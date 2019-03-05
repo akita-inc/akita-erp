@@ -146,3 +146,31 @@
     -webkit-transition-timing-function: ease-out;
     transition-timing-function: ease-out;
 }
+.container{
+    margin-top: 30px;
+    width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+    max-width: 100%;
+}
+.btn{
+    border-radius: 0px;
+}
+
+.btn-black {
+    color: #fff;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-black:hover {
+    color: #fff;
+    background-color: #171717;
+    color: #ffffff;
+}
+
+.sub-header{
+    background-color: #99ccff;
+    width: 100%;
+    min-height: 80px;
+}

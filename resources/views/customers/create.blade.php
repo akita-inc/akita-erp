@@ -2,8 +2,10 @@
 @section('title','得意先　新規追加')
 @section('title_header','得意先　新規追加')
 @section('content')
-    <div class="row row-xs" id="ctrListProvinceVl">
-
+    <div class="row row-xs" id="ctrCustomersVl">
+        <div class="sub-header">
+            <button class="btn btn-black">戻る</button>
+        </div>
     </div>
 @endsection
 @section("scripts")

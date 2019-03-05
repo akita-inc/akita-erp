@@ -1,5 +1,5 @@
-var ctrCustomerVl = new Vue({
-    el: '#ctrCustomerVl',
+var ctrCustomersVl = new Vue({
+    el: '#ctrCustomersVl',
     data: {
     },
     methods : {
