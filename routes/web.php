@@ -19,3 +19,5 @@ Route::group(['name' => 'suppliers', 'prefix' => 'suppliers', 'middleware' => ['
     Route::get('/list', 'SuppliersController@index')->name('suppliers.list');
     Route::get('/add', 'SuppliersController@add')->name('suppliers.add');
 });
+
+include "customer.php";

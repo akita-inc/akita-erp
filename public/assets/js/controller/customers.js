@@ -81,19 +81,39 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/*!******************************************!*\
-  !*** multi ./resources/assets/js/app.js ***!
-  \******************************************/
+/******/ ({
+
+/***/ "./resources/assets/js/controller/customers-vl.js":
+/*!********************************************************!*\
+  !*** ./resources/assets/js/controller/customers-vl.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var ctrCustomerVl = new Vue({
+  el: '#ctrCustomerVl',
+  data: {},
+  methods: {//end action list
+  },
+  mounted: function mounted() {},
+  components: {}
+});
+
+/***/ }),
+
+/***/ 3:
+/*!**************************************************************!*\
+  !*** multi ./resources/assets/js/controller/customers-vl.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-!(function webpackMissingModule() { var e = new Error("Cannot find module 'E:\\MyProject\\akita-erp\\resources\\assets\\js\\app.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
-/******/ ]);
+
+/******/ });
