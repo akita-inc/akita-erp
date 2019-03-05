@@ -81,19 +81,40 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/*!******************************************!*\
-  !*** multi ./resources/assets/js/app.js ***!
-  \******************************************/
+/******/ ({
+
+/***/ "./resources/assets/js/service/customers-service.js":
+/*!**********************************************************!*\
+  !*** ./resources/assets/js/service/customers-service.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+customers_service = {
+  create: function create(input) {
+    return axios.post('/admin/apiBK/customer/create', input).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  }
+};
+
+/***/ }),
+
+/***/ 1:
+/*!****************************************************************!*\
+  !*** multi ./resources/assets/js/service/customers-service.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-!(function webpackMissingModule() { var e = new Error("Cannot find module 'E:\\MyProject\\akita-erp\\resources\\assets\\js\\app.js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
 
 
 /***/ })
-/******/ ]);
+
+/******/ });

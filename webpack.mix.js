@@ -11,5 +11,20 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css');
+mix.js('resources/assets/js/app-vl.js', 'public/assets/js/app-vl.js');
+
+//mix service
+mix.js([
+    //append-auto-service
+    'resources/assets/js/service/customers-service.js',
+], 'public/assets/js/service/service.js');
+
+//mix directive
+mix.js([
+    'resources/assets/js/directive/input-directive.js'
+], 'public/assets/js/directive/directive.js');
+
+//customer
+mix.js([
+    'resources/assets/js/controller/customers-vl.js'
+], 'public/assets/js/controller/customers.js');

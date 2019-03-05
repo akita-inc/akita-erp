@@ -93,7 +93,9 @@
 
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/app.js')}}"></script>
+<script type="text/javascript" src="{{ mix('/assets/js/app-vl.js') }}"></script>
+<script type="text/javascript" src="{{ mix('/assets/js/service/service.js') }}" charset="utf-8"></script>
+<script type="text/javascript" src="{{ mix('/assets/js/directive/directive.js') }}" charset="utf-8"></script>
 @yield('scripts')
-
 </body>
 </html>
