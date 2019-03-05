@@ -8,7 +8,7 @@
     <!-- Twitter -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>システムタイトル @yield('title')</title>
+    <title>システムタイトル | @yield('title')</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
