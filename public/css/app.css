@@ -1,0 +1,75 @@
+.navbar-light .navbar-brand:focus,
+.navbar-light .navbar-brand:hover,
+.navbar-light .navbar-brand{
+    color: #0070c0;
+}
+.bg-light {
+    padding: 0px;
+    padding-left: 0px;
+    padding-left: 10px;
+    border-bottom: #0070c0 3px solid;
+    background-color: #fff !important;
+}
+.navbar-light .navbar-toggler {
+    color: #595959;
+    border-color: #d4d4d4;
+    border-radius: 0px;
+}
+#navbarRightContent{
+    min-width: 130px;
+    position: absolute;
+    right: 0px;
+    top: 43px;
+}
+#navbarRightContent .list-group .list-group-item:first-child{
+    border-top: 0px;
+}
+#navbarRightContent .list-group .list-group-item {
+    position: relative;
+    display: block;
+    padding: .75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #f2f2f2;
+    border: 1px solid #595959;
+    border-radius: 0px;
+}
+
+.navbar-toggler-left{
+    position: absolute;
+    top: 42px;
+    left: 0px;
+    min-width: 140px;
+    border: 1px solid #0070c0;
+    background-color: #0070c0;
+    color: #ffffff;
+    padding: 0px;
+    padding-bottom: 4px;
+    font-size: 13px;
+}
+
+#navbarLeftContent{
+    position: absolute;
+    top: 68px;
+    left: 0px;
+    min-width: 140px;
+}
+#navbarLeftContent .list-group .list-group-item:first-child{
+    border-top: 0px;
+}
+#navbarLeftContent .list-group .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0px;
+    margin-bottom: -1px;
+    background-color: #f2f2f2;
+    border: 1px solid #595959;
+    border-radius: 0px;
+}
+#navbarLeftContent .list-group .list-group-item a {
+    display: block;
+    padding: 5px;
+    color: black;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+}
