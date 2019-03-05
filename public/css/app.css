@@ -3,6 +3,9 @@
 .navbar-light .navbar-brand{
     color: #0070c0;
 }
+.navbar h1{
+    font-size: 1.25rem;
+}
 .bg-light {
     padding: 0px;
     padding-left: 0px;

@@ -35,6 +35,7 @@
 <!-- header -->
 <nav class="navbar navbar-light bg-light">
     <a class="navbar-brand" href="/">システムタイトル</a>
+    <h1>@yield('title_header')</h1>
     <!--Ringt menu -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarRightContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
