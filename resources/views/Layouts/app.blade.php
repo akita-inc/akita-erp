@@ -14,9 +14,11 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- fontawesome core CSS -->
     <link href="{{ asset('fontawesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
 
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     <script>
         window.Laravel = <?php echo json_encode([
@@ -92,7 +94,13 @@
 </script>
 
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
+<script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{asset('js/app.js')}}"></script>
+<script type="text/javascript">
+    $('.datepicker input').datepicker({
+        format: "yyyy/mm/dd"
+    });
+</script>
 @yield('scripts')
 
 </body>
