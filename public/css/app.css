@@ -27,11 +27,19 @@
 #navbarRightContent .list-group .list-group-item {
     position: relative;
     display: block;
-    padding: .75rem 1.25rem;
+    padding: 0px;
     margin-bottom: -1px;
     background-color: #f2f2f2;
     border: 1px solid #595959;
     border-radius: 0px;
+}
+#navbarRightContent .list-group .list-group-item a{
+    display: block;
+    padding: .75rem 1.25rem;
+    color: black;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
 }
 
 .navbar-toggler-left{
@@ -47,29 +55,92 @@
     font-size: 13px;
 }
 
-#navbarLeftContent{
+#sidebar{
     position: absolute;
-    top: 68px;
+    top: 67px;
     left: 0px;
     min-width: 140px;
+    overflow: hidden;
+    z-index: 3;
 }
-#navbarLeftContent .list-group .list-group-item:first-child{
-    border-top: 0px;
-}
-#navbarLeftContent .list-group .list-group-item {
-    position: relative;
-    display: block;
-    padding: 0px;
-    margin-bottom: -1px;
+
+#sidebar .list-group {
     background-color: #f2f2f2;
-    border: 1px solid #595959;
-    border-radius: 0px;
+    min-height: 80vh;
 }
-#navbarLeftContent .list-group .list-group-item a {
-    display: block;
-    padding: 5px;
-    color: black;
-    font-size: 15px;
-    font-weight: 600;
+#sidebar i {
+    margin-right: 6px;
+}
+
+#sidebar .list-group-item {
+    border-radius: 0;
+    background-color: #f2f2f2;
+    color: #000000;
+    border-top: 0;
+    border-color: #595959;
+    white-space: nowrap;
+    padding: 10px;
     text-decoration: none;
+    margin-bottom: 0px;
+}
+
+/* highlight active menu */
+#sidebar .list-group-item:not(.collapsed) {
+    background-color: #f2f2f2;
+}
+
+/* closed state */
+#sidebar .list-group-item[aria-expanded="false"]::after {
+    content: " \f0d7";
+    font-family: FontAwesome;
+    display: inline;
+    float: right;
+}
+
+/* open state */
+#sidebar .list-group-item[aria-expanded="true"] {
+    background-color: #f2f2f2;
+}
+#sidebar .list-group-item[aria-expanded="true"]::after {
+    content: " \f0d8";
+    font-family: FontAwesome;
+    display: inline;
+    float: right;
+}
+
+/* level 1*/
+#sidebar .collapse .list-group-item,
+#sidebar .collapsing .list-group-item  {
+    padding-left: 20px;
+}
+
+/* level 2*/
+#sidebar .collapse > .collapse .list-group-item,
+#sidebar .collapse > .collapsing .list-group-item {
+    padding-left: 30px;
+}
+
+/* level 3*/
+#sidebar .collapse > .collapse > .collapse .list-group-item {
+    padding-left: 40px;
+}
+
+.collapse.show {
+    visibility: visible;
+}
+.collapsing {
+    visibility: visible;
+    height: 0;
+    -webkit-transition-property: height, visibility;
+    transition-property: height, visibility;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+}
+.collapsing.width {
+    -webkit-transition-property: width, visibility;
+    transition-property: width, visibility;
+    width: 0;
+    height: 100%;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
 }

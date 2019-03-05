@@ -12,6 +12,8 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- fontawesome core CSS -->
+    <link href="{{ asset('fontawesome/css/font-awesome.css') }}" rel="stylesheet">
 
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -39,30 +41,45 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarRightContent">
         <ul class="list-group">
-            <li class="list-group-item">プロフィール</li>
-            <li class="list-group-item">ログアウト</li>
+            <li class="list-group-item">
+                <a href="#">プロフィール</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">ログアウト</a>
+            </li>
         </ul>
     </div>
     <!--Left menu -->
     <button class="navbar-toggler-left"
-            type="button" data-toggle="collapse" data-target="#navbarLeftContent"
+            type="button" data-toggle="collapse" data-target="#sidebar"
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation">
         Menu
     </button>
-    <div class="collapse navbar-collapse" id="navbarLeftContent">
-        <ul class="list-group">
-            <li class="list-group-item">
-                <a href="#">ＴＯＰ</a>
-            </li>
-            <li class="list-group-item">
-                <a href="#">販売</a>
-            </li>
-            <li class="list-group-item">
-                <a href="#">マスタ</a>
-            </li>
-        </ul>
+    <div class="collapse navbar-collapse" id="sidebar">
+        <a href="#" class="list-group-item" data-parent="#menu1">Top</a>
+        <a href="#menu1sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">販売</a>
+        <div class="collapse" id="menu1sub1">
+            <a href="#" class="list-group-item" data-parent="#menu1sub1">社員</a>
+            <a href="#" class="list-group-item" data-parent="#menu1sub1">仕入先</a>
+            <a href="#" class="list-group-item" data-parent="#menu1sub1">得意先</a>
+            <a href="#" class="list-group-item" data-parent="#menu1sub1">車両</a>
+        </div>
+        <a href="#menu2sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">購買</a>
+        <div class="collapse" id="menu2sub1">
+            <a href="#" class="list-group-item" data-parent="#menu2sub1">社員</a>
+            <a href="#" class="list-group-item" data-parent="#menu2sub1">仕入先</a>
+            <a href="#" class="list-group-item" data-parent="#menu2sub1">得意先</a>
+            <a href="#" class="list-group-item" data-parent="#menu2sub1">車両</a>
+        </div>
+        <a href="#menu3sub1" class="list-group-item" data-toggle="collapse" aria-expanded="true">マスタ</a>
+        <div class="collapse show" id="menu3sub1">
+            <a href="#" class="list-group-item" data-parent="#menu3sub1">社員</a>
+            <a href="#" class="list-group-item" data-parent="#menu3sub1">仕入先</a>
+            <a href="#" class="list-group-item" data-parent="#menu3sub1">得意先</a>
+            <a href="#" class="list-group-item" data-parent="#menu3sub1">車両</a>
+        </div>
     </div>
 </nav>
 
