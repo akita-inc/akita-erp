@@ -53,7 +53,8 @@ class CreateMstCustomersTable extends Migration
             $table->integer('mst_account_titles_id_2')->nullable();
             $table->integer('mst_account_titles_id_3')->nullable();
             $table->string('notes',50)->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();
         });
     }

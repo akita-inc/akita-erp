@@ -40,13 +40,13 @@ class CreateMstSuppliersTable extends Migration
             $table->text('hp_url')->nullable();
             $table->integer('bundle_dt')->nullable();
             $table->integer('payday')->nullable();
-            $table->tinyInteger('payment_month_id')->nullable();
+            $table->boolean('payment_month_id')->nullable();
             $table->integer('payment_day')->nullable();
-            $table->tinyInteger('payment_method_id')->nullable();
+            $table->boolean('payment_method_id')->nullable();
             $table->string('explanations_bill',100)->nullable();
             $table->date('business_start_dt')->nullable();
-            $table->tinyInteger('consumption_tax_calc_unit_id')->nullable();
-            $table->tinyInteger('rounding_method_id')->nullable();
+            $table->boolean('consumption_tax_calc_unit_id')->nullable();
+            $table->boolean('rounding_method_id')->nullable();
             $table->string('payment_bank_cd',4)->nullable();
             $table->string('payment_bank_name',30)->nullable();
             $table->string('payment_branch_cd',4)->nullable();
@@ -55,7 +55,8 @@ class CreateMstSuppliersTable extends Migration
             $table->string('payment_account_number',10)->nullable();
             $table->string('payment_account_holder',30)->nullable();
             $table->string('notes',50)->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();
         });
     }
