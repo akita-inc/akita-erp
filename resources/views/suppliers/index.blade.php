@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('style')
+    <link rel="stylesheet" href="{{ asset('css/search-list.css') }}">
+@endsection
 @section('content')
     <div class="container-fluid">
         <div class="content" id="content-body">
@@ -16,9 +19,9 @@
                                     <div class="row">
                                         <div class="col-sm-3 no-padding"></div>
                                         <div class="col-sm-9 form-inline no-padding justify-content-between">
-                                            <div class="w-30">コード</div>
-                                            <div class="">
-                                                <span>名称</span>
+                                            <div class="row w-100">
+                                                <div class="col-sm-3 no-padding">コード</div>
+                                                <div class="col-sm-9">名称</div>
                                             </div>
                                         </div>
                                     </div>
@@ -29,32 +32,44 @@
                                     <div class="row">
                                         <label class="col-sm-3 no-padding">仕入先</label>
                                         <div class="col-sm-9 form-inline no-padding justify-content-between">
-                                            <input type="text" name="supplier_cd" id="supplier_cd" class="form-control w-30">
-                                            <input type="text" name="supplier_nm" id="supplier_nm" class="form-control">
+                                            <div class="row">
+                                                <div class="col-sm-3 no-padding">
+                                                    <input type="text" name="supplier_cd" id="supplier_cd" class="form-control w-100">
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="supplier_nm" id="supplier_nm" class="form-control w-100">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-inline">
                                     <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="supplier_date" value="0" checked>すべて
+                                        <input type="radio" class="form-check-input" name="supplier_date" value="0">すべて
                                     </label>
                                     </div>
                                     <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="supplier_date" value="1">基準日
+                                        <input type="radio" class="form-check-input" name="supplier_date" value="1" checked>基準日
                                     </label>
                                     </div>
                                     <div class="input-group datepicker">
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control input-calendar">
                                         <div class="input-group-append">
-                                            <span class="input-group-text glyphicon glyphicon-th"></span>
+                                            <span class="input-group-text fa fa-calendar"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 no-padding d-flex justify-content-between">
-                                    <button class="btn btn-clear" type="button">条件クリア</button>
-                                    <button class="btn btn-search" type="submit">検索</button>
+                                    <div class="row w-100">
+                                        <div class="col-sm-4 no-padding">
+                                            <button class="btn btn-clear" type="button">条件クリア</button>
+                                        </div>
+                                        <div class="col-sm-8 no-padding">
+                                            <button class="btn w-100 btn-search" type="submit">検索</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -75,7 +90,7 @@
                         <tbody>
                         @for( $i = 0; $i <=5;$i++)
                             <tr>
-                                <td>S0101</td>
+                                <td><a class="supplier-link" href="">S0101</a></td>
                                 <td>株式会社０００００１</td>
                                 <td>愛知県名古屋市中区新栄5-0-0</td>
                                 <td></td>
