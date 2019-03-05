@@ -155,6 +155,10 @@
 }
 .btn{
     border-radius: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-weight: 500;
+    font-size: 13px;
 }
 
 .btn-black {
@@ -169,8 +173,19 @@
     color: #ffffff;
 }
 
+.btn-primary{
+    background-color: #0070c0;
+}
+.btn-submit{
+    min-width: 150px;
+}
 .sub-header{
     background-color: #99ccff;
     width: 100%;
     min-height: 80px;
+    padding: 10px;
+}
+.sub-header-line-two{
+    align-items: center;
+    text-align: center;
 }
