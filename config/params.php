@@ -1,6 +1,6 @@
 <?php
 return [
-    'page_size' => 10,
+    'page_size' => 2,
     'data_kb' => [
         'prefecture'                    => '00001', // 都道府県CD
         'sex'                           => '00002', // 性別ID
