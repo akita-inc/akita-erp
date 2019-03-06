@@ -12,8 +12,8 @@ class SuppliersController extends Controller
         return view('suppliers.index');
     }
 
-    public function add(Request $request)
-    {
-        return view('suppliers.add');
+    public function create(Request $request){
+
+        return view('suppliers.create');
     }
 }
