@@ -57,7 +57,8 @@
                                     </label>
                                     </div>
                                     <div class="input-group datepicker">
-                                        <input type="text" class="form-control input-calendar" name="reference_date" id="reference_date">
+                                        <input type="text" class="form-control input-calendar" name="reference_date" id="reference_date"
+                                            style="width: 130px;">
                                         <div class="input-group-append">
                                             <span class="input-group-text fa fa-calendar"></span>
                                         </div>
@@ -76,7 +77,7 @@
                             </div>
                         </form>
                     </div>
-                    <table class="table table-bordered search-content">
+                    <table class="table table-striped table-bordered search-content">
                         <thead>
                         <tr>
                             <th>仕入先CD</th>
@@ -98,7 +99,7 @@
                                 <td>{{ $sup->explanations_bill }}</td>
                                 <td>{{ $sup->adhibition_start_dt }}</td>
                                 <td>{{ $sup->adhibition_end_dt }}</td>
-                                <td>{{ $sup->modified_at }}</td>
+                                <td>{{ date('Y-m-d', strtotime($sup->modified_at)) }}</td>
                                 <td>
                                     <button type="button" class="btn btn-delete">削除</button>
                                 </td>

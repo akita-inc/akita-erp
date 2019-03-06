@@ -22,10 +22,11 @@ class MSupplier extends Model
 
     public function getSuppliers($where = array()){
         $suppliers = new MSupplier();
-        $suppliers->addSelect('mst_general_purposes.date_nm');
-        $suppliers->leftjoin('mst_general_purposes', function ($join) {
+        $suppliers = $suppliers->select(DB::raw('mst_suppliers.*'))
+                                ->addselect('mst_general_purposes.date_nm');
+        $suppliers = $suppliers->leftjoin('mst_general_purposes', function ($join) {
             $join->on('mst_general_purposes.date_id', '=', 'mst_suppliers.prefectures_cd')
-                    ->where('mst_general_purposes.data_kb', 1);
+                    ->where('mst_general_purposes.data_kb', config('params.data_kb')['prefecture']);
         });
 
         // 検索条件
