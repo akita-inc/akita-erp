@@ -22,8 +22,8 @@ class SuppliersController extends Controller
         ]);
     }
 
-    public function add(Request $request)
-    {
-        return view('suppliers.add');
+    public function create(Request $request){
+
+        return view('suppliers.create');
     }
 }

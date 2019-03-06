@@ -1,3 +1,6 @@
+body{
+    font-family: Arial, "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+}
 .navbar-light .navbar-brand:focus,
 .navbar-light .navbar-brand:hover,
 .navbar-light .navbar-brand{
@@ -145,4 +148,47 @@
     height: 100%;
     -webkit-transition-timing-function: ease-out;
     transition-timing-function: ease-out;
+}
+.container{
+    margin-top: 30px;
+    width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+    max-width: 100%;
+}
+.btn{
+    border-radius: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.btn-black {
+    color: #fff;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-black:hover {
+    color: #fff;
+    background-color: #171717;
+    color: #ffffff;
+}
+
+.btn-primary{
+    background-color: #0070c0;
+}
+.btn-submit{
+    min-width: 150px;
+}
+.sub-header{
+    background-color: #99ccff;
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+}
+.sub-header-line-two{
+    align-items: center;
+    text-align: center;
 }

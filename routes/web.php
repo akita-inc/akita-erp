@@ -15,9 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['name' => 'suppliers', 'prefix' => 'suppliers', 'middleware' => ['web'] ], function () {
-    Route::any('/list', 'SuppliersController@index')->name('suppliers.list');
-    Route::get('/add', 'SuppliersController@add')->name('suppliers.add');
-});
 
+include "supplier.php";
 include "customer.php";

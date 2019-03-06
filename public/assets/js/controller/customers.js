@@ -93,8 +93,8 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var ctrCustomerVl = new Vue({
-  el: '#ctrCustomerVl',
+var ctrCustomersVl = new Vue({
+  el: '#ctrCustomersVl',
   data: {},
   methods: {//end action list
   },
