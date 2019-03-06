@@ -48,7 +48,7 @@
                 <a href="#">プロフィール</a>
             </li>
             <li class="list-group-item">
-                <a href="#">ログアウト</a>
+                <a href="{{route('logout')}}">ログアウト</a>
             </li>
         </ul>
     </div>
