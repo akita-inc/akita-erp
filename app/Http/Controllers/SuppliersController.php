@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MSupplier;
 use Illuminate\Http\Request;
 
 class SuppliersController extends Controller
@@ -9,11 +10,20 @@ class SuppliersController extends Controller
 
     public function index(Request $request)
     {
-        return view('suppliers.index');
+        $mSuppliers = new MSupplier();
+
+        $where = array(
+            'suppliers_cd' => $request->get('supplier_cd'),
+            'supplier_nm' => $request->get('supplier_nm'),
+        );
+
+        return view('suppliers.index', [
+            'suppliers' => $mSuppliers->getSuppliers($where),
+        ]);
     }
 
-    public function add(Request $request)
-    {
-        return view('suppliers.add');
+    public function create(Request $request){
+
+        return view('suppliers.create');
     }
 }

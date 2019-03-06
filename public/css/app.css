@@ -1,3 +1,6 @@
+body{
+    font-family: Arial, "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+}
 .navbar-light .navbar-brand:focus,
 .navbar-light .navbar-brand:hover,
 .navbar-light .navbar-brand{
