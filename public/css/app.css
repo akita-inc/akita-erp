@@ -192,3 +192,43 @@ body{
     align-items: center;
     text-align: center;
 }
+/*Form*/
+.row{
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.grid-form{
+    border: 1px solid;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 20px 10px 0px;
+}
+.grid-col > label {
+    background-color: #0070c0;
+    color: white;
+    justify-content: left;
+}
+.grid-col > label.required:before{
+    content: '*';
+    position: absolute;
+    left: -12px;
+    color: red;
+    font-weight: bolder;
+    font-size: 15px;
+}
+.grid-col > .wrap-control{
+    padding: 0px;
+}
+.grid-col > .wrap-control > input{
+    border-radius: 0px;
+    width: 100%;
+}
+.grid-col{
+    padding-left: 20px !important;
+}
+.break-row-form{
+    width: 100%;
+    clear: both;
+    height: 10px;
+}
