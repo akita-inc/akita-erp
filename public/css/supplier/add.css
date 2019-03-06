@@ -1,0 +1,18 @@
+.block-item{
+    border: #BBBBBB 1px solid;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.input-group-prepend .input-group-text{
+    background-color: #0070C0;
+    color: white;
+    width: 100%;
+}
+.input-group-prepend{
+    flex-basis: 40%;
+}
+input.form-control-lg{
+    flex-basis: 60%;
+}
