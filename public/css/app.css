@@ -204,6 +204,11 @@ body{
     margin-top: 10px;
     padding: 10px 20px 10px 0px;
 }
+.margin-form-child{
+    margin: 10px 0px 20px 20px!important;
+    padding-left:0px!important;
+    padding-right: 0px!important;
+}
 .grid-col > label {
     background-color: #0070c0;
     color: white;
@@ -231,4 +236,11 @@ body{
     width: 100%;
     clear: both;
     height: 10px;
+}
+.btn-group-plus-minus{
+    margin-top:10px;
+    margin-bottom:20px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
 }
