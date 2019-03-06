@@ -19,6 +19,7 @@ class CreateMstStaffJobExperiencesTable extends Migration
             $table->string('job_duties',50)->nullable();
             $table->date('staff_tenure_start_dt')->nullable();
             $table->date('staff_tenure_end_dt')->nullable();
+            $table->integer('disp_number')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();

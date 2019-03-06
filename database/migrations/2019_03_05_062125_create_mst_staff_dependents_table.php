@@ -22,8 +22,8 @@ class CreateMstStaffDependentsTable extends Migration
             $table->string('last_nm_kana',50)->nullable();
             $table->string('first_nm_kana',50)->nullable();
             $table->date('birthday')->nullable();
-            $table->boolean('sex')->nullable();
-            $table->integer('pension_number')->nullable();
+            $table->boolean('sex_id')->nullable();
+            $table->string('social_security_number', 10)->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();

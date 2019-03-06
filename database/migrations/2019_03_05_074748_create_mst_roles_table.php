@@ -16,6 +16,7 @@ class CreateMstRolesTable extends Migration
         Schema::create('mst_roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('role_nm',50);
+            $table->integer('disp_number');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
