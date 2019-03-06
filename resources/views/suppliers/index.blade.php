@@ -34,10 +34,12 @@
                                         <div class="col-sm-9 form-inline no-padding justify-content-between">
                                             <div class="row">
                                                 <div class="col-sm-3 no-padding">
-                                                    <input type="text" name="supplier_cd" id="supplier_cd" class="form-control w-100">
+                                                    <input type="text" name="supplier_cd" id="supplier_cd" class="form-control w-100"
+                                                        value="{{ old('supplier_cd') }}">
                                                 </div>
                                                 <div class="col-sm-9">
-                                                    <input type="text" name="supplier_nm" id="supplier_nm" class="form-control w-100">
+                                                    <input type="text" name="supplier_nm" id="supplier_nm" class="form-control w-100"
+                                                           value="{{ old('supplier_nm') }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -55,7 +57,7 @@
                                     </label>
                                     </div>
                                     <div class="input-group datepicker">
-                                        <input type="text" class="form-control input-calendar">
+                                        <input type="text" class="form-control input-calendar" name="reference_date" id="reference_date">
                                         <div class="input-group-append">
                                             <span class="input-group-text fa fa-calendar"></span>
                                         </div>
@@ -88,25 +90,25 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @for( $i = 0; $i <=5;$i++)
+                        @foreach( $suppliers as $sup)
                             <tr>
-                                <td><a class="supplier-link" href="">S0101</a></td>
-                                <td>株式会社０００００１</td>
-                                <td>愛知県名古屋市中区新栄5-0-0</td>
-                                <td></td>
-                                <td>2019-04-01</td>
-                                <td>2999-12-01</td>
-                                <td>2019-04-01</td>
+                                <td><a class="supplier-link" href="">{{ $sup->mst_suppliers_cd }}</a></td>
+                                <td>{{ $sup->supplier_nm }}</td>
+                                <td>{{ $sup->date_nm . $sup->address1 . $sup->address2 . $sup->address3 }}</td>
+                                <td>{{ $sup->explanations_bill }}</td>
+                                <td>{{ $sup->adhibition_start_dt }}</td>
+                                <td>{{ $sup->adhibition_end_dt }}</td>
+                                <td>{{ $sup->modified_at }}</td>
                                 <td>
                                     <button type="button" class="btn btn-delete">削除</button>
                                 </td>
                             </tr>
-                        @endfor
+                        @endforeach
                         </tbody>
                     </table>
 
                     <div class="search-footer">
-                        @include('layouts.pagination')
+                        @include('layouts.pagination', ['paginator' => $suppliers])
                     </div>
                 </div>
             </div>
@@ -114,3 +116,20 @@
         </div>
     </div>
 @stop
+@section('scripts')
+<script type="text/javascript">
+    $(function (){
+        reference_date = $('#reference_date');
+        if (reference_date.val() === '')
+            reference_date.val('<?php echo date('Y-m-d'); ?>');
+    });
+
+    function clear(){
+
+    }
+
+    function checkSearch(){
+       // if ()
+    }
+</script>
+@endsection
