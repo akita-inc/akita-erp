@@ -23,6 +23,7 @@ class CreateMstStaffQualificationsTable extends Migration
             $table->string('notes',100)->nullable();
             $table->integer('amounts')->nullable();
             $table->date('payday')->nullable();
+            $table->integer('disp_number')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();
