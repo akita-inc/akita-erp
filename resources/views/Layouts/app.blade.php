@@ -98,7 +98,7 @@
 
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
-<script src="{{asset('js/app.js')}}"></script>
+<script src="{{asset('js/main.js')}}"></script>
 <script type="text/javascript">
     $('.datepicker input').datepicker({
         format: "yyyy/mm/dd"

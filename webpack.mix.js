@@ -17,6 +17,7 @@ mix.js('resources/assets/js/app-vl.js', 'public/assets/js/app-vl.js');
 mix.js([
     //append-auto-service
     'resources/assets/js/service/customers-service.js',
+    'resources/assets/js/service/suppliers-service.js',
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -28,3 +29,12 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/customers-vl.js'
 ], 'public/assets/js/controller/customers.js');
+
+mix.js([
+    'resources/assets/js/controller/customers-list-vl.js'
+], 'public/assets/js/controller/customers-list.js');
+
+//supplier
+mix.js([
+    'resources/assets/js/controller/suppliers-vl.js'
+], 'public/assets/js/controller/suppliers.js');

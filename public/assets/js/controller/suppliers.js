@@ -81,58 +81,44 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/assets/js/service/customers-service.js":
-/*!**********************************************************!*\
-  !*** ./resources/assets/js/service/customers-service.js ***!
-  \**********************************************************/
+/***/ "./resources/assets/js/controller/suppliers-vl.js":
+/*!********************************************************!*\
+  !*** ./resources/assets/js/controller/suppliers-vl.js ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-customers_service = {
-  loadList: function loadList(data) {
-    return axios.post('/customers/api-v1/getItems', data).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  }
-};
+var ctrSupplierrsVl = new Vue({
+  el: '#ctrSupplierrsVl',
+  data: {},
+  methods: {
+    convertKana: function convertKana(e, destination) {
+      suppliers_service.convertKana({
+        'data': e.target.value
+      }).then(function (data) {
+        $('#' + destination).val(data.info);
+      });
+    }
+  },
+  mounted: function mounted() {},
+  components: {}
+});
 
 /***/ }),
 
-/***/ "./resources/assets/js/service/suppliers-service.js":
-/*!**********************************************************!*\
-  !*** ./resources/assets/js/service/suppliers-service.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-suppliers_service = {
-  convertKana: function convertKana(input) {
-    return axios.post('/api/supplier/convert-to-kana', input).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  }
-};
-
-/***/ }),
-
-/***/ 1:
-/*!*******************************************************************************************************************!*\
-  !*** multi ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ***!
-  \*******************************************************************************************************************/
+/***/ 4:
+/*!**************************************************************!*\
+  !*** multi ./resources/assets/js/controller/suppliers-vl.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\suppliers-vl.js */"./resources/assets/js/controller/suppliers-vl.js");
 
 
 /***/ })

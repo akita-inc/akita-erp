@@ -5,9 +5,14 @@
  * Date: 3/5/2019
  * Time: 4:20 PM
  */
-Route::group(['prefix'=>'/customers'],function (){
-    Route::get('/','CustomersController@create')->name("customers.create");
-    /*Route::group(['prefix' => 'api-v1'], function () {
-    });*/
+Route::group(['name' => 'customers', 'prefix'=>'/customers', 'middleware' => ['web']],function (){
+    Route::get('/','CustomersController@index')->name("customers.list");
+    Route::get('/create','CustomersController@create')->name("customers.create");
+
+    /*Api using Vue*/
+    Route::group(['prefix' => 'api-v1'], function () {
+        Route::post('/getItems','CustomersController@getItems')->name("customers.getItems");
+
+    });
 });
 
