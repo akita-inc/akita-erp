@@ -14,7 +14,7 @@
     color: #ffffff;
 }
 .no-padding {
-    padding: 0;
+    padding: 0!important;
 }
 .pagination {
     margin-top: 0.5rem;
@@ -35,4 +35,10 @@
     background-color: #ffffff;
     color: #CAA6A6;
     border-color: #ddd;
+}
+.w-39{
+    width:39%!important;
+}
+.w-69{
+    width:69%!important;
 }
