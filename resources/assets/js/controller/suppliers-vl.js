@@ -1,9 +1,14 @@
-var ctrCustomersVl = new Vue({
-    el: '#ctrSuppliersVl',
+var ctrSupplierrsVl = new Vue({
+    el: '#ctrSupplierrsVl',
     data: {
+
     },
     methods : {
-        //end action list
+        convertKana: function (e , destination) {
+            suppliers_service.convertKana({'data': e.target.value}).then(function (data) {
+                $('#'+destination).val(data.info);
+            });
+        }
     },
     mounted () {
     },
