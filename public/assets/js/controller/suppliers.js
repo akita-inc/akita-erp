@@ -81,22 +81,29 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/assets/js/controller/customers-vl.js":
+/***/ "./resources/assets/js/controller/suppliers-vl.js":
 /*!********************************************************!*\
-  !*** ./resources/assets/js/controller/customers-vl.js ***!
+  !*** ./resources/assets/js/controller/suppliers-vl.js ***!
   \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var ctrCustomersVl = new Vue({
-  el: '#ctrCustomersVl',
+var ctrSupplierrsVl = new Vue({
+  el: '#ctrSupplierrsVl',
   data: {},
-  methods: {//end action list
+  methods: {
+    convertKana: function convertKana(e, destination) {
+      suppliers_service.convertKana({
+        'data': e.target.value
+      }).then(function (data) {
+        $('#' + destination).val(data.info);
+      });
+    }
   },
   mounted: function mounted() {},
   components: {}
@@ -104,14 +111,14 @@ var ctrCustomersVl = new Vue({
 
 /***/ }),
 
-/***/ 3:
+/***/ 4:
 /*!**************************************************************!*\
-  !*** multi ./resources/assets/js/controller/customers-vl.js ***!
+  !*** multi ./resources/assets/js/controller/suppliers-vl.js ***!
   \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\suppliers-vl.js */"./resources/assets/js/controller/suppliers-vl.js");
 
 
 /***/ })

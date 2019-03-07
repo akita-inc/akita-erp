@@ -31377,6 +31377,8 @@ module.exports = function(module) {
 __webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+
+__webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -31435,7 +31437,7 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\app-vl.js */"./resources/assets/js/app-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\app-vl.js */"./resources/assets/js/app-vl.js");
 
 
 /***/ })

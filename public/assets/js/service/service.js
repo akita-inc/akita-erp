@@ -105,14 +105,55 @@ customers_service = {
 
 /***/ }),
 
+/***/ "./resources/assets/js/service/suppliers-service.js":
+/*!**********************************************************!*\
+  !*** ./resources/assets/js/service/suppliers-service.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+suppliers_service = {
+  convertKana: function convertKana(input) {
+    return axios.post('/api/supplier/convert-to-kana', input).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  loadList: function loadList(data) {
+    return axios.post('/suppliers/api-v1/getItems', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  gotoCreate: function gotoCreate(data) {
+    return axios.post('/suppliers/create', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  deleteSupplier: function deleteSupplier(id) {
+    return axios.get('/suppliers/delete/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  }
+};
+
+/***/ }),
+
 /***/ 1:
-/*!****************************************************************!*\
-  !*** multi ./resources/assets/js/service/customers-service.js ***!
-  \****************************************************************/
+/*!*******************************************************************************************************************!*\
+  !*** multi ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ***!
+  \*******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+__webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
 
 
 /***/ })
