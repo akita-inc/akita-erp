@@ -17,9 +17,25 @@ return [
         'search' => [
             'radio-all' => 'すべて',
             'radio-reference-date' => '基準日',
+            'staff'=>'社員',
+            'code' => 'コード',
+            'name' => '氏名',
+            'belong_company_id'=>'所属会社',
+            'mst_business_office_id'=>'営業所',
+            'employment_pattern_id'=>'雇用形態',
+            'position_id'=>'役職',
         ],
         'table' => [
-
+            'staff_cd'=>'社員コード',
+            'employment_pattern_id'=>'雇用形態',
+            'position_id'=>'役職',
+            'name' => '氏名',
+            'belong_company_id'=>'所属会社',
+            'mst_business_office_id'=>'営業所',
+            'adhibition_start_dt'=>'適用開始日',
+            'adhibition_end_dt'=>'適用終了日',
+            'modified_at'=>'更新日時',
+            'delete'=>'削除',
         ]
     ],
 

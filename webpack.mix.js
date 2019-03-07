@@ -44,5 +44,9 @@ mix.js([
 ], 'public/assets/js/controller/suppliers.js');
 
 mix.js([
+    'resources/assets/js/controller/staffs-list-vl.js'
+], 'public/assets/js/controller/staffs-list.js');
+
+mix.js([
     'resources/assets/js/controller/staffs-vl.js'
 ], 'public/assets/js/controller/staffs.js');

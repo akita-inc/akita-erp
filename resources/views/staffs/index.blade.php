@@ -14,47 +14,39 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-12 row">
                         <div class="col-md-2 padding-row-5 col-list-search-f">
-                            {{trans("customers.list.search.customer")}}
+                            {{trans("staffs.list.search.staff")}}
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
-                                {{trans("customers.list.search.code")}}
+                                {{trans("staffs.list.search.code")}}
                             </label>
-                            <select class="form-control dropdown-list" name="mst_customers_cd"  id="input_mst_customers_cd"  v-model="fileSearch.mst_customers_cd">
-                                <option> </option>
-                                <option> Example</option>
-                                <option> Example</option>
-                            </select>
+                            <input id="input_mst_staffs_cd" class="form-control" name="mst_staffs_cd" v-model="fileSearch.mst_staffs_cd">
                         </div>
                         <div class="col-md-6 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
-                                {{trans("customers.list.search.name")}}
+                                {{trans("staffs.list.search.name")}}
                             </label>
-                            <select class="form-control dropdown-list" name="mst_customers_cd"  id="input_mst_customers_cd"  v-model="fileSearch.mst_customers_cd">
-                                <option> </option>
-                                <option> Example</option>
-                                <option> Example</option>
-                            </select>
+                            <input id="input_mst_staffs_name" class="form-control" name="staff_nm" v-model="fileSearch.staff_nm">
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-12 row">
+                    <div class="col-md-4 col-sm-12 row">
                         <div class="col-md-4 col-sm-12 lh-38">
-                            所属会社
+                            {{trans("staffs.list.search.belong_company_id")}}
                         </div>
                         <div class="col-md-8  col-sm-12 input-group ">
-                            <select class="form-control dropdown-list" name="mst_customers_cd"  id="input_mst_customers_cd"  v-model="fileSearch.mst_customers_cd">
+                            <select class="form-control dropdown-list" name="belong_company_id"  id="belong_company_id"  v-model="fileSearch.belong_company_id">
                                 <option> </option>
                                 <option> Example</option>
                                 <option> Example</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-12 row">
+                    <div class="col-md-4 col-sm-12 row">
                         <div class="col-md-4 padding-row-5 lh-38">
-                            所属会社
+                            {{trans("staffs.list.search.mst_business_office_id")}}
                         </div>
                         <div class="col-md-8 padding-row-0 input-group ">
-                            <select class="form-control dropdown-list" name="mst_customers_cd"  id="input_mst_customers_cd"  v-model="fileSearch.mst_customers_cd">
+                            <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option> </option>
                                 <option> Example</option>
                                 <option> Example</option>
@@ -66,27 +58,25 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-12 row">
                         <div class="col-md-2 padding-row-5 col-list-search-f">
-                            {{trans("customers.list.search.customer")}}
+                            {{trans("staffs.list.search.employment_pattern_id")}}
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
-                            <select class="form-control dropdown-list" name="mst_customers_cd"  id="input_mst_customers_cd"  v-model="fileSearch.mst_customers_cd">
-                                <option> </option>
-                                <option> Example</option>
+                            <select class="form-control dropdown-list" name="employment_pattern_id"  id="employment_pattern_id"  v-model="fileSearch.employment_pattern_id">
                                 <option> Example</option>
                             </select>
                         </div>
                         <div class="col-md-2 padding-row-5 col-list-search-f">
-                            {{trans("customers.list.search.customer")}}
+                            {{trans("staffs.list.search.position_id")}}
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
-                            <select class="form-control dropdown-list" name="mst_customers_cd"  id="input_mst_customers_cd"  v-model="fileSearch.mst_customers_cd">
+                            <select class="form-control dropdown-list" name="position_id"  id="position_id"  v-model="fileSearch.position_id">
                                 <option> </option>
                                 <option> Example</option>
                                 <option> Example</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-12 row">
+                    <div class="col-md-4 col-sm-12 row">
                         <div class="col-md-6 col-sm-12 lh-38">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
@@ -107,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-12 row">
+                    <div class="col-md-4 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
                             <button class="btn btn-black w-100" >
                                 {{trans('common.button.condition-clear')}}
@@ -127,16 +117,15 @@
                 <thead>
                 <tr>
                     @foreach($fieldShowTable as $key => $field)
-                        <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("customers.list.table.".$key)}}</th>
+                        <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("staffs.list.table.".$key)}}</th>
                     @endforeach
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr  v-cloak v-for="item in items" v-demo="{item:item}">
                     @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
-                            @if( $key == 'mst_customers_cd' )
+                            @if( $key == 'staffs_cd' )
                                 <a href="">{!! "@{{ item['$key'] }}" !!}</a>
                             @else
                                 {!! "@{{ item['$key'] }}" !!}
@@ -153,5 +142,5 @@
     </div>
 @endsection
 @section("scripts")
-    <script type="text/javascript" src="{{ mix('/assets/js/controller/customers-list.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs-list.js') }}" charset="utf-8"></script>
 @endsection
