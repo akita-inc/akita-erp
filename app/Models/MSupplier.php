@@ -11,6 +11,7 @@ class MSupplier extends Model
     use SoftDeletes;
 
     protected $table = "mst_suppliers";
+    const UPDATED_AT = "modified_at";
 
     public $label = [
 

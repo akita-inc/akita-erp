@@ -16,10 +16,15 @@
     background-color: #0070C0;
     color: #ffffff;
 }
+.search-content td {
+    vertical-align: middle;
+}
 .supplier-link {
     font-weight: bold;
     text-decoration: underline;
 }
-.input-calendar:after {
-
+.xsmall {
+    font-size: 65%;
+    font-weight: 300;
+    opacity: .78;
 }
