@@ -179,16 +179,16 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="zip_cd">郵便番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ $mSupplier->zip_cd ?? old('zip_cd') }}" maxlength="7">
+                            <input type="text" class="form-control w-50 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ $mSupplier->zip_cd ?? old('zip_cd') }}" maxlength="8">
                         </div>
                         @if ($errors->has('zip_cd'))
                             <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $errors->first('zip_cd') }}</strong>
-                                </span>
+                                <strong>{{ $errors->first('zip_cd') }}</strong>
+                            </span>
                         @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <button class="btn btn-black">〒 → 住所</button>
+                        <button class="btn btn-black" v-on:click="getAddrFromZipCode" type="button">〒 → 住所</button>
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
@@ -204,7 +204,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="address1">市区町村</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-75" id="address1" name="address1" value="{{ $mSupplier->address1 ?? old('address1') }}" maxlength="20">
+                            <input type="text" class="form-control w-75" id="address1" name="address1" v-bind:value="locality" maxlength="20">
                         </div>
                     </div>
                     <div class="break-row-form"></div>
@@ -281,11 +281,9 @@
                         <label class="col-md-5 col-sm-5" for="payment_month_id">支払予定月</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="payment_month_id" name="payment_month_id">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                @foreach($listPaymentMonth as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -305,11 +303,9 @@
                         <label class="col-md-5 col-sm-5" for="payment_method_id">支払予定方法</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="payment_method_id" name="payment_method_id">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                @foreach($listPaymentMethod as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -337,11 +333,9 @@
                         <label class="col-md-5 col-sm-5" for="consumption_tax_calc_unit_id">消費税計算単位区分</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="consumption_tax_calc_unit_id" name="consumption_tax_calc_unit_id">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                @foreach($listConsumptionTaxCalcUnit as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -349,11 +343,9 @@
                         <label class="col-md-4 col-sm-4" for="rounding_method_id">消費税端数処理区分</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-50" id="rounding_method_id" name="rounding_method_id">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                @foreach($listRoundingMethod as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -390,12 +382,10 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="payment_account_type">支払口座種別</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-25" id="payment_account_type" name="payment_account_type">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                            <select class="form-control w-50" id="payment_account_type" name="payment_account_type">
+                                @foreach($listPaymentAccountType as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

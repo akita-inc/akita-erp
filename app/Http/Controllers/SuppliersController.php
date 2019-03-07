@@ -88,6 +88,11 @@ class SuppliersController extends Controller
         $mSupplier = new MSupplier();
         $mGeneralPurposes = new MGeneralPurposes();
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture'],'');
+        $listPaymentMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_method'],'');
+        $listPaymentMonth= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_month'],'');
+        $listConsumptionTaxCalcUnit= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
+        $listRoundingMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
+        $listPaymentAccountType= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_account_type'],'');
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
@@ -171,8 +176,13 @@ class SuppliersController extends Controller
             }
         }
         return view('suppliers.create',[
-            '$Supplier' => $mSupplier,
+            'mSupplier' => $mSupplier,
             'listPrefecture' => $listPrefecture,
+            'listPaymentMethod' => $listPaymentMethod,
+            'listPaymentMonth' => $listPaymentMonth,
+            'listConsumptionTaxCalcUnit' => $listConsumptionTaxCalcUnit,
+            'listRoundingMethod' => $listRoundingMethod,
+            'listPaymentAccountType' => $listPaymentAccountType,
         ]);
     }
 }
