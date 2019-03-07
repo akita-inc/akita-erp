@@ -285,6 +285,9 @@ input{
     top: -25px;
     left: 5px;
 }
+.frm-search-list .dropdown-list{
+    border-radius:0px!important;
+}
 
 .col-list-search-f{
     line-height: 38px;
@@ -340,3 +343,4 @@ input{
     padding-right: 5px;
     line-height: 15px;
 }
+
