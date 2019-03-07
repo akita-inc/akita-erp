@@ -1,11 +1,14 @@
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 var ctrCustomersListVl = new Vue({
     el: '#ctrCustomersListVl',
     data: {
         loading:false,
         items:[],
         fileSearch:{
-            mst_customers_cd:""
+            mst_customers_cd:"",
+            customer_nm:"",
+            status:0,
+            reference_date:'',
         },
         pagination:{
             total: 0,
@@ -16,6 +19,9 @@ var ctrCustomersListVl = new Vue({
             last_page:0
         },
         getItems: function(page){
+            var date=$("#reference_date" ).datepicker({
+                format: 'yyyy/mm/dd'}).val();
+            this.fileSearch.reference_date=date;
             var data = {
                 pageSize:this.pageSize,
                 page:page,
