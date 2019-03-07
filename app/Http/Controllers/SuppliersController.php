@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Helpers\TimeFunction;
 use App\Models\MGeneralPurposes;
