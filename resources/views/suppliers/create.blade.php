@@ -195,11 +195,9 @@
                         <label class="col-md-5 col-sm-5" for="prefectures_cd">都道府県</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="prefectures_cd" name="prefectures_cd">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                @foreach($listPrefecture as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

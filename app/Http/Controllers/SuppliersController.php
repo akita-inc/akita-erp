@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Helpers\TimeFunction;
+use App\Models\MGeneralPurposes;
 use App\Models\MSupplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -85,6 +86,8 @@ class SuppliersController extends Controller
     public function create(Request $request){
 
         $mSupplier = new MSupplier();
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture'],'');
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
@@ -168,7 +171,8 @@ class SuppliersController extends Controller
             }
         }
         return view('suppliers.create',[
-            '$Supplier' => $mSupplier
+            '$Supplier' => $mSupplier,
+            'listPrefecture' => $listPrefecture,
         ]);
     }
 }
