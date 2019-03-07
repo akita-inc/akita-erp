@@ -229,6 +229,9 @@ body{
     border-radius: 0px;
     width: 100%;
 }
+.grid-col > .wrap-control > select{
+    border-radius: 0px;
+}
 .grid-col{
     padding-left: 20px !important;
 }

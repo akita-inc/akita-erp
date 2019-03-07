@@ -14,6 +14,10 @@
             color: #000000;
             border-radius: unset;
             border: #c6ef9f;
+            text-align: center;
+        }
+        #formInvoice{
+            display: none;
         }
     </style>
 @endsection
@@ -293,26 +297,27 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-12 col-sm-12 row grid-col">
-                        <button type="text" class="form-control btn-invoice-close w-100" id="input_mst_customers_cd">
+                        <a type="button" class="form-control btn-invoice-close w-100" id="showFormInvoice">
                             ▼請求書発行先
-                        </button>
+                        </a>
                     </div>
-                    <div class="col-md-11 col-sm-11 row">
+                    <div id="formInvoice">
+                        <div class="col-md-11 col-sm-11 row">
                         <div class="grid-form margin-form-child">
                             <div class="row">
-                                <div class="col-md-6 col-sm-12 row grid-col">
+                                <div class="col-md-6 col-sm-12 row grid-col no-padding">
                                     <label class="col-md-4 col-sm-4" for="input_mst_customers_cd">郵便番号</label>
                                     <div class="col-md-8 col-sm-8 wrap-control">
-                                        <input type="text" class="form-control w-25" id="input_mst_customers_cd">
+                                        <input type="text" class="form-control w-25" id="postal_code">
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-sm-12 row grid-col">
+                                <div class="col-md-6 col-sm-12 row grid-col pl-2">
                                     <div class="col-md-4 col-sm-4 wrap-control">
                                         <button class="btn btn-black w-75 h-100">〒 → 住所</button>
                                     </div>
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-6 col-sm-12 row grid-col">
+                                <div class="col-md-6 col-sm-12 row grid-col no-padding">
                                     <label class="col-md-4 col-sm-4" for="input_mst_customers_cd">都道府県</label>
                                     <div class="col-md-8 col-sm-8 wrap-control">
                                         <select  class="form-control w-39" id="input_mst_customers_cd">
@@ -329,7 +334,7 @@
                                     </div>
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-6 col-sm-12 row grid-col">
+                                <div class="col-md-6 col-sm-12 row grid-col no-padding">
                                     <label class="col-md-4 col-sm-4" for="input_mst_customers_cd">町名番地</label>
                                     <div class="col-md-8 col-sm-8 wrap-control">
                                         <input type="text" class="form-control" id="input_mst_customers_cd">
@@ -342,7 +347,7 @@
                                     </div>
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-6 col-sm-12 row grid-col">
+                                <div class="col-md-6 col-sm-12 row grid-col no-padding">
                                     <label class="col-md-4 col-sm-4" for="input_mst_customers_cd">電話番号</label>
                                     <div class="col-md-8 col-sm-8 wrap-control">
                                         <input type="text" class="form-control w-50" id="input_mst_customers_cd">
@@ -357,20 +362,29 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-1 col-sm-1 row">
-                        <div class="btn-group-plus-minus">
-                            <button class="btn btn-black">
-                                    -
-                            </button>
-                             <button class="btn btn-danger">
-                                    +
-                             </button>
-                        </div>
+                        {{--<div class="col-md-1 col-sm-1 row">--}}
+                            {{--<div class="btn-group-plus-minus">--}}
+                                {{--<button class="btn btn-black">--}}
+                                        {{-----}}
+                                {{--</button>--}}
+                                 {{--<button class="btn btn-danger">--}}
+                                        {{--+--}}
+                                 {{--</button>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                     </div>
-            </div>
+                </div>
         </form>
     </div>
 @endsection
 @section("scripts")
     <script type="text/javascript" src="{{ mix('/assets/js/controller/customers.js') }}" charset="utf-8"></script>
+    <script>
+        $(document).ready(function(){
+            $('#showFormInvoice').click(function(){
+                $('#formInvoice').toggle();;
+                $( "#postal_code" ).focus();
+            });
+        });
+    </script>
 @endsection
