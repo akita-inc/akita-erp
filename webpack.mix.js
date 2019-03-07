@@ -33,8 +33,11 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/customers-list-vl.js'
 ], 'public/assets/js/controller/customers-list.js');
-
 //supplier
+mix.js([
+    'resources/assets/js/controller/suppliers-list-vl.js'
+], 'public/assets/js/controller/suppliers-list.js');
+
 mix.js([
     'resources/assets/js/controller/suppliers-vl.js'
 ], 'public/assets/js/controller/suppliers.js');
