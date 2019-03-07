@@ -225,6 +225,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Common' => App\Helpers\Common::class,
+        'TimeFunction' => App\Helpers\TimeFunction::class,
+        'UserFunction' => App\Helpers\UserFunction::class,
     ],
 
 ];

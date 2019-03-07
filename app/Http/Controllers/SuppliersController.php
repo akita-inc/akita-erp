@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\TimeFunction;
 use App\Models\MSupplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -32,8 +34,18 @@ class SuppliersController extends Controller
             $rules = [
                 'mst_suppliers_cd'  => 'required',
                 'adhibition_start_dt'  => 'required',
+                'supplier_nm_kana'  => 'kana|nullable',
+                'supplier_nm_kana_formal'  => 'kana|nullable',
+                'dealing_person_in_charge_last_nm_kana'  => 'kana|nullable',
+                'dealing_person_in_charge_first_nm_kana'  => 'kana|nullable',
+                'accounting_person_in_charge_last_nm_kana'  => 'kana|nullable',
+                'accounting_person_in_charge_first_nm_kana'  => 'kana|nullable',
+                'phone_number'  => 'phone_number|nullable',
+                'fax_number'  => 'fax_number|nullable',
+                'zip_cd'  => 'zip_code|nullable',
             ];
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
+            var_dump($validator->errors());die;
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator->errors())
@@ -43,8 +55,8 @@ class SuppliersController extends Controller
                 try
                 {
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
-                    $mSupplier->adhibition_start_dt= $data["adhibition_start_dt"];
-                    $mSupplier->adhibition_end_dt= $data["adhibition_end_dt"];
+                    $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
+                    $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');;
                     $mSupplier->supplier_nm= $data["supplier_nm"];
                     $mSupplier->supplier_nm_kana= $data["supplier_nm_kana"];
                     $mSupplier->supplier_nm_formal= $data["supplier_nm_formal"];
@@ -71,7 +83,7 @@ class SuppliersController extends Controller
                     $mSupplier->payment_day= $data["payment_day"];
                     $mSupplier->payment_method_id= $data["payment_method_id"];
                     $mSupplier->explanations_bill= $data["explanations_bill"];
-                    $mSupplier->business_start_dt= $data["business_start_dt"];
+                    $mSupplier->business_start_dt= TimeFunction::dateFormat($data["business_start_dt"],'yyyy-mm-dd');
                     $mSupplier->consumption_tax_calc_unit_id= $data["consumption_tax_calc_unit_id"];
                     $mSupplier->rounding_method_id= $data["rounding_method_id"];
                     $mSupplier->payment_bank_cd= $data["payment_bank_cd"];
@@ -84,7 +96,7 @@ class SuppliersController extends Controller
                     $mSupplier->notes= $data["notes"];
                     $mSupplier->save();
                     DB::commit();
-                    \Session::flash('message','Add users successfully.');
+                    \Session::flash('message',Lang::get('messages.MSG03002'));
                     return redirect()->route('suppliers.list');
                 }catch (\Exception $e) {
                     DB::rollback();

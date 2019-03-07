@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\CustomValidation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        CustomValidation::validate2ByteString();
+        CustomValidation::validate1ByteString();
+        CustomValidation::validateNumberAndDashes();
+        CustomValidation::validateCharacterEmail();
+        CustomValidation::validateFormatEmail();
+        CustomValidation::validateRequiredSelect();
+        CustomValidation::validateNumber();
+        CustomValidation::validateLength();
+        CustomValidation::validatePhoneNumber();
+        CustomValidation::validateFaxNumber();
+        CustomValidation::validateZipCode();
+        CustomValidation::validateKana();
     }
 }
