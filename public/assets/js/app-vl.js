@@ -31374,6 +31374,8 @@ module.exports = function(module) {
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+__webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
+
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
 __webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
@@ -31394,20 +31396,10 @@ __webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
- * We'll load jQuery and the Bootstrap jQuery plugin which provides support
- * for JavaScript based Bootstrap features such as modals and tabs. This
- * code may be modified to fit the specific needs of your application.
- */
-
-try {//window.$ = window.jQuery = require('jquery');
-  // require('bootstrap-sass');
-} catch (e) {}
-/**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
-
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -31445,7 +31437,7 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\app-vl.js */"./resources/assets/js/app-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\app-vl.js */"./resources/assets/js/app-vl.js");
 
 
 /***/ })

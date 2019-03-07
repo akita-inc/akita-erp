@@ -11,9 +11,9 @@ class MSupplier extends Model
     use SoftDeletes;
 
     protected $table = "mst_suppliers";
+
     const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'modified_at';
-    public $label = [
+    const UPDATED_AT = 'modified_at';    public $label = [
         'mst_suppliers_cd' => '仕入先コード',
         'adhibition_start_dt' => '適用開始日',
         'adhibition_end_dt' => '適用終了日',
@@ -62,10 +62,11 @@ class MSupplier extends Model
 
     public function getSuppliers($where = array()){
         $suppliers = new MSupplier();
-        $suppliers->addSelect('mst_general_purposes.date_nm');
-        $suppliers->leftjoin('mst_general_purposes', function ($join) {
+        $suppliers = $suppliers->select(DB::raw('mst_suppliers.*'))
+                                ->addselect('mst_general_purposes.date_nm');
+        $suppliers = $suppliers->leftjoin('mst_general_purposes', function ($join) {
             $join->on('mst_general_purposes.date_id', '=', 'mst_suppliers.prefectures_cd')
-                    ->where('mst_general_purposes.data_kb', 1);
+                    ->where('mst_general_purposes.data_kb', config('params.data_kb')['prefecture']);
         });
 
         // 検索条件
