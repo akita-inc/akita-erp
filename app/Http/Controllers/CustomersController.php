@@ -10,13 +10,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 class CustomersController extends Controller
 {
     use ListTrait;
     public $table = "mst_customers";
 
     protected function search($data){
+        $dataSearch=$data['fieldSearch'];
+        $reference_date=date('Y-m-d', strtotime($dataSearch['reference_date']) );
         $this->query->select(
             'mst_customers.mst_customers_cd',
             'mst_customers.customer_nm',
@@ -27,10 +28,17 @@ class CustomersController extends Controller
             DB::raw("DATE_FORMAT(mst_customers.adhibition_end_dt, '%Y/%m/%d ') as adhibition_end_dt"),
             DB::raw("DATE_FORMAT(mst_customers.modified_at, '%Y/%m/%d %T') as modified_at")
         );
-        $this->query->leftJoin('mst_general_purposes',function ($join){
-            $join->on("data_kb","=",DB::raw(config("params.data_kb.prefecture")));
-            $join->on("date_id","=","mst_customers.prefectures_cd");
-        });
+        $this->query->leftJoin('mst_general_purposes', function ($join) {
+            $join->on("data_kb", "=", DB::raw(config("params.data_kb.prefecture")));
+            $join->on("date_id", "=", "mst_customers.prefectures_cd");
+        })->where('mst_customers.mst_customers_cd', 'LIKE', '%' . $dataSearch['mst_customers_cd'] . '%')
+            ->where('mst_customers.customer_nm', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
+
+        if ($dataSearch['status'] == '1' && $reference_date!=null) {
+            $this->query->where('mst_customers.adhibition_start_dt','<=',$reference_date)
+                        ->where('mst_customers.adhibition_end_dt','>=',$reference_date);
+        }
+
     }
 
     public function index(Request $request){

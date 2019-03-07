@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Helpers\TimeFunction;
+use App\Models\MGeneralPurposes;
 use App\Models\MSupplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
@@ -83,10 +85,12 @@ class SuppliersController extends Controller
     public function create(Request $request){
 
         $mSupplier = new MSupplier();
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture'],'');
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
-                'mst_suppliers_cd'  => 'required',
+                'mst_suppliers_cd'  => 'required|one_bytes_string',
                 'adhibition_start_dt'  => 'required',
                 'supplier_nm_kana'  => 'kana|nullable',
                 'supplier_nm_kana_formal'  => 'kana|nullable',
@@ -97,8 +101,16 @@ class SuppliersController extends Controller
                 'phone_number'  => 'phone_number|nullable',
                 'fax_number'  => 'fax_number|nullable',
                 'zip_cd'  => 'zip_code|nullable',
+                'bundle_dt'  => 'one_byte_number|nullable',
+                'payday'  => 'one_byte_number|nullable|between_custom:1,31',
+                'payment_day'  => 'one_byte_number|nullable|between_custom:1,31',
             ];
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
+            $validator->after(function ($validator) use ($data){
+                if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
+                    $validator->errors()->add('adhibition_start_dt',Lang::get('messages.MSG02014'));
+                }
+            });
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator->errors())
@@ -109,7 +121,7 @@ class SuppliersController extends Controller
                 {
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
                     $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
-                    $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');;
+                    $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     $mSupplier->supplier_nm= $data["supplier_nm"];
                     $mSupplier->supplier_nm_kana= $data["supplier_nm_kana"];
                     $mSupplier->supplier_nm_formal= $data["supplier_nm_formal"];
@@ -158,7 +170,8 @@ class SuppliersController extends Controller
             }
         }
         return view('suppliers.create',[
-            '$Supplier' => $mSupplier
+            '$Supplier' => $mSupplier,
+            'listPrefecture' => $listPrefecture,
         ]);
     }
 }

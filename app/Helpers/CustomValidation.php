@@ -115,4 +115,16 @@ class CustomValidation {
             return false;
         });
     }
+
+    public static function validateBetween() {
+        Validator::extend('between_custom', function($attribute, $value, $parameters, $validator) {
+            $validator->addReplacer('between_custom', function($message, $attribute, $rule, $parameters){
+                return str_replace([':min',':max'], $parameters, $message);
+            });
+            if($value < $parameters[0] || $value > $parameters[1]){
+                return false;
+            }
+            return true;
+        });
+    }
 }

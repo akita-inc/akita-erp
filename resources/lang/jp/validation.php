@@ -101,7 +101,7 @@ return [
     'fax_number' => \Illuminate\Support\Facades\Lang::get('messages.MSG02005'),
     'zip_code' => \Illuminate\Support\Facades\Lang::get('messages.MSG02006'),
     'kana' => \Illuminate\Support\Facades\Lang::get('messages.MSG02007'),
-
+    'between_custom' => \Illuminate\Support\Facades\Lang::get('messages.MSG02008'),
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
