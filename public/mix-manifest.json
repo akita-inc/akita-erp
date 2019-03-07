@@ -2,6 +2,7 @@
     "/assets/js/app-vl.js": "/assets/js/app-vl.js",
     "/assets/js/controller/customers.js": "/assets/js/controller/customers.js",
     "/assets/js/controller/customers-list.js": "/assets/js/controller/customers-list.js",
+    "/assets/js/controller/suppliers.js": "/assets/js/controller/suppliers.js",
     "/assets/js/directive/directive.js": "/assets/js/directive/directive.js",
     "/assets/js/service/service.js": "/assets/js/service/service.js"
 }
