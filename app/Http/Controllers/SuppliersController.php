@@ -45,7 +45,6 @@ class SuppliersController extends Controller
                 'zip_cd'  => 'zip_code|nullable',
             ];
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
-            var_dump($validator->errors());die;
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator->errors())
