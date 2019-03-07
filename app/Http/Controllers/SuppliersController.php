@@ -53,10 +53,6 @@ class SuppliersController extends Controller
             ->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%")
             ->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
 
-//        if ($where['suppliers_cd'] != '')
-//            $this->query->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%");
-//        if ($where['supplier_nm'] != '')
-//            $this->query->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
         if ($where['radio_reference_date'] == '1' && $where['reference_date'] != '') {
             $this->query->where('mst_suppliers.adhibition_start_dt', "<=", $where['reference_date']);
             $this->query->where('mst_suppliers.adhibition_end_dt', ">=", $where['reference_date']);
