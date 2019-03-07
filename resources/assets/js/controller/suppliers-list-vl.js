@@ -75,7 +75,7 @@ var ctrSuppliersListVl = new Vue({
         deleteSupplier: function (id){
             if (confirm(messages["MSG06001"])) {
                 suppliers_service.deleteSupplier(id).then((response) => {
-                    this.getItems(this.pagination.current_page);
+                    this.getItems(1);
                 });
             }
         }
