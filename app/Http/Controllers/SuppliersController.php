@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Controllers\TraitRepositories\ListTrait;use App\Helpers\TimeFunction;
+use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Helpers\TimeFunction;
 use App\Models\MSupplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 class SuppliersController extends Controller
 {
+
     use ListTrait;
     public $table = "mst_suppliers";
 
