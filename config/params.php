@@ -32,5 +32,5 @@ return [
         'rounding_method'               => '00028', // 消費税端数処理区分ID
         'deposit_bank'                  => '00029', // 入金銀行コード
     ],
-    'adhibition_end_dt_default' => '12/31/2999'
+    'adhibition_end_dt_default' => '2999/12/31'
 ];
