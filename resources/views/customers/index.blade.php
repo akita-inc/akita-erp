@@ -20,44 +20,44 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("customers.list.search.code")}}
                             </label>
-                            <input id="input_mst_customers_cd" class="form-control">
+                            <input id="input_mst_customers_cd" class="form-control" name="mst_customers_cd" v-model="fileSearch.mst_customers_cd">
                         </div>
                         <div class="col-md-5 padding-row-5">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("customers.list.search.name")}}
                             </label>
-                            <input id="input_mst_customers_name" class="form-control">
+                            <input id="input_mst_customers_name" class="form-control"  name="customer_nm" v-model="fileSearch.customer_nm">
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 row">
                         <div class="col-md-6 col-sm-12 lh-38">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="supplier_date" value="0">{{trans("customers.list.search.radio-all")}}
+                                    <input type="radio" class="form-check-input" name="status" value="0" v-model="fileSearch.status">{{trans("customers.list.search.radio-all")}}
                                 </label>
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="supplier_date" value="1" checked>{{trans("customers.list.search.radio-reference-date")}}
+                                    <input type="radio" class="form-check-input" name="status" value="1" v-model="fileSearch.status" >{{trans("customers.list.search.radio-reference-date")}}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-12 input-group datepicker">
-                            <input type="text" class="form-control input-calendar" name="reference_date" id="reference_date">
-                            <div class="input-group-append">
+                            <input  class="form-control input-calendar" name="reference_date" id="reference_date" v-model="fileSearch.reference_date">
+                                <div class="input-group-append">
                                 <span class="input-group-text fa fa-calendar"></span>
-                            </div>
+                                </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
-                            <button class="btn btn-black w-100">
+                            <button class="btn btn-black w-100" >
                                 {{trans('common.button.condition-clear')}}
                             </button>
                         </div>
                         <div class="col-md-7 lh-38 text-right no-padding">
-                            <button class="btn btn-primary w-100">
+                            <button class="btn btn-primary w-100" v-on:click="getItems(pagination.current_page)">
                                 {{trans('common.button.search')}}
                             </button>
                         </div>
