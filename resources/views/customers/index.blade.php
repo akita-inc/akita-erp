@@ -93,6 +93,9 @@
                             <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                     </tr>
+                    <tr v-cloak v-if="message !== ''">
+                        <td colspan="8">@{{message}} </td>
+                    </tr>
                 </tbody>
             </table>
             <div v-cloak class="mg-t-10">
