@@ -1,6 +1,26 @@
 body{
     font-family: Arial, "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 }
+input{
+    border-radius: 0px !important;
+}
+.v-spinner {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    line-height: 100vh;
+    z-index: 99999999999;
+    background-color: rgba(237, 237, 237,0.4);
+}
+.v-pulse{
+    background-color: #0070c0 !important;
+}
 .navbar-light .navbar-brand:focus,
 .navbar-light .navbar-brand:hover,
 .navbar-light .navbar-brand{
@@ -158,10 +178,8 @@ body{
 }
 .btn{
     border-radius: 0px;
-    padding-top: 3px;
-    padding-bottom: 3px;
     font-weight: 500;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .btn-black {
@@ -176,9 +194,22 @@ body{
     color: #ffffff;
 }
 
+.btn-yellow {
+    color: #fff;
+    background-color: #ffd966;
+    color: #000000;
+}
+
+.btn-yellow:hover {
+    color: #fff;
+    background-color: #ffcc6c;
+    color: #000000;
+}
+
 .btn-primary{
     background-color: #0070c0;
 }
+
 .btn-submit{
     min-width: 150px;
 }
@@ -232,3 +263,73 @@ body{
     clear: both;
     height: 10px;
 }
+
+.padding-row-5{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.p-t-30{
+    padding-top: 30px;
+}
+
+.frm-search-list .grid-form-search-label{
+    position: absolute;
+    top: -25px;
+    left: 5px;
+}
+
+.col-list-search-f{
+    line-height: 38px;
+}
+
+.lh-38{
+    line-height: 38px;
+}
+.wrapper-table{
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.table-green th{
+    background-color: #548235;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+    text-align: center;
+    border: #a6a6a6 1px solid;
+}
+
+.table-green td{
+    vertical-align: middle;
+}
+
+.wd-100{
+    width: 100px;
+}
+
+.wd-150{
+    width: 150px;
+}
+.pagination-custom{
+    padding: 0px;
+}
+.pagination-custom li:last-child{
+    border:0px;
+}
+.pagination-custom li.active a{
+    color: #a6a6a6 !important;
+}
+.pagination-custom li.active a:hover{
+    text-decoration: none;
+}
+.pagination-custom li{
+    float: left;
+    color: #0070c0 !important;
+    border-right: 1px solid #000000;
+    list-style: none;
+    padding-left: 5px;
+    padding-right: 5px;
+    line-height: 15px;
+}
+

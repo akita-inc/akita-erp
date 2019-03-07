@@ -94,8 +94,8 @@
 /***/ (function(module, exports) {
 
 customers_service = {
-  create: function create(input) {
-    return axios.post('/admin/apiBK/customer/create', input).then(function (response) {
+  loadList: function loadList(data) {
+    return axios.post('/customers/api-v1/getItems', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;

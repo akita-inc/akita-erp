@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\MStaffs;
+use Validator;
+use Illuminate\Support\MessageBag;
 class LoginController extends Controller
 {
     /*
@@ -25,7 +29,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -34,6 +38,52 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+//        $this->middleware('guest')->except('logout');
+    }
+    public function getLogin()
+    {
+        if(Auth::check())
+        {
+            return redirect('/');
+        }
+        else
+        {
+            return view('auth.login');
+        }
+    }
+
+    public function postLogin(Request $request)
+    {
+        $data=$request->all();
+        $rules = [
+            'staff_cd' =>'required',
+            'password' => 'required'
+        ];
+        $messages = [
+            'staff_cd.required' => 'ログインIDを入力してください。',
+            'password.required' => 'パスワードを入力してください。',
+        ];
+        $validator = Validator::make($data, $rules, $messages);
+        $remember=isset($data['remember'])?true:false;
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+            $staff = MStaffs::where('staff_cd', $data['staff_cd'])
+                ->where('password',$data['password'])
+                ->first();
+            if ($staff) {
+                Auth::login($staff,$remember);
+                return redirect('/');
+            } else {
+                $errors = new MessageBag(['errorlogin' => 'IDまたはPWが間違っています。']);
+                return redirect()->back()->withInput($request->only('staff_cd','remember'))->withErrors($errors);
+            }
+        }
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
     }
 }

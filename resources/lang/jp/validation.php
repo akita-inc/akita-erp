@@ -126,39 +126,12 @@ return [
     | Custom Validation Attributes
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used to swap attribute place-holders
-    | with something more reader friendly such as E-Mail Address instead
-    | of "email". This simply helps us make messages a little cleaner.
+    | The following language lines are used to swap our attribute placeholder
+    | with something more reader friendly such as "E-Mail Address" instead
+    | of "email". This simply helps us make our message more expressive.
     |
     */
 
-    'attributes' => [
-    	"nameMember" => "お名前",
-    	"emailMember" => "Eメール",
-        "zip_cd" => "郵便番号",
-        "address_1" => "住所",
-        "address_2" => "建物など",
-        "tel_no" => "電話番号",
-        "cel_no" => "携帯電話",
-        "id_verify_doc" => "確認書類",
-        "id_verify_img" => "確認画像",
-        "id_verify_img_2" => "確認画像2",
-        //
-        "login_id" => "ログインID",
-        "login_pw" => "パスワード",
-        "user_name" => "利用者名",
-        //
-        "name" => "お名前",
-        "status" => "ステータス",
-        //
-        "ptn_width" => "フィールド幅",
-        "ptn_height" => "フィールド高さ",
-        "ptn_default" => "初期値",
-        "ptn_value" => "選択値",
-        //
-        "mng_name" => "選択値種別名",
-        "mng_order" => "表示順",
-        "info_1" => "名称"
-    ],
+    'attributes' => [],
 
 ];

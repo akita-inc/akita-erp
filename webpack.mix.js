@@ -30,6 +30,10 @@ mix.js([
     'resources/assets/js/controller/customers-vl.js'
 ], 'public/assets/js/controller/customers.js');
 
+mix.js([
+    'resources/assets/js/controller/customers-list-vl.js'
+], 'public/assets/js/controller/customers-list.js');
+
 //supplier
 mix.js([
     'resources/assets/js/controller/suppliers-vl.js'
