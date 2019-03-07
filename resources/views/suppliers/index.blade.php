@@ -10,7 +10,7 @@
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
-                <button class="btn btn-yellow" onclick="">
+                <button class="btn btn-yellow" onclick="window.location.href= '{{route('suppliers.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>

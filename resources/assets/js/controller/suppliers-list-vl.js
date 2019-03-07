@@ -52,13 +52,6 @@ var ctrSuppliersListVl = new Vue({
         }
     },
     methods : {
-        gotoCreate: function gotoCreate() {
-            var data = {
-                page:this.pagination.current_page,
-                fieldSearch:this.fieldSearch,
-            };
-            return suppliers_service.gotoCreate(data);
-        },
         clearCondition: function clearCondition() {
             this.fieldSearch.mst_suppliers_cd = '';
             this.fieldSearch.supplier_nm = '';
