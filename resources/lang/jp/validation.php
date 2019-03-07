@@ -94,7 +94,7 @@ return [
     'email_format' => '正しいE-mailの書式で入力してください。',
     'select_required' => ':attributeを選択してください。',
     'one_byte_number' => \Illuminate\Support\Facades\Lang::get('messages.MSG02003'),
-    'length' => ':attributeは:length文字で入力して下さい。',
+    'length' => \Illuminate\Support\Facades\Lang::get('messages.MSG10002'),
     'check_two_bytes_api' => ':attributeに登録できない文字が含まれています。入力した文字を確認してください。',
     'check_address_api' => ':attributeに登録できない文字が含まれています。入力した文字を確認してください。',
     'phone_number' => \Illuminate\Support\Facades\Lang::get('messages.MSG02004'),

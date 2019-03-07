@@ -62,8 +62,13 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="supplier_nm">仕入先名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="supplier_nm" name="supplier_nm" v-on:keyup="convertKana($event, 'supplier_nm_kana')" value="{{ $mSupplier->supplier_nm ?? old('supplier_nm') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" v-on:keyup="convertKana($event, 'supplier_nm_kana')" value="{{ $mSupplier->supplier_nm ?? old('supplier_nm') }}" maxlength="200">
                         </div>
+                        @if ($errors->has('supplier_nm'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('supplier_nm') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="supplier_nm_kana">仕入先カナ名</label>
@@ -80,8 +85,13 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="supplier_nm_formal">仕入先正式名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="supplier_nm_formal" name="supplier_nm_formal" v-on:keyup="convertKana($event, 'supplier_nm_kana_formal')" value="{{ $mSupplier->supplier_nm_kana_formal ?? old('supplier_nm_kana_formal') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm_formal')? 'is-invalid': ''}}" id="supplier_nm_formal" name="supplier_nm_formal" v-on:keyup="convertKana($event, 'supplier_nm_kana_formal')" value="{{ $mSupplier->supplier_nm_formal ?? old('supplier_nm_formal') }}" maxlength="200">
                         </div>
+                        @if ($errors->has('supplier_nm_formal'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('supplier_nm_formal') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="supplier_nm_kana_formal">仕入先正式カナ名</label>
@@ -101,8 +111,13 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="dealing_person_in_charge_last_nm">取引担当者名(姓）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="dealing_person_in_charge_last_nm" name="dealing_person_in_charge_last_nm" v-on:keyup="convertKana($event, 'dealing_person_in_charge_last_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_last_nm ?? old('dealing_person_in_charge_last_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_last_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_last_nm" name="dealing_person_in_charge_last_nm" v-on:keyup="convertKana($event, 'dealing_person_in_charge_last_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_last_nm ?? old('dealing_person_in_charge_last_nm') }}" maxlength="25">
                         </div>
+                        @if ($errors->has('dealing_person_in_charge_last_nm'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('dealing_person_in_charge_last_nm') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="dealing_person_in_charge_last_nm_kana">取引担当者名カナ（姓）</label>
@@ -119,8 +134,13 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="dealing_person_in_charge_first_nm">取引担当者名(名）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="dealing_person_in_charge_first_nm" name="dealing_person_in_charge_first_nm" v-on:keyup="convertKana($event, 'dealing_person_in_charge_first_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_first_nm ?? old('dealing_person_in_charge_first_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_first_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_first_nm" name="dealing_person_in_charge_first_nm" v-on:keyup="convertKana($event, 'dealing_person_in_charge_first_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_first_nm ?? old('dealing_person_in_charge_first_nm') }}" maxlength="25">
                         </div>
+                        @if ($errors->has('dealing_person_in_charge_first_nm'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('dealing_person_in_charge_first_nm') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="dealing_person_in_charge_first_nm_kana">取引担当者名カナ（名）</label>
@@ -140,8 +160,13 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_last_nm">経理担当者名(姓）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="accounting_person_in_charge_last_nm" name="accounting_person_in_charge_last_nm" v-on:keyup="convertKana($event, 'accounting_person_in_charge_last_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_last_nm ?? old('accounting_person_in_charge_last_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_last_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_last_nm" name="accounting_person_in_charge_last_nm" v-on:keyup="convertKana($event, 'accounting_person_in_charge_last_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_last_nm ?? old('accounting_person_in_charge_last_nm') }}" maxlength="25">
                         </div>
+                        @if ($errors->has('accounting_person_in_charge_last_nm'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('accounting_person_in_charge_last_nm') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="accounting_person_in_charge_last_nm_kana">経理担当者名カナ（姓）</label>
@@ -156,10 +181,15 @@
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_last_nm">経理担当者名(名）</label>
+                        <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_first_nm">経理担当者名(名）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" v-on:keyup="convertKana($event, 'accounting_person_in_charge_first_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_first_nm ?? old('accounting_person_in_charge_first_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_first_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" v-on:keyup="convertKana($event, 'accounting_person_in_charge_first_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_first_nm ?? old('accounting_person_in_charge_first_nm') }}" maxlength="25">
                         </div>
+                        @if ($errors->has('accounting_person_in_charge_first_nm'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('accounting_person_in_charge_first_nm') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="accounting_person_in_charge_first_nm_kana">経理担当者名カナ（名）</label>
@@ -204,21 +234,36 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="address1">市区町村</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-75" id="address1" name="address1" v-bind:value="locality" maxlength="20">
+                            <input type="text" class="form-control w-75 {{$errors->has('address1')? 'is-invalid': ''}}" id="address1" name="address1" value="{{ $mSupplier->address1 ?? old('address1') }}" maxlength="20">
                         </div>
+                        @if ($errors->has('address1'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('address1') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="address2">町名番地</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="address2" name="address2" value="{{ $mSupplier->address2 ?? old('address2') }}" maxlength="20">
+                            <input type="text" class="form-control {{$errors->has('address2')? 'is-invalid': ''}}" id="address2" name="address2" value="{{ $mSupplier->address2 ?? old('address2') }}" maxlength="20">
                         </div>
+                        @if ($errors->has('address2'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('address2') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="address3">建物等</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-75" id="address3" name="address3" value="{{ $mSupplier->address3 ?? old('address3') }}" maxlength="50">
+                            <input type="text" class="form-control w-75 {{$errors->has('address3')? 'is-invalid': ''}}" id="address3" name="address3" value="{{ $mSupplier->address3 ?? old('address3') }}" maxlength="50">
                         </div>
+                        @if ($errors->has('address3'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('address3') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
@@ -247,8 +292,13 @@
                     <div class="col-md-12 col-sm-12 row grid-col">
                         <label class="col-md-2 col-sm-4" for="hp_url">WEBサイトアドレス</label>
                         <div class="col-md-10 col-sm-8 wrap-control">
-                            <input type="text" class="form-control" id="hp_url" name="hp_url" value="{{ $mSupplier->hp_url ?? old('hp_url') }}" maxlength="2500">
+                            <input type="text" class="form-control {{$errors->has('hp_url')? 'is-invalid': ''}}" id="hp_url" name="hp_url" value="{{ $mSupplier->hp_url ?? old('hp_url') }}" maxlength="2500">
                         </div>
+                        @if ($errors->has('hp_url'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('hp_url') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -325,8 +375,13 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="explanations_bill">支払いに関する説明</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <textarea class="form-control w-100" rows="3" name="explanations_bill" id="explanations_bill" maxlength="100">{{ $mSupplier->explanations_bill ?? old('explanations_bill') }}</textarea>
+                            <textarea class="form-control w-100 {{$errors->has('explanations_bill')? 'is-invalid': ''}}" rows="3" name="explanations_bill" id="explanations_bill" maxlength="100">{{ $mSupplier->explanations_bill ?? old('explanations_bill') }}</textarea>
                         </div>
+                        @if ($errors->has('explanations_bill'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('explanations_bill') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
@@ -356,33 +411,53 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="payment_bank_cd">支払銀行コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-25" id="payment_bank_cd" name="payment_bank_cd" maxlength="4">
+                            <input type="text" class="form-control w-25 {{$errors->has('payment_bank_cd')? 'is-invalid': ''}}" id="payment_bank_cd" name="payment_bank_cd" maxlength="4">
                         </div>
+                        @if ($errors->has('payment_bank_cd'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('payment_bank_cd') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payment_bank_name">支払銀行名</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control" id="payment_bank_name" name="payment_bank_name" maxlength="30">
+                            <input type="text" class="form-control {{$errors->has('payment_bank_name')? 'is-invalid': ''}}" id="payment_bank_name" name="payment_bank_name" maxlength="30">
                         </div>
+                        @if ($errors->has('payment_bank_name'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('payment_bank_name') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="payment_branch_cd">支払銀行支店コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-25" id="payment_branch_cd" name="payment_branch_cd" maxlength="4">
+                            <input type="text" class="form-control w-25 {{$errors->has('payment_branch_cd')? 'is-invalid': ''}}" id="payment_branch_cd" name="payment_branch_cd" maxlength="4">
                         </div>
+                        @if ($errors->has('payment_branch_cd'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('payment_branch_cd') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payment_branch_name">支払銀行支店名</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control" id="payment_branch_name" name="payment_branch_name" maxlength="30">
+                            <input type="text" class="form-control {{$errors->has('payment_branch_name')? 'is-invalid': ''}}" id="payment_branch_name" name="payment_branch_name" maxlength="30">
                         </div>
+                        @if ($errors->has('payment_branch_name'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('payment_branch_name') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="payment_account_type">支払口座種別</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="payment_account_type" name="payment_account_type">
+                            <select class="form-control w-50 " id="payment_account_type" name="payment_account_type">
                                 @foreach($listPaymentAccountType as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -392,21 +467,36 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payment_account_number">支払口座番号</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" id="payment_account_number" name="payment_account_number" maxlength="10">
+                            <input type="text" class="form-control w-50 {{$errors->has('payment_account_number')? 'is-invalid': ''}}" id="payment_account_number" name="payment_account_number" maxlength="10">
                         </div>
+                        @if ($errors->has('payment_account_number'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('payment_account_number') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_account_holder">支払口座名義</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" id="payment_account_holder" name="payment_account_holder" maxlength="30">
+                            <input type="text" class="form-control {{$errors->has('payment_account_holder')? 'is-invalid': ''}}" id="payment_account_holder" name="payment_account_holder" maxlength="30">
                         </div>
+                        @if ($errors->has('payment_account_holder'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('payment_account_holder') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="input_mst_customers_cd">備考</label>
+                        <label class="col-md-4 col-sm-4" for="notes">備考</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <textarea class="form-control w-100" rows="3" id="notes" name="notes" maxlength="50"></textarea>
+                            <textarea class="form-control w-100 {{$errors->has('notes')? 'is-invalid': ''}}" rows="3" id="notes" name="notes" maxlength="50"></textarea>
                         </div>
+                        @if ($errors->has('notes'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('notes') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>
