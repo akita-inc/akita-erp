@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sonpt
- * Date: 3/5/2019
- * Time: 4:11 PM
- */
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
@@ -18,6 +12,8 @@ class StaffsController extends Controller
     protected function search($data){
         $this->query->select(
             'mst_staffs.staff_cd',
+            DB::raw('CONCAT(mst_staffs.last_nm,"  ",first_nm) as staff_nm'),
+            DB::raw('CONCAT(mst_staffs.last_nm_kana,"  ",first_nm_kana) as staff_nm_kana'),
             'mst_general_purposes.date_id',
             'mst_general_purposes.date_nm',
             DB::raw("DATE_FORMAT(mst_staffs.adhibition_start_dt, '%Y/%m/%d ') as adhibition_start_dt"),
@@ -35,13 +31,13 @@ class StaffsController extends Controller
             'staff_cd' => [
                 "classTH" => "wd-100"
             ],
-            'date_nm'=> [
+            'employment_pattern_id'=> [
                 "classTH" => ""
             ],
             'position_id'=> [
                 "classTH" => ""
             ],
-            'name'=> [
+            'staff_nm'=> [
                 "classTH" => ""
             ],
             'belong_company_id'=> [
@@ -61,10 +57,7 @@ class StaffsController extends Controller
             'modified_at'=> [
                 "classTH" => "wd-150",
                 "classTD" => "text-center"
-            ],
-            'delete'=> [
-                "classTH" => "wd-100"
-            ],
+            ]
 
         ];
         return view('staffs.index',[ 'fieldShowTable'=>$fieldShowTable ]);

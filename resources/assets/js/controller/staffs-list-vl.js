@@ -5,10 +5,14 @@ var ctrStaffsListVl = new Vue({
         loading:false,
         items:[],
         fileSearch:{
-            mst_staffs_cd:"",
+            staffs_cd:"",
             staff_nm:"",
             status:0,
-            reference_date:'',
+            reference_date:"",
+            belong_company_id:"",
+            business_office_id:"",
+            employment_pattern_id:"",
+            position_id:"",
         },
         pagination:{
             total: 0,
@@ -42,6 +46,9 @@ var ctrStaffsListVl = new Vue({
         },
     },
     methods : {
+        clearCondition:function () {
+
+        }
         //end action list
     },
     mounted () {
