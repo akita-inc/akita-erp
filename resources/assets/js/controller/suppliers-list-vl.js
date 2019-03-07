@@ -7,13 +7,13 @@ var ctrSuppliersListVl = new Vue({
         fieldSearch:{
             mst_suppliers_cd:"",
             supplier_nm:"",
-            radio_reference_date : "0",
-            reference_date:"",
+            radio_reference_date : "1",
+            reference_date: date_now,
         },
         message: '',
         pagination:{
             total: 0,
-            per_page: 10,
+            per_page: 0,
             from: 1,
             to: 0,
             current_page: 1,
@@ -21,7 +21,8 @@ var ctrSuppliersListVl = new Vue({
         },
         getItems: function(page){
             if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
-                alert('aggfgf');
+                alert(messages["MSG02001"].replace(':attribute', '基準日'));
+                $('#reference_date').focus();
                 return;
             }
 
@@ -30,11 +31,14 @@ var ctrSuppliersListVl = new Vue({
                 page:page,
                 fieldSearch:this.fieldSearch,
             };
+
             var that = this;
             this.loading = true;
             suppliers_service.loadList(data).then((response) => {
-                if (response.data.data.count()===0) {
-                    this.message = 'ádfghjk';
+                if (response.data.data.length===0) {
+                    this.message = messages["MSG05001"];
+                } else {
+                    this.message = '';
                 }
 
                 that.items = response.data.data;
@@ -58,20 +62,22 @@ var ctrSuppliersListVl = new Vue({
         clearCondition: function clearCondition() {
             this.fieldSearch.mst_suppliers_cd = '';
             this.fieldSearch.supplier_nm = '';
-            this.fieldSearch.radio_reference_date = '0';
-            this.fieldSearch.reference_date = '';
+            this.fieldSearch.radio_reference_date = '1';
+            this.fieldSearch.reference_date = date_now;
+            this.message = '';
             this.getItems(1);
         },
         setDefault: function (){
             if (this.fieldSearch.reference_date === '') {
-                var now = new Date();
-                this.fieldSearch.reference_date = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDay();
+                this.fieldSearch.reference_date = date_now;
             }
         },
         deleteSupplier: function (id){
-            suppliers_service.deleteSupplier(id).then((response) => {
-                this.getItems(this.pagination.current_page);
-            });
+            if (confirm(messages["MSG06001"])) {
+                suppliers_service.deleteSupplier(id).then((response) => {
+                    this.getItems(this.pagination.current_page);
+                });
+            }
         }
     },
     mounted () {
