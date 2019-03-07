@@ -282,8 +282,14 @@ input{
 
 .frm-search-list .grid-form-search-label{
     position: absolute;
-    top: -25px;
+    top: -20px;
     left: 5px;
+    font-size: 0.7rem;
+}
+
+.frm-search-list .input-group-addon {
+    display: flex;
+    margin-left: -2px;
 }
 
 .col-list-search-f{
@@ -311,7 +317,15 @@ input{
 .table-green td{
     vertical-align: middle;
 }
-
+.xsmall {
+    font-size: 65%;
+    font-weight: 300;
+    opacity: .78;
+}
+.cd-link {
+    font-weight: bold;
+    text-decoration: underline;
+}
 .wd-100{
     width: 100px;
 }

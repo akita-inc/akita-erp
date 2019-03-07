@@ -85,7 +85,7 @@
                 </thead>
                 <tbody>
                     <tr v-cloak v-for="item in items">
-                        <td><a class="supplier-link" href="">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
+                        <td><a class="cd-link" href="">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
                         <td>
                             <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
                             <br>
@@ -97,7 +97,7 @@
                         <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
                         <td>
-                            <button v-if="item['adhibition_end_dt'].trim() === item['max_adhibition_end_dt'].trim()" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
+                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                     </tr>
                     <tr v-cloak v-if="message !== ''">
@@ -118,7 +118,7 @@
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
-        var date_now ='<?php echo date('Y-m-d'); ?>';
+        var date_now ='<?php echo date('Y/m/d'); ?>';
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/suppliers-list.js') }}" charset="utf-8"></script>
 @endsection

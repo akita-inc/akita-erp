@@ -13,7 +13,9 @@ class MSupplier extends Model
     protected $table = "mst_suppliers";
 
     const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'modified_at';    public $label = [
+    const UPDATED_AT = 'modified_at';
+
+    public $label = [
         'mst_suppliers_cd' => '仕入先コード',
         'adhibition_start_dt' => '適用開始日',
         'adhibition_end_dt' => '適用終了日',
