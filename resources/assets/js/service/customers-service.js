@@ -5,5 +5,12 @@ customers_service = {
         }).catch(function (error) {
             return error;
         });
+    },
+    deleteSupplier: function (id) {
+        return axios.get('/customers/delete/' + id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
     }
 }
