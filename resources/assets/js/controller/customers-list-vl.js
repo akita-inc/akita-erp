@@ -1,6 +1,5 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import DatePicker from 'vue2-datepicker';
-import moment from 'moment';
 
 var ctrCustomersListVl = new Vue({
     el: '#ctrCustomersListVl',
