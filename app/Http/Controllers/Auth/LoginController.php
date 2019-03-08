@@ -59,14 +59,11 @@ class LoginController extends Controller
             'staff_cd' =>'required',
             'password' => 'required'
         ];
-        $messages = [
-            'staff_cd.required' => 'ログインIDを入力してください。',
-            'password.required' => 'パスワードを入力してください。',
-        ];
-        $validator = Validator::make($data, $rules, $messages);
+        $validator = Validator::make($data, $rules);
         $remember=isset($data['remember'])?true:false;
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            $errors = new MessageBag(['errorlogin' =>  trans('messages.MSG01001')]);
+            return redirect()->back()->withInput($request->only('staff_cd','remember'))->withErrors($errors);
         } else {
             $staff = MStaffs::where('staff_cd', $data['staff_cd'])
                 ->where('password',$data['password'])
@@ -75,7 +72,7 @@ class LoginController extends Controller
                 Auth::login($staff,$remember);
                 return redirect('/');
             } else {
-                $errors = new MessageBag(['errorlogin' => 'IDまたはPWが間違っています。']);
+                $errors = new MessageBag(['errorlogin' => trans('messages.MSG01003')]);
                 return redirect()->back()->withInput($request->only('staff_cd','remember'))->withErrors($errors);
             }
         }
