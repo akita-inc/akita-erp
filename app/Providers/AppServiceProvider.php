@@ -36,5 +36,6 @@ class AppServiceProvider extends ServiceProvider
         CustomValidation::validateFaxNumber();
         CustomValidation::validateZipCode();
         CustomValidation::validateKana();
+        CustomValidation::validateBetween();
     }
 }

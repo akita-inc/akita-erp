@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-
+require_once 'Lib/Igo.php';
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -162,6 +162,16 @@ class Common {
         }
         else // to katakana 2 byte
         {
+            //convert kanji to hiragana
+            $igo = new \Igo(dirname(__FILE__) . "/ipadic");
+            $result = $igo->parse($string);
+            $str = "";
+            foreach($result as $value){
+                $feature = explode(",", $value->feature);
+                $str .= isset($feature[7]) ? $feature[7] : $value->surface;
+            }
+            $string = mb_convert_kana($str, "c", "utf-8");
+            //convert hiragana to katakana
             if($string !="")
             {
                 if(preg_match('/[^ぁ-ん]+/i',$string) || preg_match('/[^ｦ-ﾟ]+/i', $string))

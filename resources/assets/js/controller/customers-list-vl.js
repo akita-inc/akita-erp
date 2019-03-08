@@ -7,9 +7,10 @@ var ctrCustomersListVl = new Vue({
         fileSearch:{
             mst_customers_cd:"",
             customer_nm:"",
-            status:0,
-            reference_date:'',
+            status:1,
+            reference_date: date_now,
         },
+        message: '',
         pagination:{
             total: 0,
             per_page: 2,
@@ -19,9 +20,12 @@ var ctrCustomersListVl = new Vue({
             last_page:0
         },
         getItems: function(page){
-            var date=$("#reference_date" ).datepicker({
-                format: 'yyyy/mm/dd'}).val();
-            this.fileSearch.reference_date=date;
+            if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
+                alert(messages["MSG02001"].replace(':attribute', '基準日'));
+                $('#reference_date').focus();
+                return;
+            }
+
             var data = {
                 pageSize:this.pageSize,
                 page:page,
@@ -31,6 +35,12 @@ var ctrCustomersListVl = new Vue({
             var that = this;
             this.loading = true;
             customers_service.loadList(data).then((response) => {
+                if (response.data.data.length===0) {
+                    this.message = messages["MSG05001"];
+                } else {
+                    this.message = '';
+                }
+
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.loading = false;
@@ -42,7 +52,26 @@ var ctrCustomersListVl = new Vue({
         },
     },
     methods : {
-        //end action list
+        clearCondition: function clearCondition() {
+            this.fileSearch.mst_customers_cd = '';
+            this.fileSearch.customer_nm = '';
+            this.fileSearch.status = 1;
+            this.fileSearch.reference_date = date_now;
+            this.message = '';
+            this.getItems(1);
+        },
+        setDefault: function (){
+            if (this.fileSearch.reference_date === '') {
+                this.fileSearch.reference_date = date_now;
+            }
+        },
+        deleteSupplier: function (id){
+            if (confirm(messages["MSG06001"])) {
+                customers_service.deleteSupplier(id).then((response) => {
+                    this.getItems(1);
+                });
+            }
+        }
     },
     mounted () {
         this.getItems(1);

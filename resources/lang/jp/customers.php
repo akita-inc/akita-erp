@@ -31,5 +31,31 @@ return [
             'modified_at' => '更新日時',
         ]
     ],
+    'create' => [
+        'title' => '得意先　新規追加',
+        'field' => [
+            "mst_customers_cd" => "得意先コード",
+            "adhibition_start_dt" => "適用開始日",
+            "adhibition_end_dt" => "適用終了日",
+            "customer_nm" => "得意先名略称",
+            "customer_nm_kana" => "得意先略称カナ名",
+            "customer_nm_formal" => "得意先正式名",
+            "customer_nm_kana_formal" => "得意先正式カナ名",
+            "person_in_charge_last_nm" => "担当者名(姓）",
+            "person_in_charge_first_nm" => "担当者名(名）",
+            "person_in_charge_last_nm_kana" => "担当者名カナ（姓）",
+            "person_in_charge_first_nm_kana" => "担当者名カナ（名）",
+            "zip_cd" => "郵便番号",
+            "prefectures_cd" => "都道府県",
+            "address1" => "市区町村",
+            "address2" => "町名番地",
+            "address3" => "建物等",
+            "phone_number" => "電話番号",
+            "fax_number" => "FAX番号",
+            "hp_url" => "WEBサイトアドレス",
+            "customer_category_id" => "得意先カテゴリ小区分",
+            "prime_business_office_id" => "取得営業所",
+        ]
+    ]
 
 ];
