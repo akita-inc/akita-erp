@@ -5,7 +5,7 @@ var ctrStaffsListVl = new Vue({
         loading:false,
         items:[],
         fileSearch:{
-            staffs_cd:"",
+            staff_cd:"",
             position_id:"",
             staff_nm:"",
             date_nm:"",
@@ -45,6 +45,16 @@ var ctrStaffsListVl = new Vue({
             this.pagination.current_page = page;
             this.getItems(page);
         },
+        deleteStaffs: function (id){
+            if (confirm(messages["MSG06001"])) {
+                staffs_service.deleteStaffs(id).then((response) => {
+                    alert('Delete success!');
+                    this.getItems(1);
+                },(error) => {
+                    alert('delete fail!');
+                });
+            }
+        }
     },
     methods : {
         clearCondition:function () {

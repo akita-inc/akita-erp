@@ -84,7 +84,6 @@ class CustomersController extends Controller
     {
         $mCustomers = new MCustomers();
         $mCustomers = $mCustomers->find($id);
-
         try
         {
             $mCustomers->delete();

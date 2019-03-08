@@ -7,7 +7,7 @@ Route::group(['name' => 'staffs', 'prefix'=>'/staffs', 'middleware' => ['web']],
     /*Api using Vue*/
     Route::group(['prefix' => 'api-v1'], function () {
         Route::post('/getItems','StaffsController@getItems')->name("staffs.getItems");
-
+        Route::get('/delete/{id}','StaffsController@delete')->name("staffs.delete");
     });
 });
 

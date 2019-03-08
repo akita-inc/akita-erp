@@ -5,5 +5,12 @@ staffs_service = {
         }).catch(function (error) {
             return error;
         });
+    },
+    deleteStaffs: function (id) {
+        return axios.get('/staffs/api-v1/delete/' + id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
     }
 }

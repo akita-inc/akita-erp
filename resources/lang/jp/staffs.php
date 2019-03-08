@@ -35,7 +35,7 @@ return [
             'adhibition_start_dt'=>'適用開始日',
             'adhibition_end_dt'=>'適用終了日',
             'modified_at'=>'更新日時',
-            'delete'=>'削除',
+            'delete'=>'',
         ]
     ],
 

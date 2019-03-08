@@ -10,8 +10,6 @@
     padding-bottom: 5px;
     text-align: center;
 }
-.search-content tbody p {
-    position: absolute;
-    top: 340px;
-    font-size:11px;
+.search-content tbody .flex-column .small-size {
+    font-size:10px;
 }

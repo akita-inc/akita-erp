@@ -23,7 +23,7 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("staffs.list.search.code")}}
                             </label>
-                            <input id="input_staffs_cd" class="form-control" name="staffs_cd" v-model="fileSearch.staffs_cd">
+                            <input id="input_staffs_cd" class="form-control" name="staffs_cd" v-model="fileSearch.staff_cd">
                         </div>
                         <div class="col-md-6 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
@@ -38,9 +38,9 @@
                         </div>
                         <div class="col-md-8  col-sm-12 input-group">
                             <select class="form-control dropdown-list" name="belong_company_id"  id="belong_company_id"  v-model="fileSearch.belong_company_id">
-                                <option> </option>
-                                <option> Example</option>
-                                <option> Example</option>
+                                @foreach($belongCompanies as $company)
+                                    <option> Example</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -124,21 +124,27 @@
                     @foreach($fieldShowTable as $key => $field)
                         <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("staffs.list.table.".$key)}}</th>
                     @endforeach
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr  v-cloak v-for="item in items" v-demo="{item:item}">
                     @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
-                            @if( $key == 'staffs_cd' )
-                                <a href="">{!! "@{{ item['$key'] }}" !!}</a>
-                            @elseif($key=='staff_nm')
-                                <p>{!! "@{{ item['staff_nm_kana'] }}" !!}</p>
-                                {!! "@{{ item['staff_nm'] }}" !!}
-                            @else
-                                {!! "@{{ item['$key'] }}" !!}
-                            @endif
+                            @switch($key)
+                                @case('staff_cd')
+                                    <a href="#">{!! "@{{ item['$key'] }}" !!}</a>
+                                    @break
+                                @case('staff_nm')
+                                    <span class="xsmall">{!! "@{{ item['staff_nm_kana'] }}" !!}</span><br>
+                                    {!! "@{{ item['staff_nm'] }}" !!}
+                                    @break
+                                @case('delete')
+                                    <button class="btn btn-delete" v-on:click="deleteStaffs(item.id)" v-if="item['staff_cd']!='admin'">削除</button>
+                                    @break
+                                @default
+                                    {!! "@{{ item['$key'] }}" !!}
+                                    @break
+                             @endswitch
                         </td>
                     @endforeach
                 </tr>
@@ -151,5 +157,12 @@
     </div>
 @endsection
 @section("scripts")
+    <script>
+        var messages = [];
+        messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
+        messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        var date_now ='<?php echo date('Y/m/d'); ?>';
+    </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs-list.js') }}" charset="utf-8"></script>
 @endsection
