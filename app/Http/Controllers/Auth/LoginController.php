@@ -62,18 +62,14 @@ class LoginController extends Controller
         $validator = Validator::make($data, $rules);
         $remember=isset($data['remember'])?true:false;
         if ($validator->fails()) {
-            $errors = new MessageBag(['errorlogin' =>  trans('messages.MSG01001')]);
-            return redirect()->back()->withInput($request->only('staff_cd','remember'))->withErrors($errors);
+            $errors = new MessageBag(['errorlogin' => trans('messages.MSG01001')]);
+            return redirect()->back()->withInput($request->only('staff_cd', 'remember'))->withErrors($errors);
         } else {
-            $staff = MStaffs::where('staff_cd', $data['staff_cd'])
-                ->where('password',$data['password'])
-                ->first();
-            if ($staff) {
-                Auth::login($staff,$remember);
+            if (Auth::attempt(['staff_cd' => $data['staff_cd'], 'password' => $data['password']], $remember)) {
                 return redirect('/');
             } else {
                 $errors = new MessageBag(['errorlogin' => trans('messages.MSG01003')]);
-                return redirect()->back()->withInput($request->only('staff_cd','remember'))->withErrors($errors);
+                return redirect()->back()->withInput($request->only('staff_cd', 'remember'))->withErrors($errors);
             }
         }
     }
