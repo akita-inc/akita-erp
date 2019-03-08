@@ -51,7 +51,7 @@ class StaffsController extends Controller
         });
         $this->query->whereRaw('mst_staffs.deleted_at IS NULL');
         $this->query->where('staff_cd', 'LIKE', '%' . $where['staff_cd'] . '%')
-                    ->where( DB::raw('CONCAT(mst_staffs.last_nm,"    ",mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%');
+                    ->where( DB::raw('CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%');
         $where['employment_pattern_id']?$this->query->where('mst_staffs.employment_pattern_id',$where['employment_pattern_id']):'';
         $where['position_id']? $this->query->where('mst_staffs.position_id',$where['position_id']):'';
         $where['belong_company_id']?$this->query->where('mst_staffs.belong_company_id',$where['belong_company_id']):'';

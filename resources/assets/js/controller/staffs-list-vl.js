@@ -33,7 +33,6 @@ var ctrStaffsListVl = new Vue({
                 $('#reference_date').focus();
                 return;
             }
-            console.log(this.fileSearch.reference_date);
             var data = {
                 pageSize:this.pageSize,
                 page:page,
