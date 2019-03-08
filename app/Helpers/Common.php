@@ -171,9 +171,9 @@ class Common {
                 $str .= isset($feature[7]) ? $feature[7] : $value->surface;
             }
             $string = mb_convert_kana($str, "c", "utf-8");
-            //convert hiragana to katakana
             if($string !="")
             {
+                $string = preg_replace('/[^ぁ-ん]+/u', '', $string);
                 if(preg_match('/[^ぁ-ん]+/i',$string) || preg_match('/[^ｦ-ﾟ]+/i', $string))
                 {
                     $string = mb_convert_kana($string, 'KVHC', 'UTF-8');
