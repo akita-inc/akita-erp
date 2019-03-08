@@ -1,7 +1,11 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+import DatePicker from 'vue2-datepicker';
+
 var ctrCustomersListVl = new Vue({
     el: '#ctrCustomersListVl',
     data: {
+        lang:lang_date_picker,
+        format_date: format_date_picker,
         loading:false,
         items:[],
         fileSearch:{
@@ -77,6 +81,7 @@ var ctrCustomersListVl = new Vue({
         this.getItems(1);
     },
     components: {
-        PulseLoader
+        PulseLoader,
+        DatePicker,
     }
 });

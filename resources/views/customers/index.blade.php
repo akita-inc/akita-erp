@@ -30,25 +30,7 @@
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-6 col-sm-12 lh-38">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="status" value="0" v-model="fileSearch.status">{{trans("customers.list.search.radio-all")}}
-                                </label>
-                            </div>
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="status" value="1" v-model="fileSearch.status" v-on:click="setDefault()" >{{trans("customers.list.search.radio-reference-date")}}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-sm-12 input-group  date" data-provide="datepicker">
-                            <input  class="form-control" name="reference_date" id="reference_date" v-model="fileSearch.reference_date">
-                                <div class="input-group-addon">
-                                <span class="input-group-text fa fa-calendar"></span>
-                                </div>
-                        </div>
+                        @include('Component.search.search-reference-date',['field_radio'=>'fileSearch.status','field_date'=>'fileSearch.reference_date'])
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">

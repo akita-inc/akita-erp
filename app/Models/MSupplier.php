@@ -83,7 +83,36 @@ class MSupplier extends Model
 
         $suppliers->orderBy('mst_suppliers_cd', 'adhibition_start_dt');
 
-        return $suppliers->paginate(config("params.page_size"));
+        return $suppliers->get();
+    }
+
+    public function getHistoryNearest($supplier_cd, $adhibition_end_dt) {
+        $suppliers = new MSupplier();
+        $suppliers = $suppliers->where('mst_suppliers_cd', '=', $supplier_cd)
+                                ->where("adhibition_end_dt", "<", $adhibition_end_dt)
+                                ->orderByDesc("adhibition_end_dt");
+        return $suppliers->first();
+    }
+
+    public function deleteSupplier($id){
+        $mSupplier = new MSupplier();
+        $mSupplier = $mSupplier->find($id);
+
+        DB::beginTransaction();
+        try
+        {
+            $historySupplier = $this->getHistoryNearest($mSupplier->mst_suppliers_cd, $mSupplier->adhibition_end_dt);
+            if (isset($historySupplier)) {
+                $historySupplier->adhibition_end_dt = $mSupplier->adhibition_end_dt;
+                $historySupplier->save();
+            }
+            $mSupplier->delete();
+            DB::commit();
+            return true;
+        } catch (\Exception $ex){
+            DB::rollBack();
+            return false;
+        }
     }
 
     public function getSuppliersByCondition($where = array()){

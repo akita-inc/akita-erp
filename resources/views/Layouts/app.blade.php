@@ -97,14 +97,15 @@
 </script>
 <script>
     lang_date_picker = {
-        'days': ["日曜", "月曜", "火曜", "水曜", "木曜", "金曜", "土曜"],
+        'days': ["日", "月", "火", "水", "木", "金", "土"],
         'months': ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
-        'pickers': ['未来7天', '未来30天', '最近7天', '最近30天'],
+        'pickers': ['次の7日', '次の30日', '過去7日間', '過去30日間'],
         'placeholder': {
-            'date': '请选择日期',
-            'dateRange': '请选择日期范围'
+            'date': '日付を選択',
+            'dateRange': '期間を選択'
         }
     };
+    format_date_picker = "YYYY/MM/DD";
 </script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>

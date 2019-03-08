@@ -34,25 +34,7 @@
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-6 col-sm-12 lh-38">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" v-model="fieldSearch.radio_reference_date" class="form-check-input" name="supplier_date" value="0">{{trans("suppliers.list.search.radio-all")}}
-                                </label>
-                            </div>
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" v-model="fieldSearch.radio_reference_date" v-on:click="setDefault()" class="form-check-input" name="supplier_date" value="1" checked>{{trans("suppliers.list.search.radio-reference-date")}}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-sm-12 input-group date" data-provide="datepicker">
-                            <input type="text" v-model="fieldSearch.reference_date" class="form-control" name="reference_date" id="reference_date" style="width: 130px;">
-                            <div class="input-group-addon">
-                                <span class="fa fa-calendar input-group-text" aria-hidden="true"></span>
-                            </div>
-                        </div>
+                        @include('Component.search.search-reference-date',['field_radio'=>'fieldSearch.radio_reference_date','field_date'=>'fieldSearch.reference_date'])
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">

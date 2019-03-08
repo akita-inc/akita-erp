@@ -65,15 +65,11 @@ class SuppliersController extends Controller
     public function delete($id)
     {
         $mSuppliers = new MSupplier();
-        $mSuppliers = $mSuppliers->find($id);
 
-        try
-        {
-            $mSuppliers->delete();
+        if ($mSuppliers->deleteSupplier($id)) {
             $response = ['data' => 'success'];
-
-        } catch (\Exception $ex){
-            $response = ['data' => 'failed'];
+        } else {
+            $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
         }
         return response()->json($response);
     }
