@@ -15,6 +15,7 @@
 .search-content thead{
     background-color: #0070C0;
     color: #ffffff;
+    text-align: center;
 }
 .search-content td {
     vertical-align: middle;
@@ -27,4 +28,9 @@
     font-size: 65%;
     font-weight: 300;
     opacity: .78;
+}
+.search-content tbody p {
+    position: absolute;
+    top: 340px;
+    font-size:11px;
 }

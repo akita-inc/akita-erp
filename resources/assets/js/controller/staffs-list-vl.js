@@ -6,13 +6,14 @@ var ctrStaffsListVl = new Vue({
         items:[],
         fileSearch:{
             staffs_cd:"",
+            position_id:"",
             staff_nm:"",
+            date_nm:"",
             status:0,
-            reference_date:"",
             belong_company_id:"",
             business_office_id:"",
             employment_pattern_id:"",
-            position_id:"",
+            reference_date:"",
         },
         pagination:{
             total: 0,

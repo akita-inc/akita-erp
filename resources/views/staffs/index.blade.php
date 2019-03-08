@@ -2,7 +2,7 @@
 @section('title',trans("staffs.title"))
 @section('title_header',trans("staffs.title"))
 @section('style')
-    <link rel="stylesheet" href="{{ asset('css/search-list.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
 @endsection
 @section('content')
     <div class="row row-xs" id="ctrStaffsListVl">
@@ -134,8 +134,8 @@
                             @if( $key == 'staffs_cd' )
                                 <a href="">{!! "@{{ item['$key'] }}" !!}</a>
                             @elseif($key=='staff_nm')
+                                <p>{!! "@{{ item['staff_nm_kana'] }}" !!}</p>
                                 {!! "@{{ item['staff_nm'] }}" !!}
-                                {!! "@{{ item['staff_nm_kana'] }}" !!}
                             @else
                                 {!! "@{{ item['$key'] }}" !!}
                             @endif
