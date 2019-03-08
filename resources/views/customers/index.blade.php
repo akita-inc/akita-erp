@@ -43,11 +43,8 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 input-group  date" data-provide="datepicker">
-                            <input  class="form-control" name="reference_date" id="reference_date" v-model="fileSearch.reference_date">
-                                <div class="input-group-addon">
-                                <span class="input-group-text fa fa-calendar"></span>
-                                </div>
+                        <div class="col-md-6 col-sm-12">
+                            <date-picker :lang='lang' id="reference_date" :format="format_date" value-type="format" v-model="fileSearch.reference_date"></date-picker>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
