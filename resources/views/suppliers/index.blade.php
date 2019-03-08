@@ -55,13 +55,13 @@
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
-                    <th width="8%">仕入先CD</th>
-                    <th width="20%">仕入先名</th>
-                    <th width="20%">住所</th>
-                    <th width="18%">支払いに関する説明</th>
-                    <th width="9%">適用開始日</th>
-                    <th width="9%">適用開始日</th>
-                    <th width="9%">更新日時</th>
+                    <th width="8%">{{trans('suppliers.list.table.mst_suppliers_cd')}}</th>
+                    <th width="20%">{{trans('suppliers.list.table.supplier_nm')}}</th>
+                    <th width="20%">{{trans('suppliers.list.table.street_address')}}</th>
+                    <th width="18%">{{trans('suppliers.list.table.explanations_bill')}}</th>
+                    <th width="9%">{{trans('suppliers.list.table.adhibition_start_dt')}}</th>
+                    <th width="9%">{{trans('suppliers.list.table.adhibition_end_dt')}}</th>
+                    <th width="9%">{{trans('suppliers.list.table.modified_at')}}</th>
                     <th width="7%"></th>
                 </tr>
                 </thead>
