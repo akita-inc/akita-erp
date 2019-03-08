@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1064,10 +1064,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/assets/js/controller/customers-list-vl.js":
-/*!*************************************************************!*\
-  !*** ./resources/assets/js/controller/customers-list-vl.js ***!
-  \*************************************************************/
+/***/ "./resources/assets/js/controller/staffs-list-vl.js":
+/*!**********************************************************!*\
+  !*** ./resources/assets/js/controller/staffs-list-vl.js ***!
+  \**********************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1078,20 +1078,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__);
 
 
-var ctrCustomersListVl = new Vue({
-  el: '#ctrCustomersListVl',
+var ctrStaffsListVl = new Vue({
+  el: '#ctrStaffsListVl',
   data: {
+    loading: false,
     lang: lang_date_picker,
     format_date: format_date_picker,
-    loading: false,
     items: [],
+    message: '',
     fileSearch: {
-      mst_customers_cd: "",
-      customer_nm: "",
+      staff_cd: "",
+      position_id: "",
+      staff_nm: "",
+      date_nm: "",
       status: 1,
+      belong_company_id: "",
+      mst_business_office_id: "",
+      employment_pattern_id: "",
       reference_date: date_now
     },
-    message: '',
     pagination: {
       total: 0,
       per_page: 2,
@@ -1101,8 +1106,6 @@ var ctrCustomersListVl = new Vue({
       last_page: 0
     },
     getItems: function getItems(page) {
-      var _this = this;
-
       if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
         alert(messages["MSG02001"].replace(':attribute', '基準日'));
         $('#reference_date').focus();
@@ -1117,13 +1120,7 @@ var ctrCustomersListVl = new Vue({
       };
       var that = this;
       this.loading = true;
-      customers_service.loadList(data).then(function (response) {
-        if (response.data.data.length === 0) {
-          _this.message = messages["MSG05001"];
-        } else {
-          _this.message = '';
-        }
-
+      staffs_service.loadList(data).then(function (response) {
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.loading = false;
@@ -1132,31 +1129,42 @@ var ctrCustomersListVl = new Vue({
     changePage: function changePage(page) {
       this.pagination.current_page = page;
       this.getItems(page);
+    },
+    deleteStaffs: function deleteStaffs(id) {
+      var _this = this;
+
+      if (confirm(messages["MSG06001"])) {
+        staffs_service.deleteStaffs(id).then(function (response) {
+          alert('Delete success!');
+
+          _this.getItems(1);
+        }, function (error) {
+          alert('delete fail!');
+        });
+      }
     }
   },
   methods: {
     clearCondition: function clearCondition() {
-      this.fileSearch.mst_customers_cd = '';
-      this.fileSearch.customer_nm = '';
+      this.fileSearch.staff_cd = "";
+      this.fileSearch.staff_nm = "";
       this.fileSearch.status = 1;
       this.fileSearch.reference_date = date_now;
-      this.message = '';
+      this.fileSearch.position_id = "";
+      this.fileSearch.date_nm = "";
+      this.fileSearch.belong_company_id = "";
+      this.fileSearch.mst_business_office_id = "";
+      this.fileSearch.employment_pattern_id = "";
+      this.fileSearch.reference_date = date_now;
+      this.message = "";
       this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fileSearch.reference_date === '') {
         this.fileSearch.reference_date = date_now;
       }
-    },
-    deleteSupplier: function deleteSupplier(id) {
-      var _this2 = this;
+    } //end action list
 
-      if (confirm(messages["MSG06001"])) {
-        customers_service.deleteSupplier(id).then(function (response) {
-          _this2.getItems(1);
-        });
-      }
-    }
   },
   mounted: function mounted() {
     this.getItems(1);
@@ -1169,14 +1177,14 @@ var ctrCustomersListVl = new Vue({
 
 /***/ }),
 
-/***/ 4:
-/*!*******************************************************************!*\
-  !*** multi ./resources/assets/js/controller/customers-list-vl.js ***!
-  \*******************************************************************/
+/***/ 7:
+/*!****************************************************************!*\
+  !*** multi ./resources/assets/js/controller/staffs-list-vl.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
 
 
 /***/ })
