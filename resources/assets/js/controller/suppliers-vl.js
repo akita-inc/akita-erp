@@ -1,8 +1,10 @@
 import { Core } from '../package/yubinbango-core';
+import DatePicker from 'vue2-datepicker'
 
 var ctrSupplierrsVl = new Vue({
     el: '#ctrSupplierrsVl',
     data: {
+        adhibition_start_dt:''
     },
     methods : {
         convertKana: function (e , destination) {
@@ -23,5 +25,6 @@ var ctrSupplierrsVl = new Vue({
 
     },
     components: {
+        DatePicker
     }
 });
