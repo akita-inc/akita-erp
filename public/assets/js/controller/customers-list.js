@@ -1070,7 +1070,10 @@ var ctrCustomersListVl = new Vue({
     loading: false,
     items: [],
     fileSearch: {
-      mst_customers_cd: ""
+      mst_customers_cd: "",
+      customer_nm: "",
+      status: 0,
+      reference_date: ''
     },
     pagination: {
       total: 0,
@@ -1081,6 +1084,10 @@ var ctrCustomersListVl = new Vue({
       last_page: 0
     },
     getItems: function getItems(page) {
+      var date = $("#reference_date").datepicker({
+        format: 'yyyy/mm/dd'
+      }).val();
+      this.fileSearch.reference_date = date;
       var data = {
         pageSize: this.pageSize,
         page: page,
@@ -1119,7 +1126,7 @@ var ctrCustomersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
 
 
 /***/ })
