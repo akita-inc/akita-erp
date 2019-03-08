@@ -67,15 +67,15 @@ class CustomersController extends Controller
                 "classTH" => ""
             ],
             'adhibition_start_dt'=> [
-                "classTH" => "wd-150",
+                "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
             'adhibition_end_dt'=> [
-                "classTH" => "wd-150",
+                "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
             'modified_at'=> [
-                "classTH" => "wd-150",
+                "classTH" => "wd-120",
                 "classTD" => "text-center"
             ]
         ];

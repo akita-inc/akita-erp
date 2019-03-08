@@ -55,14 +55,14 @@
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
-                    <th width="8%">{{trans('suppliers.list.table.mst_suppliers_cd')}}</th>
-                    <th width="20%">{{trans('suppliers.list.table.supplier_nm')}}</th>
-                    <th width="20%">{{trans('suppliers.list.table.street_address')}}</th>
-                    <th width="18%">{{trans('suppliers.list.table.explanations_bill')}}</th>
-                    <th width="9%">{{trans('suppliers.list.table.adhibition_start_dt')}}</th>
-                    <th width="9%">{{trans('suppliers.list.table.adhibition_end_dt')}}</th>
-                    <th width="9%">{{trans('suppliers.list.table.modified_at')}}</th>
-                    <th width="7%"></th>
+                    <th class="wd-100">{{trans('suppliers.list.table.mst_suppliers_cd')}}</th>
+                    <th>{{trans('suppliers.list.table.supplier_nm')}}</th>
+                    <th>{{trans('suppliers.list.table.street_address')}}</th>
+                    <th>{{trans('suppliers.list.table.explanations_bill')}}</th>
+                    <th class="wd-120">{{trans('suppliers.list.table.adhibition_start_dt')}}</th>
+                    <th class="wd-120">{{trans('suppliers.list.table.adhibition_end_dt')}}</th>
+                    <th class="wd-120">{{trans('suppliers.list.table.modified_at')}}</th>
+                    <th class="wd-60"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -78,8 +78,8 @@
                         <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
-                        <td>
-                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
+                        <td class="no-padding">
+                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                     </tr>
                     <tr v-cloak v-if="message !== ''">
