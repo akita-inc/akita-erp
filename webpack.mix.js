@@ -50,3 +50,4 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/staffs-vl.js'
 ], 'public/assets/js/controller/staffs.js');
+

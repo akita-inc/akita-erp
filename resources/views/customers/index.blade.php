@@ -6,7 +6,7 @@
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
-                <button class="btn btn-yellow">
+                <button class="btn btn-yellow" onclick="window.location.href= '{{route('customers.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>
@@ -30,22 +30,7 @@
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-6 col-sm-12 lh-38">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="status" value="0" v-model="fileSearch.status">{{trans("customers.list.search.radio-all")}}
-                                </label>
-                            </div>
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="status" value="1" v-model="fileSearch.status" v-on:click="setDefault()" >{{trans("customers.list.search.radio-reference-date")}}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-sm-12">
-                            <date-picker :lang='lang' id="reference_date" :format="format_date" value-type="format" v-model="fileSearch.reference_date"></date-picker>
-                        </div>
+                        @include('Component.search.search-reference-date',['field_radio'=>'fileSearch.status','field_date'=>'fileSearch.reference_date'])
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
@@ -69,7 +54,7 @@
                     @foreach($fieldShowTable as $key => $field)
                         <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("customers.list.table.".$key)}}</th>
                     @endforeach
-                    <th></th>
+                    <th class="wd-60"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -86,8 +71,8 @@
                                 @endif
                             </td>
                         @endforeach
-                        <td>
-                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
+                        <td class="no-padding">
+                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                     </tr>
                     <tr v-cloak v-if="message !== ''">
