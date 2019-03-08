@@ -86,4 +86,17 @@ class MSupplier extends Model
         return $suppliers->paginate(config("params.page_size"));
     }
 
+    public function getSuppliersByCondition($where = array()){
+        $suppliers = new MSupplier();
+        $suppliers = $suppliers->select(DB::raw('mst_suppliers.*'));
+
+        // 検索条件
+        if (isset($where['suppliers_cd']) && $where['suppliers_cd'] != '')
+            $suppliers = $suppliers->where('mst_suppliers_cd', "=", $where['suppliers_cd']);
+
+        $suppliers->orderBy('mst_suppliers_cd', 'adhibition_start_dt');
+
+        return $suppliers->get();
+    }
+
 }

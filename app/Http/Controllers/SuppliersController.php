@@ -134,6 +134,13 @@ class SuppliersController extends Controller
                     ->withErrors($validator->errors())
                     ->withInput();
             }else{
+                $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' =>$data["mst_suppliers_cd"]]);
+                foreach ($listSuppliersExist as $item){
+                    if((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt) ){
+                        \Session::flash('error',Lang::get('messages.MSG10003'));
+                        return redirect()->back()->withInput();
+                    }
+                }
                 DB::beginTransaction();
                 try
                 {

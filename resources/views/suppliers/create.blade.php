@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Layouts.app')
 @section('title','仕入先　新規追加')
 @section('title_header','仕入先　新規追加')
 @section('css')
@@ -17,7 +17,10 @@
                 </div>
             </div>
 
-            <div class="text-danger">*　は必須入力の項目です。</div>
+            <div class="text-danger w-100">*　は必須入力の項目です。</div>
+            <div class="w-100">
+                @include('Layouts.alert')
+            </div>
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
@@ -31,29 +34,33 @@
                                 </span>
                         @endif
                     </div>
-                    <div class="col-md-7 col-sm-12 row h-100">
-                        <div class="col row grid-col">
+                    <div class="col-md-7 col-sm-12 row  h-100">
+                        <div class="col row grid-col h-100">
                             <label class="col-6 required" for="adhibition_start_dt">適用開始日</label>
                             <div class="col-6 wrap-control">
-                                <div class="input-group date" data-provide="datepicker">
-                                    <input type="text" class="form-control {{$errors->has('adhibition_start_dt')? 'is-invalid': ''}}" name="adhibition_start_dt" id="adhibition_start_dt" value="{{ $mSupplier->adhibition_start_dt ?? old('adhibition_start_dt') }}">
-                                    <div class="input-group-addon">
-                                        <span class="fa fa-calendar input-group-text" aria-hidden="true "></span>
-                                    </div>
-                                </div>
+                            <date-picker format="YYYY/MM/DD"
+                                         placeholder=""
+                                         v-model="adhibition_start_dt" v-cloak=""
+                                         :lang="lang"
+                                         :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
+                                         v-on:change="onChangeDatepicker1"
+                                         :value-type="'format'"
+                            >
+                            </date-picker>
+                            <input type="hidden" class="form-control {{$errors->has('adhibition_start_dt')? 'is-invalid': ''}}" name="adhibition_start_dt" id="adhibition_start_dt" value="{{ $mSupplier->adhibition_start_dt ?? old('adhibition_start_dt') }}" >
                             </div>
-                            @if ($errors->has('adhibition_start_dt'))
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
-                                </span>
-                            @endif
                         </div>
                         <div class="col row grid-col h-100">
                             <label class="col-6" for="adhibition_end_dt">適用開始日</label>
                             <div class="col-6 wrap-control">
-                                <input type="text" disabled class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ config('params.adhibition_end_dt_default') }}">
+                                <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default') }}">
                             </div>
                         </div>
+                        @if ($errors->has('adhibition_start_dt'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
+                                </span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -363,14 +370,17 @@
 
                         <label class="col-md-5 col-sm-5" for="business_start_dt">取引開始日</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <div class="input-group date w-50" data-provide="datepicker">
-                                <input type="text" class="form-control" id="business_start_dt" name="business_start_dt" value="{{ $mSupplier->business_start_dt ?? old('business_start_dt') }}">
-                                <div class="input-group-addon">
-                                    <span class="fa fa-calendar input-group-text" aria-hidden="true "></span>
-                                </div>
-                            </div>
+                            <date-picker format="YYYY/MM/DD"
+                                         placeholder=""
+                                         v-model="business_start_dt" v-cloak=""
+                                         :lang="lang"
+                                         :input-class="'form-control w-100'"
+                                         v-on:change="onChangeDatepicker2"
+                                         :value-type="'format'"
+                            >
+                            </date-picker>
+                            <input type="hidden" class="form-control {{$errors->has('business_start_dt')? 'is-invalid': ''}}" name="business_start_dt" id="business_start_dt" value="{{ $mSupplier->business_start_dt ?? old('business_start_dt') }}" >
                         </div>
-
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="explanations_bill">支払いに関する説明</label>
