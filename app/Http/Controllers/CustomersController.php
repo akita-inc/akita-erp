@@ -64,7 +64,6 @@ class CustomersController extends Controller
     }
 
     public function create(Request $request){
-
         return view('customers.create');
     }
 }

@@ -1,7 +1,10 @@
 body{
     font-family: Arial, "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 }
-input{
+.wrapper-container{
+    margin-bottom: 80px;
+}
+input,select{
     border-radius: 0px !important;
 }
 .v-spinner {
@@ -271,7 +274,48 @@ input{
     clear: both;
     height: 10px;
 }
+.wrap-control-group{
+    padding-left: 170px;
+    position: relative;
+}
+.wrap-control-group label{
+    position: absolute;
+    left: 0px;
+    line-height: 38px;
+    background-color: #0070c0;
+    color: white;
+    justify-content: left;
+    width: 170px;
+    padding-left: 10px;
+}
+.wrap-control-group > label.required:before{
+    content: '*';
+    position: absolute;
+    left: -10px;
+    color: red;
+    font-weight: bolder;
+    font-size: 15px;
+}
+.wrap-control-group input,.wrap-control-group select{
+    width: 100% !important;
+    height: 38px;
+    line-height: 38px;
+}
 
+.mx-datepicker{
+    width: 100% !important;
+}
+.pd-r-20{
+    padding-left: 0px !important;
+    padding-right: 20px !important;
+}
+.pd-l-20{
+    padding-right: 0px !important;
+    padding-left: 20px !important;
+}
+.pd-r-0{
+    padding-right: 0px !important;
+}
 .padding-row-5{
     padding-left: 5px;
     padding-right: 5px;
@@ -313,11 +357,21 @@ input{
 }
 
 .wd-100{
-    width: 100px;
+    width: 100px !important;
 }
 
 .wd-150{
-    width: 150px;
+    width: 150px !important;
+}
+
+.wd-300{
+    width: 300px !important;
+}
+.wd-250{
+    width: 250px !important;
+}
+.wd-350{
+    width: 350px !important;
 }
 .pagination-custom{
     padding: 0px;
