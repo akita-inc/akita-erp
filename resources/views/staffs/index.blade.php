@@ -38,8 +38,9 @@
                         </div>
                         <div class="col-md-8  col-sm-12 input-group">
                             <select class="form-control dropdown-list" name="belong_company_id"  id="belong_company_id"  v-model="fileSearch.belong_company_id">
+                                    <option value="">===選択===</option>
                                 @foreach($belongCompanies as $company)
-                                    <option> Example</option>
+                                    <option value="{{$company['date_id']}}"> {{$company['date_nm']}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -50,10 +51,11 @@
                         </div>
                         <div class="col-md-8 lh-38 text-right no-padding">
 
-                            <select class="form-control dropdown-list" name="business_office_id"  id="business_office_id"  v-model="fileSearch.business_office_id">
-                                <option> </option>
-                                <option> Example</option>
-                                <option> Example</option>
+                            <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
+                                <option value="">==選択==</option>
+                                @foreach($businessOffices as $office)
+                                    <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -66,8 +68,10 @@
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="employment_pattern_id"  id="employment_pattern_id"  v-model="fileSearch.employment_pattern_id">
-                                <option> Example</option>
-                                <option> Example</option>
+                                <option value="">==選択==</option>
+                                @foreach($employmentPatterns as $pattern)
+                                    <option value="{{$pattern['date_id']}}"> {{$pattern['date_nm']}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-2 padding-row-5 col-list-search-f">
@@ -75,9 +79,10 @@
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="position_id"  id="position_id"  v-model="fileSearch.position_id">
-                                <option> </option>
-                                <option> Example</option>
-                                <option> Example</option>
+                                <option value="">==選択==</option>
+                                @foreach($positions as $position)
+                                    <option value="{{$position['date_id']}}"> {{$position['date_nm']}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -90,26 +95,23 @@
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="status" value="1" v-model="fileSearch.status" >{{trans("staffs.list.search.radio-reference-date")}}
+                                    <input type="radio" class="form-check-input" name="status" value="1" v-model="fileSearch.status" v-on:click="setDefault()" >{{trans("staffs.list.search.radio-reference-date")}}
                                 </label>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 input-group datepicker">
-                            <input  class="form-control input-calendar" name="reference_date" id="reference_date" v-model="fileSearch.reference_date">
-                            <div class="input-group-append">
-                                <span class="input-group-text fa fa-calendar"></span>
-                            </div>
+                        <div class="col-md-6 col-sm-12">
+                            <date-picker :lang='lang' id="reference_date" :format="format_date" value-type="format" v-model="fileSearch.reference_date"></date-picker>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
-                            <button class="btn btn-black w-100" v-on:click="clearCondition">
+                            <button class="btn btn-black w-100" v-on:click="clearCondition()">
                                 {{trans('common.button.condition-clear')}}
                             </button>
                         </div>
                         <div class="col-md-7 lh-38 text-right no-padding">
-                            <button class="btn btn-primary w-100" v-on:click="getItems(pagination.current_page)">
+                            <button class="btn btn-primary w-100" v-on:click="getItems(1)">
                                 {{trans('common.button.search')}}
                             </button>
                         </div>

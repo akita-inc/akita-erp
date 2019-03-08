@@ -1,19 +1,23 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+import DatePicker from 'vue2-datepicker';
 var ctrStaffsListVl = new Vue({
     el: '#ctrStaffsListVl',
     data: {
         loading:false,
+        lang:lang_date_picker,
+        format_date: format_date_picker,
         items:[],
+        message:'',
         fileSearch:{
             staff_cd:"",
             position_id:"",
             staff_nm:"",
             date_nm:"",
-            status:0,
+            status:1,
             belong_company_id:"",
-            business_office_id:"",
+            mst_business_office_id:"",
             employment_pattern_id:"",
-            reference_date:"",
+            reference_date:date_now,
         },
         pagination:{
             total: 0,
@@ -24,9 +28,12 @@ var ctrStaffsListVl = new Vue({
             last_page:0
         },
         getItems: function(page){
-            var date=$("#reference_date" ).datepicker({
-                format: 'yyyy/mm/dd'}).val();
-            this.fileSearch.reference_date=date;
+            if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
+                alert(messages["MSG02001"].replace(':attribute', '基準日'));
+                $('#reference_date').focus();
+                return;
+            }
+            console.log(this.fileSearch.reference_date);
             var data = {
                 pageSize:this.pageSize,
                 page:page,
@@ -58,7 +65,23 @@ var ctrStaffsListVl = new Vue({
     },
     methods : {
         clearCondition:function () {
-
+            this.fileSearch.staff_cd = "";
+            this.fileSearch.staff_nm = "";
+            this.fileSearch.status = 1;
+            this.fileSearch.reference_date = date_now;
+            this.fileSearch.position_id="";
+            this.fileSearch.date_nm="";
+            this.fileSearch.belong_company_id="";
+            this.fileSearch.mst_business_office_id="";
+            this.fileSearch.employment_pattern_id="";
+            this.fileSearch.reference_date=date_now;
+            this.message = "";
+            this.getItems(1);
+        },
+        setDefault:function () {
+            if (this.fileSearch.reference_date === '') {
+                this.fileSearch.reference_date = date_now;
+            }
         }
         //end action list
     },
@@ -66,6 +89,7 @@ var ctrStaffsListVl = new Vue({
         this.getItems(1);
     },
     components: {
-        PulseLoader
+        PulseLoader,
+        DatePicker
     }
 });
