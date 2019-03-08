@@ -1072,13 +1072,13 @@ var ctrSuppliersListVl = new Vue({
     fieldSearch: {
       mst_suppliers_cd: "",
       supplier_nm: "",
-      radio_reference_date: "0",
-      reference_date: ""
+      radio_reference_date: "1",
+      reference_date: date_now
     },
     message: '',
     pagination: {
       total: 0,
-      per_page: 10,
+      per_page: 0,
       from: 1,
       to: 0,
       current_page: 1,
@@ -1088,7 +1088,8 @@ var ctrSuppliersListVl = new Vue({
       var _this = this;
 
       if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
-        alert('aggfgf');
+        alert(messages["MSG02001"].replace(':attribute', '基準日'));
+        $('#reference_date').focus();
         return;
       }
 
@@ -1100,8 +1101,10 @@ var ctrSuppliersListVl = new Vue({
       var that = this;
       this.loading = true;
       suppliers_service.loadList(data).then(function (response) {
-        if (response.data.data.count() === 0) {
-          _this.message = 'ádfghjk';
+        if (response.data.data.length === 0) {
+          _this.message = messages["MSG05001"];
+        } else {
+          _this.message = '';
         }
 
         that.items = response.data.data;
@@ -1115,32 +1118,27 @@ var ctrSuppliersListVl = new Vue({
     }
   },
   methods: {
-    gotoCreate: function gotoCreate() {
-      var data = {
-        page: this.pagination.current_page,
-        fieldSearch: this.fieldSearch
-      };
-      return suppliers_service.gotoCreate(data);
-    },
     clearCondition: function clearCondition() {
       this.fieldSearch.mst_suppliers_cd = '';
       this.fieldSearch.supplier_nm = '';
-      this.fieldSearch.radio_reference_date = '0';
-      this.fieldSearch.reference_date = '';
+      this.fieldSearch.radio_reference_date = '1';
+      this.fieldSearch.reference_date = date_now;
+      this.message = '';
       this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fieldSearch.reference_date === '') {
-        var now = new Date();
-        this.fieldSearch.reference_date = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDay();
+        this.fieldSearch.reference_date = date_now;
       }
     },
     deleteSupplier: function deleteSupplier(id) {
       var _this2 = this;
 
-      suppliers_service.deleteSupplier(id).then(function (response) {
-        _this2.getItems(_this2.pagination.current_page);
-      });
+      if (confirm(messages["MSG06001"])) {
+        suppliers_service.deleteSupplier(id).then(function (response) {
+          _this2.getItems(1);
+        });
+      }
     }
   },
   mounted: function mounted() {
@@ -1160,7 +1158,7 @@ var ctrSuppliersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
 
 
 /***/ })

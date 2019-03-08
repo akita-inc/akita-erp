@@ -1070,8 +1070,12 @@ var ctrCustomersListVl = new Vue({
     loading: false,
     items: [],
     fileSearch: {
-      mst_customers_cd: ""
+      mst_customers_cd: "",
+      customer_nm: "",
+      status: 1,
+      reference_date: date_now
     },
+    message: '',
     pagination: {
       total: 0,
       per_page: 2,
@@ -1081,6 +1085,14 @@ var ctrCustomersListVl = new Vue({
       last_page: 0
     },
     getItems: function getItems(page) {
+      var _this = this;
+
+      if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
+        alert(messages["MSG02001"].replace(':attribute', '基準日'));
+        $('#reference_date').focus();
+        return;
+      }
+
       var data = {
         pageSize: this.pageSize,
         page: page,
@@ -1090,6 +1102,12 @@ var ctrCustomersListVl = new Vue({
       var that = this;
       this.loading = true;
       customers_service.loadList(data).then(function (response) {
+        if (response.data.data.length === 0) {
+          _this.message = messages["MSG05001"];
+        } else {
+          _this.message = '';
+        }
+
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.loading = false;
@@ -1100,7 +1118,29 @@ var ctrCustomersListVl = new Vue({
       this.getItems(page);
     }
   },
-  methods: {//end action list
+  methods: {
+    clearCondition: function clearCondition() {
+      this.fileSearch.mst_customers_cd = '';
+      this.fileSearch.customer_nm = '';
+      this.fileSearch.status = 1;
+      this.fileSearch.reference_date = date_now;
+      this.message = '';
+      this.getItems(1);
+    },
+    setDefault: function setDefault() {
+      if (this.fileSearch.reference_date === '') {
+        this.fileSearch.reference_date = date_now;
+      }
+    },
+    deleteSupplier: function deleteSupplier(id) {
+      var _this2 = this;
+
+      if (confirm(messages["MSG06001"])) {
+        customers_service.deleteSupplier(id).then(function (response) {
+          _this2.getItems(1);
+        });
+      }
+    }
   },
   mounted: function mounted() {
     this.getItems(1);
