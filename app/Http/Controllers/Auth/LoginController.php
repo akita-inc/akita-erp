@@ -65,7 +65,7 @@ class LoginController extends Controller
             $errors = new MessageBag(['errorlogin' => trans('messages.MSG01001')]);
             return redirect()->back()->withInput($request->only('staff_cd', 'remember'))->withErrors($errors);
         } else {
-            if (Auth::attempt(['staff_cd' => $data['staff_cd'], 'password' => $data['password']], $remember)) {
+            if (Auth::attempt(['staff_cd' => $data['staff_cd'], 'password' => $data['password'],'deleted_at'=>null], $remember)) {
                 return redirect('/');
             } else {
                 $errors = new MessageBag(['errorlogin' => trans('messages.MSG01003')]);
