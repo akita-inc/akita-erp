@@ -24,3 +24,4 @@ Route::get('/login','Auth\LoginController@getLogin')->name('login');
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
 include "supplier.php";
 include "customer.php";
+include "vehicle.php";
