@@ -335,6 +335,9 @@ input,select{
     display: flex;
     margin-left: -2px;
 }
+.frm-search-list .dropdown-list{
+    border-radius:0px!important;
+}
 
 .col-list-search-f{
     line-height: 38px;
