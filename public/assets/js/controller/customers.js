@@ -17744,15 +17744,16 @@ module.exports = function(module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/lib/index.js");
-/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue2_datepicker__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/lib/index.js");
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue2_datepicker__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
 
 
 var ctrCustomersVl = new Vue({
   el: '#ctrCustomersVl',
   data: {
+    lang: lang_date_picker,
     field: {
       adhibition_start_dt: "",
       adhibition_end_dt: "2999/12/31",
@@ -17792,16 +17793,16 @@ var ctrCustomersVl = new Vue({
   methods: {
     dateFormat: {
       stringify: function stringify(date) {
-        return date ? moment__WEBPACK_IMPORTED_MODULE_2___default()(date).format('YYYY MM DD') : null;
+        return date ? moment__WEBPACK_IMPORTED_MODULE_1___default()(date).format('YYYY MM DD') : null;
       },
       parse: function parse(value) {
-        return value ? moment__WEBPACK_IMPORTED_MODULE_2___default()(value, 'YYYY MM DD').toDate() : null;
+        return value ? moment__WEBPACK_IMPORTED_MODULE_1___default()(value, 'YYYY MM DD').toDate() : null;
       }
     }
   },
   mounted: function mounted() {},
   components: {
-    DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_1___default.a
+    DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_0___default.a
   }
 });
 

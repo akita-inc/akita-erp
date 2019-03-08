@@ -95,7 +95,17 @@
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous">
 </script>
-
+<script>
+    lang_date_picker = {
+        'days': ["日曜", "月曜", "火曜", "水曜", "木曜", "金曜", "土曜"],
+        'months': ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        'pickers': ['未来7天', '未来30天', '最近7天', '最近30天'],
+        'placeholder': {
+            'date': '请选择日期',
+            'dateRange': '请选择日期范围'
+        }
+    };
+</script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{asset('js/bootstrap-datepicker.ja.min.js')}}"></script>

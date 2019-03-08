@@ -140,6 +140,27 @@
                 </div>
             </div>
             <!--Block 5-->
+            <div class="grid-form">
+                <div class="row">
+                    <div class="col-md-5 col-sm-12">
+                        @include('Component.form.input',['filed'=>'explanations_bill'])
+                    </div>
+
+                    <div class="col-md-7 col-sm-12 pd-l-20">
+                        @include('Component.form.input',['filed'=>'person_in_charge_last_nm_kana'])
+                    </div>
+
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12">
+                        @include('Component.form.input',['filed'=>'person_in_charge_first_nm'])
+                    </div>
+
+                    <div class="col-md-7 col-sm-12 pd-l-20">
+                        @include('Component.form.input',['filed'=>'person_in_charge_first_nm_kana'])
+                    </div>
+                </div>
+            </div>
+
         </form>
     </div>
 @endsection

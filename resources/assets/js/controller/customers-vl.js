@@ -4,6 +4,7 @@ import moment from 'moment'
 var ctrCustomersVl = new Vue({
     el: '#ctrCustomersVl',
     data: {
+        lang:lang_date_picker,
         field:{
             adhibition_start_dt:"",
             adhibition_end_dt:"2999/12/31",
