@@ -48,7 +48,7 @@ class CustomValidation {
     public static function validateLength() {
 
         Validator::extend('length', function($attribute, $value, $parameters, $validator) {
-           return  strlen($value)<=$parameters[0];
+           return  mb_strlen($value, 'UTF-8')<=$parameters[0];
 
         });
         Validator::replacer('length', function($message, $attribute, $rule, $parameters) {

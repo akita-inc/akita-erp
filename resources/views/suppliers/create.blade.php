@@ -216,7 +216,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="zip_cd">郵便番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ $mSupplier->zip_cd ?? old('zip_cd') }}" maxlength="8">
+                            <input type="text" class="form-control w-50 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ $mSupplier->zip_cd ?? old('zip_cd') }}" maxlength="7">
                         </div>
                         @if ($errors->has('zip_cd'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -233,7 +233,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="prefectures_cd" name="prefectures_cd">
                                 @foreach($listPrefecture as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==$mSupplier->prefectures_cd || $key==old('prefectures_cd') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -314,7 +314,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="bundle_dt">締日</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('bundle_dt')? 'is-invalid': ''}}" id="bundle_dt" name="bundle_dt" value="{{ $mSupplier->bundle_dt ?? old('bundle_dt') }}" maxlength="2">
+                            <input type="text" class="form-control w-50 {{$errors->has('bundle_dt')? 'is-invalid': ''}}" id="bundle_dt" name="bundle_dt" value="{{ $mSupplier->bundle_dt ?? old('bundle_dt') }}" maxlength="2">
                         </div>
                         @if ($errors->has('bundle_dt'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -325,7 +325,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payday">支払日</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('payday')? 'is-invalid': ''}}" id="payday" name="payday" value="{{ $mSupplier->payday ?? old('payday') }}" maxlength="2">
+                            <input type="text" class="form-control w-50 {{$errors->has('payday')? 'is-invalid': ''}}" id="payday" name="payday" value="{{ $mSupplier->payday ?? old('payday') }}" maxlength="2">
                         </div>
                         @if ($errors->has('payday'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -339,7 +339,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="payment_month_id" name="payment_month_id">
                                 @foreach($listPaymentMonth as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==$mSupplier->payment_month_id || $key==old('payment_month_id') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -347,7 +347,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payment_day">支払予定日</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('payment_day')? 'is-invalid': ''}}" id="payment_day" name="payment_day" value="{{ $mSupplier->payment_day ?? old('payment_day') }}" maxlength="2">
+                            <input type="text" class="form-control w-50 {{$errors->has('payment_day')? 'is-invalid': ''}}" id="payment_day" name="payment_day" value="{{ $mSupplier->payment_day ?? old('payment_day') }}" maxlength="2">
                         </div>
                         @if ($errors->has('payment_day'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -361,7 +361,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="payment_method_id" name="payment_method_id">
                                 @foreach($listPaymentMethod as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==$mSupplier->payment_method_id || $key==old('payment_method_id') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -399,7 +399,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="consumption_tax_calc_unit_id" name="consumption_tax_calc_unit_id">
                                 @foreach($listConsumptionTaxCalcUnit as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==$mSupplier->consumption_tax_calc_unit_id || $key==old('consumption_tax_calc_unit_id') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -409,7 +409,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-50" id="rounding_method_id" name="rounding_method_id">
                                 @foreach($listRoundingMethod as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==$mSupplier->rounding_method_id || $key==old('rounding_method_id') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -421,7 +421,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="payment_bank_cd">支払銀行コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('payment_bank_cd')? 'is-invalid': ''}}" id="payment_bank_cd" name="payment_bank_cd" maxlength="4">
+                            <input type="text" class="form-control w-50 {{$errors->has('payment_bank_cd')? 'is-invalid': ''}}" id="payment_bank_cd" name="payment_bank_cd" maxlength="4" value="{{ $mSupplier->payment_bank_cd ?? old('payment_bank_cd') }}">
                         </div>
                         @if ($errors->has('payment_bank_cd'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -432,7 +432,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payment_bank_name">支払銀行名</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('payment_bank_name')? 'is-invalid': ''}}" id="payment_bank_name" name="payment_bank_name" maxlength="30">
+                            <input type="text" class="form-control {{$errors->has('payment_bank_name')? 'is-invalid': ''}}" id="payment_bank_name" name="payment_bank_name" maxlength="30" value="{{ $mSupplier->payment_bank_name ?? old('payment_bank_name') }}">
                         </div>
                         @if ($errors->has('payment_bank_name'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -444,7 +444,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="payment_branch_cd">支払銀行支店コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('payment_branch_cd')? 'is-invalid': ''}}" id="payment_branch_cd" name="payment_branch_cd" maxlength="4">
+                            <input type="text" class="form-control w-50 {{$errors->has('payment_branch_cd')? 'is-invalid': ''}}" id="payment_branch_cd" name="payment_branch_cd" maxlength="4" value="{{ $mSupplier->payment_branch_cd ?? old('payment_branch_cd') }}">
                         </div>
                         @if ($errors->has('payment_branch_cd'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -455,7 +455,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payment_branch_name">支払銀行支店名</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('payment_branch_name')? 'is-invalid': ''}}" id="payment_branch_name" name="payment_branch_name" maxlength="30">
+                            <input type="text" class="form-control {{$errors->has('payment_branch_name')? 'is-invalid': ''}}" id="payment_branch_name" name="payment_branch_name" maxlength="30" value="{{ $mSupplier->payment_branch_name ?? old('payment_branch_name') }}">
                         </div>
                         @if ($errors->has('payment_branch_name'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -469,7 +469,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50 " id="payment_account_type" name="payment_account_type">
                                 @foreach($listPaymentAccountType as $key => $value)
-                                    <option value="{{$key}}">{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==$mSupplier->payment_account_type || $key==old('payment_account_type') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -477,7 +477,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="payment_account_number">支払口座番号</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payment_account_number')? 'is-invalid': ''}}" id="payment_account_number" name="payment_account_number" maxlength="10">
+                            <input type="text" class="form-control w-50 {{$errors->has('payment_account_number')? 'is-invalid': ''}}" id="payment_account_number" name="payment_account_number" maxlength="10" value="{{ $mSupplier->payment_account_number ?? old('payment_account_number') }}">
                         </div>
                         @if ($errors->has('payment_account_number'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -489,7 +489,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_account_holder">支払口座名義</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('payment_account_holder')? 'is-invalid': ''}}" id="payment_account_holder" name="payment_account_holder" maxlength="30">
+                            <input type="text" class="form-control {{$errors->has('payment_account_holder')? 'is-invalid': ''}}" id="payment_account_holder" name="payment_account_holder" maxlength="30" value="{{ $mSupplier->payment_account_holder ?? old('payment_account_holder') }}">
                         </div>
                         @if ($errors->has('payment_account_holder'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -500,7 +500,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <label class="col-md-4 col-sm-4" for="notes">備考</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <textarea class="form-control w-100 {{$errors->has('notes')? 'is-invalid': ''}}" rows="3" id="notes" name="notes" maxlength="50"></textarea>
+                            <textarea class="form-control w-100 {{$errors->has('notes')? 'is-invalid': ''}}" rows="3" id="notes" name="notes" maxlength="50">{{ $mSupplier->notes ?? old('notes') }}</textarea>
                         </div>
                         @if ($errors->has('notes'))
                             <span class="invalid-feedback d-block" role="alert">
