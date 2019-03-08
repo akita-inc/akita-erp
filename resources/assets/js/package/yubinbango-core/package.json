@@ -1,0 +1,58 @@
+{
+  "_from": "yubinbango-core",
+  "_id": "yubinbango-core@0.6.3",
+  "_inBundle": false,
+  "_integrity": "sha1-p7GTIdcssQ+H/1ldEdf4No38jnM=",
+  "_location": "/yubinbango-core",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "yubinbango-core",
+    "name": "yubinbango-core",
+    "escapedName": "yubinbango-core",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/yubinbango-core/-/yubinbango-core-0.6.3.tgz",
+  "_shasum": "a7b19321d72cb10f87ff595d11d7f8368dfc8e73",
+  "_spec": "yubinbango-core",
+  "_where": "F:\\akita-erp",
+  "author": {
+    "name": "Teruyuki Kobayashi koba1014@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/yubinbango/yubinbango-core/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "YubinBango-Coreに7桁の郵便番号を与えると住所をオブジェクトで取得します。",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-angular-protractor": "^0.1.1",
+    "gulp-exit": "0.0.2",
+    "gulp-webserver": "^0.9.1",
+    "run-sequence": "^1.2.1",
+    "uglifyjs": "^2.4.10"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "homepage": "https://github.com/yubinbango/yubinbango-core",
+  "license": "MIT",
+  "main": "yubinbango-core.js",
+  "name": "yubinbango-core",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yubinbango/yubinbango-core.git"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "version": "0.6.3"
+}
