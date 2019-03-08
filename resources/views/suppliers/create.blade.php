@@ -1,6 +1,6 @@
 @extends('Layouts.app')
-@section('title','仕入先　新規追加')
-@section('title_header','仕入先　新規追加')
+@section('title',$mSupplier->id ? '仕入先　修正画面' : '仕入先　新規追加')
+@section('title_header',$mSupplier->id ? '仕入先　修正画面' : '仕入先　新規追加')
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/supplier/add.css') }}">
 @endsection
@@ -9,12 +9,29 @@
         <form class="form-inline" role="form" method="post">
             @csrf
             <div class="sub-header">
-                <div class="sub-header-line-one">
-                    <button class="btn btn-black">戻る</button>
+                <div class="sub-header-line-one d-flex">
+                    <div class="d-flex">
+                        <button class="btn btn-black">{{ trans("common.button.back") }}</button>
+                    </div>
+                    <div class="d-flex ml-auto">
+                        <button class="btn btn-danger">{{ trans("common.button.delete") }}</button>
+                    </div>
                 </div>
-                <div class="sub-header-line-two">
-                    <button class="btn btn-primary btn-submit" type="submit">登録</button>
-                </div>
+                @if($mSupplier->id)
+                    <div class="grid-form border-0">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12 row grid-col"></div>
+                            <div class="col-md-7 col-sm-12 row grid-col">
+                                <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.edit") }}</button>
+                                <button class="btn btn-primary btn-submit m-auto" type="button">{{ trans("common.button.register_history_left") }}</button>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="sub-header-line-two">
+                        <button class="btn btn-primary btn-submit" type="submit">登録</button>
+                    </div>
+                @endif
             </div>
 
             <div class="text-danger w-100">*　は必須入力の項目です。</div>

@@ -74,9 +74,12 @@ class SuppliersController extends Controller
         return response()->json($response);
     }
 
-    public function create(Request $request){
+    public function create(Request $request, $id=null){
 
         $mSupplier = new MSupplier();
+        if(!is_null($id)){
+            $mSupplier = $mSupplier->find($id);
+        }
         $mGeneralPurposes = new MGeneralPurposes();
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture'],'');
         $listPaymentMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_method'],'');
