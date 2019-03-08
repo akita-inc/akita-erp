@@ -11,6 +11,8 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MCustomers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
+
 class CustomersController extends Controller
 {
     use ListTrait;
@@ -83,15 +85,10 @@ class CustomersController extends Controller
     public function delete($id)
     {
         $mCustomers = new MCustomers();
-        $mCustomers = $mCustomers->find($id);
-
-        try
-        {
-            $mCustomers->delete();
+        if ($mCustomers->deleteCustomer($id)) {
             $response = ['data' => 'success'];
-
-        } catch (\Exception $ex){
-            $response = ['data' => 'failed'];
+        } else {
+            $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
         }
         return response()->json($response);
     }
