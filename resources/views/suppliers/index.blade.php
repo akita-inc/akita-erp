@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Layouts.app')
 @section('title',trans("suppliers.title"))
 @section('title_header',trans("suppliers.title"))
 @section('style')
@@ -107,7 +107,7 @@
                 </tbody>
             </table>
             <div v-cloak class="mg-t-10">
-                @include("layouts.pagination")
+                @include("Layouts.pagination")
             </div>
         </div>
     </div>
