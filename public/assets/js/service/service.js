@@ -119,6 +119,27 @@ suppliers_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  loadList: function loadList(data) {
+    return axios.post('/suppliers/api-v1/getItems', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  gotoCreate: function gotoCreate(data) {
+    return axios.post('/suppliers/create', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  deleteSupplier: function deleteSupplier(id) {
+    return axios.get('/suppliers/delete/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 

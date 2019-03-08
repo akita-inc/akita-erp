@@ -1,25 +1,12 @@
-.search-form {
-    background-color: #99CCFF;
-    padding: 10px 20px;
-}
-.search-form .row {
-    margin-left: 0;
-    margin-right: 0;
-}
-.title-sm {
-    font-size: 0.7rem;
-}
-.search-content {
-    margin-top: 15px;
-}
 .search-content thead{
     background-color: #0070C0;
     color: #ffffff;
 }
-.supplier-link {
-    font-weight: bold;
-    text-decoration: underline;
+.search-content td {
+    vertical-align: middle;
 }
-.input-calendar:after {
-
+.search-content th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
 }

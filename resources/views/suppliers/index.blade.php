@@ -1,135 +1,124 @@
-@extends('layouts.app')
+@extends('Layouts.app')
+@section('title',trans("suppliers.title"))
+@section('title_header',trans("suppliers.title"))
 @section('style')
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}">
 @endsection
 @section('content')
-    <div class="container-fluid">
-        <div class="content" id="content-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="d-flex search-form">
-                        <form class="form w-100" name="suppliers-search"
-                              action="{{ url()->current() }}" accept-charset="UTF-8" method="post">
-                            @csrf
-                            <div class="row justify-content-end">
-                                <button class="btn btn-addnew" type="button">新規追加</button>
-                            </div>
-                            <div class="row title-sm">
-                                <div class="col-sm-4 no-padding">
-                                    <div class="row">
-                                        <div class="col-sm-3 no-padding"></div>
-                                        <div class="col-sm-9 form-inline no-padding justify-content-between">
-                                            <div class="row w-100">
-                                                <div class="col-sm-3 no-padding">コード</div>
-                                                <div class="col-sm-9">名称</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row form-inline">
-                                <div class="col-sm-4 no-padding">
-                                    <div class="row">
-                                        <label class="col-sm-3 no-padding">仕入先</label>
-                                        <div class="col-sm-9 form-inline no-padding justify-content-between">
-                                            <div class="row">
-                                                <div class="col-sm-3 no-padding">
-                                                    <input type="text" name="supplier_cd" id="supplier_cd" class="form-control w-100"
-                                                        value="{{ old('supplier_cd') }}">
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <input type="text" name="supplier_nm" id="supplier_nm" class="form-control w-100"
-                                                           value="{{ old('supplier_nm') }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 form-inline">
-                                    <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="supplier_date" value="0">すべて
-                                    </label>
-                                    </div>
-                                    <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="supplier_date" value="1" checked>基準日
-                                    </label>
-                                    </div>
-                                    <div class="input-group datepicker">
-                                        <input type="text" class="form-control input-calendar" name="reference_date" id="reference_date">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text fa fa-calendar"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 no-padding d-flex justify-content-between">
-                                    <div class="row w-100">
-                                        <div class="col-sm-4 no-padding">
-                                            <button class="btn btn-clear" type="button">条件クリア</button>
-                                        </div>
-                                        <div class="col-sm-8 no-padding">
-                                            <button class="btn w-100 btn-search" type="submit">検索</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+    @include('Layouts.alert')
+    <div class="row row-xs" id="ctrSuppliersListVl">
+        <pulse-loader :loading="loading"></pulse-loader>
+        <div class="sub-header">
+            <div class="sub-header-line-one text-right">
+                <button class="btn btn-yellow" onclick="window.location.href= '{{route('suppliers.create')}}'">
+                    {{trans('common.button.add')}}
+                </button>
+            </div>
+            <div class="sub-header-line-two p-t-30 frm-search-list">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 row">
+                        <div class="col-md-3 padding-row-5 col-list-search-f">
+                            {{trans("suppliers.list.search.customer")}}
+                        </div>
+                        <div class="col-md-4 padding-row-5 grid-form-search">
+                            <label class="grid-form-search-label" for="input_mst_suppliers_cd">
+                                {{trans("suppliers.list.search.code")}}
+                            </label>
+                            <input type="text" v-model="fieldSearch.mst_suppliers_cd" name="supplier_cd" id="supplier_cd" class="form-control">
+                        </div>
+                        <div class="col-md-5 padding-row-5">
+                            <label class="grid-form-search-label" for="input_mst_suppliers_name">
+                                {{trans("suppliers.list.search.name")}}
+                            </label>
+                            <input type="text" v-model="fieldSearch.supplier_nm" name="supplier_nm" id="supplier_nm" class="form-control">
+                        </div>
                     </div>
-                    <table class="table table-bordered search-content">
-                        <thead>
-                        <tr>
-                            <th>仕入先CD</th>
-                            <th>仕入先名</th>
-                            <th>住所</th>
-                            <th>支払いに関する説明</th>
-                            <th>適用開始日</th>
-                            <th>適用開始日</th>
-                            <th>更新日時</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach( $suppliers as $sup)
-                            <tr>
-                                <td><a class="supplier-link" href="">{{ $sup->mst_suppliers_cd }}</a></td>
-                                <td>{{ $sup->supplier_nm }}</td>
-                                <td>{{ $sup->date_nm . $sup->address1 . $sup->address2 . $sup->address3 }}</td>
-                                <td>{{ $sup->explanations_bill }}</td>
-                                <td>{{ $sup->adhibition_start_dt }}</td>
-                                <td>{{ $sup->adhibition_end_dt }}</td>
-                                <td>{{ $sup->modified_at }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-delete">削除</button>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                    <div class="col-md-5 col-sm-12 row">
+                        <div class="col-md-6 col-sm-12 lh-38">
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" v-model="fieldSearch.radio_reference_date" class="form-check-input" name="supplier_date" value="0">{{trans("suppliers.list.search.radio-all")}}
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" v-model="fieldSearch.radio_reference_date" v-on:click="setDefault()" class="form-check-input" name="supplier_date" value="1" checked>{{trans("suppliers.list.search.radio-reference-date")}}
+                                </label>
+                            </div>
+                        </div>
 
-                    <div class="search-footer">
-                        @include('layouts.pagination', ['paginator' => $suppliers])
+                        <div class="col-md-6 col-sm-12 input-group date" data-provide="datepicker">
+                            <input type="text" v-model="fieldSearch.reference_date" class="form-control" name="reference_date" id="reference_date" style="width: 130px;">
+                            <div class="input-group-addon">
+                                <span class="fa fa-calendar input-group-text" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-12 row">
+                        <div class="col-md-5 lh-38 padding-row-5">
+                            <button class="btn btn-black w-100" type="button" v-on:click="clearCondition()" >
+                                {{trans('common.button.condition-clear')}}
+                            </button>
+                        </div>
+                        <div class="col-md-7 lh-38 text-right no-padding">
+                            <button class="btn w-100 btn-primary" type="button" v-on:click="getItems(1)">
+                                {{trans('common.button.search')}}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="wrapper-table">
+            <table class="table table-striped table-bordered search-content">
+                <thead>
+                <tr>
+                    <th width="8%">仕入先CD</th>
+                    <th width="20%">仕入先名</th>
+                    <th width="20%">住所</th>
+                    <th width="18%">支払いに関する説明</th>
+                    <th width="9%">適用開始日</th>
+                    <th width="9%">適用開始日</th>
+                    <th width="9%">更新日時</th>
+                    <th width="7%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr v-cloak v-for="item in items">
+                        <td><a class="cd-link" href="">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
+                        <td>
+                            <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
+                            <br>
+                            <span>{!! "@{{ item['supplier_nm'] }}" !!}</span>
+                        </td>
+                        <td>{!! "@{{ item['street_address'] }}" !!}</td>
+                        <td>{!! "@{{ item['explanations_bill'] }}" !!}</td>
+                        <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
+                        <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
+                        <td>{!! "@{{ item['modified_at'] }}" !!}</td>
+                        <td>
+                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
+                        </td>
+                    </tr>
+                    <tr v-cloak v-if="message !== ''">
+                        <td colspan="8">@{{message}} </td>
+                    </tr>
 
+                </tbody>
+            </table>
+            <div v-cloak class="mg-t-10">
+                @include("Layouts.pagination")
+            </div>
         </div>
     </div>
 @stop
 @section('scripts')
-<script type="text/javascript">
-    $(function (){
-        reference_date = $('#reference_date');
-        if (reference_date.val() === '')
-            reference_date.val('<?php echo date('Y-m-d'); ?>');
-    });
-
-    function clear(){
-
-    }
-
-    function checkSearch(){
-       // if ()
-    }
-</script>
+    <script>
+        var messages = [];
+        messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
+        messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        var date_now ='<?php echo date('Y/m/d'); ?>';
+    </script>
+    <script type="text/javascript" src="{{ mix('/assets/js/controller/suppliers-list.js') }}" charset="utf-8"></script>
 @endsection
