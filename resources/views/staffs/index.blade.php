@@ -167,7 +167,7 @@
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
-        var auth_staff_cd="<?php echo Auth::user()->staff_cd; ?>";
+        var auth_staff_cd="<?php echo @Auth::user()->staff_cd; ?>";
         var date_now ='<?php echo date('Y/m/d'); ?>';
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs-list.js') }}" charset="utf-8"></script>
