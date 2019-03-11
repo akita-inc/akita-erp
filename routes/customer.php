@@ -13,6 +13,7 @@ Route::group(['name' => 'customers', 'prefix'=>'/customers', 'middleware' => ['a
     /*Api using Vue*/
     Route::group(['prefix' => 'api-v1'], function () {
         Route::post('/getItems','CustomersController@getItems')->name("customers.getItems");
+        Route::any('/checkIsExist/{id}','CustomersController@checkIsExist')->name("customers.checkIsExist");
 
     });
 });

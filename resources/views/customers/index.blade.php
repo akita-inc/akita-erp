@@ -65,7 +65,7 @@
                                     <span class="xsmall">{!! "@{{ item['customer_nm_kana'] }}" !!}</span><br v-if="item['customer_nm_kana']">
                                 @endif
                                 @if( $key == 'mst_customers_cd' )
-                                    <a class="cd-link" href="">{!! "@{{ item['$key'] }}" !!}</a>
+                                    <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
                                 @else
                                     <span>{!! "@{{ item['$key'] }}" !!}</span>
                                 @endif

@@ -61,8 +61,6 @@ var ctrCustomersListVl = new Vue({
             this.fileSearch.customer_nm = '';
             this.fileSearch.status = 1;
             this.fileSearch.reference_date = date_now;
-            this.message = '';
-            this.getItems(1);
         },
         setDefault: function (){
             if (this.fileSearch.reference_date === '') {
@@ -70,11 +68,29 @@ var ctrCustomersListVl = new Vue({
             }
         },
         deleteSupplier: function (id){
-            if (confirm(messages["MSG06001"])) {
-                customers_service.deleteSupplier(id).then((response) => {
+            customers_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
                     this.getItems(1);
-                });
-            }
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        customers_service.deleteSupplier(id).then((response) => {
+                            this.getItems(1);
+                        });
+                    }
+                }
+            });
+        },
+        checkIsExist: function (id) {
+            customers_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.getItems(1);
+                } else {
+                    window.location.href = 'edit/' + id;
+                }
+            });
         }
     },
     mounted () {
