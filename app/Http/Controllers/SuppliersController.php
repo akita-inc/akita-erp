@@ -99,7 +99,7 @@ class SuppliersController extends Controller
             }
         }
         $mGeneralPurposes = new MGeneralPurposes();
-        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture'],'');
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
         $listPaymentMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_method'],'');
         $listPaymentMonth= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_month'],'');
         $listConsumptionTaxCalcUnit= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
