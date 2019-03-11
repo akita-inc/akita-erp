@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Models\MBusinessOffices;
+use App\Models\MGeneralPurposes;
 use App\Models\MVehicles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -69,6 +71,40 @@ class VehiclesController extends Controller
     }
 
     public function create(Request $request){
+        $mVehicle = new MVehicles();
+        $mGeneralPurposes = new MGeneralPurposes();
+        $mBusinessOffices = new MBusinessOffices();
+        $listBusinessOffices = $mBusinessOffices->getListOption();
+        $listVehicleKb= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicles_kb'],'');
+        $listVehicleSize= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_size_kb'],'');
+        $listVehiclePurpose= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_purpose'],'');
+        $listLandTranportOfficeCd= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['land_transport_office_cd'],'');
+        $listVehicleClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_classification'],'');
+        $listPrivateCommercial= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['private_commercial'],'');
+        $listCarBodyShape= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['car_body_shape'],'');
+        $listVehicle= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle'],'');
+        $listKindOfFuel= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['kinds_of_fuel'],'');
+        $listDriveSystem= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['drive_system'],'');
+        $listTransmissions= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['transmissions'],'');
+        $listSuspensionsCd= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['suspensions_cd'],'');
+        $listPowerGate= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['power_gate_cd'],'');
 
+        return view('vehicles.create',[
+            'mVehicle' => $mVehicle,
+            'listBusinessOffices' => $listBusinessOffices,
+            'listVehicleKb' => $listVehicleKb,
+            'listVehicleSize' => $listVehicleSize,
+            'listVehiclePurpose' => $listVehiclePurpose,
+            'listLandTranportOfficeCd' => $listLandTranportOfficeCd,
+            'listVehicleClassification' => $listVehicleClassification,
+            'listPrivateCommercial' => $listPrivateCommercial,
+            'listCarBodyShape' => $listCarBodyShape,
+            'listVehicle' => $listVehicle,
+            'listKindOfFuel' => $listKindOfFuel,
+            'listDriveSystem' => $listDriveSystem,
+            'listTransmissions' => $listTransmissions,
+            'listSuspensionsCd' => $listSuspensionsCd,
+            'listPowerGate' => $listPowerGate,
+        ]);
     }
 }

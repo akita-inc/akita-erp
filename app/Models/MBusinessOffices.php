@@ -24,5 +24,16 @@ class MBusinessOffices  extends Model
         return $this->where('deleted_at','=',null)
                     ->get();
     }
+    public function getListOption($kDefault ='')
+    {
+        $result = array($kDefault => '==選択==');
+        $data =  $this->where('deleted_at','=',null)
+            ->get();
+        foreach (json_decode(json_encode($data), true) as $key=>$item){
+            $result[$item['id']] = $item['business_office_nm'];
+        }
+        return $result;
+
+    }
 
 }

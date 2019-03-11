@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -4514,10 +4514,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./resources/assets/js/controller/suppliers-vl.js":
-/*!********************************************************!*\
-  !*** ./resources/assets/js/controller/suppliers-vl.js ***!
-  \********************************************************/
+/***/ "./resources/assets/js/controller/vehicles-vl.js":
+/*!*******************************************************!*\
+  !*** ./resources/assets/js/controller/vehicles-vl.js ***!
+  \*******************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4532,11 +4532,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var ctrSupplierrsVl = new Vue({
+var ctrVehiclesVl = new Vue({
   el: '#ctrSupplierrsVl',
   data: {
     adhibition_start_dt: $('#adhibition_start_dt').val(),
     business_start_dt: $('#business_start_dt').val(),
+    registration_dt: $('#registration_dt').val(),
+    expiry_dt: $('#expiry_dt').val(),
     lang: lang_date_picker,
     name: '',
     furigana: '',
@@ -4642,14 +4644,14 @@ var CACHE = [],
 
 /***/ }),
 
-/***/ 6:
-/*!**************************************************************!*\
-  !*** multi ./resources/assets/js/controller/suppliers-vl.js ***!
-  \**************************************************************/
+/***/ 10:
+/*!*************************************************************!*\
+  !*** multi ./resources/assets/js/controller/vehicles-vl.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\suppliers-vl.js */"./resources/assets/js/controller/suppliers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })
