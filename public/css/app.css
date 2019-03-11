@@ -427,3 +427,6 @@ input,select{
     line-height: 1.5 !important;
     border-radius: 0 !important;
 }
+span.note{
+    font-size: 13px;
+}

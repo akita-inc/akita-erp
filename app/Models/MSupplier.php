@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\TimeFunction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -102,6 +103,32 @@ class MSupplier extends Model
         $suppliers->orderBy('mst_suppliers_cd', 'adhibition_start_dt');
 
         return $suppliers->get();
+    }
+    public function getLastedSupplier($suppliers_cd){
+        $suppliers = new MSupplier();
+        $suppliers = $suppliers->select(DB::raw('max(id) as max'))
+        ->where('mst_suppliers_cd', "=", $suppliers_cd);
+        return $suppliers->first();
+    }
+
+    public function editSupplier($id, $adhibition_start_dt){
+        $mSupplier = new MSupplier();
+        $mSupplier = $mSupplier->find($id);
+
+        DB::beginTransaction();
+        try
+        {
+            $historySupplier = $this->getHistoryNearest($mSupplier->mst_suppliers_cd, $mSupplier->adhibition_end_dt);
+            if (isset($historySupplier)) {
+                $historySupplier->adhibition_end_dt = TimeFunction::subOneDay($adhibition_start_dt);
+                $historySupplier->save();
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $ex){
+            DB::rollBack();
+            return false;
+        }
     }
 
 }

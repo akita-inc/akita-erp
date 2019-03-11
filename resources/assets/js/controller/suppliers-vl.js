@@ -1,5 +1,6 @@
 import { Core } from '../package/yubinbango-core';
 import DatePicker from 'vue2-datepicker'
+import historykana from 'historykana'
 
 var ctrSupplierrsVl = new Vue({
     el: '#ctrSupplierrsVl',
@@ -7,12 +8,22 @@ var ctrSupplierrsVl = new Vue({
         adhibition_start_dt:$('#adhibition_start_dt').val(),
         business_start_dt:$('#business_start_dt').val(),
         lang:lang_date_picker,
+        name: '',
+        furigana: '',
+        history: []
     },
     methods : {
-        convertKana: function (e , destination) {
-            suppliers_service.convertKana({'data': e.target.value}).then(function (data) {
+        convertKana: function (input , destination) {
+            this.history.push(input.target.value);
+            this.furigana = historykana(this.history);
+            // $('#'+destination).val(this.furigana);
+            suppliers_service.convertKana({'data': this.furigana}).then(function (data) {
                 $('#'+destination).val(data.info);
             });
+        },
+        onFocus: function(){
+            this.history = [];
+            this.furigana = '';
         },
         getAddrFromZipCode: function() {
             var zip = $('#zip_cd').val();

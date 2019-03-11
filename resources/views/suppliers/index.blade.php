@@ -67,7 +67,7 @@
                 </thead>
                 <tbody>
                     <tr v-cloak v-for="item in items">
-                        <td><a class="cd-link" href="">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
+                        <td><a class="cd-link" :href="'{{route('suppliers.edit','')}}'+'/'+item.id">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
                         <td>
                             <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
                             <br>

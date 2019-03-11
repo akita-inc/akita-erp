@@ -62,21 +62,42 @@ class SuppliersController extends Controller
         $this->query->orderby('mst_suppliers.adhibition_start_dt');
     }
 
-    public function delete($id)
+    public function delete(Request $request,$id)
     {
         $mSuppliers = new MSupplier();
 
+        if ($request->getMethod() == 'POST') {
+            if ($mSuppliers->deleteSupplier($id)) {
+                \Session::flash('message',Lang::get('messages.MSG10004'));
+            } else {
+                \Session::flash('message',Lang::get('messages.MSG06002'));
+            }
+
+            return redirect()->route('suppliers.list');
+        }
         if ($mSuppliers->deleteSupplier($id)) {
-            $response = ['data' => 'success'];
+            $response = ['data' => 'success', 'msg' => Lang::get('messages.MSG10004')];
         } else {
             $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
         }
+
         return response()->json($response);
     }
 
-    public function create(Request $request){
+    public function create(Request $request,  $id=null,$mode=null){
 
         $mSupplier = new MSupplier();
+        $flagLasted = false;
+        if(!is_null($id)){
+            $mSupplier = $mSupplier->find($id);
+            if(is_null($mSupplier)){
+                return abort(404);
+            }
+            $lastedId = $mSupplier->getLastedSupplier($mSupplier->mst_suppliers_cd);
+            if($lastedId->max==$id){
+                $flagLasted =true;
+            }
+        }
         $mGeneralPurposes = new MGeneralPurposes();
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture'],'');
         $listPaymentMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_method'],'');
@@ -120,6 +141,13 @@ class SuppliersController extends Controller
                 'notes'  => 'nullable|length:50',
             ];
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
+            if($mode=='registerHistoryLeft'){
+                $validator->after(function ($validator) use ($data,$mSupplier){
+                    if (Carbon::parse($data['adhibition_start_dt']) < Carbon::parse($mSupplier->adhibition_start_dt)){
+                        $validator->errors()->add('adhibition_start_dt',Lang::get('messages.MSG02015'));
+                    }
+                });
+            }
             $validator->after(function ($validator) use ($data){
                 if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
                     $validator->errors()->add('adhibition_start_dt',Lang::get('messages.MSG02014'));
@@ -130,16 +158,26 @@ class SuppliersController extends Controller
                     ->withErrors($validator->errors())
                     ->withInput();
             }else{
-                $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' =>$data["mst_suppliers_cd"]]);
-                foreach ($listSuppliersExist as $item){
-                    if((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt) ){
-                        \Session::flash('error',Lang::get('messages.MSG10003'));
-                        return redirect()->back()->withInput();
+                if(!isset($mode)) {
+                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"]]);
+                    foreach ($listSuppliersExist as $item) {
+                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
+                            \Session::flash('error', Lang::get('messages.MSG10003'));
+                            return redirect()->back()->withInput();
+                        }
                     }
                 }
                 DB::beginTransaction();
                 try
                 {
+                    if($mode=='registerHistoryLeft'){
+
+                        $mSupplier->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt"]);
+                        $mSupplier->save();
+                        $mSupplier = new MSupplier();
+                    }elseif ($mode=='edit'){
+                        $mSupplier->editSupplier($mSupplier->id,$data["adhibition_start_dt"]);
+                    }
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
                     $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
                     $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
@@ -198,6 +236,8 @@ class SuppliersController extends Controller
             'listConsumptionTaxCalcUnit' => $listConsumptionTaxCalcUnit,
             'listRoundingMethod' => $listRoundingMethod,
             'listPaymentAccountType' => $listPaymentAccountType,
+            'flagLasted' => $flagLasted,
         ]);
     }
+
 }
