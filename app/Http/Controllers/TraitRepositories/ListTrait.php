@@ -22,6 +22,17 @@ trait ListTrait
 
     protected function search($data){}
 
+    protected function queryDataKb($kb,$val)
+    {
+        if($val)
+        {
+            $this->query->where($kb,$val);
+        }
+        else
+        {
+            return null;
+        }
+    }
     public function getItems(Request $request)
     {
         $data = $request->all();

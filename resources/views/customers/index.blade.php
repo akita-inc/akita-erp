@@ -54,7 +54,7 @@
                     @foreach($fieldShowTable as $key => $field)
                         <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("customers.list.table.".$key)}}</th>
                     @endforeach
-                    <th></th>
+                    <th class="wd-60"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -71,8 +71,8 @@
                                 @endif
                             </td>
                         @endforeach
-                        <td>
-                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
+                        <td class="no-padding">
+                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                     </tr>
                     <tr v-cloak v-if="message !== ''">
