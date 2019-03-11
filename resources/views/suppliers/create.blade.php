@@ -61,21 +61,21 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row  h-100">
                         <div class="col row grid-col h-100">
-                            <label class="col-6 required" for="adhibition_start_dt_old">適用開始日（更新用）</label>
-                            <div class="col-6 wrap-control">
+                            <label class="col-7 required" for="adhibition_start_dt_old">適用開始日（更新用）</label>
+                            <div class="col-5 wrap-control">
                                 <input type="text" readonly class="form-control" id="adhibition_start_dt_old" name="adhibition_start_dt_old" value="{{str_replace('-', '/', $mSupplier->adhibition_start_dt) }}">
                             </div>
                         </div>
                         <div class="col row grid-col h-100">
-                            <label class="col-6" for="adhibition_end_dt">適用終了日（更新用）</label>
-                            <div class="col-6 wrap-control">
+                            <label class="col-7" for="adhibition_end_dt">適用終了日（更新用）</label>
+                            <div class="col-5 wrap-control">
                                 <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/', $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default') )}}">
                             </div>
                         </div>
                         <div class="break-row-form"></div>
                         <div class="col row grid-col h-100">
-                            <label class="col-6 required" for="adhibition_start_dt">適用開始日（新規用）</label>
-                            <div class="col-6 wrap-control">
+                            <label class="col-7 required" for="adhibition_start_dt">適用開始日（新規用）</label>
+                            <div class="col-5 wrap-control">
                                 <date-picker format="YYYY/MM/DD"
                                              placeholder=""
                                              v-model="adhibition_start_dt" v-cloak=""
@@ -89,8 +89,8 @@
                             </div>
                         </div>
                         <div class="col row grid-col h-100">
-                            <label class="col-6" for="adhibition_end_dt">適用終了日（新規用）</label>
-                            <div class="col-6 wrap-control">
+                            <label class="col-7" for="adhibition_end_dt">適用終了日（新規用）</label>
+                            <div class="col-5 wrap-control">
                                 <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/', config('params.adhibition_end_dt_default') )}}">
                             </div>
                         </div>
@@ -118,8 +118,8 @@
                         </div>
                         <div class="col-md-7 col-sm-12 row  h-100">
                             <div class="col row grid-col h-100">
-                                <label class="col-6 required" for="adhibition_start_dt">適用開始日</label>
-                                <div class="col-6 wrap-control">
+                                <label class="col-7 required" for="adhibition_start_dt">適用開始日</label>
+                                <div class="col-5 wrap-control">
                                     <date-picker format="YYYY/MM/DD"
                                                  placeholder=""
                                                  v-model="adhibition_start_dt" v-cloak=""
@@ -133,13 +133,13 @@
                                 </div>
                             </div>
                             <div class="col row grid-col h-100">
-                                <label class="col-6" for="adhibition_end_dt">適用終了日</label>
-                                <div class="col-6 wrap-control">
+                                <label class="col-7" for="adhibition_end_dt">適用終了日</label>
+                                <div class="col-5 wrap-control">
                                     <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default') }}">
                                 </div>
                             </div>
                             @if ($errors->has('adhibition_start_dt'))
-                                <span class="invalid-feedback d-block" role="alert">
+                                <span class="invalid-feedback d-block grid-col" role="alert">
                                     <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
                                 </span>
                             @endif
