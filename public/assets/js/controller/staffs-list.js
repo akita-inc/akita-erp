@@ -1086,6 +1086,7 @@ var ctrStaffsListVl = new Vue({
     format_date: format_date_picker,
     items: [],
     message: '',
+    auth_staff_cd: '',
     fileSearch: {
       staff_cd: "",
       position_id: "",
@@ -1121,9 +1122,16 @@ var ctrStaffsListVl = new Vue({
       var that = this;
       this.loading = true;
       staffs_service.loadList(data).then(function (response) {
+        if (response.data.data.length === 0) {
+          that.message = messages["MSG05001"];
+        } else {
+          that.message = '';
+        }
+
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.loading = false;
+        that.auth_staff_cd = auth_staff_cd;
       });
     },
     changePage: function changePage(page) {
@@ -1135,11 +1143,7 @@ var ctrStaffsListVl = new Vue({
 
       if (confirm(messages["MSG06001"])) {
         staffs_service.deleteStaffs(id).then(function (response) {
-          alert('Delete success!');
-
           _this.getItems(1);
-        }, function (error) {
-          alert('delete fail!');
         });
       }
     }
@@ -1184,7 +1188,7 @@ var ctrStaffsListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
+module.exports = __webpack_require__(/*! D:\Myproject\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
 
 
 /***/ })
