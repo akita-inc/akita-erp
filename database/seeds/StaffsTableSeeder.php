@@ -15,10 +15,10 @@ class StaffsTableSeeder extends Seeder
         DB::table('mst_staffs')->insert([
             'adhibition_start_dt'=>new \DateTime(),
             'adhibition_end_dt'=>new \DateTime(),
-            'staff_cd'=>'admi',
+            'staff_cd'=>'admin',
             'last_nm'=>'鈴木',
             'first_nm'=>'太郎',
-            'password' => bcrypt('ShinWay@2019'),
+            'password' => bcrypt('123456'),
         ]);
     }
 }

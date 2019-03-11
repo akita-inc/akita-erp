@@ -8,6 +8,7 @@ var ctrStaffsListVl = new Vue({
         format_date: format_date_picker,
         items:[],
         message:'',
+        auth_staff_cd:'',
         fileSearch:{
             staff_cd:"",
             position_id:"",
@@ -42,9 +43,15 @@ var ctrStaffsListVl = new Vue({
             var that = this;
             this.loading = true;
             staffs_service.loadList(data).then((response) => {
+                if (response.data.data.length===0) {
+                    that.message = messages["MSG05001"];
+                } else {
+                    that.message = '';
+                }
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.loading = false;
+                that.auth_staff_cd=auth_staff_cd;
             });
         },
         changePage: function (page) {
@@ -54,10 +61,7 @@ var ctrStaffsListVl = new Vue({
         deleteStaffs: function (id){
             if (confirm(messages["MSG06001"])) {
                 staffs_service.deleteStaffs(id).then((response) => {
-                    alert('Delete success!');
                     this.getItems(1);
-                },(error) => {
-                    alert('delete fail!');
                 });
             }
         }

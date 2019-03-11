@@ -141,7 +141,7 @@
                                     {!! "@{{ item['staff_nm'] }}" !!}
                                     @break
                                 @case('delete')
-                                    <button class="btn btn-delete" v-on:click="deleteStaffs(item.id)" v-if="item['staff_cd']!='admin'">削除</button>
+                                    <button class="btn btn-delete" v-on:click="deleteStaffs(item.id)" v-if="item['staff_cd']!='admin' && item['staff_cd']!=auth_staff_cd">削除</button>
                                     @break
                                 @default
                                     {!! "@{{ item['$key'] }}" !!}
@@ -149,6 +149,9 @@
                              @endswitch
                         </td>
                     @endforeach
+                </tr>
+                <tr v-cloak v-if="message !== ''">
+                    <td colspan="10">@{{message}} </td>
                 </tr>
                 </tbody>
             </table>
@@ -164,6 +167,7 @@
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        var auth_staff_cd="<?php echo @Auth::user()->staff_cd; ?>";
         var date_now ='<?php echo date('Y/m/d'); ?>';
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs-list.js') }}" charset="utf-8"></script>

@@ -123,9 +123,11 @@ class StaffsController extends Controller
         $mStaffs = new MStaffs();
         $mStaffs = $mStaffs->find($id);
         try {
-            $mStaffs->deleted_at = date('Y-m-d');
-            $mStaffs->save();
-            $response = ['data' => 'success'];
+            if ($mStaffs->deleteStaffs($id)) {
+                $response = ['data' => 'success'];
+            } else {
+                $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
+            }
 
         } catch (\Exception $ex) {
             $response = ['data' => $ex];
