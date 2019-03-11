@@ -24,6 +24,7 @@ return [
     ],
     "description-form" =>[
         "indicates_required_items" => "*　は必須入力の項目です。"
-    ]
+    ],
+    'select_option' => '===選択===',
 
 ];

@@ -78,10 +78,10 @@
         </div>
         <a href="#menu3sub1" class="list-group-item" data-toggle="collapse" aria-expanded="true">マスタ</a>
         <div class="collapse show" id="menu3sub1">
-            <a href="#" class="list-group-item" data-parent="#menu3sub1">社員</a>
+            <a href="{{ route('staffs.list') }}" class="list-group-item" data-parent="#menu3sub1">社員</a>
             <a href="{{ route('suppliers.list') }}" class="list-group-item" data-parent="#menu3sub1">仕入先</a>
             <a href="{{ route('customers.list') }}" class="list-group-item" data-parent="#menu3sub1">得意先</a>
-            <a href="#" class="list-group-item" data-parent="#menu3sub1">車両</a>
+            <a href="{{ route('vehicles.list') }}" class="list-group-item" data-parent="#menu3sub1">車両</a>
         </div>
     </div>
 </nav>
