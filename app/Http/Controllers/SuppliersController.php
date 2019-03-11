@@ -44,7 +44,7 @@ class SuppliersController extends Controller
         $this->query
             ->leftjoin('mst_general_purposes', function ($join) {
                 $join->on('mst_general_purposes.date_id', '=', 'mst_suppliers.prefectures_cd')
-                    ->where('mst_general_purposes.data_kb', config('params.data_kb.prefecture'));
+                    ->where('mst_general_purposes.data_kb', config('params.data_kb.prefecture_cd'));
             })
             ->leftjoin(DB::raw('(select mst_suppliers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_suppliers where deleted_at IS NULL group by mst_suppliers_cd) sub'), function ($join) {
                 $join->on('sub.mst_suppliers_cd', '=', 'mst_suppliers.mst_suppliers_cd');
