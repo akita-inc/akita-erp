@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMstAuthsTable extends Migration
+class CreateMstStaffAuthsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateMstAuthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mst_auths', function (Blueprint $table) {
+        Schema::create('mst_staff_auths', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('mst_role_id');
             $table->integer('mst_screen_id');
-            $table->boolean('accessible_kb')->nullable();
-            $table->boolean('screen_disp_auth_kb')->nullable();
+            $table->decimal('accessible_kb', 1,0)->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
@@ -31,6 +29,6 @@ class CreateMstAuthsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mst_auths');
+        Schema::dropIfExists('mst_staff_auths');
     }
 }

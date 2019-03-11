@@ -25,7 +25,7 @@ class CustomersController extends Controller
             'mst_customers.mst_customers_cd',
             'mst_customers.customer_nm',
             'mst_customers.customer_nm_kana',
-            DB::raw('CONCAT(mst_general_purposes.date_nm,mst_customers.address1,mst_customers.address2,mst_customers.address3) as street_address'),
+            DB::raw("CONCAT_WS('',mst_general_purposes.date_nm,mst_customers.address1,mst_customers.address2,mst_customers.address3) as street_address"),
             'mst_customers.explanations_bill',
             DB::raw("DATE_FORMAT(mst_customers.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
             DB::raw("DATE_FORMAT(mst_customers.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
@@ -33,7 +33,7 @@ class CustomersController extends Controller
             DB::raw("DATE_FORMAT(sub.max_adhibition_end_dt, '%Y/%m/%d') as max_adhibition_end_dt")
         );
         $this->query->leftJoin('mst_general_purposes', function ($join) {
-            $join->on("data_kb", "=", DB::raw(config("params.data_kb.prefecture")));
+            $join->on("data_kb", "=", DB::raw(config("params.data_kb.prefecture_cd")));
             $join->on("date_id", "=", "mst_customers.prefectures_cd");
         })
         ->leftjoin(DB::raw('(select mst_customers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_customers where deleted_at IS NULL group by mst_customers_cd) sub'), function ($join) {

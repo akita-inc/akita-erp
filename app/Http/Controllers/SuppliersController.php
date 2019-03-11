@@ -34,7 +34,7 @@ class SuppliersController extends Controller
             'mst_suppliers.mst_suppliers_cd',
             'mst_suppliers.supplier_nm',
             'mst_suppliers.supplier_nm_kana',
-            DB::raw('CONCAT(mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3) as street_address'),
+            DB::raw("CONCAT_WS('',mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3) as street_address"),
             'mst_suppliers.explanations_bill',
             DB::raw("DATE_FORMAT(mst_suppliers.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
             DB::raw("DATE_FORMAT(mst_suppliers.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
@@ -44,7 +44,7 @@ class SuppliersController extends Controller
         $this->query
             ->leftjoin('mst_general_purposes', function ($join) {
                 $join->on('mst_general_purposes.date_id', '=', 'mst_suppliers.prefectures_cd')
-                    ->where('mst_general_purposes.data_kb', config('params.data_kb.prefecture'));
+                    ->where('mst_general_purposes.data_kb', config('params.data_kb.prefecture_cd'));
             })
             ->leftjoin(DB::raw('(select mst_suppliers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_suppliers where deleted_at IS NULL group by mst_suppliers_cd) sub'), function ($join) {
                 $join->on('sub.mst_suppliers_cd', '=', 'mst_suppliers.mst_suppliers_cd');
