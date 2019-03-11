@@ -367,7 +367,7 @@ input,select{
 .table td, .table th {
     padding: 0.5rem;
 }
-.wrapper-table .table td {
+.td-nl2br {
     white-space:pre;
 }
 
@@ -387,7 +387,6 @@ input,select{
     font-size: 65%;
     font-weight: 300;
     opacity: .78;
-    padding-left: 5px;
 }
 .cd-link {
     font-weight: bold;

@@ -64,7 +64,8 @@ class CustomersController extends Controller
                 "classTH" => ""
             ],
             'explanations_bill'=> [
-                "classTH" => ""
+                "classTH" => "",
+                "classTD" => "td-nl2br",
             ],
             'adhibition_start_dt'=> [
                 "classTH" => "wd-120",
