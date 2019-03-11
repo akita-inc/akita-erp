@@ -1145,6 +1145,8 @@ var ctrVehiclesListVl = new Vue({
       this.fieldSearch.mst_business_office_id = '';
       this.fieldSearch.radio_reference_date = '1';
       this.fieldSearch.reference_date = date_now;
+      this.message = '';
+      this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fieldSearch.reference_date === '') {
@@ -1179,7 +1181,7 @@ var ctrVehiclesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
 
 
 /***/ })

@@ -20,7 +20,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true])
+                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
@@ -82,7 +82,7 @@
                         @include('Component.form.input',['class'=>'wd-250','filed'=>'zip_cd'])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        <button type="button" class="btn btn-black">〒 → 住所</button>
+                        <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
                     </div>
 
                     <div class="break-row-form"></div>
@@ -90,7 +90,7 @@
                     <!--prefectures_cd address1-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>$listPrefecture])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -130,7 +130,7 @@
 
                     <!--customer_category_id prime_business_office_id-->
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['filed'=>'customer_category_id','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['filed'=>'customer_category_id','array'=>$customer_categories])
                     </div>
 
                     <div class="col-md-5 col-sm-12 pd-l-20">
@@ -210,7 +210,7 @@
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
-                                    <button type="button" class="btn btn-black">〒 → 住所</button>
+                                    <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
                                 </div>
 
                                 <div class="break-row-form"></div>
@@ -223,9 +223,7 @@
                                         'filed'=>'prefectures_cd',
                                         'filedId'=>"'mst_bill_issue_destinations_prefectures_cd'+index",
                                         'filedMode'=>"items.prefectures_cd",
-                                        'array'=>[""=>"select",
-                                            'text','text2'
-                                            ]
+                                        'array'=>$listPrefecture
                                     ])
                                 </div>
 

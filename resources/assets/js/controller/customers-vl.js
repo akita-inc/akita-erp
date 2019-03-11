@@ -1,5 +1,6 @@
-import DatePicker from 'vue2-datepicker'
-import moment from 'moment'
+import DatePicker from 'vue2-datepicker';
+import { Core } from '../package/yubinbango-core';
+import moment from 'moment';
 
 var ctrCustomersVl = new Vue({
     el: '#ctrCustomersVl',
@@ -54,6 +55,14 @@ var ctrCustomersVl = new Vue({
         },
         addRows: function () {
             this.field.mst_bill_issue_destinations.push({});
+        },
+        getAddrFromZipCode: function() {
+            var zip = $('#zip_cd').val();
+            new Core(zip, function (addr) {
+                $('#prefectures_cd').val(addr.region_id);// 都道府県ID
+                $('#address1').val(addr.locality);// 市区町村
+                $('#address2').val(addr.street);// 町域
+            });
         },
         removeRows: function (index) {
             this.field.mst_bill_issue_destinations.splice(index, 1);
