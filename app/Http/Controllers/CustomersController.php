@@ -33,7 +33,7 @@ class CustomersController extends Controller
             DB::raw("DATE_FORMAT(sub.max_adhibition_end_dt, '%Y/%m/%d') as max_adhibition_end_dt")
         );
         $this->query->leftJoin('mst_general_purposes', function ($join) {
-            $join->on("data_kb", "=", DB::raw(config("params.data_kb.prefecture")));
+            $join->on("data_kb", "=", DB::raw(config("params.data_kb.prefecture_cd")));
             $join->on("date_id", "=", "mst_customers.prefectures_cd");
         })
         ->leftjoin(DB::raw('(select mst_customers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_customers where deleted_at IS NULL group by mst_customers_cd) sub'), function ($join) {
