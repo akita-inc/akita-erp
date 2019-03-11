@@ -20,25 +20,25 @@ trait FormTrait
         $this->query = DB::table($this->table);
     }
 
-    protected function search($data){}
-
-    public function getItems(Request $request)
+    public function validForm(Request $request)
     {
         $data = $request->all();
-        $this->getQuery();
-        $this->search( $data );
-        $items = $this->query->paginate(config('params.page_size'));
-        $response = [
-            'pagination' => [
-                'total' => $items->total(),
-                'per_page' => $items->perPage(),
-                'current_page' => $items->currentPage(),
-                'last_page' => $items->lastPage(),
-                'from' => $items->firstItem(),
-                'to' => $items->lastItem()
-            ],
-            'data' => $items
-        ];
-        return response()->json($response);
+        $data['province_id'] = $request->province_name['id'];
+        $validator = Validator::make($data, [
+            'name' => 'required',
+            'type' => 'required',
+            'province_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success'=>FALSE,
+                'message'=> $validator->errors()
+            ]);
+        }else{
+            return response()->json([
+                'success'=>true,
+                'message'=> []
+            ]);
+        }
     }
 }
