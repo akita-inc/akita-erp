@@ -1145,8 +1145,6 @@ var ctrVehiclesListVl = new Vue({
       this.fieldSearch.mst_business_office_id = '';
       this.fieldSearch.radio_reference_date = '1';
       this.fieldSearch.reference_date = date_now;
-      this.message = '';
-      this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fieldSearch.reference_date === '') {
