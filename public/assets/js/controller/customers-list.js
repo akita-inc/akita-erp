@@ -1149,11 +1149,34 @@ var ctrCustomersListVl = new Vue({
     deleteSupplier: function deleteSupplier(id) {
       var _this2 = this;
 
-      if (confirm(messages["MSG06001"])) {
-        customers_service.deleteSupplier(id).then(function (response) {
+      customers_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
           _this2.getItems(1);
-        });
-      }
+
+          return false;
+        } else {
+          if (confirm(messages["MSG06001"])) {
+            customers_service.deleteSupplier(id).then(function (response) {
+              _this2.getItems(1);
+            });
+          }
+        }
+      });
+    },
+    checkIsExist: function checkIsExist(id) {
+      var _this3 = this;
+
+      customers_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this3.getItems(1);
+        } else {
+          window.location.href = 'edit/' + id;
+        }
+      });
     }
   },
   mounted: function mounted() {
@@ -1174,7 +1197,7 @@ var ctrCustomersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
 
 
 /***/ })
