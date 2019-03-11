@@ -19,6 +19,7 @@ class MSupplier extends Model
     public $label = [
         'mst_suppliers_cd' => '仕入先コード',
         'adhibition_start_dt' => '適用開始日',
+        'adhibition_start_dt_new' => '適用開始日（新規用）',
         'adhibition_end_dt' => '適用終了日',
         'supplier_nm' => '仕入先名',
         'supplier_nm_kana' => '仕入先カナ名',

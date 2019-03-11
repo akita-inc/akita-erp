@@ -4536,7 +4536,9 @@ var ctrSupplierrsVl = new Vue({
   el: '#ctrSupplierrsVl',
   data: {
     adhibition_start_dt: $('#adhibition_start_dt').val(),
+    adhibition_end_dt: $('#adhibition_end_dt').val(),
     business_start_dt: $('#business_start_dt').val(),
+    adhibition_start_dt_new: $('#adhibition_start_dt_new').val(),
     lang: lang_date_picker,
     name: '',
     furigana: '',
@@ -4545,15 +4547,14 @@ var ctrSupplierrsVl = new Vue({
   methods: {
     convertKana: function convertKana(input, destination) {
       this.history.push(input.target.value);
-      this.furigana = historykana__WEBPACK_IMPORTED_MODULE_2___default()(this.history); // $('#'+destination).val(this.furigana);
-
+      this.furigana = historykana__WEBPACK_IMPORTED_MODULE_2___default()(this.history);
       suppliers_service.convertKana({
         'data': this.furigana
       }).then(function (data) {
         $('#' + destination).val(data.info);
       });
     },
-    onBlur: function (){
+    onBlur: function onBlur() {
       this.history = [];
       this.furigana = '';
     },
@@ -4566,12 +4567,6 @@ var ctrSupplierrsVl = new Vue({
 
         $('#address2').val(addr.street); // 町域
       });
-    },
-    onChangeDatepicker1: function onChangeDatepicker1(input) {
-      $('#adhibition_start_dt').val(input);
-    },
-    onChangeDatepicker2: function onChangeDatepicker2(input) {
-      $('#business_start_dt').val(input);
     }
   },
   mounted: function mounted() {},
