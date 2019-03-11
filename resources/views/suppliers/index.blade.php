@@ -74,7 +74,7 @@
                             <span>{!! "@{{ item['supplier_nm'] }}" !!}</span>
                         </td>
                         <td>{!! "@{{ item['street_address'] }}" !!}</td>
-                        <td>{!! "@{{ item['explanations_bill'] }}" !!}</td>
+                        <td class="td-nl2br">{!! "@{{ item['explanations_bill'] }}" !!}</td>
                         <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
