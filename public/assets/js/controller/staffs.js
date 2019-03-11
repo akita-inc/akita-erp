@@ -81,106 +81,37 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/assets/js/service/customers-service.js":
-/*!**********************************************************!*\
-  !*** ./resources/assets/js/service/customers-service.js ***!
-  \**********************************************************/
+/***/ "./resources/assets/js/controller/staffs-vl.js":
+/*!*****************************************************!*\
+  !*** ./resources/assets/js/controller/staffs-vl.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-customers_service = {
-  loadList: function loadList(data) {
-    return axios.post('/customers/api-v1/getItems', data).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
+var ctrStaffsVl = new Vue({
+  el: '#ctrStaffsVl',
+  data: {},
+  methods: {//end action list
   },
-  deleteSupplier: function deleteSupplier(id) {
-    return axios.get('/customers/delete/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  }
-};
+  mounted: function mounted() {},
+  components: {}
+});
 
 /***/ }),
 
-/***/ "./resources/assets/js/service/staffs-service.js":
-/*!*******************************************************!*\
-  !*** ./resources/assets/js/service/staffs-service.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-staffs_service = {
-  loadList: function loadList(data) {
-    return axios.post('/staffs/api-v1/getItems', data).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  deleteStaffs: function deleteStaffs(id) {
-    return axios.get('/staffs/api-v1/delete/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  }
-};
-
-/***/ }),
-
-/***/ "./resources/assets/js/service/suppliers-service.js":
-/*!**********************************************************!*\
-  !*** ./resources/assets/js/service/suppliers-service.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-suppliers_service = {
-  convertKana: function convertKana(input) {
-    return axios.post('/api/supplier/convert-to-kana', input).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  loadList: function loadList(data) {
-    return axios.post('/suppliers/api-v1/getItems', data).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  deleteSupplier: function deleteSupplier(id) {
-    return axios.get('/suppliers/delete/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  }
-};
-
-/***/ }),
-
-/***/ 1:
-/*!*******************************************************************************************************************************************************************!*\
-  !*** multi ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ***!
-  \*******************************************************************************************************************************************************************/
+/***/ 8:
+/*!***********************************************************!*\
+  !*** multi ./resources/assets/js/controller/staffs-vl.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

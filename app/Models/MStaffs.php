@@ -33,7 +33,7 @@ class MStaffs extends Authenticatable
         'password', 'remember_token'
     ];
     const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+    const UPDATED_AT = 'modified_at';
     public $rules = [
 
     ];
