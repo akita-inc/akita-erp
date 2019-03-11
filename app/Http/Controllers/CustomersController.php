@@ -25,7 +25,7 @@ class CustomersController extends Controller
             'mst_customers.mst_customers_cd',
             'mst_customers.customer_nm',
             'mst_customers.customer_nm_kana',
-            DB::raw('CONCAT(mst_general_purposes.date_nm,mst_customers.address1,mst_customers.address2,mst_customers.address3) as street_address'),
+            DB::raw("CONCAT_WS('',mst_general_purposes.date_nm,mst_customers.address1,mst_customers.address2,mst_customers.address3) as street_address"),
             'mst_customers.explanations_bill',
             DB::raw("DATE_FORMAT(mst_customers.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
             DB::raw("DATE_FORMAT(mst_customers.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
