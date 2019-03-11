@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\TimeFunction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -62,28 +63,72 @@ class MSupplier extends Model
 
     ];
 
-    public function getSuppliers($where = array()){
+    public function getHistoryNearest($supplier_cd, $adhibition_end_dt) {
         $suppliers = new MSupplier();
-        $suppliers = $suppliers->select(DB::raw('mst_suppliers.*'))
-                                ->addselect('mst_general_purposes.date_nm');
-        $suppliers = $suppliers->leftjoin('mst_general_purposes', function ($join) {
-            $join->on('mst_general_purposes.date_id', '=', 'mst_suppliers.prefectures_cd')
-                    ->where('mst_general_purposes.data_kb', config('params.data_kb')['prefecture']);
-        });
+        $suppliers = $suppliers->where('mst_suppliers_cd', '=', $supplier_cd)
+                                ->where("adhibition_end_dt", "<", $adhibition_end_dt)
+                                ->orderByDesc("adhibition_end_dt");
+        return $suppliers->first();
+    }
+
+    public function deleteSupplier($id){
+        $mSupplier = new MSupplier();
+        $mSupplier = $mSupplier->find($id);
+
+        DB::beginTransaction();
+        try
+        {
+            $historySupplier = $this->getHistoryNearest($mSupplier->mst_suppliers_cd, $mSupplier->adhibition_end_dt);
+            if (isset($historySupplier)) {
+                $historySupplier->adhibition_end_dt = $mSupplier->adhibition_end_dt;
+                $historySupplier->save();
+            }
+            $mSupplier->delete();
+            DB::commit();
+            return true;
+        } catch (\Exception $ex){
+            DB::rollBack();
+            return false;
+        }
+    }
+
+    public function getSuppliersByCondition($where = array()){
+        $suppliers = new MSupplier();
+        $suppliers = $suppliers->select(DB::raw('mst_suppliers.*'));
 
         // 検索条件
         if (isset($where['suppliers_cd']) && $where['suppliers_cd'] != '')
-            $suppliers = $suppliers->where('mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%");
-        if (isset($where['supplier_nm']) && $where['supplier_nm'] != '')
-            $suppliers = $suppliers->where('supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
-        if (isset($where['reference_date']) && $where['reference_date'] != '') {
-            $suppliers = $suppliers->where('adhibition_start_dt', "<=", $where['reference_date']);
-            $suppliers = $suppliers->where('adhibition_end_dt', ">=", $where['reference_date']);
-        }
+            $suppliers = $suppliers->where('mst_suppliers_cd', "=", $where['suppliers_cd']);
 
         $suppliers->orderBy('mst_suppliers_cd', 'adhibition_start_dt');
 
-        return $suppliers->paginate(config("params.page_size"));
+        return $suppliers->get();
+    }
+    public function getLastedSupplier($suppliers_cd){
+        $suppliers = new MSupplier();
+        $suppliers = $suppliers->select(DB::raw('max(id) as max'))
+        ->where('mst_suppliers_cd', "=", $suppliers_cd);
+        return $suppliers->first();
+    }
+
+    public function editSupplier($id, $adhibition_start_dt){
+        $mSupplier = new MSupplier();
+        $mSupplier = $mSupplier->find($id);
+
+        DB::beginTransaction();
+        try
+        {
+            $historySupplier = $this->getHistoryNearest($mSupplier->mst_suppliers_cd, $mSupplier->adhibition_end_dt);
+            if (isset($historySupplier)) {
+                $historySupplier->adhibition_end_dt = TimeFunction::subOneDay($adhibition_start_dt);
+                $historySupplier->save();
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $ex){
+            DB::rollBack();
+            return false;
+        }
     }
 
 }

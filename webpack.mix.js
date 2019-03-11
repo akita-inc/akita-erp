@@ -18,6 +18,8 @@ mix.js([
     //append-auto-service
     'resources/assets/js/service/customers-service.js',
     'resources/assets/js/service/suppliers-service.js',
+    'resources/assets/js/service/staffs-service.js',
+    'resources/assets/js/service/vehicles-service.js',
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -41,3 +43,15 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/suppliers-vl.js'
 ], 'public/assets/js/controller/suppliers.js');
+
+mix.js([
+    'resources/assets/js/controller/staffs-list-vl.js'
+], 'public/assets/js/controller/staffs-list.js');
+
+mix.js([
+    'resources/assets/js/controller/staffs-vl.js'
+], 'public/assets/js/controller/staffs.js');
+//vehicles
+mix.js([
+    'resources/assets/js/controller/vehicles-list-vl.js'
+], 'public/assets/js/controller/vehicles-list.js');

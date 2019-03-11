@@ -34,25 +34,7 @@
                         </div>
                     </div>
                     <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-6 col-sm-12 lh-38">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" v-model="fieldSearch.radio_reference_date" class="form-check-input" name="supplier_date" value="0">{{trans("suppliers.list.search.radio-all")}}
-                                </label>
-                            </div>
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" v-model="fieldSearch.radio_reference_date" v-on:click="setDefault()" class="form-check-input" name="supplier_date" value="1" checked>{{trans("suppliers.list.search.radio-reference-date")}}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-sm-12 input-group date" data-provide="datepicker">
-                            <input type="text" v-model="fieldSearch.reference_date" class="form-control" name="reference_date" id="reference_date" style="width: 130px;">
-                            <div class="input-group-addon">
-                                <span class="fa fa-calendar input-group-text" aria-hidden="true"></span>
-                            </div>
-                        </div>
+                        @include('Component.search.search-reference-date',['field_radio'=>'fieldSearch.radio_reference_date','field_date'=>'fieldSearch.reference_date'])
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
@@ -73,22 +55,22 @@
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
-                    <th width="8%">仕入先CD</th>
-                    <th width="20%">仕入先名</th>
-                    <th width="20%">住所</th>
-                    <th width="18%">支払いに関する説明</th>
-                    <th width="9%">適用開始日</th>
-                    <th width="9%">適用開始日</th>
-                    <th width="9%">更新日時</th>
-                    <th width="7%"></th>
+                    <th class="wd-100">{{trans('suppliers.list.table.mst_suppliers_cd')}}</th>
+                    <th>{{trans('suppliers.list.table.supplier_nm')}}</th>
+                    <th>{{trans('suppliers.list.table.street_address')}}</th>
+                    <th>{{trans('suppliers.list.table.explanations_bill')}}</th>
+                    <th class="wd-120">{{trans('suppliers.list.table.adhibition_start_dt')}}</th>
+                    <th class="wd-120">{{trans('suppliers.list.table.adhibition_end_dt')}}</th>
+                    <th class="wd-120">{{trans('suppliers.list.table.modified_at')}}</th>
+                    <th class="wd-60"></th>
                 </tr>
                 </thead>
                 <tbody>
                     <tr v-cloak v-for="item in items">
-                        <td><a class="cd-link" href="">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
+                        <td><a class="cd-link" :href="'{{route('suppliers.edit','')}}'+'/'+item.id">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
                         <td>
                             <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
-                            <br>
+                            <br v-if="item['supplier_nm_kana']">
                             <span>{!! "@{{ item['supplier_nm'] }}" !!}</span>
                         </td>
                         <td>{!! "@{{ item['street_address'] }}" !!}</td>
@@ -96,8 +78,8 @@
                         <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
-                        <td>
-                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete" v-on:click="deleteSupplier(item['id'])">削除</button>
+                        <td class="no-padding">
+                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                     </tr>
                     <tr v-cloak v-if="message !== ''">

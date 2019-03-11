@@ -18,9 +18,13 @@ return [
         'search' => '検索',
         'back' => '戻る',
         'register' => '登録',
+        'edit' => '更新',
+        'delete' => '削除',
+        'register_history_left' =>'新規登録(履歴残し)'
     ],
     "description-form" =>[
         "indicates_required_items" => "*　は必須入力の項目です。"
-    ]
+    ],
+    'select_option' => '===選択===',
 
 ];
