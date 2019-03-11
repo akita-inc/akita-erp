@@ -482,7 +482,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="consumption_tax_calc_unit_id" name="consumption_tax_calc_unit_id">
                                 @foreach($listConsumptionTaxCalcUnit as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mSupplier->consumption_tax_calc_unit_id || $key==old('consumption_tax_calc_unit_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ ($key==$mSupplier->consumption_tax_calc_unit_id && !is_null($mSupplier->consumption_tax_calc_unit_id))  || ($key==old('consumption_tax_calc_unit_id') && !is_null(old('consumption_tax_calc_unit_id')) ) ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
