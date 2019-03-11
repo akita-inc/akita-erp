@@ -62,12 +62,12 @@
                         @foreach($fieldShowTable as $key => $field)
                             <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @if ($key == 'customer_nm')
-                                    <span class="xsmall">{!! "@{{ item['customer_nm_kana'] }}" !!}</span><br>
+                                    <span class="xsmall">{!! "@{{ item['customer_nm_kana'] }}" !!}</span><br v-if="item['customer_nm_kana']">
                                 @endif
                                 @if( $key == 'mst_customers_cd' )
                                     <a class="cd-link" href="">{!! "@{{ item['$key'] }}" !!}</a>
                                 @else
-                                    {!! "@{{ item['$key'] }}" !!}
+                                    <span>{!! "@{{ item['$key'] }}" !!}</span>
                                 @endif
                             </td>
                         @endforeach

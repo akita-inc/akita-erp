@@ -70,7 +70,7 @@
                         <td><a class="cd-link" :href="'{{route('suppliers.edit','')}}'+'/'+item.id">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
                         <td>
                             <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
-                            <br>
+                            <br v-if="item['supplier_nm_kana']">
                             <span>{!! "@{{ item['supplier_nm'] }}" !!}</span>
                         </td>
                         <td>{!! "@{{ item['street_address'] }}" !!}</td>
