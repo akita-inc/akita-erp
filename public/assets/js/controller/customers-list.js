@@ -1140,8 +1140,6 @@ var ctrCustomersListVl = new Vue({
       this.fileSearch.customer_nm = '';
       this.fileSearch.status = 1;
       this.fileSearch.reference_date = date_now;
-      this.message = '';
-      this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fileSearch.reference_date === '') {

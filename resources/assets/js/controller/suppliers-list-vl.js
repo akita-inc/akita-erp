@@ -61,8 +61,6 @@ var ctrSuppliersListVl = new Vue({
             this.fieldSearch.supplier_nm = '';
             this.fieldSearch.radio_reference_date = '1';
             this.fieldSearch.reference_date = date_now;
-            this.message = '';
-            this.getItems(1);
         },
         setDefault: function (){
             if (this.fieldSearch.reference_date === '') {
