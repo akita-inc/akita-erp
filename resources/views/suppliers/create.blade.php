@@ -6,30 +6,34 @@
 @endsection
 @section('content')
     <div class="row row-xs" id="ctrSupplierrsVl">
-        <form class="form-inline" role="form" method="post">
+        <form class="form-inline" role="form" method="post" id="form1" action="{{$mSupplier->id ? route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'edit']): ''}}">
             @csrf
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
                         <button class="btn btn-black">{{ trans("common.button.back") }}</button>
                     </div>
+                    @if($mSupplier->id)
                     <div class="d-flex ml-auto">
-                        <button class="btn btn-danger">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-danger text-white" onclick="detele()">{{ trans("common.button.delete") }}</button>
                     </div>
+                    @endif
                 </div>
                 @if($mSupplier->id)
                     <div class="grid-form border-0">
                         <div class="row">
                             <div class="col-md-5 col-sm-12 row grid-col"></div>
                             <div class="col-md-7 col-sm-12 row grid-col">
-                                <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.edit") }}</button>
-                                <button class="btn btn-primary btn-submit m-auto" type="button">{{ trans("common.button.register_history_left") }}</button>
+                                <button class="btn btn-primary btn-submit" type="submit" disabled>{{ trans("common.button.edit") }}</button>
+                                @if($flagLasted)
+                                <button class="btn btn-primary btn-submit m-auto" type="button" onclick="registerHistoryLeft()" >{{ trans("common.button.register_history_left") }}</button>
+                                @endif
                             </div>
                         </div>
                     </div>
                 @else
                     <div class="sub-header-line-two">
-                        <button class="btn btn-primary btn-submit" type="submit">登録</button>
+                        <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.register") }}</button>
                     </div>
                 @endif
             </div>
@@ -38,13 +42,17 @@
             <div class="w-100">
                 @include('Layouts.alert')
             </div>
+            @if($mSupplier->id)
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="mst_suppliers_cd">仕入先コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" maxlength="5" value="{{ $mSupplier->mst_suppliers_cd ?? old('mst_suppliers_cd') }}">
+                            <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" readonly maxlength="5" value="{{ $mSupplier->mst_suppliers_cd ?? old('mst_suppliers_cd') }}">
                         </div>
+                        <span class="note">
+                            ※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。
+                        </span>
                         @if ($errors->has('mst_suppliers_cd'))
                             <span class="invalid-feedback d-block" role="alert">
                                     <strong>{{ $errors->first('mst_suppliers_cd') }}</strong>
@@ -53,40 +61,98 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row  h-100">
                         <div class="col row grid-col h-100">
-                            <label class="col-6 required" for="adhibition_start_dt">適用開始日</label>
+                            <label class="col-6 required" for="adhibition_start_dt_old">適用開始日（更新用）</label>
                             <div class="col-6 wrap-control">
-                            <date-picker format="YYYY/MM/DD"
-                                         placeholder=""
-                                         v-model="adhibition_start_dt" v-cloak=""
-                                         :lang="lang"
-                                         :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
-                                         v-on:change="onChangeDatepicker1"
-                                         :value-type="'format'"
-                            >
-                            </date-picker>
-                            <input type="hidden" class="form-control {{$errors->has('adhibition_start_dt')? 'is-invalid': ''}}" name="adhibition_start_dt" id="adhibition_start_dt" value="{{ $mSupplier->adhibition_start_dt ?? old('adhibition_start_dt') }}" >
+                                <input type="text" readonly class="form-control" id="adhibition_start_dt_old" name="adhibition_start_dt_old" value="{{str_replace('-', '/', $mSupplier->adhibition_start_dt) }}">
                             </div>
                         </div>
                         <div class="col row grid-col h-100">
-                            <label class="col-6" for="adhibition_end_dt">適用開始日</label>
+                            <label class="col-6" for="adhibition_end_dt">適用終了日（更新用）</label>
                             <div class="col-6 wrap-control">
-                                <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default') }}">
+                                <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/', $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default') )}}">
+                            </div>
+                        </div>
+                        <div class="break-row-form"></div>
+                        <div class="col row grid-col h-100">
+                            <label class="col-6 required" for="adhibition_start_dt">適用開始日（新規用）</label>
+                            <div class="col-6 wrap-control">
+                                <date-picker format="YYYY/MM/DD"
+                                             placeholder=""
+                                             v-model="adhibition_start_dt" v-cloak=""
+                                             :lang="lang"
+                                             :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
+                                             v-on:change="onChangeDatepicker1"
+                                             :value-type="'format'"
+                                >
+                                </date-picker>
+                                <input type="hidden" class="form-control {{$errors->has('adhibition_start_dt')? 'is-invalid': ''}}" name="adhibition_start_dt" id="adhibition_start_dt" value="{{ old('adhibition_start_dt') }}" >
+                            </div>
+                        </div>
+                        <div class="col row grid-col h-100">
+                            <label class="col-6" for="adhibition_end_dt">適用終了日（新規用）</label>
+                            <div class="col-6 wrap-control">
+                                <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/', config('params.adhibition_end_dt_default') )}}">
                             </div>
                         </div>
                         @if ($errors->has('adhibition_start_dt'))
-                            <span class="invalid-feedback d-block" role="alert">
+                            <span class="invalid-feedback d-block grid-col" role="alert">
                                     <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
                                 </span>
                         @endif
                     </div>
                 </div>
             </div>
+            @else
+                <div class="grid-form">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 row grid-col h-100">
+                            <label class="col-md-5 col-sm-5 required" for="mst_suppliers_cd">仕入先コード</label>
+                            <div class="col-md-7 col-sm-7 wrap-control">
+                                <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" maxlength="5" value="{{ $mSupplier->mst_suppliers_cd ?? old('mst_suppliers_cd') }}">
+                            </div>
+                            @if ($errors->has('mst_suppliers_cd'))
+                                <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('mst_suppliers_cd') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                        <div class="col-md-7 col-sm-12 row  h-100">
+                            <div class="col row grid-col h-100">
+                                <label class="col-6 required" for="adhibition_start_dt">適用開始日</label>
+                                <div class="col-6 wrap-control">
+                                    <date-picker format="YYYY/MM/DD"
+                                                 placeholder=""
+                                                 v-model="adhibition_start_dt" v-cloak=""
+                                                 :lang="lang"
+                                                 :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
+                                                 v-on:change="onChangeDatepicker1"
+                                                 :value-type="'format'"
+                                    >
+                                    </date-picker>
+                                    <input type="hidden" class="form-control {{$errors->has('adhibition_start_dt')? 'is-invalid': ''}}" name="adhibition_start_dt" id="adhibition_start_dt" value="{{ $mSupplier->adhibition_start_dt ?? old('adhibition_start_dt') }}" >
+                                </div>
+                            </div>
+                            <div class="col row grid-col h-100">
+                                <label class="col-6" for="adhibition_end_dt">適用終了日</label>
+                                <div class="col-6 wrap-control">
+                                    <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default') }}">
+                                </div>
+                            </div>
+                            @if ($errors->has('adhibition_start_dt'))
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="supplier_nm">仕入先名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" v-on:keyup="convertKana($event, 'supplier_nm_kana')" value="{{ $mSupplier->supplier_nm ?? old('supplier_nm') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" v-on:input="convertKana($event, 'supplier_nm_kana')" value="{{ $mSupplier->supplier_nm ?? old('supplier_nm') }}" maxlength="200" v-on:blur="onFocus">
                         </div>
                         @if ($errors->has('supplier_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -109,7 +175,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="supplier_nm_formal">仕入先正式名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm_formal')? 'is-invalid': ''}}" id="supplier_nm_formal" name="supplier_nm_formal" v-on:keyup="convertKana($event, 'supplier_nm_kana_formal')" value="{{ $mSupplier->supplier_nm_formal ?? old('supplier_nm_formal') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm_formal')? 'is-invalid': ''}}" id="supplier_nm_formal" name="supplier_nm_formal" v-on:input="convertKana($event, 'supplier_nm_kana_formal')" value="{{ $mSupplier->supplier_nm_formal ?? old('supplier_nm_formal') }}" maxlength="200">
                         </div>
                         @if ($errors->has('supplier_nm_formal'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -135,7 +201,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="dealing_person_in_charge_last_nm">取引担当者名(姓）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_last_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_last_nm" name="dealing_person_in_charge_last_nm" v-on:keyup="convertKana($event, 'dealing_person_in_charge_last_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_last_nm ?? old('dealing_person_in_charge_last_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_last_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_last_nm" name="dealing_person_in_charge_last_nm" v-on:input="convertKana($event, 'dealing_person_in_charge_last_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_last_nm ?? old('dealing_person_in_charge_last_nm') }}" maxlength="25">
                         </div>
                         @if ($errors->has('dealing_person_in_charge_last_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -158,7 +224,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="dealing_person_in_charge_first_nm">取引担当者名(名）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_first_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_first_nm" name="dealing_person_in_charge_first_nm" v-on:keyup="convertKana($event, 'dealing_person_in_charge_first_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_first_nm ?? old('dealing_person_in_charge_first_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_first_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_first_nm" name="dealing_person_in_charge_first_nm" v-on:input="convertKana($event, 'dealing_person_in_charge_first_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_first_nm ?? old('dealing_person_in_charge_first_nm') }}" maxlength="25">
                         </div>
                         @if ($errors->has('dealing_person_in_charge_first_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -184,7 +250,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_last_nm">経理担当者名(姓）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_last_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_last_nm" name="accounting_person_in_charge_last_nm" v-on:keyup="convertKana($event, 'accounting_person_in_charge_last_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_last_nm ?? old('accounting_person_in_charge_last_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_last_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_last_nm" name="accounting_person_in_charge_last_nm" v-on:input="convertKana($event, 'accounting_person_in_charge_last_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_last_nm ?? old('accounting_person_in_charge_last_nm') }}" maxlength="25">
                         </div>
                         @if ($errors->has('accounting_person_in_charge_last_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -207,7 +273,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_first_nm">経理担当者名(名）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_first_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" v-on:keyup="convertKana($event, 'accounting_person_in_charge_first_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_first_nm ?? old('accounting_person_in_charge_first_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_first_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" v-on:input="convertKana($event, 'accounting_person_in_charge_first_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_first_nm ?? old('accounting_person_in_charge_first_nm') }}" maxlength="25">
                         </div>
                         @if ($errors->has('accounting_person_in_charge_first_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -531,5 +597,20 @@
     </div>
 @endsection
 @section("scripts")
+    <script>
+
+        var messages = [];
+        messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        function registerHistoryLeft() {
+            $('#form1').attr('action','{{route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'registerHistoryLeft'])}}');
+            $('#form1').submit();
+        }
+        function detele() {
+            if(confirm(messages['MSG06001'])){
+                $('#form1').attr('action','{{route('suppliers.delete.post',['id' => $mSupplier->id])}}');
+                $('#form1').submit();
+            }
+        }
+    </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/suppliers.js') }}" charset="utf-8"></script>
 @endsection

@@ -60,4 +60,7 @@ class TimeFunction
             return '';
         }
     }
+    static function subOneDay($date, $format='Y-m-d'){
+        return Carbon::parse($date)->subDay()->format($format);
+    }
 }

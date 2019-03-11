@@ -163,14 +163,14 @@ class Common {
         else // to katakana 2 byte
         {
             //convert kanji to hiragana
-            $igo = new \Igo(dirname(__FILE__) . "/ipadic");
-            $result = $igo->parse($string);
-            $str = "";
-            foreach($result as $value){
-                $feature = explode(",", $value->feature);
-                $str .= isset($feature[7]) ? $feature[7] : $value->surface;
-            }
-            $string = mb_convert_kana($str, "c", "utf-8");
+//            $igo = new \Igo(dirname(__FILE__) . "/ipadic");
+//            $result = $igo->parse($string);
+//            $str = "";
+//            foreach($result as $value){
+//                $feature = explode(",", $value->feature);
+//                $str .= isset($feature[7]) ? $feature[7] : $value->surface;
+//            }
+//            $string = mb_convert_kana($str, "c", "utf-8");
             if($string !="")
             {
                 $string = preg_replace('/[^ぁ-ん]+/u', '', $string);

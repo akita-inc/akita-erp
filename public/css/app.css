@@ -1,5 +1,6 @@
 body{
     font-family: Arial, "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+    font-size: 14px;
 }
 .wrapper-container{
     margin-bottom: 80px;
@@ -407,4 +408,7 @@ input,select{
     padding-left: 5px;
     padding-right: 5px;
     line-height: 15px;
+}
+span.note{
+    font-size: 13px;
 }
