@@ -143,24 +143,176 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'explanations_bill'])
+                        @include('Component.form.textarea',['filed'=>'explanations_bill'])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'person_in_charge_last_nm_kana'])
+                        @include('Component.form.input',['class'=>'wd-250','filed'=>'bundle_dt'])
+                        <div class="break-row-form"></div>
+                        <div class="col-md-12 col-sm-12 row grid-col no-padding">
+                            <div class="col-md-6 col-sm-12 no-padding">
+                                @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_month_id','array'=>[""=>"select",'text','text2']])
+                            </div>
+                            <div class="col-md-6 col-sm-12 pd-l-20">
+                                @include('Component.form.input',['class'=>'wd-250','filed'=>'deposit_day'])
+                            </div>
+                        </div>
                     </div>
 
                     <div class="break-row-form"></div>
+
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'person_in_charge_first_nm'])
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_method_id','array'=>[""=>"select",'text','text2']])
+                        <div class="break-row-form"></div>
+                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'business_start_dt'])
+                    </div>
+                    <div class="col-md-7 col-sm-12 pd-l-20">
+                        @include('Component.form.textarea',['filed'=>'deposit_method_notes'])
                     </div>
 
+                    <div class="break-row-form"></div>
+
+                    <div class="col-md-5 col-sm-12">
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'consumption_tax_calc_unit_id','array'=>[""=>"select",'text','text2']])
+                    </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'person_in_charge_first_nm_kana'])
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'rounding_method_id','array'=>[""=>"select",'text','text2']])
+                    </div>
+
+                    <div class="break-row-form"></div>
+
+                    <div class="col-md-5 col-sm-12">
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'discount_rate'])
+                    </div>
+                    <div class="col-md-7 col-sm-12 pd-l-20">
+                        @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','label'=>'あり'])
+                    </div>
+
+                </div>
+            </div>
+            <!--Block 6-->
+            <div class="grid-form">
+                <p class="header-collapse" >
+                    <a data-toggle="collapse" href="#b_mst_bill_issue_destinations" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        請求書発行先
+                    </a>
+                </p>
+                <div class="collapse" id="b_mst_bill_issue_destinations">
+                    <div class="wrapper-collapse">
+                        <div class="grid-form items-collapse" v-for="(items,index) in field.mst_bill_issue_destinations">
+                            <div v-cloak class="row">
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.input-vue',[
+                                        'class'=>'wd-350',
+                                        'filed'=>'zip_cd',
+                                        'filedId'=>"'mst_bill_issue_destinations_zip_cd'+index",
+                                        'filedMode'=>"items.zip_cd",
+                                    ])
+                                </div>
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    <button type="button" class="btn btn-black">〒 → 住所</button>
+                                </div>
+
+                                <div class="break-row-form"></div>
+
+                                <!--prefectures_cd address1-->
+
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.select-vue',[
+                                        'class'=>'wd-300',
+                                        'filed'=>'prefectures_cd',
+                                        'filedId'=>"'mst_bill_issue_destinations_prefectures_cd'+index",
+                                        'filedMode'=>"items.prefectures_cd",
+                                        'array'=>[""=>"select",
+                                            'text','text2'
+                                            ]
+                                    ])
+                                </div>
+
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.input-vue',[
+                                        'filed'=>'address1',
+                                        'filedId'=>"'mst_bill_issue_destinations_address1'+index",
+                                        'filedMode'=>"items.address1",
+                                    ])
+                                </div>
+
+                                <div class="break-row-form"></div>
+
+                                <!--address2 address3-->
+
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.input-vue',[
+                                        'filed'=>'address2',
+                                        'filedId'=>"'mst_bill_issue_destinations_address2'+index",
+                                        'filedMode'=>"items.address2",
+                                    ])
+                                </div>
+
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.input-vue',[
+                                        'filed'=>'address3',
+                                        'filedId'=>"'mst_bill_issue_destinations_address3'+index",
+                                        'filedMode'=>"items.address3",
+                                    ])
+                                </div>
+
+                                <div class="break-row-form"></div>
+                                <!--phone_number fax_number-->
+
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.input-vue',[
+                                        'class'=>'wd-350',
+                                        'filed'=>'phone_number',
+                                        'filedId'=>"'mst_bill_issue_destinations_phone_number'+index",
+                                        'filedMode'=>"items.phone_number",
+                                    ])
+                                </div>
+
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.input-vue',[
+                                        'class'=>'wd-350',
+                                        'filed'=>'fax_number',
+                                        'filedId'=>"'mst_bill_issue_destinations_fax_number'+index",
+                                        'filedMode'=>"items.fax_number",
+                                    ])
+                                </div>
+                            </div>
+                            <button @click="removeRows(index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                        </div>
+                        <button @click="addRows" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
                 </div>
             </div>
+            <!--Block 7-->
+            <div class="grid-form">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_bank_cd','array'=>[""=>"select",'text','text2']])
+                    </div>
 
+                    <div class="break-row-form"></div>
+
+                    <div class="col-md-5 col-sm-12">
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id','array'=>[""=>"select",'text','text2']])
+                    </div>
+                    <div class="col-md-7 col-sm-12 pd-l-20 row grid-col">
+                        <div class="col-md-6 col-sm-12 no-padding">
+                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_2','array'=>[""=>"select",'text','text2']])
+                        </div>
+
+                        <div class="col-md-6 col-sm-12 pd-l-20">
+                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_3','array'=>[""=>"select",'text','text2']])
+                        </div>
+                    </div>
+
+                    <div class="break-row-form"></div>
+
+                    <div class="col-md-5 col-sm-12">
+                        @include('Component.form.textarea',['filed'=>'notes'])
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 @endsection

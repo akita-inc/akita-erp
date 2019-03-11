@@ -35,10 +35,12 @@ var ctrCustomersVl = new Vue({
             rounding_method_id:"",
             discount_rate:"",
             except_g_drive_bill_fg:"",
-            mst_bill_issue_destinations:[{
-                mst_bill_issue_destinations:"",
-                bill_address1:"",
-            }]
+            mst_bill_issue_destinations:[{}],
+            deposit_bank_cd:"",
+            mst_account_titles_id: "",
+            mst_account_titles_id_2: "",
+            mst_account_titles_id_3: "",
+            notes:""
         }
     },
     methods : {
@@ -49,6 +51,12 @@ var ctrCustomersVl = new Vue({
             parse: (value) => {
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
+        },
+        addRows: function () {
+            this.field.mst_bill_issue_destinations.push({});
+        },
+        removeRows: function (index) {
+            this.field.mst_bill_issue_destinations.splice(index, 1);
         }
     },
     mounted () {
