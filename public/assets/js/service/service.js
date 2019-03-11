@@ -204,10 +204,10 @@ vehicles_service = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-__webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
-__webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
-module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
 
 
 /***/ })

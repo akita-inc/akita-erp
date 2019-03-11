@@ -9,10 +9,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MCustomers;
+use App\Models\MCustomersCategories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-
+use App\Models\MGeneralPurposes;
 class CustomersController extends Controller
 {
     use ListTrait;
@@ -94,6 +95,14 @@ class CustomersController extends Controller
     }
 
     public function create(Request $request){
-        return view('customers.create');
+        $mGeneralPurposes = new MGeneralPurposes();
+        $mCustomerCategories=new MCustomersCategories();
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
+        $customer_categories=$mCustomerCategories->getAllData();
+//        dd($listPrefecture);
+        return view('customers.create', [
+                                'listPrefecture' => $listPrefecture,
+                                'customer_categories'=>$customer_categories
+        ]);
     }
 }
