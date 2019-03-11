@@ -4553,7 +4553,7 @@ var ctrSupplierrsVl = new Vue({
         $('#' + destination).val(data.info);
       });
     },
-    onFocus: function onFocus() {
+    onBlur: function (){
       this.history = [];
       this.furigana = '';
     },
