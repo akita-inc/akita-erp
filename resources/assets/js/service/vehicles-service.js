@@ -13,5 +13,12 @@ vehicles_service = {
         }).catch(function (error) {
             return error;
         });
+    },
+    checkIsExist: function (id) {
+        return axios.get('/vehicles/api-v1/checkIsExist/' + id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
     }
 }

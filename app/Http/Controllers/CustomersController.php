@@ -94,6 +94,16 @@ class CustomersController extends Controller
         return response()->json($response);
     }
 
+    public function checkIsExist($id){
+        $mCustomers = new MCustomers();
+        $mCustomers = $mCustomers->find($id);
+        if (isset($mCustomers)) {
+            return Response()->json(array('success'=>true));
+        } else {
+            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+        }
+    }
+
     public function create(Request $request){
         return view('customers.create');
     }
