@@ -152,7 +152,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="supplier_nm">仕入先名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" v-on:input="convertKana($event, 'supplier_nm_kana')" value="{{ $mSupplier->supplier_nm ?? old('supplier_nm') }}" maxlength="200" v-on:blur="onFocus">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" v-on:input="convertKana($event, 'supplier_nm_kana')" value="{{ $mSupplier->supplier_nm ?? old('supplier_nm') }}" maxlength="200" v-on:blur="onBlur">
                         </div>
                         @if ($errors->has('supplier_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -175,7 +175,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="supplier_nm_formal">仕入先正式名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm_formal')? 'is-invalid': ''}}" id="supplier_nm_formal" name="supplier_nm_formal" v-on:input="convertKana($event, 'supplier_nm_kana_formal')" value="{{ $mSupplier->supplier_nm_formal ?? old('supplier_nm_formal') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm_formal')? 'is-invalid': ''}}" id="supplier_nm_formal" name="supplier_nm_formal" v-on:input="convertKana($event, 'supplier_nm_kana_formal')" value="{{ $mSupplier->supplier_nm_formal ?? old('supplier_nm_formal') }}" maxlength="200" v-on:blur="onBlur">
                         </div>
                         @if ($errors->has('supplier_nm_formal'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -201,7 +201,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="dealing_person_in_charge_last_nm">取引担当者名(姓）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_last_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_last_nm" name="dealing_person_in_charge_last_nm" v-on:input="convertKana($event, 'dealing_person_in_charge_last_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_last_nm ?? old('dealing_person_in_charge_last_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_last_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_last_nm" name="dealing_person_in_charge_last_nm" v-on:input="convertKana($event, 'dealing_person_in_charge_last_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_last_nm ?? old('dealing_person_in_charge_last_nm') }}" maxlength="25" v-on:blur="onBlur">
                         </div>
                         @if ($errors->has('dealing_person_in_charge_last_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -224,7 +224,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="dealing_person_in_charge_first_nm">取引担当者名(名）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_first_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_first_nm" name="dealing_person_in_charge_first_nm" v-on:input="convertKana($event, 'dealing_person_in_charge_first_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_first_nm ?? old('dealing_person_in_charge_first_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('dealing_person_in_charge_first_nm')? 'is-invalid': ''}}" id="dealing_person_in_charge_first_nm" name="dealing_person_in_charge_first_nm" v-on:input="convertKana($event, 'dealing_person_in_charge_first_nm_kana')" value="{{ $mSupplier->dealing_person_in_charge_first_nm ?? old('dealing_person_in_charge_first_nm') }}" maxlength="25" v-on:blur="onBlur">
                         </div>
                         @if ($errors->has('dealing_person_in_charge_first_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -250,7 +250,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_last_nm">経理担当者名(姓）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_last_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_last_nm" name="accounting_person_in_charge_last_nm" v-on:input="convertKana($event, 'accounting_person_in_charge_last_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_last_nm ?? old('accounting_person_in_charge_last_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_last_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_last_nm" name="accounting_person_in_charge_last_nm" v-on:input="convertKana($event, 'accounting_person_in_charge_last_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_last_nm ?? old('accounting_person_in_charge_last_nm') }}" maxlength="25" v-on:blur="onBlur">
                         </div>
                         @if ($errors->has('accounting_person_in_charge_last_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -273,7 +273,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col">
                         <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_first_nm">経理担当者名(名）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_first_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" v-on:input="convertKana($event, 'accounting_person_in_charge_first_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_first_nm ?? old('accounting_person_in_charge_first_nm') }}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_first_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" v-on:input="convertKana($event, 'accounting_person_in_charge_first_nm_kana')" value="{{ $mSupplier->accounting_person_in_charge_first_nm ?? old('accounting_person_in_charge_first_nm') }}" maxlength="25" v-on:blur="onBlur">
                         </div>
                         @if ($errors->has('accounting_person_in_charge_first_nm'))
                             <span class="invalid-feedback d-block" role="alert">

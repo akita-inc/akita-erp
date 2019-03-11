@@ -21,7 +21,8 @@ var ctrSupplierrsVl = new Vue({
                 $('#'+destination).val(data.info);
             });
         },
-        onFocus: function(){
+        onBlur: function(){
+            console.log(1);
             this.history = [];
             this.furigana = '';
         },
