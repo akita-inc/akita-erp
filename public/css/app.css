@@ -354,6 +354,9 @@ input,select{
 .table td, .table th {
     padding: 0.5rem;
 }
+.wrapper-table .table td {
+    white-space:pre;
+}
 
 .table-green th{
     background-color: #548235;
