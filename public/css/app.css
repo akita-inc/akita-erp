@@ -391,6 +391,8 @@ input,select{
 .cd-link {
     font-weight: bold;
     text-decoration: underline;
+    cursor: pointer;
+    color: #007bff;
 }
 .wd-60{
     width: 60px !important;

@@ -20,5 +20,12 @@ suppliers_service = {
         }).catch(function (error) {
             return error;
         });
+    },
+    checkIsExist: function (id) {
+        return axios.get('/api/supplier/checkIsExist/' + id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
     }
 }

@@ -67,7 +67,7 @@
                 </thead>
                 <tbody>
                     <tr v-cloak v-for="item in items">
-                        <td><a class="cd-link" :href="'{{route('suppliers.edit','')}}'+'/'+item.id">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</a></td>
+                        <td><div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</div></td>
                         <td>
                             <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
                             <br v-if="item['supplier_nm_kana']">
