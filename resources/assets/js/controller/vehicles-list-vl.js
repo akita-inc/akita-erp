@@ -9,8 +9,11 @@ var ctrVehiclesListVl = new Vue({
         loading:false,
         items:[],
         fieldSearch:{
-            mst_suppliers_cd:"",
-            supplier_nm:"",
+            vehicles_cd:"",
+            door_number:"",
+            vehicles_kb: "",
+            registration_numbers: "",
+            mst_business_office_id: "",
             radio_reference_date : "1",
             reference_date: date_now,
         },
@@ -57,8 +60,11 @@ var ctrVehiclesListVl = new Vue({
     },
     methods : {
         clearCondition: function clearCondition() {
-            this.fieldSearch.mst_suppliers_cd = '';
-            this.fieldSearch.supplier_nm = '';
+            this.fieldSearch.vehicles_cd = '';
+            this.fieldSearch.door_number = '';
+            this.fieldSearch.vehicles_kb = '';
+            this.fieldSearch.registration_numbers = '';
+            this.fieldSearch.mst_business_office_id = '';
             this.fieldSearch.radio_reference_date = '1';
             this.fieldSearch.reference_date = date_now;
             this.message = '';
