@@ -1,6 +1,7 @@
 import DatePicker from 'vue2-datepicker';
 import { Core } from '../package/yubinbango-core';
 import moment from 'moment';
+import historykana from "historykana";
 
 var ctrCustomersVl = new Vue({
     el: '#ctrCustomersVl',
@@ -41,7 +42,9 @@ var ctrCustomersVl = new Vue({
             mst_account_titles_id: "",
             mst_account_titles_id_2: "",
             mst_account_titles_id_3: "",
-            notes:""
+            notes:"",
+            furigana: '',
+            history: []
         }
     },
     methods : {
@@ -55,6 +58,18 @@ var ctrCustomersVl = new Vue({
         },
         addRows: function () {
             this.field.mst_bill_issue_destinations.push({});
+        },
+        convertKana: function (input , destination) {
+            console.log(input);
+            this.history.push(input.target.value);
+            this.furigana = historykana(this.history);
+            suppliers_service.convertKana({'data': this.furigana}).then(function (data) {
+                $('#'+destination).val(data.info);
+            });
+        },
+        onBlur: function(){
+            this.history = [];
+            this.furigana = '';
         },
         getAddrFromZipCode: function() {
             var zip = $('#zip_cd').val();

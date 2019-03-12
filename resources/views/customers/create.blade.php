@@ -37,7 +37,12 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'customer_nm','required'=>true])
+                        <div class="wrap-control-group">
+                            <label class="required" for="customer_nm">
+                                {{ trans("customers.create.field.customer_nm") }}
+                            </label>
+                            <input v-on:input="convertKana($event, 'customer_nm_kana')"  type="text" class="form-control" id="customer_nm" v-on:blur="onBlur">
+                        </div>
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -46,7 +51,12 @@
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'customer_nm_formal'])
+                        <div class="wrap-control-group">
+                            <label class="required" for="customer_nm_formal">
+                                {{ trans("customers.create.field.customer_nm_formal") }}
+                            </label>
+                            <input v-on:input="convertKana($event, 'customer_nm_formal_kana')"  type="text" class="form-control" id="customer_nm_formal_kana" v-on:blur="onBlur">
+                        </div>
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
