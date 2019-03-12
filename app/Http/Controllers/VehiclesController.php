@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
+use App\Models\MStaffs;
 use App\Models\MVehicles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -74,7 +75,9 @@ class VehiclesController extends Controller
         $mVehicle = new MVehicles();
         $mGeneralPurposes = new MGeneralPurposes();
         $mBusinessOffices = new MBusinessOffices();
+        $mStaff = new MStaffs();
         $listBusinessOffices = $mBusinessOffices->getListOption();
+        $listAdminStaffs = $mStaff->getListOption();
         $listVehicleKb= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicles_kb'],'');
         $listVehicleSize= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_size_kb'],'');
         $listVehiclePurpose= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_purpose'],'');
@@ -105,6 +108,7 @@ class VehiclesController extends Controller
             'listTransmissions' => $listTransmissions,
             'listSuspensionsCd' => $listSuspensionsCd,
             'listPowerGate' => $listPowerGate,
+            'listAdminStaffs' => $listAdminStaffs,
         ]);
     }
 }

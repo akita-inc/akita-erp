@@ -684,314 +684,435 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="zip_cd">デジタコ車載器No.</label>
+                        <label class="col-md-5 col-sm-5" for="digital_tachograph_numbers">デジタコ車載器No.</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control" id="vehicles_kb" name="vehicles_kb">
-                                @foreach($listPrivateCommercial as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->vehicles_kb || $key==old('vehicles_kb') ? 'selected' : ''}}>{{$value}}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" class="form-control w-75 {{$errors->has('digital_tachograph_numbers')? 'is-invalid': ''}}" id="digital_tachograph_numbers" name="digital_tachograph_numbers" value="{{ $mVehicle->digital_tachograph_numbers ?? old('digital_tachograph_numbers') }}" maxlength="20">
                         </div>
-                        @if ($errors->has('zip_cd'))
+                        @if ($errors->has('digital_tachograph_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('zip_cd') }}</strong>
+                                <strong>{{ $errors->first('digital_tachograph_numbers') }}</strong>
                             </span>
                         @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="address1">ETC車載器No.</label>
+                        <label class="col-md-4 col-sm-4" for="etc_numbers">ETC車載器No.</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-75 {{$errors->has('address1')? 'is-invalid': ''}}" id="address1" name="address1" value="{{ $mVehicle->address1 ?? old('address1') }}" maxlength="20">
+                            <input type="text" class="form-control w-75 {{$errors->has('etc_numbers')? 'is-invalid': ''}}" id="etc_numbers" name="etc_numbers" value="{{ $mVehicle->etc_numbers ?? old('etc_numbers') }}" maxlength="20">
                         </div>
-                        @if ($errors->has('address1'))
+                        @if ($errors->has('etc_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('address1') }}</strong>
+                                <strong>{{ $errors->first('etc_numbers') }}</strong>
                             </span>
                         @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="zip_cd">ドラレコNo.</label>
+                        <label class="col-md-5 col-sm-5" for="drive_recorder_numbers">ドラレコNo.</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control" id="vehicles_kb" name="vehicles_kb">
-                                @foreach($listPrivateCommercial as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->vehicles_kb || $key==old('vehicles_kb') ? 'selected' : ''}}>{{$value}}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" class="form-control w-75 {{$errors->has('drive_recorder_numbers')? 'is-invalid': ''}}" id="drive_recorder_numbers" name="drive_recorder_numbers" value="{{ $mVehicle->drive_recorder_numbers ?? old('drive_recorder_numbers') }}" maxlength="20">
                         </div>
-                        @if ($errors->has('zip_cd'))
+                        @if ($errors->has('drive_recorder_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('zip_cd') }}</strong>
+                                <strong>{{ $errors->first('drive_recorder_numbers') }}</strong>
                             </span>
                         @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="address1">ベッドの有無</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <div class="custom-control custom-checkbox d-block">
-                                <input type="checkbox" class="d-block custom-control-input" id="customCheck1">
-                                <label class="d-block custom-control-label" for="customCheck1">あり</label>
+                        <label class="col-md-4 col-sm-4">ベッドの有無</label>
+                        <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="bed_fg" value="1" name="bed_fg">
+                                <label class="d-block custom-control-label" for="bed_fg">あり</label>
                             </div>
                         </div>
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="address2">町名番地</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('address2')? 'is-invalid': ''}}" id="address2" name="address2" value="{{ $mVehicle->address2 ?? old('address2') }}" maxlength="20">
+                        <label class="col-md-5 col-sm-5">冷蔵冷凍機の有無</label>
+                        <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="refrigerator_fg" name="refrigerator_fg" value="1">
+                                <label class="d-block custom-control-label" for="refrigerator_fg">あり</label>
+                            </div>
                         </div>
-                        @if ($errors->has('address2'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('address2') }}</strong>
-                            </span>
-                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="address3">建物等</label>
+                        <label class="col-md-4 col-sm-4" for="drive_system_id">駆動</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-75 {{$errors->has('address3')? 'is-invalid': ''}}" id="address3" name="address3" value="{{ $mVehicle->address3 ?? old('address3') }}" maxlength="50">
+                            <select class="form-control" id="drive_system_id" name="drive_system_id">
+                                @foreach($listDriveSystem as $key => $value)
+                                    <option value="{{$key}}" {{$key==$mVehicle->drive_system_id || $key==old('drive_system_id') ? 'selected' : ''}}>{{$value}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        @if ($errors->has('address3'))
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col h-100">
+                        <label class="col-md-5 col-sm-5" for="transmissions_id">ミッション</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <select class="form-control" id="transmissions_id" name="transmissions_id">
+                                @foreach($listTransmissions as $key => $value)
+                                    <option value="{{$key}}" {{$key==$mVehicle->transmissions_id || $key==old('transmissions_id') ? 'selected' : ''}}>{{$value}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col h-100">
+                        <label class="col-md-4 col-sm-4" for="transmissions_notes">ミッション備考</label>
+                        <div class="col-md-8 col-sm-8 wrap-control">
+                            <input type="text" class="form-control {{$errors->has('transmissions_notes')? 'is-invalid': ''}}" id="transmissions_notes" name="transmissions_notes" value="{{ $mVehicle->transmissions_notes ?? old('transmissions_notes') }}" maxlength="20">
+                        </div>
+                        @if ($errors->has('transmissions_notes'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('address3') }}</strong>
-                            </span>
+                                    <strong>{{ $errors->first('transmissions_notes') }}</strong>
+                                </span>
                         @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5" for="phone_number">電話番号</label>
+                        <label class="col-md-5 col-sm-5" for="suspensions_cd">サスペンション</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('phone_number')? 'is-invalid': ''}}" id="phone_number" name="phone_number" value="{{ $mVehicle->phone_number ?? old('phone_number') }}" maxlength="20">
+                            <select class="form-control" id="suspensions_cd" name="suspensions_cd">
+                                @foreach($listSuspensionsCd as $key => $value)
+                                    <option value="{{$key}}" {{$key==$mVehicle->suspensions_cd || $key==old('suspensions_cd') ? 'selected' : ''}}>{{$value}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        @if ($errors->has('phone_number'))
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col h-100"></div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col h-100">
+                        <label class="col-md-5 col-sm-5" for="tank_capacity_1">燃料タンクの容量１</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <input type="text" class="form-control {{$errors->has('tank_capacity_1')? 'is-invalid': ''}}" id="tank_capacity_1" name="tank_capacity_1" value="{{ $mVehicle->tank_capacity_1 ?? old('tank_capacity_1') }}" maxlength="20">
+                        </div>
+                        @if ($errors->has('tank_capacity_1'))
                             <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $errors->first('phone_number') }}</strong>
+                                    <strong>{{ $errors->first('tank_capacity_1') }}</strong>
                                 </span>
                         @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
-                        <label class="col-md-4 col-sm-4" for="fax_number">FAX番号</label>
+                        <label class="col-md-4 col-sm-4" for="tank_capacity_2">燃料タンクの容量２</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('fax_number')? 'is-invalid': ''}}" id="fax_number" name="fax_number" value="{{ $mVehicle->fax_number ?? old('fax_number') }}" maxlength="20">
+                            <input type="text" class="form-control {{$errors->has('tank_capacity_2')? 'is-invalid': ''}}" id="tank_capacity_2" name="tank_capacity_2" value="{{ $mVehicle->tank_capacity_2 ?? old('tank_capacity_2') }}" maxlength="20">
                         </div>
-                        @if ($errors->has('fax_number'))
+                        @if ($errors->has('tank_capacity_2'))
                             <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $errors->first('fax_number') }}</strong>
+                                    <strong>{{ $errors->first('tank_capacity_2') }}</strong>
                                 </span>
                         @endif
                     </div>
                     <div class="break-row-form"></div>
-                    <div class="col-md-12 col-sm-12 row grid-col">
-                        <label class="col-md-2 col-sm-4" for="vehicle_inspection_sticker_pdf">WEBサイトアドレス</label>
-                        <div class="col-md-10 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('vehicle_inspection_sticker_pdf')? 'is-invalid': ''}}" id="vehicle_inspection_sticker_pdf" name="vehicle_inspection_sticker_pdf" value="{{ $mVehicle->vehicle_inspection_sticker_pdf ?? old('vehicle_inspection_sticker_pdf') }}" maxlength="2500">
-                        </div>
-                        @if ($errors->has('vehicle_inspection_sticker_pdf'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('vehicle_inspection_sticker_pdf') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="grid-form">
-                <div class="row">
+                    <div class="col-md-12 col-sm-12 row grid-col">◆積込可能内寸</div>
                     <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="registration_dt">締日</label>
+                        <label class="col-md-5 col-sm-5" for="loading_inside_dimension_capacity_length">長さ（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('registration_dt')? 'is-invalid': ''}}" id="registration_dt" name="registration_dt" value="{{ $mVehicle->registration_dt ?? old('registration_dt') }}" maxlength="2">
+                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_length')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_length" name="loading_inside_dimension_capacity_length" value="{{ $mVehicle->loading_inside_dimension_capacity_length ?? old('loading_inside_dimension_capacity_length') }}" maxlength="2">
                         </div>
-                        @if ($errors->has('registration_dt'))
+                        @if ($errors->has('loading_inside_dimension_capacity_length'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('registration_dt') }}</strong>
+                                <strong>{{ $errors->first('loading_inside_dimension_capacity_length') }}</strong>
                             </span>
                         @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="payday">支払日</label>
+                        <label class="col-md-4 col-sm-4" for="loading_inside_dimension_capacity_width">幅（cm）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payday')? 'is-invalid': ''}}" id="payday" name="payday" value="{{ $mVehicle->payday ?? old('payday') }}" maxlength="2">
+                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_width')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_width" name="loading_inside_dimension_capacity_width" value="{{ $mVehicle->loading_inside_dimension_capacity_width ?? old('loading_inside_dimension_capacity_width') }}" maxlength="2">
                         </div>
-                        @if ($errors->has('payday'))
+                        @if ($errors->has('loading_inside_dimension_capacity_width'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payday') }}</strong>
+                                <strong>{{ $errors->first('loading_inside_dimension_capacity_width') }}</strong>
                             </span>
                         @endif
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="payment_month_id">支払予定月</label>
+                        <label class="col-md-5 col-sm-5" for="loading_inside_dimension_capacity_height">高さ（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="payment_month_id" name="payment_month_id">
-                                {{--@foreach($listPaymentMonth as $key => $value)--}}
-                                    {{--<option value="{{$key}}" {{$key==$mVehicle->payment_month_id || $key==old('payment_month_id') ? 'selected' : ''}}>{{$value}}</option>--}}
-                                {{--@endforeach--}}
+                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_height')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_height" name="loading_inside_dimension_capacity_height" value="{{ $mVehicle->loading_inside_dimension_capacity_height ?? old('loading_inside_dimension_capacity_height') }}" maxlength="2">
+                        </div>
+                        @if ($errors->has('loading_inside_dimension_capacity_height'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('loading_inside_dimension_capacity_height') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col"></div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5">融雪</label>
+                        <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox form-control border-0">
+                                <input type="checkbox" class="custom-control-input" id="snowmelt_fg" name="snowmelt_fg" value="1">
+                                <label class="d-block custom-control-label" for="snowmelt_fg">あり</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col">
+                        <label class="col-md-4 col-sm-4">観音扉</label>
+                        <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox form-control border-0">
+                                <input type="checkbox" class="custom-control-input" id="double_door_fg" name="double_door_fg" value="1">
+                                <label class="d-block custom-control-label" for="double_door_fg">あり</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5">床・鉄板</label>
+                        <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox form-control border-0">
+                                <input type="checkbox" class="custom-control-input" id="floor_iron_plate_fg" name="floor_iron_plate_fg" value="1">
+                                <label class="d-block custom-control-label" for="floor_iron_plate_fg">あり</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col">
+                        <label class="col-md-4 col-sm-4">床・佐川仕様埋込式</label>
+                        <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox form-control border-0">
+                                <input type="checkbox" class="custom-control-input" id="floor_sagawa_embedded_fg" name="floor_sagawa_embedded_fg" value="1">
+                                <label class="d-block custom-control-label" for="floor_sagawa_embedded_fg">あり</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5">床・ローラー</label>
+                        <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox form-control border-0">
+                                <input type="checkbox" class="custom-control-input" id="floor_roller_fg" name="floor_roller_fg" value="1">
+                                <label class="d-block custom-control-label" for="floor_roller_fg">あり</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col">
+                        <label class="col-md-4 col-sm-4">床・ジョルダー及びコンベアー</label>
+                        <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox form-control border-0">
+                                <input type="checkbox" class="custom-control-input" id="floor_joloda_conveyor_fg" name="floor_joloda_conveyor_fg" value="1">
+                                <label class="d-block custom-control-label" for="floor_joloda_conveyor_fg">あり</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5" for="power_gate_cd">パワーゲート</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <select class="form-control w-50" id="power_gate_cd" name="power_gate_cd">
+                                @foreach($listPowerGate as $key => $value)
+                                <option value="{{$key}}" {{$key==$mVehicle->power_gate_cd || $key==old('power_gate_cd') ? 'selected' : ''}}>{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="payment_day">支払予定日</label>
+                        <label class="col-md-4 col-sm-4" for="vehicle_delivery_dt">納車日</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payment_day')? 'is-invalid': ''}}" id="payment_day" name="payment_day" value="{{ $mVehicle->payment_day ?? old('payment_day') }}" maxlength="2">
-                        </div>
-                        @if ($errors->has('payment_day'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payment_day') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                    <div class="break-row-form"></div>
-                    <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="payment_method_id">支払予定方法</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="payment_method_id" name="payment_method_id">
-                                {{--@foreach($listPaymentMethod as $key => $value)--}}
-                                    {{--<option value="{{$key}}" {{$key==$mVehicle->payment_method_id || $key==old('payment_method_id') ? 'selected' : ''}}>{{$value}}</option>--}}
-                                {{--@endforeach--}}
-                            </select>
-                        </div>
-
-                        <div class="break-row-form"></div>
-
-                        <label class="col-md-5 col-sm-5" for="registration_dt">取引開始日</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
                             <date-picker format="YYYY/MM/DD"
                                          placeholder=""
-                                         v-model="registration_dt" v-cloak=""
+                                         v-model="vehicle_delivery_dt" v-cloak=""
                                          :lang="lang"
                                          :input-class="'form-control w-100'"
                                          v-on:change="onChangeDatepicker2"
                                          :value-type="'format'"
                             >
                             </date-picker>
-                            <input type="hidden" class="form-control {{$errors->has('registration_dt')? 'is-invalid': ''}}" name="registration_dt" id="registration_dt" value="{{ $mVehicle->registration_dt ?? old('registration_dt') }}" >
+                            <input type="hidden" class="form-control {{$errors->has('vehicle_delivery_dt')? 'is-invalid': ''}}" name="vehicle_delivery_dt" id="vehicle_delivery_dt" value="{{ $mVehicle->vehicle_delivery_dt ?? old('vehicle_delivery_dt') }}" >
                         </div>
-                    </div>
-                    <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="explanations_bill">支払いに関する説明</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <textarea class="form-control w-100 {{$errors->has('explanations_bill')? 'is-invalid': ''}}" rows="3" name="explanations_bill" id="explanations_bill" maxlength="100">{{ $mVehicle->explanations_bill ?? old('explanations_bill') }}</textarea>
-                        </div>
-                        @if ($errors->has('explanations_bill'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('explanations_bill') }}</strong>
-                            </span>
-                        @endif
                     </div>
                     <div class="break-row-form"></div>
-                    <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="consumption_tax_calc_unit_id">消費税計算単位区分</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="consumption_tax_calc_unit_id" name="consumption_tax_calc_unit_id">
-                                {{--@foreach($listConsumptionTaxCalcUnit as $key => $value)--}}
-                                    {{--<option value="{{$key}}" {{ ($key==$mVehicle->consumption_tax_calc_unit_id && !is_null($mVehicle->consumption_tax_calc_unit_id))  || ($key==old('consumption_tax_calc_unit_id') && !is_null(old('consumption_tax_calc_unit_id')) ) ? 'selected' : ''}}>{{$value}}</option>--}}
-                                {{--@endforeach--}}
-                            </select>
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <label class="col-md-2 col-sm-2" for="specification_notes">仕様に関する備考</label>
+                        <div class="col-md-10 col-sm-10 wrap-control">
+                            <textarea class="form-control w-100 {{$errors->has('specification_notes')? 'is-invalid': ''}}" rows="3" id="specification_notes" name="specification_notes" maxlength="50">{{ $mVehicle->specification_notes ?? old('specification_notes') }}</textarea>
                         </div>
-                    </div>
-                    <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="rounding_method_id">消費税端数処理区分</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control w-50" id="rounding_method_id" name="rounding_method_id">
-                                {{--@foreach($listRoundingMethod as $key => $value)--}}
-                                    {{--<option value="{{$key}}" {{$key==$mVehicle->rounding_method_id || $key==old('rounding_method_id') ? 'selected' : ''}}>{{$value}}</option>--}}
-                                {{--@endforeach--}}
-                            </select>
-                        </div>
+                        @if ($errors->has('specification_notes'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('specification_notes') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="payment_bank_cd">支払銀行コード</label>
+                        <label class="col-md-5 col-sm-5" for="mst_staffs_id">車輌管理責任者号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payment_bank_cd')? 'is-invalid': ''}}" id="payment_bank_cd" name="payment_bank_cd" maxlength="4" value="{{ $mVehicle->payment_bank_cd ?? old('payment_bank_cd') }}">
-                        </div>
-                        @if ($errors->has('payment_bank_cd'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payment_bank_cd') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                    <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="payment_bank_name">支払銀行名</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('payment_bank_name')? 'is-invalid': ''}}" id="payment_bank_name" name="payment_bank_name" maxlength="30" value="{{ $mVehicle->payment_bank_name ?? old('payment_bank_name') }}">
-                        </div>
-                        @if ($errors->has('payment_bank_name'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payment_bank_name') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                    <div class="break-row-form"></div>
-                    <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="payment_branch_cd">支払銀行支店コード</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payment_branch_cd')? 'is-invalid': ''}}" id="payment_branch_cd" name="payment_branch_cd" maxlength="4" value="{{ $mVehicle->payment_branch_cd ?? old('payment_branch_cd') }}">
-                        </div>
-                        @if ($errors->has('payment_branch_cd'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payment_branch_cd') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                    <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="payment_branch_name">支払銀行支店名</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('payment_branch_name')? 'is-invalid': ''}}" id="payment_branch_name" name="payment_branch_name" maxlength="30" value="{{ $mVehicle->payment_branch_name ?? old('payment_branch_name') }}">
-                        </div>
-                        @if ($errors->has('payment_branch_name'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payment_branch_name') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                    <div class="break-row-form"></div>
-                    <div class="col-md-5 col-sm-12 row grid-col">
-                        <label class="col-md-5 col-sm-5" for="payment_account_type">支払口座種別</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50 " id="payment_account_type" name="payment_account_type">
-                                {{--@foreach($listPaymentAccountType as $key => $value)--}}
-                                    {{--<option value="{{$key}}" {{$key==$mVehicle->payment_account_type || $key==old('payment_account_type') ? 'selected' : ''}}>{{$value}}</option>--}}
-                                {{--@endforeach--}}
+                            <select class="form-control w-100" id="mst_staffs_id" name="mst_staffs_id">
+                                @foreach($listAdminStaffs as $key => $value)
+                                    <option value="{{$key}}" {{$key==$mVehicle->mst_staffs_id || $key==old('mst_staffs_id') ? 'selected' : ''}}>{{$value}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="payment_account_number">支払口座番号</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payment_account_number')? 'is-invalid': ''}}" id="payment_account_number" name="payment_account_number" maxlength="10" value="{{ $mVehicle->payment_account_number ?? old('payment_account_number') }}">
+                    <div class="col-md-7 col-sm-12 row grid-col"></div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5" for="personal_insurance_prices">対人保険料（円）</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <input type="text" class="form-control w-50 {{$errors->has('personal_insurance_prices')? 'is-invalid': ''}}" id="personal_insurance_prices" name="personal_insurance_prices" value="{{ $mVehicle->personal_insurance_prices ?? old('personal_insurance_prices') }}" maxlength="2">
                         </div>
-                        @if ($errors->has('payment_account_number'))
+                        @if ($errors->has('personal_insurance_prices'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payment_account_number') }}</strong>
+                                <strong>{{ $errors->first('personal_insurance_prices') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col">
+                        <label class="col-md-4 col-sm-4" for="property_damage_insurance_prices">対物保険料（円）</label>
+                        <div class="col-md-8 col-sm-8 wrap-control">
+                            <input type="text" class="form-control w-25 {{$errors->has('property_damage_insurance_prices')? 'is-invalid': ''}}" id="property_damage_insurance_prices" name="property_damage_insurance_prices" value="{{ $mVehicle->property_damage_insurance_prices ?? old('property_damage_insurance_prices') }}" maxlength="2">
+                        </div>
+                        @if ($errors->has('property_damage_insurance_prices'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('property_damage_insurance_prices') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5" for="vehicle_insurance_prices">車両保険料（円）</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_insurance_prices')? 'is-invalid': ''}}" id="vehicle_insurance_prices" name="vehicle_insurance_prices" value="{{ $mVehicle->vehicle_insurance_prices ?? old('vehicle_insurance_prices') }}" maxlength="2">
+                        </div>
+                        @if ($errors->has('vehicle_insurance_prices'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('vehicle_insurance_prices') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col"></div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <label class="col-md-2 col-sm-2" for="picture_fronts">写真　前</label>
+                        <div class="col-md-10 col-sm-10 wrap-control">
+                            <input type="file" class="form-control {{$errors->has('picture_fronts')? 'is-invalid': ''}}" id="picture_fronts" name="picture_fronts" value="{{ $mVehicle->picture_fronts ?? old('picture_fronts') }}">
+                        </div>
+                        @if ($errors->has('picture_fronts'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('picture_fronts') }}</strong>
                             </span>
                         @endif
                     </div>
                     <div class="break-row-form"></div>
-                    <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5" for="payment_account_holder">支払口座名義</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('payment_account_holder')? 'is-invalid': ''}}" id="payment_account_holder" name="payment_account_holder" maxlength="30" value="{{ $mVehicle->payment_account_holder ?? old('payment_account_holder') }}">
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <label class="col-md-2 col-sm-2" for="picture_rights">写真　側面右</label>
+                        <div class="col-md-10 col-sm-10 wrap-control">
+                            <input type="file" class="form-control {{$errors->has('picture_rights')? 'is-invalid': ''}}" id="picture_rights" name="picture_rights" value="{{ $mVehicle->picture_rights ?? old('picture_rights') }}">
                         </div>
-                        @if ($errors->has('payment_account_holder'))
+                        @if ($errors->has('picture_rights'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payment_account_holder') }}</strong>
+                                <strong>{{ $errors->first('picture_rights') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <label class="col-md-2 col-sm-2" for="picture_lefts">写真　側面左</label>
+                        <div class="col-md-10 col-sm-10 wrap-control">
+                            <input type="file" class="form-control {{$errors->has('picture_lefts')? 'is-invalid': ''}}" id="picture_lefts" name="picture_lefts" value="{{ $mVehicle->picture_lefts ?? old('picture_lefts') }}">
+                        </div>
+                        @if ($errors->has('picture_lefts'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('picture_lefts') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <label class="col-md-2 col-sm-2" for="picture_rears">写真　後</label>
+                        <div class="col-md-10 col-sm-10 wrap-control">
+                            <input type="file" class="form-control {{$errors->has('picture_rears')? 'is-invalid': ''}}" id="picture_rears" name="picture_rears" value="{{ $mVehicle->picture_rears ?? old('picture_rears') }}">
+                        </div>
+                        @if ($errors->has('picture_rears'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('picture_rears') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5" for="acquisition_amounts">取得金額（円）</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <input type="text" class="form-control w-50 {{$errors->has('acquisition_amounts')? 'is-invalid': ''}}" id="acquisition_amounts" name="acquisition_amounts" maxlength="4" value="{{ $mVehicle->acquisition_amounts ?? old('acquisition_amounts') }}">
+                        </div>
+                        @if ($errors->has('acquisition_amounts'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('acquisition_amounts') }}</strong>
                             </span>
                         @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <label class="col-md-4 col-sm-4" for="notes">備考</label>
+                        <label class="col-md-4 col-sm-4" for="acquisition_amortization">償却回数（回）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <textarea class="form-control w-100 {{$errors->has('notes')? 'is-invalid': ''}}" rows="3" id="notes" name="notes" maxlength="50">{{ $mVehicle->notes ?? old('notes') }}</textarea>
+                            <input type="text" class="form-control w-25 {{$errors->has('acquisition_amortization')? 'is-invalid': ''}}" id="acquisition_amortization" name="acquisition_amortization" maxlength="30" value="{{ $mVehicle->acquisition_amortization ?? old('acquisition_amortization') }}">
                         </div>
-                        @if ($errors->has('notes'))
+                        @if ($errors->has('acquisition_amortization'))
                             <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('notes') }}</strong>
+                                <strong>{{ $errors->first('acquisition_amortization') }}</strong>
                             </span>
                         @endif
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5" for="durable_years">耐用年数（年）</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <input type="text" class="form-control w-50 {{$errors->has('durable_years')? 'is-invalid': ''}}" id="durable_years" name="durable_years" maxlength="4" value="{{ $mVehicle->durable_years ?? old('durable_years') }}">
+                        </div>
+                        @if ($errors->has('durable_years'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('durable_years') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col">
+                        <label class="col-md-4 col-sm-4" for="tire_sizes">タイヤサイズ</label>
+                        <div class="col-md-8 col-sm-8 wrap-control">
+                            <input type="text" class="form-control {{$errors->has('tire_sizes')? 'is-invalid': ''}}" id="tire_sizes" name="tire_sizes" maxlength="30" value="{{ $mVehicle->tire_sizes ?? old('tire_sizes') }}">
+                        </div>
+                        @if ($errors->has('tire_sizes'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('tire_sizes') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-5 col-sm-12 row grid-col">
+                        <label class="col-md-5 col-sm-5" for="battery_sizes">バッテリーサイズ</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <input type="text" class="form-control w-50 {{$errors->has('battery_sizes')? 'is-invalid': ''}}" id="battery_sizes" name="battery_sizes" maxlength="4" value="{{ $mVehicle->battery_sizes ?? old('battery_sizes') }}">
+                        </div>
+                        @if ($errors->has('battery_sizes'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('battery_sizes') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col">
+                        <label class="col-md-4 col-sm-4" for="dispose_dt">売却または廃車日</label>
+                        <div class="col-8 wrap-control">
+                            <date-picker format="YYYY/MM/DD"
+                                         placeholder=""
+                                         v-model="dispose_dt" v-cloak=""
+                                         :lang="lang"
+                                         :input-class="{{ $errors->has('dispose_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
+                                         :value-type="'format'"
+                            >
+                            </date-picker>
+                            <input type="hidden" class="form-control {{$errors->has('dispose_dt')? 'is-invalid': ''}}" name="dispose_dt" id="dispose_dt" value="{{ old('dispose_dt') }}" >
+                        </div>
+                    </div>
+                    <div class="break-row-form"></div>
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <label class="col-md-2 col-sm-2" for="notes">備考</label>
+                        <div class="col-md-10 col-sm-10 wrap-control">
+                            <input type="text" class="form-control {{$errors->has('notes')? 'is-invalid': ''}}" id="notes" name="notes" value="{{ $mVehicle->notes ?? old('notes') }}" maxlength="2">
+                        </div>
                     </div>
                 </div>
             </div>

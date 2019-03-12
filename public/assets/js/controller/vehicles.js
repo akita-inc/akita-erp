@@ -4539,22 +4539,14 @@ var ctrVehiclesVl = new Vue({
     business_start_dt: $('#business_start_dt').val(),
     registration_dt: $('#registration_dt').val(),
     expiry_dt: $('#expiry_dt').val(),
+    vehicle_delivery_dt: $('#vehicle_delivery_dt').val(),
+    dispose_dt: $('#dispose_dt').val(),
     lang: lang_date_picker,
     name: '',
     furigana: '',
     history: []
   },
   methods: {
-    convertKana: function convertKana(input, destination) {
-      this.history.push(input.target.value);
-      this.furigana = historykana__WEBPACK_IMPORTED_MODULE_2___default()(this.history); // $('#'+destination).val(this.furigana);
-
-      suppliers_service.convertKana({
-        'data': this.furigana
-      }).then(function (data) {
-        $('#' + destination).val(data.info);
-      });
-    },
     onBlur: function onBlur() {
       console.log(1);
       this.history = [];
