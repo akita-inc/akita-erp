@@ -107,6 +107,13 @@ customers_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  checkIsExist: function checkIsExist(id) {
+    return axios.get('/customers/api-v1/checkIsExist/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -129,6 +136,13 @@ staffs_service = {
   },
   deleteStaffs: function deleteStaffs(id) {
     return axios.get('/staffs/api-v1/delete/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  checkIsExist: function checkIsExist(id) {
+    return axios.get('/staffs/api-v1/checkIsExist/' + id).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
@@ -166,6 +180,13 @@ suppliers_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  checkIsExist: function checkIsExist(id) {
+    return axios.get('/api/supplier/checkIsExist/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -188,6 +209,13 @@ vehicles_service = {
   },
   delete: function _delete(id) {
     return axios.get('/vehicles/delete/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  checkIsExist: function checkIsExist(id) {
+    return axios.get('/vehicles/api-v1/checkIsExist/' + id).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;

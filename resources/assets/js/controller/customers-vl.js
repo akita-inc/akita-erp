@@ -1,5 +1,6 @@
-import DatePicker from 'vue2-datepicker'
-import moment from 'moment'
+import DatePicker from 'vue2-datepicker';
+import { Core } from '../package/yubinbango-core';
+import moment from 'moment';
 
 var ctrCustomersVl = new Vue({
     el: '#ctrCustomersVl',
@@ -35,10 +36,12 @@ var ctrCustomersVl = new Vue({
             rounding_method_id:"",
             discount_rate:"",
             except_g_drive_bill_fg:"",
-            mst_bill_issue_destinations:[{
-                mst_bill_issue_destinations:"",
-                bill_address1:"",
-            }]
+            mst_bill_issue_destinations:[{}],
+            deposit_bank_cd:"",
+            mst_account_titles_id: "",
+            mst_account_titles_id_2: "",
+            mst_account_titles_id_3: "",
+            notes:""
         }
     },
     methods : {
@@ -49,6 +52,20 @@ var ctrCustomersVl = new Vue({
             parse: (value) => {
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
+        },
+        addRows: function () {
+            this.field.mst_bill_issue_destinations.push({});
+        },
+        getAddrFromZipCode: function() {
+            var zip = $('#zip_cd').val();
+            new Core(zip, function (addr) {
+                $('#prefectures_cd').val(addr.region_id);// 都道府県ID
+                $('#address1').val(addr.locality);// 市区町村
+                $('#address2').val(addr.street);// 町域
+            });
+        },
+        removeRows: function (index) {
+            this.field.mst_bill_issue_destinations.splice(index, 1);
         }
     },
     mounted () {

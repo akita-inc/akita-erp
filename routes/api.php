@@ -18,5 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::group(array('prefix' => 'api/supplier'), function() {
     Route::any('convert-to-kana', ['uses' => 'Api\SuppliersController@convertToKana']);
-
+    Route::any('checkIsExist/{id}', ['uses' => 'Api\SuppliersController@checkIsExist']);
 });

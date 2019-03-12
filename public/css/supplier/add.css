@@ -11,3 +11,17 @@
     background-color: #D9D9D9;
     opacity: 1;
 }
+.btn-collapse{
+    background-color:#A9D08E;
+}
+
+.grid-form .form-collapse{
+    border:solid 1px #0f0f0f;
+    background-color:rgb(242,242,242);
+}
+.grid-form .collapsed{
+    flex-direction: row-reverse;
+}
+.grid-form .form-collapse .grid-col{
+    padding-left: 0px !important;
+}

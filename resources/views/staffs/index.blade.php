@@ -129,22 +129,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr  v-cloak v-for="item in items" v-demo="{item:item}">
+                <tr  v-cloak v-for="item in items">
                     @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('staff_cd')
-                                    <a href="#">{!! "@{{ item['$key'] }}" !!}</a>
+                                    <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
                                     @break
                                 @case('staff_nm')
-                                    <span class="xsmall">{!! "@{{ item['staff_nm_kana'] }}" !!}</span><br>
-                                    {!! "@{{ item['staff_nm'] }}" !!}
+                                    <span class="xsmall">{!! "@{{ item['staff_nm_kana'] }}" !!}</span><br v-if="item['staff_nm_kana']">
+                                    <span>{!! "@{{ item['staff_nm'] }}" !!}</span>
                                     @break
                                 @case('delete')
-                                    <button class="btn btn-delete" v-on:click="deleteStaffs(item.id)" v-if="item['staff_cd']!='admin' && item['staff_cd']!=auth_staff_cd">削除</button>
+                                    <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="item['staff_cd']!='admin' && item['staff_cd']!=auth_staff_cd">削除</button>
                                     @break
                                 @default
-                                    {!! "@{{ item['$key'] }}" !!}
+                                    <span>{!! "@{{ item['$key'] }}" !!}</span>
                                     @break
                              @endswitch
                         </td>

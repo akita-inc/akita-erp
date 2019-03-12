@@ -55,6 +55,22 @@ return [
             "hp_url" => "WEBサイトアドレス",
             "customer_category_id" => "得意先カテゴリ小区分",
             "prime_business_office_id" => "取得営業所",
+            "explanations_bill" => "請求に関する説明",
+            "bundle_dt" => "請求締日",
+            "deposit_month_id" => "入金予定月",
+            "deposit_day" => "入金予定日",
+            "deposit_method_id" => "入金予定方法",
+            "deposit_method_notes" => "入金予定補足説明",
+            "business_start_dt" => "取引開始日",
+            "consumption_tax_calc_unit_id" => "消費税計算単位区分",
+            "rounding_method_id" => "消費税端数処理区分",
+            "discount_rate" => "値引率（％）",
+            "except_g_drive_bill_fg" => "請求書の発行有無",
+            "deposit_bank_cd" => "入金銀行コード",
+            "mst_account_titles_id" => "売上勘定科目（代表）",
+            "mst_account_titles_id_2" => "売上勘定科目（第２）",
+            "mst_account_titles_id_3" => "売上勘定科目（第３）",
+            "notes" => "備考",
         ]
     ]
 

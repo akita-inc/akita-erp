@@ -1141,11 +1141,32 @@ var ctrStaffsListVl = new Vue({
     deleteStaffs: function deleteStaffs(id) {
       var _this = this;
 
-      if (confirm(messages["MSG06001"])) {
-        staffs_service.deleteStaffs(id).then(function (response) {
+      staffs_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
           _this.getItems(1);
-        });
-      }
+        } else {
+          if (confirm(messages["MSG06001"])) {
+            staffs_service.deleteStaffs(id).then(function (response) {
+              _this.getItems(1);
+            });
+          }
+        }
+      });
+    },
+    checkIsExist: function checkIsExist(id) {
+      var _this2 = this;
+
+      staffs_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this2.getItems(1);
+        } else {
+          window.location.href = 'edit/' + id;
+        }
+      });
     }
   },
   methods: {
@@ -1160,8 +1181,6 @@ var ctrStaffsListVl = new Vue({
       this.fileSearch.mst_business_office_id = "";
       this.fileSearch.employment_pattern_id = "";
       this.fileSearch.reference_date = date_now;
-      this.message = "";
-      this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fileSearch.reference_date === '') {

@@ -1086,8 +1086,11 @@ var ctrVehiclesListVl = new Vue({
     loading: false,
     items: [],
     fieldSearch: {
-      mst_suppliers_cd: "",
-      supplier_nm: "",
+      vehicles_cd: "",
+      door_number: "",
+      vehicles_kb: "",
+      registration_numbers: "",
+      mst_business_office_id: "",
       radio_reference_date: "1",
       reference_date: date_now
     },
@@ -1135,12 +1138,13 @@ var ctrVehiclesListVl = new Vue({
   },
   methods: {
     clearCondition: function clearCondition() {
-      this.fieldSearch.mst_suppliers_cd = '';
-      this.fieldSearch.supplier_nm = '';
+      this.fieldSearch.vehicles_cd = '';
+      this.fieldSearch.door_number = '';
+      this.fieldSearch.vehicles_kb = '';
+      this.fieldSearch.registration_numbers = '';
+      this.fieldSearch.mst_business_office_id = '';
       this.fieldSearch.radio_reference_date = '1';
       this.fieldSearch.reference_date = date_now;
-      this.message = '';
-      this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fieldSearch.reference_date === '') {
@@ -1150,11 +1154,34 @@ var ctrVehiclesListVl = new Vue({
     deleteVehicle: function deleteVehicle(id) {
       var _this2 = this;
 
-      if (confirm(messages["MSG06001"])) {
-        vehicles_service.delete(id).then(function (response) {
+      vehicles_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
           _this2.getItems(1);
-        });
-      }
+
+          return false;
+        } else {
+          if (confirm(messages["MSG06001"])) {
+            vehicles_service.delete(id).then(function (response) {
+              _this2.getItems(1);
+            });
+          }
+        }
+      });
+    },
+    checkIsExist: function checkIsExist(id) {
+      var _this3 = this;
+
+      vehicles_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this3.getItems(1);
+        } else {
+          window.location.href = 'edit/' + id;
+        }
+      });
     }
   },
   mounted: function mounted() {

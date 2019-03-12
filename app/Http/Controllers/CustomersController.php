@@ -9,10 +9,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MCustomers;
+use App\Models\MCustomersCategories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-
+use App\Models\MGeneralPurposes;
 class CustomersController extends Controller
 {
     use ListTrait;
@@ -64,7 +65,8 @@ class CustomersController extends Controller
                 "classTH" => ""
             ],
             'explanations_bill'=> [
-                "classTH" => ""
+                "classTH" => "",
+                "classTD" => "td-nl2br",
             ],
             'adhibition_start_dt'=> [
                 "classTH" => "wd-120",
@@ -93,7 +95,25 @@ class CustomersController extends Controller
         return response()->json($response);
     }
 
+    public function checkIsExist($id){
+        $mCustomers = new MCustomers();
+        $mCustomers = $mCustomers->find($id);
+        if (isset($mCustomers)) {
+            return Response()->json(array('success'=>true));
+        } else {
+            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+        }
+    }
+
     public function create(Request $request){
-        return view('customers.create');
+        $mGeneralPurposes = new MGeneralPurposes();
+        $mCustomerCategories=new MCustomersCategories();
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
+        $customer_categories=$mCustomerCategories->getAllData();
+//        dd($listPrefecture);
+        return view('customers.create', [
+                                'listPrefecture' => $listPrefecture,
+                                'customer_categories'=>$customer_categories
+        ]);
     }
 }
