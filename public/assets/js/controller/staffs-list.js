@@ -1160,8 +1160,6 @@ var ctrStaffsListVl = new Vue({
       this.fileSearch.mst_business_office_id = "";
       this.fileSearch.employment_pattern_id = "";
       this.fileSearch.reference_date = date_now;
-      this.message = "";
-      this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fileSearch.reference_date === '') {

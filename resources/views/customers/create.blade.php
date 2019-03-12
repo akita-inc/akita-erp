@@ -209,7 +209,7 @@
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
-                                    <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
+                                    <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCodeCollapse(index)">〒 → 住所</button>
                                 </div>
 
                                 <div class="break-row-form"></div>

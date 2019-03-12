@@ -17817,6 +17817,20 @@ var ctrCustomersVl = new Vue({
         $('#address2').val(addr.street); // 町域
       });
     },
+    getAddrFromZipCodeCollapse: function getAddrFromZipCodeCollapse(index) {
+      var zip_cd = '#mst_bill_issue_destinations_zip_cd' + index;
+      var prefectures_cd = '#mst_bill_issue_destinations_prefectures_cd' + index;
+      var address1 = '#mst_bill_issue_destinations_address1' + index;
+      var address2 = '#mst_bill_issue_destinations_address2' + index;
+      var zip = $(zip_cd).val();
+      new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_1__["Core"](zip, function (addr) {
+        $(prefectures_cd).val(addr.region_id); // 都道府県ID
+
+        $(address1).val(addr.locality); // 市区町村
+
+        $(address2).val(addr.street); // 町域
+      });
+    },
     removeRows: function removeRows(index) {
       this.field.mst_bill_issue_destinations.splice(index, 1);
     }
