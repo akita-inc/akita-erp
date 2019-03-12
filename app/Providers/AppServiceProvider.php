@@ -37,5 +37,7 @@ class AppServiceProvider extends ServiceProvider
         CustomValidation::validateZipCode();
         CustomValidation::validateKana();
         CustomValidation::validateBetween();
+        CustomValidation::validateDateFormat();
+        CustomValidation::validateFileSize();
     }
 }
