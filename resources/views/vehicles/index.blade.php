@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}">
 @endsection
 @section('content')
-    @include('Layouts.alert')
     <div class="row row-xs" id="ctrVehiclesListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
@@ -109,7 +108,7 @@
                 </thead>
                 <tbody>
                     <tr v-cloak v-for="item in items">
-                        <td><a class="cd-link" href="">{!! "@{{ item['vehicles_cd'] }}" !!}</a></td>
+                        <td><div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['vehicles_cd'] }}" !!}</div></td>
                         <td>{!! "@{{ item['door_number'] }}" !!}</td>
                         <td>{!! "@{{ item['vehicles_kb_nm'] }}" !!}</td>
                         <td>{!! "@{{ item['registration_numbers'] }}" !!}</td>
