@@ -140,19 +140,33 @@ class SuppliersController extends Controller
                 'payment_account_holder'  => 'nullable|length:30',
                 'notes'  => 'nullable|length:50',
             ];
+            if($mode=='registerHistoryLeft'){
+                unset($rules['adhibition_start_dt']);
+                $rules['adhibition_start_dt_new'] ='required';
+            }
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
             if($mode=='registerHistoryLeft'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
-                    if (Carbon::parse($data['adhibition_start_dt']) < Carbon::parse($mSupplier->adhibition_start_dt)){
-                        $validator->errors()->add('adhibition_start_dt',Lang::get('messages.MSG02015'));
+                    if (Carbon::parse($data['adhibition_start_dt_new']) < Carbon::parse($mSupplier->adhibition_start_dt)){
+                        $validator->errors()->add('adhibition_start_dt_new',Lang::get('messages.MSG02015'));
+                    }
+                    if (Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
+                        $validator->errors()->add('adhibition_start_dt_new',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_new'],Lang::get('messages.MSG02014')));
+                    }
+                });
+            }elseif ($mode=='edit'){
+                $validator->after(function ($validator) use ($data,$mSupplier){
+                    if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
+                        $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
+                    }
+                });
+            }else{
+                $validator->after(function ($validator) use ($data,$mSupplier){
+                    if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
+                        $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt'],Lang::get('messages.MSG02014')));
                     }
                 });
             }
-            $validator->after(function ($validator) use ($data){
-                if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
-                    $validator->errors()->add('adhibition_start_dt',Lang::get('messages.MSG02014'));
-                }
-            });
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator->errors())
@@ -176,7 +190,9 @@ class SuppliersController extends Controller
                         $mSupplier->save();
                         $mSupplier = new MSupplier();
                     }elseif ($mode=='edit'){
-                        $mSupplier->editSupplier($mSupplier->id,$data["adhibition_start_dt"]);
+                        if($data["adhibition_start_dt"]!= $mSupplier->adhibition_start_dt){
+                            $mSupplier->editSupplier($mSupplier->id,$data["adhibition_start_dt"]);
+                        }
                     }
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
                     $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');

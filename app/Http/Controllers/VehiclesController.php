@@ -109,6 +109,16 @@ class VehiclesController extends Controller
         return response()->json($response);
     }
 
+    public function checkIsExist($id){
+        $mVehicle = new MVehicles();
+        $mVehicle = $mVehicle->find($id);
+        if (isset($mVehicle)) {
+            return Response()->json(array('success'=>true));
+        } else {
+            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+        }
+    }
+
     public function create(Request $request){
 
     }

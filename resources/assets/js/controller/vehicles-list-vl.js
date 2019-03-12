@@ -74,11 +74,29 @@ var ctrVehiclesListVl = new Vue({
             }
         },
         deleteVehicle: function (id){
-            if (confirm(messages["MSG06001"])) {
-                vehicles_service.delete(id).then((response) => {
+            vehicles_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
                     this.getItems(1);
-                });
-            }
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        vehicles_service.delete(id).then((response) => {
+                            this.getItems(1);
+                        });
+                    }
+                }
+            });
+        },
+        checkIsExist: function (id) {
+            vehicles_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.getItems(1);
+                } else {
+                    window.location.href = 'edit/' + id;
+                }
+            });
         }
     },
     mounted () {
