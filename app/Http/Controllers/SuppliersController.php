@@ -157,7 +157,7 @@ class SuppliersController extends Controller
             }elseif ($mode=='edit'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
                     if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
-                        $validator->errors()->add('adhibition_start_dt',Lang::get('messages.MSG02015'));
+                        $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
                     }
                 });
             }else{
