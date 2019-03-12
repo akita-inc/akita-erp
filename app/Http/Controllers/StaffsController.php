@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\MStaffs;
 use App\Models\MGeneralPurposes;
+use Illuminate\Support\Facades\Lang;
+
 class StaffsController extends Controller
 {
     use ListTrait;
@@ -86,20 +88,20 @@ class StaffsController extends Controller
                 "classTH" => ""
             ],
             'adhibition_start_dt' => [
-                "classTH" => "wd-150",
+                "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
             'adhibition_end_dt' => [
-                "classTH" => "wd-150",
+                "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
             'modified_at' => [
-                "classTH" => "wd-150",
+                "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
             'delete' => [
-                "classTH" => "wd-100",
-                "classTD" => "wd-50"
+                "classTH" => "wd-60",
+                "classTD" => "no-padding"
             ]
 
         ];
@@ -133,6 +135,16 @@ class StaffsController extends Controller
             $response = ['data' => $ex];
         }
         return response()->json($response);
+    }
+
+    public function checkIsExist($id){
+        $mStaffs = new MStaffs();
+        $mStaffs = $mStaffs->find($id);
+        if (isset($mStaffs)) {
+            return Response()->json(array('success'=>true));
+        } else {
+            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+        }
     }
 
     public function create(Request $request)
