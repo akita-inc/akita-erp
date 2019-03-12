@@ -9,6 +9,6 @@ Route::group(['name' => 'vehicles', 'prefix' => 'vehicles', 'middleware' => ['au
     /*Api using Vue*/
     Route::group(['prefix' => 'api-v1'], function () {
         Route::post('/getItems','VehiclesController@getItems')->name("vehicles.getItems");
-
+        Route::any('/checkIsExist/{id}','VehiclesController@checkIsExist')->name("vehicles.checkIsExist");
     });
 });

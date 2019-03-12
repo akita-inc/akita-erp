@@ -1154,11 +1154,34 @@ var ctrVehiclesListVl = new Vue({
     deleteVehicle: function deleteVehicle(id) {
       var _this2 = this;
 
-      if (confirm(messages["MSG06001"])) {
-        vehicles_service.delete(id).then(function (response) {
+      vehicles_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
           _this2.getItems(1);
-        });
-      }
+
+          return false;
+        } else {
+          if (confirm(messages["MSG06001"])) {
+            vehicles_service.delete(id).then(function (response) {
+              _this2.getItems(1);
+            });
+          }
+        }
+      });
+    },
+    checkIsExist: function checkIsExist(id) {
+      var _this3 = this;
+
+      vehicles_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this3.getItems(1);
+        } else {
+          window.location.href = 'edit/' + id;
+        }
+      });
     }
   },
   mounted: function mounted() {
@@ -1179,7 +1202,7 @@ var ctrVehiclesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
 
 
 /***/ })
