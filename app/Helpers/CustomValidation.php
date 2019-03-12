@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Validator;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CustomValidation {
 
@@ -125,6 +126,33 @@ class CustomValidation {
                 return false;
             }
             return true;
+        });
+    }
+
+    public static function validateDateFormat(){
+        Validator::extend('date_format_custom', function($attribute, $value, $parameters, $validator) {
+
+            if (preg_match("/^[0-9]{4}(0[1-9]|1[0-2])$/",$value)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    public static function validateFileSize(){
+        Validator::extend('max_mb', function($attribute, $value, $parameters, $validator) {
+
+            if ($value instanceof UploadedFile && ! $value->isValid()) {
+                return false;
+            }
+
+            $megabytes = $value->getSize() / 1024 / 1024;
+
+            return $megabytes <= $parameters[0];
+        });
+        Validator::replacer('max_mb', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':max' , $parameters[0], $message);
         });
     }
 }
