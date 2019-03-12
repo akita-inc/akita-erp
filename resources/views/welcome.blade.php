@@ -1,5 +1,5 @@
 @extends('Layouts.app')
-@section('title','Dashboard')
+@section('title','メニュー')
 @section("style")
 @endsection
 @section('content')

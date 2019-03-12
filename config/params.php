@@ -44,7 +44,7 @@ return [
         'accessible_kb'                 => '09001', // アクセス許可区分
         // 'screen_disp_auth_kb'           => '09002', // データ項目表示許可区分
         'screen_category'               => '09003', // システム画面カテゴリID
-        'payment_account_type'               => '09004',
+        'payment_account_type'          => '09004', // 支払口座種別
     ],
     'adhibition_end_dt_default' => '2999/12/31'
 ];

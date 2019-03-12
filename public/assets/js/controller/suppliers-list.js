@@ -1139,8 +1139,6 @@ var ctrSuppliersListVl = new Vue({
       this.fieldSearch.supplier_nm = '';
       this.fieldSearch.radio_reference_date = '1';
       this.fieldSearch.reference_date = date_now;
-      this.message = '';
-      this.getItems(1);
     },
     setDefault: function setDefault() {
       if (this.fieldSearch.reference_date === '') {
@@ -1150,11 +1148,34 @@ var ctrSuppliersListVl = new Vue({
     deleteSupplier: function deleteSupplier(id) {
       var _this2 = this;
 
-      if (confirm(messages["MSG06001"])) {
-        suppliers_service.deleteSupplier(id).then(function (response) {
+      suppliers_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
           _this2.getItems(1);
-        });
-      }
+
+          return false;
+        } else {
+          if (confirm(messages["MSG06001"])) {
+            suppliers_service.deleteSupplier(id).then(function (response) {
+              _this2.getItems(1);
+            });
+          }
+        }
+      });
+    },
+    checkIsExist: function checkIsExist(id) {
+      var _this3 = this;
+
+      suppliers_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this3.getItems(1);
+        } else {
+          window.location.href = 'edit/' + id;
+        }
+      });
     }
   },
   mounted: function mounted() {

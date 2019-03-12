@@ -137,14 +137,14 @@
                                     <a href="#">{!! "@{{ item['$key'] }}" !!}</a>
                                     @break
                                 @case('staff_nm')
-                                    <span class="xsmall">{!! "@{{ item['staff_nm_kana'] }}" !!}</span><br>
-                                    {!! "@{{ item['staff_nm'] }}" !!}
+                                    <span class="xsmall">{!! "@{{ item['staff_nm_kana'] }}" !!}</span><br v-if="item['staff_nm_kana']">
+                                    <span>{!! "@{{ item['staff_nm'] }}" !!}</span>
                                     @break
                                 @case('delete')
                                     <button class="btn btn-delete" v-on:click="deleteStaffs(item.id)" v-if="item['staff_cd']!='admin' && item['staff_cd']!=auth_staff_cd">削除</button>
                                     @break
                                 @default
-                                    {!! "@{{ item['$key'] }}" !!}
+                                    <span>{!! "@{{ item['$key'] }}" !!}</span>
                                     @break
                              @endswitch
                         </td>
