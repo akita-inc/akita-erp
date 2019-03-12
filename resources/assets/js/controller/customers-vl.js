@@ -1,6 +1,7 @@
 import DatePicker from 'vue2-datepicker';
 import { Core } from '../package/yubinbango-core';
 import moment from 'moment';
+import historykana from "historykana";
 
 var ctrCustomersVl = new Vue({
     el: '#ctrCustomersVl',
@@ -41,7 +42,9 @@ var ctrCustomersVl = new Vue({
             mst_account_titles_id: "",
             mst_account_titles_id_2: "",
             mst_account_titles_id_3: "",
-            notes:""
+            notes:"",
+            furigana: '',
+            history: []
         }
     },
     methods : {
@@ -56,12 +59,37 @@ var ctrCustomersVl = new Vue({
         addRows: function () {
             this.field.mst_bill_issue_destinations.push({});
         },
+        convertKana: function (input , destination) {
+            console.log(input);
+            this.history.push(input.target.value);
+            this.furigana = historykana(this.history);
+            suppliers_service.convertKana({'data': this.furigana}).then(function (data) {
+                $('#'+destination).val(data.info);
+            });
+        },
+        onBlur: function(){
+            this.history = [];
+            this.furigana = '';
+        },
         getAddrFromZipCode: function() {
             var zip = $('#zip_cd').val();
             new Core(zip, function (addr) {
                 $('#prefectures_cd').val(addr.region_id);// 都道府県ID
                 $('#address1').val(addr.locality);// 市区町村
                 $('#address2').val(addr.street);// 町域
+            });
+        },
+        getAddrFromZipCodeCollapse:function(index)
+        {
+            var zip_cd='#mst_bill_issue_destinations_zip_cd'+index;
+            var prefectures_cd='#mst_bill_issue_destinations_prefectures_cd'+index;
+            var address1='#mst_bill_issue_destinations_address1'+index;
+            var address2='#mst_bill_issue_destinations_address2'+index;
+            var zip = $(zip_cd).val();
+            new Core(zip, function (addr) {
+                $(prefectures_cd).val(addr.region_id);// 都道府県ID
+                $(address1).val(addr.locality);// 市区町村
+                $(address2).val(addr.street);// 町域
             });
         },
         removeRows: function (index) {
