@@ -9,12 +9,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Models\MAccountTitles;
+use App\Models\MBusinessOffices;
 use App\Models\MCustomers;
 use App\Models\MCustomersCategories;
+use App\Models\MGeneralPurposes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-use App\Models\MGeneralPurposes;
 class CustomersController extends Controller
 {
     use ListTrait,FormTrait;
@@ -109,12 +111,27 @@ class CustomersController extends Controller
     public function create(Request $request){
         $mGeneralPurposes = new MGeneralPurposes();
         $mCustomerCategories=new MCustomersCategories();
+        $mBusinessOffices=new MBusinessOffices();
+        $mAccountTitles=new MAccountTitles();
+        $customer_categories=$mCustomerCategories->getListCustomerCategories();
+        $mBusinessOffices=$mBusinessOffices->getListBusinessOffices();
+        $listAccountTitles=$mAccountTitles->getListAccountTitles();
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
-        $customer_categories=$mCustomerCategories->getAllData();
-//        dd($listPrefecture);
+        $listDepositMethods=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_method'],'');
+        $listDepositMonths=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_month'],'');
+        $listConsumptionTaxCalcUnit=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
+        $listRoundingMethod=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
+        $listDepositBankCd=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_bank_cd'],'');
         return view('customers.create', [
                                 'listPrefecture' => $listPrefecture,
-                                'customer_categories'=>$customer_categories
+                                'customer_categories'=>$customer_categories,
+                                'business_offices'=>$mBusinessOffices,
+                                'listDepositMethods'=>$listDepositMethods,
+                                'listDepositMonths'=>$listDepositMonths,
+                                'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
+                                'listRoundingMethod'=>$listRoundingMethod,
+                                'listDepositBankCd'=>$listDepositBankCd,
+                                'listAccountTitles'=>$listAccountTitles
         ]);
     }
 }
