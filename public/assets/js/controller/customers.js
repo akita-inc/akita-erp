@@ -22177,6 +22177,8 @@ var ctrCustomersVl = new Vue({
   el: '#ctrCustomersVl',
   data: {
     lang: lang_date_picker,
+    furigana: '',
+    history: [],
     field: {
       adhibition_start_dt: "",
       adhibition_end_dt: "2999/12/31",
@@ -22212,9 +22214,7 @@ var ctrCustomersVl = new Vue({
       mst_account_titles_id: "",
       mst_account_titles_id_2: "",
       mst_account_titles_id_3: "",
-      notes: "",
-      furigana: '',
-      history: []
+      notes: ""
     }
   },
   methods: {
@@ -22230,7 +22230,6 @@ var ctrCustomersVl = new Vue({
       this.field.mst_bill_issue_destinations.push({});
     },
     convertKana: function convertKana(input, destination) {
-      console.log(input);
       this.history.push(input.target.value);
       this.furigana = historykana__WEBPACK_IMPORTED_MODULE_3___default()(this.history);
       suppliers_service.convertKana({
