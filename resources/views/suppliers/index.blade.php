@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}">
 @endsection
 @section('content')
-    @include('Layouts.alert')
     <div class="row row-xs" id="ctrSuppliersListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
