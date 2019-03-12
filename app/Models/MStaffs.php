@@ -56,7 +56,7 @@ class MStaffs extends Authenticatable
         try
         {
             $historyStaffs = $this->getHistoryNearest($mMStaffs->staff_cd, $mMStaffs->adhibition_end_dt);
-            if (isset($historySupplier)) {
+            if (isset($historyStaffs)) {
                 $historyStaffs->adhibition_end_dt = $mMStaffs->adhibition_end_dt;
                 $historyStaffs->save();
             }

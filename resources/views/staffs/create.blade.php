@@ -24,15 +24,16 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5 required" for="staff_cd">社員コード</label>
-                        <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('staff_cd')? 'is-invalid': ''}}" name="staff_cd" id="staff_cd" maxlength="5" value="{{ $mStaffs->staff_cd ?? old('staff_cd') }}">
-                        </div>
-                        @if ($errors->has('staff_cd'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $errors->first('staff_cd') }}</strong>
-                                </span>
-                        @endif
+                        {{--<label class="col-md-5 col-sm-5 required" for="staff_cd">社員コード</label>--}}
+                        {{--<div class="col-md-7 col-sm-7 wrap-control">--}}
+                            {{--<input type="text" class="form-control w-50 {{$errors->has('staff_cd')? 'is-invalid': ''}}" name="staff_cd" id="staff_cd" maxlength="5" value="{{ $mStaffs->staff_cd ?? old('staff_cd') }}">--}}
+                        {{--</div>--}}
+                        {{--@if ($errors->has('staff_cd'))--}}
+                            {{--<span class="invalid-feedback d-block" role="alert">--}}
+                                    {{--<strong>{{ $errors->first('staff_cd') }}</strong>--}}
+                                {{--</span>--}}
+                        {{--@endif--}}
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true])
                     </div>
                     <div class="col-md-7 col-sm-12 row  h-100">
                         <div class="col row grid-col h-100">
@@ -76,6 +77,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col">
@@ -110,6 +112,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col">
@@ -159,6 +162,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col">
@@ -273,6 +277,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
@@ -307,6 +312,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
@@ -341,6 +347,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col">
@@ -426,6 +433,99 @@
                 </div>
             </div>
 
+            <div class="grid-form">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <button class="btn btn-collapse w-100">▼ 学歴</button>
+                    </div>
+                </div>
+                <div class="break-row-form"></div>
+                <div class="grid-form form-collapse">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 row grid-col">
+                            <label class="col-md-2 col-sm-2" for="educational_background">最終学歴</label>
+                            <div class="col-md-10 col-sm-10 wrap-control">
+                                <input type="text" class="form-control w-75 {{$errors->has('educational_background')? 'is-invalid': ''}}" id="educational_background" name="educational_background" value="{{ $mStaff->educational_background ?? old('educational_background') }}" maxlength="25">
+                            </div>
+                            @if ($errors->has('educational_background'))
+                                <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('educational_background') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                        <div class="break-row-form"></div>
+                        <div class="col-md-5 col-sm-12 row grid-col">
+                            <label class="col-md-5 col-sm-5" for="educational_background_dt">最終学歴日付</label>
+                            <div class="col-md-7 col-sm-7 wrap-control">
+                                <date-picker format="YYYY/MM/DD"
+                                             placeholder=""
+                                             v-model="educational_background_dt" v-cloak=""
+                                             :lang="lang"
+                                             :input-class="{{ $errors->has('educational_background_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
+                                             v-on:change="onChangeDatepicker1"
+                                             :value-type="'format'"
+                                >
+                                </date-picker>
+                                <input type="hidden" class="form-control   {{$errors->has('educational_background_dt')? 'is-invalid': ''}}" name="educational_background_dt" id="educational_background_dt" value="{{ $mStaff->educational_background_dt ?? old('educational_background_dt')}}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-form">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 row grid-col">
+                        <button class="btn btn-collapse w-100">▼ 前職経歴</button>
+                    </div>
+                </div>
+                <div class="break-row-form"></div>
+                <div class="">
+                <div class="row form-collapse w-95">
+                     <div class="col-md-10 col-sm-12 row grid-col">
+                            <label class="col-md-2 col-sm-2" for="job_duties">職務内容</label>
+                            <div class="col-md-10 col-sm-10 wrap-control">
+                                <input type="text" class="form-control w-75 {{$errors->has('job_duties')? 'is-invalid': ''}}" id="job_duties" name="job_duties" value="{{ $mStaff->job_duties ?? old('job_duties') }}">
+                            </div>
+                            @if ($errors->has('job_duties'))
+                                <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('job_duties') }}</strong>
+                            </span>
+                            @endif
+                      </div>
+                     <div class="break-row-form"></div>
+                     <div class="col-md-5 col-sm-12 row grid-col h-100">
+                            <label class="col-md-5 col-sm-5" for="staff_tenure_start_dt">在職期間（開始日）</label>
+                            <div class="col-md-4 col-sm-4 wrap-control">
+                                <date-picker format="YYYY/MM/DD"
+                                             placeholder=""
+                                             v-model="staff_tenure_start_dt" v-cloak=""
+                                             :lang="lang"
+                                             :input-class="{{ $errors->has('staff_tenure_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
+                                             v-on:change="onChangeDatepicker1"
+                                             :value-type="'format'"
+                                >
+                                </date-picker>
+                                <input type="hidden" class="form-control   {{$errors->has('staff_tenure_start_dt')? 'is-invalid': ''}}" name="staff_tenure_start_dt" id="staff_tenure_start_dt" value="{{ $mStaff->staff_tenure_start_dt ?? old('staff_tenure_start_dt')}}" >
+                            </div>
+                      </div>
+                     <div class="col-md-7 col-sm-12 row grid-col">
+                            <label class="col-md-4 col-sm-4" for="staff_tenure_end_dt">在職期間（終了日）</label>
+                            <div class="col-md-2 col-sm-2 wrap-control">
+                                <date-picker format="YYYY/MM/DD"
+                                             placeholder=""
+                                             v-model="staff_tenure_end_dt" v-cloak=""
+                                             :lang="lang"
+                                             :input-class="{{ $errors->has('staff_tenure_end_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
+                                             v-on:change="onChangeDatepicker1"
+                                             :value-type="'format'"
+                                >
+                                </date-picker>
+                                <input type="hidden" class="form-control {{$errors->has('staff_tenure_end_dt')? 'is-invalid': ''}}" name="staff_tenure_end_dt" id="staff_tenure_end_dt" value="{{ $mStaff->staff_tenure_end_dt ?? old('staff_tenure_end_dt')}}" >
+                            </div>
+                     </div>
+                </div>
+                </div>
+            </div>
         </form>
     </div>
 @endsection

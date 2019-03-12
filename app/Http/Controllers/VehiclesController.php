@@ -129,7 +129,7 @@ class VehiclesController extends Controller
         $mGeneralPurposes = new MGeneralPurposes();
         $mBusinessOffices = new MBusinessOffices();
         $mStaff = new MStaffs();
-        $listBusinessOffices = $mBusinessOffices->getListOption();
+        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices();
         $listAdminStaffs = $mStaff->getListOption();
         $listVehicleKb= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicles_kb'],'');
         $listVehicleSize= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_size_kb'],'');

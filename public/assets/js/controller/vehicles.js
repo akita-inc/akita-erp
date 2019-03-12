@@ -4547,7 +4547,6 @@ var ctrVehiclesVl = new Vue({
   },
   methods: {
     onBlur: function onBlur() {
-      console.log(1);
       this.history = [];
       this.furigana = '';
     },
