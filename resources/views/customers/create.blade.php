@@ -134,9 +134,8 @@
                     </div>
 
                     <div class="col-md-5 col-sm-12 pd-l-20">
-                        @include('Component.form.select',['filed'=>'prime_business_office_id','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['filed'=>'prime_business_office_id','array'=>$business_offices])
                     </div>
-
                 </div>
             </div>
             <!--Block 5-->
@@ -151,7 +150,7 @@
                         <div class="break-row-form"></div>
                         <div class="col-md-12 col-sm-12 row grid-col no-padding">
                             <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_month_id','array'=>[""=>"select",'text','text2']])
+                                @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_month_id','array'=>$listDepositMonths])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
                                 @include('Component.form.input',['class'=>'wd-250','filed'=>'deposit_day'])
@@ -162,7 +161,7 @@
                     <div class="break-row-form"></div>
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_method_id','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_method_id','array'=>$listDepositMethods])
                         <div class="break-row-form"></div>
                         @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'business_start_dt'])
                     </div>
@@ -173,10 +172,10 @@
                     <div class="break-row-form"></div>
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-350','filed'=>'consumption_tax_calc_unit_id','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'consumption_tax_calc_unit_id','array'=>$listConsumptionTaxCalcUnit])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.select',['class'=>'wd-350','filed'=>'rounding_method_id','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'rounding_method_id','array'=>$listRoundingMethod])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -286,21 +285,21 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_bank_cd','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_bank_cd','array'=>$listDepositBankCd])
                     </div>
 
                     <div class="break-row-form"></div>
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id','array'=>[""=>"select",'text','text2']])
+                        @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id','array'=>$listAccountTitles])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_2','array'=>[""=>"select",'text','text2']])
+                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_2','array'=>$listAccountTitles])
                         </div>
 
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_3','array'=>[""=>"select",'text','text2']])
+                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_3','array'=>$listAccountTitles])
                         </div>
                     </div>
 
