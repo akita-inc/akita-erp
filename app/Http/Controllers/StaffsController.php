@@ -149,8 +149,12 @@ class StaffsController extends Controller
 
     public function create(Request $request)
     {
-
-        return view('staffs.create');
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listPrefecture = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'], '');
+        $listEmploymentPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
+        return view('staffs.create', [
+            'listEmploymentPattern' => $listEmploymentPattern
+        ]);
     }
 
 }
