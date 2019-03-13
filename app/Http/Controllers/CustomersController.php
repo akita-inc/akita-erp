@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MAccountTitles;
 use App\Models\MBusinessOffices;
@@ -18,8 +19,19 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 class CustomersController extends Controller
 {
-    use ListTrait;
+    use ListTrait,FormTrait;
     public $table = "mst_customers";
+
+    public $ruleValid = [
+        'mst_customers_cd'  => 'required|one_bytes_string|length:5',
+        'adhibition_start_dt'  => 'required',
+        'customer_nm'  => 'nullable|length:200',
+        'customer_nm_kana'  => 'kana|nullable',
+        'customer_nm_formal'  => 'length:200|nullable',
+        'customer_nm_kana_formal'  => 'kana|nullable'
+    ];
+
+    public $messagesCustom = [];
 
     protected function search($data){
         $dataSearch=$data['fieldSearch'];

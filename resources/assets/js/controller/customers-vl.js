@@ -1,3 +1,4 @@
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import DatePicker from 'vue2-datepicker';
 import { Core } from '../package/yubinbango-core';
 import moment from 'moment';
@@ -45,7 +46,8 @@ var ctrCustomersVl = new Vue({
             mst_account_titles_id_2: "",
             mst_account_titles_id_3: "",
             notes:"",
-        }
+        },
+        errors:{}
     },
     methods : {
         dateFormat: {
@@ -55,6 +57,13 @@ var ctrCustomersVl = new Vue({
             parse: (value) => {
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
+        },
+        submit: function(){
+            var that = this;
+            customers_service.submit(this.field).then((response) => {
+                console.log(response);
+                that.loading = false;
+            });
         },
         addRows: function () {
             this.field.mst_bill_issue_destinations.push({});

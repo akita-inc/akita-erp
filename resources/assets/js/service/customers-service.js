@@ -13,6 +13,13 @@ customers_service = {
             return error;
         });
     },
+    submit: function (id) {
+        return axios.post('/customers/api-v1/submit').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
     checkIsExist: function (id) {
         return axios.get('/customers/api-v1/checkIsExist/' + id).then(function (response) {
             return response.data;
