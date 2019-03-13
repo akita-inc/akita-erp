@@ -11,7 +11,7 @@
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
-                        <button class="btn btn-black" type="button" v-on:click="backHistory">{{ trans("common.button.back") }}</button>
+                        <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
                     </div>
                     @if($mVehicle->id)
                     <div class="d-flex ml-auto">
