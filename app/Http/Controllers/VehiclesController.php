@@ -293,7 +293,7 @@ class VehiclesController extends Controller
                         $mVehicle->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     }else{
                         $mVehicle->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
-                        $mVehicle->adhibition_end_dt= TimeFunction::dateFormat($flagLasted ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                        $mVehicle->adhibition_end_dt= TimeFunction::dateFormat($mode=='edit' ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     }
 
 
@@ -395,7 +395,11 @@ class VehiclesController extends Controller
 
                     $mVehicle->save();
                     DB::commit();
-                    \Session::flash('message',Lang::get('messages.MSG03002'));
+                    if($mode=='edit'){
+                        \Session::flash('message',Lang::get('messages.MSG04002'));
+                    }else{
+                        \Session::flash('message',Lang::get('messages.MSG03002'));
+                    }
                     return redirect()->route('vehicles.list');
                 }catch (\Exception $e) {
                     DB::rollback();
