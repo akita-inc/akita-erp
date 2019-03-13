@@ -4576,6 +4576,11 @@ var ctrSupplierrsVl = new Vue({
           $('#address2').val(addr.street); // 町域
         }
       });
+    },
+    backHistory: function backHistory() {
+      suppliers_service.backHistory().then(function () {
+        window.location.href = listRoute;
+      });
     }
   },
   mounted: function mounted() {},

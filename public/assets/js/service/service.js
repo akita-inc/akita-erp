@@ -121,6 +121,13 @@ customers_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/customers/api-v1/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -150,6 +157,13 @@ staffs_service = {
   },
   checkIsExist: function checkIsExist(id) {
     return axios.get('/staffs/api-v1/checkIsExist/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/staffs/api-v1/back-history').then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
@@ -194,6 +208,13 @@ suppliers_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/api/supplier/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -223,6 +244,13 @@ vehicles_service = {
   },
   checkIsExist: function checkIsExist(id) {
     return axios.get('/vehicles/api-v1/checkIsExist/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/vehicles/api-v1/back-history').then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;

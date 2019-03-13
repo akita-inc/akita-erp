@@ -20,5 +20,12 @@ vehicles_service = {
         }).catch(function (error) {
             return error;
         });
-    }
+    },
+    backHistory: function () {
+        return axios.get('/vehicles/api-v1/back-history').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
