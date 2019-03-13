@@ -117,7 +117,7 @@ class SuppliersController extends Controller
                 'supplier_nm'  => 'required|length:200',
                 'supplier_nm_kana'  => 'kana|nullable|length:200',
                 'supplier_nm_formal'  => 'length:200|nullable',
-                'supplier_nm_kana_formal'  => 'length:200|nullable',
+                'supplier_nm_kana_formal'  => 'kana|length:200|nullable',
                 'dealing_person_in_charge_last_nm'  => 'length:25|nullable',
                 'dealing_person_in_charge_first_nm'  => 'length:25|nullable',
                 'dealing_person_in_charge_last_nm_kana'  => 'kana|nullable|length:50',

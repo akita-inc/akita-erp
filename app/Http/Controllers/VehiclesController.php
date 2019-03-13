@@ -104,10 +104,19 @@ class VehiclesController extends Controller
         $this->query->orderby('mst_vehicles.adhibition_start_dt');
     }
 
-    public function delete($id)
+    public function delete(Request $request,$id)
     {
         $mVehicle = new MVehicles();
 
+        if ($request->getMethod() == 'POST') {
+            if ($mVehicle->deleteVehicle($id)) {
+                \Session::flash('message',Lang::get('messages.MSG10004'));
+            } else {
+                \Session::flash('message',Lang::get('messages.MSG06002'));
+            }
+
+            return redirect()->route('suppliers.list');
+        }
         if ($mVehicle->deleteVehicle($id)) {
             $response = ['data' => 'success'];
         } else {
@@ -270,7 +279,7 @@ class VehiclesController extends Controller
                 {
                     if($mode=='registerHistoryLeft'){
 
-                        $mVehicle->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt"]);
+                        $mVehicle->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
                         $mVehicle->save();
                         $mVehicle = new MVehicles();
                     }elseif ($mode=='edit'){
