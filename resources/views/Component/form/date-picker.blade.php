@@ -1,6 +1,6 @@
 <div class="wrap-control-group {!! isset($class) ? $class:"" !!}">
     <label class="{!! isset($required) && $required ? "required":"" !!}">
-        {{ trans(@$label.".create.field.".$filed) }}
+        {{ trans(@$table.".create.field.".$filed) }}
     </label>
     <date-picker
         :lang='lang'

@@ -1,6 +1,6 @@
 <div class="wrap-control-group {!! isset($class) ? $class:"" !!}">
     <label class="{!! isset($required) && $required ? "required":"" !!}" v-bind:for="{!! $filedId !!}">
-        {{ trans(@$label.".create.field.".$filed) }}
+        {{ trans(@$table.".create.field.".$filed) }}
     </label>
     <select {!! isset($attr_input) ? $attr_input:"" !!}
             class="form-control"

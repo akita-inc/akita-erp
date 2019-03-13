@@ -2,7 +2,7 @@
 @section('title',trans("customers.create.title"))
 @section('title_header',trans("customers.create.title"))
 @section('content')
-    @php $label='customers' @endphp
+    @php $table='customers' @endphp
     <div class="wrapper-container" id="ctrCustomersVl">
         <div class="sub-header">
             <div class="sub-header-line-one">

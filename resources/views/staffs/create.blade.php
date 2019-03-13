@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/supplier/add.css') }}">
 @endsection
 @section('content')
-    @php $label='staffs' @endphp
+    @php $table='staffs' @endphp
     <div class="wrapper-container" id="ctrStaffsVl">
         <div class="sub-header">
             <div class="sub-header-line-one">
