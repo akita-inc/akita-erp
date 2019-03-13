@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['name' => 'staffs', 'prefix'=>'/staffs', 'middleware' => ['web']],function (){
+Route::group(['name' => 'staffs', 'prefix'=>'/staffs', 'middleware' => ['auth']],function (){
     Route::get('/','StaffsController@index')->name("staffs.list");
     Route::get('/create','StaffsController@create')->name("staffs.create");
 

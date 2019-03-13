@@ -48,6 +48,7 @@ class EditMstStaffsTable extends Migration
             $table->string('relocation_municipal_office_cd',5)->nullable();
             $table->string('educational_background',50)->nullable();
             $table->date('educational_background_dt')->nullable();
+            $table->boolean('enable_fg')->nullable()->default(1);
             $table->string('drivers_license_number',12)->nullable();
             $table->boolean('drivers_license_color_id')->nullable();
             $table->date('drivers_license_issued_dt')->nullable();
@@ -67,10 +68,11 @@ class EditMstStaffsTable extends Migration
             $table->integer('drivers_license_divisions_12')->nullable();
             $table->integer('drivers_license_divisions_13')->nullable();
             $table->integer('drivers_license_divisions_14')->nullable();
-            $table->string('retire_reason')->nullable();
+            $table->string('retire_reasons')->nullable();
             $table->date('retire_dt')->nullable();
             $table->string('death_reasons')->nullable();
             $table->date('death_dt')->nullable();
+            $table->boolean('workmens_compensation_insurance_fg')->nullable();
             $table->string('belong_company_id',20)->nullable();
             $table->string('occupation_id',5)->nullable();
             $table->integer('mst_business_office_id')->nullable();

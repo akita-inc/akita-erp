@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-8  col-sm-12 input-group">
                             <select class="form-control dropdown-list" name="belong_company_id"  id="belong_company_id"  v-model="fileSearch.belong_company_id">
-                                    <option value="">===選択===</option>
+                                    <option value="">={{trans('common.select_option')}}=</option>
                                 @foreach($belongCompanies as $company)
                                     <option value="{{$company['date_id']}}"> {{$company['date_nm']}}</option>
                                 @endforeach
@@ -52,7 +52,7 @@
                         <div class="col-md-8 lh-38 text-right no-padding">
 
                             <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
-                                <option value="">==選択==</option>
+                                <option value="">{{trans('common.select_option')}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
                                 @endforeach
@@ -68,7 +68,7 @@
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="employment_pattern_id"  id="employment_pattern_id"  v-model="fileSearch.employment_pattern_id">
-                                <option value="">==選択==</option>
+                                <option value="">{{trans('common.select_option')}}</option>
                                 @foreach($employmentPatterns as $pattern)
                                     <option value="{{$pattern['date_id']}}"> {{$pattern['date_nm']}}</option>
                                 @endforeach
@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="position_id"  id="position_id"  v-model="fileSearch.position_id">
-                                <option value="">==選択==</option>
+                                <option value="">{{trans('common.select_option')}}</option>
                                 @foreach($positions as $position)
                                     <option value="{{$position['date_id']}}"> {{$position['date_nm']}}</option>
                                 @endforeach
