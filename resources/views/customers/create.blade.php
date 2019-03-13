@@ -53,7 +53,7 @@
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
                         <div class="wrap-control-group">
-                            <label class="required" for="customer_nm_formal">
+                            <label for="customer_nm_formal">
                                 {{ trans("customers.create.field.customer_nm_formal") }}
                             </label>
                             <input v-on:input="convertKana($event, 'customer_nm_kana_formal')"  type="text" class="form-control" id="customer_nm_formal" v-on:blur="onBlur">

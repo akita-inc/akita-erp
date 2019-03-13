@@ -26,5 +26,6 @@ return [
         "indicates_required_items" => "*　は必須入力の項目です。"
     ],
     'select_option' => '===選択===',
+    'save_fail' => 'Error! Save Fail.',
 
 ];

@@ -22,6 +22,17 @@ class CustomersController extends Controller
     use ListTrait,FormTrait;
     public $table = "mst_customers";
 
+    public $ruleValid = [
+        'mst_customers_cd'  => 'required|one_bytes_string|length:5',
+        'adhibition_start_dt'  => 'required',
+        'customer_nm'  => 'nullable|length:200',
+        'customer_nm_kana'  => 'kana|nullable',
+        'customer_nm_formal'  => 'length:200|nullable',
+        'customer_nm_kana_formal'  => 'kana|nullable'
+    ];
+
+    public $messagesCustom = [];
+
     protected function search($data){
         $dataSearch=$data['fieldSearch'];
         $reference_date=date('Y-m-d', strtotime($dataSearch['reference_date']) );
@@ -106,10 +117,6 @@ class CustomersController extends Controller
         } else {
             return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
         }
-    }
-
-    public function submit(Request $request){
-
     }
 
     public function create(Request $request){

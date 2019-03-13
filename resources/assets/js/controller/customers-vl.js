@@ -46,7 +46,8 @@ var ctrCustomersVl = new Vue({
             mst_account_titles_id_2: "",
             mst_account_titles_id_3: "",
             notes:"",
-        }
+        },
+        errors:{}
     },
     methods : {
         dateFormat: {
