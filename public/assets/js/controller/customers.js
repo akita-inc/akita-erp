@@ -23148,6 +23148,7 @@ var ctrCustomersVl = new Vue({
     lang: lang_date_picker,
     furigana: '',
     history: [],
+    loading: false,
     field: {
       adhibition_start_dt: "",
       adhibition_end_dt: "2999/12/31",
@@ -23185,9 +23186,7 @@ var ctrCustomersVl = new Vue({
       mst_account_titles_id_3: "",
       notes: ""
     },
-    errors: {}
-  },
-  methods: {
+    errors: {},
     dateFormat: {
       stringify: function stringify(date) {
         return date ? moment__WEBPACK_IMPORTED_MODULE_3___default()(date).format('YYYY MM DD') : null;
@@ -23195,11 +23194,17 @@ var ctrCustomersVl = new Vue({
       parse: function parse(value) {
         return value ? moment__WEBPACK_IMPORTED_MODULE_3___default()(value, 'YYYY MM DD').toDate() : null;
       }
-    },
+    }
+  },
+  methods: {
     submit: function submit() {
       var that = this;
+      that.loading = true;
       customers_service.submit(this.field).then(function (response) {
-        console.log(response);
+        if (response.success == false) {
+          that.errors = response.message;
+        }
+
         that.loading = false;
       });
     },
@@ -23207,12 +23212,13 @@ var ctrCustomersVl = new Vue({
       this.field.mst_bill_issue_destinations.push({});
     },
     convertKana: function convertKana(input, destination) {
+      var that = this;
       this.history.push(input.target.value);
       this.furigana = historykana__WEBPACK_IMPORTED_MODULE_4___default()(this.history);
-      suppliers_service.convertKana({
+      home_service.convertKana({
         'data': this.furigana
       }).then(function (data) {
-        $('#' + destination).val(data.info);
+        that.field[destination] = data.info;
       });
     },
     onBlur: function onBlur() {
@@ -23220,27 +23226,26 @@ var ctrCustomersVl = new Vue({
       this.furigana = '';
     },
     getAddrFromZipCode: function getAddrFromZipCode() {
+      var that = this;
       var zip = $('#zip_cd').val();
       new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_2__["Core"](zip, function (addr) {
-        $('#prefectures_cd').val(addr.region_id); // 都道府県ID
-
-        $('#address1').val(addr.locality); // 市区町村
-
-        $('#address2').val(addr.street); // 町域
+        that.field.prefectures_cd = addr.region_id;
+        that.field.address1 = addr.region_id;
+        that.field.address2 = addr.region_id;
       });
     },
     getAddrFromZipCodeCollapse: function getAddrFromZipCodeCollapse(index) {
-      var zip_cd = '#mst_bill_issue_destinations_zip_cd' + index;
-      var prefectures_cd = '#mst_bill_issue_destinations_prefectures_cd' + index;
-      var address1 = '#mst_bill_issue_destinations_address1' + index;
-      var address2 = '#mst_bill_issue_destinations_address2' + index;
-      var zip = $(zip_cd).val();
+      var that = this;
+      var zip = this.field.mst_bill_issue_destinations[index].zip_cd;
       new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_2__["Core"](zip, function (addr) {
-        $(prefectures_cd).val(addr.region_id); // 都道府県ID
+        that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id; // 都道府県ID
 
-        $(address1).val(addr.locality); // 市区町村
+        that.field.mst_bill_issue_destinations[index].address1 = addr.locality; // 市区町村
 
-        $(address2).val(addr.street); // 町域
+        that.field.mst_bill_issue_destinations[index].address2 = addr.street; // 町域
+
+        that.field.mst_bill_issue_destinations.push({});
+        that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
       });
     },
     removeRows: function removeRows(index) {
@@ -23254,7 +23259,8 @@ var ctrCustomersVl = new Vue({
   },
   mounted: function mounted() {},
   components: {
-    DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_1___default.a
+    DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_1___default.a,
+    PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
 });
 
@@ -23326,7 +23332,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })

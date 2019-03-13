@@ -22,6 +22,7 @@ include "api.php";
 Route::post('login','Auth\LoginController@postLogin');
 Route::get('/login','Auth\LoginController@getLogin')->name('login');
 Route::get('/logout','Auth\LoginController@logout')->name('logout');
+include "home.php";
 include "supplier.php";
 include "customer.php";
 include "staff.php";

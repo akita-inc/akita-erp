@@ -2,7 +2,7 @@
 @section('title',trans("customers.create.title"))
 @section('title_header',trans("customers.create.title"))
 @section('content')
-    @php $table='customers.create.field.' @endphp
+    @php $prefix='customers.create.field.' @endphp
     <div class="wrapper-container" id="ctrCustomersVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
@@ -29,7 +29,7 @@
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_start_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
+                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
                         </div>
                     </div>
                 </div>
@@ -38,12 +38,11 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        <div class="wrap-control-group">
-                            <label class="required" for="customer_nm">
-                                {{ trans("customers.create.field.customer_nm") }}
-                            </label>
-                            <input v-on:input="convertKana($event, 'customer_nm_kana')"  type="text" class="form-control" id="customer_nm" v-on:blur="onBlur">
-                        </div>
+                        @include('Component.form.input',[
+                                'filed'=>'customer_nm',
+                                'required'=>true,
+                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana\')" v-on:blur="onBlur"'
+                            ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -52,12 +51,10 @@
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
-                        <div class="wrap-control-group">
-                            <label for="customer_nm_formal">
-                                {{ trans("customers.create.field.customer_nm_formal") }}
-                            </label>
-                            <input v-on:input="convertKana($event, 'customer_nm_kana_formal')"  type="text" class="form-control" id="customer_nm_formal" v-on:blur="onBlur">
-                        </div>
+                        @include('Component.form.input',[
+                                'filed'=>'customer_nm_formal',
+                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana_formal\')" v-on:blur="onBlur"'
+                            ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -69,7 +66,10 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'person_in_charge_last_nm'])
+                        @include('Component.form.input',[
+                               'filed'=>'person_in_charge_last_nm',
+                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_last_nm_kana\')" v-on:blur="onBlur"'
+                           ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -78,7 +78,10 @@
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'person_in_charge_first_nm'])
+                        @include('Component.form.input',[
+                               'filed'=>'person_in_charge_first_nm',
+                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_first_nm_kana\')" v-on:blur="onBlur"'
+                           ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -90,7 +93,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-250','filed'=>'zip_cd'])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'zip_cd'])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
