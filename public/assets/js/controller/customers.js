@@ -23245,6 +23245,11 @@ var ctrCustomersVl = new Vue({
     },
     removeRows: function removeRows(index) {
       this.field.mst_bill_issue_destinations.splice(index, 1);
+    },
+    backHistory: function backHistory() {
+      customers_service.backHistory().then(function () {
+        window.location.href = listRoute;
+      });
     }
   },
   mounted: function mounted() {},

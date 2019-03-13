@@ -11,6 +11,7 @@ namespace App\Http\Controllers\TraitRepositories;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 trait ListTrait
 {
@@ -35,7 +36,16 @@ trait ListTrait
     }
     public function getItems(Request $request)
     {
-        $data = $request->all();
+
+        if(Session::exists('backQueryFlag') && Session::get('backQueryFlag')){
+            if(Session::exists('backQueryFlag') ){
+                $data = Session::get('requestHistory');
+            }
+            Session::put('backQueryFlag', false);
+        }else{
+            $data = $request->all();
+            Session::put('requestHistory', $data);
+        }
         $this->getQuery();
         $this->search( $data );
         $items = $this->query->paginate(config('params.page_size'));
@@ -48,7 +58,8 @@ trait ListTrait
                 'from' => $items->firstItem(),
                 'to' => $items->lastItem()
             ],
-            'data' => $items
+            'data' => $items,
+            'fieldSearch' => $data['fieldSearch']
         ];
         return response()->json($response);
     }

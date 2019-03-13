@@ -14,11 +14,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\TraitRepositories\FormTrait;
 
 class VehiclesController extends Controller
 {
 
-    use ListTrait;
+    use ListTrait,FormTrait;
     public $table = "mst_vehicles";
 
     public function index(Request $request)

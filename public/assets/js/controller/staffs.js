@@ -17815,6 +17815,11 @@ var ctrStaffsVl = new Vue({
     },
     removeRows: function removeRows(index) {
       this.field.mst_staff_qualifications.splice(index, 1);
+    },
+    backHistory: function backHistory() {
+      staffs_service.backHistory().then(function () {
+        window.location.href = listRoute;
+      });
     }
   },
   mounted: function mounted() {},

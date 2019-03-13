@@ -9,6 +9,8 @@ Route::group(['name' => 'staffs', 'prefix'=>'/staffs', 'middleware' => ['auth']]
         Route::post('/getItems','StaffsController@getItems')->name("staffs.getItems");
         Route::get('/delete/{id}','StaffsController@delete')->name("staffs.delete");
         Route::any('/checkIsExist/{id}','StaffsController@checkIsExist')->name("staffs.checkIsExist");
+        Route::any('back-history', ['uses' => 'StaffsController@backHistory']);
+
     });
 });
 

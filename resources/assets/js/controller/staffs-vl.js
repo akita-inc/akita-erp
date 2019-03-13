@@ -59,6 +59,11 @@ var ctrStaffsVl = new Vue({
         },
         removeRows: function (index) {
             this.field.mst_staff_qualifications.splice(index, 1);
+        },
+        backHistory: function () {
+            staffs_service.backHistory().then(function () {
+                window.location.href = listRoute;
+            });
         }
     },
     mounted () {

@@ -11,7 +11,7 @@
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
-                        <button class="btn btn-black">{{ trans("common.button.back") }}</button>
+                        <button class="btn btn-black" type="button" v-on:click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
                     @if($mVehicle->id)
                     <div class="d-flex ml-auto">
@@ -1220,6 +1220,7 @@
 @endsection
 @section("scripts")
     <script type="text/javascript">
+        var listRoute = "{{route('vehicles.list')}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         function registerHistoryLeft() {
