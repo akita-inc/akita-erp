@@ -2,7 +2,7 @@
 @section('title',trans("customers.create.title"))
 @section('title_header',trans("customers.create.title"))
 @section('content')
-    @php $table='customers' @endphp
+    @php $table='customers.create.field.' @endphp
     <div class="wrapper-container" id="ctrCustomersVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">

@@ -1,6 +1,6 @@
 <div class="wrap-control-group {!! isset($class) ? $class:"" !!}">
     <label class="{!! isset($required) && $required ? "required":"" !!}" for="{!! $filed !!}">
-        {{ trans(@$table.".create.field.".$filed) }}
+        {{ trans(@$prefix.$filed) }}
     </label>
     <select {!! isset($attr_input) ? $attr_input:"" !!} class="form-control" v-model="field.{!! $filed !!}" id="{!! $filed !!}">
         @if(isset($array) && !empty($array))
