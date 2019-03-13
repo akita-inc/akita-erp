@@ -4,12 +4,13 @@
 @section('content')
     @php $table='customers' @endphp
     <div class="wrapper-container" id="ctrCustomersVl">
+        <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one">
                 <button class="btn btn-black">{{ trans("common.button.back") }}</button>
         </div>
             <div class="sub-header-line-two">
-                <button class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                <button @click="validForm" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
             </div>
         </div>
 

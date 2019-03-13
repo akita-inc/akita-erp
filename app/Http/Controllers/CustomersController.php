@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MAccountTitles;
 use App\Models\MBusinessOffices;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 class CustomersController extends Controller
 {
-    use ListTrait;
+    use ListTrait,FormTrait;
     public $table = "mst_customers";
 
     protected function search($data){
