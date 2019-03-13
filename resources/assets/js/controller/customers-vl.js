@@ -57,9 +57,9 @@ var ctrCustomersVl = new Vue({
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
         },
-        validForm: function(){
+        submit: function(){
             var that = this;
-            customers_service.validForm(this.field).then((response) => {
+            customers_service.submit(this.field).then((response) => {
                 console.log(response);
                 that.loading = false;
             });

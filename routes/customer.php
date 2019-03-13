@@ -14,7 +14,7 @@ Route::group(['name' => 'customers', 'prefix'=>'/customers', 'middleware' => ['a
     Route::group(['prefix' => 'api-v1'], function () {
         Route::post('/getItems','CustomersController@getItems')->name("customers.getItems");
         Route::any('/checkIsExist/{id}','CustomersController@checkIsExist')->name("customers.checkIsExist");
-        Route::any('/validForm','CustomersController@validForm')->name("customers.validForm");
+        Route::any('/submit','CustomersController@submit')->name("customers.validForm");
 
     });
 });

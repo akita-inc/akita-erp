@@ -9,7 +9,7 @@
                 <button class="btn btn-black">{{ trans("common.button.back") }}</button>
             </div>
             <div class="sub-header-line-two">
-                <button @click="validForm" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
             </div>
         </div>
 

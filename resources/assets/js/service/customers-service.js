@@ -13,8 +13,8 @@ customers_service = {
             return error;
         });
     },
-    validForm: function (id) {
-        return axios.post('/customers/api-v1/validForm').then(function (response) {
+    submit: function (id) {
+        return axios.post('/customers/api-v1/submit').then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

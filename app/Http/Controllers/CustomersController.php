@@ -108,6 +108,10 @@ class CustomersController extends Controller
         }
     }
 
+    public function submit(Request $request){
+
+    }
+
     public function create(Request $request){
         $mGeneralPurposes = new MGeneralPurposes();
         $mCustomerCategories=new MCustomersCategories();
