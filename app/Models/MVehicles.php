@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\TimeFunction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,8 @@ class MVehicles extends Model
     public $label = [
         'vehicles_cd' => '車両コード',
         'adhibition_start_dt' => '適用開始日',
+        'adhibition_start_dt_new' => '適用開始日（新規用）',
+        'adhibition_start_dt_edit' => '適用開始日（更新用）',
         'adhibition_end_dt' => '適用終了日',
         'door_number' => 'ドア番',
         'vehicles_kb' => '車両区分',
