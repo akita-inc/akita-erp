@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Http\Controllers\TraitRepositories\FormTrait;
 
 class SuppliersController
 {
+    use ListTrait, FormTrait;
     public function convertToKana(Request $request)
     {
         $data = $request->get('data');

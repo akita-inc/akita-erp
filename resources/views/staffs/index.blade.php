@@ -5,11 +5,12 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
 @endsection
 @section('content')
+    @include('Layouts.alert')
     <div class="row row-xs" id="ctrStaffsListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
-                <button class="btn btn-yellow">
+                <button class="btn btn-yellow" onclick="window.location.href= '{{route('staffs.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>

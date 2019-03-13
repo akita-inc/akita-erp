@@ -23250,6 +23250,11 @@ var ctrCustomersVl = new Vue({
     },
     removeRows: function removeRows(index) {
       this.field.mst_bill_issue_destinations.splice(index, 1);
+    },
+    backHistory: function backHistory() {
+      customers_service.backHistory().then(function () {
+        window.location.href = listRoute;
+      });
     }
   },
   mounted: function mounted() {},
@@ -23327,7 +23332,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })

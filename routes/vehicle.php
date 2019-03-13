@@ -14,5 +14,7 @@ Route::group(['name' => 'vehicles', 'prefix' => 'vehicles', 'middleware' => ['au
     Route::group(['prefix' => 'api-v1'], function () {
         Route::post('/getItems','VehiclesController@getItems')->name("vehicles.getItems");
         Route::any('/checkIsExist/{id}','VehiclesController@checkIsExist')->name("vehicles.checkIsExist");
+        Route::any('back-history', ['uses' => 'VehiclesController@backHistory']);
+
     });
 });

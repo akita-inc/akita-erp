@@ -1128,6 +1128,7 @@ var ctrVehiclesListVl = new Vue({
 
         that.items = response.data.data;
         that.pagination = response.pagination;
+        that.fieldSearch = response.fieldSearch;
         that.loading = false;
       });
     },

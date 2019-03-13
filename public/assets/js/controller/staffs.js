@@ -17815,6 +17815,11 @@ var ctrStaffsVl = new Vue({
     },
     removeRows: function removeRows(index) {
       this.field.mst_staff_qualifications.splice(index, 1);
+    },
+    backHistory: function backHistory() {
+      staffs_service.backHistory().then(function () {
+        window.location.href = listRoute;
+      });
     }
   },
   mounted: function mounted() {},
@@ -17891,7 +17896,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

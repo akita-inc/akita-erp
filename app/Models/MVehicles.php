@@ -147,8 +147,8 @@ class MVehicles extends Model
     
     public function getLastedVehicle($vehicles_cd){
         $mVehicle = new MVehicles();
-        $mVehicle = $mVehicle->select(DB::raw('max(id) as max'))
-            ->where('vehicles_cd', "=", $vehicles_cd);
+        $mVehicle = $mVehicle->where('vehicles_cd', '=', $vehicles_cd)
+            ->orderByDesc("adhibition_start_dt");
         return $mVehicle->first();
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Lang;
 
 class StaffsController extends Controller
 {
-    use ListTrait;
+    use ListTrait, FormTrait;
     public $table = "mst_staffs";
     protected function search($data)
     {

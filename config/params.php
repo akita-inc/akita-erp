@@ -46,5 +46,6 @@ return [
         'screen_category'               => '09003', // システム画面カテゴリID
         'payment_account_type'          => '09004', // 支払口座種別
     ],
-    'adhibition_end_dt_default' => '2999/12/31'
+    'adhibition_end_dt_default' => '2999/12/31',
+    'vehicle_path' => storage_path('vehicle/'),
 ];

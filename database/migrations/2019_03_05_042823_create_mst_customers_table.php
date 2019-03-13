@@ -49,6 +49,7 @@ class CreateMstCustomersTable extends Migration
             $table->decimal('discount_amount',9,3)->nullable();
             $table->integer('except_g_drive_bill_fg')->nullable()->default(1);
             $table->string('deposit_bank_cd',4)->nullable();
+            $table->boolean('enable_fg')->nullable()->default(1);
             $table->integer('mst_account_titles_id')->nullable();
             $table->integer('mst_account_titles_id_2')->nullable();
             $table->integer('mst_account_titles_id_3')->nullable();

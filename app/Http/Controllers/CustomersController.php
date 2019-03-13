@@ -78,10 +78,14 @@ class CustomersController extends Controller
         ->leftjoin(DB::raw('(select mst_customers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_customers where deleted_at IS NULL group by mst_customers_cd) sub'), function ($join) {
             $join->on('sub.mst_customers_cd', '=', 'mst_customers.mst_customers_cd');
         })
-        ->whereRaw('mst_customers.deleted_at IS NULL')
-        ->where('mst_customers.mst_customers_cd', 'LIKE', '%' . $dataSearch['mst_customers_cd'] . '%')
-        ->where('mst_customers.customer_nm', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
+        ->whereRaw('mst_customers.deleted_at IS NULL');
 
+        if ($dataSearch['mst_customers_cd'] != '') {
+            $this->query->where('mst_customers.mst_customers_cd', 'LIKE', '%' . $dataSearch['mst_customers_cd'] . '%');
+        }
+        if ($dataSearch['customer_nm'] != '') {
+            $this->query->where('mst_customers.customer_nm', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
+        }
         if ($dataSearch['status'] == '1' && $reference_date!=null) {
             $this->query->where('mst_customers.adhibition_start_dt','<=',$reference_date)
                         ->where('mst_customers.adhibition_end_dt','>=',$reference_date);

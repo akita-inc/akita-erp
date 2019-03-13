@@ -10,6 +10,7 @@ namespace App\Http\Controllers\TraitRepositories;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 trait FormTrait
@@ -52,5 +53,9 @@ trait FormTrait
             'message'=> [],
             'idInsert' => $idInsert
         ]);
+    }
+
+    public function backHistory(Request $request){
+        Session::put('backQueryFlag', true);
     }
 }

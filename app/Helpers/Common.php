@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 require_once 'Lib/Igo.php';
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -173,7 +175,7 @@ class Common {
 //            $string = mb_convert_kana($str, "c", "utf-8");
             if($string !="")
             {
-                $string = preg_replace('/[^ぁ-ん]+/u', '', $string);
+                $string = preg_replace('/[^ぁ-んー]+/u', '', $string);
                 if(preg_match('/[^ぁ-ん]+/i',$string) || preg_match('/[^ｦ-ﾟ]+/i', $string))
                 {
                     $string = mb_convert_kana($string, 'KVHC', 'UTF-8');
@@ -182,5 +184,11 @@ class Common {
         }
 
         return $string;
+    }
+
+    public static function uploadFile($file,$directoryPath){
+        $name = $file->getClientOriginalName();
+        $file->move($directoryPath, $name);
+        return $directoryPath.'/'.$name;
     }
 }

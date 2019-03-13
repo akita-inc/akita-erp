@@ -11,11 +11,11 @@
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
-                        <button class="btn btn-black">{{ trans("common.button.back") }}</button>
+                        <button class="btn btn-black" type="button" v-on:click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
                     @if($mSupplier->id)
                     <div class="d-flex ml-auto">
-                        <button class="btn btn-danger text-white" onclick="detele()">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-danger text-white" onclick="detele()" type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                     @endif
                 </div>
@@ -178,7 +178,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5" for="supplier_nm">仕入先名</label>
+                        <label class="col-md-5 col-sm-5 required" for="supplier_nm">仕入先名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" v-on:input="convertKana($event, 'supplier_nm_kana')" value="{{ old('supplier_nm') ?? $mSupplier->supplier_nm}}" maxlength="200" v-on:blur="onBlur">
                         </div>
@@ -527,7 +527,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-form">
+            <div class="grid-form mb-5">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_bank_cd">支払銀行コード</label>
@@ -626,9 +626,11 @@
 @endsection
 @section("scripts")
     <script>
-
+        var listRoute = "{{route('suppliers.list')}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
+        messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
         function registerHistoryLeft() {
             $('#form1').attr('action','{{route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'registerHistoryLeft'])}}');
             $('#form1').submit();

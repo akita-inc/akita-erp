@@ -9,7 +9,7 @@
     <div class="wrapper-container" id="ctrStaffsVl">
         <div class="sub-header">
             <div class="sub-header-line-one">
-                <button class="btn btn-black">{{ trans("common.button.back") }}</button>
+                <button class="btn btn-black" type="button" v-on:click="backHistory">{{ trans("common.button.back") }}</button>
             </div>
             <div class="sub-header-line-two">
                 <button class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
@@ -570,5 +570,8 @@
     </div>
 @endsection
 @section("scripts")
+    <script>
+        var listRoute = "{{route('staffs.list')}}";
+    </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs.js') }}" charset="utf-8"></script>
 @endsection
