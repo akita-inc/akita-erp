@@ -16,6 +16,7 @@ mix.js('resources/assets/js/app-vl.js', 'public/assets/js/app-vl.js');
 //mix service
 mix.js([
     //append-auto-service
+    'resources/assets/js/service/home-service.js',
     'resources/assets/js/service/customers-service.js',
     'resources/assets/js/service/suppliers-service.js',
     'resources/assets/js/service/staffs-service.js',

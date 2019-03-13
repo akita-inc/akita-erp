@@ -19,5 +19,12 @@ staffs_service = {
         }).catch(function (error) {
             return error;
         });
-    }
+    },
+    backHistory: function () {
+        return axios.get('/staffs/api-v1/back-history').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }

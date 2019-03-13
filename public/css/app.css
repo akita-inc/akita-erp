@@ -247,6 +247,7 @@ input,select{
     background-color: #0070c0;
     color: white;
     justify-content: left;
+    min-height: 38px;
 }
 .grid-col > label.required:before{
     content: '*';
@@ -509,4 +510,13 @@ span.note{
 
 .label-input-file{
     height: calc(1.5em + .75rem + 2px);
+}
+
+.message-error{
+    color: red;
+    font-size: 80%;
+    font-weight: bold;
+}
+.error-form .mx-input{
+    border-color: #dc3545;
 }

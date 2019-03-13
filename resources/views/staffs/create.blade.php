@@ -9,7 +9,7 @@
     <div class="wrapper-container" id="ctrStaffsVl">
         <div class="sub-header">
             <div class="sub-header-line-one">
-                <button class="btn btn-black"  onclick="window.location.href= '{{route('staffs.list')}}'">{{ trans("common.button.back") }}</button>
+                <button class="btn btn-black" type="button" v-on:click="backHistory">{{ trans("common.button.back") }}</button>
             </div>
             <div class="sub-header-line-two">
                 <button class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
@@ -31,7 +31,7 @@
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
+                            @include('Component.form.input',['filed'=>'adhibition_start_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
                         </div>
                     </div>
                 </div>
@@ -46,12 +46,11 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'employment_pattern_id','array'=>@$listEmployPattern])
+                        @include('Component.form.select',['class'=>'wd-300','filed'=>'employment_pattern_id','array'=>$listEmploymentPattern])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.select',['class'=>'w-75','filed'=>'position_id','array'=>@$listPosition])
-
+                        @include('Component.form.select',['class'=>'w-75','filed'=>'position_id','array'=>[]])
                     </div>
 
                 </div>
@@ -60,21 +59,11 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        <div class="wrap-control-group">
-                            <label for="customer_nm">
-                                {{ trans($prefix."last_nm") }}
-                            </label>
-                            <input v-on:input="convertKana($event, 'last_nm_kana')"  type="text" class="form-control" id="last_nm" v-on:blur="onBlur">
-                        </div>
+                        @include('Component.form.input',['filed'=>'last_nm'])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        <div class="wrap-control-group">
-                            <label for="customer_nm">
-                                {{ trans($prefix."first_nm") }}
-                            </label>
-                            <input v-on:input="convertKana($event, 'first_nm_kana')"  type="text" class="form-control" id="first_nm" v-on:blur="onBlur">
-                        </div>
+                        @include('Component.form.input',['filed'=>'first_nm'])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -94,7 +83,7 @@
                         @include('Component.form.input',['class'=>'wd-250','filed'=>'zip_cd'])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode(zip_cd)">〒 → 住所</button>
+                        <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
                     </div>
 
                     <div class="break-row-form"></div>
@@ -102,7 +91,7 @@
                     <!--prefectures_cd address1-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>@$listPrefecture])
+                        @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>[]])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -148,7 +137,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'sex_id','array'=>@$listSex])
+                        @include('Component.form.select',['class'=>'wd-300','filed'=>'sex_id','array'=>[]])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -198,8 +187,8 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            <label class="grid-form-label pl-150">コード</label>
-                            @include('Component.form.select',['class'=>'wd-300','filed'=>'relocation_municipal_office_cd'])
+                            <label class="grid-form-label pl-5">コード</label>
+                            @include('Component.form.input',['class'=>'wd-300','filed'=>'relocation_municipal_office_cd'])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             <label class="grid-form-label ">名称</label>
@@ -225,7 +214,7 @@
 
                                     <div class="break-row-form"></div>
                                     <div class="col-md-5 col-sm-12">
-                                        @include('Component.form.date-picker',['filed'=>'educational_background_dt','class'=>'wd-350'])
+                                        @include('Component.form.input',['filed'=>'educational_background_dt'])
                                     </div>
                               </div>
                         </div>
@@ -274,12 +263,13 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows(index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
-                        <button @click="addRows('mst_staff_job_experiences')" type="button" class="btn btn-primary btn-rows-add">+</button>
+                        <button @click="addRows" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
                 </div>
             </div>
+
             <!--Block 10-->
             <div class="grid-form">
                 <p class="header-collapse">
@@ -354,9 +344,9 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows(index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
-                        <button @click="addRows('mst_staff_qualifications')" type="button" class="btn btn-primary btn-rows-add">+</button>
+                        <button @click="addRows" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
                 </div>
             </div>
@@ -886,5 +876,8 @@
     </div>
 @endsection
 @section("scripts")
+    <script>
+        var listRoute = "{{route('staffs.list')}}";
+    </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs.js') }}" charset="utf-8"></script>
 @endsection

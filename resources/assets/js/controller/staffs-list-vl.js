@@ -50,6 +50,7 @@ var ctrStaffsListVl = new Vue({
                 }
                 that.items = response.data.data;
                 that.pagination = response.pagination;
+                that.fileSearch = response.fieldSearch;
                 that.loading = false;
                 that.auth_staff_cd=auth_staff_cd;
             });

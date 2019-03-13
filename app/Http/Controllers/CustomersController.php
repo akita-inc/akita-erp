@@ -25,13 +25,37 @@ class CustomersController extends Controller
     public $ruleValid = [
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
-        'customer_nm'  => 'nullable|length:200',
-        'customer_nm_kana'  => 'kana|nullable',
+        'customer_nm'  => 'required|nullable|length:200',
+        'customer_nm_kana'  => 'kana|nullable|length:200',
         'customer_nm_formal'  => 'length:200|nullable',
-        'customer_nm_kana_formal'  => 'kana|nullable'
+        'customer_nm_kana_formal'  => 'kana|nullable|length:200',
+        'customer_nm_kana_formal'  => 'kana|nullable|length:200',
+        'person_in_charge_last_nm'  => 'length:25|nullable',
+        'person_in_charge_first_nm'  => 'length:25|nullable',
+        'person_in_charge_last_nm_kana'  => 'kana|nullable|length:50',
+        'person_in_charge_first_nm_kana'  => 'kana|nullable|length:50',
+        'zip_cd'  => 'zip_code|nullable|length:7',
+        'address1'  => 'nullable|length:20',
+        'address2'  => 'nullable|length:20',
+        'address3'  => 'nullable|length:50',
+        'phone_number'  => 'phone_number|nullable|length:20',
+        'fax_number'  => 'fax_number|nullable|length:20',
+        'hp_url'  => 'nullable|length:2500',
+        'explanations_bill'  => 'nullable|length:100',
+        'bundle_dt'  => 'one_byte_number|nullable|length:2',
+        'deposit_day'  => 'one_byte_number|nullable|between_custom:1,31|length:2',
+        'deposit_method_notes'  => 'nullable|length:100',
+        'deposit_bank_cd'  => 'nullable|length:4',
+        'notes'  => 'nullable|length:50',
     ];
 
+    public $labels = [];
+
     public $messagesCustom = [];
+
+    public function __construct(){
+        $this->labels = Lang::get("customers.create.field");
+    }
 
     protected function search($data){
         $dataSearch=$data['fieldSearch'];
@@ -54,10 +78,14 @@ class CustomersController extends Controller
         ->leftjoin(DB::raw('(select mst_customers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_customers where deleted_at IS NULL group by mst_customers_cd) sub'), function ($join) {
             $join->on('sub.mst_customers_cd', '=', 'mst_customers.mst_customers_cd');
         })
-        ->whereRaw('mst_customers.deleted_at IS NULL')
-        ->where('mst_customers.mst_customers_cd', 'LIKE', '%' . $dataSearch['mst_customers_cd'] . '%')
-        ->where('mst_customers.customer_nm', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
+        ->whereRaw('mst_customers.deleted_at IS NULL');
 
+        if ($dataSearch['mst_customers_cd'] != '') {
+            $this->query->where('mst_customers.mst_customers_cd', 'LIKE', '%' . $dataSearch['mst_customers_cd'] . '%');
+        }
+        if ($dataSearch['customer_nm'] != '') {
+            $this->query->where('mst_customers.customer_nm', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
+        }
         if ($dataSearch['status'] == '1' && $reference_date!=null) {
             $this->query->where('mst_customers.adhibition_start_dt','<=',$reference_date)
                         ->where('mst_customers.adhibition_end_dt','>=',$reference_date);

@@ -49,10 +49,14 @@ class SuppliersController extends Controller
             ->leftjoin(DB::raw('(select mst_suppliers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_suppliers where deleted_at IS NULL group by mst_suppliers_cd) sub'), function ($join) {
                 $join->on('sub.mst_suppliers_cd', '=', 'mst_suppliers.mst_suppliers_cd');
             })
-            ->whereRaw('mst_suppliers.deleted_at IS NULL')
-            ->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%")
-            ->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
+            ->whereRaw('mst_suppliers.deleted_at IS NULL');
 
+        if ($where['suppliers_cd'] != '') {
+            $this->query->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%");
+        }
+        if ($where['supplier_nm'] != '') {
+            $this->query->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
+        }
         if ($where['radio_reference_date'] == '1' && $where['reference_date'] != '') {
             $this->query->where('mst_suppliers.adhibition_start_dt', "<=", $where['reference_date']);
             $this->query->where('mst_suppliers.adhibition_end_dt', ">=", $where['reference_date']);
@@ -94,7 +98,7 @@ class SuppliersController extends Controller
                 return abort(404);
             }
             $lastedId = $mSupplier->getLastedSupplier($mSupplier->mst_suppliers_cd);
-            if($lastedId->max==$id){
+            if($lastedId->id==$id){
                 $flagLasted =true;
             }
         }
@@ -110,9 +114,10 @@ class SuppliersController extends Controller
             $rules = [
                 'mst_suppliers_cd'  => 'required|one_bytes_string|length:5',
                 'adhibition_start_dt'  => 'required',
-                'supplier_nm'  => 'nullable|length:200',
-                'supplier_nm_kana'  => 'kana|nullable',
+                'supplier_nm'  => 'required|length:200',
+                'supplier_nm_kana'  => 'kana|nullable|length:200',
                 'supplier_nm_formal'  => 'length:200|nullable',
+                'supplier_nm_kana_formal'  => 'length:200|nullable',
                 'dealing_person_in_charge_last_nm'  => 'length:25|nullable',
                 'dealing_person_in_charge_first_nm'  => 'length:25|nullable',
                 'dealing_person_in_charge_last_nm_kana'  => 'kana|nullable|length:50',
@@ -165,6 +170,13 @@ class SuppliersController extends Controller
                     if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
                         $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt'],Lang::get('messages.MSG02014')));
                     }
+
+                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"]]);
+                    foreach ($listSuppliersExist as $item) {
+                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
+                            $validator->errors()->add('mst_suppliers_cd',Lang::get('messages.MSG10003'));
+                        }
+                    }
                 });
             }
             if ($validator->fails()) {
@@ -172,15 +184,6 @@ class SuppliersController extends Controller
                     ->withErrors($validator->errors())
                     ->withInput();
             }else{
-                if(!isset($mode)) {
-                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"]]);
-                    foreach ($listSuppliersExist as $item) {
-                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                            \Session::flash('error', Lang::get('messages.MSG10003'));
-                            return redirect()->back()->withInput();
-                        }
-                    }
-                }
                 DB::beginTransaction();
                 try
                 {

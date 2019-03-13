@@ -13,8 +13,8 @@ customers_service = {
             return error;
         });
     },
-    submit: function (id) {
-        return axios.post('/customers/api-v1/submit').then(function (response) {
+    submit: function (data) {
+        return axios.post('/customers/api-v1/submit', data).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;
@@ -26,5 +26,12 @@ customers_service = {
         }).catch(function (error) {
             return error;
         });
-    }
+    },
+    backHistory: function () {
+        return axios.get('/customers/api-v1/back-history').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
