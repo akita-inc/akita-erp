@@ -21,7 +21,7 @@ class MCustomersCategories  extends Model
     ];
     public function getListCustomerCategories()
     {
-        $data=$this->select('id','processing_kb')
+        $data=$this->select('id','name')
             ->orderBy('disp_number','asc')
             ->get();
         $result = array("" => '==選択==');

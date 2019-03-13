@@ -2,12 +2,13 @@
 @section('title',trans("customers.create.title"))
 @section('title_header',trans("customers.create.title"))
 @section('content')
+    @php $table='customers' @endphp
     <div class="wrapper-container" id="ctrCustomersVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one">
                 <button class="btn btn-black">{{ trans("common.button.back") }}</button>
-            </div>
+        </div>
             <div class="sub-header-line-two">
                 <button @click="validForm" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
             </div>
@@ -27,9 +28,8 @@
                         <div class="col-md-6 col-sm-12 no-padding">
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
                         </div>
-
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
+                            @include('Component.form.input',['filed'=>'adhibition_start_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
                         </div>
                     </div>
                 </div>
@@ -195,7 +195,7 @@
                         @include('Component.form.input',['class'=>'wd-350','filed'=>'discount_rate'])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','label'=>'あり'])
+                        @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','checkboxLabel'=>'あり'])
                     </div>
 
                 </div>
