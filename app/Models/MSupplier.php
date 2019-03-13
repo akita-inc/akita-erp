@@ -108,8 +108,8 @@ class MSupplier extends Model
     }
     public function getLastedSupplier($suppliers_cd){
         $suppliers = new MSupplier();
-        $suppliers = $suppliers->select(DB::raw('max(id) as max'))
-        ->where('mst_suppliers_cd', "=", $suppliers_cd);
+        $suppliers = $suppliers->where('mst_suppliers_cd', '=', $suppliers_cd)
+            ->orderByDesc("adhibition_start_dt");
         return $suppliers->first();
     }
 

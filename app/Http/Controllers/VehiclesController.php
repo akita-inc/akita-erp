@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Common;
 use App\Helpers\TimeFunction;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
@@ -153,7 +154,7 @@ class VehiclesController extends Controller
                 return abort(404);
             }
             $lastedId = $mVehicle->getLastedVehicle($mVehicle->vehicles_cd);
-            if($lastedId->max==$id){
+            if($lastedId->id==$id){
                 $flagLasted =true;
             }
         }
@@ -161,12 +162,12 @@ class VehiclesController extends Controller
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
-                'vehicles_cd'=>'required|one_bytes_string|length:5',
+                'vehicles_cd'=>'required|one_byte_number|length:5',
                 'adhibition_start_dt'=>'required',
-                'door_number'=>'one_byte_number|length:5',
+                'door_number'=>'nullable|one_byte_number|length:5',
                 'registration_numbers'=>'required|length:50',
                 'mst_business_office_id'=>'required',
-                'vehicle_inspection_sticker_pdf'=>'nullable|mimes:pdf|max_mb:1',
+                'vehicle_inspection_sticker_pdf'=>'nullable|mimes:pdf|max_mb:2',
                 'first_year_registration_dt'=>'nullable|date_format_custom:Ym',
                 'seating_capacity'=>'nullable|one_byte_number|length:2',
                 'max_loading_capacity'=>'nullable|one_byte_number|length:5',
@@ -251,7 +252,6 @@ class VehiclesController extends Controller
                     }
                 });
             }
-//            var_dump($validator->errors());die;
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator->errors())
@@ -287,6 +287,8 @@ class VehiclesController extends Controller
                         $mVehicle->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
                         $mVehicle->adhibition_end_dt= TimeFunction::dateFormat($flagLasted ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     }
+
+
                     $mVehicle->door_number= $data["door_number"];
                     $mVehicle->vehicles_kb= $data["vehicles_kb"];
                     $mVehicle->registration_numbers= $data["registration_numbers"];
@@ -294,7 +296,6 @@ class VehiclesController extends Controller
                     $mVehicle->vehicle_size_kb= $data["vehicle_size_kb"];
                     $mVehicle->vehicle_purpose_id= $data["vehicle_purpose_id"];
                     $mVehicle->land_transport_office_cd= $data["land_transport_office_cd"];
-                    $mVehicle->vehicle_inspection_sticker_pdf= $data["vehicle_inspection_sticker_pdf"];
                     $mVehicle->registration_dt= TimeFunction::dateFormat($data["registration_dt"],'yyyy-mm-dd');
                     $mVehicle->first_year_registration_dt= TimeFunction::dateFormat($data["first_year_registration_dt"],'yyyy-mm-dd');
                     $mVehicle->vehicle_classification_id= $data["vehicle_classification_id"];
@@ -354,10 +355,6 @@ class VehiclesController extends Controller
                     $mVehicle->personal_insurance_prices= $data["personal_insurance_prices"];
                     $mVehicle->property_damage_insurance_prices= $data["property_damage_insurance_prices"];
                     $mVehicle->vehicle_insurance_prices= $data["vehicle_insurance_prices"];
-                    $mVehicle->picture_fronts= $data["picture_fronts"];
-                    $mVehicle->picture_rights= $data["picture_rights"];
-                    $mVehicle->picture_lefts= $data["picture_lefts"];
-                    $mVehicle->picture_rears= $data["picture_rears"];
                     $mVehicle->acquisition_amounts= $data["acquisition_amounts"];
                     $mVehicle->acquisition_amortization= $data["acquisition_amortization"];
                     $mVehicle->durable_years= $data["durable_years"];
@@ -365,10 +362,33 @@ class VehiclesController extends Controller
                     $mVehicle->battery_sizes= $data["battery_sizes"];
                     $mVehicle->dispose_dt= TimeFunction::dateFormat($data["dispose_dt"],'yyyy-mm-dd');
                     $mVehicle->notes= $data["notes"];
+
+                    //deleteFile
+                    if(isset($data['deleteFile']) && count($data['deleteFile']) > 0){
+                        foreach ($data['deleteFile'] as $item){
+                            if (file_exists($mVehicle->{$item})) {
+                                unlink($mVehicle->{$item});
+                                $mVehicle->{$item} = '';
+                            }
+                        }
+                    }
+
+                    $mVehicle->save();
+
+                    //upload file
+                    $directoryPath = config('params.vehicle_path').$mVehicle->id;
+                    if (!file_exists($directoryPath)) {
+                        mkdir($directoryPath, 0777, true);
+                    }
+                    foreach($request->allFiles() as $key => $item){
+                        $file = $data[$key];
+                        $mVehicle->{$key} = Common::uploadFile($file, $directoryPath);
+                    }
+
                     $mVehicle->save();
                     DB::commit();
                     \Session::flash('message',Lang::get('messages.MSG03002'));
-                    return redirect()->route('suppliers.list');
+                    return redirect()->route('vehicles.list');
                 }catch (\Exception $e) {
                     DB::rollback();
                     dd($e);

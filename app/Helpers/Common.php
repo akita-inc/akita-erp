@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 require_once 'Lib/Igo.php';
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -182,5 +184,11 @@ class Common {
         }
 
         return $string;
+    }
+
+    public static function uploadFile($file,$directoryPath){
+        $name = $file->getClientOriginalName();
+        $file->move($directoryPath, $name);
+        return $directoryPath.'/'.$name;
     }
 }

@@ -15,7 +15,7 @@
                     </div>
                     @if($mSupplier->id)
                     <div class="d-flex ml-auto">
-                        <button class="btn btn-danger text-white" onclick="detele()">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-danger text-white" onclick="detele()" type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                     @endif
                 </div>
@@ -527,7 +527,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-form">
+            <div class="grid-form mb-5">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_bank_cd">支払銀行コード</label>

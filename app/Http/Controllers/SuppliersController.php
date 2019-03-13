@@ -94,7 +94,7 @@ class SuppliersController extends Controller
                 return abort(404);
             }
             $lastedId = $mSupplier->getLastedSupplier($mSupplier->mst_suppliers_cd);
-            if($lastedId->max==$id){
+            if($lastedId->id==$id){
                 $flagLasted =true;
             }
         }
