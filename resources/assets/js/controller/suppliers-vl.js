@@ -30,6 +30,10 @@ var ctrSupplierrsVl = new Vue({
             var zip = $('#zip_cd').val();
             if(zip==''){
                 alert(messages['MSG07001']);
+            }else{
+                if(isNaN(zip)){
+                    alert(messages['MSG07002']);
+                }
             }
             new Core(zip, function (addr) {
                 if(addr.region_id=="" || addr.locality=="" || addr.street==""){
