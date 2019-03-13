@@ -4560,12 +4560,21 @@ var ctrSupplierrsVl = new Vue({
     },
     getAddrFromZipCode: function getAddrFromZipCode() {
       var zip = $('#zip_cd').val();
+
+      if (zip == '') {
+        alert(messages['MSG07001']);
+      }
+
       new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_0__["Core"](zip, function (addr) {
-        $('#prefectures_cd').val(addr.region_id); // 都道府県ID
+        if (addr.region_id == "" || addr.locality == "" || addr.street == "") {
+          alert(messages['MSG07002']);
+        } else {
+          $('#prefectures_cd').val(addr.region_id); // 都道府県ID
 
-        $('#address1').val(addr.locality); // 市区町村
+          $('#address1').val(addr.locality); // 市区町村
 
-        $('#address2').val(addr.street); // 町域
+          $('#address2').val(addr.street); // 町域
+        }
       });
     }
   },
