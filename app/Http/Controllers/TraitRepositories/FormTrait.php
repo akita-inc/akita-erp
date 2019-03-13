@@ -18,12 +18,21 @@ trait FormTrait
         return $this->query->insertGetId( $data );
     }
 
+    protected function validAfter( &$validator ){
+
+    }
+
     public function submit(Request $request)
     {
         $data = $request->all();
         $idInsert = "";
         if( !empty($this->ruleValid) ){
-            $validator = Validator::make( $data, $this->ruleValid,$this->messagesCustom );
+            $validator = Validator::make( $data, $this->ruleValid ,$this->messagesCustom ,$this->labels );
+
+            $validator->after(function($validator) use ($data) {
+                $this->validAfter($validator,$data);
+            });
+
             if ( $validator->fails() ) {
                 return response()->json([
                     'success'=>FALSE,

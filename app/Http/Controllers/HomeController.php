@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Common;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,5 +25,11 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    public function convertKana(Request $request){
+        $data = $request->get('data');
+        $string = Common::convertToKana($data,'katakana');
+        return Response()->json(array('success'=>true,'info'=>$string));
     }
 }

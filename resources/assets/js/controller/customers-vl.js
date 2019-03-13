@@ -10,6 +10,7 @@ var ctrCustomersVl = new Vue({
         lang:lang_date_picker,
         furigana: '',
         history: [],
+        loading:false,
         field:{
             adhibition_start_dt:"",
             adhibition_end_dt:"2999/12/31",
@@ -47,9 +48,7 @@ var ctrCustomersVl = new Vue({
             mst_account_titles_id_3: "",
             notes:"",
         },
-        errors:{}
-    },
-    methods : {
+        errors:{},
         dateFormat: {
             stringify: (date) => {
                 return date ? moment(date).format('YYYY MM DD') : null
@@ -57,11 +56,16 @@ var ctrCustomersVl = new Vue({
             parse: (value) => {
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
-        },
+        }
+    },
+    methods : {
         submit: function(){
-            var that = this;
+            let that = this;
+            that.loading = true;
             customers_service.submit(this.field).then((response) => {
-                console.log(response);
+                if(response.success == false){
+                    that.errors = response.message;
+                }
                 that.loading = false;
             });
         },
@@ -69,10 +73,11 @@ var ctrCustomersVl = new Vue({
             this.field.mst_bill_issue_destinations.push({});
         },
         convertKana: function (input , destination) {
+            let that = this;
             this.history.push(input.target.value);
             this.furigana = historykana(this.history);
-            suppliers_service.convertKana({'data': this.furigana}).then(function (data) {
-                $('#'+destination).val(data.info);
+            home_service.convertKana({'data': this.furigana}).then(function (data) {
+                that.field[destination] = data.info;
             });
         },
         onBlur: function(){
@@ -80,24 +85,24 @@ var ctrCustomersVl = new Vue({
             this.furigana = '';
         },
         getAddrFromZipCode: function() {
-            var zip = $('#zip_cd').val();
+            let that = this;
+            let zip = $('#zip_cd').val();
             new Core(zip, function (addr) {
-                $('#prefectures_cd').val(addr.region_id);// 都道府県ID
-                $('#address1').val(addr.locality);// 市区町村
-                $('#address2').val(addr.street);// 町域
+                that.field.prefectures_cd = addr.region_id;
+                that.field.address1 = addr.region_id;
+                that.field.address2 = addr.region_id;
             });
         },
         getAddrFromZipCodeCollapse:function(index)
         {
-            var zip_cd='#mst_bill_issue_destinations_zip_cd'+index;
-            var prefectures_cd='#mst_bill_issue_destinations_prefectures_cd'+index;
-            var address1='#mst_bill_issue_destinations_address1'+index;
-            var address2='#mst_bill_issue_destinations_address2'+index;
-            var zip = $(zip_cd).val();
+            let that = this;
+            let zip = this.field.mst_bill_issue_destinations[index].zip_cd;
             new Core(zip, function (addr) {
-                $(prefectures_cd).val(addr.region_id);// 都道府県ID
-                $(address1).val(addr.locality);// 市区町村
-                $(address2).val(addr.street);// 町域
+                that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id;// 都道府県ID
+                that.field.mst_bill_issue_destinations[index].address1 = addr.locality;// 市区町村
+                that.field.mst_bill_issue_destinations[index].address2 = addr.street;// 町域
+                that.field.mst_bill_issue_destinations.push({});
+                that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
             });
         },
         removeRows: function (index) {
@@ -107,6 +112,7 @@ var ctrCustomersVl = new Vue({
     mounted () {
     },
     components: {
-        DatePicker
+        DatePicker,
+        PulseLoader
     }
 });
