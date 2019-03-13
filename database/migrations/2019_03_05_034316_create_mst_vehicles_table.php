@@ -99,6 +99,8 @@ class CreateMstVehiclesTable extends Migration
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();
+            $table->boolean('wireless_installation_fg')->nullable();
+            $table->boolean('enable_fg')->nullable()->default(1);
             $table->index('door_number');
         });
     }

@@ -55,6 +55,7 @@ class CreateMstSuppliersTable extends Migration
             $table->string('payment_account_number',10)->nullable();
             $table->string('payment_account_holder',30)->nullable();
             $table->string('notes',50)->nullable();
+            $table->boolean('enable_fg')->nullable()->default(1);
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();
