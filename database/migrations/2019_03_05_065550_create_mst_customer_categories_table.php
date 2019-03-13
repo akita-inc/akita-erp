@@ -15,8 +15,8 @@ class CreateMstCustomerCategoriesTable extends Migration
     {
         Schema::create('mst_customer_categories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('data_kb');
-            $table->integer('processing_kb');
+            $table->integer('parent_id');
+            $table->string('name', 255);
             $table->integer('disp_number')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));

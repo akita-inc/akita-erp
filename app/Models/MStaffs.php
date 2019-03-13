@@ -56,7 +56,7 @@ class MStaffs extends Authenticatable
         try
         {
             $historyStaffs = $this->getHistoryNearest($mMStaffs->staff_cd, $mMStaffs->adhibition_end_dt);
-            if (isset($historySupplier)) {
+            if (isset($historyStaffs)) {
                 $historyStaffs->adhibition_end_dt = $mMStaffs->adhibition_end_dt;
                 $historyStaffs->save();
             }
@@ -73,4 +73,14 @@ class MStaffs extends Authenticatable
         "staff_cd" => "ログインID",
         "password" => "ログインPW",
     );
+
+    public function getListOption($kDefault =''){
+        $result = array($kDefault => '==選択==');
+        $data =  $this->where('deleted_at','=',null)->where('admin_fg','=',1)
+            ->get();
+        foreach (json_decode(json_encode($data), true) as $key=>$item){
+            $result[$item['id']] = $item['first_nm'].' '.$item['last_nm'];
+        }
+        return $result;
+    }
 }

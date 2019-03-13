@@ -55,3 +55,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/vehicles-list-vl.js'
 ], 'public/assets/js/controller/vehicles-list.js');
+
+mix.js([
+    'resources/assets/js/controller/vehicles-vl.js'
+], 'public/assets/js/controller/vehicles.js');

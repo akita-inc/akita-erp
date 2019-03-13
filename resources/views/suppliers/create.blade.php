@@ -90,7 +90,7 @@
                                     </date-picker>
                                     <input type="hidden" id="adhibition_end_dt" value="{{ old('adhibition_end_dt') ?? $mSupplier->adhibition_end_dt }}">
                                 @else
-                                    <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/',  config('params.adhibition_end_dt_default') ?? $mSupplier->adhibition_end_dt)}}">
+                                    <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/',  $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default'))}}">
                                 @endif
                             </div>
                         </div>
