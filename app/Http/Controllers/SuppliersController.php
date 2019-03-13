@@ -186,17 +186,22 @@ class SuppliersController extends Controller
                 {
                     if($mode=='registerHistoryLeft'){
 
-                        $mSupplier->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt"]);
+                        $mSupplier->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
                         $mSupplier->save();
                         $mSupplier = new MSupplier();
                     }elseif ($mode=='edit'){
                         if($data["adhibition_start_dt"]!= $mSupplier->adhibition_start_dt){
-                            $mSupplier->editSupplier($mSupplier->id,$data["adhibition_start_dt"]);
+                            $mSupplier->editSupplier($mSupplier->id, $data["adhibition_start_dt"]);
                         }
                     }
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
-                    $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
-                    $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                    if($mode=='registerHistoryLeft'){
+                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt_new"],'yyyy-mm-dd');
+                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                    }else{
+                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
+                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat($flagLasted ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                    }
                     $mSupplier->supplier_nm= $data["supplier_nm"];
                     $mSupplier->supplier_nm_kana= $data["supplier_nm_kana"];
                     $mSupplier->supplier_nm_formal= $data["supplier_nm_formal"];

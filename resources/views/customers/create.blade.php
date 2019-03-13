@@ -56,7 +56,7 @@
                             <label class="required" for="customer_nm_formal">
                                 {{ trans("customers.create.field.customer_nm_formal") }}
                             </label>
-                            <input v-on:input="convertKana($event, 'customer_nm_formal_kana')"  type="text" class="form-control" id="customer_nm_formal_kana" v-on:blur="onBlur">
+                            <input v-on:input="convertKana($event, 'customer_nm_kana_formal')"  type="text" class="form-control" id="customer_nm_formal" v-on:blur="onBlur">
                         </div>
                     </div>
 
