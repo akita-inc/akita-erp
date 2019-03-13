@@ -28,10 +28,17 @@ var ctrSupplierrsVl = new Vue({
         },
         getAddrFromZipCode: function() {
             var zip = $('#zip_cd').val();
+            if(zip==''){
+                alert(messages['MSG07001']);
+            }
             new Core(zip, function (addr) {
-                $('#prefectures_cd').val(addr.region_id);// 都道府県ID
-                $('#address1').val(addr.locality);// 市区町村
-                $('#address2').val(addr.street);// 町域
+                if(addr.region_id=="" || addr.locality=="" || addr.street==""){
+                    alert(messages['MSG07002']);
+                }else{
+                    $('#prefectures_cd').val(addr.region_id);// 都道府県ID
+                    $('#address1').val(addr.locality);// 市区町村
+                    $('#address2').val(addr.street);// 町域
+                }
             });
         },
     },

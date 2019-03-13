@@ -178,7 +178,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5" for="supplier_nm">仕入先名</label>
+                        <label class="col-md-5 col-sm-5 required" for="supplier_nm">仕入先名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" v-on:input="convertKana($event, 'supplier_nm_kana')" value="{{ old('supplier_nm') ?? $mSupplier->supplier_nm}}" maxlength="200" v-on:blur="onBlur">
                         </div>
@@ -629,6 +629,8 @@
 
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
+        messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
         function registerHistoryLeft() {
             $('#form1').attr('action','{{route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'registerHistoryLeft'])}}');
             $('#form1').submit();

@@ -175,7 +175,7 @@ class Common {
 //            $string = mb_convert_kana($str, "c", "utf-8");
             if($string !="")
             {
-                $string = preg_replace('/[^ぁ-ん]+/u', '', $string);
+                $string = preg_replace('/[^ぁ-んー]+/u', '', $string);
                 if(preg_match('/[^ぁ-ん]+/i',$string) || preg_match('/[^ｦ-ﾟ]+/i', $string))
                 {
                     $string = mb_convert_kana($string, 'KVHC', 'UTF-8');
