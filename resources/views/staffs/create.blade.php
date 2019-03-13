@@ -1,18 +1,16 @@
 @extends('Layouts.app')
 @section('title',trans("staffs.create.title"))
 @section('title_header',trans("staffs.create.title"))
-@section('css')
-    <link rel="stylesheet" href="{{ asset('css/supplier/add.css') }}">
-@endsection
 @section('content')
     @php $prefix='staffs.create.field.' @endphp
     <div class="wrapper-container" id="ctrStaffsVl">
+        <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one">
                 <button class="btn btn-black" type="button" v-on:click="backHistory">{{ trans("common.button.back") }}</button>
             </div>
             <div class="sub-header-line-two">
-                <button class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
             </div>
         </div>
 
@@ -31,14 +29,14 @@
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_start_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
+                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
                         </div>
                     </div>
                 </div>
                 <div class="break-row-form"></div>
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'password','required'=>true])
+                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"type='password' class='w-100'"])
                     </div>
                 </div>
             </div>
@@ -46,11 +44,12 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'employment_pattern_id','array'=>$listEmploymentPattern])
+                        @include('Component.form.select',['class'=>'wd-300','filed'=>'employment_pattern_id','array'=>@$listEmployPattern])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.select',['class'=>'w-75','filed'=>'position_id','array'=>[]])
+                        @include('Component.form.select',['class'=>'w-75','filed'=>'position_id','array'=>@$listPosition])
+
                     </div>
 
                 </div>
@@ -59,11 +58,19 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'last_nm'])
+                        @include('Component.form.input',[
+                             'filed'=>'last_nm',
+                             'required'=>true,
+                             'attr_input' => 'v-on:input="convertKana($event, \'last_nm_kana\')" v-on:blur="onBlur"'
+                         ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'first_nm'])
+                        @include('Component.form.input',[
+                              'filed'=>'first_nm',
+                              'required'=>true,
+                              'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')" v-on:blur="onBlur"'
+                          ])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -83,7 +90,7 @@
                         @include('Component.form.input',['class'=>'wd-250','filed'=>'zip_cd'])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
+                        <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode()">〒 → 住所</button>
                     </div>
 
                     <div class="break-row-form"></div>
@@ -91,7 +98,7 @@
                     <!--prefectures_cd address1-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>[]])
+                        @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>@$listPrefecture])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -137,7 +144,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'sex_id','array'=>[]])
+                        @include('Component.form.select',['class'=>'wd-300','filed'=>'sex_id','array'=>@$listSex])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -187,8 +194,8 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            <label class="grid-form-label pl-5">コード</label>
-                            @include('Component.form.input',['class'=>'wd-300','filed'=>'relocation_municipal_office_cd'])
+                            <label class="grid-form-label pl-150">コード</label>
+                            @include('Component.form.select',['class'=>'wd-300','filed'=>'relocation_municipal_office_cd'])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             <label class="grid-form-label ">名称</label>
@@ -208,15 +215,15 @@
                     <div class="wrapper-collapse pr-0">
                         <div class="grid-form items-collapse">
                             <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                        @include('Component.form.input',['class'=>'w-75','filed'=>'educational_background'])
-                                    </div>
+                                <div class="col-md-12 col-sm-12">
+                                    @include('Component.form.input',['class'=>'w-75','filed'=>'educational_background'])
+                                </div>
 
-                                    <div class="break-row-form"></div>
-                                    <div class="col-md-5 col-sm-12">
-                                        @include('Component.form.input',['filed'=>'educational_background_dt'])
-                                    </div>
-                              </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.date-picker',['filed'=>'educational_background_dt','class'=>'wd-350'])
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -263,13 +270,12 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows(index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
-                        <button @click="addRows" type="button" class="btn btn-primary btn-rows-add">+</button>
+                        <button @click="addRows('mst_staff_job_experiences')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
                 </div>
             </div>
-
             <!--Block 10-->
             <div class="grid-form">
                 <p class="header-collapse">
@@ -334,19 +340,19 @@
                                     ])
                                     <div class="break-row-form"></div>
                                     <div v-if="index!=0">
-                                    @include('Component.form.input-vue',[
-                                        'filed'=>'payday',
-                                        'class'=>'wd-350',
-                                        'filedId'=>"'mst_staff_qualifications_payday'+index",
-                                        'filedMode'=>"items.payday",
-                                     ])
+                                        @include('Component.form.input-vue',[
+                                            'filed'=>'payday',
+                                            'class'=>'wd-350',
+                                            'filedId'=>"'mst_staff_qualifications_payday'+index",
+                                            'filedMode'=>"items.payday",
+                                         ])
                                     </div>
                                 </div>
 
                             </div>
-                            <button @click="removeRows(index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
-                        <button @click="addRows" type="button" class="btn btn-primary btn-rows-add">+</button>
+                        <button @click="addRows('mst_staff_qualifications')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
                 </div>
             </div>
@@ -809,40 +815,40 @@
                                 <div class="break-row-form"></div>
 
                                 <div class="col-md-5 col-sm-12">
-                                        <div class="wrap-control-group textarea">
-                                            <label class="h-100" for="screen_category_id2">
-                                                {{ trans(@$prefix.'screen_category_id.2') }}
-                                            </label>
-                                            <div class="col-md-12 col-sm-12">
-                                                ■ アクセス許可区分
-                                            </div>
-                                            <div class="col-md-12 col-sm-12">
-                                                <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
-                                                <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
-                                                <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
-                                                <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
-                                                <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
-                                                <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
-                                            </div>
+                                    <div class="wrap-control-group textarea">
+                                        <label class="h-100" for="screen_category_id2">
+                                            {{ trans(@$prefix.'screen_category_id.2') }}
+                                        </label>
+                                        <div class="col-md-12 col-sm-12">
+                                            ■ アクセス許可区分
                                         </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
+                                            <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
+                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
+                                            <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
+                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
+                                            <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
-                                        <div class="wrap-control-group textarea">
-                                            <label class="h-100" for="screen_category_id3">
-                                                {{ trans(@$prefix.'screen_category_id.3') }}
-                                            </label>
-                                            <div class="col-md-12 col-sm-12">
-                                                ■ アクセス許可区分
-                                            </div>
-                                            <div class="col-md-12 col-sm-12">
-                                                <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
-                                                <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
-                                                <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
-                                                <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
-                                                <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
-                                                <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
-                                            </div>
+                                    <div class="wrap-control-group textarea">
+                                        <label class="h-100" for="screen_category_id3">
+                                            {{ trans(@$prefix.'screen_category_id.3') }}
+                                        </label>
+                                        <div class="col-md-12 col-sm-12">
+                                            ■ アクセス許可区分
                                         </div>
+                                        <div class="col-md-12 col-sm-12">
+                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
+                                            <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
+                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
+                                            <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
+                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
+                                            <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="break-row-form"></div>
@@ -866,8 +872,8 @@
                                 </div>
 
                             </div>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
             <!--End-->

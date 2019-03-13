@@ -14,6 +14,35 @@ class StaffsController extends Controller
 {
     use ListTrait, FormTrait;
     public $table = "mst_staffs";
+    public $ruleValid = [
+        'staff_cd'  => 'required|one_bytes_string|length:5',
+        'adhibition_start_dt'  => 'required',
+        'password'=>'required|length:50',
+        'last_nm'  => 'nullable|length:25',
+        'last_nm_kana'  => 'kana|nullable|length:25',
+        'first_nm'  => 'length:50|nullable',
+        'first_nm_kana'=>'kana|nullable|length:50',
+        'zip_cd'=>'one_bytes_string|length:7',
+        'address1'=>'length:20|nullable',
+        'address2'=>'length:20|nullable',
+        'address3'=>'length:50|nullable',
+        "landline_phone_number"=>"length:20|nullable",
+        "cellular_phone_number"=>"length:20|nullable",
+        "corp_cellular_phone_number"=>"length:20|nullable",
+        "notes"=>"length:50|nullable",
+        "insurer_number"=>"length:3|nullable",
+        "basic_pension_number"=>"length:11|nullable",
+        "person_insured_number"=>"length:11|nullable",
+        "job_duties"=>"length:50|nullable",
+    ];
+    public $labels = [];
+
+    public $messagesCustom = [];
+
+    public function __construct(){
+        $this->labels = Lang::get("staffs.create.field");
+    }
+
     protected function search($data)
     {
         $where = array(
@@ -150,32 +179,8 @@ class StaffsController extends Controller
         }
     }
 
-    public function create(Request $request,  $id=null,$mode=null)
+    public function create(Request $request)
     {
-        $mStaffs= new MStaffs();
-        $flagLasted = false;
-        if(!is_null($id)){
-            $mStaffs = $mStaffs->find($id);
-            if(is_null($mStaffs)){
-                return abort(404);
-            }
-            $lastedId = $mStaffs->getLastedSupplier($mStaffs->staff_cd);
-            if($lastedId->max==$id){
-                $flagLasted =true;
-            }
-        }
-        if ($request->getMethod() == 'POST') {
-            $data = $request->all();
-            $rules = [
-                'staff_cd'  => 'required|one_bytes_string|length:5',
-                'adhibition_start_dt'  => 'required',
-                'password'=>'length:50',
-                'last_nm'  => 'nullable|length:25',
-                'last_nm_kana'  => 'kana|nullable|length:25',
-                'first_nm'  => 'length:50|nullable',
-                'first_nm_kana'=>'kana|nullable|length:50',
-            ];
-        }
         $mGeneralPurposes = new MGeneralPurposes();
         $listEmployPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
         $listPosition=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['position'], '');

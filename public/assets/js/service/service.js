@@ -121,6 +121,13 @@ customers_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/customers/api-v1/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -167,8 +174,22 @@ staffs_service = {
       return error;
     });
   },
+  submit: function submit(data) {
+    return axios.post('/staffs/api-v1/submit', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
   checkIsExist: function checkIsExist(id) {
     return axios.get('/staffs/api-v1/checkIsExist/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/staffs/api-v1/back-history').then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
@@ -213,6 +234,13 @@ suppliers_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/api/supplier/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -246,6 +274,13 @@ vehicles_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/vehicles/api-v1/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -258,11 +293,11 @@ vehicles_service = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
-__webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-__webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
-__webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
 
 
 /***/ })
