@@ -10,18 +10,17 @@ namespace App\Http\Controllers\TraitRepositories;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 trait FormTrait
 {
     protected function save( $data ){
-        return $this->query->insertGetId( $data );
+        return DB::table($this->table)->insertGetId( $data );
     }
 
-    protected function validAfter( &$validator ){
-
-    }
+    protected function validAfter( &$validator,$data ){}
 
     public function submit(Request $request)
     {
