@@ -2,6 +2,7 @@
 @section('title',trans("customers.title"))
 @section('title_header',trans("customers.title"))
 @section('content')
+    @include('Layouts.alert')
     <div class="row row-xs" id="ctrCustomersListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
