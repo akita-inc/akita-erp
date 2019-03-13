@@ -117,7 +117,7 @@ class SuppliersController extends Controller
                 'supplier_nm'  => 'required|length:200',
                 'supplier_nm_kana'  => 'kana|nullable|length:200',
                 'supplier_nm_formal'  => 'length:200|nullable',
-                'supplier_nm_kana_formal'  => 'length:200|nullable',
+                'supplier_nm_kana_formal'  => 'kana|length:200|nullable',
                 'dealing_person_in_charge_last_nm'  => 'length:25|nullable',
                 'dealing_person_in_charge_first_nm'  => 'length:25|nullable',
                 'dealing_person_in_charge_last_nm_kana'  => 'kana|nullable|length:50',
@@ -203,7 +203,7 @@ class SuppliersController extends Controller
                         $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     }else{
                         $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
-                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat($flagLasted ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat($mode=='edit' ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     }
                     $mSupplier->supplier_nm= $data["supplier_nm"];
                     $mSupplier->supplier_nm_kana= $data["supplier_nm_kana"];
@@ -244,7 +244,11 @@ class SuppliersController extends Controller
                     $mSupplier->notes= $data["notes"];
                     $mSupplier->save();
                     DB::commit();
-                    \Session::flash('message',Lang::get('messages.MSG03002'));
+                    if($mode=='edit'){
+                        \Session::flash('message',Lang::get('messages.MSG04002'));
+                    }else{
+                        \Session::flash('message',Lang::get('messages.MSG03002'));
+                    }
                     return redirect()->route('suppliers.list');
                 }catch (\Exception $e) {
                     DB::rollback();
