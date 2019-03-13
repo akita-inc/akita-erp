@@ -4563,6 +4563,10 @@ var ctrSupplierrsVl = new Vue({
 
       if (zip == '') {
         alert(messages['MSG07001']);
+      } else {
+        if (isNaN(zip)) {
+          alert(messages['MSG07002']);
+        }
       }
 
       new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_0__["Core"](zip, function (addr) {

@@ -251,6 +251,13 @@ class VehiclesController extends Controller
                     if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
                         $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mVehicle->label['adhibition_start_dt'],Lang::get('messages.MSG02014')));
                     }
+
+                    $listVehiclesExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"]]);
+                    foreach ($listVehiclesExist as $item) {
+                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
+                            $validator->errors()->add('vehicles_cd',Lang::get('messages.MSG10003'));
+                        }
+                    }
                 });
             }
             if ($validator->fails()) {
@@ -258,15 +265,6 @@ class VehiclesController extends Controller
                     ->withErrors($validator->errors())
                     ->withInput();
             }else{
-                if(!isset($mode)) {
-                    $listSuppliersExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"]]);
-                    foreach ($listSuppliersExist as $item) {
-                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                            \Session::flash('error', Lang::get('messages.MSG10003'));
-                            return redirect()->back()->withInput();
-                        }
-                    }
-                }
                 DB::beginTransaction();
                 try
                 {

@@ -170,6 +170,13 @@ class SuppliersController extends Controller
                     if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
                         $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt'],Lang::get('messages.MSG02014')));
                     }
+
+                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"]]);
+                    foreach ($listSuppliersExist as $item) {
+                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
+                            $validator->errors()->add('mst_suppliers_cd',Lang::get('messages.MSG10003'));
+                        }
+                    }
                 });
             }
             if ($validator->fails()) {
@@ -177,15 +184,6 @@ class SuppliersController extends Controller
                     ->withErrors($validator->errors())
                     ->withInput();
             }else{
-                if(!isset($mode)) {
-                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"]]);
-                    foreach ($listSuppliersExist as $item) {
-                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                            \Session::flash('error', Lang::get('messages.MSG10003'));
-                            return redirect()->back()->withInput();
-                        }
-                    }
-                }
                 DB::beginTransaction();
                 try
                 {
