@@ -49,10 +49,14 @@ class SuppliersController extends Controller
             ->leftjoin(DB::raw('(select mst_suppliers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_suppliers where deleted_at IS NULL group by mst_suppliers_cd) sub'), function ($join) {
                 $join->on('sub.mst_suppliers_cd', '=', 'mst_suppliers.mst_suppliers_cd');
             })
-            ->whereRaw('mst_suppliers.deleted_at IS NULL')
-            ->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%")
-            ->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
+            ->whereRaw('mst_suppliers.deleted_at IS NULL');
 
+        if ($where['suppliers_cd'] != '') {
+            $this->query->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%");
+        }
+        if ($where['supplier_nm'] != '') {
+            $this->query->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
+        }
         if ($where['radio_reference_date'] == '1' && $where['reference_date'] != '') {
             $this->query->where('mst_suppliers.adhibition_start_dt', "<=", $where['reference_date']);
             $this->query->where('mst_suppliers.adhibition_end_dt', ">=", $where['reference_date']);
