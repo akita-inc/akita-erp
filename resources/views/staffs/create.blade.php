@@ -7,7 +7,7 @@
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one">
-                <button class="btn btn-black" type="button" v-on:click="backHistory">{{ trans("common.button.back") }}</button>
+                <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
             </div>
             <div class="sub-header-line-two">
                 <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>

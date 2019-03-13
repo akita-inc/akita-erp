@@ -104,7 +104,7 @@ class CustomValidation {
     }
     public static function validateZipCode() {
         Validator::extend('zip_code', function($attribute, $value, $parameters, $validator) {
-            return preg_match("/^([0-9\s\-\+\(\)]*)$/", $value);
+            return preg_match("/^[0-9]+$/", $value);
         });
     }
 

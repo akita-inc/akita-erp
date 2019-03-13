@@ -104,10 +104,19 @@ class VehiclesController extends Controller
         $this->query->orderby('mst_vehicles.adhibition_start_dt');
     }
 
-    public function delete($id)
+    public function delete(Request $request,$id)
     {
         $mVehicle = new MVehicles();
 
+        if ($request->getMethod() == 'POST') {
+            if ($mVehicle->deleteVehicle($id)) {
+                \Session::flash('message',Lang::get('messages.MSG10004'));
+            } else {
+                \Session::flash('message',Lang::get('messages.MSG06002'));
+            }
+
+            return redirect()->route('suppliers.list');
+        }
         if ($mVehicle->deleteVehicle($id)) {
             $response = ['data' => 'success'];
         } else {
@@ -270,7 +279,7 @@ class VehiclesController extends Controller
                 {
                     if($mode=='registerHistoryLeft'){
 
-                        $mVehicle->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt"]);
+                        $mVehicle->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
                         $mVehicle->save();
                         $mVehicle = new MVehicles();
                     }elseif ($mode=='edit'){
@@ -284,7 +293,7 @@ class VehiclesController extends Controller
                         $mVehicle->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     }else{
                         $mVehicle->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
-                        $mVehicle->adhibition_end_dt= TimeFunction::dateFormat($flagLasted ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                        $mVehicle->adhibition_end_dt= TimeFunction::dateFormat($mode=='edit' ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
                     }
 
 
@@ -386,7 +395,11 @@ class VehiclesController extends Controller
 
                     $mVehicle->save();
                     DB::commit();
-                    \Session::flash('message',Lang::get('messages.MSG03002'));
+                    if($mode=='edit'){
+                        \Session::flash('message',Lang::get('messages.MSG04002'));
+                    }else{
+                        \Session::flash('message',Lang::get('messages.MSG03002'));
+                    }
                     return redirect()->route('vehicles.list');
                 }catch (\Exception $e) {
                     DB::rollback();
