@@ -9,7 +9,7 @@
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
-                <button class="btn btn-yellow">
+                <button class="btn btn-yellow"  onclick="window.location.href= '{{route('staffs.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>
@@ -167,8 +167,8 @@
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
-        var auth_staff_cd="<?php echo @Auth::user()->staff_cd; ?>";
-        var date_now ='<?php echo date('Y/m/d'); ?>';
+        var auth_staff_cd="@php echo @Auth::user()->staff_cd; @endphp";
+        var date_now ="@php echo date('Y/m/d'); @endphp";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs-list.js') }}" charset="utf-8"></script>
 @endsection

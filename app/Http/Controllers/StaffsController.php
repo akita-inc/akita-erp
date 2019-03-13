@@ -149,13 +149,42 @@ class StaffsController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request,  $id=null,$mode=null)
     {
+        $mStaffs= new MStaffs();
+        $flagLasted = false;
+        if(!is_null($id)){
+            $mStaffs = $mStaffs->find($id);
+            if(is_null($mStaffs)){
+                return abort(404);
+            }
+            $lastedId = $mStaffs->getLastedSupplier($mStaffs->staff_cd);
+            if($lastedId->max==$id){
+                $flagLasted =true;
+            }
+        }
+        if ($request->getMethod() == 'POST') {
+            $data = $request->all();
+            $rules = [
+                'staff_cd'  => 'required|one_bytes_string|length:5',
+                'adhibition_start_dt'  => 'required',
+                'password'=>'length:50',
+                'last_nm'  => 'nullable|length:25',
+                'last_nm_kana'  => 'kana|nullable|length:25',
+                'first_nm'  => 'length:50|nullable',
+                'first_nm_kana'=>'kana|nullable|length:50',
+            ];
+        }
         $mGeneralPurposes = new MGeneralPurposes();
-        $listPrefecture = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'], '');
-        $listEmploymentPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
+        $listEmployPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
+        $listPosition=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['position'], '');
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
+        $listSex=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['sex'],'');
         return view('staffs.create', [
-            'listEmploymentPattern' => $listEmploymentPattern
+            'listEmployPattern' => $listEmployPattern,
+            'listPosition'=>$listPosition,
+            'listPrefecture'=>$listPrefecture,
+            'listSex'=>$listSex
         ]);
     }
 

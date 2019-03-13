@@ -2,7 +2,7 @@
 @section('title',trans("customers.create.title"))
 @section('title_header',trans("customers.create.title"))
 @section('content')
-    @php $table='customers.create.field.' @endphp
+    @php $prefix='customers.create.field.' @endphp
     <div class="wrapper-container" id="ctrCustomersVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
@@ -98,7 +98,6 @@
 
                     <div class="break-row-form"></div>
 
-                    <!--prefectures_cd address1-->
 
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>$listPrefecture])
@@ -110,7 +109,6 @@
 
                     <div class="break-row-form"></div>
 
-                    <!--address2 address3-->
 
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['filed'=>'address2'])
