@@ -19,7 +19,7 @@ class TimeFunction
 
     static function dateFormat($time = '', $type = null)
 	{
-		if($time == '' || $time == "null") return '';
+		if($time == '' || $time == "null") return null;
 		$dt = Carbon::parse($time);
 		switch ($type) {
 			default: return $dt->format('Y/m/d');
