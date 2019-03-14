@@ -54,7 +54,7 @@ trait FormTrait
         ]);
     }
 
-    public function backHistory(Request $request){
+    public function backHistory(){
         Session::put('backQueryFlag', true);
     }
 }

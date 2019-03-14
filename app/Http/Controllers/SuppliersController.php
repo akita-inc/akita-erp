@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Helpers\TimeFunction;
 use App\Models\MGeneralPurposes;
 use App\Models\MSupplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 class SuppliersController extends Controller
 {
 
-    use ListTrait;
+    use ListTrait,FormTrait;
     public $table = "mst_suppliers";
 
     public function index(Request $request)
@@ -71,6 +73,7 @@ class SuppliersController extends Controller
         $mSuppliers = new MSupplier();
 
         if ($request->getMethod() == 'POST') {
+            $this->backHistory();
             if ($mSuppliers->deleteSupplier($id)) {
                 \Session::flash('message',Lang::get('messages.MSG10004'));
             } else {
@@ -149,10 +152,15 @@ class SuppliersController extends Controller
                 unset($rules['adhibition_start_dt']);
                 $rules['adhibition_start_dt_new'] ='required';
             }
+            if($mode=='edit'){
+                $mSupplier->label['adhibition_start_dt'] = $mSupplier->label['adhibition_start_dt_edit'];
+                $mSupplier->label['adhibition_end_dt'] = $mSupplier->label['adhibition_end_dt_edit'];
+                $rules['adhibition_end_dt'] ='required';
+            }
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
             if($mode=='registerHistoryLeft'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
-                    if (Carbon::parse($data['adhibition_start_dt_new']) < Carbon::parse($mSupplier->adhibition_start_dt)){
+                    if (Carbon::parse($data['adhibition_start_dt_new']) <= Carbon::parse($mSupplier->adhibition_start_dt)){
                         $validator->errors()->add('adhibition_start_dt_new',Lang::get('messages.MSG02015'));
                     }
                     if (Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
@@ -161,8 +169,10 @@ class SuppliersController extends Controller
                 });
             }elseif ($mode=='edit'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
-                    if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
-                        $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
+                    if($data['adhibition_end_dt']!=""){
+                        if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
+                            $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
+                        }
                     }
                 });
             }else{
@@ -244,6 +254,7 @@ class SuppliersController extends Controller
                     $mSupplier->notes= $data["notes"];
                     $mSupplier->save();
                     DB::commit();
+                    Session::put('backQueryFlag', true);
                     if($mode=='edit'){
                         \Session::flash('message',Lang::get('messages.MSG04002'));
                     }else{

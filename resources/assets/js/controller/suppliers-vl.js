@@ -1,6 +1,6 @@
 import { Core } from '../package/yubinbango-core';
 import DatePicker from 'vue2-datepicker'
-import historykana from 'historykana'
+import * as AutoKana from 'vanilla-autokana';
 
 var ctrSupplierrsVl = new Vue({
     el: '#ctrSupplierrsVl',
@@ -10,22 +10,8 @@ var ctrSupplierrsVl = new Vue({
         business_start_dt:$('#business_start_dt').val(),
         adhibition_start_dt_new:$('#adhibition_start_dt_new').val(),
         lang:lang_date_picker,
-        name: '',
-        furigana: '',
-        history: []
     },
     methods : {
-        convertKana: function (input , destination) {
-            this.history.push(input.target.value);
-            this.furigana = historykana(this.history);
-            suppliers_service.convertKana({'data': this.furigana}).then(function (data) {
-                $('#'+destination).val(data.info);
-            });
-        },
-        onBlur: function(){
-            this.history = [];
-            this.furigana = '';
-        },
         getAddrFromZipCode: function() {
             var zip = $('#zip_cd').val();
             if(zip==''){
@@ -45,6 +31,20 @@ var ctrSupplierrsVl = new Vue({
                 }
             });
         },
+        deleteSupplier: function(id){
+            suppliers_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.backHistory();
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        $('#form1').attr('action',deleteRoute);
+                        $('#form1').submit();
+                    }
+                }
+            });
+        },
         backHistory: function () {
             suppliers_service.backHistory().then(function () {
                 window.location.href = listRoute;
@@ -52,7 +52,12 @@ var ctrSupplierrsVl = new Vue({
         }
     },
     mounted () {
-
+        AutoKana.bind('#supplier_nm', '#supplier_nm_kana', { katakana: true });
+        AutoKana.bind('#supplier_nm_formal', '#supplier_nm_kana_formal', { katakana: true });
+        AutoKana.bind('#dealing_person_in_charge_last_nm', '#dealing_person_in_charge_last_nm_kana', { katakana: true });
+        AutoKana.bind('#dealing_person_in_charge_first_nm', '#dealing_person_in_charge_first_nm_kana', { katakana: true });
+        AutoKana.bind('#accounting_person_in_charge_last_nm', '#accounting_person_in_charge_last_nm_kana', { katakana: true });
+        AutoKana.bind('#accounting_person_in_charge_first_nm', '#accounting_person_in_charge_first_nm_kana', { katakana: true });
     },
     components: {
         DatePicker

@@ -4560,6 +4560,24 @@ var ctrVehiclesVl = new Vue({
         $('#address2').val(addr.street); // 町域
       });
     },
+    deleteVehicle: function deleteVehicle(id) {
+      var _this = this;
+
+      vehicles_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this.backHistory();
+
+          return false;
+        } else {
+          if (confirm(messages["MSG06001"])) {
+            $('#form1').attr('action', deleteRoute);
+            $('#form1').submit();
+          }
+        }
+      });
+    },
     backHistory: function backHistory() {
       vehicles_service.backHistory().then(function () {
         window.location.href = listRoute;
@@ -4640,7 +4658,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })
