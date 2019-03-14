@@ -35,7 +35,7 @@ var ctrSupplierrsVl = new Vue({
             suppliers_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
-                    this.backHistory();
+                    that.backHistory();
                     return false;
                 } else {
                     if (confirm(messages["MSG06001"])) {

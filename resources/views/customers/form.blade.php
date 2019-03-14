@@ -17,7 +17,7 @@
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
-                        <button class="btn btn-danger text-white" onclick="detele()" type="button">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-danger text-white" v-on:click="deleteCustomer('{{$customer['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                 @endif
             </div>

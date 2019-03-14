@@ -133,9 +133,12 @@ class CustomersController extends Controller
     public function delete($id)
     {
         $mCustomers = new MCustomers();
+        $this->backHistory();
         if ($mCustomers->deleteCustomer($id)) {
+            \Session::flash('message',Lang::get('messages.MSG10004'));
             $response = ['data' => 'success'];
         } else {
+            \Session::flash('message',Lang::get('messages.MSG06002'));
             $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
         }
         return response()->json($response);

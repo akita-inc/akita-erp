@@ -18884,6 +18884,27 @@ var ctrCustomersVl = new Vue({
     },
     backHistory: function backHistory() {
       window.history.back();
+    },
+    backToList: function backToList() {
+      customers_service.backHistory().then(function () {
+        window.location.href = listRoute;
+      });
+    },
+    deleteCustomer: function deleteCustomer(id) {
+      var that = this;
+      customers_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+          that.backToList();
+          return false;
+        } else {
+          if (confirm(messages["MSG06001"])) {
+            customers_service.deleteCustomer(id).then(function (response) {
+              window.location.href = listRoute;
+            });
+          }
+        }
+      });
     }
   },
   mounted: function mounted() {
@@ -18980,7 +19001,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
