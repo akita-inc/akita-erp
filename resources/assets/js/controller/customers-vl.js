@@ -91,22 +91,48 @@ var ctrCustomersVl = new Vue({
         getAddrFromZipCode: function() {
             let that = this;
             let zip = $('#zip_cd').val();
+            if(zip==''){
+                alert(messages['MSG07001']);
+                return;
+            }else{
+                if(isNaN(zip)){
+                    alert(messages['MSG07002']);
+                    return;
+                }
+            }
             new Core(zip, function (addr) {
-                that.field.prefectures_cd = addr.region_id;
-                that.field.address1 = addr.region_id;
-                that.field.address2 = addr.region_id;
+                if(addr.region_id=="" || addr.locality=="" || addr.street==""){
+                    alert(messages['MSG07002']);
+                }else {
+                    that.field.prefectures_cd = addr.region_id;
+                    that.field.address1 = addr.locality;
+                    that.field.address2 = addr.street;
+                }
             });
         },
         getAddrFromZipCodeCollapse:function(index)
         {
             let that = this;
             let zip = this.field.mst_bill_issue_destinations[index].zip_cd;
+            if(zip==''){
+                alert(messages['MSG07001']);
+                return;
+            }else{
+                if(isNaN(zip)){
+                    alert(messages['MSG07002']);
+                    return;
+                }
+            }
             new Core(zip, function (addr) {
-                that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id;// 都道府県ID
-                that.field.mst_bill_issue_destinations[index].address1 = addr.locality;// 市区町村
-                that.field.mst_bill_issue_destinations[index].address2 = addr.street;// 町域
-                that.field.mst_bill_issue_destinations.push({});
-                that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
+                if(addr.region_id=="" || addr.locality=="" || addr.street==""){
+                    alert(messages['MSG07002']);
+                }else {
+                    that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id;// 都道府県ID
+                    that.field.mst_bill_issue_destinations[index].address1 = addr.locality;// 市区町村
+                    that.field.mst_bill_issue_destinations[index].address2 = addr.street;// 町域
+                    that.field.mst_bill_issue_destinations.push({});
+                    that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
+                }
             });
         },
         removeRows: function (index) {

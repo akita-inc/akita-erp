@@ -151,7 +151,7 @@ class CustomersController extends Controller
         }
     }
 
-    public function create(Request $request){
+    public function store(Request $request, $id=null){
         $mGeneralPurposes = new MGeneralPurposes();
         $mCustomerCategories=new MCustomersCategories();
         $mBusinessOffices=new MBusinessOffices();
@@ -164,15 +164,32 @@ class CustomersController extends Controller
         $listDepositMonths=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_month'],'');
         $listConsumptionTaxCalcUnit=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
         $listRoundingMethod=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
-        return view('customers.create', [
-                                'listPrefecture' => $listPrefecture,
-                                'customer_categories'=>$customer_categories,
-                                'business_offices'=>$mBusinessOffices,
-                                'listDepositMethods'=>$listDepositMethods,
-                                'listDepositMonths'=>$listDepositMonths,
-                                'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
-                                'listRoundingMethod'=>$listRoundingMethod,
-                                'listAccountTitles'=>$listAccountTitles
+        $customer = null;
+        $flagRegisterHistory = false;
+        //load form by update
+        if($id != null){
+            $customer = MCustomers::find( $id );
+            if(empty($customer)){
+                abort('404');
+            }else{
+                $customerLast = MCustomers::where('mst_customers_cd', '=', $customer->mst_customers_cd)
+                    ->orderByDesc("adhibition_start_dt")->first();
+                if($customerLast->id == $id){
+                    $flagRegisterHistory = true;
+                }
+            }
+        }
+        return view('customers.form', [
+            'customer' => $customer,
+            'flagRegisterHistory' => $flagRegisterHistory,
+            'listPrefecture' => $listPrefecture,
+            'customer_categories'=>$customer_categories,
+            'business_offices'=>$mBusinessOffices,
+            'listDepositMethods'=>$listDepositMethods,
+            'listDepositMonths'=>$listDepositMonths,
+            'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
+            'listRoundingMethod'=>$listRoundingMethod,
+            'listAccountTitles'=>$listAccountTitles
         ]);
     }
 

@@ -6,11 +6,30 @@
     <div class="wrapper-container" id="ctrCustomersVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
-            <div class="sub-header-line-one">
-                <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
-        </div>
+            <div class="sub-header-line-one d-flex">
+                <div class="d-flex">
+                    <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
+                </div>
+                @if(!empty($customer))
+                    <div class="d-flex ml-auto">
+                        <button class="btn btn-danger text-white" onclick="detele()" type="button">{{ trans("common.button.delete") }}</button>
+                    </div>
+                @endif
+            </div>
             <div class="sub-header-line-two">
-                <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                <div class="grid-form border-0">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                        <div class="col-md-7 col-sm-12 row grid-col h-100">
+                            <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                            @if($flagRegisterHistory)
+                                <button class="btn btn-primary btn-submit m-auto" type="button" onclick="registerHistoryLeft()" >
+                                    {{ trans("common.button.register_history_left") }}
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -23,14 +42,31 @@
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
                             @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "maxlength='5'"])
+                            @if($flagRegisterHistory)
+                                <span>
+                                    {{trans("customers.create.mst_customers_cd_description")}}
+                                </span>
+                            @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
+                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($customer) ? '_edit':''),'required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
+                            @if($flagRegisterHistory)
+                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($customer) ? '_edit':''),'required'=>true ])
+                            @else
+                                @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($customer) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
+                            @endif
                         </div>
+                        @if($flagRegisterHistory)
+                            <div class="col-md-6 col-sm-12 no-padding">
+                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true])
+                            </div>
+                            <div class="col-md-6 col-sm-12 pd-l-20">
+                                @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -342,6 +378,10 @@
 @section("scripts")
     <script>
         var listRoute = "{{route('customers.list')}}";
+        var messages = [];
+        messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
+        messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/customers.js') }}" charset="utf-8"></script>
 @endsection
