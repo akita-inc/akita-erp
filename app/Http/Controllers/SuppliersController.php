@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Helpers\TimeFunction;
 use App\Models\MGeneralPurposes;
 use App\Models\MSupplier;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 class SuppliersController extends Controller
 {
 
-    use ListTrait;
+    use ListTrait,FormTrait;
     public $table = "mst_suppliers";
 
     public function index(Request $request)
@@ -72,6 +73,7 @@ class SuppliersController extends Controller
         $mSuppliers = new MSupplier();
 
         if ($request->getMethod() == 'POST') {
+            $this->backHistory();
             if ($mSuppliers->deleteSupplier($id)) {
                 \Session::flash('message',Lang::get('messages.MSG10004'));
             } else {
@@ -153,7 +155,7 @@ class SuppliersController extends Controller
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
             if($mode=='registerHistoryLeft'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
-                    if (Carbon::parse($data['adhibition_start_dt_new']) < Carbon::parse($mSupplier->adhibition_start_dt)){
+                    if (Carbon::parse($data['adhibition_start_dt_new']) <= Carbon::parse($mSupplier->adhibition_start_dt)){
                         $validator->errors()->add('adhibition_start_dt_new',Lang::get('messages.MSG02015'));
                     }
                     if (Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {

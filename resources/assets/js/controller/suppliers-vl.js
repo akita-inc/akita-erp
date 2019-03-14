@@ -31,6 +31,20 @@ var ctrSupplierrsVl = new Vue({
                 }
             });
         },
+        deleteSupplier: function(id){
+            suppliers_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.backHistory();
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        $('#form1').attr('action',deleteRoute);
+                        $('#form1').submit();
+                    }
+                }
+            });
+        },
         backHistory: function () {
             suppliers_service.backHistory().then(function () {
                 window.location.href = listRoute;

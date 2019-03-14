@@ -15,7 +15,7 @@
                     </div>
                     @if($mVehicle->id)
                     <div class="d-flex ml-auto">
-                        <button class="btn btn-danger text-white" onclick="deleteVehicle()" type="button">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-danger text-white" v-on:click='deleteVehicle("{{$mVehicle->id}}")' type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                     @endif
                 </div>
@@ -178,7 +178,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5" for="door_number">ドア番号</label>
+                        <label class="col-md-5 col-sm-5 required" for="door_number">ドア番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <input type="text" class="form-control w-50 {{$errors->has('door_number')? 'is-invalid': ''}}" id="door_number" name="door_number" value="{{ old('door_number') ??  $mVehicle->door_number }}">
                         </div>
@@ -661,7 +661,7 @@
                         @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
-                        <button class="btn btn-black" v-on:click="getAddrFromZipCode" type="button">所有者の内容コピー</button>
+                        <button class="btn btn-black" onclick="copyText()" type="button">所有者の内容コピー</button>
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
@@ -1221,19 +1221,12 @@
 @section("scripts")
     <script type="text/javascript">
         var listRoute = "{{route('vehicles.list')}}";
+        var deleteRoute = "{{route('vehicles.delete.post',['id' => $mVehicle->id])}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         function registerHistoryLeft() {
             $('#form1').attr('action','{{route('vehicles.edit.post',['id' => $mVehicle->id, 'mode'=>'registerHistoryLeft'])}}');
             $('#form1').submit();
-        }
-        function deleteVehicle() {
-            if(confirm(messages['MSG06001'])){
-                $('#form1').attr('action','{{route('vehicles.delete.post',['id' => $mVehicle->id])}}');
-                $('#form1').submit();
-            }else{
-                return false;
-            }
         }
         function uploadFile(target) {
             document.getElementById(target.name+"_file_name").innerHTML = target.files[0].name;
@@ -1242,6 +1235,11 @@
             $('#'+destination+"_file_name").html('');
             $('#'+destination).attr('value','');
             $('div.alert-area').append("<input type='hidden' class='deleteFile' name='deleteFile[]' value='"+ destination+"'>");
+        }
+        
+        function copyText() {
+            $('#user_nm').val($('#owner_nm').val());
+            $('#user_address').val($('#owner_address').val());
         }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/vehicles.js') }}" charset="utf-8"></script>
