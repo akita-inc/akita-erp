@@ -23152,6 +23152,8 @@ var ctrCustomersVl = new Vue({
     field: {
       adhibition_start_dt: "",
       adhibition_end_dt: "2999/12/31",
+      adhibition_start_dt_history: "",
+      adhibition_end_dt_history: "2999/12/31",
       customer_nm: "",
       customer_nm_kana: "",
       customer_nm_formal: "",
@@ -23241,24 +23243,54 @@ var ctrCustomersVl = new Vue({
     getAddrFromZipCode: function getAddrFromZipCode() {
       var that = this;
       var zip = $('#zip_cd').val();
+
+      if (zip == '') {
+        alert(messages['MSG07001']);
+        return;
+      } else {
+        if (isNaN(zip)) {
+          alert(messages['MSG07002']);
+          return;
+        }
+      }
+
       new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_2__["Core"](zip, function (addr) {
-        that.field.prefectures_cd = addr.region_id;
-        that.field.address1 = addr.region_id;
-        that.field.address2 = addr.region_id;
+        if (addr.region_id == "" || addr.locality == "" || addr.street == "") {
+          alert(messages['MSG07002']);
+        } else {
+          that.field.prefectures_cd = addr.region_id;
+          that.field.address1 = addr.locality;
+          that.field.address2 = addr.street;
+        }
       });
     },
     getAddrFromZipCodeCollapse: function getAddrFromZipCodeCollapse(index) {
       var that = this;
       var zip = this.field.mst_bill_issue_destinations[index].zip_cd;
+
+      if (zip == '') {
+        alert(messages['MSG07001']);
+        return;
+      } else {
+        if (isNaN(zip)) {
+          alert(messages['MSG07002']);
+          return;
+        }
+      }
+
       new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_2__["Core"](zip, function (addr) {
-        that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id; // 都道府県ID
+        if (addr.region_id == "" || addr.locality == "" || addr.street == "") {
+          alert(messages['MSG07002']);
+        } else {
+          that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id; // 都道府県ID
 
-        that.field.mst_bill_issue_destinations[index].address1 = addr.locality; // 市区町村
+          that.field.mst_bill_issue_destinations[index].address1 = addr.locality; // 市区町村
 
-        that.field.mst_bill_issue_destinations[index].address2 = addr.street; // 町域
+          that.field.mst_bill_issue_destinations[index].address2 = addr.street; // 町域
 
-        that.field.mst_bill_issue_destinations.push({});
-        that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
+          that.field.mst_bill_issue_destinations.push({});
+          that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
+        }
       });
     },
     removeRows: function removeRows(index) {
@@ -23343,7 +23375,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })

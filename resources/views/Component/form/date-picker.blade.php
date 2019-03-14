@@ -4,6 +4,8 @@
             {{ trans(@$prefix.$filed) }}
         </label>
         <date-picker
+            {!! isset($attr_input) ? $attr_input:"" !!}
+                :value="'2018-01-20'"
             :lang='lang'
             id="{!! $filed !!}"
                      placeholder=""

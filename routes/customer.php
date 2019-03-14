@@ -7,7 +7,8 @@
  */
 Route::group(['name' => 'customers', 'prefix'=>'/customers', 'middleware' => ['auth']],function (){
     Route::get('/list','CustomersController@index')->name("customers.list");
-    Route::get('/create','CustomersController@create')->name("customers.create");
+    Route::get('/create','CustomersController@store')->name("customers.create");
+    Route::get('/edit/{id}', 'CustomersController@store')->name('customers.edit');
     Route::get('/delete/{id}', 'CustomersController@delete')->name('customers.delete');
 
     /*Api using Vue*/
