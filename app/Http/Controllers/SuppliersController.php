@@ -9,6 +9,7 @@ use App\Models\MSupplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 class SuppliersController extends Controller
@@ -192,7 +193,7 @@ class SuppliersController extends Controller
                         $mSupplier->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
                         $mSupplier->save();
                         $mSupplier = new MSupplier();
-                    }elseif ($mode=='edit'){
+                    }elseif ($mode=='edit' && $flagLasted){
                         if($data["adhibition_start_dt"]!= $mSupplier->adhibition_start_dt){
                             $mSupplier->editSupplier($mSupplier->id, $data["adhibition_start_dt"]);
                         }
@@ -244,6 +245,7 @@ class SuppliersController extends Controller
                     $mSupplier->notes= $data["notes"];
                     $mSupplier->save();
                     DB::commit();
+                    Session::put('backQueryFlag', true);
                     if($mode=='edit'){
                         \Session::flash('message',Lang::get('messages.MSG04002'));
                     }else{

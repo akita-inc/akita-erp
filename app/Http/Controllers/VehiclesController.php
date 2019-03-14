@@ -395,6 +395,7 @@ class VehiclesController extends Controller
 
                     $mVehicle->save();
                     DB::commit();
+                    Session::put('backQueryFlag', true);
                     if($mode=='edit'){
                         \Session::flash('message',Lang::get('messages.MSG04002'));
                     }else{
