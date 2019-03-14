@@ -26,9 +26,11 @@ class CreateMstBusinessOfficesTable extends Migration
             $table->string('phone_number',20)->nullable();
             $table->string('fax_number',20)->nullable();
             $table->string('ip_phone_number',20)->nullable();
+            $table->string('email_address',300)->nullable();
             $table->integer('green_m_fg')->nullable();
             $table->integer('gmark_fg')->nullable();
             $table->date('gmark_limit')->nullable();
+            $table->string('erea_id',5)->nullable();
             $table->string('warehouse_fg',1)->nullable();
             $table->date('opening_dt')->nullable();
             $table->date('closing_dt')->nullable();
