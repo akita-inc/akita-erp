@@ -14,9 +14,12 @@ use App\Models\MBusinessOffices;
 use App\Models\MCustomers;
 use App\Models\MCustomersCategories;
 use App\Models\MGeneralPurposes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Validator;
+
 class CustomersController extends Controller
 {
     use ListTrait,FormTrait;
@@ -25,6 +28,7 @@ class CustomersController extends Controller
     public $ruleValid = [
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
+        'discount_rate'  => 'nullable|numeric|length:3',
         'customer_nm'  => 'required|nullable|length:200',
         'customer_nm_kana'  => 'kana|nullable|length:200',
         'customer_nm_formal'  => 'length:200|nullable',
@@ -160,7 +164,6 @@ class CustomersController extends Controller
         $listDepositMonths=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_month'],'');
         $listConsumptionTaxCalcUnit=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
         $listRoundingMethod=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
-        $listDepositBankCd=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_bank_cd'],'');
         return view('customers.create', [
                                 'listPrefecture' => $listPrefecture,
                                 'customer_categories'=>$customer_categories,
@@ -169,8 +172,78 @@ class CustomersController extends Controller
                                 'listDepositMonths'=>$listDepositMonths,
                                 'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
                                 'listRoundingMethod'=>$listRoundingMethod,
-                                'listDepositBankCd'=>$listDepositBankCd,
                                 'listAccountTitles'=>$listAccountTitles
         ]);
+    }
+
+    protected function validAfter( &$validator,$data ){
+        $mst_bill_issue_destinations = $data["mst_bill_issue_destinations"];
+        $errorsEx = [];
+        if( count($mst_bill_issue_destinations) > 0 ){
+            foreach ($mst_bill_issue_destinations as $index => $items){
+                $validatorEx = Validator::make( $items, [
+                    'zip_cd'  => 'required|zip_code|nullable|length:7',
+                    'address1'  => 'nullable|length:20',
+                    'address2'  => 'nullable|length:20',
+                    'address3'  => 'nullable|length:50',
+                    'phone_number'  => 'phone_number|nullable|length:20',
+                    'fax_number'  => 'fax_number|nullable|length:20'
+                ] ,$this->messagesCustom ,$this->labels );
+                if ( $validatorEx->fails() ) {
+                    $errorsEx[$index] = $validatorEx->errors();
+                }
+            }
+        }
+        if( count($errorsEx) > 0){
+            $validator->errors()
+                ->add("mst_bill_issue_destinations",$errorsEx);
+        }
+        if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
+            $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
+        }
+
+        if (isset($data['mst_customers_cd']) && !empty($data['mst_customers_cd'])){
+            $strWhereStartDate = 'DATE_FORMAT("'.$data['adhibition_start_dt'].'", "%Y%m%d")';
+            $strWhereEndDate = 'DATE_FORMAT("'.config('params.adhibition_end_dt_default').'", "%Y%m%d")';
+            $strWhereStartDateDB = 'DATE_FORMAT(adhibition_start_dt, "%Y%m%d")';
+            $strWhereEndDateDB = 'DATE_FORMAT(adhibition_end_dt, "%Y%m%d")';
+            $strWhere = $strWhereStartDate." > ".$strWhereEndDateDB." or ".$strWhereEndDate." < ".$strWhereStartDateDB;
+            $countExist = MCustomers::query()
+                ->where('mst_customers_cd','=',$data['mst_customers_cd'])
+                ->whereRaw("!(".$strWhere.")")
+                ->count();
+            if( $countExist > 0 ){
+                $validator->errors()->add('mst_customers_cd',Lang::get('messages.MSG10003'));
+            }
+        }
+    }
+
+    protected function save($data){
+        $arrayInsert = $data;
+        $mst_bill_issue_destinations =  $data["mst_bill_issue_destinations"];
+        unset($arrayInsert["mst_bill_issue_destinations"]);
+        DB::beginTransaction();
+        $id = DB::table($this->table)->insertGetId( $arrayInsert );
+        if( count($mst_bill_issue_destinations) > 0 ){
+            foreach ($mst_bill_issue_destinations as $bill_issue_destination){
+                $arrayInsertBill = [
+                    'mst_customers' => $id,
+                    'bill_zip_cd' => $bill_issue_destination['zip_cd'],
+                    'bill_address1' => $bill_issue_destination['prefectures_cd'],
+                    'bill_address2' => $bill_issue_destination['address1'],
+                    'bill_address3' => $bill_issue_destination['address2'],
+                    'bill_address4' => $bill_issue_destination['address3'],
+                    'bill_phone_number' => $bill_issue_destination['phone_number'],
+                    'bill_fax_number' => $bill_issue_destination['fax_number'],
+                ];
+                if(!DB::table("mst_bill_issue_destinations")->insert($arrayInsertBill)){
+                    DB::rollBack();
+                    return false;
+                }
+            }
+        }
+        DB::commit();
+        \Session::flash('message',Lang::get('messages.MSG03002'));
+        return $id;
     }
 }

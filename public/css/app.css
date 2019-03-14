@@ -467,6 +467,7 @@ input,select{
     padding-right: 50px;
     padding-left: 15px;
     position: relative;
+    min-height: 40px;
 }
 .wrapper-collapse .btn-rows-add{
     position: absolute;
@@ -519,4 +520,10 @@ span.note{
 }
 .error-form .mx-input{
     border-color: #dc3545;
+}
+.form-control.is-invalid, .was-validated .form-control:invalid {
+    border-color: #dc3545;
+    padding-right: 12px !important;
+    background-image: none;
+    border-radius: 0px !important;
 }

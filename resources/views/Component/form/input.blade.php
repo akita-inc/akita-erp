@@ -9,5 +9,5 @@
                class="form-control"
                id="{!! $filed !!}">
     </div>
-    <span v-cloak v-if="errors.{!! $filed !!} != undefined" class="message-error">@{{errors.{!! $filed !!}[0]}}</span>
+    <span v-cloak v-if="errors.{!! $filed !!} != undefined" class="message-error" v-html="errors.{!! $filed !!}.join('<br />')"></span>
 </div>

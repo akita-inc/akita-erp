@@ -22,14 +22,14 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true])
+                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "maxlength='5'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
+                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
                         </div>
                     </div>
                 </div>
@@ -41,24 +41,24 @@
                         @include('Component.form.input',[
                                 'filed'=>'customer_nm',
                                 'required'=>true,
-                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana\')" v-on:blur="onBlur"'
+                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana\')" v-on:blur="onBlur" maxlength="200"'
                             ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'customer_nm_kana'])
+                        @include('Component.form.input',['filed'=>'customer_nm_kana','attr_input' => "maxlength='200'" ])
                     </div>
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                                 'filed'=>'customer_nm_formal',
-                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana_formal\')" v-on:blur="onBlur"'
+                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana_formal\')" v-on:blur="onBlur" maxlength="200"'
                             ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'customer_nm_kana_formal'])
+                        @include('Component.form.input',['filed'=>'customer_nm_kana_formal','attr_input' => "maxlength='200'"])
                     </div>
                 </div>
             </div>
@@ -68,24 +68,24 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                                'filed'=>'person_in_charge_last_nm',
-                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_last_nm_kana\')" v-on:blur="onBlur"'
+                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_last_nm_kana\')" v-on:blur="onBlur" maxlength="25"'
                            ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'person_in_charge_last_nm_kana'])
+                        @include('Component.form.input',['filed'=>'person_in_charge_last_nm_kana','attr_input' => "maxlength='50'"])
                     </div>
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                                'filed'=>'person_in_charge_first_nm',
-                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_first_nm_kana\')" v-on:blur="onBlur"'
+                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_first_nm_kana\')" v-on:blur="onBlur" maxlength="25"'
                            ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'person_in_charge_first_nm_kana'])
+                        @include('Component.form.input',['filed'=>'person_in_charge_first_nm_kana','attr_input' => "maxlength='50'"])
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'zip_cd'])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'zip_cd','attr_input' => "maxlength='7'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
@@ -108,7 +108,7 @@
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'address1'])
+                        @include('Component.form.input',['filed'=>'address1','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -116,28 +116,28 @@
                     <!--address2 address3-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'address2'])
+                        @include('Component.form.input',['filed'=>'address2','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'address3'])
+                        @include('Component.form.input',['filed'=>'address3','attr_input' => "maxlength='50'"])
                     </div>
 
                     <div class="break-row-form"></div>
                     <!--phone_number fax_number-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'phone_number'])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'phone_number','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'fax_number'])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'fax_number','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="break-row-form"></div>
                     <!--hp_url-->
                     <div class="col-md-12 col-sm-12 pd-r-0">
-                        @include('Component.form.input',['filed'=>'hp_url'])
+                        @include('Component.form.input',['filed'=>'hp_url','attr_input' => "maxlength='2500'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -156,18 +156,18 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.textarea',['filed'=>'explanations_bill'])
+                        @include('Component.form.textarea',['filed'=>'explanations_bill','attr_input' => "maxlength='100'"])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-250','filed'=>'bundle_dt'])
+                        @include('Component.form.input',['class'=>'wd-250','filed'=>'bundle_dt','attr_input' => "maxlength='2'"])
                         <div class="break-row-form"></div>
                         <div class="col-md-12 col-sm-12 row grid-col no-padding">
                             <div class="col-md-6 col-sm-12 no-padding">
                                 @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_month_id','array'=>$listDepositMonths])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
-                                @include('Component.form.input',['class'=>'wd-250','filed'=>'deposit_day'])
+                                @include('Component.form.input',['class'=>'wd-250','filed'=>'deposit_day','attr_input' => "maxlength='2'"])
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                         @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'business_start_dt'])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.textarea',['filed'=>'deposit_method_notes'])
+                        @include('Component.form.textarea',['filed'=>'deposit_method_notes','attr_input' => "maxlength='200'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -195,7 +195,7 @@
                     <div class="break-row-form"></div>
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'discount_rate'])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'discount_rate','attr_input' => "maxlength='3'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','checkboxLabel'=>'あり'])
@@ -220,6 +220,8 @@
                                         'filed'=>'zip_cd',
                                         'filedId'=>"'mst_bill_issue_destinations_zip_cd'+index",
                                         'filedMode'=>"items.zip_cd",
+                                        'filedErrors'=>"mst_bill_issue_destinations",
+                                        'attr_input' => "maxlength='7'"
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -236,7 +238,7 @@
                                         'filed'=>'prefectures_cd',
                                         'filedId'=>"'mst_bill_issue_destinations_prefectures_cd'+index",
                                         'filedMode'=>"items.prefectures_cd",
-                                        'array'=>$listPrefecture
+                                        'array'=>$listPrefecture,
                                     ])
                                 </div>
 
@@ -245,6 +247,8 @@
                                         'filed'=>'address1',
                                         'filedId'=>"'mst_bill_issue_destinations_address1'+index",
                                         'filedMode'=>"items.address1",
+                                        'filedErrors'=>"mst_bill_issue_destinations",
+                                        'attr_input' => "maxlength='20'"
                                     ])
                                 </div>
 
@@ -257,6 +261,8 @@
                                         'filed'=>'address2',
                                         'filedId'=>"'mst_bill_issue_destinations_address2'+index",
                                         'filedMode'=>"items.address2",
+                                        'filedErrors'=>"mst_bill_issue_destinations",
+                                        'attr_input' => "maxlength='20'"
                                     ])
                                 </div>
 
@@ -265,6 +271,8 @@
                                         'filed'=>'address3',
                                         'filedId'=>"'mst_bill_issue_destinations_address3'+index",
                                         'filedMode'=>"items.address3",
+                                        'filedErrors'=>"mst_bill_issue_destinations",
+                                        'attr_input' => "maxlength='20'"
                                     ])
                                 </div>
 
@@ -277,6 +285,8 @@
                                         'filed'=>'phone_number',
                                         'filedId'=>"'mst_bill_issue_destinations_phone_number'+index",
                                         'filedMode'=>"items.phone_number",
+                                        'filedErrors'=>"mst_bill_issue_destinations",
+                                        'attr_input' => "maxlength='20'"
                                     ])
                                 </div>
 
@@ -286,6 +296,8 @@
                                         'filed'=>'fax_number',
                                         'filedId'=>"'mst_bill_issue_destinations_fax_number'+index",
                                         'filedMode'=>"items.fax_number",
+                                        'filedErrors'=>"mst_bill_issue_destinations",
+                                        'attr_input' => "maxlength='20'"
                                     ])
                                 </div>
                             </div>
@@ -299,7 +311,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_bank_cd','array'=>$listDepositBankCd])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'deposit_bank_cd','attr_input' => "maxlength='4'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -320,7 +332,7 @@
                     <div class="break-row-form"></div>
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.textarea',['filed'=>'notes'])
+                        @include('Component.form.textarea',['filed'=>'notes','attr_input' => "maxlength='2500'"])
                     </div>
                 </div>
             </div>
