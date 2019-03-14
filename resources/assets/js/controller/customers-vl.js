@@ -2,14 +2,12 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import DatePicker from 'vue2-datepicker';
 import { Core } from '../package/yubinbango-core';
 import moment from 'moment';
-import historykana from "historykana";
+import * as AutoKana from "vanilla-autokana";
 
 var ctrCustomersVl = new Vue({
     el: '#ctrCustomersVl',
     data: {
         lang:lang_date_picker,
-        furigana: '',
-        history: [],
         loading:false,
         field:{
             adhibition_start_dt:"",
@@ -17,6 +15,7 @@ var ctrCustomersVl = new Vue({
             customer_nm:"",
             customer_nm_kana:"",
             customer_nm_formal:"",
+            customer_nm_kana_formal:"",
             person_in_charge_last_nm:"",
             person_in_charge_first_nm:"",
             person_in_charge_last_nm_kana:"",
@@ -56,7 +55,8 @@ var ctrCustomersVl = new Vue({
             parse: (value) => {
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
-        }
+        },
+        autokana:[],
     },
     methods : {
         submit: function(){
@@ -86,16 +86,7 @@ var ctrCustomersVl = new Vue({
             });
         },
         convertKana: function (input , destination) {
-            let that = this;
-            this.history.push(input.target.value);
-            this.furigana = historykana(this.history);
-            home_service.convertKana({'data': this.furigana}).then(function (data) {
-                that.field[destination] = data.info;
-            });
-        },
-        onBlur: function(){
-            this.history = [];
-            this.furigana = '';
+            this.field[destination] = this.autokana[input.target.id].getFurigana();
         },
         getAddrFromZipCode: function() {
             let that = this;
@@ -152,6 +143,11 @@ var ctrCustomersVl = new Vue({
         }
     },
     mounted () {
+        this.autokana ['customer_nm'] = AutoKana.bind('#customer_nm', '#customer_nm_kana', { katakana: true });
+
+        this.autokana ['customer_nm_formal'] = AutoKana.bind('#customer_nm_formal', '#customer_nm_kana_formal', { katakana: true });
+        this.autokana ['person_in_charge_last_nm'] = AutoKana.bind('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', { katakana: true });
+        this.autokana ['person_in_charge_first_nm'] = AutoKana.bind('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', { katakana: true });
     },
     components: {
         DatePicker,
