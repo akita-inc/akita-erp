@@ -188,6 +188,10 @@ class StaffsController extends Controller
         $this->validateBlockCollapse($validator,"mst_staff_job_experiences",$data,[
             'job_duties' => 'nullable|length:50'
         ]);
+        $this->validateBlockCollapse($validator,"mst_staff_qualifications",$data,[
+            'notes' => 'nullable|length:100',
+            'amounts'=>'integer'
+        ]);
         if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
             $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
         }
@@ -222,6 +226,9 @@ class StaffsController extends Controller
                 }
                 break;
             case "mst_staff_qualifications":
+                if (Carbon::parse($data['period_validity_start_dt']) > Carbon::parse($data['period_validity_end_dt'])) {
+                    $validator->errors()->add('period_validity_start_dt', str_replace(' :attribute', $this->labels['period_validity_start_dt'], Lang::get('messages.MSG02014')));
+                }
                 break;
             case "mst_staff_dependents":
                 break;
@@ -234,9 +241,11 @@ class StaffsController extends Controller
         $data['password']=bcrypt($data['password']);
         $arrayInsert = $data;
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
+        $mst_staff_qualifications=$data["mst_staff_qualifications"];
         DB::beginTransaction();
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
+        unset($arrayInsert["mst_staff_qualifications"]);
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
         if( count($mst_staff_job_experiences) > 0 ){
             foreach ($mst_staff_job_experiences as $key=>$staff_job_experience){
@@ -248,6 +257,27 @@ class StaffsController extends Controller
                     'disp_number'=>($key+1)
                 ];
                 if(!DB::table("mst_staff_job_experiences")->insert($arrayInsertJobEx)){
+                    DB::rollBack();
+                    return false;
+                }
+            }
+        }
+        if(count($mst_staff_qualifications)>0)
+        {
+            foreach ($mst_staff_qualifications as $key=>$staff_qualification){
+                $arrInsertStaffQualifications = [
+                    'mst_staff_id' => $id,
+                    'qualification_kind_id' => $staff_qualification['qualification_kind_id'],
+                    'staff_tenure_start_dt' => $staff_qualification['staff_tenure_start_dt'],
+                    'acquisition_dt' => $staff_qualification['acquisition_dt'],
+                    'period_validity_start_dt'=>$staff_qualification['period_validity_start_dt'],
+                    'period_validity_end_dt'=>$staff_qualification['period_validity_end_dt'],
+                    'notes'=>$staff_qualification['notes'],
+                    'amounts'=>$staff_qualification['amounts'],
+                    'payday'=>$staff_qualification['payday'],
+                    'disp_number'=>($key+1)
+                ];
+                if(!DB::table("mst_staff_qualifications")->insert($arrInsertStaffQualifications)){
                     DB::rollBack();
                     return false;
                 }

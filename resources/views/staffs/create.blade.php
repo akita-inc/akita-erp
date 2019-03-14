@@ -216,7 +216,7 @@
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_educational_background" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        学歴
+                         {{trans($prefix."educational_background_title")}}
                     </a>
                 </p>
                 <div class="collapse" id="b_mst_educational_background">
@@ -240,7 +240,7 @@
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_staff_job_experiences" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        前職経歴
+                         {{trans($prefix."mst_staff_job_experiences_title")}}
                     </a>
                 </p>
                 <div class="collapse" id="b_mst_staff_job_experiences">
@@ -291,7 +291,7 @@
             <div class="grid-form">
                 <p class="header-collapse">
                     <a data-toggle="collapse" href="#b_mst_staff_qualifications" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        資格
+                        {{trans($prefix."mst_staff_qualifications_title")}}
                     </a>
                 </p>
                 <div class="collapse" id="b_mst_staff_qualifications">
