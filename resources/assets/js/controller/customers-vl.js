@@ -41,7 +41,7 @@ var ctrCustomersVl = new Vue({
             rounding_method_id:"",
             discount_rate:"",
             except_g_drive_bill_fg:"",
-            mst_bill_issue_destinations:[{}],
+            mst_bill_issue_destinations:[],
             deposit_bank_cd:"",
             mst_account_titles_id: "",
             mst_account_titles_id_2: "",
@@ -65,12 +65,25 @@ var ctrCustomersVl = new Vue({
             customers_service.submit(this.field).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
+                }else{
+                    that.errors = [];
+                    window.location.href = '/customers/list'
                 }
                 that.loading = false;
             });
         },
+        showError: function ( errors ){
+            return errors.join("<br/>");
+        },
         addRows: function () {
-            this.field.mst_bill_issue_destinations.push({});
+            this.field.mst_bill_issue_destinations.push({
+                prefectures_cd:"",
+                address1:"",
+                address2:"",
+                address3:"",
+                phone_number:"",
+                fax_number:""
+            });
         },
         convertKana: function (input , destination) {
             let that = this;
@@ -109,9 +122,7 @@ var ctrCustomersVl = new Vue({
             this.field.mst_bill_issue_destinations.splice(index, 1);
         },
         backHistory: function () {
-            customers_service.backHistory().then(function () {
-                window.location.href = listRoute;
-            });
+            window.history.back();
         }
     },
     mounted () {
