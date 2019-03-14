@@ -205,8 +205,6 @@
                             <label class="grid-form-label ">名称</label>
                             <Dropdown  id="relocation_municipal_office_cd"  name="relocation_municipal_office_cd"
                                     :options="field.dropdown_relocate_municipal_office_nm"
-                                     v-on:change="onChange($event)"
-                                     {{--v-on:filter="getDropdownValues"--}}
                                     :disabled="false"
                                      placeholder="">
                             </Dropdown>
@@ -217,11 +215,11 @@
             <!--Block 8-->
             <div class="grid-form">
                 <p class="header-collapse" >
-                    <a data-toggle="collapse" href="#b_mst_bill_issue_destinations" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <a data-toggle="collapse" href="#b_mst_educational_background" role="button" aria-expanded="false" aria-controls="collapseExample">
                         学歴
                     </a>
                 </p>
-                <div class="collapse" id="b_mst_bill_issue_destinations">
+                <div class="collapse" id="b_mst_educational_background">
                     <div class="wrapper-collapse pr-0">
                         <div class="grid-form items-collapse">
                             <div class="row">
@@ -254,7 +252,7 @@
                                         'filed'=>'job_duties',
                                         'filedId'=>"'mst_staff_job_experiences_job_duties'+index",
                                         'filedMode'=>"items.job_duties",
-                                        'filedErrors'=>"mst_staff_job_experiences",
+                                        'filedErrors'=>"mst_staff_job_experiences"
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -263,25 +261,27 @@
                                 <!--address2 address3-->
 
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',[
+                                    @include('Component.form.date-picker-vue',[
                                         'filed'=>'staff_tenure_start_dt',
                                         'class'=>'wd-350',
-                                        'filedId'=>"'mst_bill_issue_destinations_staff_tenure_start_dt'+index",
+                                        'filedId'=>"'mst_staff_job_experiences_staff_tenure_start_dt'+index",
                                         'filedMode'=>"items.staff_tenure_start_dt",
+                                        'filedErrors'=>"mst_staff_job_experiences"
                                     ])
                                 </div>
 
                                 <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.date-picker',[
+                                    @include('Component.form.date-picker-vue',[
                                         'filed'=>'staff_tenure_end_dt',
                                         'class'=>'wd-350',
-                                        'filedId'=>"'mst_bill_issue_destinations_staff_tenure_start_dt'+index",
+                                        'filedId'=>"'mst_staff_job_experiences_staff_tenure_start_dt'+index",
                                         'filedMode'=>"items.staff_tenure_end_dt",
+                                        'filedErrors'=>"mst_staff_job_experiences"
                                     ])
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_job_experiences')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -299,46 +299,54 @@
                         <div class="grid-form items-collapse" v-for="(items,index) in field.mst_staff_qualifications">
                             <div v-cloak class="row">
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.input-vue',[
+                                    @include('Component.form.select-vue',[
                                         'filed'=>'qualification_kind_id',
-                                        'filedId'=>"'mst_staff_qualifications_qualification_kind_id'+index",
+                                        'filedId'=>"'mst_staff_qualification_kind_id'+index",
                                         'filedMode'=>"items.qualification_kind_id",
+                                        'filedErrors'=>"mst_staff_qualifications",
+                                        'array'=>@$listQualificationKind
+
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.date-picker',[
+                                    @include('Component.form.date-picker-vue',[
                                         'filed'=>'acquisition_dt',
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_qualifications_acquisition_dt'+index",
                                         'filedMode'=>"items.acquisition_dt",
+                                        'filedErrors'=>"mst_staff_qualifications"
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <!--address2 address3-->
 
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',[
+                                    @include('Component.form.date-picker-vue',[
                                         'filed'=>'period_validity_start_dt',
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_qualifications_period_validity_start_dt'+index",
                                         'filedMode'=>"items.period_validity_start_dt",
+                                         'filedErrors'=>"mst_staff_qualifications"
+
                                     ])
                                 </div>
 
                                 <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.date-picker',[
+                                    @include('Component.form.date-picker-vue',[
                                         'filed'=>'period_validity_end_dt',
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_qualifications_period_validity_end_dt'+index",
                                         'filedMode'=>"items.period_validity_end_dt",
+                                        'filedErrors'=>"mst_staff_qualifications"
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.textarea',[
+                                    @include('Component.form.textarea-vue',[
                                         'filed'=>'qualification_notes',
                                         'filedId'=>"'mst_staff_qualifications_qualification_notes'+index",
                                         'filedMode'=>"items.qualification_notes",
+                                        'filedErrors'=>"mst_staff_qualifications"
                                     ])
                                 </div>
 
@@ -348,6 +356,7 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_qualifications_amounts'+index",
                                         'filedMode'=>"items.amounts",
+                                        'filedErrors'=>"mst_staff_qualifications"
                                     ])
                                     <div class="break-row-form"></div>
                                     <div v-if="index!=0">
@@ -356,6 +365,8 @@
                                             'class'=>'wd-350',
                                             'filedId'=>"'mst_staff_qualifications_payday'+index",
                                             'filedMode'=>"items.payday",
+                                            'filedErrors'=>"mst_staff_qualifications"
+
                                          ])
                                     </div>
                                 </div>

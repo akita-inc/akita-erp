@@ -45,20 +45,8 @@ var ctrStaffsVl = new Vue({
             dropdown_relocate_municipal_office_nm:"",
             educational_background:"",
             educational_background_dt:"",
-            mst_staff_job_experiences:[{}],
-            job_duties:"",
-            staff_tenure_start_dt:"",
-            staff_tenure_end_dt:"",
-            // mst_staff_qualifications:[{}],
-            // mst_staff_dependents:[{
-            //      birthday:"",
-            //      ast_nm:"",
-            //      last_nm_kana:"",
-            //      first_nm:"",
-            //      first_nm_kana:"",
-            //      sex_id:"",
-            //      social_security_number:"",
-            // }],
+            mst_staff_job_experiences:[],
+            mst_staff_qualifications:[],
         },
         errors:{},
         dateFormat: {
@@ -88,6 +76,7 @@ var ctrStaffsVl = new Vue({
         },
         getDropdownValues:function()
         {
+
         },
         onChange:function(event)
         {
@@ -95,7 +84,33 @@ var ctrStaffsVl = new Vue({
             console.log(event.target.value);
         },
         addRows: function (block) {
-            this.field[block].push({});
+            let value;
+            switch (block) {
+                case 'mst_staff_job_experiences':
+                    value = {
+                        job_duties: "",
+                        staff_tenure_start_dt: "",
+                        staff_tenure_end_dt: ""
+                    };
+                    break;
+                case 'mst_staff_qualifications':
+                    value = {
+                        qualification_kind_id: "",
+                        acquisition_dt: "",
+                        period_validity_start_dt: "",
+                        period_validity_end_dt:"",
+                        notes:"",
+                        amounts:"",
+                        payday:"",
+                        disp_number:"",
+                    };
+                    break;
+                case 'mst_staff_dependents':
+                    value = {
+                    };
+                    break;
+            }
+            this.field[block].push(value);
         },
         convertKana: function (input , destination) {
             let that = this;
@@ -119,8 +134,8 @@ var ctrStaffsVl = new Vue({
                 that.field.address2=addr.street;// 町域
             });
         },
-        removeRows: function (block,index) {
-            this.field[block].splice(index, 1);
+        removeRows: function (index) {
+            this.field.mst_staff_job_experiences.splice(index, 1);
         },
         backHistory: function () {
             staffs_service.backHistory().then(function () {
