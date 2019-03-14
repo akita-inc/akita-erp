@@ -80,7 +80,7 @@
                         @include('Component.form.input',[
                                 'filed'=>'customer_nm',
                                 'required'=>true,
-                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana\')" v-on:blur="onBlur" maxlength="200"'
+                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana\')"  maxlength="200"'
                             ])
                     </div>
 
@@ -92,7 +92,7 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                                 'filed'=>'customer_nm_formal',
-                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana_formal\')" v-on:blur="onBlur" maxlength="200"'
+                                'attr_input' => 'v-on:input="convertKana($event, \'customer_nm_kana_formal\')"  maxlength="200"'
                             ])
                     </div>
 
@@ -107,7 +107,7 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                                'filed'=>'person_in_charge_last_nm',
-                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_last_nm_kana\')" v-on:blur="onBlur" maxlength="25"'
+                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_last_nm_kana\')"  maxlength="25"'
                            ])
                     </div>
 
@@ -119,7 +119,7 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                                'filed'=>'person_in_charge_first_nm',
-                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_first_nm_kana\')" v-on:blur="onBlur" maxlength="25"'
+                               'attr_input' => 'v-on:input="convertKana($event, \'person_in_charge_first_nm_kana\')"  maxlength="25"'
                            ])
                     </div>
 

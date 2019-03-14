@@ -1,6 +1,5 @@
 import { Core } from '../package/yubinbango-core';
 import DatePicker from 'vue2-datepicker'
-import historykana from 'historykana'
 
 var ctrVehiclesVl = new Vue({
     el: '#ctrVehiclesVl',
