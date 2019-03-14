@@ -164,7 +164,6 @@ class CustomersController extends Controller
         $listDepositMonths=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_month'],'');
         $listConsumptionTaxCalcUnit=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
         $listRoundingMethod=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
-        $listDepositBankCd=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_bank_cd'],'');
         return view('customers.create', [
                                 'listPrefecture' => $listPrefecture,
                                 'customer_categories'=>$customer_categories,
@@ -173,7 +172,6 @@ class CustomersController extends Controller
                                 'listDepositMonths'=>$listDepositMonths,
                                 'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
                                 'listRoundingMethod'=>$listRoundingMethod,
-                                'listDepositBankCd'=>$listDepositBankCd,
                                 'listAccountTitles'=>$listAccountTitles
         ]);
     }
