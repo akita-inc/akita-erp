@@ -177,7 +177,28 @@ var ctrCustomersVl = new Vue({
                     that.loading = false;
                 });
             }
-        }
+        },
+        backToList: function () {
+            customers_service.backHistory().then(function () {
+                window.location.href = listRoute;
+            });
+        },
+        deleteCustomer: function(id){
+            var that = this;
+            customers_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    that.backToList();
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        customers_service.deleteCustomer(id).then((response) => {
+                            window.location.href = listRoute;
+                        });
+                    }
+                }
+            });
+        },
     },
     mounted () {
         this.loadFormEdit();

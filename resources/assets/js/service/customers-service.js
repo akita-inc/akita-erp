@@ -6,7 +6,7 @@ customers_service = {
             return error;
         });
     },
-    deleteSupplier: function (id) {
+    deleteCustomer: function (id) {
         return axios.get('/customers/delete/' + id).then(function (response) {
             return response.data;
         }).catch(function (error) {
