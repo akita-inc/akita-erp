@@ -240,6 +240,10 @@ class CustomersController extends Controller
         $arrayInsert = $data;
         $mst_bill_issue_destinations =  $data["mst_bill_issue_destinations"];
         unset($arrayInsert["mst_bill_issue_destinations"]);
+        unset($arrayInsert["adhibition_start_dt_edit"]);
+        unset($arrayInsert["adhibition_end_dt_edit"]);
+        unset($arrayInsert["adhibition_start_dt_history"]);
+        unset($arrayInsert["adhibition_end_dt_history"]);
         DB::beginTransaction();
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
         if( count($mst_bill_issue_destinations) > 0 ){
