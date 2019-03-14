@@ -22,14 +22,14 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true,'attr_input' => "max-length='5'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="2999/12/31"' ])
+                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-250','filed'=>'zip_cd'])
+                        @include('Component.form.input',['class'=>'wd-250','filed'=>'zip_cd','attr_input' => "max-length='7'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode()">〒 → 住所</button>
@@ -170,7 +170,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'insurer_number'])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'insurer_number','attr_input' => "max-length='3'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         @include('Component.form.input',['class'=>'wd-350','filed'=>'basic_pension_number'])
@@ -195,11 +195,21 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
                             <label class="grid-form-label pl-150">コード</label>
-                            @include('Component.form.select',['class'=>'wd-300','filed'=>'relocation_municipal_office_cd'])
+                            @include('Component.form.select',[
+                            'class'=>'wd-300',
+                            'filed'=>'relocation_municipal_office_cd',
+                            'array'=>$listReMunicipalOffice,
+                             'attr_input' => '@change="onChange($event)"'])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             <label class="grid-form-label ">名称</label>
-                            <input v-model="field.relocation_municipal_office_cd" name="relocation_municipal_office_cd" type="text" class="form-control" id="relocation_municipal_office_cd">
+                            <Dropdown  id="relocation_municipal_office_cd"  name="relocation_municipal_office_cd"
+                                    :options="field.dropdown_relocate_municipal_office_nm"
+                                     v-on:change="onChange($event)"
+                                     {{--v-on:filter="getDropdownValues"--}}
+                                    :disabled="false"
+                                     placeholder="">
+                            </Dropdown>
                         </div>
                     </div>
                 </div>
@@ -244,6 +254,7 @@
                                         'filed'=>'job_duties',
                                         'filedId'=>"'mst_staff_job_experiences_job_duties'+index",
                                         'filedMode'=>"items.job_duties",
+                                        'filedErrors'=>"mst_staff_job_experiences",
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>

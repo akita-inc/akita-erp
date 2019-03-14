@@ -194,6 +194,13 @@ staffs_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  loadListReMunicipalOffice: function loadListReMunicipalOffice() {
+    return axios.post('/staffs/api-v1/relocation-municipal-office').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 

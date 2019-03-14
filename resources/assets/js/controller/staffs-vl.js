@@ -3,6 +3,8 @@ import { Core } from '../package/yubinbango-core';
 import DatePicker from 'vue2-datepicker';
 import moment from "moment";
 import historykana from "historykana";
+import Dropdown from 'vue-simple-search-dropdown';
+
 var ctrStaffsVl = new Vue({
     el: '#ctrStaffsVl',
     data: {
@@ -32,19 +34,31 @@ var ctrStaffsVl = new Vue({
             notes:"",
             sex_id:"",
             birthday:"",
-            enter_day:"",
-            retire_day:"",
+            enter_date:"",
+            retire_date:"",
             insurer_number:"",
             basic_pension_number:"",
             person_insured_number:"",
             health_insurance_class:"",
             welfare_annuity_class:"",
             relocation_municipal_office_cd:"",
+            dropdown_relocate_municipal_office_nm:"",
             educational_background:"",
             educational_background_dt:"",
-            // mst_staff_job_experiences:[{}],
+            mst_staff_job_experiences:[{}],
+            job_duties:"",
+            staff_tenure_start_dt:"",
+            staff_tenure_end_dt:"",
             // mst_staff_qualifications:[{}],
-            // mst_staff_dependents:[{}],
+            // mst_staff_dependents:[{
+            //      birthday:"",
+            //      ast_nm:"",
+            //      last_nm_kana:"",
+            //      first_nm:"",
+            //      first_nm_kana:"",
+            //      sex_id:"",
+            //      social_security_number:"",
+            // }],
         },
         errors:{},
         dateFormat: {
@@ -64,7 +78,6 @@ var ctrStaffsVl = new Vue({
             staffs_service.submit(this.field).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
-
                 }
                 else
                 {
@@ -72,6 +85,14 @@ var ctrStaffsVl = new Vue({
                 }
                 that.loading = false;
             });
+        },
+        getDropdownValues:function()
+        {
+        },
+        onChange:function(event)
+        {
+            this.field.relocation_municipal_office_cd=event.target.value;
+            console.log(event.target.value);
         },
         addRows: function (block) {
             this.field[block].push({});
@@ -108,9 +129,14 @@ var ctrStaffsVl = new Vue({
         }
     },
     mounted () {
+        var that=this;
+        staffs_service.loadListReMunicipalOffice().then((response) => {
+            that.field.dropdown_relocate_municipal_office_nm =  response.data;
+        });
     },
     components: {
         DatePicker,
-        PulseLoader
+        PulseLoader,
+        Dropdown
     }
 });

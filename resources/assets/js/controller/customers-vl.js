@@ -13,7 +13,7 @@ var ctrCustomersVl = new Vue({
         loading:false,
         field:{
             adhibition_start_dt:"",
-            adhibition_end_dt:"2999/12/31",
+            adhibition_end_dt:"",
             customer_nm:"",
             customer_nm_kana:"",
             customer_nm_formal:"",

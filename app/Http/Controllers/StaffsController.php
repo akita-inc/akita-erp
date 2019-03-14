@@ -31,8 +31,11 @@ class StaffsController extends Controller
         "corp_cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:3|nullable",
+        "health_insurance_class"=>"integer|nullable",
+        "welfare_annuity_class"=>"integer|nullable",
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
+        "educational_background"=>"length:50|nullable",
         "job_duties"=>"length:50|nullable",
     ];
     public $labels = [];
@@ -178,10 +181,6 @@ class StaffsController extends Controller
             return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
         }
     }
-    protected  function insertGetId()
-    {
-
-    }
     public function create(Request $request)
     {
         $mGeneralPurposes = new MGeneralPurposes();
@@ -189,11 +188,13 @@ class StaffsController extends Controller
         $listPosition=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['position'], '');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
         $listSex=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['sex'],'');
+        $listReMunicipalOffice=$mGeneralPurposes->getCodeByDataKB(config('params.data_kb')['relocation_municipal_office_cd'],'');
         return view('staffs.create', [
             'listEmployPattern' => $listEmployPattern,
             'listPosition'=>$listPosition,
             'listPrefecture'=>$listPrefecture,
-            'listSex'=>$listSex
+            'listSex'=>$listSex,
+            'listReMunicipalOffice'=>$listReMunicipalOffice
         ]);
     }
 

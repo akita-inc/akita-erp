@@ -34,4 +34,11 @@ staffs_service = {
             return error;
         });
     },
+    loadListReMunicipalOffice: function () {
+        return axios.post('/staffs/api-v1/relocation-municipal-office').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
