@@ -18743,7 +18743,12 @@ var ctrCustomersVl = new Vue({
     loading: false,
     field: {
       adhibition_start_dt: "",
-      adhibition_end_dt: "2999/12/31",
+      adhibition_end_dt: $("#hd_adhibition_end_dt_default").val(),
+      adhibition_start_dt_edit: "",
+      adhibition_end_dt_edit: $("#hd_adhibition_end_dt_default").val(),
+      adhibition_start_dt_history: "",
+      adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
+      mst_customers_cd: "",
       customer_nm: "",
       customer_nm_kana: "",
       customer_nm_formal: "",
@@ -18882,6 +18887,12 @@ var ctrCustomersVl = new Vue({
     }
   },
   mounted: function mounted() {
+    var that = this;
+    $.each(this.field, function (key, value) {
+      if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
+        that.field[key] = $("#hd_" + key).val();
+      }
+    });
     this.autokana['customer_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm', '#customer_nm_kana', {
       katakana: true
     });

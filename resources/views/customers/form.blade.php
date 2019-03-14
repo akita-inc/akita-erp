@@ -10,7 +10,12 @@
                 <div class="d-flex">
                     <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
                 </div>
+
+                <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                 @if(!empty($customer))
+                    @foreach($customer as $key=>$value)
+                        <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
+                    @endforeach
                     <div class="d-flex ml-auto">
                         <button class="btn btn-danger text-white" onclick="detele()" type="button">{{ trans("common.button.delete") }}</button>
                     </div>
