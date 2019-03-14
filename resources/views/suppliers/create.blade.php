@@ -15,7 +15,7 @@
                     </div>
                     @if($mSupplier->id)
                     <div class="d-flex ml-auto">
-                        <button class="btn btn-danger text-white" onclick="detele()" type="button">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-danger text-white" v-on:click='deleteSupplier("{{$mSupplier->id}}")' type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                     @endif
                 </div>
@@ -180,7 +180,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="supplier_nm">仕入先名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" vvalue="{{ old('supplier_nm',$mSupplier->supplier_nm ? :'') }}" maxlength="200" >
+                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" value="{{ old('supplier_nm',$mSupplier->supplier_nm ? :'') }}" maxlength="200" >
                         </div>
                         @if ($errors->has('supplier_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -301,7 +301,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="accounting_person_in_charge_first_nm">経理担当者名(名）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_first_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" vvalue="{{ old('accounting_person_in_charge_first_nm', $mSupplier->accounting_person_in_charge_first_nm? : '')}}" maxlength="25">
+                            <input type="text" class="form-control {{$errors->has('accounting_person_in_charge_first_nm')? 'is-invalid': ''}}" id="accounting_person_in_charge_first_nm" name="accounting_person_in_charge_first_nm" value="{{ old('accounting_person_in_charge_first_nm', $mSupplier->accounting_person_in_charge_first_nm? : '')}}" maxlength="25">
                         </div>
                         @if ($errors->has('accounting_person_in_charge_first_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -627,6 +627,7 @@
 @section("scripts")
     <script>
         var listRoute = "{{route('suppliers.list')}}";
+        var deleteRoute = "{{route('suppliers.delete.post',['id' => $mSupplier->id])}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
@@ -634,12 +635,6 @@
         function registerHistoryLeft() {
             $('#form1').attr('action','{{route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'registerHistoryLeft'])}}');
             $('#form1').submit();
-        }
-        function detele() {
-            if(confirm(messages['MSG06001'])){
-                $('#form1').attr('action','{{route('suppliers.delete.post',['id' => $mSupplier->id])}}');
-                $('#form1').submit();
-            }
         }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/suppliers.js') }}" charset="utf-8"></script>

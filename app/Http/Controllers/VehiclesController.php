@@ -109,6 +109,7 @@ class VehiclesController extends Controller
         $mVehicle = new MVehicles();
 
         if ($request->getMethod() == 'POST') {
+            $this->backHistory();
             if ($mVehicle->deleteVehicle($id)) {
                 \Session::flash('message',Lang::get('messages.MSG10004'));
             } else {
@@ -174,7 +175,7 @@ class VehiclesController extends Controller
             $rules = [
                 'vehicles_cd'=>'required|one_byte_number|length:5',
                 'adhibition_start_dt'=>'required',
-                'door_number'=>'nullable|one_byte_number|length:5',
+                'door_number'=>'required|one_byte_number|length:5',
                 'registration_numbers'=>'required|length:50',
                 'mst_business_office_id'=>'required',
                 'vehicle_inspection_sticker_pdf'=>'nullable|mimes:pdf|max_mb:2',
@@ -242,7 +243,7 @@ class VehiclesController extends Controller
             $validator = Validator::make($data, $rules,$customMessages,$mVehicle->label);
             if($mode=='registerHistoryLeft'){
                 $validator->after(function ($validator) use ($data,$mVehicle){
-                    if (Carbon::parse($data['adhibition_start_dt_new']) < Carbon::parse($mVehicle->adhibition_start_dt)){
+                    if (Carbon::parse($data['adhibition_start_dt_new']) <= Carbon::parse($mVehicle->adhibition_start_dt)){
                         $validator->errors()->add('adhibition_start_dt_new',Lang::get('messages.MSG02015'));
                     }
                     if (Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {

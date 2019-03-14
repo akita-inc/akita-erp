@@ -28,6 +28,20 @@ var ctrVehiclesVl = new Vue({
                 $('#address2').val(addr.street);// 町域
             });
         },
+        deleteVehicle: function(id){
+            vehicles_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.backHistory();
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        $('#form1').attr('action',deleteRoute);
+                        $('#form1').submit();
+                    }
+                }
+            });
+        },
         backHistory: function () {
             vehicles_service.backHistory().then(function () {
                 window.location.href = listRoute;
