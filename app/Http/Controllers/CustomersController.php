@@ -24,6 +24,7 @@ class CustomersController extends Controller
 {
     use ListTrait,FormTrait;
     public $table = "mst_customers";
+    public $allNullAble = false;
 
     public $ruleValid = [
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
@@ -197,8 +198,14 @@ class CustomersController extends Controller
     protected function validAfter( &$validator,$data ){
         $mst_bill_issue_destinations = $data["mst_bill_issue_destinations"];
         $errorsEx = [];
+        $this->allNullAble = true;
         if( count($mst_bill_issue_destinations) > 0 ){
             foreach ($mst_bill_issue_destinations as $index => $items){
+                foreach ($items as $valueChk){
+                    if(!empty($valueChk)){
+                        $this->allNullAble = false;
+                    }
+                }
                 $validatorEx = Validator::make( $items, [
                     'zip_cd'  => 'required|zip_code|nullable|length:7',
                     'address1'  => 'nullable|length:20',
@@ -212,7 +219,7 @@ class CustomersController extends Controller
                 }
             }
         }
-        if( count($errorsEx) > 0){
+        if( count($errorsEx) > 0 && !$this->allNullAble){
             $validator->errors()
                 ->add("mst_bill_issue_destinations",$errorsEx);
         }
@@ -246,7 +253,7 @@ class CustomersController extends Controller
         unset($arrayInsert["adhibition_end_dt_history"]);
         DB::beginTransaction();
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
-        if( count($mst_bill_issue_destinations) > 0 ){
+        if( count($mst_bill_issue_destinations) > 0 && !$this->allNullAble ){
             foreach ($mst_bill_issue_destinations as $bill_issue_destination){
                 $arrayInsertBill = [
                     'mst_customers' => $id,

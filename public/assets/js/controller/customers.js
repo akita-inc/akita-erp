@@ -18777,7 +18777,14 @@ var ctrCustomersVl = new Vue({
       rounding_method_id: "",
       discount_rate: "",
       except_g_drive_bill_fg: "",
-      mst_bill_issue_destinations: [],
+      mst_bill_issue_destinations: [{
+        prefectures_cd: "",
+        address1: "",
+        address2: "",
+        address3: "",
+        phone_number: "",
+        fax_number: ""
+      }],
       deposit_bank_cd: "",
       mst_account_titles_id: "",
       mst_account_titles_id_2: "",
@@ -18890,6 +18897,10 @@ var ctrCustomersVl = new Vue({
     var that = this;
     $.each(this.field, function (key, value) {
       if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
+        if (key == "hd_adhibition_start_dt" || key == "hd_adhibition_end_dt") {
+          that.field[key + "_edit"] = $("#hd_" + key).val();
+        }
+
         that.field[key] = $("#hd_" + key).val();
       }
     });
