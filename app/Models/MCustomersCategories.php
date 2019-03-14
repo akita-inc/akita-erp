@@ -26,7 +26,7 @@ class MCustomersCategories  extends Model
             ->get();
         $result = array("" => '==選択==');
         foreach (json_decode(json_encode($data), true) as $key=>$item){
-            $result[$item['id']] = $item['data_kb'];
+            $result[$item['id']] = $item['name'];
         }
         return $result;
     }
