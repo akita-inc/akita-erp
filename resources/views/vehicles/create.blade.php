@@ -41,7 +41,7 @@
             <div class="text-danger w-100">*　は必須入力の項目です。</div>
             <div class="w-100 alert-area">
                 @include('Layouts.alert')
-                <input type="hidden" id="adhibition_start_dt" value="{{  old('adhibition_start_dt') ?? $mVehicle->adhibition_start_dt }}">
+                <input type="hidden" id="adhibition_start_dt" value="{{  old('adhibition_start_dt', $mVehicle->adhibition_start_dt ? : '') }}">
             </div>
             @if($mVehicle->id)
             <div class="grid-form">
@@ -49,7 +49,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="vehicles_cd">車両コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" readonly maxlength="5" value="{{ old('vehicles_cd') ?? $mVehicle->vehicles_cd }}">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" readonly maxlength="5" value="{{ old('vehicles_cd', $mVehicle->vehicles_cd ? : '') }}">
                         </div>
                         <span class="note">
                             ※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。
@@ -93,7 +93,7 @@
                                                  :input-name="'adhibition_end_dt'"
                                     >
                                     </date-picker>
-                                    <input type="hidden" id="adhibition_end_dt" value="{{ old('adhibition_end_dt') ?? $mVehicle->adhibition_end_dt }}">
+                                    <input type="hidden" id="adhibition_end_dt" value="{{ old('adhibition_end_dt', $mVehicle->adhibition_end_dt ? : '') }}">
                                 @else
                                     <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/',  $mVehicle->adhibition_end_dt ?? config('params.adhibition_end_dt_default'))}}">
                                 @endif
@@ -142,7 +142,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100">
                             <label class="col-md-5 col-sm-5 required" for="vehicles_cd">車両コード</label>
                             <div class="col-md-7 col-sm-7 wrap-control">
-                                <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" maxlength="5" value="{{ old('vehicles_cd') ?? $mVehicle->vehicles_cd}}">
+                                <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" maxlength="5" value="{{ old('vehicles_cd', $mVehicle->vehicles_cd ? : '') }}">
                             </div>
                             @if ($errors->has('vehicles_cd'))
                                 <span class="invalid-feedback d-block" role="alert">
@@ -185,7 +185,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="door_number">ドア番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('door_number')? 'is-invalid': ''}}" id="door_number" name="door_number" value="{{ old('door_number') ??  $mVehicle->door_number }}">
+                            <input type="text" class="form-control w-50 {{$errors->has('door_number')? 'is-invalid': ''}}" id="door_number" name="door_number" value="{{ old('door_number',  $mVehicle->door_number ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('door_number'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -212,7 +212,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="registration_numbers">自動車登録番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('registration_numbers')? 'is-invalid': ''}}" id="registration_numbers" name="registration_numbers" value="{{ old('registration_numbers') ?? $mVehicle->registration_numbers }}" maxlength="50" >
+                            <input type="text" class="form-control {{$errors->has('registration_numbers')? 'is-invalid': ''}}" id="registration_numbers" name="registration_numbers" value="{{ old('registration_numbers', $mVehicle->registration_numbers ? : '') }}" maxlength="50" >
                         </div>
                         @if ($errors->has('registration_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -288,8 +288,8 @@
                         <label class="col-md-2 col-sm-5 label-input-file {{$mVehicle->vehicle_inspection_sticker_pdf ? 'pr-0': ''}}" for="vehicle_inspection_sticker_pdf">車検証PDF{{$mVehicle->vehicle_inspection_sticker_pdf ? '（１ファイル）': ''}}</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="vehicle_inspection_sticker_pdf" name="vehicle_inspection_sticker_pdf" class="input-file" onchange='uploadFile(this)' value="{{old('vehicle_inspection_sticker_pdf') ?? $mVehicle->vehicle_inspection_sticker_pdf}}">
-                                <span id="vehicle_inspection_sticker_pdf_file_name" class="w-100 form-control">{{old('vehicle_inspection_sticker_pdf') ?? $mVehicle->vehicle_inspection_sticker_pdf}}</span>
+                                <input type="file" id="vehicle_inspection_sticker_pdf" name="vehicle_inspection_sticker_pdf" class="input-file" onchange='uploadFile(this)' value="{{old('vehicle_inspection_sticker_pdf', $mVehicle->vehicle_inspection_sticker_pdf ? : '') }}">
+                                <span id="vehicle_inspection_sticker_pdf_file_name" class="w-100 form-control">{{old('vehicle_inspection_sticker_pdf', $mVehicle->vehicle_inspection_sticker_pdf? :'')}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -325,13 +325,13 @@
                                          :input-name="'registration_dt'"
                             >
                             </date-picker>
-                            <input type="hidden" class="form-control {{$errors->has('registration_dt')? 'is-invalid': ''}}" id="registration_dt" value="{{ old('registration_dt')?? $mVehicle->registration_dt }}" >
+                            <input type="hidden" class="form-control {{$errors->has('registration_dt')? 'is-invalid': ''}}" id="registration_dt" value="{{ old('registration_dt', $mVehicle->registration_dt ? : '') }}" >
                         </div>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="first_year_registration_dt">初年度登録年月</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('first_year_registration_dt')? 'is-invalid': ''}}" id="first_year_registration_dt" name="first_year_registration_dt" value="{{ old('first_year_registration_dt') || $mVehicle->first_year_registration_dt}}" maxlength="6">
+                            <input type="text" class="form-control w-25 {{$errors->has('first_year_registration_dt')? 'is-invalid': ''}}" id="first_year_registration_dt" name="first_year_registration_dt" value="{{ old('first_year_registration_dt',$mVehicle->first_year_registration_dt ? : '') }}" maxlength="6">
                             ※例：201903など
                         </div>
                         @if ($errors->has('first_year_registration_dt'))
@@ -406,7 +406,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="seating_capacity">定員</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('seating_capacity')? 'is-invalid': ''}}" id="seating_capacity" name="seating_capacity" value="{{ old('seating_capacity') ?? $mVehicle->seating_capacity }}" maxlength="2">
+                            <input type="text" class="form-control w-50 {{$errors->has('seating_capacity')? 'is-invalid': ''}}" id="seating_capacity" name="seating_capacity" value="{{ old('seating_capacity', $mVehicle->seating_capacity ? : '') }}" maxlength="2">
                         </div>
                         @if ($errors->has('seating_capacity'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -417,7 +417,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="max_loading_capacity">最大積載量（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('max_loading_capacity')? 'is-invalid': ''}}" id="max_loading_capacity" name="max_loading_capacity" value="{{ old('max_loading_capacity') ?? $mVehicle->max_loading_capacity}}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('max_loading_capacity')? 'is-invalid': ''}}" id="max_loading_capacity" name="max_loading_capacity" value="{{ old('max_loading_capacity', $mVehicle->max_loading_capacity ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('max_loading_capacity'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -429,7 +429,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_body_weights">車両重量（Kg）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_body_weights')? 'is-invalid': ''}}" id="vehicle_body_weights" name="vehicle_body_weights" value="{{ old('vehicle_body_weights') ?? $mVehicle->vehicle_body_weights}}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_body_weights')? 'is-invalid': ''}}" id="vehicle_body_weights" name="vehicle_body_weights" value="{{ old('vehicle_body_weights', $mVehicle->vehicle_body_weights ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('vehicle_body_weights'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -440,7 +440,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_total_weights">車両総重量（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_total_weights')? 'is-invalid': ''}}" id="vehicle_total_weights" name="vehicle_total_weights" value="{{ old('vehicle_total_weights') ?? $mVehicle->vehicle_total_weights}}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_total_weights')? 'is-invalid': ''}}" id="vehicle_total_weights" name="vehicle_total_weights" value="{{ old('vehicle_total_weights', $mVehicle->vehicle_total_weights ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('vehicle_total_weights'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -452,7 +452,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="frame_numbers">車台番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('frame_numbers')? 'is-invalid': ''}}" id="frame_numbers" name="frame_numbers" value="{{ old('frame_numbers') ?? $mVehicle->frame_numbers }}" maxlength="10">
+                            <input type="text" class="form-control w-50 {{$errors->has('frame_numbers')? 'is-invalid': ''}}" id="frame_numbers" name="frame_numbers" value="{{ old('frame_numbers', $mVehicle->frame_numbers ? : '') }}" maxlength="10">
                         </div>
                         @if ($errors->has('frame_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -463,7 +463,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_lengths">長さ（cm）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_lengths')? 'is-invalid': ''}}" id="vehicle_lengths" name="vehicle_lengths" value="{{ old('vehicle_lengths') ?? $mVehicle->vehicle_lengths}}" maxlength="4">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_lengths')? 'is-invalid': ''}}" id="vehicle_lengths" name="vehicle_lengths" value="{{ old('vehicle_lengths', $mVehicle->vehicle_lengths ? : '') }}" maxlength="4">
                         </div>
                         @if ($errors->has('vehicle_lengths'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -475,7 +475,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_widths">幅（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_widths')? 'is-invalid': ''}}" id="vehicle_widths" name="vehicle_widths" value="{{ old('vehicle_widths') ?? $mVehicle->vehicle_widths }}" maxlength="3">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_widths')? 'is-invalid': ''}}" id="vehicle_widths" name="vehicle_widths" value="{{ old('vehicle_widths', $mVehicle->vehicle_widths ? : '') }}" maxlength="3">
                         </div>
                         @if ($errors->has('vehicle_widths'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -486,7 +486,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_heights">高さ（cm）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_heights')? 'is-invalid': ''}}" id="vehicle_heights" name="vehicle_heights" value="{{ old('vehicle_heights') ?? $mVehicle->vehicle_heights }}" maxlength="3">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_heights')? 'is-invalid': ''}}" id="vehicle_heights" name="vehicle_heights" value="{{ old('vehicle_heights', $mVehicle->vehicle_heights ? : '') }}" maxlength="3">
                         </div>
                         @if ($errors->has('vehicle_heights'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -498,7 +498,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="axle_loads_ff">前前軸重（Kg）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_ff')? 'is-invalid': ''}}" id="axle_loads_ff" name="axle_loads_ff" value="{{ old('axle_loads_ff') ?? $mVehicle->axle_loads_ff }}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_ff')? 'is-invalid': ''}}" id="axle_loads_ff" name="axle_loads_ff" value="{{ old('axle_loads_ff', $mVehicle->axle_loads_ff ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('axle_loads_ff'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -509,7 +509,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="axle_loads_fr">前後軸重（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_fr')? 'is-invalid': ''}}" id="axle_loads_fr" name="axle_loads_fr" value="{{ old('axle_loads_fr')  ?? $mVehicle->axle_loads_fr}}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_fr')? 'is-invalid': ''}}" id="axle_loads_fr" name="axle_loads_fr" value="{{ old('axle_loads_fr', $mVehicle->axle_loads_fr ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('axle_loads_fr'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -521,7 +521,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="axle_loads_rf">後前軸重（Kg）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_rf')? 'is-invalid': ''}}" id="axle_loads_rf" name="axle_loads_rf" value="{{ old('axle_loads_rf') ?? $mVehicle->axle_loads_rf }}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_rf')? 'is-invalid': ''}}" id="axle_loads_rf" name="axle_loads_rf" value="{{ old('axle_loads_rf', $mVehicle->axle_loads_rf ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('axle_loads_rf'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -532,7 +532,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="axle_loads_rr">後後軸重（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_rr')? 'is-invalid': ''}}" id="axle_loads_rr" name="axle_loads_rr" value="{{ old('axle_loads_rr')  ?? $mVehicle->axle_loads_rr}}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('axle_loads_rr')? 'is-invalid': ''}}" id="axle_loads_rr" name="axle_loads_rr" value="{{ old('axle_loads_rr', $mVehicle->axle_loads_rr ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('axle_loads_rr'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -544,7 +544,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_types">型式</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_types')? 'is-invalid': ''}}" id="vehicle_types" name="vehicle_types" value="{{ old('vehicle_types') ?? $mVehicle->vehicle_types}}" maxlength="50">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_types')? 'is-invalid': ''}}" id="vehicle_types" name="vehicle_types" value="{{ old('vehicle_types', $mVehicle->vehicle_types ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('vehicle_types'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -555,7 +555,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="engine_typese">原動機の型式</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('engine_typese')? 'is-invalid': ''}}" id="engine_typese" name="engine_typese" value="{{  old('engine_typese') ?? $mVehicle->engine_typese }}" maxlength="50">
+                            <input type="text" class="form-control w-50 {{$errors->has('engine_typese')? 'is-invalid': ''}}" id="engine_typese" name="engine_typese" value="{{  old('engine_typese', $mVehicle->engine_typese ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('engine_typese'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -567,7 +567,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="total_displacements">総排気量（L）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('total_displacements')? 'is-invalid': ''}}" id="total_displacements" name="total_displacements" value="{{ old('total_displacements') ?? $mVehicle->total_displacements }}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('total_displacements')? 'is-invalid': ''}}" id="total_displacements" name="total_displacements" value="{{ old('total_displacements', $mVehicle->total_displacements ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('total_displacements'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -578,7 +578,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="rated_outputs">定格出力（KW）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('rated_outputs')? 'is-invalid': ''}}" id="rated_outputs" name="rated_outputs" value="{{ old('rated_outputs') ?? $mVehicle->rated_outputs}}" maxlength="5">
+                            <input type="text" class="form-control w-50 {{$errors->has('rated_outputs')? 'is-invalid': ''}}" id="rated_outputs" name="rated_outputs" value="{{ old('rated_outputs', $mVehicle->rated_outputs ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('rated_outputs'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -605,7 +605,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="type_designation_numbers">型式指定番号</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('type_designation_numbers')? 'is-invalid': ''}}" id="type_designation_numbers" name="type_designation_numbers" value="{{ old('type_designation_numbers') ?? $mVehicle->type_designation_numbers}}" maxlength="50">
+                            <input type="text" class="form-control w-50 {{$errors->has('type_designation_numbers')? 'is-invalid': ''}}" id="type_designation_numbers" name="type_designation_numbers" value="{{ old('type_designation_numbers', $mVehicle->type_designation_numbers ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('type_designation_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -617,7 +617,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="id_segment_numbers">識別区分番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('id_segment_numbers')? 'is-invalid': ''}}" id="id_segment_numbers" name="id_segment_numbers" value="{{ old('id_segment_numbers') ?? $mVehicle->id_segment_numbers}}" maxlength="50">
+                            <input type="text" class="form-control w-50 {{$errors->has('id_segment_numbers')? 'is-invalid': ''}}" id="id_segment_numbers" name="id_segment_numbers" value="{{ old('id_segment_numbers', $mVehicle->id_segment_numbers ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('id_segment_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -631,7 +631,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="owner_nm">氏名または名称</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-100 {{$errors->has('owner_nm')? 'is-invalid': ''}}" id="owner_nm" name="owner_nm" value="{{ old('owner_nm') ?? $mVehicle->owner_nm }}" maxlength="50">
+                            <input type="text" class="form-control w-100 {{$errors->has('owner_nm')? 'is-invalid': ''}}" id="owner_nm" name="owner_nm" value="{{ old('owner_nm', $mVehicle->owner_nm ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('owner_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -644,7 +644,7 @@
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
                         <label class="col-md-2 col-sm-5" for="owner_address">住所</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-100 {{$errors->has('owner_address')? 'is-invalid': ''}}" id="owner_address" name="owner_address" value="{{  old('owner_address') ?? $mVehicle->owner_address}}" maxlength="200">
+                            <input type="text" class="form-control w-100 {{$errors->has('owner_address')? 'is-invalid': ''}}" id="owner_address" name="owner_address" value="{{  old('owner_address', $mVehicle->owner_address ? : '') }}" maxlength="200">
                         </div>
                         @if ($errors->has('owner_address'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -657,7 +657,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="user_nm">氏名または名称</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-100 {{$errors->has('user_nm')? 'is-invalid': ''}}" id="user_nm" name="user_nm" value="{{ old('user_nm') ?? $mVehicle->user_nm}}" maxlength="50">
+                            <input type="text" class="form-control w-100 {{$errors->has('user_nm')? 'is-invalid': ''}}" id="user_nm" name="user_nm" value="{{ old('user_nm', $mVehicle->user_nm ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('user_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -672,7 +672,7 @@
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
                         <label class="col-md-2 col-sm-5" for="user_address">住所</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-100 {{$errors->has('user_address')? 'is-invalid': ''}}" id="user_address" name="user_address" value="{{ old('user_address') ?? $mVehicle->user_address}}" maxlength="200">
+                            <input type="text" class="form-control w-100 {{$errors->has('user_address')? 'is-invalid': ''}}" id="user_address" name="user_address" value="{{ old('user_address', $mVehicle->user_address ? : '') }}" maxlength="200">
                         </div>
                         @if ($errors->has('user_address'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -684,7 +684,7 @@
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
                         <label class="col-md-2 col-sm-5" for="user_base_locations">本拠の位置</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-100 {{$errors->has('user_base_locations')? 'is-invalid': ''}}" id="user_base_locations" name="user_base_locations" value="{{ old('user_base_locations') ?? $mVehicle->user_base_locations}}" maxlength="200">
+                            <input type="text" class="form-control w-100 {{$errors->has('user_base_locations')? 'is-invalid': ''}}" id="user_base_locations" name="user_base_locations" value="{{ old('user_base_locations', $mVehicle->user_base_locations ? : '') }}" maxlength="200">
                         </div>
                         @if ($errors->has('user_base_locations'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -705,7 +705,7 @@
                                          :input-name="'expiry_dt'"
                             >
                             </date-picker>
-                            <input type="hidden" class="form-control {{$errors->has('expiry_dt')? 'is-invalid': ''}}" id="expiry_dt" value="{{ old('expiry_dt') ?? $mVehicle->expiry_dt}}" >
+                            <input type="hidden" class="form-control {{$errors->has('expiry_dt')? 'is-invalid': ''}}" id="expiry_dt" value="{{ old('expiry_dt', $mVehicle->expiry_dt ? : '') }}" >
                         </div>
                         @if ($errors->has('expiry_dt'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -718,7 +718,7 @@
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
                         <label class="col-md-2 col-sm-5" for="car_inspections_notes">車検証備考</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
-                            <textarea class="form-control w-100 {{$errors->has('car_inspections_notes')? 'is-invalid': ''}}" rows="3" id="car_inspections_notes" name="car_inspections_notes" maxlength="50">{{ old('car_inspections_notes') ?? $mVehicle->car_inspections_notes }}</textarea>
+                            <textarea class="form-control w-100 {{$errors->has('car_inspections_notes')? 'is-invalid': ''}}" rows="3" id="car_inspections_notes" name="car_inspections_notes" maxlength="50">{{ old('car_inspections_notes', $mVehicle->car_inspections_notes ? :'' )}}</textarea>
                         </div>
                         @if ($errors->has('car_inspections_notes'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -733,7 +733,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="digital_tachograph_numbers">デジタコ車載器No.</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-75 {{$errors->has('digital_tachograph_numbers')? 'is-invalid': ''}}" id="digital_tachograph_numbers" name="digital_tachograph_numbers" value="{{ old('digital_tachograph_numbers') ?? $mVehicle->digital_tachograph_numbers}}" maxlength="50">
+                            <input type="text" class="form-control w-75 {{$errors->has('digital_tachograph_numbers')? 'is-invalid': ''}}" id="digital_tachograph_numbers" name="digital_tachograph_numbers" value="{{ old('digital_tachograph_numbers', $mVehicle->digital_tachograph_numbers ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('digital_tachograph_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -744,7 +744,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="etc_numbers">ETC車載器No.</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-75 {{$errors->has('etc_numbers')? 'is-invalid': ''}}" id="etc_numbers" name="etc_numbers" value="{{ old('etc_numbers') ?? $mVehicle->etc_numbers}}" maxlength="19">
+                            <input type="text" class="form-control w-75 {{$errors->has('etc_numbers')? 'is-invalid': ''}}" id="etc_numbers" name="etc_numbers" value="{{ old('etc_numbers', $mVehicle->etc_numbers ? : '') }}" maxlength="19">
                         </div>
                         @if ($errors->has('etc_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -756,7 +756,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="drive_recorder_numbers">ドラレコNo.</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-75 {{$errors->has('drive_recorder_numbers')? 'is-invalid': ''}}" id="drive_recorder_numbers" name="drive_recorder_numbers" value="{{ old('drive_recorder_numbers') ?? $mVehicle->drive_recorder_numbers}}" maxlength="10">
+                            <input type="text" class="form-control w-75 {{$errors->has('drive_recorder_numbers')? 'is-invalid': ''}}" id="drive_recorder_numbers" name="drive_recorder_numbers" value="{{ old('drive_recorder_numbers', $mVehicle->drive_recorder_numbers ? : '') }}" maxlength="10">
                         </div>
                         @if ($errors->has('drive_recorder_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -778,7 +778,7 @@
                         <label class="col-md-5 col-sm-5">冷蔵冷凍機の有無</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="refrigerator_fg" name="refrigerator_fg" value="1">
+                                <input type="checkbox" class="custom-control-input" id="refrigerator_fg" name="refrigerator_fg" value="1" {{old('refrigerator_fg') || $mVehicle->refrigerator_fg ? 'checked': ''}}>
                                 <label class="d-block custom-control-label" for="refrigerator_fg">あり</label>
                             </div>
                         </div>
@@ -807,7 +807,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="transmissions_notes">ミッション備考</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('transmissions_notes')? 'is-invalid': ''}}" id="transmissions_notes" name="transmissions_notes" value="{{ old('transmissions_notes') ?? $mVehicle->transmissions_notes}}" maxlength="50">
+                            <input type="text" class="form-control {{$errors->has('transmissions_notes')? 'is-invalid': ''}}" id="transmissions_notes" name="transmissions_notes" value="{{ old('transmissions_notes', $mVehicle->transmissions_notes ? : '') }}" maxlength="50">
                         </div>
                         @if ($errors->has('transmissions_notes'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -831,7 +831,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="tank_capacity_1">燃料タンクの容量１</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('tank_capacity_1')? 'is-invalid': ''}}" id="tank_capacity_1" name="tank_capacity_1" value="{{ old('tank_capacity_1') ?? $mVehicle->tank_capacity_1}}" maxlength="3">
+                            <input type="text" class="form-control {{$errors->has('tank_capacity_1')? 'is-invalid': ''}}" id="tank_capacity_1" name="tank_capacity_1" value="{{ old('tank_capacity_1', $mVehicle->tank_capacity_1 ? : '') }}" maxlength="3">
                         </div>
                         @if ($errors->has('tank_capacity_1'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -842,7 +842,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="tank_capacity_2">燃料タンクの容量２</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('tank_capacity_2')? 'is-invalid': ''}}" id="tank_capacity_2" name="tank_capacity_2" value="{{ old('tank_capacity_2') ?? $mVehicle->tank_capacity_2}}" maxlength="3">
+                            <input type="text" class="form-control {{$errors->has('tank_capacity_2')? 'is-invalid': ''}}" id="tank_capacity_2" name="tank_capacity_2" value="{{ old('tank_capacity_2', $mVehicle->tank_capacity_2 ? : '') }}" maxlength="3">
                         </div>
                         @if ($errors->has('tank_capacity_2'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -855,7 +855,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="loading_inside_dimension_capacity_length">長さ（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_length')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_length" name="loading_inside_dimension_capacity_length" value="{{ old('loading_inside_dimension_capacity_length') ?? $mVehicle->loading_inside_dimension_capacity_length}}" maxlength="5">
+                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_length')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_length" name="loading_inside_dimension_capacity_length" value="{{ old('loading_inside_dimension_capacity_length', $mVehicle->loading_inside_dimension_capacity_length ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('loading_inside_dimension_capacity_length'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -866,7 +866,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="loading_inside_dimension_capacity_width">幅（cm）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_width')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_width" name="loading_inside_dimension_capacity_width" value="{{ old('loading_inside_dimension_capacity_width') ?? $mVehicle->loading_inside_dimension_capacity_width}}" maxlength="5">
+                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_width')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_width" name="loading_inside_dimension_capacity_width" value="{{ old('loading_inside_dimension_capacity_width', $mVehicle->loading_inside_dimension_capacity_width ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('loading_inside_dimension_capacity_width'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -878,7 +878,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="loading_inside_dimension_capacity_height">高さ（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_height')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_height" name="loading_inside_dimension_capacity_height" value="{{ old('loading_inside_dimension_capacity_height') || $mVehicle->loading_inside_dimension_capacity_height}}" maxlength="5">
+                            <input type="text" class="form-control {{$errors->has('loading_inside_dimension_capacity_height')? 'is-invalid': ''}}" id="loading_inside_dimension_capacity_height" name="loading_inside_dimension_capacity_height" value="{{ old('loading_inside_dimension_capacity_height',$mVehicle->loading_inside_dimension_capacity_height ? : '') }}" maxlength="5">
                         </div>
                         @if ($errors->has('loading_inside_dimension_capacity_height'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -892,7 +892,7 @@
                         <label class="col-md-5 col-sm-5">融雪</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="snowmelt_fg" name="snowmelt_fg" value="1">
+                                <input type="checkbox" class="custom-control-input" id="snowmelt_fg" name="snowmelt_fg" value="1" {{old('snowmelt_fg') || $mVehicle->snowmelt_fg ? 'checked': ''}}>
                                 <label class="d-block custom-control-label" for="snowmelt_fg">あり</label>
                             </div>
                         </div>
@@ -901,7 +901,7 @@
                         <label class="col-md-4 col-sm-4">観音扉</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="double_door_fg" name="double_door_fg" value="1">
+                                <input type="checkbox" class="custom-control-input" id="double_door_fg" name="double_door_fg" value="1" {{old('double_door_fg') || $mVehicle->double_door_fg ? 'checked': ''}}>
                                 <label class="d-block custom-control-label" for="double_door_fg">あり</label>
                             </div>
                         </div>
@@ -911,7 +911,7 @@
                         <label class="col-md-5 col-sm-5">床・鉄板</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_iron_plate_fg" name="floor_iron_plate_fg" value="1">
+                                <input type="checkbox" class="custom-control-input" id="floor_iron_plate_fg" name="floor_iron_plate_fg" value="1" {{old('floor_iron_plate_fg') || $mVehicle->floor_iron_plate_fg ? 'checked': ''}}>
                                 <label class="d-block custom-control-label" for="floor_iron_plate_fg">あり</label>
                             </div>
                         </div>
@@ -920,7 +920,7 @@
                         <label class="col-md-4 col-sm-4">床・佐川仕様埋込式</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_sagawa_embedded_fg" name="floor_sagawa_embedded_fg" value="1">
+                                <input type="checkbox" class="custom-control-input" id="floor_sagawa_embedded_fg" name="floor_sagawa_embedded_fg" value="1" {{old('floor_sagawa_embedded_fg') || $mVehicle->floor_sagawa_embedded_fg ? 'checked': ''}}>
                                 <label class="d-block custom-control-label" for="floor_sagawa_embedded_fg">あり</label>
                             </div>
                         </div>
@@ -930,7 +930,7 @@
                         <label class="col-md-5 col-sm-5">床・ローラー</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_roller_fg" name="floor_roller_fg" value="1">
+                                <input type="checkbox" class="custom-control-input" id="floor_roller_fg" name="floor_roller_fg" value="1" {{old('floor_roller_fg') || $mVehicle->floor_roller_fg ? 'checked': ''}}>
                                 <label class="d-block custom-control-label" for="floor_roller_fg">あり</label>
                             </div>
                         </div>
@@ -939,7 +939,7 @@
                         <label class="col-md-4 col-sm-4">床・ジョルダー及びコンベアー</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_joloda_conveyor_fg" name="floor_joloda_conveyor_fg" value="1">
+                                <input type="checkbox" class="custom-control-input" id="floor_joloda_conveyor_fg" name="floor_joloda_conveyor_fg" value="1" {{old('floor_joloda_conveyor_fg') || $mVehicle->floor_joloda_conveyor_fg ? 'checked': ''}}>
                                 <label class="d-block custom-control-label" for="floor_joloda_conveyor_fg">あり</label>
                             </div>
                         </div>
@@ -967,7 +967,7 @@
                                          :input-name="'vehicle_delivery_dt'"
                             >
                             </date-picker>
-                            <input type="hidden" class="form-control {{$errors->has('vehicle_delivery_dt')? 'is-invalid': ''}}" id="vehicle_delivery_dt" value="{{ old('vehicle_delivery_dt') || $mVehicle->vehicle_delivery_dt}}" >
+                            <input type="hidden" class="form-control {{$errors->has('vehicle_delivery_dt')? 'is-invalid': ''}}" id="vehicle_delivery_dt" value="{{ old('vehicle_delivery_dt',$mVehicle->vehicle_delivery_dt ? : '') }}" >
                         </div>
                     </div>
                     <div class="break-row-form"></div>
@@ -1001,7 +1001,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="personal_insurance_prices">対人保険料（円）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('personal_insurance_prices')? 'is-invalid': ''}}" id="personal_insurance_prices" name="personal_insurance_prices" value="{{ old('personal_insurance_prices') ?? $mVehicle->personal_insurance_prices }}" maxlength="6">
+                            <input type="text" class="form-control w-50 {{$errors->has('personal_insurance_prices')? 'is-invalid': ''}}" id="personal_insurance_prices" name="personal_insurance_prices" value="{{ old('personal_insurance_prices', $mVehicle->personal_insurance_prices ? : '') }}" maxlength="6">
                         </div>
                         @if ($errors->has('personal_insurance_prices'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1012,7 +1012,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="property_damage_insurance_prices">対物保険料（円）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('property_damage_insurance_prices')? 'is-invalid': ''}}" id="property_damage_insurance_prices" name="property_damage_insurance_prices" value="{{ old('property_damage_insurance_prices') ?? $mVehicle->property_damage_insurance_prices }}" maxlength="6">
+                            <input type="text" class="form-control w-25 {{$errors->has('property_damage_insurance_prices')? 'is-invalid': ''}}" id="property_damage_insurance_prices" name="property_damage_insurance_prices" value="{{ old('property_damage_insurance_prices', $mVehicle->property_damage_insurance_prices ? : '') }}" maxlength="6">
                         </div>
                         @if ($errors->has('property_damage_insurance_prices'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1025,7 +1025,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_insurance_prices">車両保険料（円）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_insurance_prices')? 'is-invalid': ''}}" id="vehicle_insurance_prices" name="vehicle_insurance_prices" value="{{ old('vehicle_insurance_prices') ?? $mVehicle->vehicle_insurance_prices }}" maxlength="6">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_insurance_prices')? 'is-invalid': ''}}" id="vehicle_insurance_prices" name="vehicle_insurance_prices" value="{{ old('vehicle_insurance_prices', $mVehicle->vehicle_insurance_prices ? : '') }}" maxlength="6">
                         </div>
                         @if ($errors->has('vehicle_insurance_prices'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1039,8 +1039,8 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_fronts">写真　前</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_fronts" name="picture_fronts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_fronts') ?? $mVehicle->picture_fronts}}">
-                                <span id="picture_fronts_file_name" class="w-100 form-control">{{old('picture_fronts') ?? $mVehicle->picture_fronts}}</span>
+                                <input type="file" id="picture_fronts" name="picture_fronts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_fronts', $mVehicle->picture_fronts ? : '') }}">
+                                <span id="picture_fronts_file_name" class="w-100 form-control">{{old('picture_fronts', $mVehicle->picture_fronts ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1065,8 +1065,8 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_rights">写真　側面右</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_rights" name="picture_rights" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rights') ?? $mVehicle->picture_rights}}">
-                                <span id="picture_rights_file_name" class="w-100 form-control">{{old('picture_rights') ?? $mVehicle->picture_rights}}</span>
+                                <input type="file" id="picture_rights" name="picture_rights" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rights', $mVehicle->picture_rights ? : '') }}">
+                                <span id="picture_rights_file_name" class="w-100 form-control">{{old('picture_rights', $mVehicle->picture_rights ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1091,8 +1091,8 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_lefts">写真　側面左</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_lefts" name="picture_lefts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_lefts') ?? $mVehicle->picture_lefts}}">
-                                <span id="picture_lefts_file_name" class="w-100 form-control">{{old('picture_lefts') ?? $mVehicle->picture_lefts}}</span>
+                                <input type="file" id="picture_lefts" name="picture_lefts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_lefts', $mVehicle->picture_lefts ? : '') }}">
+                                <span id="picture_lefts_file_name" class="w-100 form-control">{{old('picture_lefts', $mVehicle->picture_lefts ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1117,8 +1117,8 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_rears">写真　後</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_rears" name="picture_rears" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rears') ?? $mVehicle->picture_rears}}">
-                                <span id="picture_rears_file_name" class="w-100 form-control">{{old('picture_rears') ?? $mVehicle->picture_rears}}</span>
+                                <input type="file" id="picture_rears" name="picture_rears" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rears', $mVehicle->picture_rears ? : '') }}">
+                                <span id="picture_rears_file_name" class="w-100 form-control">{{old('picture_rears', $mVehicle->picture_rears ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1142,7 +1142,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="acquisition_amounts">取得金額（円）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('acquisition_amounts')? 'is-invalid': ''}}" id="acquisition_amounts" name="acquisition_amounts" maxlength="10" value="{{ old('acquisition_amounts')  ?? $mVehicle->acquisition_amounts}}">
+                            <input type="text" class="form-control w-50 {{$errors->has('acquisition_amounts')? 'is-invalid': ''}}" id="acquisition_amounts" name="acquisition_amounts" maxlength="10" value="{{ old('acquisition_amounts', $mVehicle->acquisition_amounts ? : '') }}">
                         </div>
                         @if ($errors->has('acquisition_amounts'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1153,7 +1153,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="acquisition_amortization">償却回数（回）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('acquisition_amortization')? 'is-invalid': ''}}" id="acquisition_amortization" name="acquisition_amortization" maxlength="3" value="{{ old('acquisition_amortization') ?? $mVehicle->acquisition_amortization }}">
+                            <input type="text" class="form-control w-25 {{$errors->has('acquisition_amortization')? 'is-invalid': ''}}" id="acquisition_amortization" name="acquisition_amortization" maxlength="3" value="{{ old('acquisition_amortization', $mVehicle->acquisition_amortization ? : '') }}">
                         </div>
                         @if ($errors->has('acquisition_amortization'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1165,7 +1165,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="durable_years">耐用年数（年）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('durable_years')? 'is-invalid': ''}}" id="durable_years" name="durable_years" maxlength="3" value="{{ old('durable_years') ?? $mVehicle->durable_years}}">
+                            <input type="text" class="form-control w-50 {{$errors->has('durable_years')? 'is-invalid': ''}}" id="durable_years" name="durable_years" maxlength="3" value="{{ old('durable_years', $mVehicle->durable_years ? : '') }}">
                         </div>
                         @if ($errors->has('durable_years'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1176,7 +1176,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="tire_sizes">タイヤサイズ</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('tire_sizes')? 'is-invalid': ''}}" id="tire_sizes" name="tire_sizes" maxlength="10" value="{{ old('tire_sizes') ?? $mVehicle->tire_sizes}}">
+                            <input type="text" class="form-control {{$errors->has('tire_sizes')? 'is-invalid': ''}}" id="tire_sizes" name="tire_sizes" maxlength="10" value="{{ old('tire_sizes', $mVehicle->tire_sizes ? : '') }}">
                         </div>
                         @if ($errors->has('tire_sizes'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1188,7 +1188,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="battery_sizes">バッテリーサイズ</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('battery_sizes')? 'is-invalid': ''}}" id="battery_sizes" name="battery_sizes" maxlength="10" value="{{ old('battery_sizes') ?? $mVehicle->battery_sizes}}">
+                            <input type="text" class="form-control w-50 {{$errors->has('battery_sizes')? 'is-invalid': ''}}" id="battery_sizes" name="battery_sizes" maxlength="10" value="{{ old('battery_sizes', $mVehicle->battery_sizes ? : '') }}">
                         </div>
                         @if ($errors->has('battery_sizes'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1208,14 +1208,14 @@
                                          :input-name="'dispose_dt'"
                             >
                             </date-picker>
-                            <input type="hidden" class="form-control {{$errors->has('dispose_dt')? 'is-invalid': ''}}" id="dispose_dt" value="{{ old('dispose_dt') }}" >
+                            <input type="hidden" class="form-control {{$errors->has('dispose_dt')? 'is-invalid': ''}}" id="dispose_dt" value="{{ old('dispose_dt',$mVehicle->notes  ? : '') }}" >
                         </div>
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
                         <label class="col-md-2 col-sm-2" for="notes">備考</label>
                         <div class="col-md-10 col-sm-10 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('notes')? 'is-invalid': ''}}" id="notes" name="notes" value="{{ old('notes') ?? $mVehicle->notes}}">
+                            <input type="text" class="form-control {{$errors->has('notes')? 'is-invalid': ''}}" id="notes" name="notes" value="{{ old('notes', $mVehicle->notes ? : '') }}">
                         </div>
                     </div>
                 </div>
