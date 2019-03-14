@@ -177,6 +177,7 @@ class CustomersController extends Controller
                 if($customerLast->id == $id){
                     $flagRegisterHistory = true;
                 }
+                $customer = $customer->toArray();
             }
         }
         return view('customers.form', [
