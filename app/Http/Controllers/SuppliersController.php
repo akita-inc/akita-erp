@@ -152,6 +152,11 @@ class SuppliersController extends Controller
                 unset($rules['adhibition_start_dt']);
                 $rules['adhibition_start_dt_new'] ='required';
             }
+            if($mode=='edit'){
+                $mSupplier->label['adhibition_start_dt'] = $mSupplier->label['adhibition_start_dt_edit'];
+                $mSupplier->label['adhibition_end_dt'] = $mSupplier->label['adhibition_end_dt_edit'];
+                $rules['adhibition_end_dt'] ='required';
+            }
             $validator = Validator::make($data, $rules,array(),$mSupplier->label);
             if($mode=='registerHistoryLeft'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
@@ -164,8 +169,10 @@ class SuppliersController extends Controller
                 });
             }elseif ($mode=='edit'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
-                    if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
-                        $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
+                    if($data['adhibition_end_dt']!=""){
+                        if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
+                            $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
+                        }
                     }
                 });
             }else{
@@ -195,7 +202,7 @@ class SuppliersController extends Controller
                         $mSupplier->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
                         $mSupplier->save();
                         $mSupplier = new MSupplier();
-                    }elseif ($mode=='edit' && $flagLasted){
+                    }elseif ($mode=='edit'){
                         if($data["adhibition_start_dt"]!= $mSupplier->adhibition_start_dt){
                             $mSupplier->editSupplier($mSupplier->id, $data["adhibition_start_dt"]);
                         }

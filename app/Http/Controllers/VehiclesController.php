@@ -232,6 +232,11 @@ class VehiclesController extends Controller
                 unset($rules['adhibition_start_dt']);
                 $rules['adhibition_start_dt_new'] ='required';
             }
+            if($mode=='edit'){
+                $mVehicle->label['adhibition_start_dt'] = $mVehicle->label['adhibition_start_dt_edit'];
+                $mVehicle->label['adhibition_end_dt'] = $mVehicle->label['adhibition_end_dt_edit'];
+                $rules['adhibition_end_dt'] ='required';
+            }
             $customMessages = [
                 'vehicle_inspection_sticker_pdf.mimes' => Lang::get('messages.MSG02017'),
                 'picture_fronts.mimes' => Lang::get('messages.MSG02018'),

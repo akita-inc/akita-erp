@@ -74,6 +74,11 @@
                                 >
                                 </date-picker>
                             </div>
+                            @if ($errors->has('adhibition_start_dt'))
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
+                                </span>
+                            @endif
                         </div>
                         <div class="col row grid-col h-100">
                             <label class="col-7" for="adhibition_end_dt">適用終了日（更新用）</label>
@@ -93,12 +98,13 @@
                                     <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/',  $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default'))}}">
                                 @endif
                             </div>
-                        </div>
-                        @if ($errors->has('adhibition_start_dt'))
-                            <span class="invalid-feedback d-block grid-col" role="alert">
-                                    <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
+                            @if ($errors->has('adhibition_end_dt'))
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $errors->first('adhibition_end_dt') }}</strong>
                                 </span>
-                        @endif
+                            @endif
+                        </div>
+
                         @if($flagLasted)
                         <div class="break-row-form"></div>
                         <div class="col row grid-col h-100">
