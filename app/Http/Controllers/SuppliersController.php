@@ -202,7 +202,7 @@ class SuppliersController extends Controller
                         $mSupplier->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
                         $mSupplier->save();
                         $mSupplier = new MSupplier();
-                    }elseif ($mode=='edit' && $flagLasted){
+                    }elseif ($mode=='edit'){
                         if($data["adhibition_start_dt"]!= $mSupplier->adhibition_start_dt){
                             $mSupplier->editSupplier($mSupplier->id, $data["adhibition_start_dt"]);
                         }
