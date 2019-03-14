@@ -16,6 +16,7 @@ Route::group(['name' => 'customers', 'prefix'=>'/customers', 'middleware' => ['a
         Route::post('/getItems','CustomersController@getItems')->name("customers.getItems");
         Route::any('/checkIsExist/{id}','CustomersController@checkIsExist')->name("customers.checkIsExist");
         Route::any('/submit','CustomersController@submit')->name("customers.validForm");
+        Route::any('/getListBill/{id}','CustomersController@getListBill')->name("customers.getListBill");
         Route::any('back-history', ['uses' => 'CustomersController@backHistory']);
     });
 });

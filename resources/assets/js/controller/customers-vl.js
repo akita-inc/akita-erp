@@ -9,6 +9,8 @@ var ctrCustomersVl = new Vue({
     data: {
         lang:lang_date_picker,
         loading:false,
+        customer_edit:0,
+        customer_id:null,
         field:{
             adhibition_start_dt:"",
             adhibition_end_dt:$("#hd_adhibition_end_dt_default").val(),
@@ -41,11 +43,19 @@ var ctrCustomersVl = new Vue({
             deposit_day:"",
             deposit_method_id:"",
             deposit_method_notes:"",
+            business_start_dt:"",
             consumption_tax_calc_unit_id:"",
             rounding_method_id:"",
             discount_rate:"",
             except_g_drive_bill_fg:"",
-            mst_bill_issue_destinations:[],
+            mst_bill_issue_destinations:[{
+                prefectures_cd:"",
+                address1:"",
+                address2:"",
+                address3:"",
+                phone_number:"",
+                fax_number:""
+            }],
             deposit_bank_cd:"",
             mst_account_titles_id: "",
             mst_account_titles_id_2: "",
@@ -146,6 +156,28 @@ var ctrCustomersVl = new Vue({
         backHistory: function () {
             window.history.back();
         },
+        loadFormEdit: function () {
+            let that = this;
+            if($("#hd_customer_edit").val() == 1){
+                this.loading = true;
+                that.customer_edit = 1;
+                that.customer_id = $("#hd_id").val();
+                $.each(this.field,function (key,value) {
+                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
+                        if(key == "adhibition_start_dt" || key == "adhibition_end_dt"){
+                            that.field[key + "_edit"] = $("#hd_"+key).val();
+                        }
+                        that.field[key] = $("#hd_"+key).val();
+                    }
+                });
+                customers_service.getListBill(that.customer_id).then((response) => {
+                    if(response.data != null){
+                        that.field.mst_bill_issue_destinations = response.data;
+                    }
+                    that.loading = false;
+                });
+            }
+        },
         backToList: function () {
             customers_service.backHistory().then(function () {
                 window.location.href = listRoute;
@@ -169,13 +201,7 @@ var ctrCustomersVl = new Vue({
         },
     },
     mounted () {
-        let that = this;
-        $.each(this.field,function (key,value) {
-            if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
-                that.field[key] = $("#hd_"+key).val();
-            }
-        });
-
+        this.loadFormEdit();
         this.autokana ['customer_nm'] = AutoKana.bind('#customer_nm', '#customer_nm_kana', { katakana: true });
         this.autokana ['customer_nm_formal'] = AutoKana.bind('#customer_nm_formal', '#customer_nm_kana_formal', { katakana: true });
         this.autokana ['person_in_charge_last_nm'] = AutoKana.bind('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', { katakana: true });

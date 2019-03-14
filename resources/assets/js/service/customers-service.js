@@ -34,4 +34,11 @@ customers_service = {
             return error;
         });
     },
+    getListBill: function (id) {
+        return axios.get('/customers/api-v1/getListBill/'+id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
