@@ -108,7 +108,10 @@ customers_service = {
       return error;
     });
   },
-  submit: function submit(data) {
+  submit: function submit(data,id) {
+      if(id!=undefined && id!=null){
+          data["id"] = id;
+      }
     return axios.post('/customers/api-v1/submit', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
@@ -124,6 +127,13 @@ customers_service = {
   },
   backHistory: function backHistory() {
     return axios.get('/customers/api-v1/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getListBill: function getListBill(id) {
+    return axios.get('/customers/api-v1/getListBill/' + id).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;

@@ -254,6 +254,7 @@ class CustomersController extends Controller
         DB::beginTransaction();
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
         if( count($mst_bill_issue_destinations) > 0 && !$this->allNullAble ){
+            $disp_number = 1;
             foreach ($mst_bill_issue_destinations as $bill_issue_destination){
                 $arrayInsertBill = [
                     'mst_customers' => $id,
@@ -264,15 +265,38 @@ class CustomersController extends Controller
                     'bill_address4' => $bill_issue_destination['address3'],
                     'bill_phone_number' => $bill_issue_destination['phone_number'],
                     'bill_fax_number' => $bill_issue_destination['fax_number'],
+                    'disp_number' => $disp_number,
                 ];
                 if(!DB::table("mst_bill_issue_destinations")->insert($arrayInsertBill)){
                     DB::rollBack();
                     return false;
                 }
+                $disp_number++;
             }
         }
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
+    }
+
+    public function getListBill( $id ){
+        $listBills = DB::table("mst_bill_issue_destinations")
+            ->select(
+                "id",
+                "bill_zip_cd as zip_cd",
+                "bill_address1 as prefectures_cd",
+                "bill_address1 as prefectures_cd",
+                "bill_address2 as address1",
+                "bill_address3 as address2",
+                "bill_address4 as address3",
+                "bill_phone_number as phone_number",
+                "bill_fax_number as fax_number"
+            )
+            ->where("mst_customers","=",$id)
+            ->get();
+        if($listBills){
+            $listBills->toArray();
+        }
+        return Response()->json(array('success'=>true, 'data'=> $listBills));
     }
 }

@@ -12,8 +12,15 @@
                 </div>
 
                 <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
+                <input type="hidden" id="hd_customer_edit" value="{!! !empty($customer) ? 1:0 !!}">
                 @if(!empty($customer))
                     @foreach($customer as $key=>$value)
+                        @if($key == 'adhibition_start_dt'
+                            || $key == 'adhibition_end_dt'
+                            || $key == 'business_start_dt'
+                        )
+                            @php($value = date("Y/m/d",strtotime($value)))
+                            @endif
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
@@ -46,7 +53,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "maxlength='5'"])
+                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($customer) ? 'readonly=""':'')])
                             @if($flagRegisterHistory)
                                 <span>
                                     {{trans("customers.create.mst_customers_cd_description")}}
