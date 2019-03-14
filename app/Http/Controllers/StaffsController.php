@@ -178,7 +178,10 @@ class StaffsController extends Controller
             return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
         }
     }
+    protected  function insertGetId()
+    {
 
+    }
     public function create(Request $request)
     {
         $mGeneralPurposes = new MGeneralPurposes();
