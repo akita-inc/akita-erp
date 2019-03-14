@@ -360,7 +360,7 @@
                         <label class="col-md-4 col-sm-4" for="private_commercial_id">自家用・事業用の別</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="private_commercial_id" name="private_commercial_id">
-                                @foreach($listVehicleClassification as $key => $value)
+                                @foreach($listPrivateCommercial as $key => $value)
                                     <option value="{{$key}}" {{$key==$mVehicle->private_commercial_id || $key==old('private_commercial_id') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
