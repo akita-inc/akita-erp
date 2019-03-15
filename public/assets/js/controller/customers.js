@@ -18929,7 +18929,7 @@ var ctrCustomersVl = new Vue({
           }
         });
         customers_service.getListBill(that.customer_id).then(function (response) {
-          if (response.data != null) {
+          if (response.data != null && response.data.length > 0) {
             that.field.mst_bill_issue_destinations = response.data;
           }
 

@@ -272,10 +272,9 @@ class CustomersController extends Controller
                 ]);
             }
         }
-
+        $arrayIDInsert = [];
         if( count($mst_bill_issue_destinations) > 0 && !$this->allNullAble ){
             $disp_number = 1;
-            $arrayIDInsert = [];
             foreach ($mst_bill_issue_destinations as $bill_issue_destination){
                 $arrayInsertBill = [
                     'mst_customers' => $id,
@@ -302,10 +301,14 @@ class CustomersController extends Controller
                 }
                 $disp_number++;
             }
-            DB::table("mst_bill_issue_destinations")
-                ->whereNotIn("id",$arrayIDInsert )
-                ->where("mst_customers",$id)
-                ->delete();
+        }
+        if(isset( $data["id"]) && $data["id"]) {
+            $deleteBill = DB::table("mst_bill_issue_destinations")
+                ->where("mst_customers", $id);
+            if (!empty($arrayIDInsert)) {
+                $deleteBill = $deleteBill->whereNotIn("id", $arrayIDInsert);
+            }
+            $deleteBill->delete();
         }
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
