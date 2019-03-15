@@ -33,6 +33,7 @@ return [
     ],
     'create' => [
         'title' => '得意先　新規追加',
+        'title_edit' => '得意先　修正',
         'mst_customers_cd_description' => '※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。',
         'field' => [
             "mst_customers_cd" => "得意先コード",

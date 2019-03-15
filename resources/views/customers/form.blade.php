@@ -1,6 +1,6 @@
 @extends('Layouts.app')
-@section('title',trans("customers.create.title"))
-@section('title_header',trans("customers.create.title"))
+@section('title',trans("customers.create.title".(!empty($customer) ? "_edit":"")))
+@section('title_header',trans("customers.create.title".(!empty($customer) ? "_edit":"")))
 @section('content')
     @php $prefix='customers.create.field.' @endphp
     <div class="wrapper-container" id="ctrCustomersVl">
