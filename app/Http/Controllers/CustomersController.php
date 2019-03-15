@@ -267,8 +267,8 @@ class CustomersController extends Controller
         }else{
             $id = DB::table($this->table)->insertGetId( $arrayInsert );
             if(isset($data["clone"])){
-                DB::table($this->table)->where("id","=",$id)->update([
-                        "adhibition_start_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d')
+                DB::table($this->table)->where("id","=",$data["id"])->update([
+                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d')
                 ]);
             }
         }
