@@ -35,7 +35,7 @@
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
                             <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                             @if($flagRegisterHistory)
-                                <button class="btn btn-primary btn-submit m-auto" type="button" onclick="registerHistoryLeft()" >
+                                <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
                                     {{ trans("common.button.register_history_left") }}
                                 </button>
                             @endif

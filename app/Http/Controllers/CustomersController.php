@@ -238,8 +238,12 @@ class CustomersController extends Controller
             $strWhere = $strWhereStartDate." > ".$strWhereEndDateDB." or ".$strWhereEndDate." < ".$strWhereStartDateDB;
             $countExist = MCustomers::query()
                 ->where('mst_customers_cd','=',$data['mst_customers_cd'])
-                ->whereRaw("!(".$strWhere.")")
-                ->count();
+                ->whereRaw("!(".$strWhere.")");
+
+            if(isset($data["id"]) && $data["id"]){
+                $countExist = $countExist->where("id","<>",$data["id"]);
+            }
+            $countExist = $countExist->count();
             if( $countExist > 0 ){
                 $validator->errors()->add('mst_customers_cd',Lang::get('messages.MSG10003'));
             }
@@ -254,10 +258,24 @@ class CustomersController extends Controller
         unset($arrayInsert["adhibition_end_dt_edit"]);
         unset($arrayInsert["adhibition_start_dt_history"]);
         unset($arrayInsert["adhibition_end_dt_history"]);
+        unset($arrayInsert["id"]);
+        unset($arrayInsert["clone"]);
         DB::beginTransaction();
-        $id = DB::table($this->table)->insertGetId( $arrayInsert );
+        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"]) ){
+            $id = $data["id"];
+            DB::table($this->table)->where("id","=",$id)->update( $arrayInsert );
+        }else{
+            $id = DB::table($this->table)->insertGetId( $arrayInsert );
+            if(isset($data["clone"])){
+                DB::table($this->table)->where("id","=",$id)->update([
+                        "adhibition_start_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d')
+                ]);
+            }
+        }
+
         if( count($mst_bill_issue_destinations) > 0 && !$this->allNullAble ){
             $disp_number = 1;
+            $arrayIDInsert = [];
             foreach ($mst_bill_issue_destinations as $bill_issue_destination){
                 $arrayInsertBill = [
                     'mst_customers' => $id,
@@ -270,12 +288,24 @@ class CustomersController extends Controller
                     'bill_fax_number' => $bill_issue_destination['fax_number'],
                     'disp_number' => $disp_number,
                 ];
-                if(!DB::table("mst_bill_issue_destinations")->insert($arrayInsertBill)){
+                if(isset($bill_issue_destination["id"]) && $bill_issue_destination["id"] && !isset($data["clone"])){
+                    DB::table("mst_bill_issue_destinations")
+                        ->where("id","=",$bill_issue_destination["id"])->update($arrayInsertBill);
+                    $arrayIDInsert[] = $flagUpdate = $bill_issue_destination["id"];
+                }else{
+                    $flagUpdate = DB::table("mst_bill_issue_destinations")->insertGetId($arrayInsertBill);
+                    $arrayIDInsert[] = $flagUpdate;
+                }
+                if(!$flagUpdate){
                     DB::rollBack();
                     return false;
                 }
                 $disp_number++;
             }
+            DB::table("mst_bill_issue_destinations")
+                ->whereNotIn("id",$arrayIDInsert )
+                ->where("mst_customers",$id)
+                ->delete();
         }
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
