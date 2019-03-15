@@ -393,7 +393,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="phone_number">電話番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('phone_number')? 'is-invalid': ''}}" id="phone_number" name="phone_number" value="{{ old('phone_number', $mSupplier->phone_number ? : '')}}" maxlength="20">
+                            <input type="text" class="form-control w-75 {{$errors->has('phone_number')? 'is-invalid': ''}}" id="phone_number" name="phone_number" value="{{ old('phone_number', $mSupplier->phone_number ? : '')}}" maxlength="20">
                         </div>
                         @if ($errors->has('phone_number'))
                             <span class="invalid-feedback d-block" role="alert">
