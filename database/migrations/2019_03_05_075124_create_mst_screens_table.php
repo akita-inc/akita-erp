@@ -15,7 +15,9 @@ class CreateMstScreensTable extends Migration
     {
         Schema::create('mst_screens', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('screen_category_id');
             $table->string('screen_nm',50);
+            $table->integer('disp_number');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
