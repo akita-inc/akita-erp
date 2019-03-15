@@ -42,6 +42,20 @@
 .w-69{
     width:69%!important;
 }
+.label-file-image{
+    margin-left: 170px;
+    background-color:rgb(217,217,217)!important;
+    color:#1d2124!important;
+    text-align: center!important;
+}
+.file-image {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
 .grid-form-label {
     position: absolute;
     top: -20px;

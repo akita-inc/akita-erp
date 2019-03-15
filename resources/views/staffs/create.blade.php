@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <form class="form-inline" role="form">
+        <form class="form-inline" role="form" enctype="multipart/form-data">
             <div class="text-danger">
                 {{ trans("common.description-form.indicates_required_items") }}
             </div>
@@ -61,7 +61,7 @@
                         @include('Component.form.input',[
                              'filed'=>'last_nm',
                              'required'=>true,
-                             'attr_input' => 'v-on:input="convertKana($event, \'last_nm_kana\')" v-on:blur="onBlur"'
+                             'attr_input' => 'v-on:input="convertKana($event, \'last_nm_kana\')"'
                          ])
                     </div>
 
@@ -69,7 +69,7 @@
                         @include('Component.form.input',[
                               'filed'=>'first_nm',
                               'required'=>true,
-                              'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')" v-on:blur="onBlur"'
+                              'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')"'
                           ])
                     </div>
 
@@ -205,8 +205,8 @@
                             <label class="grid-form-label ">名称</label>
                             <Dropdown  id="relocation_municipal_office_cd"  name="relocation_municipal_office_cd"
                                     :options="field.dropdown_relocate_municipal_office_nm"
-                                    :disabled="false"
-                                     placeholder="">
+                                       :disabled="false"
+                                      >
                             </Dropdown>
                         </div>
                     </div>
@@ -256,8 +256,6 @@
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
-
-
                                 <!--address2 address3-->
 
                                 <div class="col-md-5 col-sm-12">
@@ -483,7 +481,7 @@
                     </div>
                 </div>
             </div>
-            <!--Block 12-->
+            <!--Block 12 not yet-->
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_staff_driver_license" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -507,6 +505,7 @@
                                         'class'=>'wd-350',
                                        'filedId'=>"mst_staff_driver_license_color_id",
                                        'filedMode'=>"items.drivers_license_color_id",
+                                       'array'=>$listDriversLicenseColors,
                                    ])
                                 </div>
 
@@ -538,9 +537,11 @@
                                         'filedMode'=>"items.drivers_license_picture",
                                     ])
                                     <div class="wrap-control-group">
-                                        <button type="file" class="btn btn-secondary float-left">{{trans($prefix.'btn_browse_license_picture')}}</button>
-                                        <button type="file" class="btn btn-dark float-right">{{trans($prefix.'btn_delete_file_license_picture')}}</button>
+                                        <input type="file" name="file" id="file" ref="file" v-on:change="onFileChange"  class="file-image" />
+                                        <label  class="label-file-image" for="file">{{trans($prefix.'btn_browse_license_picture')}}</label>
+                                        <button type="button" class="btn btn-dark float-right">{{trans($prefix.'btn_delete_file_license_picture')}}</button>
                                     </div>
+
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
@@ -548,6 +549,7 @@
                                          'filed'=>'drivers_license_divisions_1',
                                          'filedId'=>"mst_staff_drivers_license_divisions_1",
                                          'filedMode'=>"items.drivers_license_divisions_1",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -555,6 +557,7 @@
                                          'filed'=>'drivers_license_divisions_2',
                                          'filedId'=>"mst_staff_drivers_license_divisions_2",
                                          'filedMode'=>"items.drivers_license_divisions_2",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -563,6 +566,7 @@
                                          'filed'=>'drivers_license_divisions_3',
                                          'filedId'=>"mst_staff_drivers_license_divisions_3",
                                          'filedMode'=>"items.drivers_license_divisions_3",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -570,6 +574,7 @@
                                          'filed'=>'drivers_license_divisions_4',
                                          'filedId'=>"mst_staff_drivers_license_divisions_4",
                                          'filedMode'=>"items.drivers_license_divisions_4",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -578,6 +583,7 @@
                                          'filed'=>'drivers_license_divisions_5',
                                          'filedId'=>"mst_staff_drivers_license_divisions_5",
                                          'filedMode'=>"items.drivers_license_divisions_5",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -585,6 +591,7 @@
                                          'filed'=>'drivers_license_divisions_6',
                                          'filedId'=>"mst_staff_drivers_license_divisions_6",
                                          'filedMode'=>"items.drivers_license_divisions_6",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -593,6 +600,7 @@
                                          'filed'=>'drivers_license_divisions_7',
                                          'filedId'=>"mst_staff_drivers_license_divisions_7",
                                          'filedMode'=>"items.drivers_license_divisions_7",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -600,6 +608,7 @@
                                          'filed'=>'drivers_license_divisions_8',
                                          'filedId'=>"mst_staff_drivers_license_divisions_8",
                                          'filedMode'=>"items.drivers_license_divisions_8",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -608,6 +617,7 @@
                                          'filed'=>'drivers_license_divisions_9',
                                          'filedId'=>"mst_staff_drivers_license_divisions_9",
                                          'filedMode'=>"items.drivers_license_divisions_9",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -615,6 +625,7 @@
                                          'filed'=>'drivers_license_divisions_10',
                                          'filedId'=>"mst_staff_drivers_license_divisions_10",
                                          'filedMode'=>"items.drivers_license_divisions_10",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -623,6 +634,7 @@
                                          'filed'=>'drivers_license_divisions_11',
                                          'filedId'=>"mst_staff_drivers_license_divisions_11",
                                          'filedMode'=>"items.drivers_license_divisions_11",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -630,6 +642,7 @@
                                          'filed'=>'drivers_license_divisions_12',
                                          'filedId'=>"mst_staff_drivers_license_divisions_12",
                                          'filedMode'=>"items.drivers_license_divisions_12",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -638,6 +651,7 @@
                                          'filed'=>'drivers_license_divisions_13',
                                          'filedId'=>"mst_staff_drivers_license_divisions_13",
                                          'filedMode'=>"items.drivers_license_divisions_13",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -645,6 +659,7 @@
                                          'filed'=>'drivers_license_divisions_14',
                                          'filedId'=>"mst_staff_drivers_license_divisions_14",
                                          'filedMode'=>"items.drivers_license_divisions_14",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <!--address2 address3-->
@@ -704,6 +719,7 @@
                                         'filed'=>'belong_company_id',
                                         'filedId'=>"mst_others_belong_company_id",
                                         'filedMode'=>"items.belong_company_id",
+                                        'array'=>$listBelongCompanies,
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -712,6 +728,7 @@
                                         'class'=>'w-75',
                                         'filedId'=>"mst_others_occupation_id",
                                         'filedMode'=>"items.occupation_id",
+                                        'array'=>$listOccupation,
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -721,6 +738,7 @@
                                         'filed'=>'mst_business_office_id',
                                         'filedId'=>"mst_others_mst_business_office_id",
                                         'filedMode'=>"items.mst_business_office_id",
+                                        'array'=>$mBusinessOffices
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -729,6 +747,7 @@
                                         'class'=>'w-75',
                                         'filedId'=>"mst_others_depertment_id",
                                         'filedMode'=>"items.depertment_id",
+                                        'array'=>$listDepartments
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>

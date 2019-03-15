@@ -174,6 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+
 
     ],
 
@@ -227,6 +229,8 @@ return [
         'Common' => App\Helpers\Common::class,
         'TimeFunction' => App\Helpers\TimeFunction::class,
         'UserFunction' => App\Helpers\UserFunction::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+
     ],
 
 ];
