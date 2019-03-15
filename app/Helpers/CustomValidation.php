@@ -155,4 +155,10 @@ class CustomValidation {
             return str_replace(':max' , $parameters[0], $message);
         });
     }
+
+    public static function validateDecimal(){
+        Validator::extend('decimal_custom', function($attribute, $value, $parameters, $validator) {
+            return preg_match("/^([0-9\s\.]*)$/", $value);
+        });
+    }
 }
