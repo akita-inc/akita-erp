@@ -733,7 +733,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="digital_tachograph_numbers">デジタコ車載器No.</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-75 {{$errors->has('digital_tachograph_numbers')? 'is-invalid': ''}}" id="digital_tachograph_numbers" name="digital_tachograph_numbers" value="{{ old('digital_tachograph_numbers', !is_null($mVehicle->digital_tachograph_numbers) ? $mVehicle->digital_tachograph_numbers : '') }}" maxlength="50">
+                            <input type="text" class="form-control w-75 {{$errors->has('digital_tachograph_numbers')? 'is-invalid': ''}}" id="digital_tachograph_numbers" name="digital_tachograph_numbers" value="{{ old('digital_tachograph_numbers', !is_null($mVehicle->digital_tachograph_numbers) ? $mVehicle->digital_tachograph_numbers : '') }}" maxlength="10">
                         </div>
                         @if ($errors->has('digital_tachograph_numbers'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1001,7 +1001,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="personal_insurance_prices">対人保険料（円）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('personal_insurance_prices')? 'is-invalid': ''}}" id="personal_insurance_prices" name="personal_insurance_prices" value="{{ old('personal_insurance_prices', !is_null($mVehicle->personal_insurance_prices) ? $mVehicle->personal_insurance_prices : '') }}" maxlength="6">
+                            <input type="text" class="form-control w-50 {{$errors->has('personal_insurance_prices')? 'is-invalid': ''}}" id="personal_insurance_prices" name="personal_insurance_prices" value="{{ old('personal_insurance_prices', !is_null($mVehicle->personal_insurance_prices) ? $mVehicle->personal_insurance_prices : '') }}" maxlength="11">
                         </div>
                         @if ($errors->has('personal_insurance_prices'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1012,7 +1012,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="property_damage_insurance_prices">対物保険料（円）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-25 {{$errors->has('property_damage_insurance_prices')? 'is-invalid': ''}}" id="property_damage_insurance_prices" name="property_damage_insurance_prices" value="{{ old('property_damage_insurance_prices', !is_null($mVehicle->property_damage_insurance_prices) ? $mVehicle->property_damage_insurance_prices : '') }}" maxlength="6">
+                            <input type="text" class="form-control w-25 {{$errors->has('property_damage_insurance_prices')? 'is-invalid': ''}}" id="property_damage_insurance_prices" name="property_damage_insurance_prices" value="{{ old('property_damage_insurance_prices', !is_null($mVehicle->property_damage_insurance_prices) ? $mVehicle->property_damage_insurance_prices : '') }}" maxlength="11">
                         </div>
                         @if ($errors->has('property_damage_insurance_prices'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1025,7 +1025,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_insurance_prices">車両保険料（円）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_insurance_prices')? 'is-invalid': ''}}" id="vehicle_insurance_prices" name="vehicle_insurance_prices" value="{{ old('vehicle_insurance_prices', !is_null($mVehicle->vehicle_insurance_prices) ? $mVehicle->vehicle_insurance_prices : '') }}" maxlength="6">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicle_insurance_prices')? 'is-invalid': ''}}" id="vehicle_insurance_prices" name="vehicle_insurance_prices" value="{{ old('vehicle_insurance_prices', !is_null($mVehicle->vehicle_insurance_prices) ? $mVehicle->vehicle_insurance_prices : '') }}" maxlength="11">
                         </div>
                         @if ($errors->has('vehicle_insurance_prices'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -1142,7 +1142,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="acquisition_amounts">取得金額（円）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('acquisition_amounts')? 'is-invalid': ''}}" id="acquisition_amounts" name="acquisition_amounts" maxlength="10" value="{{ old('acquisition_amounts', !is_null($mVehicle->acquisition_amounts) ? $mVehicle->acquisition_amounts  : '') }}">
+                            <input type="text" class="form-control w-50 {{$errors->has('acquisition_amounts')? 'is-invalid': ''}}" id="acquisition_amounts" name="acquisition_amounts" maxlength="11" value="{{ old('acquisition_amounts', !is_null($mVehicle->acquisition_amounts) ? $mVehicle->acquisition_amounts  : '') }}">
                         </div>
                         @if ($errors->has('acquisition_amounts'))
                             <span class="invalid-feedback d-block" role="alert">
