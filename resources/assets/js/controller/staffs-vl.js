@@ -43,7 +43,7 @@ var ctrStaffsVl = new Vue({
             health_insurance_class:"",
             welfare_annuity_class:"",
             relocation_municipal_office_cd:"",
-            dropdown_relocate_municipal_office_nm:"",
+            dropdown_relocate_municipal_office_nm:[],
             educational_background:"",
             educational_background_dt:"",
             mst_staff_job_experiences: [{
@@ -130,7 +130,8 @@ var ctrStaffsVl = new Vue({
         onChange:function(event)
         {
             this.field.relocation_municipal_office_cd=event.target.value;
-            console.log(event.target.value);
+            // this.handleSelect({id:event.target.value,name:event.target.selectedOptions[0].text});
+            // this.handleSelect({id:event.target.value,name:'abc2'});
         },
         addRows: function (block) {
             let value;
@@ -213,13 +214,19 @@ var ctrStaffsVl = new Vue({
                 console.log(that.field.mst_staff_auths);
 
             });
-        }
+        },
+        handleSelect: function (selected) {
+            if(typeof selected.id!="undefined"){
+                this.field.relocation_municipal_office_cd = selected.id;
+            }
+        },
     },
     mounted () {
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.field.dropdown_relocate_municipal_office_nm =  response.data;
         });
+
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
     },
