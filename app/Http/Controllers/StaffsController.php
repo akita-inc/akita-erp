@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Http\Controllers\TraitRepositories\StaffTrait;
 use App\Models\MBusinessOffices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Validator;
 
 class StaffsController extends Controller
 {
-    use ListTrait, FormTrait;
+    use ListTrait, FormTrait,StaffTrait;
     public $table = "mst_staffs";
     public $ruleValid = [
         'staff_cd'  => 'required|one_bytes_string|length:5',
@@ -40,10 +41,6 @@ class StaffsController extends Controller
         "educational_background"=>"length:50|nullable",
         "job_duties"=>"length:50|nullable",
     ];
-    public $labels = [];
-
-    public $messagesCustom = [];
-
     public function __construct(){
         $this->labels = Lang::get("staffs.create.field");
     }
@@ -183,106 +180,42 @@ class StaffsController extends Controller
             return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
         }
     }
-
     protected function validAfter( &$validator,$data ){
+        //running in ValidateStaffTrait
         $this->validateBlockCollapse($validator,"mst_staff_job_experiences",$data,[
             'job_duties' => 'nullable|length:50'
         ]);
         $this->validateBlockCollapse($validator,"mst_staff_qualifications",$data,[
-            'notes' => 'nullable|length:100',
-            'amounts'=>'integer'
+            'qualifications_notes' => 'nullable|length:100',
+            'amounts'=>'nullable|integer'
+        ]);
+        $this->validateBlockCollapse($validator,"mst_staff_dependents",$data,[
+            'dept_last_nm' => 'nullable|length:25',
+            'dept_last_nm_kana' => 'nullable|length:50',
+            'dept_first_nm' => 'nullable|length:25',
+            'dept_first_nm_kana' => 'nullable|length:50',
+            'dept_social_security_number'=>'nullable|length:10'
         ]);
         if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
             $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
         }
     }
-    protected function validateBlockCollapse(&$validator,$name,$data=array(),$rules=array())
-    {
-        $dataBlocks = $data[$name];
-        $nameBlocks=$name;
-        $errorsEx = [];
-        if (count($dataBlocks) > 0) {
-            foreach ($dataBlocks as $index => $items) {
-                $validatorEx = Validator::make($items, $rules, $this->messagesCustom, $this->labels);
-                $validatorEx->after(function ($validatorEx) use ($items,$nameBlocks)  {
-                        $this->addAdditionRules($validatorEx,$items,$nameBlocks);
-                });
-                if ($validatorEx->fails()) {
-                    $errorsEx[$index] = $validatorEx->errors();
-                }
-            }
-        }
-        if( count($errorsEx) > 0){
-            $validator->errors()->add($nameBlocks,$errorsEx);
-        }
-        return true;
-    }
-    protected function addAdditionRules( &$validator,$data,$nameBlocks ){
-        switch ($nameBlocks)
-        {
-            case "mst_staff_job_experiences":
-                if (Carbon::parse($data['staff_tenure_start_dt']) > Carbon::parse($data['staff_tenure_end_dt'])) {
-                    $validator->errors()->add('staff_tenure_start_dt', str_replace(' :attribute', $this->labels['staff_tenure_start_dt'], Lang::get('messages.MSG02014')));
-                }
-                break;
-            case "mst_staff_qualifications":
-                if (Carbon::parse($data['period_validity_start_dt']) > Carbon::parse($data['period_validity_end_dt'])) {
-                    $validator->errors()->add('period_validity_start_dt', str_replace(' :attribute', $this->labels['period_validity_start_dt'], Lang::get('messages.MSG02014')));
-                }
-                break;
-            case "mst_staff_dependents":
-                break;
-        }
-
-    }
-
-
     protected function save($data){
         $data['password']=bcrypt($data['password']);
         $arrayInsert = $data;
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
         $mst_staff_qualifications=$data["mst_staff_qualifications"];
+        $mst_staff_dependents=$data["mst_staff_dependents"];
         DB::beginTransaction();
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
         unset($arrayInsert["mst_staff_qualifications"]);
+        unset($arrayInsert["mst_staff_dependents"]);
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
-        if( count($mst_staff_job_experiences) > 0 ){
-            foreach ($mst_staff_job_experiences as $key=>$staff_job_experience){
-                $arrayInsertJobEx = [
-                    'mst_staff_id' => $id,
-                    'job_duties' => $staff_job_experience['job_duties'],
-                    'staff_tenure_start_dt' => $staff_job_experience['staff_tenure_start_dt'],
-                    'staff_tenure_end_dt' => $staff_job_experience['staff_tenure_end_dt'],
-                    'disp_number'=>($key+1)
-                ];
-                if(!DB::table("mst_staff_job_experiences")->insert($arrayInsertJobEx)){
-                    DB::rollBack();
-                    return false;
-                }
-            }
-        }
-        if(count($mst_staff_qualifications)>0)
-        {
-            foreach ($mst_staff_qualifications as $key=>$staff_qualification){
-                $arrInsertStaffQualifications = [
-                    'mst_staff_id' => $id,
-                    'qualification_kind_id' => $staff_qualification['qualification_kind_id'],
-                    'staff_tenure_start_dt' => $staff_qualification['staff_tenure_start_dt'],
-                    'acquisition_dt' => $staff_qualification['acquisition_dt'],
-                    'period_validity_start_dt'=>$staff_qualification['period_validity_start_dt'],
-                    'period_validity_end_dt'=>$staff_qualification['period_validity_end_dt'],
-                    'notes'=>$staff_qualification['notes'],
-                    'amounts'=>$staff_qualification['amounts'],
-                    'payday'=>$staff_qualification['payday'],
-                    'disp_number'=>($key+1)
-                ];
-                if(!DB::table("mst_staff_qualifications")->insert($arrInsertStaffQualifications)){
-                    DB::rollBack();
-                    return false;
-                }
-            }
-        }
+        $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
+        $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications","qualifications_");
+        $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents","dept_",["disp_number"]);
+
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
@@ -298,13 +231,15 @@ class StaffsController extends Controller
         $listSex=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['sex'],'');
         $listReMunicipalOffice=$mGeneralPurposes->getCodeByDataKB(config('params.data_kb')['relocation_municipal_office_cd'],'');
         $listQualificationKind=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['qualification_kind'],'');
+        $listDependentKBs=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['dependent_kb'],'');
         return view('staffs.create', [
             'listEmployPattern' => $listEmployPattern,
             'listPosition'=>$listPosition,
             'listPrefecture'=>$listPrefecture,
             'listSex'=>$listSex,
             'listReMunicipalOffice'=>$listReMunicipalOffice,
-            'listQualificationKind'=>$listQualificationKind
+            'listQualificationKind'=>$listQualificationKind,
+            'listDependentKBs'=>$listDependentKBs
         ]);
     }
 

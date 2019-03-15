@@ -343,9 +343,9 @@
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.textarea-vue',[
-                                        'filed'=>'qualification_notes',
-                                        'filedId'=>"'mst_staff_qualifications_qualification_notes'+index",
-                                        'filedMode'=>"items.qualification_notes",
+                                        'filed'=>'qualifications_notes',
+                                        'filedId'=>"'mst_staff_qualifications_notes'+index",
+                                        'filedMode'=>"items.qualifications_notes",
                                         'filedErrors'=>"mst_staff_qualifications"
                                     ])
                                 </div>
@@ -360,7 +360,7 @@
                                     ])
                                     <div class="break-row-form"></div>
                                     <div v-if="index!=0">
-                                        @include('Component.form.input-vue',[
+                                        @include('Component.form.date-picker-vue',[
                                             'filed'=>'payday',
                                             'class'=>'wd-350',
                                             'filedId'=>"'mst_staff_qualifications_payday'+index",
@@ -382,7 +382,7 @@
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_staff_dependents" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        扶養者
+                         {{trans($prefix."mst_staff_dependents_title")}}
                     </a>
                 </p>
                 <div class="collapse" id="b_mst_staff_dependents">
@@ -390,11 +390,14 @@
                         <div class="grid-form items-collapse" v-for="(items,index) in field.mst_staff_dependents">
                             <div v-cloak class="row">
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.input-vue',[
-                                        'filed'=>'dependent_kb',
+                                    @include('Component.form.select-vue',[
+                                        'filed'=>'dept_dependent_kb',
                                          'class'=>'wd-300',
                                         'filedId'=>"'mst_staff_dependents_dependent_kb'+index",
-                                        'filedMode'=>"items.dependent_kb",
+                                        'filedMode'=>"items.dept_dependent_kb",
+                                        'array'=>$listDependentKBs,
+                                        'filedErrors'=>"mst_staff_dependents"
+
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -404,16 +407,19 @@
 
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.input-vue',[
-                                        'filed'=>'mst_staff_dependents.last_nm',
+                                        'filed'=>'dept_last_nm',
                                         'filedId'=>"'mst_staff_dependents_last_nm'+index",
-                                        'filedMode'=>"items.last_nm",
+                                        'filedMode'=>"items.dept_last_nm",
+                                        'filedErrors'=>"mst_staff_dependents"
+
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.input-vue',[
-                                        'filed'=>'mst_staff_dependents.last_nm_kana',
+                                        'filed'=>'dept_last_nm_kana',
                                         'filedId'=>"'mst_staff_dependents_last_nm_kana'+index",
-                                        'filedMode'=>"items.last_nm_kana",
+                                        'filedMode'=>"items.dept_last_nm_kana",
+                                        'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
 
@@ -421,45 +427,51 @@
 
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.input-vue',[
-                                        'filed'=>'mst_staff_dependents.first_nm',
+                                        'filed'=>'dept_first_nm',
                                         'filedId'=>"'mst_staff_dependents_first_nm'+index",
-                                        'filedMode'=>"items.first_nm",
+                                        'filedMode'=>"items.dept_first_nm",
+                                        'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.input-vue',[
-                                        'filed'=>'mst_staff_dependents.first_nm_kana',
+                                        'filed'=>'dept_first_nm_kana',
                                         'filedId'=>"'mst_staff_dependents_first_nm_kana'+index",
-                                        'filedMode'=>"items.first_nm_kana",
+                                        'filedMode'=>"items.dept_first_nm_kana",
+                                        'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
 
                                 <div class="break-row-form"></div>
 
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',[
-                                        'filed'=>'mst_staff_dependents.birthday',
+                                    @include('Component.form.date-picker-vue',[
+                                        'filed'=>'dept_birthday',
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_dependents_birthday'+index",
-                                        'filedMode'=>"items.birthday",
+                                        'filedMode'=>"items.dept_birthday",
+                                        'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.select-vue',[
-                                        'filed'=>'mst_staff_dependents.sex_id',
+                                        'filed'=>'dept_sex_id',
                                         'class'=>'wd-300',
                                         'filedId'=>"'mst_staff_dependents_sex_id'+index",
-                                        'filedMode'=>"items.sex_id",
+                                        'filedMode'=>"items.dept_sex_id",
+                                        'array'=>$listSex,
+                                        'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
 
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.input-vue',[
-                                        'filed'=>'mst_staff_dependents.social_security_number',
+                                        'filed'=>'dept_social_security_number',
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_dependents_social_security_number'+index",
-                                        'filedMode'=>"items.social_security_number",
+                                        'filedMode'=>"items.dept_social_security_number",
+                                        'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
                                 <!--address2 address3-->

@@ -4,6 +4,7 @@ import DatePicker from 'vue2-datepicker';
 import moment from "moment";
 import historykana from "historykana";
 import Dropdown from 'vue-simple-search-dropdown';
+import * as AutoKana from "vanilla-autokana";
 
 var ctrStaffsVl = new Vue({
     el: '#ctrStaffsVl',
@@ -45,8 +46,32 @@ var ctrStaffsVl = new Vue({
             dropdown_relocate_municipal_office_nm:"",
             educational_background:"",
             educational_background_dt:"",
-            mst_staff_job_experiences:[],
-            mst_staff_qualifications:[],
+            mst_staff_job_experiences: [{
+                job_duties: "",
+                staff_tenure_start_dt: "",
+                staff_tenure_end_dt: ""
+            }],
+            mst_staff_qualifications: [{
+                qualification_kind_id: "",
+                acquisition_dt: "",
+                period_validity_start_dt: "",
+                period_validity_end_dt: "",
+                qualifications_notes: "",
+                amounts: "",
+                payday: "",
+                disp_number: "",
+            }],
+            mst_staff_dependents:[{
+                dept_dependent_kb:"",
+                dept_last_nm:"",
+                dept_last_nm_kana:"",
+                dept_first_nm:"",
+                dept_first_nm_kana:"",
+                dept_birthday:"",
+                dept_sex_id:"",
+                dept_social_security_number:"",
+            }]
+
         },
         errors:{},
         dateFormat: {
@@ -56,9 +81,13 @@ var ctrStaffsVl = new Vue({
             parse: (value) => {
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
-        }
+        },
+        autokana:[],
     },
     methods : {
+        showError: function ( errors ){
+            return errors.join("<br/>");
+        },
         submit:function()
         {
             let that = this;
@@ -99,7 +128,7 @@ var ctrStaffsVl = new Vue({
                         acquisition_dt: "",
                         period_validity_start_dt: "",
                         period_validity_end_dt:"",
-                        notes:"",
+                        qualifications_notes:"",
                         amounts:"",
                         payday:"",
                         disp_number:"",
@@ -107,19 +136,21 @@ var ctrStaffsVl = new Vue({
                     break;
                 case 'mst_staff_dependents':
                     value = {
+                        dept_dependent_kb:"",
+                        dept_last_nm:"",
+                        dept_last_nm_kana:"",
+                        dept_first_nm:"",
+                        dept_first_nm_kana:"",
+                        dept_birthday:"",
+                        dept_sex_id:"",
+                        dept_social_security_number:"",
                     };
                     break;
             }
             this.field[block].push(value);
         },
         convertKana: function (input , destination) {
-            let that = this;
-            this.history.push(input.target.value);
-            console.log(input.target.value);
-            this.furigana = historykana(this.history);
-            home_service.convertKana({'data': this.furigana}).then(function (data) {
-                that.field[destination] = data.info;
-            });
+            this.field[destination] = this.autokana[input.target.id].getFurigana();
         },
         onBlur: function(){
             this.history = [];
@@ -148,6 +179,8 @@ var ctrStaffsVl = new Vue({
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.field.dropdown_relocate_municipal_office_nm =  response.data;
         });
+        this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
+        this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
     },
     components: {
         DatePicker,
