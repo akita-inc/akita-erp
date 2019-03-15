@@ -94,12 +94,12 @@ class CustomValidation {
 
     public static function validatePhoneNumber() {
         Validator::extend('phone_number', function($attribute, $value, $parameters, $validator) {
-            return preg_match("/^([0-9\s\-\+\(\)]*)$/", $value);
+            return preg_match("/^([0-9\s\-]*)$/", $value);
         });
     }
     public static function validateFaxNumber() {
         Validator::extend('fax_number', function($attribute, $value, $parameters, $validator) {
-            return preg_match("/^([0-9\s\-\+\(\)]*)$/", $value);
+            return preg_match("/^([0-9\s\-]*)$/", $value);
         });
     }
     public static function validateZipCode() {

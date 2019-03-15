@@ -18806,9 +18806,26 @@ var ctrCustomersVl = new Vue({
     autokana: []
   },
   methods: {
+    clone: function clone() {
+      this.field["clone"] = true;
+      this.submit();
+    },
     submit: function submit() {
       var that = this;
       that.loading = true;
+
+      if (this.customer_edit == 1) {
+        this.field["id"] = this.customer_id;
+
+        if (this.field["clone"] == true) {
+          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
+          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
+        } else {
+          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
+          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
+        }
+      }
+
       customers_service.submit(this.field).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
@@ -18912,7 +18929,7 @@ var ctrCustomersVl = new Vue({
           }
         });
         customers_service.getListBill(that.customer_id).then(function (response) {
-          if (response.data != null) {
+          if (response.data != null && response.data.length > 0) {
             that.field.mst_bill_issue_destinations = response.data;
           }
 
@@ -19031,7 +19048,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
