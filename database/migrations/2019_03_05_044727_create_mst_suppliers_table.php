@@ -37,7 +37,7 @@ class CreateMstSuppliersTable extends Migration
             $table->string('address3',50)->nullable();
             $table->string('phone_number',20)->nullable();
             $table->string('fax_number',20)->nullable();
-            $table->text('hp_url')->nullable();
+            $table->string('hp_url',2500)->nullable();
             $table->integer('bundle_dt')->nullable();
             $table->integer('payday')->nullable();
             $table->integer('payment_month_id')->nullable();

@@ -14,6 +14,7 @@ use App\Models\MBusinessOffices;
 use App\Models\MCustomers;
 use App\Models\MCustomersCategories;
 use App\Models\MGeneralPurposes;
+use App\Models\MMstBillIssueDestinations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -261,13 +262,18 @@ class CustomersController extends Controller
         unset($arrayInsert["id"]);
         unset($arrayInsert["clone"]);
         DB::beginTransaction();
+        if(isset($arrayInsert["except_g_drive_bill_fg"]) && $arrayInsert["except_g_drive_bill_fg"] == true){
+            $arrayInsert["except_g_drive_bill_fg"] = 1;
+        }else{
+            $arrayInsert["except_g_drive_bill_fg"] = 0;
+        }
         if(isset( $data["id"]) && $data["id"] && !isset($data["clone"]) ){
             $id = $data["id"];
-            DB::table($this->table)->where("id","=",$id)->update( $arrayInsert );
+            MCustomers::query()->where("id","=",$id)->update( $arrayInsert );
         }else{
-            $id = DB::table($this->table)->insertGetId( $arrayInsert );
+            $id =  MCustomers::query()->insertGetId( $arrayInsert );
             if(isset($data["clone"])){
-                DB::table($this->table)->where("id","=",$data["id"])->update([
+                MCustomers::query()->where("id","=",$data["id"])->update([
                         "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d')
                 ]);
             }
@@ -288,11 +294,11 @@ class CustomersController extends Controller
                     'disp_number' => $disp_number,
                 ];
                 if(isset($bill_issue_destination["id"]) && $bill_issue_destination["id"] && !isset($data["clone"])){
-                    DB::table("mst_bill_issue_destinations")
+                    MMstBillIssueDestinations::query()
                         ->where("id","=",$bill_issue_destination["id"])->update($arrayInsertBill);
                     $arrayIDInsert[] = $flagUpdate = $bill_issue_destination["id"];
                 }else{
-                    $flagUpdate = DB::table("mst_bill_issue_destinations")->insertGetId($arrayInsertBill);
+                    $flagUpdate = MMstBillIssueDestinations::query()->insertGetId($arrayInsertBill);
                     $arrayIDInsert[] = $flagUpdate;
                 }
                 if(!$flagUpdate){
@@ -304,7 +310,7 @@ class CustomersController extends Controller
         }
         if(isset( $data["id"]) && $data["id"]) {
             $deleteBill = DB::table("mst_bill_issue_destinations")
-                ->where("mst_customers_id", $id);
+                ->where("mst_customer_id", $id);
             if (!empty($arrayIDInsert)) {
                 $deleteBill = $deleteBill->whereNotIn("id", $arrayIDInsert);
             }
@@ -329,6 +335,7 @@ class CustomersController extends Controller
                 "bill_fax_number as fax_number"
             )
             ->where("mst_customer_id","=",$id)
+            ->orderBy(DB::raw("disp_number*1"))
             ->get();
         if($listBills){
             $listBills->toArray();

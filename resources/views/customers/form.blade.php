@@ -33,7 +33,7 @@
                     <div class="row">
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
-                            <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                            <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($customer) ? "edit":"register")) }}</button>
                             @if($flagRegisterHistory)
                                 <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
                                     {{ trans("common.button.register_history_left") }}
@@ -244,7 +244,7 @@
                         @include('Component.form.input',['class'=>'wd-350','filed'=>'discount_rate','attr_input' => "maxlength='3'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','checkboxLabel'=>'あり'])
+                        @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','checkboxLabel'=>'あり','attr_input' => "value='1'"])
                     </div>
 
                 </div>

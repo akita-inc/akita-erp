@@ -47,7 +47,7 @@ var ctrCustomersVl = new Vue({
             consumption_tax_calc_unit_id:"",
             rounding_method_id:"",
             discount_rate:"",
-            except_g_drive_bill_fg:"",
+            except_g_drive_bill_fg:false,
             mst_bill_issue_destinations:[{
                 prefectures_cd:"",
                 address1:"",
@@ -115,7 +115,11 @@ var ctrCustomersVl = new Vue({
             });
         },
         convertKana: function (input , destination) {
-            this.field[destination] = this.autokana[input.target.id].getFurigana();
+            if(this.field[input.target.id] == ""){
+                this.field[destination] = "";
+            }else{
+                this.field[destination] = this.autokana[input.target.id].getFurigana();
+            }
         },
         getAddrFromZipCode: function() {
             let that = this;
@@ -181,8 +185,15 @@ var ctrCustomersVl = new Vue({
                         if(key == "adhibition_start_dt" || key == "adhibition_end_dt"){
                             that.field[key + "_edit"] = $("#hd_"+key).val();
                         }
-                        that.field[key] = $("#hd_"+key).val();
+                        if(key == "except_g_drive_bill_fg"){
+                            if($("#hd_"+key).val() == 1){
+                                that.field[key] = true;
+                            }
+                        }else{
+                            that.field[key] = $("#hd_"+key).val();
+                        }
                     }
+
                 });
                 customers_service.getListBill(that.customer_id).then((response) => {
                     if(response.data != null && response.data.length > 0){
