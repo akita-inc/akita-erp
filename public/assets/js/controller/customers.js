@@ -18741,6 +18741,8 @@ var ctrCustomersVl = new Vue({
   data: {
     lang: lang_date_picker,
     loading: false,
+    customer_edit: 0,
+    customer_id: null,
     field: {
       adhibition_start_dt: "",
       adhibition_end_dt: $("#hd_adhibition_end_dt_default").val(),
@@ -18773,11 +18775,19 @@ var ctrCustomersVl = new Vue({
       deposit_day: "",
       deposit_method_id: "",
       deposit_method_notes: "",
+      business_start_dt: "",
       consumption_tax_calc_unit_id: "",
       rounding_method_id: "",
       discount_rate: "",
       except_g_drive_bill_fg: "",
-      mst_bill_issue_destinations: [],
+      mst_bill_issue_destinations: [{
+        prefectures_cd: "",
+        address1: "",
+        address2: "",
+        address3: "",
+        phone_number: "",
+        fax_number: ""
+      }],
       deposit_bank_cd: "",
       mst_account_titles_id: "",
       mst_account_titles_id_2: "",
@@ -18796,9 +18806,26 @@ var ctrCustomersVl = new Vue({
     autokana: []
   },
   methods: {
+    clone: function clone() {
+      this.field["clone"] = true;
+      this.submit();
+    },
     submit: function submit() {
       var that = this;
       that.loading = true;
+
+      if (this.customer_edit == 1) {
+        this.field["id"] = this.customer_id;
+
+        if (this.field["clone"] == true) {
+          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
+          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
+        } else {
+          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
+          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
+        }
+      }
+
       customers_service.submit(this.field).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
@@ -18885,6 +18912,31 @@ var ctrCustomersVl = new Vue({
     backHistory: function backHistory() {
       window.history.back();
     },
+    loadFormEdit: function loadFormEdit() {
+      var that = this;
+
+      if ($("#hd_customer_edit").val() == 1) {
+        this.loading = true;
+        that.customer_edit = 1;
+        that.customer_id = $("#hd_id").val();
+        $.each(this.field, function (key, value) {
+          if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
+            if (key == "adhibition_start_dt" || key == "adhibition_end_dt") {
+              that.field[key + "_edit"] = $("#hd_" + key).val();
+            }
+
+            that.field[key] = $("#hd_" + key).val();
+          }
+        });
+        customers_service.getListBill(that.customer_id).then(function (response) {
+          if (response.data != null && response.data.length > 0) {
+            that.field.mst_bill_issue_destinations = response.data;
+          }
+
+          that.loading = false;
+        });
+      }
+    },
     backToList: function backToList() {
       customers_service.backHistory().then(function () {
         window.location.href = listRoute;
@@ -18908,12 +18960,7 @@ var ctrCustomersVl = new Vue({
     }
   },
   mounted: function mounted() {
-    var that = this;
-    $.each(this.field, function (key, value) {
-      if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
-        that.field[key] = $("#hd_" + key).val();
-      }
-    });
+    this.loadFormEdit();
     this.autokana['customer_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm', '#customer_nm_kana', {
       katakana: true
     });
@@ -19001,7 +19048,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
