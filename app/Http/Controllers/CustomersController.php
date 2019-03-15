@@ -277,7 +277,7 @@ class CustomersController extends Controller
             $disp_number = 1;
             foreach ($mst_bill_issue_destinations as $bill_issue_destination){
                 $arrayInsertBill = [
-                    'mst_customers' => $id,
+                    'mst_customer_id' => $id,
                     'bill_zip_cd' => $bill_issue_destination['zip_cd'],
                     'bill_address1' => $bill_issue_destination['prefectures_cd'],
                     'bill_address2' => $bill_issue_destination['address1'],
@@ -328,7 +328,7 @@ class CustomersController extends Controller
                 "bill_phone_number as phone_number",
                 "bill_fax_number as fax_number"
             )
-            ->where("mst_customers","=",$id)
+            ->where("mst_customer_id","=",$id)
             ->get();
         if($listBills){
             $listBills->toArray();
