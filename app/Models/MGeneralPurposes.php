@@ -99,6 +99,41 @@ class MGeneralPurposes extends Model
         }
         return $result;
     }
+    public function getCodeByDataKB($data_kb,$kDefault = "default"){
+        $data = $this->getMConfigByConditions(
+            array(
+                [
+                    'field' => 'data_kb',
+                    'operator' => '=',
+                    'value' => $data_kb
+                ]
+            ),
+            array('date_id', 'date_id'),
+            array(
+                [
+                    'field' => 'disp_number',
+                    'sortby' => 'asc',
+                ]
+            )
+        );
+        if($kDefault == "Empty"){
+            $result = array();
+        }else{
+            $result = array($kDefault => '==選択==');
+        }
+        foreach (json_decode(json_encode($data), true) as $key=>$item){
+            $result[$item['date_id']] = $item['date_id'];
+        }
+        return $result;
+    }
+    public function getNmByDataKB($data_kb)
+    {
+        return $this->select('date_id as id','date_nm as name')
+            ->where('data_kb',$data_kb)
+            ->where('deleted_at','=',null)
+            ->orderBy('disp_number','ASC')
+            ->get();
+    }
     public function getDataByMngDiv($div){
         return $this->where('data_kb',$div)
             ->where('deleted_at','=',null)
