@@ -232,7 +232,7 @@ class CustomersController extends Controller
 
         if (isset($data['mst_customers_cd']) && !empty($data['mst_customers_cd'])){
             $strWhereStartDate = 'DATE_FORMAT("'.$data['adhibition_start_dt'].'", "%Y%m%d")';
-            $strWhereEndDate = 'DATE_FORMAT("'.config('params.adhibition_end_dt_default').'", "%Y%m%d")';
+            $strWhereEndDate = 'DATE_FORMAT("'.$data['adhibition_end_dt'].'", "%Y%m%d")';
             $strWhereStartDateDB = 'DATE_FORMAT(adhibition_start_dt, "%Y%m%d")';
             $strWhereEndDateDB = 'DATE_FORMAT(adhibition_end_dt, "%Y%m%d")';
             $strWhere = $strWhereStartDate." > ".$strWhereEndDateDB." or ".$strWhereEndDate." < ".$strWhereStartDateDB;
