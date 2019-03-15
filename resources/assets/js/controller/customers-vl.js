@@ -115,7 +115,11 @@ var ctrCustomersVl = new Vue({
             });
         },
         convertKana: function (input , destination) {
-            this.field[destination] = this.autokana[input.target.id].getFurigana();
+            if(this.field[input.target.id] == ""){
+                this.field[destination] = "";
+            }else{
+                this.field[destination] = this.autokana[input.target.id].getFurigana();
+            }
         },
         getAddrFromZipCode: function() {
             let that = this;

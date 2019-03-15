@@ -334,6 +334,7 @@ class CustomersController extends Controller
                 "bill_fax_number as fax_number"
             )
             ->where("mst_customer_id","=",$id)
+            ->orderBy(DB::raw("disp_number*1"))
             ->get();
         if($listBills){
             $listBills->toArray();
