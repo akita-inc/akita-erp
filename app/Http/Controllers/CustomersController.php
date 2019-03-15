@@ -49,7 +49,7 @@ class CustomersController extends Controller
         'explanations_bill'  => 'nullable|length:100',
         'bundle_dt'  => 'one_byte_number|nullable|length:2',
         'deposit_day'  => 'one_byte_number|nullable|between_custom:1,31|length:2',
-        'deposit_method_notes'  => 'nullable|length:100',
+        'deposit_method_notes'  => 'nullable|length:200',
         'deposit_bank_cd'  => 'nullable|length:4',
         'notes'  => 'nullable|length:50',
     ];
