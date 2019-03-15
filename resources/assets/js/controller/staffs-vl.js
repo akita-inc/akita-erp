@@ -70,7 +70,27 @@ var ctrStaffsVl = new Vue({
                 dept_birthday:"",
                 dept_sex_id:"",
                 dept_social_security_number:"",
-            }]
+            }],
+            mst_role_id:'',
+            mst_staff_auths: {
+                1: {
+                    staffScreen: [],
+                    screen_category_id:1,
+                    accessible_kb: 9,
+                },
+                2: {
+                    screen_category_id: 2,
+                    accessible_kb: 9,
+                },
+                3: {
+                    screen_category_id: 3,
+                    accessible_kb: 9,
+                },
+                4: {
+                    screen_category_id: 4,
+                    accessible_kb: 9,
+                },
+            }
 
         },
         errors:{},
@@ -171,6 +191,27 @@ var ctrStaffsVl = new Vue({
         backHistory: function () {
             staffs_service.backHistory().then(function () {
                 window.location.href = listRoute;
+            });
+        },
+        loadRoleConfig: function () {
+            var that = this;
+            staffs_service.loadRoleConfig(this.field.mst_role_id).then(function (result) {
+                var data =  result.data;
+                if(data.length > 0){
+                    data.forEach(function(item) {
+                        switch (item.screen_category_id) {
+                            case 1:
+                                that.field.mst_staff_auths[1].staffScreen.push(item.mst_screen_id);
+                                that.field.mst_staff_auths[1].accessible_kb = item.accessible_kb;
+                                break;
+                            default:
+                                that.field.mst_staff_auths[2].accessible_kb = item.accessible_kb;
+                        }
+
+                    });
+                }
+                console.log(that.field.mst_staff_auths);
+
             });
         }
     },

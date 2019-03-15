@@ -41,4 +41,11 @@ staffs_service = {
             return error;
         });
     },
+    loadRoleConfig: function (role_id) {
+        return axios.post('/staffs/api-v1/load-role-config',{role_id:role_id}).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    }
 }
