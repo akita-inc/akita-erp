@@ -203,7 +203,6 @@ class StaffsController extends Controller
         }
     }
     protected function save($data){
-//        var_dump($data["mst_staff_auths"]);die;
         $data['password']=bcrypt($data['password']);
         $arrayInsert = $data;
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
