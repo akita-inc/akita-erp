@@ -304,7 +304,7 @@ class CustomersController extends Controller
         }
         if(isset( $data["id"]) && $data["id"]) {
             $deleteBill = DB::table("mst_bill_issue_destinations")
-                ->where("mst_customers", $id);
+                ->where("mst_customers_id", $id);
             if (!empty($arrayIDInsert)) {
                 $deleteBill = $deleteBill->whereNotIn("id", $arrayIDInsert);
             }
