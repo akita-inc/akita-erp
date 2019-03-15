@@ -49,7 +49,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="mst_suppliers_cd">仕入先コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" readonly maxlength="5" value="{{ old('mst_suppliers_cd',!is_null($mSupplier->mst_suppliers_cd) ? $mVehicle->mst_suppliers_cd :'') }}">
+                            <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" readonly maxlength="5" value="{{ old('mst_suppliers_cd',!is_null($mSupplier->mst_suppliers_cd) ? $mSupplier->mst_suppliers_cd :'') }}">
                         </div>
                         <span class="note">
                             ※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。
@@ -186,7 +186,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="supplier_nm">仕入先名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" value="{{ old('supplier_nm',!is_null($mSupplier->supplier_nm) ? $mVehicle->supplier_nm :'') }}" maxlength="200" >
+                            <input type="text" class="form-control {{$errors->has('supplier_nm')? 'is-invalid': ''}}" id="supplier_nm" name="supplier_nm" value="{{ old('supplier_nm',!is_null($mSupplier->supplier_nm) ? $mSupplier->supplier_nm :'') }}" maxlength="200" >
                         </div>
                         @if ($errors->has('supplier_nm'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -197,7 +197,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="supplier_nm_kana">仕入先カナ名</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm_kana')? 'is-invalid': ''}}" id="supplier_nm_kana" name="supplier_nm_kana" value="{{ old('supplier_nm_kana',!is_null($mSupplier->supplier_nm_kana) ? $mVehicle->supplier_nm_kana :'') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm_kana')? 'is-invalid': ''}}" id="supplier_nm_kana" name="supplier_nm_kana" value="{{ old('supplier_nm_kana',!is_null($mSupplier->supplier_nm_kana) ? $mSupplier->supplier_nm_kana :'') }}" maxlength="200">
                         </div>
                         @if ($errors->has('supplier_nm_kana'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -209,7 +209,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="supplier_nm_formal">仕入先正式名</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm_formal')? 'is-invalid': ''}}" id="supplier_nm_formal" name="supplier_nm_formal" value="{{ old('supplier_nm_formal',!is_null($mSupplier->supplier_nm_formal) ? $mVehicle->supplier_nm_formal :'') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm_formal')? 'is-invalid': ''}}" id="supplier_nm_formal" name="supplier_nm_formal" value="{{ old('supplier_nm_formal',!is_null($mSupplier->supplier_nm_formal) ? $mSupplier->supplier_nm_formal :'') }}" maxlength="200">
                         </div>
                         @if ($errors->has('supplier_nm_formal'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -220,7 +220,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="supplier_nm_kana_formal">仕入先正式カナ名</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control {{$errors->has('supplier_nm_kana_formal')? 'is-invalid': ''}}" id="supplier_nm_kana_formal" name="supplier_nm_kana_formal" value="{{ old('supplier_nm_kana_formal',!is_null($mSupplier->supplier_nm_kana_formal) ? $mVehicle->supplier_nm_kana_formal :'') }}" maxlength="200">
+                            <input type="text" class="form-control {{$errors->has('supplier_nm_kana_formal')? 'is-invalid': ''}}" id="supplier_nm_kana_formal" name="supplier_nm_kana_formal" value="{{ old('supplier_nm_kana_formal',!is_null($mSupplier->supplier_nm_kana_formal) ? $mSupplier->supplier_nm_kana_formal :'') }}" maxlength="200">
                         </div>
                         @if ($errors->has('supplier_nm_kana_formal'))
                             <span class="invalid-feedback d-block" role="alert">
