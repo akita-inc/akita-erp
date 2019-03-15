@@ -2,21 +2,27 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import DatePicker from 'vue2-datepicker';
 import { Core } from '../package/yubinbango-core';
 import moment from 'moment';
-import historykana from "historykana";
+import * as AutoKana from "vanilla-autokana";
 
 var ctrCustomersVl = new Vue({
     el: '#ctrCustomersVl',
     data: {
         lang:lang_date_picker,
-        furigana: '',
-        history: [],
         loading:false,
+        customer_edit:0,
+        customer_id:null,
         field:{
             adhibition_start_dt:"",
-            adhibition_end_dt:"",
+            adhibition_end_dt:$("#hd_adhibition_end_dt_default").val(),
+            adhibition_start_dt_edit:"",
+            adhibition_end_dt_edit:$("#hd_adhibition_end_dt_default").val(),
+            adhibition_start_dt_history:"",
+            adhibition_end_dt_history:$("#hd_adhibition_end_dt_default").val(),
+            mst_customers_cd:"",
             customer_nm:"",
             customer_nm_kana:"",
             customer_nm_formal:"",
+            customer_nm_kana_formal:"",
             person_in_charge_last_nm:"",
             person_in_charge_first_nm:"",
             person_in_charge_last_nm_kana:"",
@@ -37,11 +43,19 @@ var ctrCustomersVl = new Vue({
             deposit_day:"",
             deposit_method_id:"",
             deposit_method_notes:"",
+            business_start_dt:"",
             consumption_tax_calc_unit_id:"",
             rounding_method_id:"",
             discount_rate:"",
             except_g_drive_bill_fg:"",
-            mst_bill_issue_destinations:[],
+            mst_bill_issue_destinations:[{
+                prefectures_cd:"",
+                address1:"",
+                address2:"",
+                address3:"",
+                phone_number:"",
+                fax_number:""
+            }],
             deposit_bank_cd:"",
             mst_account_titles_id: "",
             mst_account_titles_id_2: "",
@@ -56,7 +70,8 @@ var ctrCustomersVl = new Vue({
             parse: (value) => {
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
-        }
+        },
+        autokana:[],
     },
     methods : {
         submit: function(){
@@ -86,36 +101,53 @@ var ctrCustomersVl = new Vue({
             });
         },
         convertKana: function (input , destination) {
-            let that = this;
-            this.history.push(input.target.value);
-            this.furigana = historykana(this.history);
-            home_service.convertKana({'data': this.furigana}).then(function (data) {
-                that.field[destination] = data.info;
-            });
-        },
-        onBlur: function(){
-            this.history = [];
-            this.furigana = '';
+            this.field[destination] = this.autokana[input.target.id].getFurigana();
         },
         getAddrFromZipCode: function() {
             let that = this;
             let zip = $('#zip_cd').val();
+            if(zip==''){
+                alert(messages['MSG07001']);
+                return;
+            }else{
+                if(isNaN(zip)){
+                    alert(messages['MSG07002']);
+                    return;
+                }
+            }
             new Core(zip, function (addr) {
-                that.field.prefectures_cd = addr.region_id;
-                that.field.address1 = addr.region_id;
-                that.field.address2 = addr.region_id;
+                if(addr.region_id=="" || addr.locality=="" || addr.street==""){
+                    alert(messages['MSG07002']);
+                }else {
+                    that.field.prefectures_cd = addr.region_id;
+                    that.field.address1 = addr.locality;
+                    that.field.address2 = addr.street;
+                }
             });
         },
         getAddrFromZipCodeCollapse:function(index)
         {
             let that = this;
             let zip = this.field.mst_bill_issue_destinations[index].zip_cd;
+            if(zip==''){
+                alert(messages['MSG07001']);
+                return;
+            }else{
+                if(isNaN(zip)){
+                    alert(messages['MSG07002']);
+                    return;
+                }
+            }
             new Core(zip, function (addr) {
-                that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id;// 都道府県ID
-                that.field.mst_bill_issue_destinations[index].address1 = addr.locality;// 市区町村
-                that.field.mst_bill_issue_destinations[index].address2 = addr.street;// 町域
-                that.field.mst_bill_issue_destinations.push({});
-                that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
+                if(addr.region_id=="" || addr.locality=="" || addr.street==""){
+                    alert(messages['MSG07002']);
+                }else {
+                    that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id;// 都道府県ID
+                    that.field.mst_bill_issue_destinations[index].address1 = addr.locality;// 市区町村
+                    that.field.mst_bill_issue_destinations[index].address2 = addr.street;// 町域
+                    that.field.mst_bill_issue_destinations.push({});
+                    that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
+                }
             });
         },
         removeRows: function (index) {
@@ -123,9 +155,57 @@ var ctrCustomersVl = new Vue({
         },
         backHistory: function () {
             window.history.back();
-        }
+        },
+        loadFormEdit: function () {
+            let that = this;
+            if($("#hd_customer_edit").val() == 1){
+                this.loading = true;
+                that.customer_edit = 1;
+                that.customer_id = $("#hd_id").val();
+                $.each(this.field,function (key,value) {
+                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
+                        if(key == "adhibition_start_dt" || key == "adhibition_end_dt"){
+                            that.field[key + "_edit"] = $("#hd_"+key).val();
+                        }
+                        that.field[key] = $("#hd_"+key).val();
+                    }
+                });
+                customers_service.getListBill(that.customer_id).then((response) => {
+                    if(response.data != null){
+                        that.field.mst_bill_issue_destinations = response.data;
+                    }
+                    that.loading = false;
+                });
+            }
+        },
+        backToList: function () {
+            customers_service.backHistory().then(function () {
+                window.location.href = listRoute;
+            });
+        },
+        deleteCustomer: function(id){
+            var that = this;
+            customers_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    that.backToList();
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        customers_service.deleteCustomer(id).then((response) => {
+                            window.location.href = listRoute;
+                        });
+                    }
+                }
+            });
+        },
     },
     mounted () {
+        this.loadFormEdit();
+        this.autokana ['customer_nm'] = AutoKana.bind('#customer_nm', '#customer_nm_kana', { katakana: true });
+        this.autokana ['customer_nm_formal'] = AutoKana.bind('#customer_nm_formal', '#customer_nm_kana_formal', { katakana: true });
+        this.autokana ['person_in_charge_last_nm'] = AutoKana.bind('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', { katakana: true });
+        this.autokana ['person_in_charge_first_nm'] = AutoKana.bind('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', { katakana: true });
     },
     components: {
         DatePicker,

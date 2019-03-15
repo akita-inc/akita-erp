@@ -24,6 +24,7 @@ class CustomersController extends Controller
 {
     use ListTrait,FormTrait;
     public $table = "mst_customers";
+    public $allNullAble = false;
 
     public $ruleValid = [
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
@@ -133,9 +134,12 @@ class CustomersController extends Controller
     public function delete($id)
     {
         $mCustomers = new MCustomers();
+        $this->backHistory();
         if ($mCustomers->deleteCustomer($id)) {
+            \Session::flash('message',Lang::get('messages.MSG10004'));
             $response = ['data' => 'success'];
         } else {
+            \Session::flash('message',Lang::get('messages.MSG06002'));
             $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
         }
         return response()->json($response);
@@ -151,7 +155,7 @@ class CustomersController extends Controller
         }
     }
 
-    public function create(Request $request){
+    public function store(Request $request, $id=null){
         $mGeneralPurposes = new MGeneralPurposes();
         $mCustomerCategories=new MCustomersCategories();
         $mBusinessOffices=new MBusinessOffices();
@@ -164,25 +168,47 @@ class CustomersController extends Controller
         $listDepositMonths=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_month'],'');
         $listConsumptionTaxCalcUnit=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
         $listRoundingMethod=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
-        $listDepositBankCd=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_bank_cd'],'');
-        return view('customers.create', [
-                                'listPrefecture' => $listPrefecture,
-                                'customer_categories'=>$customer_categories,
-                                'business_offices'=>$mBusinessOffices,
-                                'listDepositMethods'=>$listDepositMethods,
-                                'listDepositMonths'=>$listDepositMonths,
-                                'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
-                                'listRoundingMethod'=>$listRoundingMethod,
-                                'listDepositBankCd'=>$listDepositBankCd,
-                                'listAccountTitles'=>$listAccountTitles
+        $customer = null;
+        $flagRegisterHistory = false;
+        //load form by update
+        if($id != null){
+            $customer = MCustomers::find( $id );
+            if(empty($customer)){
+                abort('404');
+            }else{
+                $customerLast = MCustomers::where('mst_customers_cd', '=', $customer->mst_customers_cd)
+                    ->orderByDesc("adhibition_start_dt")->first();
+                if($customerLast->id == $id){
+                    $flagRegisterHistory = true;
+                }
+                $customer = $customer->toArray();
+            }
+        }
+        return view('customers.form', [
+            'customer' => $customer,
+            'flagRegisterHistory' => $flagRegisterHistory,
+            'listPrefecture' => $listPrefecture,
+            'customer_categories'=>$customer_categories,
+            'business_offices'=>$mBusinessOffices,
+            'listDepositMethods'=>$listDepositMethods,
+            'listDepositMonths'=>$listDepositMonths,
+            'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
+            'listRoundingMethod'=>$listRoundingMethod,
+            'listAccountTitles'=>$listAccountTitles
         ]);
     }
 
     protected function validAfter( &$validator,$data ){
         $mst_bill_issue_destinations = $data["mst_bill_issue_destinations"];
         $errorsEx = [];
+        $this->allNullAble = true;
         if( count($mst_bill_issue_destinations) > 0 ){
             foreach ($mst_bill_issue_destinations as $index => $items){
+                foreach ($items as $valueChk){
+                    if(!empty($valueChk)){
+                        $this->allNullAble = false;
+                    }
+                }
                 $validatorEx = Validator::make( $items, [
                     'zip_cd'  => 'required|zip_code|nullable|length:7',
                     'address1'  => 'nullable|length:20',
@@ -196,7 +222,7 @@ class CustomersController extends Controller
                 }
             }
         }
-        if( count($errorsEx) > 0){
+        if( count($errorsEx) > 0 && !$this->allNullAble){
             $validator->errors()
                 ->add("mst_bill_issue_destinations",$errorsEx);
         }
@@ -224,9 +250,14 @@ class CustomersController extends Controller
         $arrayInsert = $data;
         $mst_bill_issue_destinations =  $data["mst_bill_issue_destinations"];
         unset($arrayInsert["mst_bill_issue_destinations"]);
+        unset($arrayInsert["adhibition_start_dt_edit"]);
+        unset($arrayInsert["adhibition_end_dt_edit"]);
+        unset($arrayInsert["adhibition_start_dt_history"]);
+        unset($arrayInsert["adhibition_end_dt_history"]);
         DB::beginTransaction();
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
-        if( count($mst_bill_issue_destinations) > 0 ){
+        if( count($mst_bill_issue_destinations) > 0 && !$this->allNullAble ){
+            $disp_number = 1;
             foreach ($mst_bill_issue_destinations as $bill_issue_destination){
                 $arrayInsertBill = [
                     'mst_customers' => $id,
@@ -237,15 +268,38 @@ class CustomersController extends Controller
                     'bill_address4' => $bill_issue_destination['address3'],
                     'bill_phone_number' => $bill_issue_destination['phone_number'],
                     'bill_fax_number' => $bill_issue_destination['fax_number'],
+                    'disp_number' => $disp_number,
                 ];
                 if(!DB::table("mst_bill_issue_destinations")->insert($arrayInsertBill)){
                     DB::rollBack();
                     return false;
                 }
+                $disp_number++;
             }
         }
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
+    }
+
+    public function getListBill( $id ){
+        $listBills = DB::table("mst_bill_issue_destinations")
+            ->select(
+                "id",
+                "bill_zip_cd as zip_cd",
+                "bill_address1 as prefectures_cd",
+                "bill_address1 as prefectures_cd",
+                "bill_address2 as address1",
+                "bill_address3 as address2",
+                "bill_address4 as address3",
+                "bill_phone_number as phone_number",
+                "bill_fax_number as fax_number"
+            )
+            ->where("mst_customers","=",$id)
+            ->get();
+        if($listBills){
+            $listBills->toArray();
+        }
+        return Response()->json(array('success'=>true, 'data'=> $listBills));
     }
 }

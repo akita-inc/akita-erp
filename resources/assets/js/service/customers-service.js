@@ -6,7 +6,7 @@ customers_service = {
             return error;
         });
     },
-    deleteSupplier: function (id) {
+    deleteCustomer: function (id) {
         return axios.get('/customers/delete/' + id).then(function (response) {
             return response.data;
         }).catch(function (error) {
@@ -29,6 +29,13 @@ customers_service = {
     },
     backHistory: function () {
         return axios.get('/customers/api-v1/back-history').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    getListBill: function (id) {
+        return axios.get('/customers/api-v1/getListBill/'+id).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

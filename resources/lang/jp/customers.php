@@ -33,10 +33,15 @@ return [
     ],
     'create' => [
         'title' => '得意先　新規追加',
+        'mst_customers_cd_description' => '※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。',
         'field' => [
             "mst_customers_cd" => "得意先コード",
             "adhibition_start_dt" => "適用開始日",
             "adhibition_end_dt" => "適用終了日",
+            "adhibition_start_dt_edit" => "適用開始日（更新用）",
+            "adhibition_end_dt_edit" => "適用終了日（更新用）",
+            "adhibition_start_dt_history" => "適用開始日（新規用）",
+            "adhibition_end_dt_history" => "適用終了日（新規用）",
             "customer_nm" => "得意先名略称",
             "customer_nm_kana" => "得意先略称カナ名",
             "customer_nm_formal" => "得意先正式名",

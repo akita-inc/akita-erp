@@ -1,6 +1,5 @@
 import { Core } from '../package/yubinbango-core';
 import DatePicker from 'vue2-datepicker'
-import historykana from 'historykana'
 
 var ctrVehiclesVl = new Vue({
     el: '#ctrVehiclesVl',
@@ -26,6 +25,20 @@ var ctrVehiclesVl = new Vue({
                 $('#prefectures_cd').val(addr.region_id);// 都道府県ID
                 $('#address1').val(addr.locality);// 市区町村
                 $('#address2').val(addr.street);// 町域
+            });
+        },
+        deleteVehicle: function(id){
+            vehicles_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.backHistory();
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        $('#form1').attr('action',deleteRoute);
+                        $('#form1').submit();
+                    }
+                }
             });
         },
         backHistory: function () {

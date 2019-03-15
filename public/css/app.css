@@ -278,6 +278,7 @@ input,select{
 .wrap-control-group{
     padding-left: 170px;
     position: relative;
+    min-height: 38px;
 }
 .wrap-control-group label{
     position: absolute;
