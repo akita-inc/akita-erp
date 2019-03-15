@@ -39,5 +39,6 @@ class AppServiceProvider extends ServiceProvider
         CustomValidation::validateBetween();
         CustomValidation::validateDateFormat();
         CustomValidation::validateFileSize();
+        CustomValidation::validateDecimal();
     }
 }

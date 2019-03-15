@@ -21,7 +21,7 @@ class EditMstStaffsTable extends Migration
             $table->string('staff_cd',5);
             $table->string('password',50);
             $table->string('remember_token',255);
-            $table->boolean('employment_pattern_id')->nullable();
+            $table->integer('employment_pattern_id')->nullable();
             $table->string('position_id',5)->nullable();
             $table->string('last_nm',25)->nullable();
             $table->string('first_nm',25)->nullable();
@@ -36,7 +36,7 @@ class EditMstStaffsTable extends Migration
             $table->string('cellular_phone_number',20)->nullable();
             $table->string('corp_cellular_phone_number',20)->nullable();
             $table->string('notes',50)->nullable();
-            $table->boolean('sex_id')->nullable();
+            $table->integer('sex_id')->nullable();
             $table->date('birthday')->nullable();
             $table->date('enter_date')->nullable();
             $table->date('retire_date')->nullable();
@@ -48,9 +48,9 @@ class EditMstStaffsTable extends Migration
             $table->string('relocation_municipal_office_cd',5)->nullable();
             $table->string('educational_background',50)->nullable();
             $table->date('educational_background_dt')->nullable();
-            $table->boolean('enable_fg')->nullable()->default(1);
+            $table->tinyInteger('enable_fg')->nullable()->default(1);
             $table->string('drivers_license_number',12)->nullable();
-            $table->boolean('drivers_license_color_id')->nullable();
+            $table->integer('drivers_license_color_id')->nullable();
             $table->date('drivers_license_issued_dt')->nullable();
             $table->date('drivers_license_period_validity')->nullable();
             $table->text('drivers_license_picture')->nullable();
@@ -72,7 +72,7 @@ class EditMstStaffsTable extends Migration
             $table->date('retire_dt')->nullable();
             $table->string('death_reasons')->nullable();
             $table->date('death_dt')->nullable();
-            $table->boolean('workmens_compensation_insurance_fg')->nullable();
+            $table->integer('workmens_compensation_insurance_fg')->nullable();
             $table->string('belong_company_id',20)->nullable();
             $table->string('occupation_id',5)->nullable();
             $table->integer('mst_business_office_id')->nullable();
@@ -82,7 +82,7 @@ class EditMstStaffsTable extends Migration
             $table->string('employment_insurance_numbers',20)->nullable();
             $table->string('health_insurance_numbers',20)->nullable();
             $table->string('employees_pension_insurance_numbers',10)->nullable();
-            $table->boolean('admin_fg')->nullable()->default(0);
+            $table->tinyInteger('admin_fg')->nullable()->default(0);
             $table->integer('mst_role_id')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));

@@ -17,11 +17,11 @@ class CreateMstGeneralPurposesTable extends Migration
             $table->increments('id');
             $table->char('data_kb',5);
             $table->string('data_kb_nm',100);
-            $table->decimal('date_id',5,0);
+            $table->integer('date_id');
             $table->string('date_nm',100);
             $table->string('date_nm_kana',200);
             $table->string('date_nm_short',10)->nullable();
-            $table->boolean('disp_fg')->nullable();
+            $table->tinyInteger('disp_fg')->nullable();
             $table->integer('disp_number')->nullable();
             $table->string('contents1',100)->nullable();
             $table->string('contents2',100)->nullable();

@@ -104,6 +104,7 @@ return [
     'between_custom' => \Illuminate\Support\Facades\Lang::get('messages.MSG02008'),
     'date_format_custom' => \Illuminate\Support\Facades\Lang::get('messages.MSG02013'),
     'max_mb' => \Illuminate\Support\Facades\Lang::get('messages.MSG02019'),
+    'decimal_custom' => \Illuminate\Support\Facades\Lang::get('messages.MSG02020'),
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

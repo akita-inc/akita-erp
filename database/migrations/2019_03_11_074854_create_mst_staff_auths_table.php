@@ -16,7 +16,7 @@ class CreateMstStaffAuthsTable extends Migration
         Schema::create('mst_staff_auths', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('mst_screen_id');
-            $table->decimal('accessible_kb', 1,0)->nullable();
+            $table->integer('accessible_kb')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
