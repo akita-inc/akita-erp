@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\TraitRepositories;
 
 
+use App\Models\MScreens;
+use App\Models\MStaffAuths;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use Carbon\Carbon;
@@ -84,6 +86,36 @@ trait StaffTrait
                     DB::rollBack();
                     return false;
                 }
+            }
+        }
+        return true;
+    }
+
+    protected function saveStaffAuth($id, $data= array()){
+        $mStaffAuth = new MStaffAuths();
+        $dataInsert = [];
+        foreach ($data as $key => $value){
+            switch ($key){
+                case 1:
+                    foreach ($value['staffScreen'] as $id){
+                        array_push($dataInsert, array('mst_screen_id' => $id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
+                    }
+                    break;
+                default:
+                    $mst_screen = MScreens::where('screen_category_id',$value['screen_category_id'])->first();
+                    array_push($dataInsert, array('mst_screen_id' => $mst_screen->id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
+            }
+        }
+        if(count($dataInsert) > 0){
+            DB::beginTransaction();
+            try
+            {
+                $mStaffAuth->insert($dataInsert);
+                DB::commit();
+            }catch (\Exception $e) {
+                DB::rollback();
+                dd($e);
+                return false;
             }
         }
         return true;

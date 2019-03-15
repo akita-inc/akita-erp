@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\Common;
+use App\Models\MRoleAuths;
 use App\Models\MStaffs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -19,6 +20,12 @@ class StaffsController
     {
         $mGeneralPurposes = new MGeneralPurposes();
         $data=$mGeneralPurposes->getNmByDataKB(config('params.data_kb')['relocation_municipal_office_cd'],'');
+        return Response()->json(array('success'=>true,'data'=>$data));
+    }
+
+    public function getRoleConfig(Request $request){
+        $mRoleAuth = new MRoleAuths();
+        $data = $mRoleAuth->getListRolesByCondition($request->input('role_id'));
         return Response()->json(array('success'=>true,'data'=>$data));
     }
 }
