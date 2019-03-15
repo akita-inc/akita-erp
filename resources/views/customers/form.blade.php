@@ -149,7 +149,6 @@
 
                     <div class="break-row-form"></div>
 
-                    <!--prefectures_cd address1-->
 
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>$listPrefecture])
@@ -161,7 +160,6 @@
 
                     <div class="break-row-form"></div>
 
-                    <!--address2 address3-->
 
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['filed'=>'address2','attr_input' => "maxlength='20'"])

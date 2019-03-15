@@ -13,6 +13,13 @@ staffs_service = {
             return error;
         });
     },
+    submit: function (data) {
+        return axios.post('/staffs/api-v1/submit', data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
     checkIsExist: function (id) {
         return axios.get('/staffs/api-v1/checkIsExist/' + id).then(function (response) {
             return response.data;
@@ -22,6 +29,13 @@ staffs_service = {
     },
     backHistory: function () {
         return axios.get('/staffs/api-v1/back-history').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    loadListReMunicipalOffice: function () {
+        return axios.post('/staffs/api-v1/relocation-municipal-office').then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;
