@@ -244,7 +244,7 @@
                         @include('Component.form.input',['class'=>'wd-350','filed'=>'discount_rate','attr_input' => "maxlength='3'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','checkboxLabel'=>'あり'])
+                        @include('Component.form.checkbox',['class'=>'wd-350','filed'=>'except_g_drive_bill_fg','checkboxLabel'=>'あり','attr_input' => "value='1'"])
                     </div>
 
                 </div>

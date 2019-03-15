@@ -18779,7 +18779,7 @@ var ctrCustomersVl = new Vue({
       consumption_tax_calc_unit_id: "",
       rounding_method_id: "",
       discount_rate: "",
-      except_g_drive_bill_fg: "",
+      except_g_drive_bill_fg: false,
       mst_bill_issue_destinations: [{
         prefectures_cd: "",
         address1: "",
@@ -18925,7 +18925,13 @@ var ctrCustomersVl = new Vue({
               that.field[key + "_edit"] = $("#hd_" + key).val();
             }
 
-            that.field[key] = $("#hd_" + key).val();
+            if (key == "except_g_drive_bill_fg") {
+              if ($("#hd_" + key).val() == 1) {
+                that.field[key] = true;
+              }
+            } else {
+              that.field[key] = $("#hd_" + key).val();
+            }
           }
         });
         customers_service.getListBill(that.customer_id).then(function (response) {

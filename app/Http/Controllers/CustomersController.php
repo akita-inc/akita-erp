@@ -261,6 +261,11 @@ class CustomersController extends Controller
         unset($arrayInsert["id"]);
         unset($arrayInsert["clone"]);
         DB::beginTransaction();
+        if(isset($arrayInsert["except_g_drive_bill_fg"]) && $arrayInsert["except_g_drive_bill_fg"] == true){
+            $arrayInsert["except_g_drive_bill_fg"] = 1;
+        }else{
+            $arrayInsert["except_g_drive_bill_fg"] = 0;
+        }
         if(isset( $data["id"]) && $data["id"] && !isset($data["clone"]) ){
             $id = $data["id"];
             DB::table($this->table)->where("id","=",$id)->update( $arrayInsert );
