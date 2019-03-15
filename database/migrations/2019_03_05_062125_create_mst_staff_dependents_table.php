@@ -16,13 +16,13 @@ class CreateMstStaffDependentsTable extends Migration
         Schema::create('mst_staff_dependents', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('mst_staff_id');
-            $table->boolean('dependent_kb')->nullable();
+            $table->integer('dependent_kb')->nullable();
             $table->string('last_nm',25)->nullable();
             $table->string('first_nm',25)->nullable();
             $table->string('last_nm_kana',50)->nullable();
             $table->string('first_nm_kana',50)->nullable();
             $table->date('birthday')->nullable();
-            $table->boolean('sex_id')->nullable();
+            $table->integer('sex_id')->nullable();
             $table->string('social_security_number', 10)->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));

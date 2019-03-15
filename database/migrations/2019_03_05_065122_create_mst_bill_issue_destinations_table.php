@@ -15,7 +15,7 @@ class CreateMstBillIssueDestinationsTable extends Migration
     {
         Schema::create('mst_bill_issue_destinations', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('mst_customers');
+            $table->integer('mst_customer_id');
             $table->string('bill_zip_cd',7);
             $table->char('bill_address1',2)->nullable();
             $table->string('bill_address2',20)->nullable();
