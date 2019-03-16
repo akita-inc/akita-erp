@@ -207,11 +207,6 @@ class CustomValidation {
     public static function validateImage(){
         Validator::extend('is_image',function($attribute, $value, $params, $validator) {
             return self::validate_base64($value, ['png', 'jpg', 'jpeg']);
-//            $image = base64_decode($value);
-//            $f = finfo_open();
-//            $result = finfo_buffer($f, $image, FILEINFO_MIME_TYPE);
-//            var_dump($result);die;
-//            return $result == 'image/png' || $result == 'image/jpg' || $result == 'image/jpeg' ;
         });
     }
 }

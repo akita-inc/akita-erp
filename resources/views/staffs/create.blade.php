@@ -838,19 +838,24 @@
                                             ■ 対象の情報
                                         </div>
                                         <div class="col-md-12 col-sm-12">
+                                            @if(@$listStaffScreens)
                                             @foreach($listStaffScreens as $item)
                                                 <input type="checkbox" class="form-control" id="info_target_{{$item->id}}" value="{{$item->id}}" v-model="field.mst_staff_auths[1].staffScreen">
                                                 <span for="info_target_{{$item->id}}">{{$item->screen_nm}}</span>
                                             @endforeach
+                                            @endif
                                         </div>
                                         <div class="col-md-12 col-sm-12">
                                             ■ アクセス許可区分
                                         </div>
                                         <div class="col-md-12 col-sm-12">
+                                            @if(@$listAccessiblePermission)
                                             @foreach($listAccessiblePermission as $key => $value)
                                                 <input type="radio" class="form-control" id="staff_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[1].accessible_kb" value="{{$key}}">
                                                 <span for="staff_access_permission_role_{{$key}}">{{ $value}}</span>
                                             @endforeach
+                                            @endif
+
                                         </div>
                                     </div>
                                 </div>
