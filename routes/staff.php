@@ -12,6 +12,7 @@ Route::group(['name' => 'staffs', 'prefix'=>'/staffs', 'middleware' => ['auth']]
         Route::any('/checkIsExist/{id}','StaffsController@checkIsExist')->name("staffs.checkIsExist");
         Route::any('back-history', ['uses' => 'StaffsController@backHistory']);
         Route::any('/relocation-municipal-office', ['uses' => 'Api\StaffsController@getListReMunicipalOffice']);
+        Route::any('/load-role-config', ['uses' => 'Api\StaffsController@getRoleConfig']);
     });
 });
 

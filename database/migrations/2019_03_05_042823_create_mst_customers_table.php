@@ -33,7 +33,7 @@ class CreateMstCustomersTable extends Migration
             $table->string('address3',50)->nullable();
             $table->string('phone_number',20)->nullable();
             $table->string('fax_number',20)->nullable();
-            $table->text('hp_url')->nullable();
+            $table->string('hp_url', 2500)->nullable();
             $table->integer('customer_category_id')->nullable();
             $table->integer('prime_business_office_id')->nullable();
             $table->string('explanations_bill',100)->nullable();

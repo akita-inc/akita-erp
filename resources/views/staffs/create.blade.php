@@ -204,9 +204,9 @@
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             <label class="grid-form-label ">名称</label>
                             <Dropdown  id="relocation_municipal_office_cd"  name="relocation_municipal_office_cd"
+                                    v-on:selected="handleSelect"
                                     :options="field.dropdown_relocate_municipal_office_nm"
-                                       :disabled="false"
-                                      >
+                                    :disabled="false" placeholder="">
                             </Dropdown>
                         </div>
                     </div>
@@ -481,7 +481,7 @@
                     </div>
                 </div>
             </div>
-            <!--Block 12 not yet-->
+            <!--Block 12-->
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_staff_driver_license" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -822,6 +822,8 @@
                                         'filed'=>'mst_role_id',
                                         'filedId'=>"mst_access_authority_mst_role_id",
                                         'filedMode'=>"items.mst_role_id",
+                                        'array'=>@$listRoles,
+                                        'attr_input' => 'v-on:change="loadRoleConfig"'
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -836,31 +838,19 @@
                                             ■ 対象の情報
                                         </div>
                                         <div class="col-md-12 col-sm-12">
-                                            <input type="checkbox" class="form-control" id="info_target_1">
-                                            <span for="info_target.1">{{ trans(@$prefix."info_target.1") }}</span>
-                                            <input type="checkbox" class="form-control" id="info_target_2">
-                                            <span for="info_target.2">{{ trans(@$prefix."info_target.2") }}</span>
-                                            <input type="checkbox" class="form-control" id="info_target_3">
-                                            <span for="info_target.3">{{ trans(@$prefix."info_target.3") }}</span>
-                                            <input type="checkbox" class="form-control" id="info_target_4">
-                                            <span for="info_target.4">{{ trans(@$prefix."info_target.4") }}</span>
-                                            <input type="checkbox" class="form-control" id="info_target_5">
-                                            <span for="info_target.5">{{ trans(@$prefix."info_target.5") }}</span>
-                                            <input type="checkbox" class="form-control" id="info_target_6">
-                                            <span for="info_target.6">{{ trans(@$prefix."info_target.6") }}</span>
-                                            <input type="checkbox" class="form-control" id="info_target_7">
-                                            <span for="info_target.7">{{ trans(@$prefix."info_target.7") }}</span>
+                                            @foreach($listStaffScreens as $item)
+                                                <input type="checkbox" class="form-control" id="info_target_{{$item->id}}" value="{{$item->id}}" v-model="field.mst_staff_auths[1].staffScreen">
+                                                <span for="info_target_{{$item->id}}">{{$item->screen_nm}}</span>
+                                            @endforeach
                                         </div>
                                         <div class="col-md-12 col-sm-12">
                                             ■ アクセス許可区分
                                         </div>
                                         <div class="col-md-12 col-sm-12">
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
-                                            <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
-                                            <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
-                                            <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
+                                            @foreach($listAccessiblePermission as $key => $value)
+                                                <input type="radio" class="form-control" id="staff_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[1].accessible_kb" value="{{$key}}">
+                                                <span for="staff_access_permission_role_{{$key}}">{{ $value}}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -876,12 +866,10 @@
                                             ■ アクセス許可区分
                                         </div>
                                         <div class="col-md-12 col-sm-12">
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
-                                            <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
-                                            <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
-                                            <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
+                                            @foreach($listAccessiblePermission as $key => $value)
+                                                <input type="radio" class="form-control" id="supplier_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[2].accessible_kb" value="{{$key}}">
+                                                <span for="supplier_access_permission_role_{{$key}}">{{ $value}}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -894,12 +882,10 @@
                                             ■ アクセス許可区分
                                         </div>
                                         <div class="col-md-12 col-sm-12">
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
-                                            <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
-                                            <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
-                                            <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
+                                            @foreach($listAccessiblePermission as $key => $value)
+                                                <input type="radio" class="form-control" id="customer_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[3].accessible_kb" value="{{$key}}">
+                                                <span for="customer_access_permission_role_{{$key}}">{{ $value}}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -914,12 +900,10 @@
                                             ■ アクセス許可区分
                                         </div>
                                         <div class="col-md-12 col-sm-12">
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_1">
-                                            <span for="access_permission_role.1">{{ trans(@$prefix."access_permission_role.1") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_2">
-                                            <span for="access_permission_role.2">{{ trans(@$prefix."access_permission_role.2") }}</span>
-                                            <input type="radio" name="access_permission_role" class="form-control" id="access_permission_role_3">
-                                            <span for="access_permission_role.3">{{ trans(@$prefix."access_permission_role.3") }}</span>
+                                            @foreach($listAccessiblePermission as $key => $value)
+                                                <input type="radio" class="form-control" id="vehicle_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[4].accessible_kb" value="{{$key}}">
+                                                <span for="vehicle_access_permission_role_{{$key}}">{{ $value}}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>

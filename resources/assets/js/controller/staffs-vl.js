@@ -43,7 +43,7 @@ var ctrStaffsVl = new Vue({
             health_insurance_class:"",
             welfare_annuity_class:"",
             relocation_municipal_office_cd:"",
-            dropdown_relocate_municipal_office_nm:"",
+            dropdown_relocate_municipal_office_nm:[],
             educational_background:"",
             educational_background_dt:"",
             mst_staff_job_experiences: [{
@@ -71,43 +71,28 @@ var ctrStaffsVl = new Vue({
                 dept_sex_id:"",
                 dept_social_security_number:"",
             }],
-            drivers_license_number:"",
-            drivers_license_color_id:"",
-            drivers_license_issued_dt:"",
-            drivers_license_period_validity:"",
-            drivers_license_picture:"",
-            btn_browse_license_picture:"",
-            btn_delete_file_license_picture:"",
-            drivers_license_divisions_1:"",
-            drivers_license_divisions_2:"",
-            drivers_license_divisions_3:"",
-            drivers_license_divisions_4:"",
-            drivers_license_divisions_5:"",
-            drivers_license_divisions_6:"",
-            drivers_license_divisions_7:"",
-            drivers_license_divisions_8:"",
-            drivers_license_divisions_9:"",
-            drivers_license_divisions_10:"",
-            drivers_license_divisions_11:"",
-            drivers_license_divisions_12:"",
-            drivers_license_divisions_13:"",
-            drivers_license_divisions_14:"",
-            retire_reasons:"",
-            retire_dt:"",
-            death_reasons:"",
-            death_dt:"",
-            belong_company_id:"",
-            occupation_id:"",
-            mst_business_office_id:"",
-            depertment_id:"",
-            driver_election_dt:"",
-            medical_checkup_interval_id:"",
-            employment_insurance_numbers:"",
-            health_insurance_numbers:"",
-            employees_pension_insurance_numbers:"",
-            admin_fg:"",
+            mst_role_id:'',
+            mst_staff_auths: {
+                1: {
+                    staffScreen: [],
+                    screen_category_id:1,
+                    accessible_kb: 9,
+                },
+                2: {
+                    screen_category_id: 2,
+                    accessible_kb: 9,
+                },
+                3: {
+                    screen_category_id: 3,
+                    accessible_kb: 9,
+                },
+                4: {
+                    screen_category_id: 4,
+                    accessible_kb: 9,
+                },
+            }
+
         },
-        image:"",
         errors:{},
         dateFormat: {
             stringify: (date) => {
@@ -123,31 +108,13 @@ var ctrStaffsVl = new Vue({
         showError: function ( errors ){
             return errors.join("<br/>");
         },
-        onFileChange(e) {
-            this.field.drivers_license_picture= this.$refs.file.files[0].name;
-            console.log(this.$refs.file.files[0]);
-            let files = e.target.files || e.dataTransfer.files;
-            if (!files.length)
-                return;
-            this.createImage(files[0]);
-        },
-        createImage(file) {
-            let reader = new FileReader();
-            let that = this;
-            reader.onload = (e) => {
-                that.image = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        },
         submit:function()
         {
             let that = this;
             that.loading = true;
-            this.field.drivers_license_picture= that.image;
-                staffs_service.submit(this.field).then((response) => {
+            staffs_service.submit(this.field).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
-                    this.field.drivers_license_picture= this.$refs.file.files[0].name;
                 }
                 else
                 {
@@ -156,10 +123,15 @@ var ctrStaffsVl = new Vue({
                 that.loading = false;
             });
         },
+        getDropdownValues:function()
+        {
+
+        },
         onChange:function(event)
         {
             this.field.relocation_municipal_office_cd=event.target.value;
-            console.log(event.target.value);
+            // this.handleSelect({id:event.target.value,name:event.target.selectedOptions[0].text});
+            // this.handleSelect({id:event.target.value,name:'abc2'});
         },
         addRows: function (block) {
             let value;
@@ -221,13 +193,40 @@ var ctrStaffsVl = new Vue({
             staffs_service.backHistory().then(function () {
                 window.location.href = listRoute;
             });
-        }
+        },
+        loadRoleConfig: function () {
+            var that = this;
+            staffs_service.loadRoleConfig(this.field.mst_role_id).then(function (result) {
+                var data =  result.data;
+                if(data.length > 0){
+                    data.forEach(function(item) {
+                        switch (item.screen_category_id) {
+                            case 1:
+                                that.field.mst_staff_auths[1].staffScreen.push(item.mst_screen_id);
+                                that.field.mst_staff_auths[1].accessible_kb = item.accessible_kb;
+                                break;
+                            default:
+                                that.field.mst_staff_auths[2].accessible_kb = item.accessible_kb;
+                        }
+
+                    });
+                }
+                console.log(that.field.mst_staff_auths);
+
+            });
+        },
+        handleSelect: function (selected) {
+            if(typeof selected.id!="undefined"){
+                this.field.relocation_municipal_office_cd = selected.id;
+            }
+        },
     },
     mounted () {
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.field.dropdown_relocate_municipal_office_nm =  response.data;
         });
+
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
     },

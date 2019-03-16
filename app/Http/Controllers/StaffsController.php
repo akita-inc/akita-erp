@@ -5,6 +5,8 @@ use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Http\Controllers\TraitRepositories\StaffTrait;
 use App\Models\MBusinessOffices;
+use App\Models\MRoles;
+use App\Models\MScreens;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -212,17 +214,19 @@ class StaffsController extends Controller
     protected function save($data){
         $data['password']=bcrypt($data['password']);
         $data['admin_fg']=isset($data['admin_fg'])?1:0;
-        dd($data);
         $arrayInsert = $data;
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
         $mst_staff_qualifications=$data["mst_staff_qualifications"];
         $mst_staff_dependents=$data["mst_staff_dependents"];
+        $mst_staff_auths=$data["mst_staff_auths"];
         DB::beginTransaction();
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
         unset($arrayInsert["mst_staff_qualifications"]);
         unset($arrayInsert["mst_staff_dependents"]);
+        unset($arrayInsert["mst_staff_auths"]);
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
+        $this->saveStaffAuth($id,$mst_staff_auths);
         $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
         $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications","qualifications_");
         $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents","dept_",["disp_number"]);
@@ -236,6 +240,8 @@ class StaffsController extends Controller
     {
         $mGeneralPurposes = new MGeneralPurposes();
         $mBusinessOffices=new MBusinessOffices();
+        $mRoles = new MRoles();
+        $mScreen = new MScreens();
         $listEmployPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
         $listPosition=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['position'], '');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
@@ -249,6 +255,9 @@ class StaffsController extends Controller
         $mBusinessOffices=$mBusinessOffices->getListBusinessOffices();
         $listDriversLicenseDivisions=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['drivers_license_divisions_kb'],'');
         $listDriversLicenseColors=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['drivers_license_color'],'');
+        $listRoles = $mRoles->getListRoles();
+        $listStaffScreens = $mScreen->getListScreensByCondition(['screen_category_id' => 1]);
+        $listAccessiblePermission=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['accessible_kb'],'Empty');
         return view('staffs.create', [
             'listEmployPattern' => $listEmployPattern,
             'listPosition'=>$listPosition,
@@ -257,6 +266,9 @@ class StaffsController extends Controller
             'listReMunicipalOffice'=>$listReMunicipalOffice,
             'listQualificationKind'=>$listQualificationKind,
             'listDependentKBs'=>$listDependentKBs,
+            'listRoles'=>$listRoles,
+            'listStaffScreens'=>$listStaffScreens,
+            'listAccessiblePermission'=>$listAccessiblePermission,
             'listBelongCompanies'=>$listBelongCompanies,
             'listOccupation'=>$listOccupation,
             'mBusinessOffices'=>$mBusinessOffices,
