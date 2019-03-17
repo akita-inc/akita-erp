@@ -23438,6 +23438,12 @@ var ctrStaffsVl = new Vue({
     this.autokana['first_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_6__["bind"]('#first_nm', '#first_nm_kana', {
       katakana: true
     });
+    this.autokana['dept_last_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_6__["bind"]('#mst_staff_dependents_last_nm0', '#mst_staff_dependents_last_nm_kana0', {
+      katakana: true
+    });
+    this.autokana['dept_first_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_6__["bind"]('#mst_staff_dependents_first_nm0', '#mst_staff_dependents_first_nm_kana0', {
+      katakana: true
+    });
   },
   components: {
     DatePicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_2___default.a,

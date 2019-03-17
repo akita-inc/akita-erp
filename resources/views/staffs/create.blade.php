@@ -203,7 +203,7 @@
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             <label class="grid-form-label ">名称</label>
-                            <Dropdown  id="relocation_municipal_office_cd"  name="relocation_municipal_office_cd"
+                            <Dropdown  id="relocation_municipal_office_cd" class="dropdown-search-list"  name="relocation_municipal_office_cd"
                                     v-on:selected="handleSelect"
                                     :options="dropdown_relocate_municipal_office_nm"
                                     :disabled="false" placeholder="">

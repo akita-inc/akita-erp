@@ -267,7 +267,9 @@ var ctrStaffsVl = new Vue({
 
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
-    },
+        this.autokana ['dept_last_nm'] = AutoKana.bind('#mst_staff_dependents_last_nm0', '#mst_staff_dependents_last_nm_kana0', { katakana: true });
+        this.autokana ['dept_first_nm'] = AutoKana.bind('#mst_staff_dependents_first_nm0', '#mst_staff_dependents_first_nm_kana0',  { katakana: true });
+        },
     components: {
         DatePicker,
         PulseLoader,

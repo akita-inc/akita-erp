@@ -68,3 +68,24 @@
 .pl-150{
     padding-left: 150px;
 }
+.dropdown-search-list{
+    height: 38px;
+}
+.dropdown-search-list .dropdown-input{
+    height: 100%!important;
+    width: 100%!important;
+    min-width: unset!important;
+    max-width: unset!important;
+}
+.dropdown-search-list .dropdown-content{
+    min-width: unset!important;
+    max-width: unset!important;
+    width: 100%;
+}
+.dropdown-search-list .dropdown-content .dropdown-item{
+    height: 38px;
+    line-height: 38px;
+    font-size: 1rem!important;
+    font-weight: 400!important;
+    color: #495057!important;
+}
