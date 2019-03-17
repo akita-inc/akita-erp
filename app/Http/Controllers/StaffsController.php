@@ -211,9 +211,28 @@ class StaffsController extends Controller
             $validator->errors()->add('retire_dt', str_replace(' :attribute', $this->labels['retire_dt'], Lang::get('messages.MSG02014')));
         }
     }
+    protected function uploadFile($file,$path)
+    {
+        $exploded=explode(",",$file);
+        $decoded=base64_decode($exploded[1]);
+        if(str_contains($exploded[0],'jpeg'))
+        {
+            $extension='jpg';
+        }
+        else
+        {
+            $extension='png';
+        }
+        $fileName=str_random().'.'.$extension;
+        $filePath=$path.$fileName;
+        file_put_contents($filePath,$decoded);
+        return $fileName;
+    }
+
     protected function save($data){
         $data['password']=bcrypt($data['password']);
         $data['admin_fg']=isset($data['admin_fg'])?1:0;
+        $data["drivers_license_picture"]=$this->uploadFile($data["drivers_license_picture"],config('params.staff_path'));
         $arrayInsert = $data;
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
         $mst_staff_qualifications=$data["mst_staff_qualifications"];
@@ -230,6 +249,7 @@ class StaffsController extends Controller
         $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
         $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications","qualifications_");
         $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents","dept_",["disp_number"]);
+        dd(true);
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;

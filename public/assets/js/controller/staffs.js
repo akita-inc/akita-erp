@@ -23207,7 +23207,6 @@ var ctrStaffsVl = new Vue({
       health_insurance_class: "",
       welfare_annuity_class: "",
       relocation_municipal_office_cd: "",
-      dropdown_relocate_municipal_office_nm: [],
       educational_background: "",
       educational_background_dt: "",
       mst_staff_job_experiences: [{
@@ -23240,8 +23239,6 @@ var ctrStaffsVl = new Vue({
       drivers_license_issued_dt: "",
       drivers_license_period_validity: "",
       drivers_license_picture: "",
-      btn_browse_license_picture: "",
-      btn_delete_file_license_picture: "",
       drivers_license_divisions_1: "",
       drivers_license_divisions_2: "",
       drivers_license_divisions_3: "",
@@ -23291,7 +23288,8 @@ var ctrStaffsVl = new Vue({
         }
       }
     },
-    image: "",
+    image_drivers_license_picture: "",
+    dropdown_relocate_municipal_office_nm: [],
     errors: {},
     dateFormat: {
       stringify: function stringify(date) {
@@ -23308,32 +23306,27 @@ var ctrStaffsVl = new Vue({
       return errors.join("<br/>");
     },
     onFileChange: function onFileChange(e) {
-      this.field.drivers_license_picture = this.$refs.file.files[0].name;
-      console.log(this.$refs.file.files[0]);
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length) return;
-      this.createImage(files[0]);
-    },
-    createImage: function createImage(file) {
-      var reader = new FileReader();
-      var that = this;
-
-      reader.onload = function (e) {
-        that.image = e.target.result;
-      };
-
-      reader.readAsDataURL(file);
-    },
-    submit: function submit() {
       var _this = this;
 
+      var fileReader = new FileReader();
+      fileReader.readAsDataURL(e.target.files[0]);
+
+      fileReader.onload = function (e) {
+        _this.field.drivers_license_picture = e.target.result;
+      };
+
+      this.image_drivers_license_picture = e.target.files[0].name;
+    },
+    deleteFileUpload: function deleteFileUpload() {
+      this.image_drivers_license_picture = "";
+      this.field.drivers_license_picture = "";
+    },
+    submit: function submit() {
       var that = this;
       that.loading = true;
-      this.field.drivers_license_picture = that.image;
       staffs_service.submit(this.field).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
-          _this.field.drivers_license_picture = _this.$refs.file.files[0].name;
         } else {
           that.errors = {};
         }
@@ -23341,7 +23334,6 @@ var ctrStaffsVl = new Vue({
         that.loading = false;
       });
     },
-    getDropdownValues: function getDropdownValues() {},
     onChange: function onChange(event) {
       this.field.relocation_municipal_office_cd = event.target.value; // this.handleSelect({id:event.target.value,name:event.target.selectedOptions[0].text});
       // this.handleSelect({id:event.target.value,name:'abc2'});
@@ -23390,10 +23382,6 @@ var ctrStaffsVl = new Vue({
     convertKana: function convertKana(input, destination) {
       this.field[destination] = this.autokana[input.target.id].getFurigana();
     },
-    onBlur: function onBlur() {
-      this.history = [];
-      this.furigana = '';
-    },
     getAddrFromZipCode: function getAddrFromZipCode() {
       var that = this;
       var zip = that.field.zip_cd;
@@ -23405,8 +23393,8 @@ var ctrStaffsVl = new Vue({
         that.field.address2 = addr.street; // 町域
       });
     },
-    removeRows: function removeRows(index) {
-      this.field.mst_staff_job_experiences.splice(index, 1);
+    removeRows: function removeRows(block, index) {
+      this.field[block].splice(index, 1);
     },
     backHistory: function backHistory() {
       staffs_service.backHistory().then(function () {
@@ -23431,8 +23419,6 @@ var ctrStaffsVl = new Vue({
             }
           });
         }
-
-        console.log(that.field.mst_staff_auths);
       });
     },
     handleSelect: function handleSelect(selected) {
@@ -23444,7 +23430,7 @@ var ctrStaffsVl = new Vue({
   mounted: function mounted() {
     var that = this;
     staffs_service.loadListReMunicipalOffice().then(function (response) {
-      that.field.dropdown_relocate_municipal_office_nm = response.data;
+      that.dropdown_relocate_municipal_office_nm = response.data;
     });
     this.autokana['last_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_6__["bind"]('#last_nm', '#last_nm_kana', {
       katakana: true

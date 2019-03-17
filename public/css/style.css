@@ -47,6 +47,7 @@
     background-color:rgb(217,217,217)!important;
     color:#1d2124!important;
     text-align: center!important;
+    cursor:pointer;
 }
 .file-image {
     width: 0.1px;

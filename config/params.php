@@ -48,4 +48,6 @@ return [
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicle_path' => storage_path('vehicle/'),
+    'staff_path'=>storage_path('staff/'),
+
 ];

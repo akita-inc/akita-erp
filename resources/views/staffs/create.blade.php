@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <form class="form-inline" role="form" enctype="multipart/form-data">
+        <form class="form-inline" role="form" enctype="multipart/form-data" >
             <div class="text-danger">
                 {{ trans("common.description-form.indicates_required_items") }}
             </div>
@@ -205,7 +205,7 @@
                             <label class="grid-form-label ">名称</label>
                             <Dropdown  id="relocation_municipal_office_cd"  name="relocation_municipal_office_cd"
                                     v-on:selected="handleSelect"
-                                    :options="field.dropdown_relocate_municipal_office_nm"
+                                    :options="dropdown_relocate_municipal_office_nm"
                                     :disabled="false" placeholder="">
                             </Dropdown>
                         </div>
@@ -279,7 +279,7 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_job_experiences')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -531,17 +531,13 @@
                                 <div class="break-row-form"></div>
 
                                 <div class="col-md-12 col-sm-12">
-                                    @include('Component.form.input',[
+                                    @include('Component.form.file',[
                                         'filed'=>'drivers_license_picture',
+                                        'attr_input'=>'v-on:change="onFileChange"',
+                                        'attr_delete_path'=>'@click="deleteFileUpload"',
                                         'filedId'=>"mst_staff_drivers_license_picture",
                                         'filedMode'=>"items.drivers_license_picture",
                                     ])
-                                    <div class="wrap-control-group">
-                                        <input type="file" name="file" id="file" ref="file" v-on:change="onFileChange"  class="file-image" />
-                                        <label  class="label-file-image" for="file">{{trans($prefix.'btn_browse_license_picture')}}</label>
-                                        <button type="button" class="btn btn-dark float-right">{{trans($prefix.'btn_delete_file_license_picture')}}</button>
-                                    </div>
-
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">

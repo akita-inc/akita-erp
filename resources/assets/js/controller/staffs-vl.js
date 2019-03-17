@@ -43,7 +43,6 @@ var ctrStaffsVl = new Vue({
             health_insurance_class:"",
             welfare_annuity_class:"",
             relocation_municipal_office_cd:"",
-            dropdown_relocate_municipal_office_nm:[],
             educational_background:"",
             educational_background_dt:"",
             mst_staff_job_experiences: [{
@@ -76,8 +75,6 @@ var ctrStaffsVl = new Vue({
             drivers_license_issued_dt:"",
             drivers_license_period_validity:"",
             drivers_license_picture:"",
-            btn_browse_license_picture:"",
-            btn_delete_file_license_picture:"",
             drivers_license_divisions_1:"",
             drivers_license_divisions_2:"",
             drivers_license_divisions_3:"",
@@ -127,7 +124,8 @@ var ctrStaffsVl = new Vue({
                 },
             }
         },
-        image:"",
+        image_drivers_license_picture:"",
+        dropdown_relocate_municipal_office_nm:[],
         errors:{},
         dateFormat: {
             stringify: (date) => {
@@ -143,31 +141,28 @@ var ctrStaffsVl = new Vue({
         showError: function ( errors ){
             return errors.join("<br/>");
         },
-        onFileChange(e) {
-            this.field.drivers_license_picture= this.$refs.file.files[0].name;
-            console.log(this.$refs.file.files[0]);
-            let files = e.target.files || e.dataTransfer.files;
-            if (!files.length)
-                return;
-            this.createImage(files[0]);
-        },
-        createImage(file) {
-            let reader = new FileReader();
-            let that = this;
-            reader.onload = (e) => {
-                that.image = e.target.result;
+        onFileChange:function(e) {
+
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(e.target.files[0]);
+            fileReader.onload = (e) => {
+                this.field.drivers_license_picture= e.target.result;
             };
-            reader.readAsDataURL(file);
+            this.image_drivers_license_picture=e.target.files[0].name;
+
+        },
+        deleteFileUpload:function()
+        {
+            this.image_drivers_license_picture="";
+            this.field.drivers_license_picture="";
         },
         submit:function()
         {
             let that = this;
             that.loading = true;
-            this.field.drivers_license_picture= that.image;
-                staffs_service.submit(this.field).then((response) => {
+            staffs_service.submit(this.field).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
-                    this.field.drivers_license_picture= this.$refs.file.files[0].name;
                 }
                 else
                 {
@@ -175,10 +170,6 @@ var ctrStaffsVl = new Vue({
                 }
                 that.loading = false;
             });
-        },
-        getDropdownValues:function()
-        {
-
         },
         onChange:function(event)
         {
@@ -226,10 +217,6 @@ var ctrStaffsVl = new Vue({
         convertKana: function (input , destination) {
             this.field[destination] = this.autokana[input.target.id].getFurigana();
         },
-        onBlur: function(){
-            this.history = [];
-            this.furigana = '';
-        },
         getAddrFromZipCode: function() {
             var that=this;
             var zip = that.field.zip_cd;
@@ -239,8 +226,8 @@ var ctrStaffsVl = new Vue({
                 that.field.address2=addr.street;// 町域
             });
         },
-        removeRows: function (index) {
-            this.field.mst_staff_job_experiences.splice(index, 1);
+        removeRows: function (block,index) {
+            this.field[block].splice(index, 1);
         },
         backHistory: function () {
             staffs_service.backHistory().then(function () {
@@ -264,8 +251,6 @@ var ctrStaffsVl = new Vue({
 
                     });
                 }
-                console.log(that.field.mst_staff_auths);
-
             });
         },
         handleSelect: function (selected) {
@@ -277,7 +262,7 @@ var ctrStaffsVl = new Vue({
     mounted () {
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
-            that.field.dropdown_relocate_municipal_office_nm =  response.data;
+            that.dropdown_relocate_municipal_office_nm =  response.data;
         });
 
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
