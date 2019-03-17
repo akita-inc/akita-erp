@@ -3,11 +3,9 @@
         <label class="{!! isset($required) && $required ? "required":"" !!}" for="{!! $filed !!}">
             {{ trans(@$prefix.$filed) }}
         </label>
-        <input  type="text"
-               v-bind:class="errors.{!! $filed !!} != undefined ? 'form-control is-invalid':'form-control' "
+        <input  type="text" v-bind:class="errors.{!! $filed !!} != undefined ? 'form-control is-invalid':'form-control' "
                class="form-control"
                v-model="image_{!! $filed !!}" readonly style="background-color: white">
-        {{--showing variable path name file (v-model) in vuejs--}}
     </div>
     <span v-cloak v-if="errors.{!! $filed !!} != undefined" class="message-error" v-html="errors.{!! $filed !!}.join('<br />')"></span>
 </div>

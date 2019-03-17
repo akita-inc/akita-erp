@@ -46,8 +46,10 @@
     margin-left: 170px;
     background-color:rgb(217,217,217)!important;
     color:#1d2124!important;
-    text-align: center!important;
     cursor:pointer;
+    justify-content: center!important;
+    padding-left: 0px!important;
+    width:114px!important;
 }
 .file-image {
     width: 0.1px;
