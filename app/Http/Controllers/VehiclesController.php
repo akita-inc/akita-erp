@@ -116,7 +116,7 @@ class VehiclesController extends Controller
                 \Session::flash('message',Lang::get('messages.MSG06002'));
             }
 
-            return redirect()->route('suppliers.list');
+            return redirect()->route('vehicles.list');
         }
         if ($mVehicle->deleteVehicle($id)) {
             $response = ['data' => 'success'];
@@ -169,7 +169,17 @@ class VehiclesController extends Controller
                 $flagLasted =true;
             }
         }
-
+        $checkboxes = array(
+            'wireless_installation_fg',
+            'bed_fg',
+            'refrigerator_fg',
+            'snowmelt_fg',
+            'double_door_fg',
+            'floor_iron_plate_fg',
+            'floor_sagawa_embedded_fg',
+            'floor_roller_fg',
+            'floor_joloda_conveyor_fg',
+            );
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
@@ -270,7 +280,7 @@ class VehiclesController extends Controller
                     $listVehiclesExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"]]);
                     foreach ($listVehiclesExist as $item) {
                         if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                            $validator->errors()->add('vehicles_cd',Lang::get('messages.MSG10003'));
+                            $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
                         }
                     }
                 });
@@ -281,120 +291,140 @@ class VehiclesController extends Controller
                     ->withInput();
             }else{
                 DB::beginTransaction();
-                try
-                {
-                    if($mode=='registerHistoryLeft'){
+                try {
+                    if ($mode == 'registerHistoryLeft') {
 
                         $mVehicle->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
                         $mVehicle->save();
                         $mVehicle = new MVehicles();
-                    }elseif ($mode=='edit'){
-                        if($data["adhibition_start_dt"]!= $mVehicle->adhibition_start_dt){
-                            $mVehicle->editVehicle($mVehicle->id,$data["adhibition_start_dt"]);
+                    } elseif ($mode == 'edit') {
+                        if ($data["adhibition_start_dt"] != $mVehicle->adhibition_start_dt) {
+                            $mVehicle->editVehicle($mVehicle->id, $data["adhibition_start_dt"]);
                         }
                     }
-                    $mVehicle->vehicles_cd= $data["vehicles_cd"];
-                    if($mode=='registerHistoryLeft'){
-                        $mVehicle->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt_new"],'yyyy-mm-dd');
-                        $mVehicle->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
-                    }else{
-                        $mVehicle->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
-                        $mVehicle->adhibition_end_dt= TimeFunction::dateFormat($mode=='edit' ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                    $mVehicle->vehicles_cd = $data["vehicles_cd"];
+                    if ($mode == 'registerHistoryLeft') {
+                        $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt_new"], 'yyyy-mm-dd');
+                        $mVehicle->adhibition_end_dt = TimeFunction::dateFormat(config('params.adhibition_end_dt_default'), 'yyyy-mm-dd');
+                    } else {
+                        $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt"], 'yyyy-mm-dd');
+                        $mVehicle->adhibition_end_dt = TimeFunction::dateFormat($mode == 'edit' ? $data["adhibition_end_dt"] : config('params.adhibition_end_dt_default'), 'yyyy-mm-dd');
                     }
 
 
-                    $mVehicle->door_number= $data["door_number"];
-                    $mVehicle->vehicles_kb= $data["vehicles_kb"];
-                    $mVehicle->registration_numbers= $data["registration_numbers"];
-                    $mVehicle->mst_business_office_id= $data["mst_business_office_id"];
-                    $mVehicle->vehicle_size_kb= $data["vehicle_size_kb"];
-                    $mVehicle->vehicle_purpose_id= $data["vehicle_purpose_id"];
-                    $mVehicle->land_transport_office_cd= $data["land_transport_office_cd"];
-                    $mVehicle->registration_dt= TimeFunction::dateFormat($data["registration_dt"],'yyyy-mm-dd');
-                    $mVehicle->first_year_registration_dt= TimeFunction::dateFormat($data["first_year_registration_dt"],'yyyy-mm-dd');
-                    $mVehicle->vehicle_classification_id= $data["vehicle_classification_id"];
-                    $mVehicle->private_commercial_id= $data["private_commercial_id"];
-                    $mVehicle->car_body_shape_id= $data["car_body_shape_id"];
-                    $mVehicle->vehicle_id= $data["vehicle_id"];
-                    $mVehicle->seating_capacity= $data["seating_capacity"];
-                    $mVehicle->max_loading_capacity= $data["max_loading_capacity"];
-                    $mVehicle->vehicle_body_weights= $data["vehicle_body_weights"];
-                    $mVehicle->vehicle_total_weights= $data["vehicle_total_weights"];
-                    $mVehicle->frame_numbers= $data["frame_numbers"];
-                    $mVehicle->vehicle_lengths= $data["vehicle_lengths"];
-                    $mVehicle->vehicle_widths= $data["vehicle_widths"];
-                    $mVehicle->vehicle_heights= $data["vehicle_heights"];
-                    $mVehicle->axle_loads_ff= $data["axle_loads_ff"];
-                    $mVehicle->axle_loads_fr= $data["axle_loads_fr"];
-                    $mVehicle->axle_loads_rf= $data["axle_loads_rf"];
-                    $mVehicle->axle_loads_rr= $data["axle_loads_rr"];
-                    $mVehicle->vehicle_types= $data["vehicle_types"];
-                    $mVehicle->engine_typese= $data["engine_typese"];
-                    $mVehicle->total_displacements= $data["total_displacements"];
-                    $mVehicle->rated_outputs= $data["rated_outputs"];
-                    $mVehicle->kinds_of_fuel_id= $data["kinds_of_fuel_id"];
-                    $mVehicle->type_designation_numbers= $data["type_designation_numbers"];
-                    $mVehicle->id_segment_numbers= $data["id_segment_numbers"];
-                    $mVehicle->owner_nm= $data["owner_nm"];
-                    $mVehicle->owner_address= $data["owner_address"];
-                    $mVehicle->user_nm= $data["user_nm"];
-                    $mVehicle->user_address= $data["user_address"];
-                    $mVehicle->user_base_locations= $data["user_base_locations"];
-                    $mVehicle->expiry_dt= TimeFunction::dateFormat($data["expiry_dt"],'yyyy-mm-dd');
-                    $mVehicle->car_inspections_notes= $data["car_inspections_notes"];
-                    $mVehicle->digital_tachograph_numbers= $data["digital_tachograph_numbers"];
-                    $mVehicle->etc_numbers= $data["etc_numbers"];
-                    $mVehicle->drive_recorder_numbers= $data["drive_recorder_numbers"];
-                    $mVehicle->bed_fg= isset($data["bed_fg"]) ? 1 : 0;
-                    $mVehicle->refrigerator_fg= isset($data["refrigerator_fg"]) ? 1 : 0;
-                    $mVehicle->drive_system_id= $data["drive_system_id"];
-                    $mVehicle->transmissions_id= $data["transmissions_id"];
-                    $mVehicle->transmissions_notes= $data["transmissions_notes"];
-                    $mVehicle->suspensions_cd= $data["suspensions_cd"];
-                    $mVehicle->tank_capacity_1= $data["tank_capacity_1"];
-                    $mVehicle->tank_capacity_2= $data["tank_capacity_2"];
-                    $mVehicle->loading_inside_dimension_capacity_length= $data["loading_inside_dimension_capacity_length"];
-                    $mVehicle->loading_inside_dimension_capacity_width= $data["loading_inside_dimension_capacity_width"];
-                    $mVehicle->loading_inside_dimension_capacity_height= $data["loading_inside_dimension_capacity_height"];
-                    $mVehicle->snowmelt_fg= isset($data["snowmelt_fg"]) ? 1 : 0;
-                    $mVehicle->double_door_fg= isset($data["double_door_fg"]) ? 1 : 0;
-                    $mVehicle->floor_iron_plate_fg= isset($data["floor_iron_plate_fg"]) ? 1 : 0;
-                    $mVehicle->floor_sagawa_embedded_fg= isset($data["floor_sagawa_embedded_fg"]) ? 1 : 0;
-                    $mVehicle->floor_roller_fg= isset($data["floor_roller_fg"]) ? 1 : 0;
-                    $mVehicle->floor_joloda_conveyor_fg= isset($data["floor_joloda_conveyor_fg"]) ? 1 : 0;
-                    $mVehicle->power_gate_cd= $data["power_gate_cd"];
-                    $mVehicle->vehicle_delivery_dt= TimeFunction::dateFormat($data["vehicle_delivery_dt"],'yyyy-mm-dd');
-                    $mVehicle->specification_notes= $data["specification_notes"];
-                    $mVehicle->mst_staffs_id= $data["mst_staffs_id"];
-                    $mVehicle->personal_insurance_prices= $data["personal_insurance_prices"];
-                    $mVehicle->property_damage_insurance_prices= $data["property_damage_insurance_prices"];
-                    $mVehicle->vehicle_insurance_prices= $data["vehicle_insurance_prices"];
-                    $mVehicle->acquisition_amounts= $data["acquisition_amounts"];
-                    $mVehicle->acquisition_amortization= $data["acquisition_amortization"];
-                    $mVehicle->durable_years= $data["durable_years"];
-                    $mVehicle->tire_sizes= $data["tire_sizes"];
-                    $mVehicle->battery_sizes= $data["battery_sizes"];
-                    $mVehicle->dispose_dt= TimeFunction::dateFormat($data["dispose_dt"],'yyyy-mm-dd');
-                    $mVehicle->notes= $data["notes"];
+                    $mVehicle->door_number = $data["door_number"];
+                    $mVehicle->vehicles_kb = $data["vehicles_kb"];
+                    $mVehicle->registration_numbers = $data["registration_numbers"];
+                    $mVehicle->mst_business_office_id = $data["mst_business_office_id"];
+                    $mVehicle->vehicle_size_kb = $data["vehicle_size_kb"];
+                    $mVehicle->vehicle_purpose_id = $data["vehicle_purpose_id"];
+                    $mVehicle->land_transport_office_cd = $data["land_transport_office_cd"];
+                    $mVehicle->registration_dt = TimeFunction::dateFormat($data["registration_dt"], 'yyyy-mm-dd');
+                    $mVehicle->first_year_registration_dt = $data["first_year_registration_dt"];
+                    $mVehicle->vehicle_classification_id = $data["vehicle_classification_id"];
+                    $mVehicle->private_commercial_id = $data["private_commercial_id"];
+                    $mVehicle->car_body_shape_id = $data["car_body_shape_id"];
+                    $mVehicle->vehicle_id = $data["vehicle_id"];
+                    $mVehicle->seating_capacity = $data["seating_capacity"];
+                    $mVehicle->max_loading_capacity = $data["max_loading_capacity"];
+                    $mVehicle->vehicle_body_weights = $data["vehicle_body_weights"];
+                    $mVehicle->vehicle_total_weights = $data["vehicle_total_weights"];
+                    $mVehicle->frame_numbers = $data["frame_numbers"];
+                    $mVehicle->vehicle_lengths = $data["vehicle_lengths"];
+                    $mVehicle->vehicle_widths = $data["vehicle_widths"];
+                    $mVehicle->vehicle_heights = $data["vehicle_heights"];
+                    $mVehicle->axle_loads_ff = $data["axle_loads_ff"];
+                    $mVehicle->axle_loads_fr = $data["axle_loads_fr"];
+                    $mVehicle->axle_loads_rf = $data["axle_loads_rf"];
+                    $mVehicle->axle_loads_rr = $data["axle_loads_rr"];
+                    $mVehicle->vehicle_types = $data["vehicle_types"];
+                    $mVehicle->engine_typese = $data["engine_typese"];
+                    $mVehicle->total_displacements = $data["total_displacements"];
+                    $mVehicle->rated_outputs = $data["rated_outputs"];
+                    $mVehicle->kinds_of_fuel_id = $data["kinds_of_fuel_id"];
+                    $mVehicle->type_designation_numbers = $data["type_designation_numbers"];
+                    $mVehicle->id_segment_numbers = $data["id_segment_numbers"];
+                    $mVehicle->wireless_installation_fg = isset($data["wireless_installation_fg"]) ? 1 : 0;
+                    $mVehicle->owner_nm = $data["owner_nm"];
+                    $mVehicle->owner_address = $data["owner_address"];
+                    $mVehicle->user_nm = $data["user_nm"];
+                    $mVehicle->user_address = $data["user_address"];
+                    $mVehicle->user_base_locations = $data["user_base_locations"];
+                    $mVehicle->expiry_dt = TimeFunction::dateFormat($data["expiry_dt"], 'yyyy-mm-dd');
+                    $mVehicle->car_inspections_notes = $data["car_inspections_notes"];
+                    $mVehicle->digital_tachograph_numbers = $data["digital_tachograph_numbers"];
+                    $mVehicle->etc_numbers = $data["etc_numbers"];
+                    $mVehicle->drive_recorder_numbers = $data["drive_recorder_numbers"];
+                    $mVehicle->bed_fg = isset($data["bed_fg"]) ? 1 : 0;
+                    $mVehicle->refrigerator_fg = isset($data["refrigerator_fg"]) ? 1 : 0;
+                    $mVehicle->drive_system_id = $data["drive_system_id"];
+                    $mVehicle->transmissions_id = $data["transmissions_id"];
+                    $mVehicle->transmissions_notes = $data["transmissions_notes"];
+                    $mVehicle->suspensions_cd = $data["suspensions_cd"];
+                    $mVehicle->tank_capacity_1 = $data["tank_capacity_1"];
+                    $mVehicle->tank_capacity_2 = $data["tank_capacity_2"];
+                    $mVehicle->loading_inside_dimension_capacity_length = $data["loading_inside_dimension_capacity_length"];
+                    $mVehicle->loading_inside_dimension_capacity_width = $data["loading_inside_dimension_capacity_width"];
+                    $mVehicle->loading_inside_dimension_capacity_height = $data["loading_inside_dimension_capacity_height"];
+                    $mVehicle->snowmelt_fg = isset($data["snowmelt_fg"]) ? 1 : 0;
+                    $mVehicle->double_door_fg = isset($data["double_door_fg"]) ? 1 : 0;
+                    $mVehicle->floor_iron_plate_fg = isset($data["floor_iron_plate_fg"]) ? 1 : 0;
+                    $mVehicle->floor_sagawa_embedded_fg = isset($data["floor_sagawa_embedded_fg"]) ? 1 : 0;
+                    $mVehicle->floor_roller_fg = isset($data["floor_roller_fg"]) ? 1 : 0;
+                    $mVehicle->floor_joloda_conveyor_fg = isset($data["floor_joloda_conveyor_fg"]) ? 1 : 0;
+                    $mVehicle->power_gate_cd = $data["power_gate_cd"];
+                    $mVehicle->vehicle_delivery_dt = TimeFunction::dateFormat($data["vehicle_delivery_dt"], 'yyyy-mm-dd');
+                    $mVehicle->specification_notes = $data["specification_notes"];
+                    $mVehicle->mst_staffs_id = $data["mst_staffs_id"];
+                    $mVehicle->personal_insurance_prices = $data["personal_insurance_prices"];
+                    $mVehicle->property_damage_insurance_prices = $data["property_damage_insurance_prices"];
+                    $mVehicle->vehicle_insurance_prices = $data["vehicle_insurance_prices"];
+                    $mVehicle->acquisition_amounts = $data["acquisition_amounts"];
+                    $mVehicle->acquisition_amortization = $data["acquisition_amortization"];
+                    $mVehicle->durable_years = $data["durable_years"];
+                    $mVehicle->tire_sizes = $data["tire_sizes"];
+                    $mVehicle->battery_sizes = $data["battery_sizes"];
+                    $mVehicle->dispose_dt = TimeFunction::dateFormat($data["dispose_dt"], 'yyyy-mm-dd');
+                    $mVehicle->notes = $data["notes"];
 
-                    //deleteFile
-                    if(isset($data['deleteFile']) && count($data['deleteFile']) > 0){
-                        foreach ($data['deleteFile'] as $item){
-                            if (file_exists($mVehicle->{$item})) {
-                                unlink($mVehicle->{$item});
-                                $mVehicle->{$item} = '';
-                            }
+                    $mVehicle->save();
+                    if ($mode == 'registerHistoryLeft'){
+                        Common::fullCopyDirectory(config('params.vehicles_path') . $id, config('params.vehicles_path') . $mVehicle->id);
+                        $oldVehicle = MVehicles::find($id);
+                        $uploadFile =  array('vehicle_inspection_sticker_pdf','picture_fronts','picture_rights','picture_lefts','picture_rears');
+                        foreach ($uploadFile as $item){
+                            $mVehicle->{$item} = $oldVehicle->{$item};
                         }
                     }
 
                     $mVehicle->save();
 
+                    $directoryPath = config('params.vehicles_path') . $mVehicle->id;
+                    //deleteFile
+
+                    if (isset($data['deleteFile']) && count($data['deleteFile']) > 0) {
+                        foreach ($data['deleteFile'] as $item) {
+                            if ($item == 'vehicle_inspection_sticker_pdf') {
+                                $filePath = $directoryPath . '/pdf/' . $mVehicle->{$item};
+                            } else {
+                                $filePath = $directoryPath . '/image/' . $mVehicle->{$item};
+                            }
+                            if (file_exists($filePath)) {
+                                unlink($filePath);
+                                $mVehicle->{$item} = '';
+                            }
+                        }
+                    }
+
+
+                    $mVehicle->save();
+
                     //upload file
-                    $directoryPath = config('params.vehicle_path').$mVehicle->id;
+                    $directoryPath = config('params.vehicles_path') . $mVehicle->id;
                     if (!file_exists($directoryPath)) {
                         mkdir($directoryPath, 0777, true);
                     }
-                    foreach($request->allFiles() as $key => $item){
+                    foreach ($request->allFiles() as $key => $item) {
                         $file = $data[$key];
                         $mVehicle->{$key} = Common::uploadFile($file, $directoryPath);
                     }
