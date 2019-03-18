@@ -244,15 +244,17 @@ class CustomersController extends Controller
                 ->whereRaw("!(".$strWhere.")");
 
             if(isset($data["id"]) && $data["id"]){
-                $beforeItem = MCustomers::query()
-                    ->whereRaw($strWhereStartDateDB." < ".$strWhereStartDate)
-                    ->whereNull("deleted_at")
-                    ->where('mst_customers_cd','=',$data['mst_customers_cd'])
-                    ->orderByDesc("adhibition_start_dt")
-                    ->first();
-                if($beforeItem){
-                    $this->beforeItem = $beforeItem;
-                    $countExist = $countExist->where("id","<>",$beforeItem->id);
+                if(!isset($data["clone"])){
+                    $beforeItem = MCustomers::query()
+                        ->whereRaw($strWhereStartDateDB." < ".$strWhereStartDate)
+                        ->whereNull("deleted_at")
+                        ->where('mst_customers_cd','=',$data['mst_customers_cd'])
+                        ->orderByDesc("adhibition_start_dt")
+                        ->first();
+                    if($beforeItem){
+                        $this->beforeItem = $beforeItem;
+                        $countExist = $countExist->where("id","<>",$beforeItem->id);
+                    }
                 }
                 $countExist = $countExist->where("id","<>",$data["id"]);
             }
