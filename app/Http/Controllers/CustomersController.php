@@ -258,6 +258,9 @@ class CustomersController extends Controller
 
             if(isset($data["id"]) && $data["id"]){
                 if(!isset($data["clone"])){
+                    if (Carbon::parse($data['adhibition_start_dt_edit']) > Carbon::parse($data['adhibition_end_dt_edit'])) {
+                        $validator->errors()->add('adhibition_start_dt_edit',str_replace(' :attribute',$this->labels['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
+                    }
                     $beforeItem = MCustomers::query()
                         ->whereRaw($strWhereStartDateDB." < ".$strWhereStartDate)
                         ->whereNull("deleted_at")
