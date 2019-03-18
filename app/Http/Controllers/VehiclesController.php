@@ -116,7 +116,7 @@ class VehiclesController extends Controller
                 \Session::flash('message',Lang::get('messages.MSG06002'));
             }
 
-            return redirect()->route('suppliers.list');
+            return redirect()->route('vehicles.list');
         }
         if ($mVehicle->deleteVehicle($id)) {
             $response = ['data' => 'success'];
@@ -169,9 +169,24 @@ class VehiclesController extends Controller
                 $flagLasted =true;
             }
         }
-
+        $checkboxes = array(
+            'wireless_installation_fg',
+            'bed_fg',
+            'refrigerator_fg',
+            'snowmelt_fg',
+            'double_door_fg',
+            'floor_iron_plate_fg',
+            'floor_sagawa_embedded_fg',
+            'floor_roller_fg',
+            'floor_joloda_conveyor_fg',
+            );
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
+            foreach($checkboxes as $checkbox){
+                if ( ! isset($data[$checkbox])){
+                    $data[$checkbox] = 0;
+                }
+            }
             $rules = [
                 'vehicles_cd'=>'required|one_byte_number|length:5',
                 'adhibition_start_dt'=>'required',
@@ -270,7 +285,7 @@ class VehiclesController extends Controller
                     $listVehiclesExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"]]);
                     foreach ($listVehiclesExist as $item) {
                         if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                            $validator->errors()->add('vehicles_cd',Lang::get('messages.MSG10003'));
+                            $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
                         }
                     }
                 });
@@ -311,7 +326,7 @@ class VehiclesController extends Controller
                     $mVehicle->vehicle_purpose_id= $data["vehicle_purpose_id"];
                     $mVehicle->land_transport_office_cd= $data["land_transport_office_cd"];
                     $mVehicle->registration_dt= TimeFunction::dateFormat($data["registration_dt"],'yyyy-mm-dd');
-                    $mVehicle->first_year_registration_dt= TimeFunction::dateFormat($data["first_year_registration_dt"],'yyyy-mm-dd');
+                    $mVehicle->first_year_registration_dt= $data["first_year_registration_dt"];
                     $mVehicle->vehicle_classification_id= $data["vehicle_classification_id"];
                     $mVehicle->private_commercial_id= $data["private_commercial_id"];
                     $mVehicle->car_body_shape_id= $data["car_body_shape_id"];

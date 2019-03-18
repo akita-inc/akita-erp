@@ -198,7 +198,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="vehicles_kb" name="vehicles_kb">
                                 @foreach($listVehicleKb as $key => $value)
-                                <option value="{{$key}}" {{$key==old('vehicles_kb') || $key==$mVehicle->vehicles_kb ? 'selected' : ''}}>{{$value}}</option>
+                                <option value="{{$key}}" {{$key==old('vehicles_kb',!is_null($mVehicle->vehicles_kb) ? $mVehicle->vehicles_kb : '')  ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -225,7 +225,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-50" id="mst_business_office_id" name="mst_business_office_id">
                                 @foreach($listBusinessOffices as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('mst_business_office_id')  || $key==$mVehicle->mst_business_office_id ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ $key==old('mst_business_office_id',!is_null($mVehicle->mst_business_office_id) ? $mVehicle->mst_business_office_id : '')   ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -241,7 +241,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="vehicle_size_kb" name="vehicle_size_kb">
                                 @foreach($listVehicleSize as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('vehicle_size_kb') || $key==$mVehicle->vehicle_size_kb ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ $key==old('vehicle_size_kb',!is_null($mVehicle->vehicle_size_kb) ? $mVehicle->vehicle_size_kb : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -256,7 +256,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="vehicle_purpose_id" name="vehicle_purpose_id">
                                 @foreach($listVehiclePurpose as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('vehicle_purpose_id') ||$key==$mVehicle->vehicle_purpose_id ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ $key==old('vehicle_purpose_id',!is_null($mVehicle->vehicle_purpose_id) ? $mVehicle->vehicle_purpose_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -272,7 +272,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-100" id="land_transport_office_cd" name="land_transport_office_cd">
                                 @foreach($listLandTranportOfficeCd as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('land_transport_office_cd') ||$key==$mVehicle->land_transport_office_cd? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==old('land_transport_office_cd',!is_null($mVehicle->land_transport_office_cd) ? $mVehicle->land_transport_office_cd : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -346,7 +346,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="vehicle_classification_id" name="vehicle_classification_id">
                                 @foreach($listVehicleClassification as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('vehicle_classification_id') || $key==$mVehicle->vehicle_classification_id ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==old('vehicle_classification_id',!is_null($mVehicle->vehicle_classification_id) ? $mVehicle->vehicle_classification_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -361,7 +361,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="private_commercial_id" name="private_commercial_id">
                                 @foreach($listPrivateCommercial as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->private_commercial_id || $key==old('private_commercial_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ $key==old('private_commercial_id',!is_null($mVehicle->private_commercial_id) ? $mVehicle->private_commercial_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -377,7 +377,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="car_body_shape_id" name="car_body_shape_id">
                                 @foreach($listCarBodyShape as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->car_body_shape_id || $key==old('car_body_shape_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==old('car_body_shape_id',!is_null($mVehicle->car_body_shape_id) ? $mVehicle->car_body_shape_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -392,7 +392,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="vehicle_id" name="vehicle_id">
                                 @foreach($listVehicle as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->vehicle_id || $key==old('vehicle_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ $key==old('vehicle_id',!is_null($mVehicle->vehicle_id) ? $mVehicle->vehicle_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -592,7 +592,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-75" id="kinds_of_fuel_id" name="kinds_of_fuel_id">
                                 @foreach($listKindOfFuel as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->kinds_of_fuel_id || $key==old('kinds_of_fuel_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ $key==old('kinds_of_fuel_id',!is_null($mVehicle->kinds_of_fuel_id) ? $mVehicle->kinds_of_fuel_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -629,7 +629,7 @@
                         <label class="col-md-4 col-sm-4">無線装置</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="wireless_installation_fg" value="1" name="wireless_installation_fg" {{old('wireless_installation_fg') || $mVehicle->wireless_installation_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="wireless_installation_fg" value="1" name="wireless_installation_fg" {{Common::checkIfValue('wireless_installation_fg', '1', $mVehicle->wireless_installation_fg)}}>
                                 <label class="d-block custom-control-label" for="wireless_installation_fg">あり</label>
                             </div>
                         </div>
@@ -776,7 +776,7 @@
                         <label class="col-md-4 col-sm-4">ベッドの有無</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="bed_fg" value="1" name="bed_fg" {{old('bed_fg') || $mVehicle->bed_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="bed_fg" value="1" name="bed_fg" {{Common::checkIfValue('bed_fg', '1', $mVehicle->bed_fg)}}>
                                 <label class="d-block custom-control-label" for="bed_fg">あり</label>
                             </div>
                         </div>
@@ -786,7 +786,7 @@
                         <label class="col-md-5 col-sm-5">冷蔵冷凍機の有無</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="refrigerator_fg" name="refrigerator_fg" value="1" {{old('refrigerator_fg') || $mVehicle->refrigerator_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="refrigerator_fg" name="refrigerator_fg" value="1" {{Common::checkIfValue('refrigerator_fg', '1', $mVehicle->refrigerator_fg)}}>
                                 <label class="d-block custom-control-label" for="refrigerator_fg">あり</label>
                             </div>
                         </div>
@@ -796,7 +796,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control" id="drive_system_id" name="drive_system_id">
                                 @foreach($listDriveSystem as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->drive_system_id || $key==old('drive_system_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==old('drive_system_id',!is_null($mVehicle->drive_system_id) ? $mVehicle->drive_system_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -807,7 +807,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control" id="transmissions_id" name="transmissions_id">
                                 @foreach($listTransmissions as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->transmissions_id || $key==old('transmissions_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{ $key==old('transmissions_id',!is_null($mVehicle->transmissions_id) ? $mVehicle->transmissions_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -829,7 +829,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control" id="suspensions_cd" name="suspensions_cd">
                                 @foreach($listSuspensionsCd as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->suspensions_cd || $key==old('suspensions_cd') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==old('suspensions_cd',!is_null($mVehicle->suspensions_cd) ? $mVehicle->suspensions_cd : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -900,7 +900,7 @@
                         <label class="col-md-5 col-sm-5">融雪</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="snowmelt_fg" name="snowmelt_fg" value="1" {{old('snowmelt_fg') || $mVehicle->snowmelt_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="snowmelt_fg" name="snowmelt_fg" value="1" {{Common::checkIfValue('snowmelt_fg', '1', $mVehicle->snowmelt_fg)}}>
                                 <label class="d-block custom-control-label" for="snowmelt_fg">あり</label>
                             </div>
                         </div>
@@ -909,7 +909,7 @@
                         <label class="col-md-4 col-sm-4">観音扉</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="double_door_fg" name="double_door_fg" value="1" {{old('double_door_fg') || $mVehicle->double_door_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="double_door_fg" name="double_door_fg" value="1" {{Common::checkIfValue('double_door_fg', '1', $mVehicle->double_door_fg)}}>
                                 <label class="d-block custom-control-label" for="double_door_fg">あり</label>
                             </div>
                         </div>
@@ -919,7 +919,7 @@
                         <label class="col-md-5 col-sm-5">床・鉄板</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_iron_plate_fg" name="floor_iron_plate_fg" value="1" {{old('floor_iron_plate_fg') || $mVehicle->floor_iron_plate_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="floor_iron_plate_fg" name="floor_iron_plate_fg" value="1" {{Common::checkIfValue('floor_iron_plate_fg', '1', $mVehicle->floor_iron_plate_fg)}}>
                                 <label class="d-block custom-control-label" for="floor_iron_plate_fg">あり</label>
                             </div>
                         </div>
@@ -928,7 +928,7 @@
                         <label class="col-md-4 col-sm-4">床・佐川仕様埋込式</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_sagawa_embedded_fg" name="floor_sagawa_embedded_fg" value="1" {{old('floor_sagawa_embedded_fg') || $mVehicle->floor_sagawa_embedded_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="floor_sagawa_embedded_fg" name="floor_sagawa_embedded_fg" value="1" {{Common::checkIfValue('floor_sagawa_embedded_fg', '1', $mVehicle->floor_sagawa_embedded_fg)}}>
                                 <label class="d-block custom-control-label" for="floor_sagawa_embedded_fg">あり</label>
                             </div>
                         </div>
@@ -938,7 +938,7 @@
                         <label class="col-md-5 col-sm-5">床・ローラー</label>
                         <div class="col-md-7 col-sm-7 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_roller_fg" name="floor_roller_fg" value="1" {{old('floor_roller_fg') || $mVehicle->floor_roller_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="floor_roller_fg" name="floor_roller_fg" value="1" {{Common::checkIfValue('floor_roller_fg', '1', $mVehicle->floor_roller_fg)}}>
                                 <label class="d-block custom-control-label" for="floor_roller_fg">あり</label>
                             </div>
                         </div>
@@ -947,7 +947,7 @@
                         <label class="col-md-4 col-sm-4">床・ジョルダー及びコンベアー</label>
                         <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
                             <div class="custom-control custom-checkbox form-control border-0">
-                                <input type="checkbox" class="custom-control-input" id="floor_joloda_conveyor_fg" name="floor_joloda_conveyor_fg" value="1" {{old('floor_joloda_conveyor_fg') || $mVehicle->floor_joloda_conveyor_fg ? 'checked': ''}}>
+                                <input type="checkbox" class="custom-control-input" id="floor_joloda_conveyor_fg" name="floor_joloda_conveyor_fg" value="1" {{Common::checkIfValue('floor_joloda_conveyor_fg', '1', $mVehicle->floor_joloda_conveyor_fg)}}>
                                 <label class="d-block custom-control-label" for="floor_joloda_conveyor_fg">あり</label>
                             </div>
                         </div>
@@ -958,7 +958,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="power_gate_cd" name="power_gate_cd">
                                 @foreach($listPowerGate as $key => $value)
-                                <option value="{{$key}}" {{$key==$mVehicle->power_gate_cd || $key==old('power_gate_cd') ? 'selected' : ''}}>{{$value}}</option>
+                                <option value="{{$key}}" {{$key==old('power_gate_cd',!is_null($mVehicle->power_gate_cd) ? $mVehicle->power_gate_cd : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -982,7 +982,7 @@
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
                         <label class="col-md-2 col-sm-2" for="specification_notes">仕様に関する備考</label>
                         <div class="col-md-10 col-sm-10 wrap-control">
-                            <textarea class="form-control w-100 {{$errors->has('specification_notes')? 'is-invalid': ''}}" rows="3" id="specification_notes" name="specification_notes" maxlength="200">{{ old('specification_notes') ||$mVehicle->specification_notes }}</textarea>
+                            <textarea class="form-control w-100 {{$errors->has('specification_notes')? 'is-invalid': ''}}" rows="3" id="specification_notes" name="specification_notes" maxlength="200">{{ old('specification_notes',$mVehicle->specification_notes ? $mVehicle->specification_notes : '') }}</textarea>
                         </div>
                         @if ($errors->has('specification_notes'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -999,7 +999,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-100" id="mst_staffs_id" name="mst_staffs_id">
                                 @foreach($listAdminStaffs as $key => $value)
-                                    <option value="{{$key}}" {{$key==$mVehicle->mst_staffs_id || $key==old('mst_staffs_id') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{$key==old('mst_staffs_id',!is_null($mVehicle->mst_staffs_id) ? $mVehicle->mst_staffs_id : '') ? 'selected' : ''}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -1216,7 +1216,7 @@
                                          :input-name="'dispose_dt'"
                             >
                             </date-picker>
-                            <input type="hidden" class="form-control {{$errors->has('dispose_dt')? 'is-invalid': ''}}" id="dispose_dt" value="{{ old('dispose_dt',$mVehicle->notes  ? : '') }}" >
+                            <input type="hidden" class="form-control {{$errors->has('dispose_dt')? 'is-invalid': ''}}" id="dispose_dt" value="{{ old('dispose_dt',$mVehicle->dispose_dt  ? : '') }}" >
                         </div>
                     </div>
                     <div class="break-row-form"></div>
@@ -1225,6 +1225,11 @@
                         <div class="col-md-10 col-sm-10 wrap-control">
                             <input type="text" class="form-control {{$errors->has('notes')? 'is-invalid': ''}}" id="notes" name="notes" value="{{ old('notes', !is_null($mVehicle->notes) ? $mVehicle->notes : '') }}" maxlength="100">
                         </div>
+                        @if ($errors->has('notes'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('notes') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>

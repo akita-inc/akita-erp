@@ -246,7 +246,7 @@ class CustomersController extends Controller
             }
             $countExist = $countExist->count();
             if( $countExist > 0 ){
-                $validator->errors()->add('mst_customers_cd',Lang::get('messages.MSG10003'));
+                $validator->errors()->add('mst_customers_cd',str_replace(':screen','得意先',Lang::get('messages.MSG10003')));
             }
         }
     }
