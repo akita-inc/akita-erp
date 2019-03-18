@@ -188,7 +188,15 @@ class Common {
 
     public static function uploadFile($file,$directoryPath){
         $name = $file->getClientOriginalName();
-        $file->move($directoryPath, $name);
-        return $directoryPath.'/'.$name;
+        $extension = $file->getClientOriginalExtension();
+        if($extension=='jpg' || $extension=='png' ||$extension=='jpeg'){
+            $extension = 'image';
+        }
+        $newPath = $directoryPath.'/'.$extension;
+        if (!file_exists($newPath)) {
+            mkdir($newPath, 0777, true);
+        }
+        $file->move($newPath, $name);
+        return $name;
     }
 }

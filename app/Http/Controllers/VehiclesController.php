@@ -335,6 +335,7 @@ class VehiclesController extends Controller
                     $mVehicle->kinds_of_fuel_id= $data["kinds_of_fuel_id"];
                     $mVehicle->type_designation_numbers= $data["type_designation_numbers"];
                     $mVehicle->id_segment_numbers= $data["id_segment_numbers"];
+                    $mVehicle->wireless_installation_fg= isset($data["wireless_installation_fg"]) ? 1 : 0;
                     $mVehicle->owner_nm= $data["owner_nm"];
                     $mVehicle->owner_address= $data["owner_address"];
                     $mVehicle->user_nm= $data["user_nm"];
@@ -377,11 +378,17 @@ class VehiclesController extends Controller
                     $mVehicle->dispose_dt= TimeFunction::dateFormat($data["dispose_dt"],'yyyy-mm-dd');
                     $mVehicle->notes= $data["notes"];
 
+                    $directoryPath = config('params.vehicles_path').$mVehicle->id;
                     //deleteFile
                     if(isset($data['deleteFile']) && count($data['deleteFile']) > 0){
                         foreach ($data['deleteFile'] as $item){
-                            if (file_exists($mVehicle->{$item})) {
-                                unlink($mVehicle->{$item});
+                            if($item=='vehicle_inspection_sticker_pdf'){
+                                $filePath = $directoryPath.'/pdf/'.$mVehicle->{$item};
+                            }else{
+                                $filePath = $directoryPath.'/image/'.$mVehicle->{$item};
+                            }
+                            if (file_exists($filePath)) {
+                                unlink($filePath);
                                 $mVehicle->{$item} = '';
                             }
                         }
@@ -390,7 +397,7 @@ class VehiclesController extends Controller
                     $mVehicle->save();
 
                     //upload file
-                    $directoryPath = config('params.vehicle_path').$mVehicle->id;
+                    $directoryPath = config('params.vehicles_path').$mVehicle->id;
                     if (!file_exists($directoryPath)) {
                         mkdir($directoryPath, 0777, true);
                     }
