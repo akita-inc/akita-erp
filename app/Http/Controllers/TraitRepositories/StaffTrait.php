@@ -120,4 +120,41 @@ trait StaffTrait
         }
         return true;
     }
+    protected function uploadFile($id,$file,$path)
+    {
+        $fileName="";
+        if(isset($file))
+        {
+            $processPath=$path.$id."/image";
+            if(!file_exists($processPath)){
+                mkdir($processPath, 0777, true);
+            }
+            $exploded=explode(",",$file);
+            $decoded=base64_decode($exploded[1]);
+            if(str_contains($exploded[0],'jpeg'))
+            {
+                $extension='jpg';
+            }
+            else
+            {
+                $extension='png';
+            }
+            $fileName=str_random().'.'.$extension;
+            $filePath=$processPath.'/'.$fileName;
+            file_put_contents($filePath,$decoded);
+
+        }
+        DB::beginTransaction();
+        try
+        {
+            DB::table('mst_staffs')
+                ->where('id', $id)
+                ->update(['drivers_license_picture' => $fileName]);
+        }catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+            return false;
+        }
+        return true;
+    }
 }
