@@ -169,23 +169,12 @@ class VehiclesController extends Controller
                 $flagLasted =true;
             }
         }
-        $checkboxes = array(
-            'wireless_installation_fg',
-            'bed_fg',
-            'refrigerator_fg',
-            'snowmelt_fg',
-            'double_door_fg',
-            'floor_iron_plate_fg',
-            'floor_sagawa_embedded_fg',
-            'floor_roller_fg',
-            'floor_joloda_conveyor_fg',
-            );
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
                 'vehicles_cd'=>'required|one_byte_number|length:5',
                 'adhibition_start_dt'=>'required',
-                'door_number'=>'required|one_byte_number|length:10',
+                'door_number'=>'required|one_byte_number|length:10|number_range',
                 'registration_numbers'=>'required|length:50',
                 'mst_business_office_id'=>'required',
                 'vehicle_inspection_sticker_pdf'=>'nullable|mimes:pdf|max_mb:2',
@@ -214,7 +203,7 @@ class VehiclesController extends Controller
                 'user_address'=>'nullable|length:200',
                 'user_base_locations'=>'nullable|length:200',
                 'car_inspections_notes'=>'nullable|length:50',
-                'digital_tachograph_numbers'=>'nullable|one_byte_number|length:10',
+                'digital_tachograph_numbers'=>'nullable|one_byte_number|length:10|number_range',
                 'etc_numbers'=>'nullable|length:19',
                 'drive_recorder_numbers'=>'nullable|length:10',
                 'transmissions_notes'=>'nullable|length:50',
