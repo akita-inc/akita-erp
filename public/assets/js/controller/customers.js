@@ -18836,7 +18836,7 @@ var ctrCustomersVl = new Vue({
           window.location.href = '/customers/list';
         }
 
-        _this.field["clone"] = false;
+        _this.field["clone"] = null;
         that.loading = false;
       });
     },

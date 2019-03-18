@@ -98,7 +98,7 @@ var ctrCustomersVl = new Vue({
                     that.errors = [];
                     window.location.href = '/customers/list'
                 }
-                this.field["clone"] = false;
+                this.field["clone"] = null;
                 that.loading = false;
             });
         },
