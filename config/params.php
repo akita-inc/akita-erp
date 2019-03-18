@@ -12,6 +12,7 @@ return [
         'relocation_municipal_office_cd'=> '01008', // 市町村役場コード
         'drivers_license_color'         => '01009', // 運転免許証の色ID
         'drivers_license_divisions_kb'  => '01010', // 運転免許証の区分1
+        'medical_checkup_interval'      => '01011',//健康診断の間隔ID
         'dependent_kb'                  => '02001', // 扶養区分
         'qualification_kind'            => '03001', // 資格種類ID
         'vehicles_kb'                   => '04001', // 車両区分
@@ -48,5 +49,6 @@ return [
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),
+    'staff_path'=>storage_path('staff/'),
     'max_file_size' => 1,
 ];

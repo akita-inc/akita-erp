@@ -18811,6 +18811,8 @@ var ctrCustomersVl = new Vue({
       this.submit();
     },
     submit: function submit() {
+      var _this = this;
+
       var that = this;
       that.loading = true;
 
@@ -18834,6 +18836,7 @@ var ctrCustomersVl = new Vue({
           window.location.href = '/customers/list';
         }
 
+        _this.field["clone"] = false;
         that.loading = false;
       });
     },

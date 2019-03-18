@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
     ],
 
     /*
@@ -227,6 +228,7 @@ return [
         'Common' => App\Helpers\Common::class,
         'TimeFunction' => App\Helpers\TimeFunction::class,
         'UserFunction' => App\Helpers\UserFunction::class,
+
     ],
 
 ];

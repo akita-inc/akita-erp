@@ -22,9 +22,12 @@ trait FormTrait
 
     protected function validAfter( &$validator,$data ){}
 
+    protected function beforeSubmit($data){}
+
     public function submit(Request $request)
     {
         $data = $request->all();
+        $this->beforeSubmit($data);
         $idInsert = "";
         if( !empty($this->ruleValid) ){
             $validator = Validator::make( $data, $this->ruleValid ,$this->messagesCustom ,$this->labels );

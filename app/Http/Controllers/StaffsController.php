@@ -41,7 +41,13 @@ class StaffsController extends Controller
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
         "educational_background"=>"length:50|nullable",
-        "job_duties"=>"length:50|nullable",
+        "retire_reasons"=>"length:50|nullable",
+        "death_reasons"=>"length:50|nullable",
+        "employment_insurance_numbers"=>"length:20|nullable",
+        "health_insurance_numbers"=>"length:20|nullable",
+        "employees_pension_insurance_numbers"=>"length:10|nullable",
+        "drivers_license_number"=>"length:12|nullable",
+        'drivers_license_picture' => 'nullable|is_image'
     ];
     public function __construct(){
         $this->labels = Lang::get("staffs.create.field");
@@ -201,26 +207,35 @@ class StaffsController extends Controller
         if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
             $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
         }
+        if (Carbon::parse($data['retire_dt']) > Carbon::parse($data['death_dt'])) {
+            $validator->errors()->add('retire_dt', str_replace(' :attribute', $this->labels['retire_dt'], Lang::get('messages.MSG02014')));
+        }
     }
+
+
     protected function save($data){
         $data['password']=bcrypt($data['password']);
+        $data['admin_fg']=isset($data['admin_fg'])?1:0;
+        $data['workmens_compensation_insurance_fg']=isset($data['workmens_compensation_insurance_fg'])?1:0;
         $arrayInsert = $data;
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
         $mst_staff_qualifications=$data["mst_staff_qualifications"];
         $mst_staff_dependents=$data["mst_staff_dependents"];
         $mst_staff_auths=$data["mst_staff_auths"];
+        $drivers_license_picture=$data["drivers_license_picture"];
         DB::beginTransaction();
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
         unset($arrayInsert["mst_staff_qualifications"]);
         unset($arrayInsert["mst_staff_dependents"]);
         unset($arrayInsert["mst_staff_auths"]);
+        unset($arrayInsert["drivers_license_picture"]);
         $id = DB::table($this->table)->insertGetId( $arrayInsert );
+        $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
         $this->saveStaffAuth($id,$mst_staff_auths);
         $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
         $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications","qualifications_");
         $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents","dept_",["disp_number"]);
-
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
@@ -230,6 +245,7 @@ class StaffsController extends Controller
     public function create(Request $request)
     {
         $mGeneralPurposes = new MGeneralPurposes();
+        $mBusinessOffices=new MBusinessOffices();
         $mRoles = new MRoles();
         $mScreen = new MScreens();
         $listEmployPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
@@ -239,9 +255,17 @@ class StaffsController extends Controller
         $listReMunicipalOffice=$mGeneralPurposes->getCodeByDataKB(config('params.data_kb')['relocation_municipal_office_cd'],'');
         $listQualificationKind=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['qualification_kind'],'');
         $listDependentKBs=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['dependent_kb'],'');
+        $listBelongCompanies=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['belong_company'],'');
+        $listOccupation=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['occupation'],'');
+        $listDepartments=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['department'],'');
+        $listMedicalCheckupInterval=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['medical_checkup_interval'],'');
+        $mBusinessOffices=$mBusinessOffices->getListBusinessOffices();
+        $listDriversLicenseDivisions=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['drivers_license_divisions_kb'],'');
+        $listDriversLicenseColors=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['drivers_license_color'],'');
         $listRoles = $mRoles->getListRoles();
         $listStaffScreens = $mScreen->getListScreensByCondition(['screen_category_id' => 1]);
         $listAccessiblePermission=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['accessible_kb'],'Empty');
+
         return view('staffs.create', [
             'listEmployPattern' => $listEmployPattern,
             'listPosition'=>$listPosition,
@@ -253,6 +277,13 @@ class StaffsController extends Controller
             'listRoles'=>$listRoles,
             'listStaffScreens'=>$listStaffScreens,
             'listAccessiblePermission'=>$listAccessiblePermission,
+            'listBelongCompanies'=>$listBelongCompanies,
+            'listOccupation'=>$listOccupation,
+            'mBusinessOffices'=>$mBusinessOffices,
+            'listDepartments'=>$listDepartments,
+            'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
+            'listDriversLicenseColors'=>$listDriversLicenseColors,
+            'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
         ]);
     }
 

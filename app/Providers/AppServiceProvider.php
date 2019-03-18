@@ -41,5 +41,6 @@ class AppServiceProvider extends ServiceProvider
         CustomValidation::validateFileSize();
         CustomValidation::validateDecimal();
         CustomValidation::validateNumberRange();
+        CustomValidation::validateImage();
     }
 }

@@ -26,6 +26,7 @@ class CustomersController extends Controller
     use ListTrait,FormTrait;
     public $table = "mst_customers";
     public $allNullAble = false;
+    public $beforeItem = null;
 
     public $ruleValid = [
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
@@ -199,6 +200,19 @@ class CustomersController extends Controller
         ]);
     }
 
+    protected function beforeSubmit($data){
+        unset($this->ruleValid['adhibition_start_dt']);
+        if(isset($data["id"]) && $data["id"]) {
+            if (!isset($data["clone"])) {
+                $this->ruleValid['adhibition_start_dt_edit'] = 'required';
+                $this->ruleValid['adhibition_end_dt_edit'] = 'required';
+            }else{
+                $this->ruleValid['adhibition_start_dt_history'] = 'required';
+                $this->ruleValid['adhibition_end_dt_history'] = 'required';
+            }
+        }
+    }
+
     protected function validAfter( &$validator,$data ){
         $mst_bill_issue_destinations = $data["mst_bill_issue_destinations"];
         $errorsEx = [];
@@ -239,9 +253,25 @@ class CustomersController extends Controller
             $strWhere = $strWhereStartDate." > ".$strWhereEndDateDB." or ".$strWhereEndDate." < ".$strWhereStartDateDB;
             $countExist = MCustomers::query()
                 ->where('mst_customers_cd','=',$data['mst_customers_cd'])
+                ->whereNull("deleted_at")
                 ->whereRaw("!(".$strWhere.")");
 
             if(isset($data["id"]) && $data["id"]){
+                if(!isset($data["clone"])){
+                    if (Carbon::parse($data['adhibition_start_dt_edit']) > Carbon::parse($data['adhibition_end_dt_edit'])) {
+                        $validator->errors()->add('adhibition_start_dt_edit',str_replace(' :attribute',$this->labels['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
+                    }
+                    $beforeItem = MCustomers::query()
+                        ->whereRaw($strWhereStartDateDB." < ".$strWhereStartDate)
+                        ->whereNull("deleted_at")
+                        ->where('mst_customers_cd','=',$data['mst_customers_cd'])
+                        ->orderByDesc("adhibition_start_dt")
+                        ->first();
+                    if($beforeItem){
+                        $this->beforeItem = $beforeItem;
+                        $countExist = $countExist->where("id","<>",$beforeItem->id);
+                    }
+                }
                 $countExist = $countExist->where("id","<>",$data["id"]);
             }
             $countExist = $countExist->count();
@@ -270,6 +300,11 @@ class CustomersController extends Controller
         if(isset( $data["id"]) && $data["id"] && !isset($data["clone"]) ){
             $id = $data["id"];
             MCustomers::query()->where("id","=",$id)->update( $arrayInsert );
+            if($this->beforeItem){
+                MCustomers::query()->where("id","=",$this->beforeItem["id"])->update([
+                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d')
+                ]);
+            }
         }else{
             $id =  MCustomers::query()->insertGetId( $arrayInsert );
             if(isset($data["clone"])){
