@@ -265,6 +265,7 @@ class CustomersController extends Controller
                         ->whereRaw($strWhereStartDateDB." < ".$strWhereStartDate)
                         ->whereNull("deleted_at")
                         ->where('mst_customers_cd','=',$data['mst_customers_cd'])
+                        ->where("id","<>",$data["id"])
                         ->orderByDesc("adhibition_start_dt")
                         ->first();
                     if($beforeItem){
