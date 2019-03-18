@@ -198,4 +198,18 @@ class Common {
         $file->move($newPath, $name);
         return $name;
     }
+
+    public static function fullCopyDirectory($src, $dst) {
+        if (is_dir($src)) {
+            @mkdir( $dst, 0777 ,TRUE);
+            $files = scandir($src);
+            foreach($files as $file){
+                if ($file != "." && $file != ".."){
+                    self::fullCopyDirectory("$src".'/'."$file", "$dst".'/'."$file");
+                }
+            }
+        } else if (file_exists($src)){
+            copy($src, $dst);
+        }
+    }
 }
