@@ -43,7 +43,6 @@ var ctrStaffsVl = new Vue({
             health_insurance_class:"",
             welfare_annuity_class:"",
             relocation_municipal_office_cd:"",
-            dropdown_relocate_municipal_office_nm:[],
             educational_background:"",
             educational_background_dt:"",
             mst_staff_job_experiences: [{
@@ -71,7 +70,40 @@ var ctrStaffsVl = new Vue({
                 dept_sex_id:"",
                 dept_social_security_number:"",
             }],
-            mst_role_id:'',
+            drivers_license_number:"",
+            drivers_license_color_id:"",
+            drivers_license_issued_dt:"",
+            drivers_license_period_validity:"",
+            drivers_license_picture:"",
+            drivers_license_divisions_1:"",
+            drivers_license_divisions_2:"",
+            drivers_license_divisions_3:"",
+            drivers_license_divisions_4:"",
+            drivers_license_divisions_5:"",
+            drivers_license_divisions_6:"",
+            drivers_license_divisions_7:"",
+            drivers_license_divisions_8:"",
+            drivers_license_divisions_9:"",
+            drivers_license_divisions_10:"",
+            drivers_license_divisions_11:"",
+            drivers_license_divisions_12:"",
+            drivers_license_divisions_13:"",
+            drivers_license_divisions_14:"",
+            retire_reasons:"",
+            retire_dt:"",
+            death_reasons:"",
+            death_dt:"",
+            belong_company_id:"",
+            occupation_id:"",
+            mst_business_office_id:"",
+            depertment_id:"",
+            driver_election_dt:"",
+            medical_checkup_interval_id:"",
+            employment_insurance_numbers:"",
+            health_insurance_numbers:"",
+            employees_pension_insurance_numbers:"",
+            admin_fg:"",
+            mst_role_id:"",
             mst_staff_auths: {
                 1: {
                     staffScreen: [],
@@ -91,8 +123,9 @@ var ctrStaffsVl = new Vue({
                     accessible_kb: 9,
                 },
             }
-
         },
+        image_drivers_license_picture:"",
+        dropdown_relocate_municipal_office_nm:[],
         errors:{},
         dateFormat: {
             stringify: (date) => {
@@ -102,11 +135,27 @@ var ctrStaffsVl = new Vue({
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
         },
+        index:0,
         autokana:[],
     },
     methods : {
         showError: function ( errors ){
             return errors.join("<br/>");
+        },
+        onFileChange:function(e) {
+
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(e.target.files[0]);
+            fileReader.onload = (e) => {
+                this.field.drivers_license_picture= e.target.result;
+            };
+            this.image_drivers_license_picture=e.target.files[0].name;
+
+        },
+        deleteFileUpload:function()
+        {
+            this.image_drivers_license_picture="";
+            this.field.drivers_license_picture="";
         },
         submit:function()
         {
@@ -123,10 +172,6 @@ var ctrStaffsVl = new Vue({
                 that.loading = false;
             });
         },
-        getDropdownValues:function()
-        {
-
-        },
         onChange:function(event)
         {
             this.field.relocation_municipal_office_cd=event.target.value;
@@ -135,6 +180,7 @@ var ctrStaffsVl = new Vue({
         },
         addRows: function (block) {
             let value;
+            let that=this;
             switch (block) {
                 case 'mst_staff_job_experiences':
                     value = {
@@ -166,16 +212,29 @@ var ctrStaffsVl = new Vue({
                         dept_sex_id:"",
                         dept_social_security_number:"",
                     };
+                    this.index+=1;
                     break;
             }
             this.field[block].push(value);
         },
         convertKana: function (input , destination) {
-            this.field[destination] = this.autokana[input.target.id].getFurigana();
+            if(this.field[input.target.id] == ""){
+                this.field[destination] = "";
+            }else{
+                this.field[destination] = this.autokana[input.target.id].getFurigana();
+            }
         },
-        onBlur: function(){
-            this.history = [];
-            this.furigana = '';
+        convertKanaBlock:function(input,destination){
+            console.log(input.target.id);
+            let kana="";
+            if(this.field[input.target.id] == ""){
+                kana = "";
+            }else{
+                kana = this.autokana[input.target.id].getFurigana();
+                console.log(kana);
+            }
+            this.field.mst_staff_dependents[this.index][destination]=kana;
+
         },
         getAddrFromZipCode: function() {
             var that=this;
@@ -186,8 +245,8 @@ var ctrStaffsVl = new Vue({
                 that.field.address2=addr.street;// 町域
             });
         },
-        removeRows: function (index) {
-            this.field.mst_staff_job_experiences.splice(index, 1);
+        removeRows: function (block,index) {
+            this.field[block].splice(index, 1);
         },
         backHistory: function () {
             staffs_service.backHistory().then(function () {
@@ -211,24 +270,27 @@ var ctrStaffsVl = new Vue({
 
                     });
                 }
-                console.log(that.field.mst_staff_auths);
-
             });
+        },
+        showKana:function (index) {
+            this.autokana ['mst_staff_dependents_last_nm'+index] = AutoKana.bind('#mst_staff_dependents_last_nm'+index, '#mst_staff_dependents_last_nm_kana'+index, { katakana: true });
+            this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
         },
         handleSelect: function (selected) {
             if(typeof selected.id!="undefined"){
                 this.field.relocation_municipal_office_cd = selected.id;
             }
         },
+
     },
     mounted () {
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
-            that.field.dropdown_relocate_municipal_office_nm =  response.data;
+            that.dropdown_relocate_municipal_office_nm =  response.data;
         });
-
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
+        this.showKana(this.index);
     },
     components: {
         DatePicker,

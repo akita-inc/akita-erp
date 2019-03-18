@@ -15,11 +15,9 @@ class Common {
 		return Route::current()->action['prefix'] == "/$name" ? 'active ' : '';
 	}
 
-	public static function selectIfValue($array = array(), $key = '', $value) {
-		if ( $value == '' && !isset($array[$key]) ) {
-			return 'selected="selected"';
-		}
-		return isset($array[$key]) && $array[$key]  == $value ? 'selected="selected"' : '';
+	public static function selectIfValue(string $name, $value, $default) {
+        $current_defaults = Input::old() ? old($name, '') : $default;
+        return ((string)$value == (string)$current_defaults) ? 'selected="selected"' : '';
 	}
 	public static function selectDefaultStatus($array = array(), $key = '', $value,$MNGFG) {
             if (!isset($array[$key]) && $MNGFG == "0") {
@@ -197,5 +195,19 @@ class Common {
         }
         $file->move($newPath, $name);
         return $name;
+    }
+
+    public static function fullCopyDirectory($src, $dst) {
+        if (is_dir($src)) {
+            @mkdir( $dst, 0777 ,TRUE);
+            $files = scandir($src);
+            foreach($files as $file){
+                if ($file != "." && $file != ".."){
+                    self::fullCopyDirectory("$src".'/'."$file", "$dst".'/'."$file");
+                }
+            }
+        } else if (file_exists($src)){
+            copy($src, $dst);
+        }
     }
 }

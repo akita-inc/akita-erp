@@ -48,8 +48,8 @@ return [
             "employment_pattern_id"=>"雇用形態",
             "position_id"=>"役職",
             "last_nm"=>"社員名（姓）",
-            "first_nm"=>"社員カナ名（姓）",
-            "last_nm_kana"=>"社員名（名）",
+            "last_nm_kana"=>"社員カナ名（姓）",
+            "first_nm"=>"社員名（名）",
             "first_nm_kana"=>"社員カナ名（名）",
             "zip_cd"=>"郵便番号",
             "prefectures_cd"=>"都道府県",
@@ -150,7 +150,8 @@ return [
                 "1"=>"閲覧可能",
                 "2"=>"入力可能",
                 "3"=>"アクセス不可"
-            ]
+            ],
+            "workmens_compensation_insurance_fg"=>"労災保険の有無"
         ]
     ]
 ];

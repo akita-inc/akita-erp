@@ -2,6 +2,7 @@
 @section('title',trans("staffs.create.title"))
 @section('title_header',trans("staffs.create.title"))
 @section('content')
+    @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
     <div class="wrapper-container" id="ctrStaffsVl">
         <pulse-loader :loading="loading"></pulse-loader>
@@ -14,7 +15,7 @@
             </div>
         </div>
 
-        <form class="form-inline" role="form">
+        <form class="form-inline" role="form" enctype="multipart/form-data" >
             <div class="text-danger">
                 {{ trans("common.description-form.indicates_required_items") }}
             </div>
@@ -60,22 +61,20 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                              'filed'=>'last_nm',
-                             'required'=>true,
-                             'attr_input' => 'v-on:input="convertKana($event, \'last_nm_kana\')" v-on:blur="onBlur"'
+                             'attr_input' => 'v-on:input="convertKana($event, \'last_nm_kana\')"'
                          ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',[
-                              'filed'=>'first_nm',
-                              'required'=>true,
-                              'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')" v-on:blur="onBlur"'
-                          ])
+                        @include('Component.form.input',['filed'=>'last_nm_kana'])
                     </div>
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'last_nm_kana'])
+                        @include('Component.form.input',[
+                             'filed'=>'first_nm',
+                             'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')"'
+                         ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -203,9 +202,9 @@
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             <label class="grid-form-label ">名称</label>
-                            <Dropdown  id="relocation_municipal_office_cd"  name="relocation_municipal_office_cd"
+                            <Dropdown  id="relocation_municipal_office_cd" class="dropdown-search-list"  name="relocation_municipal_office_cd"
                                     v-on:selected="handleSelect"
-                                    :options="field.dropdown_relocate_municipal_office_nm"
+                                    :options="dropdown_relocate_municipal_office_nm"
                                     :disabled="false" placeholder="">
                             </Dropdown>
                         </div>
@@ -256,8 +255,6 @@
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
-
-
                                 <!--address2 address3-->
 
                                 <div class="col-md-5 col-sm-12">
@@ -281,7 +278,7 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_job_experiences')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -402,7 +399,6 @@
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                 </div>
-
                                 <div class="break-row-form"></div>
 
                                 <div class="col-md-5 col-sm-12">
@@ -410,7 +406,8 @@
                                         'filed'=>'dept_last_nm',
                                         'filedId'=>"'mst_staff_dependents_last_nm'+index",
                                         'filedMode'=>"items.dept_last_nm",
-                                        'filedErrors'=>"mst_staff_dependents"
+                                        'attr_input'=>'v-on:input="convertKanaBlock($event, \'dept_last_nm_kana\')"',
+                                        'filedErrors'=>"mst_staff_dependents",
 
                                     ])
                                 </div>
@@ -430,6 +427,7 @@
                                         'filed'=>'dept_first_nm',
                                         'filedId'=>"'mst_staff_dependents_first_nm'+index",
                                         'filedMode'=>"items.dept_first_nm",
+                                        'attr_input'=>'v-on:input="convertKanaBlock($event, \'dept_first_nm_kana\')"',
                                         'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
@@ -507,6 +505,7 @@
                                         'class'=>'wd-350',
                                        'filedId'=>"mst_staff_driver_license_color_id",
                                        'filedMode'=>"items.drivers_license_color_id",
+                                       'array'=>$listDriversLicenseColors,
                                    ])
                                 </div>
 
@@ -532,15 +531,13 @@
                                 <div class="break-row-form"></div>
 
                                 <div class="col-md-12 col-sm-12">
-                                    @include('Component.form.input',[
+                                    @include('Component.form.file',[
                                         'filed'=>'drivers_license_picture',
+                                        'attr_input'=>'v-on:change="onFileChange"',
+                                        'attr_delete_path'=>'@click="deleteFileUpload"',
                                         'filedId'=>"mst_staff_drivers_license_picture",
                                         'filedMode'=>"items.drivers_license_picture",
                                     ])
-                                    <div class="wrap-control-group">
-                                        <button type="file" class="btn btn-secondary float-left">{{trans($prefix.'btn_browse_license_picture')}}</button>
-                                        <button type="file" class="btn btn-dark float-right">{{trans($prefix.'btn_delete_file_license_picture')}}</button>
-                                    </div>
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
@@ -548,6 +545,7 @@
                                          'filed'=>'drivers_license_divisions_1',
                                          'filedId'=>"mst_staff_drivers_license_divisions_1",
                                          'filedMode'=>"items.drivers_license_divisions_1",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -555,6 +553,7 @@
                                          'filed'=>'drivers_license_divisions_2',
                                          'filedId'=>"mst_staff_drivers_license_divisions_2",
                                          'filedMode'=>"items.drivers_license_divisions_2",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -563,6 +562,7 @@
                                          'filed'=>'drivers_license_divisions_3',
                                          'filedId'=>"mst_staff_drivers_license_divisions_3",
                                          'filedMode'=>"items.drivers_license_divisions_3",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -570,6 +570,7 @@
                                          'filed'=>'drivers_license_divisions_4',
                                          'filedId'=>"mst_staff_drivers_license_divisions_4",
                                          'filedMode'=>"items.drivers_license_divisions_4",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -578,6 +579,7 @@
                                          'filed'=>'drivers_license_divisions_5',
                                          'filedId'=>"mst_staff_drivers_license_divisions_5",
                                          'filedMode'=>"items.drivers_license_divisions_5",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -585,6 +587,7 @@
                                          'filed'=>'drivers_license_divisions_6',
                                          'filedId'=>"mst_staff_drivers_license_divisions_6",
                                          'filedMode'=>"items.drivers_license_divisions_6",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -593,6 +596,7 @@
                                          'filed'=>'drivers_license_divisions_7',
                                          'filedId'=>"mst_staff_drivers_license_divisions_7",
                                          'filedMode'=>"items.drivers_license_divisions_7",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -600,6 +604,7 @@
                                          'filed'=>'drivers_license_divisions_8',
                                          'filedId'=>"mst_staff_drivers_license_divisions_8",
                                          'filedMode'=>"items.drivers_license_divisions_8",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -608,6 +613,7 @@
                                          'filed'=>'drivers_license_divisions_9',
                                          'filedId'=>"mst_staff_drivers_license_divisions_9",
                                          'filedMode'=>"items.drivers_license_divisions_9",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -615,6 +621,7 @@
                                          'filed'=>'drivers_license_divisions_10',
                                          'filedId'=>"mst_staff_drivers_license_divisions_10",
                                          'filedMode'=>"items.drivers_license_divisions_10",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -623,6 +630,7 @@
                                          'filed'=>'drivers_license_divisions_11',
                                          'filedId'=>"mst_staff_drivers_license_divisions_11",
                                          'filedMode'=>"items.drivers_license_divisions_11",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -630,6 +638,7 @@
                                          'filed'=>'drivers_license_divisions_12',
                                          'filedId'=>"mst_staff_drivers_license_divisions_12",
                                          'filedMode'=>"items.drivers_license_divisions_12",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -638,6 +647,7 @@
                                          'filed'=>'drivers_license_divisions_13',
                                          'filedId'=>"mst_staff_drivers_license_divisions_13",
                                          'filedMode'=>"items.drivers_license_divisions_13",
+                                         'array'=>$listDriversLicenseDivisions
                                      ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -645,6 +655,7 @@
                                          'filed'=>'drivers_license_divisions_14',
                                          'filedId'=>"mst_staff_drivers_license_divisions_14",
                                          'filedMode'=>"items.drivers_license_divisions_14",
+                                         'array'=>$listDriversLicenseDivisions
                                     ])
                                 </div>
                                 <!--address2 address3-->
@@ -704,6 +715,7 @@
                                         'filed'=>'belong_company_id',
                                         'filedId'=>"mst_others_belong_company_id",
                                         'filedMode'=>"items.belong_company_id",
+                                        'array'=>$listBelongCompanies,
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -712,6 +724,7 @@
                                         'class'=>'w-75',
                                         'filedId'=>"mst_others_occupation_id",
                                         'filedMode'=>"items.occupation_id",
+                                        'array'=>$listOccupation,
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -721,6 +734,7 @@
                                         'filed'=>'mst_business_office_id',
                                         'filedId'=>"mst_others_mst_business_office_id",
                                         'filedMode'=>"items.mst_business_office_id",
+                                        'array'=>$mBusinessOffices
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -729,6 +743,7 @@
                                         'class'=>'w-75',
                                         'filedId'=>"mst_others_depertment_id",
                                         'filedMode'=>"items.depertment_id",
+                                        'array'=>$listDepartments
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -746,6 +761,7 @@
                                          'class'=>'wd-350',
                                         'filedId'=>"mst_others_medical_checkup_interval_id",
                                         'filedMode'=>"items.medical_checkup_interval_id",
+                                        'array'=>$listMedicalCheckupInterval
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -773,13 +789,12 @@
                                     ])
                                 </div>
 
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
+                                <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.checkbox',[
-                                        'filed'=>'admin_fg',
-                                        'filedId'=>"mst_others_admin_fg",
-                                        'filedMode'=>"items.admin_fg",
-                                        'checkboxLabel'=>'管理者である'
+                                        'filed'=>'workmens_compensation_insurance_fg',
+                                        'filedId'=>"mst_others_workmens_compensation_insurance_fg",
+                                        'filedMode'=>"items.workmens_compensation_insurance_fg",
+                                        'checkboxLabel'=>'あり'
                                     ])
                                 </div>
                             </div>
@@ -819,19 +834,24 @@
                                             ■ 対象の情報
                                         </div>
                                         <div class="col-md-12 col-sm-12">
+                                            @if(@$listStaffScreens)
                                             @foreach($listStaffScreens as $item)
                                                 <input type="checkbox" class="form-control" id="info_target_{{$item->id}}" value="{{$item->id}}" v-model="field.mst_staff_auths[1].staffScreen">
                                                 <span for="info_target_{{$item->id}}">{{$item->screen_nm}}</span>
                                             @endforeach
+                                            @endif
                                         </div>
                                         <div class="col-md-12 col-sm-12">
                                             ■ アクセス許可区分
                                         </div>
                                         <div class="col-md-12 col-sm-12">
+                                            @if(@$listAccessiblePermission)
                                             @foreach($listAccessiblePermission as $key => $value)
                                                 <input type="radio" class="form-control" id="staff_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[1].accessible_kb" value="{{$key}}">
                                                 <span for="staff_access_permission_role_{{$key}}">{{ $value}}</span>
                                             @endforeach
+                                            @endif
+
                                         </div>
                                     </div>
                                 </div>
