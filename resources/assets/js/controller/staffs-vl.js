@@ -168,6 +168,7 @@ var ctrStaffsVl = new Vue({
                 else
                 {
                     that.errors = {};
+                    window.location.href = '/staffs';
                 }
                 that.loading = false;
             });
