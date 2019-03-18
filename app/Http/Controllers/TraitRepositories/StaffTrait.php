@@ -144,14 +144,12 @@ trait StaffTrait
             file_put_contents($filePath,$decoded);
 
         }
-        DB::beginTransaction();
         try
         {
             DB::table('mst_staffs')
                 ->where('id', $id)
                 ->update(['drivers_license_picture' => $fileName]);
         }catch (\Exception $e) {
-            DB::rollback();
             dd($e);
             return false;
         }

@@ -23330,6 +23330,7 @@ var ctrStaffsVl = new Vue({
           that.errors = response.message;
         } else {
           that.errors = {};
+          window.location.href = '/staffs';
         }
 
         that.loading = false;
