@@ -72,6 +72,7 @@
                             @endif
                         </div>
                         @if($flagRegisterHistory)
+                            <div class="break-row-form"></div>
                             <div class="col-md-6 col-sm-12 no-padding">
                                 @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true])
                             </div>
