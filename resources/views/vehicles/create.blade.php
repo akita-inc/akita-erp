@@ -298,7 +298,7 @@
                                 </label>
                                 @if($mVehicle->vehicle_inspection_sticker_pdf)
                                 <div class="ml-auto">
-                                    <button type="button" class="btn btn-dark" onclick="deleteFileUpload('vehicle_inspection_sticker_pdf')">ファイル削除</button>
+                                    <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'vehicle_inspection_sticker_pdf')">ファイル削除</button>
                                 </div>
                                 @endif
                             </div>
@@ -625,7 +625,15 @@
                             </span>
                         @endif
                     </div>
-                    <div class="col-md-7 col-sm-12 row grid-col h-100"></div>
+                    <div class="col-md-7 col-sm-12 row grid-col label-input-file">
+                        <label class="col-md-4 col-sm-4">無線装置</label>
+                        <div class="col-md-8 col-sm-8 wrap-control d-flex align-content-center align-self-center pl-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="wireless_installation_fg" value="1" name="wireless_installation_fg" {{old('wireless_installation_fg') || $mVehicle->wireless_installation_fg ? 'checked': ''}}>
+                                <label class="d-block custom-control-label" for="wireless_installation_fg">あり</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-12 col-sm-12 row grid-col h-100">◆所有者</div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
@@ -1049,7 +1057,7 @@
                                 </label>
                                 @if($mVehicle->picture_fronts)
                                     <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload('picture_fronts')">ファイル削除</button>
+                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_fronts')">ファイル削除</button>
                                     </div>
                                 @endif
                             </div>
@@ -1075,7 +1083,7 @@
                                 </label>
                                 @if($mVehicle->picture_rights)
                                     <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload('picture_rights')">ファイル削除</button>
+                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_rights')">ファイル削除</button>
                                     </div>
                                 @endif
                             </div>
@@ -1101,7 +1109,7 @@
                                 </label>
                                 @if($mVehicle->picture_lefts)
                                     <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload('picture_lefts')">ファイル削除</button>
+                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_lefts')">ファイル削除</button>
                                     </div>
                                 @endif
                             </div>
@@ -1127,7 +1135,7 @@
                                 </label>
                                 @if($mVehicle->picture_rears)
                                     <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload('picture_rears')">ファイル削除</button>
+                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_rears')">ファイル削除</button>
                                     </div>
                                 @endif
                             </div>
@@ -1234,13 +1242,13 @@
             $('#form1').submit();
         }
         function uploadFile(target) {
-            console.log(target.files[0]);
             document.getElementById(target.name+"_file_name").innerHTML = target.files[0].name;
         }
-        function deleteFileUpload(destination) {
+        function deleteFileUpload(e,destination) {
             $('#'+destination+"_file_name").html('');
             $('#'+destination).attr('value','');
             $('div.alert-area').append("<input type='hidden' class='deleteFile' name='deleteFile[]' value='"+ destination+"'>");
+            $(e).hide();
         }
         
         function copyText() {
