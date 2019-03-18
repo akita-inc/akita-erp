@@ -5,6 +5,7 @@ namespace App\Helpers;
 require_once 'Lib/Igo.php';
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -31,11 +32,9 @@ class Common {
             return isset($array[$key]) && $array[$key]  == $value ? 'selected="selected"' : '';
 	}
 
-	public static function checkIfValue($array = array(), $key = '', $value) {
-		if ( $value == '' && !isset($array[$key]) ) {
-			return 'checked="checked"';
-		}
-		return isset($array[$key]) && $array[$key]  == $value ? 'checked="checked"' : '';
+	public static function checkIfValue(string $name, $value, $default) {
+        $current_defaults = Input::old() ? old($name, 0) : $default;
+        return ($value == $current_defaults) ? 'checked' : '';
 	}
 
 	public static function _e($arr = array(), $key = '', $default = '') {

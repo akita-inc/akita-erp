@@ -184,7 +184,7 @@ class SuppliersController extends Controller
                     $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"]]);
                     foreach ($listSuppliersExist as $item) {
                         if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                            $validator->errors()->add('mst_suppliers_cd',Lang::get('messages.MSG10003'));
+                            $validator->errors()->add('mst_suppliers_cd',str_replace(':screen','仕入先',Lang::get('messages.MSG10003')));
                         }
                     }
                 });
