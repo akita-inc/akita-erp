@@ -2,6 +2,7 @@
 @section('title',trans("staffs.create.title"))
 @section('title_header',trans("staffs.create.title"))
 @section('content')
+    @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
     <div class="wrapper-container" id="ctrStaffsVl">
         <pulse-loader :loading="loading"></pulse-loader>
@@ -60,22 +61,20 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                              'filed'=>'last_nm',
-                             'required'=>true,
                              'attr_input' => 'v-on:input="convertKana($event, \'last_nm_kana\')"'
                          ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',[
-                              'filed'=>'first_nm',
-                              'required'=>true,
-                              'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')"'
-                          ])
+                        @include('Component.form.input',['filed'=>'last_nm_kana'])
                     </div>
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'last_nm_kana'])
+                        @include('Component.form.input',[
+                             'filed'=>'first_nm',
+                             'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')"'
+                         ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -400,7 +399,6 @@
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                 </div>
-
                                 <div class="break-row-form"></div>
 
                                 <div class="col-md-5 col-sm-12">
@@ -408,7 +406,8 @@
                                         'filed'=>'dept_last_nm',
                                         'filedId'=>"'mst_staff_dependents_last_nm'+index",
                                         'filedMode'=>"items.dept_last_nm",
-                                        'filedErrors'=>"mst_staff_dependents"
+                                        'attr_input'=>'v-on:input="convertKanaBlock($event, \'dept_last_nm_kana\')"',
+                                        'filedErrors'=>"mst_staff_dependents",
 
                                     ])
                                 </div>
@@ -428,6 +427,7 @@
                                         'filed'=>'dept_first_nm',
                                         'filedId'=>"'mst_staff_dependents_first_nm'+index",
                                         'filedMode'=>"items.dept_first_nm",
+                                        'attr_input'=>'v-on:input="convertKanaBlock($event, \'dept_first_nm_kana\')"',
                                         'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
@@ -761,6 +761,7 @@
                                          'class'=>'wd-350',
                                         'filedId'=>"mst_others_medical_checkup_interval_id",
                                         'filedMode'=>"items.medical_checkup_interval_id",
+                                        'array'=>$listMedicalCheckupInterval
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -788,13 +789,12 @@
                                     ])
                                 </div>
 
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
+                                <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.checkbox',[
-                                        'filed'=>'admin_fg',
-                                        'filedId'=>"mst_others_admin_fg",
-                                        'filedMode'=>"items.admin_fg",
-                                        'checkboxLabel'=>'管理者である'
+                                        'filed'=>'workmens_compensation_insurance_fg',
+                                        'filedId'=>"mst_others_workmens_compensation_insurance_fg",
+                                        'filedMode'=>"items.workmens_compensation_insurance_fg",
+                                        'checkboxLabel'=>'あり'
                                     ])
                                 </div>
                             </div>

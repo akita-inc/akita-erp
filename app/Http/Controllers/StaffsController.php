@@ -213,25 +213,30 @@ class StaffsController extends Controller
     }
     protected function uploadFile($file,$path)
     {
-        $exploded=explode(",",$file);
-        $decoded=base64_decode($exploded[1]);
-        if(str_contains($exploded[0],'jpeg'))
+        if(isset($file))
         {
-            $extension='jpg';
+            $exploded=explode(",",$file);
+            $decoded=base64_decode($exploded[1]);
+            if(str_contains($exploded[0],'jpeg'))
+            {
+                $extension='jpg';
+            }
+            else
+            {
+                $extension='png';
+            }
+            $fileName=str_random().'.'.$extension;
+            $filePath=$path.$fileName;
+            file_put_contents($filePath,$decoded);
+            return $fileName;
         }
-        else
-        {
-            $extension='png';
-        }
-        $fileName=str_random().'.'.$extension;
-        $filePath=$path.$fileName;
-        file_put_contents($filePath,$decoded);
-        return $fileName;
+        return "";
     }
 
     protected function save($data){
         $data['password']=bcrypt($data['password']);
         $data['admin_fg']=isset($data['admin_fg'])?1:0;
+        $data['workmens_compensation_insurance_fg']=isset($data['workmens_compensation_insurance_fg'])?1:0;
         $data["drivers_license_picture"]=$this->uploadFile($data["drivers_license_picture"],config('params.staff_path'));
         $arrayInsert = $data;
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
@@ -249,7 +254,6 @@ class StaffsController extends Controller
         $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
         $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications","qualifications_");
         $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents","dept_",["disp_number"]);
-        dd(true);
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
@@ -272,12 +276,14 @@ class StaffsController extends Controller
         $listBelongCompanies=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['belong_company'],'');
         $listOccupation=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['occupation'],'');
         $listDepartments=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['department'],'');
+        $listMedicalCheckupInterval=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['medical_checkup_interval'],'');
         $mBusinessOffices=$mBusinessOffices->getListBusinessOffices();
         $listDriversLicenseDivisions=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['drivers_license_divisions_kb'],'');
         $listDriversLicenseColors=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['drivers_license_color'],'');
         $listRoles = $mRoles->getListRoles();
         $listStaffScreens = $mScreen->getListScreensByCondition(['screen_category_id' => 1]);
         $listAccessiblePermission=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['accessible_kb'],'Empty');
+
         return view('staffs.create', [
             'listEmployPattern' => $listEmployPattern,
             'listPosition'=>$listPosition,
@@ -294,7 +300,8 @@ class StaffsController extends Controller
             'mBusinessOffices'=>$mBusinessOffices,
             'listDepartments'=>$listDepartments,
             'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
-            'listDriversLicenseColors'=>$listDriversLicenseColors
+            'listDriversLicenseColors'=>$listDriversLicenseColors,
+            'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
         ]);
     }
 

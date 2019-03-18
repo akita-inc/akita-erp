@@ -135,6 +135,7 @@ var ctrStaffsVl = new Vue({
                 return value ? moment(value, 'YYYY MM DD').toDate() : null
             }
         },
+        index:0,
         autokana:[],
     },
     methods : {
@@ -179,6 +180,7 @@ var ctrStaffsVl = new Vue({
         },
         addRows: function (block) {
             let value;
+            let that=this;
             switch (block) {
                 case 'mst_staff_job_experiences':
                     value = {
@@ -210,12 +212,29 @@ var ctrStaffsVl = new Vue({
                         dept_sex_id:"",
                         dept_social_security_number:"",
                     };
+                    this.index+=1;
                     break;
             }
             this.field[block].push(value);
         },
         convertKana: function (input , destination) {
-            this.field[destination] = this.autokana[input.target.id].getFurigana();
+            if(this.field[input.target.id] == ""){
+                this.field[destination] = "";
+            }else{
+                this.field[destination] = this.autokana[input.target.id].getFurigana();
+            }
+        },
+        convertKanaBlock:function(input,destination){
+            console.log(input.target.id);
+            let kana="";
+            if(this.field[input.target.id] == ""){
+                kana = "";
+            }else{
+                kana = this.autokana[input.target.id].getFurigana();
+                console.log(kana);
+            }
+            this.field.mst_staff_dependents[this.index][destination]=kana;
+
         },
         getAddrFromZipCode: function() {
             var that=this;
@@ -253,23 +272,26 @@ var ctrStaffsVl = new Vue({
                 }
             });
         },
+        showKana:function (index) {
+            this.autokana ['mst_staff_dependents_last_nm'+index] = AutoKana.bind('#mst_staff_dependents_last_nm'+index, '#mst_staff_dependents_last_nm_kana'+index, { katakana: true });
+            this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
+        },
         handleSelect: function (selected) {
             if(typeof selected.id!="undefined"){
                 this.field.relocation_municipal_office_cd = selected.id;
             }
         },
+
     },
     mounted () {
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.dropdown_relocate_municipal_office_nm =  response.data;
         });
-
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
-        this.autokana ['dept_last_nm'] = AutoKana.bind('#mst_staff_dependents_last_nm0', '#mst_staff_dependents_last_nm_kana0', { katakana: true });
-        this.autokana ['dept_first_nm'] = AutoKana.bind('#mst_staff_dependents_first_nm0', '#mst_staff_dependents_first_nm_kana0',  { katakana: true });
-        },
+        this.showKana(this.index);
+    },
     components: {
         DatePicker,
         PulseLoader,
