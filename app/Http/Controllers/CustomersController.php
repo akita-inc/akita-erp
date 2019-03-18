@@ -200,6 +200,19 @@ class CustomersController extends Controller
         ]);
     }
 
+    protected function beforeSubmit($data){
+        unset($this->ruleValid['adhibition_start_dt']);
+        if(isset($data["id"]) && $data["id"]) {
+            if (!isset($data["clone"])) {
+                $this->ruleValid['adhibition_start_dt_edit'] = 'required';
+                $this->ruleValid['adhibition_end_dt_edit'] = 'required';
+            }else{
+                $this->ruleValid['adhibition_start_dt_history'] = 'required';
+                $this->ruleValid['adhibition_end_dt_history'] = 'required';
+            }
+        }
+    }
+
     protected function validAfter( &$validator,$data ){
         $mst_bill_issue_destinations = $data["mst_bill_issue_destinations"];
         $errorsEx = [];
