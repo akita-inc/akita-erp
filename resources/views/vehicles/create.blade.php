@@ -198,7 +198,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="vehicles_kb" name="vehicles_kb">
                                 @foreach($listVehicleKb as $key => $value)
-                                <option value="{{$key}}" {{$key==old('vehicles_kb',!is_null($mVehicle->vehicles_kb) ? $mVehicle->vehicles_kb : '')  ? 'selected' : ''}}>{{$value}}</option>
+                                <option value="{{$key}}" {{Common::selectIfValue('vehicles_kb', $key, $mVehicle->vehicles_kb)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -225,7 +225,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-50" id="mst_business_office_id" name="mst_business_office_id">
                                 @foreach($listBusinessOffices as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('mst_business_office_id',!is_null($mVehicle->mst_business_office_id) ? $mVehicle->mst_business_office_id : '')   ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('mst_business_office_id', $key, $mVehicle->mst_business_office_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -241,7 +241,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="vehicle_size_kb" name="vehicle_size_kb">
                                 @foreach($listVehicleSize as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('vehicle_size_kb',!is_null($mVehicle->vehicle_size_kb) ? $mVehicle->vehicle_size_kb : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('vehicle_size_kb', $key, $mVehicle->vehicle_size_kb)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -256,7 +256,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="vehicle_purpose_id" name="vehicle_purpose_id">
                                 @foreach($listVehiclePurpose as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('vehicle_purpose_id',!is_null($mVehicle->vehicle_purpose_id) ? $mVehicle->vehicle_purpose_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('vehicle_purpose_id', $key, $mVehicle->vehicle_purpose_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -272,7 +272,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-100" id="land_transport_office_cd" name="land_transport_office_cd">
                                 @foreach($listLandTranportOfficeCd as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('land_transport_office_cd',!is_null($mVehicle->land_transport_office_cd) ? $mVehicle->land_transport_office_cd : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('land_transport_office_cd', $key, $mVehicle->land_transport_office_cd)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -346,7 +346,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="vehicle_classification_id" name="vehicle_classification_id">
                                 @foreach($listVehicleClassification as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('vehicle_classification_id',!is_null($mVehicle->vehicle_classification_id) ? $mVehicle->vehicle_classification_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('vehicle_classification_id', $key, $mVehicle->vehicle_classification_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -361,7 +361,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="private_commercial_id" name="private_commercial_id">
                                 @foreach($listPrivateCommercial as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('private_commercial_id',!is_null($mVehicle->private_commercial_id) ? $mVehicle->private_commercial_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('private_commercial_id', $key, $mVehicle->private_commercial_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -377,7 +377,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="car_body_shape_id" name="car_body_shape_id">
                                 @foreach($listCarBodyShape as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('car_body_shape_id',!is_null($mVehicle->car_body_shape_id) ? $mVehicle->car_body_shape_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('car_body_shape_id', $key, $mVehicle->car_body_shape_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -392,7 +392,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-25" id="vehicle_id" name="vehicle_id">
                                 @foreach($listVehicle as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('vehicle_id',!is_null($mVehicle->vehicle_id) ? $mVehicle->vehicle_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('vehicle_id', $key, $mVehicle->vehicle_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -592,7 +592,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-75" id="kinds_of_fuel_id" name="kinds_of_fuel_id">
                                 @foreach($listKindOfFuel as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('kinds_of_fuel_id',!is_null($mVehicle->kinds_of_fuel_id) ? $mVehicle->kinds_of_fuel_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('kinds_of_fuel_id', $key, $mVehicle->kinds_of_fuel_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -796,7 +796,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control" id="drive_system_id" name="drive_system_id">
                                 @foreach($listDriveSystem as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('drive_system_id',!is_null($mVehicle->drive_system_id) ? $mVehicle->drive_system_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('drive_system_id', $key, $mVehicle->drive_system_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -807,7 +807,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control" id="transmissions_id" name="transmissions_id">
                                 @foreach($listTransmissions as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('transmissions_id',!is_null($mVehicle->transmissions_id) ? $mVehicle->transmissions_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('transmissions_id', $key, $mVehicle->transmissions_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -829,7 +829,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control" id="suspensions_cd" name="suspensions_cd">
                                 @foreach($listSuspensionsCd as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('suspensions_cd',!is_null($mVehicle->suspensions_cd) ? $mVehicle->suspensions_cd : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('suspensions_cd', $key, $mVehicle->suspensions_cd)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -958,7 +958,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="power_gate_cd" name="power_gate_cd">
                                 @foreach($listPowerGate as $key => $value)
-                                <option value="{{$key}}" {{$key==old('power_gate_cd',!is_null($mVehicle->power_gate_cd) ? $mVehicle->power_gate_cd : '') ? 'selected' : ''}}>{{$value}}</option>
+                                <option value="{{$key}}" {{Common::selectIfValue('power_gate_cd', $key, $mVehicle->power_gate_cd)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -999,7 +999,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-100" id="mst_staffs_id" name="mst_staffs_id">
                                 @foreach($listAdminStaffs as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('mst_staffs_id',!is_null($mVehicle->mst_staffs_id) ? $mVehicle->mst_staffs_id : '') ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('mst_staffs_id', $key, $mVehicle->mst_staffs_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>

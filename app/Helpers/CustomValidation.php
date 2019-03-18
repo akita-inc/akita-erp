@@ -161,4 +161,14 @@ class CustomValidation {
             return preg_match("/^([0-9\s\.]*)$/", $value);
         });
     }
+
+    public static function validateNumberRange(){
+        Validator::extend('number_range', function($attribute, $value, $parameters, $validator) {
+            if ($value > 2147483647) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    }
 }

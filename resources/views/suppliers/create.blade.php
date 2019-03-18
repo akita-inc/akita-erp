@@ -350,7 +350,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="prefectures_cd" name="prefectures_cd">
                                 @foreach($listPrefecture as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('prefectures_cd') || $key==$mSupplier->prefectures_cd   ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('prefectures_cd', $key, $mSupplier->prefectures_cd)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -456,7 +456,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="payment_month_id" name="payment_month_id">
                                 @foreach($listPaymentMonth as $key => $value)
-                                    <option value="{{$key}}" {{ $key==old('payment_month_id') || $key==$mSupplier->payment_month_id? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('payment_month_id', $key, $mSupplier->payment_month_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -478,7 +478,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="payment_method_id" name="payment_method_id">
                                 @foreach($listPaymentMethod as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('payment_method_id') || $key==$mSupplier->payment_method_id? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('payment_method_id', $key, $mSupplier->payment_method_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -516,7 +516,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50" id="consumption_tax_calc_unit_id" name="consumption_tax_calc_unit_id">
                                 @foreach($listConsumptionTaxCalcUnit as $key => $value)
-                                    <option value="{{$key}}" {{($key==old('consumption_tax_calc_unit_id') && !is_null(old('consumption_tax_calc_unit_id')) ) || ($key==$mSupplier->consumption_tax_calc_unit_id && !is_null($mSupplier->consumption_tax_calc_unit_id))? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('consumption_tax_calc_unit_id', $key, $mSupplier->consumption_tax_calc_unit_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -526,7 +526,7 @@
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <select class="form-control w-50" id="rounding_method_id" name="rounding_method_id">
                                 @foreach($listRoundingMethod as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('rounding_method_id') || $key==$mSupplier->rounding_method_id? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('rounding_method_id', $key, $mSupplier->rounding_method_id)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -586,7 +586,7 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <select class="form-control w-50 " id="payment_account_type" name="payment_account_type">
                                 @foreach($listPaymentAccountType as $key => $value)
-                                    <option value="{{$key}}" {{$key==old('payment_account_type') || $key==$mSupplier->payment_account_type ? 'selected' : ''}}>{{$value}}</option>
+                                    <option value="{{$key}}" {{Common::selectIfValue('payment_account_type', $key, $mSupplier->payment_account_type)}}>{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
