@@ -48,4 +48,5 @@ return [
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),
+    'max_file_size' => 1,
 ];
