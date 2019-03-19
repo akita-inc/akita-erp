@@ -259,6 +259,14 @@ class VehiclesController extends Controller
                     if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
                         $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mVehicle->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
                     }
+
+                    $listVehiclesExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"],'id' => $mVehicle->id,'adhibition_start_dt' => $mVehicle->adhibition_start_dt]);
+                    foreach ($listVehiclesExist as $item) {
+                        if (Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_start_dt)) {
+                            $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
+                            break;
+                        }
+                    }
                 });
             }else{
                 $validator->after(function ($validator) use ($data,$mVehicle){
@@ -270,6 +278,7 @@ class VehiclesController extends Controller
                     foreach ($listVehiclesExist as $item) {
                         if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
                             $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
+                            break;
                         }
                     }
                 });
@@ -378,34 +387,34 @@ class VehiclesController extends Controller
 
                     $mVehicle->save();
                     if ($mode == 'registerHistoryLeft'){
-                        Common::fullCopyDirectory(config('params.vehicles_path') . $id, config('params.vehicles_path') . $mVehicle->id);
                         $oldVehicle = MVehicles::find($id);
                         $uploadFile =  array('vehicle_inspection_sticker_pdf','picture_fronts','picture_rights','picture_lefts','picture_rears');
+                        $src = config('params.vehicles_path') . $id;
+                        $des = config('params.vehicles_path') . $mVehicle->id;
+                        mkdir($des, 0777, true);
+                        mkdir($des.'/pdf', 0777, true);
+                        mkdir($des.'/image', 0777, true);
                         foreach ($uploadFile as $item){
-                            $mVehicle->{$item} = $oldVehicle->{$item};
+                            if(!$request->hasFile($item) && !empty($oldVehicle->{$item} )){
+                                if ((isset($data['deleteFile']) && !in_array($item,$data['deleteFile'])) ||  !isset($data['deleteFile'])) {
+                                    $mVehicle->{$item} = $oldVehicle->{$item};
+                                    if($item=='vehicle_inspection_sticker_pdf'){
+                                        copy($src.'/pdf/'.$oldVehicle->{$item}, $des.'/pdf/'.$oldVehicle->{$item});
+                                    }else{
+                                        copy($src.'/image/'.$oldVehicle->{$item}, $des.'/image/'.$oldVehicle->{$item});
+                                    }
+                                }
+                            }
                         }
+                        $mVehicle->save();
                     }
 
-                    $mVehicle->save();
-
-                    $directoryPath = config('params.vehicles_path') . $mVehicle->id;
                     //deleteFile
-
                     if (isset($data['deleteFile']) && count($data['deleteFile']) > 0) {
                         foreach ($data['deleteFile'] as $item) {
-                            if ($item == 'vehicle_inspection_sticker_pdf') {
-                                $filePath = $directoryPath . '/pdf/' . $mVehicle->{$item};
-                            } else {
-                                $filePath = $directoryPath . '/image/' . $mVehicle->{$item};
-                            }
-                            if (file_exists($filePath)) {
-                                unlink($filePath);
-                                $mVehicle->{$item} = '';
-                            }
+                            $mVehicle->{$item} = null;
                         }
                     }
-
-
                     $mVehicle->save();
 
                     //upload file

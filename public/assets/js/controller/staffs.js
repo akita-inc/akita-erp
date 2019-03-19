@@ -23177,16 +23177,10 @@ var ctrStaffsVl = new Vue({
     furigana: '',
     history: [],
     loading: false,
-    staff_edit: 0,
-    staff_id: null,
     field: {
       staff_cd: "",
       adhibition_start_dt: "",
-      adhibition_end_dt: $("#hd_adhibition_end_dt_default").val(),
-      adhibition_start_dt_edit: "",
-      adhibition_end_dt_edit: $("#hd_adhibition_end_dt_default").val(),
-      adhibition_start_dt_history: "",
-      adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
+      adhibition_end_dt: "2999/12/31",
       password: "",
       employment_pattern_id: "",
       position_id: "",
@@ -23272,7 +23266,6 @@ var ctrStaffsVl = new Vue({
       employment_insurance_numbers: "",
       health_insurance_numbers: "",
       employees_pension_insurance_numbers: "",
-      workmens_compensation_insurance_fg: "",
       admin_fg: "",
       mst_role_id: "",
       mst_staff_auths: {
@@ -23310,10 +23303,6 @@ var ctrStaffsVl = new Vue({
     autokana: []
   },
   methods: {
-    clone: function clone() {
-      this.field["clone"] = true;
-      this.submit();
-    },
     showError: function showError(errors) {
       return errors.join("<br/>");
     },
@@ -23334,23 +23323,8 @@ var ctrStaffsVl = new Vue({
       this.field.drivers_license_picture = "";
     },
     submit: function submit() {
-      var _this2 = this;
-
       var that = this;
       that.loading = true;
-
-      if (this.staff_edit == 1) {
-        this.field["id"] = this.staff_edit;
-
-        if (this.field["clone"] == true) {
-          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
-          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
-        } else {
-          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
-          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
-        }
-      }
-
       staffs_service.submit(this.field).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
@@ -23359,58 +23333,8 @@ var ctrStaffsVl = new Vue({
           window.location.href = '/staffs';
         }
 
-        _this2.field["clone"] = null;
         that.loading = false;
       });
-    },
-    loadFormEdit: function loadFormEdit() {
-      var that = this;
-
-      if ($("#hd_staff_edit").val() == 1) {
-        this.loading = true;
-        that.staff_edit = 1;
-        that.staff_id = $("#hd_id").val();
-        $.each(this.field, function (key, value) {
-          if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_staff_job_experiences') {
-            if (key == "adhibition_start_dt" || key == "adhibition_end_dt") {
-              that.field[key + "_edit"] = $("#hd_" + key).val();
-            }
-
-            that.field.workmens_compensation_insurance_fg = that.field.workmens_compensation_insurance_fg == 0 ? "" : 1;
-            that.image_drivers_license_picture = "/storage/staff/" + that.staff_id + "/image/" + that.field.drivers_license_picture;
-            that.field[key] = $("#hd_" + key).val();
-          }
-        });
-        that.getMstCollapses();
-      }
-    },
-    getMstCollapses: function getMstCollapses() {
-      var that = this;
-      staffs_service.getListStaffJobEx(that.staff_id).then(function (response) {
-        if (response.data != null && response.data.length > 0) {
-          that.field.mst_staff_job_experiences = response.data;
-          console.log(response.data);
-        }
-      });
-      staffs_service.getListStaffQualifications(that.staff_id).then(function (response) {
-        if (response.data != null && response.data.length > 0) {
-          that.field.mst_staff_qualifications = response.data;
-          console.log(response.data);
-        }
-      });
-      staffs_service.getStaffDependents(that.staff_id).then(function (response) {
-        if (response.data != null && response.data.length > 0) {
-          that.field.mst_staff_dependents = response.data;
-          console.log(response.data);
-        }
-      });
-      staffs_service.getStaffAuths(that.staff_id).then(function (response) {
-        if (response.data != null && response.data.length > 0) {
-          that.field.mst_staff_auths = response.data;
-          console.log(response.data);
-        }
-      });
-      that.loading = false;
     },
     onChange: function onChange(event) {
       this.field.relocation_municipal_office_cd = event.target.value; // this.handleSelect({id:event.target.value,name:event.target.selectedOptions[0].text});
@@ -23512,36 +23436,10 @@ var ctrStaffsVl = new Vue({
                 break;
 
               default:
-                that.field.mst_staff_auths[2].accessible_kb = item.accessible_kb;
+                that.field.mst_staff_auths[item.screen_category_id].accessible_kb = item.accessible_kb;
             }
           });
         }
-      });
-    },
-    handleSelect: function handleSelect(selected) {
-      if (typeof selected.id != "undefined") {
-        this.field.relocation_municipal_office_cd = selected.id;
-      }
-    },
-    deleteStaff: function deleteStaff(id) {
-      var that = this;
-      staffs_service.checkIsExist(id).then(function (response) {
-        if (!response.success) {
-          alert(response.msg);
-          that.backToList();
-          return false;
-        } else {
-          if (confirm(messages["MSG06001"])) {
-            staffs_service.deleteStaffs(id).then(function (response) {
-              window.location.href = listRoute;
-            });
-          }
-        }
-      });
-    },
-    backToList: function backToList() {
-      staffs_service.backHistory().then(function () {
-        window.location.href = listRoute;
       });
     },
     showKana: function showKana(index) {
@@ -23551,11 +23449,15 @@ var ctrStaffsVl = new Vue({
       this.autokana['mst_staff_dependents_first_nm' + index] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_6__["bind"]('#mst_staff_dependents_first_nm' + index, '#mst_staff_dependents_first_nm_kana' + index, {
         katakana: true
       });
+    },
+    handleSelect: function handleSelect(selected) {
+      if (typeof selected.id != "undefined") {
+        this.field.relocation_municipal_office_cd = selected.id;
+      }
     }
   },
   mounted: function mounted() {
     var that = this;
-    that.loadFormEdit();
     staffs_service.loadListReMunicipalOffice().then(function (response) {
       that.dropdown_relocate_municipal_office_nm = response.data;
     });
@@ -23642,7 +23544,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

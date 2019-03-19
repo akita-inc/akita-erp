@@ -338,7 +338,7 @@ var ctrStaffsVl = new Vue({
                                 that.field.mst_staff_auths[1].accessible_kb = item.accessible_kb;
                                 break;
                             default:
-                                that.field.mst_staff_auths[2].accessible_kb = item.accessible_kb;
+                                that.field.mst_staff_auths[item.screen_category_id].accessible_kb = item.accessible_kb;
                         }
 
                     });

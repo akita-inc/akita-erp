@@ -76,7 +76,7 @@ var ctrCustomersListVl = new Vue({
                     return false;
                 } else {
                     if (confirm(messages["MSG06001"])) {
-                        customers_service.deleteSupplier(id).then((response) => {
+                        customers_service.deleteCustomer(id).then((response) => {
                             this.getItems(1);
                         });
                     }
