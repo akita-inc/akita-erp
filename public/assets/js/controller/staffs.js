@@ -23436,7 +23436,7 @@ var ctrStaffsVl = new Vue({
                 break;
 
               default:
-                that.field.mst_staff_auths[2].accessible_kb = item.accessible_kb;
+                that.field.mst_staff_auths[item.screen_category_id].accessible_kb = item.accessible_kb;
             }
           });
         }
@@ -23544,7 +23544,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

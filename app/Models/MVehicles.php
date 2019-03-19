@@ -145,6 +145,8 @@ class MVehicles extends Model
             $mVehicle = $mVehicle->where('vehicles_cd', "=", $where['vehicles_cd']);
         if (isset($where['id']) && $where['id'] != '')
             $mVehicle = $mVehicle->where('id', "!=", $where['id']);
+        if (isset($where['adhibition_start_dt']) && $where['adhibition_start_dt'] != '')
+            $mVehicle = $mVehicle->where('adhibition_start_dt', "<=", $where['adhibition_start_dt']);
         $mVehicle->orderBy('vehicles_cd', 'adhibition_start_dt');
 
         return $mVehicle->get();
