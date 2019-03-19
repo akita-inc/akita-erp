@@ -25445,6 +25445,7 @@ var ctrStaffsVl = new Vue({
           that.errors = response.message;
         } else {
           that.errors = {};
+          window.location.href = '/staffs/list';
         }
 
         _this2.field["clone"] = null;
