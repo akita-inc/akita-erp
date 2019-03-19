@@ -13,6 +13,7 @@ return [
     */
 
     'title' => '社員　検索リスト',
+    'title_edit' => '社員　修正',
     'list' => [
         'search' => [
             'radio-all' => 'すべて',
@@ -40,10 +41,15 @@ return [
     ],
     'create' => [
         'title' => '社員　新規追加',
+        'title_edit' => '社員　修正',
         'field' => [
             "staff_cd" => "社員コード",
             "adhibition_start_dt" => "適用開始日",
             "adhibition_end_dt" => "適用終了日",
+            "adhibition_start_dt_edit" => "適用開始日（更新用）",
+            "adhibition_end_dt_edit" => "適用終了日（更新用）",
+            "adhibition_start_dt_history" => "適用開始日（新規用）",
+            "adhibition_end_dt_history" => "適用終了日（新規用）",
             "password"=>"パスワード",
             "employment_pattern_id"=>"雇用形態",
             "position_id"=>"役職",

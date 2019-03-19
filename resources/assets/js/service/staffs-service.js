@@ -47,5 +47,33 @@ staffs_service = {
         }).catch(function (error) {
             return error;
         });
-    }
+    },
+    getListStaffJobEx: function (id) {
+        return axios.get('/staffs/api-v1/list-staff-job-ex/'+id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    getListStaffQualifications:function(id){
+        return axios.get('/staffs/api-v1/list-staff-qualification/'+id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    getStaffDependents:function(id){
+        return axios.get('/staffs/api-v1/list-staff-dependents/'+id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    getStaffAuths:function(id){
+        return axios.get('/staffs/api-v1/list-staff-auths/'+id).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
