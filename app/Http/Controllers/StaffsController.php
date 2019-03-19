@@ -47,10 +47,12 @@ class StaffsController extends Controller
         "health_insurance_numbers"=>"length:20|nullable",
         "employees_pension_insurance_numbers"=>"length:10|nullable",
         "drivers_license_number"=>"length:12|nullable",
-        'drivers_license_picture' => 'nullable|is_image'
     ];
+    public $messagesCustom =[];
     public function __construct(){
         $this->labels = Lang::get("staffs.create.field");
+        $this->ruleValid['drivers_license_picture'] = 'nullable|mimes:jpeg,jpg,png|max_mb:'.config("params.max_file_size");
+        $this->messagesCustom['drivers_license_picture.mimes'] = Lang::get('messages.MSG02018');
     }
 
     protected function search($data)
@@ -381,7 +383,16 @@ class StaffsController extends Controller
     }
     public function getStaffAuths($id)
     {
-        return Response()->json(array('success'=>true, 'data'=> ""));
+        $data = DB::table("mst_staff_auths")
+            ->select(DB::raw('mst_staff_auths.*, mst_screens.screen_category_id'))
+            ->join('mst_screens','mst_screens.id', '=', 'mst_staff_auths.mst_screen_id')
+            ->where("mst_staff_id","=",$id)
+            ->get();
+        if($data){
+            $data->toArray();
+            $data = $data->groupBy('screen_category_id');
+        }
+        return Response()->json(array('success'=>true, 'data'=> $data));
 
     }
 }

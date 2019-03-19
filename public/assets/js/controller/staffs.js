@@ -23318,15 +23318,7 @@ var ctrStaffsVl = new Vue({
       return errors.join("<br/>");
     },
     onFileChange: function onFileChange(e) {
-      var _this = this;
-
-      var fileReader = new FileReader();
-      fileReader.readAsDataURL(e.target.files[0]);
-
-      fileReader.onload = function (e) {
-        _this.field.drivers_license_picture = e.target.result;
-      };
-
+      this.field.drivers_license_picture = e.target.files[0];
       this.image_drivers_license_picture = e.target.files[0].name;
     },
     deleteFileUpload: function deleteFileUpload() {
@@ -23334,7 +23326,7 @@ var ctrStaffsVl = new Vue({
       this.field.drivers_license_picture = "";
     },
     submit: function submit() {
-      var _this2 = this;
+      var _this = this;
 
       var that = this;
       that.loading = true;
@@ -23351,18 +23343,20 @@ var ctrStaffsVl = new Vue({
         }
       }
 
-      console.log(this.field);
-      that.field.drivers_license_picture = ""; //debug
-
-      staffs_service.submit(this.field).then(function (response) {
+      var formData = new FormData();
+      formData.append('data', JSON.stringify(this.field));
+      formData.append('image', this.field.drivers_license_picture);
+      staffs_service.submit(formData).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
-        } else {
-          that.errors = {};
-          window.location.href = '/staffs/list';
-        }
+        } // else
+        // {
+        //     that.errors = {};
+        //     window.location.href = '/staffs/list';
+        // }
 
-        _this2.field["clone"] = null;
+
+        _this.field["clone"] = null;
         that.loading = false;
       });
     },
@@ -23380,7 +23374,7 @@ var ctrStaffsVl = new Vue({
             }
 
             that.field.workmens_compensation_insurance_fg = that.field.workmens_compensation_insurance_fg == 0 ? "" : 1;
-            that.image_drivers_license_picture = "/storage/staff/" + that.staff_id + "/image/" + that.field.drivers_license_picture;
+            that.image_drivers_license_picture = that.field.drivers_license_picture;
             that.field[key] = $("#hd_" + key).val();
           }
         });
@@ -23392,25 +23386,40 @@ var ctrStaffsVl = new Vue({
       staffs_service.getListStaffJobEx(that.staff_id).then(function (response) {
         if (response.data != null && response.data.length > 0) {
           that.field.mst_staff_job_experiences = response.data;
-          console.log(response.data);
         }
       });
       staffs_service.getListStaffQualifications(that.staff_id).then(function (response) {
         if (response.data != null && response.data.length > 0) {
           that.field.mst_staff_qualifications = response.data;
-          console.log(response.data);
         }
       });
       staffs_service.getStaffDependents(that.staff_id).then(function (response) {
         if (response.data != null && response.data.length > 0) {
           that.field.mst_staff_dependents = response.data;
-          console.log(response.data);
         }
       });
       staffs_service.getStaffAuths(that.staff_id).then(function (response) {
         if (response.data != null && response.data.length > 0) {
           that.field.mst_staff_auths = response.data;
-          console.log(response.data);
+          that.field.mst_staff_auths = {
+            1: {
+              staffScreen: [],
+              screen_category_id: 1,
+              accessible_kb: 9
+            },
+            2: {
+              screen_category_id: 2,
+              accessible_kb: 9
+            },
+            3: {
+              screen_category_id: 3,
+              accessible_kb: 9
+            },
+            4: {
+              screen_category_id: 4,
+              accessible_kb: 9
+            }
+          };
         }
       });
       that.loading = false;
@@ -23666,7 +23675,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

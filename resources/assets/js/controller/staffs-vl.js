@@ -154,12 +154,7 @@ var ctrStaffsVl = new Vue({
             return errors.join("<br/>");
         },
         onFileChange:function(e) {
-
-            var fileReader = new FileReader();
-            fileReader.readAsDataURL(e.target.files[0]);
-            fileReader.onload = (e) => {
-                this.field.drivers_license_picture= e.target.result;
-            };
+            this.field.drivers_license_picture = e.target.files[0];
             this.image_drivers_license_picture=e.target.files[0].name;
 
         },
@@ -182,17 +177,21 @@ var ctrStaffsVl = new Vue({
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
                 }
             }
-            console.log(this.field);
-            that.field.drivers_license_picture="";//debug
-            staffs_service.submit(this.field).then((response) => {
+            let formData = new FormData();
+
+            formData.append('data', JSON.stringify(this.field));
+            formData.append('image', this.field.drivers_license_picture);
+
+
+            staffs_service.submit(formData).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
                 }
-                else
-                {
-                    that.errors = {};
-                    window.location.href = '/staffs/list';
-                }
+                // else
+                // {
+                //     that.errors = {};
+                //     window.location.href = '/staffs/list';
+                // }
                 this.field["clone"] = null;
                 that.loading = false;
             });
@@ -209,7 +208,7 @@ var ctrStaffsVl = new Vue({
                             that.field[key + "_edit"] = $("#hd_"+key).val();
                         }
                         that.field.workmens_compensation_insurance_fg=that.field.workmens_compensation_insurance_fg==0?"":1;
-                        that.image_drivers_license_picture="/storage/staff/"+that.staff_id+"/image/"+that.field.drivers_license_picture;
+                        that.image_drivers_license_picture = that.field.drivers_license_picture;
                         that.field[key] = $("#hd_"+key).val();
                     }
 
@@ -224,25 +223,40 @@ var ctrStaffsVl = new Vue({
             staffs_service.getListStaffJobEx(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_job_experiences = response.data;
-                    console.log(response.data);
                 }
             });
             staffs_service.getListStaffQualifications(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_qualifications = response.data;
-                    console.log(response.data);
                 }
             });
             staffs_service.getStaffDependents(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_dependents = response.data;
-                    console.log(response.data);
                 }
             });
             staffs_service.getStaffAuths(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_auths = response.data;
-                    console.log(response.data);
+                    that.field.mst_staff_auths = {
+                        1: {
+                            staffScreen: [],
+                            screen_category_id:1,
+                            accessible_kb: 9,
+                        },
+                        2: {
+                            screen_category_id: 2,
+                            accessible_kb: 9,
+                        },
+                        3: {
+                            screen_category_id: 3,
+                            accessible_kb: 9,
+                        },
+                        4: {
+                            screen_category_id: 4,
+                            accessible_kb: 9,
+                        },
+                    }
                 }
             });
             that.loading = false;

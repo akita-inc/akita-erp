@@ -49,6 +49,6 @@ return [
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),
-    'staff_path'=>storage_path('staff/'),
+    'staff_path'=>storage_path('staffs/'),
     'max_file_size' => 1,
 ];

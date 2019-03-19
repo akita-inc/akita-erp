@@ -27,6 +27,11 @@ trait FormTrait
     public function submit(Request $request)
     {
         $data = $request->all();
+        if($request->route()->getPrefix()=='staffs/api-v1'){
+            $image = $data['image'];
+            $data = json_decode($data['data'], true);
+            $data['drivers_license_picture'] = $image;
+        }
         $this->beforeSubmit($data);
         $idInsert = "";
         if( !empty($this->ruleValid) ){
@@ -35,7 +40,6 @@ trait FormTrait
             $validator->after(function($validator) use ($data) {
                 $this->validAfter($validator,$data);
             });
-
             if ( $validator->fails() ) {
                 return response()->json([
                     'success'=>FALSE,
