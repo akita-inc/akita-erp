@@ -182,6 +182,8 @@ var ctrStaffsVl = new Vue({
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
                 }
             }
+            console.log(this.field);
+            that.field.drivers_license_picture="";//debug
             staffs_service.submit(this.field).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;

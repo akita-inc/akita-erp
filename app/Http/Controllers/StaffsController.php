@@ -223,6 +223,12 @@ class StaffsController extends Controller
         $mst_staff_auths=$data["mst_staff_auths"];
         $drivers_license_picture=$data["drivers_license_picture"];
         DB::beginTransaction();
+        unset($arrayInsert["adhibition_start_dt_edit"]);
+        unset($arrayInsert["adhibition_end_dt_edit"]);
+        unset($arrayInsert["adhibition_start_dt_history"]);
+        unset($arrayInsert["adhibition_end_dt_history"]);
+        unset($arrayInsert["id"]);
+        unset($arrayInsert["clone"]);
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
         unset($arrayInsert["mst_staff_qualifications"]);

@@ -23351,6 +23351,9 @@ var ctrStaffsVl = new Vue({
         }
       }
 
+      console.log(this.field);
+      that.field.drivers_license_picture = ""; //debug
+
       staffs_service.submit(this.field).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
