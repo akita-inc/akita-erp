@@ -143,7 +143,8 @@ class MVehicles extends Model
         // 検索条件
         if (isset($where['vehicles_cd']) && $where['vehicles_cd'] != '')
             $mVehicle = $mVehicle->where('vehicles_cd', "=", $where['vehicles_cd']);
-
+        if (isset($where['id']) && $where['id'] != '')
+            $mVehicle = $mVehicle->where('id', "!=", $where['id']);
         $mVehicle->orderBy('vehicles_cd', 'adhibition_start_dt');
 
         return $mVehicle->get();

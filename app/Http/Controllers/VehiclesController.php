@@ -259,6 +259,14 @@ class VehiclesController extends Controller
                     if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
                         $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mVehicle->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
                     }
+
+                    $listVehiclesExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"],'id' => $mVehicle->id]);
+                    foreach ($listVehiclesExist as $item) {
+                        if (Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_start_dt)) {
+                            $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
+                            break;
+                        }
+                    }
                 });
             }else{
                 $validator->after(function ($validator) use ($data,$mVehicle){
@@ -270,6 +278,7 @@ class VehiclesController extends Controller
                     foreach ($listVehiclesExist as $item) {
                         if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
                             $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
+                            break;
                         }
                     }
                 });
@@ -388,20 +397,10 @@ class VehiclesController extends Controller
 
                     $mVehicle->save();
 
-                    $directoryPath = config('params.vehicles_path') . $mVehicle->id;
                     //deleteFile
-
                     if (isset($data['deleteFile']) && count($data['deleteFile']) > 0) {
                         foreach ($data['deleteFile'] as $item) {
-                            if ($item == 'vehicle_inspection_sticker_pdf') {
-                                $filePath = $directoryPath . '/pdf/' . $mVehicle->{$item};
-                            } else {
-                                $filePath = $directoryPath . '/image/' . $mVehicle->{$item};
-                            }
-                            if (file_exists($filePath)) {
-                                unlink($filePath);
-                                $mVehicle->{$item} = '';
-                            }
+                            $mVehicle->{$item} = '';
                         }
                     }
 

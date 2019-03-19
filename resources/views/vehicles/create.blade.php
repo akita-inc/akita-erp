@@ -296,11 +296,9 @@
                                 <label for="vehicle_inspection_sticker_pdf" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
-                                @if($mVehicle->vehicle_inspection_sticker_pdf)
                                 <div class="ml-auto">
                                     <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'vehicle_inspection_sticker_pdf')">ファイル削除</button>
                                 </div>
-                                @endif
                             </div>
                         </div>
                         @if ($errors->has('vehicle_inspection_sticker_pdf'))
@@ -1055,11 +1053,9 @@
                                 <label for="picture_fronts" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
-                                @if($mVehicle->picture_fronts)
-                                    <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_fronts')">ファイル削除</button>
-                                    </div>
-                                @endif
+                                <div class="ml-auto">
+                                    <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_fronts')">ファイル削除</button>
+                                </div>
                             </div>
                         </div>
                         @if ($errors->has('picture_fronts'))
@@ -1081,11 +1077,9 @@
                                 <label for="picture_rights" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
-                                @if($mVehicle->picture_rights)
-                                    <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_rights')">ファイル削除</button>
-                                    </div>
-                                @endif
+                                <div class="ml-auto">
+                                    <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_rights')">ファイル削除</button>
+                                </div>
                             </div>
                         </div>
                         @if ($errors->has('picture_rights'))
@@ -1107,11 +1101,9 @@
                                 <label for="picture_lefts" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
-                                @if($mVehicle->picture_lefts)
-                                    <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_lefts')">ファイル削除</button>
-                                    </div>
-                                @endif
+                                <div class="ml-auto">
+                                    <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_lefts')">ファイル削除</button>
+                                </div>
                             </div>
                         </div>
                         @if ($errors->has('picture_lefts'))
@@ -1133,11 +1125,9 @@
                                 <label for="picture_rears" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
-                                @if($mVehicle->picture_rears)
-                                    <div class="ml-auto">
-                                        <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_rears')">ファイル削除</button>
-                                    </div>
-                                @endif
+                                <div class="ml-auto">
+                                    <button type="button" class="btn btn-dark" onclick="deleteFileUpload(this,'picture_rears')">ファイル削除</button>
+                                </div>
                             </div>
                         </div>
                         @if ($errors->has('picture_rears'))
@@ -1251,9 +1241,11 @@
         }
         function deleteFileUpload(e,destination) {
             $('#'+destination+"_file_name").html('');
-            $('#'+destination).attr('value','');
-            $('div.alert-area').append("<input type='hidden' class='deleteFile' name='deleteFile[]' value='"+ destination+"'>");
-            $(e).hide();
+            $('#'+destination).wrap('<form>').closest('form').get(0).reset();
+            $('#'+destination).unwrap();
+            if($('div.alert-area :input[value='+destination+']').length <= 0){
+                $('div.alert-area').append("<input type='hidden' class='deleteFile' name='deleteFile[]' value='"+ destination+"'>");
+            }
         }
         
         function copyText() {
