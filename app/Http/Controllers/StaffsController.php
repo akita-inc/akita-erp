@@ -19,6 +19,9 @@ class StaffsController extends Controller
 {
     use ListTrait, FormTrait,StaffTrait;
     public $table = "mst_staffs";
+    public $allNullAble = false;
+    public $beforeItem = null;
+
     public $ruleValid = [
         'staff_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
@@ -209,6 +212,7 @@ class StaffsController extends Controller
         if (Carbon::parse($data['retire_dt']) > Carbon::parse($data['death_dt'])) {
             $validator->errors()->add('retire_dt', str_replace(' :attribute', $this->labels['retire_dt'], Lang::get('messages.MSG02014')));
         }
+
     }
 
 
@@ -217,6 +221,7 @@ class StaffsController extends Controller
         $data['admin_fg']=isset($data['admin_fg'])?1:0;
         $data['workmens_compensation_insurance_fg']=isset($data['workmens_compensation_insurance_fg'])?1:0;
         $arrayInsert = $data;
+        $currentTime = date("Y-m-d H:i:s",time());
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
         $mst_staff_qualifications=$data["mst_staff_qualifications"];
         $mst_staff_dependents=$data["mst_staff_dependents"];
@@ -235,7 +240,28 @@ class StaffsController extends Controller
         unset($arrayInsert["mst_staff_dependents"]);
         unset($arrayInsert["mst_staff_auths"]);
         unset($arrayInsert["drivers_license_picture"]);
-        $id = DB::table($this->table)->insertGetId( $arrayInsert );
+        if(isset( $data["id"]) && $data["id"]){
+            $id = $data["id"];
+            $arrayInsert["modified_at"] = $currentTime;
+            MStaffs::query()->where("id","=",$id)->update( $arrayInsert );
+//            if($this->beforeItem){
+//                MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
+//                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+//                    "modified_at" => $currentTime
+//                ]);
+//            }
+            if(isset($data["clone"])){
+                MStaffs::query()->where("id","=",$data["id"])->update([
+                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                    "modified_at" => $currentTime
+                ]);
+            }
+        }else {
+            $arrayInsert["created_at"] = $currentTime;
+            $arrayInsert["modified_at"] = $currentTime;
+            $id = DB::table($this->table)->insertGetId( $arrayInsert );
+
+        }
         $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
         $this->saveStaffAuth($id,$mst_staff_auths);
         $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
