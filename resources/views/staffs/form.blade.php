@@ -1,17 +1,47 @@
 @extends('Layouts.app')
-@section('title',trans("staffs.create.title"))
-@section('title_header',trans("staffs.create.title"))
+@section('title',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
+@section('title_header',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
 @section('content')
     @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
     <div class="wrapper-container" id="ctrStaffsVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
-            <div class="sub-header-line-one">
+            <div class="sub-header-line-one d-flex">
+                <div class="d-flex">
                 <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
+                </div>
+                <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
+                <input type="hidden" id="hd_staff_edit" value="{!! !empty($staff) ? 1:0 !!}">
+                @if(!empty($staff))
+                    @foreach($staff as $key=>$value)
+                        @if($key == 'adhibition_start_dt'
+                            || $key == 'adhibition_end_dt'
+                            || $key == 'business_start_dt'
+                        )
+                            @php($value = date("Y/m/d",strtotime($value)))
+                        @endif
+                        <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
+                    @endforeach
+                    <div class="d-flex ml-auto">
+                        <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                    </div>
+                @endif
             </div>
             <div class="sub-header-line-two">
-                <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                <div class="grid-form border-0">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                        <div class="col-md-7 col-sm-12 row grid-col h-100">
+                            <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($staff) ? "edit":"register")) }}</button>
+                            @if($flagRegisterHistory)
+                                <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
+                                    {{ trans("common.button.register_history_left") }}
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -23,23 +53,27 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true,'attr_input' => "max-length='5'"])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
+                        <div class="break-row-form"></div>
+                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"type='password' class='w-100'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt','required'=>true])
+                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_end_dt','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
+                            @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
                         </div>
+                        @if($flagRegisterHistory)
+                            <div class="break-row-form"></div>
+                            <div class="col-md-6 col-sm-12 no-padding">
+                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true])
+                            </div>
+                            <div class="col-md-6 col-sm-12 pd-l-20">
+                                @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
+                            </div>
+                        @endif
                     </div>
-                </div>
-                <div class="break-row-form"></div>
-                <div class="row">
-                    <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"type='password' class='w-100'"])
-                    </div>
-                </div>
             </div>
             <!--Block 2-->
             <div class="grid-form">
@@ -915,7 +949,7 @@
                 </div>
             </div>
             <!--End-->
-
+            </div>
         </form>
     </div>
 @endsection

@@ -174,6 +174,13 @@ class SuppliersController extends Controller
                             $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
                         }
                     }
+                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"],'id' => $mSupplier->id,'adhibition_start_dt' => $mSupplier->adhibition_start_dt]);
+                    foreach ($listSuppliersExist as $item) {
+                        if (Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_start_dt) ) {
+                            $validator->errors()->add('mst_suppliers_cd',str_replace(':screen','仕入先',Lang::get('messages.MSG10003')));
+                            break;
+                        }
+                    }
                 });
             }else{
                 $validator->after(function ($validator) use ($data,$mSupplier){
@@ -185,6 +192,7 @@ class SuppliersController extends Controller
                     foreach ($listSuppliersExist as $item) {
                         if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
                             $validator->errors()->add('mst_suppliers_cd',str_replace(':screen','仕入先',Lang::get('messages.MSG10003')));
+                            break;
                         }
                     }
                 });

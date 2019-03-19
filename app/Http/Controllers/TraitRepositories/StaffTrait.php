@@ -94,17 +94,20 @@ trait StaffTrait
     protected function saveStaffAuth($id, $data= array()){
         $mStaffAuth = new MStaffAuths();
         $dataInsert = [];
-        foreach ($data as $key => $value){
-            switch ($key){
-                case 1:
-                    foreach ($value['staffScreen'] as $id){
-                        array_push($dataInsert, array('mst_screen_id' => $id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
-                    }
-                    break;
-                default:
-                    $mst_screen = MScreens::where('screen_category_id',$value['screen_category_id'])->first();
-                    array_push($dataInsert, array('mst_screen_id' => $mst_screen->id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
+        $allScreen = MScreens::all();
+        foreach ($allScreen as $item){
+            if($item->screen_category_id==1){
+                $accessible_kb = in_array($item->id,$data[$item->screen_category_id]['staffScreen']) ? $data[$item->screen_category_id]['accessible_kb'] : 9;
             }
+           else{
+                $accessible_kb = $data[$item->screen_category_id]['accessible_kb'];
+            }
+
+            array_push($dataInsert, array(
+                'mst_screen_id' => $item->id,
+                'accessible_kb' => $accessible_kb,
+                'mst_staff_id' => $id
+            ));
         }
         if(count($dataInsert) > 0){
             DB::beginTransaction();
