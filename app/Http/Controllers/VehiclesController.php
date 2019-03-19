@@ -296,7 +296,7 @@ class VehiclesController extends Controller
                         $mVehicle->save();
                         $mVehicle = new MVehicles();
                     } elseif ($mode == 'edit') {
-                        if ($data["adhibition_start_dt"] != $mVehicle->adhibition_start_dt) {
+                        if (Carbon::parse($data["adhibition_start_dt"]) != Carbon::parse($mVehicle->adhibition_start_dt)) {
                             $mVehicle->editVehicle($mVehicle->id, $data["adhibition_start_dt"]);
                         }
                     }

@@ -211,7 +211,7 @@ class SuppliersController extends Controller
                         $mSupplier->save();
                         $mSupplier = new MSupplier();
                     }elseif ($mode=='edit'){
-                        if($data["adhibition_start_dt"]!= $mSupplier->adhibition_start_dt){
+                        if(Carbon::parse($data["adhibition_start_dt"])!= Carbon::parse($mSupplier->adhibition_start_dt)){
                             $mSupplier->editSupplier($mSupplier->id, $data["adhibition_start_dt"]);
                         }
                     }
