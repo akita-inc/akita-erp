@@ -61,13 +61,9 @@ trait StaffTrait
         }
 
     }
-    protected function saveBlock($id, $dataBlocks, $tableName,$flagEdit=null,$prefixField = null, $unsetFields = array())
+    protected function saveBlock($id, $dataBlocks = array(), $tableName, $prefixField = null, $unsetFields = array())
     {
-        $arrayIDInsert = [];
-        $currentTime = date("Y-m-d H:i:s",time());
-        $flagUpdate=null;
         if (count($dataBlocks) > 0) {
-            $disp_number = 1;
             foreach ($dataBlocks as $key => $item) {
                 $arrayField = [];
                 $fields = array_keys($item);
@@ -85,35 +81,14 @@ trait StaffTrait
                         unset($arrayInsert[$field]);
                     }
                 }
-                if(isset($item["id"]) && $item["id"] ){
-                    $item["modified_at"] = $currentTime;
-                    DB::table($tableName)->where("id", "=", $item["id"])->update($arrayInsert);
-                    $arrayIDInsert[] = $flagUpdate = $item["id"];
-                }
-                else
-                {
-                    $ids=DB::table($tableName)->insertGetId($arrayInsert);
-                    $arrayIDInsert[] = $ids;
-                }
-                if(!$flagUpdate){
+                if (!DB::table($tableName)->insert($arrayInsert)) {
                     DB::rollBack();
                     return false;
                 }
-                $disp_number++;
-
             }
-        }
-        if(isset($flagEdit)) {
-            $deleteRows = DB::table($tableName)
-                ->where("mst_staff_id", $id);
-            if (!empty($arrayIDInsert)) {
-                $deleteRows = $deleteRows->whereNotIn("id", $arrayIDInsert);
-            }
-            $deleteRows->delete();
         }
         return true;
     }
-
     protected function saveStaffAuth($id, $data= array()){
         $mStaffAuth = new MStaffAuths();
         $dataInsert = [];
