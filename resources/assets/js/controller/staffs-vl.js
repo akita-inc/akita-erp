@@ -173,7 +173,7 @@ var ctrStaffsVl = new Vue({
             let that = this;
             that.loading = true;
             if(this.staff_edit == 1){
-                this.field["id"] = this.staff_edit;
+                this.field["id"] = this.staff_id;
                 if(this.field["clone"] == true){
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
@@ -182,8 +182,9 @@ var ctrStaffsVl = new Vue({
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
                 }
             }
-            console.log(this.field);
-            that.field.drivers_license_picture="";//debug
+            if(this.staff_id){
+                this.field.drivers_license_picture="";
+            }
             staffs_service.submit(this.field).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
@@ -224,25 +225,21 @@ var ctrStaffsVl = new Vue({
             staffs_service.getListStaffJobEx(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_job_experiences = response.data;
-                    console.log(response.data);
                 }
             });
             staffs_service.getListStaffQualifications(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_qualifications = response.data;
-                    console.log(response.data);
                 }
             });
             staffs_service.getStaffDependents(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_dependents = response.data;
-                    console.log(response.data);
                 }
             });
             staffs_service.getStaffAuths(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_auths = response.data;
-                    console.log(response.data);
                 }
             });
             that.loading = false;
