@@ -393,7 +393,6 @@
                                         'filedErrors'=>"mst_staff_qualifications"
                                     ])
                                     <div class="break-row-form"></div>
-                                    <div v-if="index!=0">
                                         @include('Component.form.date-picker-vue',[
                                             'filed'=>'payday',
                                             'class'=>'wd-350',
@@ -402,7 +401,6 @@
                                             'filedErrors'=>"mst_staff_qualifications"
 
                                          ])
-                                    </div>
                                 </div>
 
                             </div>

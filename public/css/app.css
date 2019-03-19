@@ -276,7 +276,7 @@ input,select{
     height: 10px;
 }
 .wrap-control-group{
-    padding-left: 170px;
+    padding-left: 180px;
     position: relative;
     min-height: 38px;
 }
@@ -287,9 +287,8 @@ input,select{
     background-color: #0070c0;
     color: white;
     justify-content: left;
-    width: 170px;
+    width: 180px;
     padding-left: 10px;
-    padding-right: 10px;
 }
 .wrap-control-group > label.required:before{
     content: '*';
