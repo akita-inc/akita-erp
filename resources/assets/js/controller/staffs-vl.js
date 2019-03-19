@@ -1,6 +1,6 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import { Core } from '../package/yubinbango-core';
-import DatePicker from 'vue2-datepicker';
+import DatePicker from '../component/vue2-datepicker-master'
 import moment from "moment";
 import historykana from "historykana";
 import Dropdown from 'vue-simple-search-dropdown';
@@ -168,7 +168,7 @@ var ctrStaffsVl = new Vue({
             let that = this;
             that.loading = true;
             if(this.staff_edit == 1){
-                this.field["id"] = this.staff_edit;
+                this.field["id"] = this.staff_id;
                 if(this.field["clone"] == true){
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
@@ -176,6 +176,9 @@ var ctrStaffsVl = new Vue({
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
                 }
+            }
+            if(this.staff_id){
+                this.field.drivers_license_picture="";
             }
             let formData = new FormData();
 
@@ -187,11 +190,11 @@ var ctrStaffsVl = new Vue({
                 if(response.success == false){
                     that.errors = response.message;
                 }
-                // else
-                // {
-                //     that.errors = {};
-                //     window.location.href = '/staffs/list';
-                // }
+                else
+                {
+                    that.errors = {};
+                    window.location.href = '/staffs/list';
+                }
                 this.field["clone"] = null;
                 that.loading = false;
             });

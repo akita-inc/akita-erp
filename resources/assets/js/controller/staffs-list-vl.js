@@ -1,5 +1,5 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-import DatePicker from 'vue2-datepicker';
+import DatePicker from '../component/vue2-datepicker-master'
 var ctrStaffsListVl = new Vue({
     el: '#ctrStaffsListVl',
     data: {

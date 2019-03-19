@@ -289,6 +289,7 @@ input,select{
     justify-content: left;
     width: 170px;
     padding-left: 10px;
+    padding-right: 10px;
 }
 .wrap-control-group > label.required:before{
     content: '*';
