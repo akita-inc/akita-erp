@@ -1,5 +1,5 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-import DatePicker from 'vue2-datepicker';
+import DatePicker from '../component/vue2-datepicker-master'
 import { Core } from '../package/yubinbango-core';
 import moment from 'moment';
 import * as AutoKana from "vanilla-autokana";
@@ -74,6 +74,15 @@ var ctrCustomersVl = new Vue({
         autokana:[],
     },
     methods : {
+        testblur: function(event){
+            const keyCode = event.keyCode
+            console.log(keyCode);
+            // Tab 9 or Enter 13
+            if (keyCode === 9 || keyCode === 13) {
+                this.popupVisible = false
+                event.stopPropagation()
+            }
+        },
         clone: function(){
             this.field["clone"] = true;
             this.submit();
