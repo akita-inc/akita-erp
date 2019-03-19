@@ -22,9 +22,6 @@ trait StaffTrait
     public $labels = [
     ];
 
-    public $messagesCustom = [
-       "drivers_license_picture.is_image" =>"運転免許証の画像をファイル選択した時はJPEG、JPG、PNGのみ選択できるようにしてください。",
-    ];
     protected function validateBlockCollapse(&$validator,$name,$data=array(),$rules=array())
     {
         $dataBlocks = $data[$name];
