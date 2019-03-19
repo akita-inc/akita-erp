@@ -192,7 +192,6 @@ var ctrStaffsVl = new Vue({
                 else
                 {
                     that.errors = {};
-                    window.location.href = '/staffs/list';
                 }
                 this.field["clone"] = null;
                 that.loading = false;

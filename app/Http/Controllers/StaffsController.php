@@ -212,14 +212,45 @@ class StaffsController extends Controller
         if (Carbon::parse($data['retire_dt']) > Carbon::parse($data['death_dt'])) {
             $validator->errors()->add('retire_dt', str_replace(' :attribute', $this->labels['retire_dt'], Lang::get('messages.MSG02014')));
         }
+        if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
+            $validator->errors()->add('adhibition_start_dt_history',str_replace(' :attribute',$this->labels['adhibition_start_dt_history'],Lang::get('messages.MSG02014')));
+        }
+        $strWhereStartDate = 'DATE_FORMAT("'.$data['adhibition_start_dt'].'", "%Y%m%d")';
+        $strWhereEndDate = 'DATE_FORMAT("'.$data['adhibition_end_dt'].'", "%Y%m%d")';
+        $strWhereStartDateDB = 'DATE_FORMAT(adhibition_start_dt, "%Y%m%d")';
+        $strWhereEndDateDB = 'DATE_FORMAT(adhibition_end_dt, "%Y%m%d")';
+        $strWhere = $strWhereStartDate." > ".$strWhereEndDateDB." or ".$strWhereEndDate." < ".$strWhereStartDateDB;
+        $countExist = MStaffs::query()
+            ->where('staff_cd','=',$data['staff_cd'])
+            ->whereNull("deleted_at")
+            ->whereRaw("!(".$strWhere.")");
+        if(isset($data["id"]) && $data["id"]) {
+            $beforeItem = MStaffs::query()
+                ->whereRaw($strWhereStartDateDB." < ".$strWhereStartDate)
+                ->whereNull("deleted_at")
+                ->where('staff_cd','=',$data['staff_cd'])
+                ->where("id","<>",$data["id"])
+                ->orderByDesc("adhibition_start_dt")
+                ->first();
+            if($beforeItem){
+                $this->beforeItem = $beforeItem;
+                $countExist = $countExist->where("id","<>",$beforeItem->id);
+            }
+            $countExist = $countExist->where("id","<>",$data["id"]);
+
+        }
+      $countExist = $countExist->count();
+       if( $countExist > 0 ){
+            $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
+      }
 
     }
 
 
     protected function save($data){
         $data['password']=bcrypt($data['password']);
-        $data['admin_fg']=isset($data['admin_fg'])?1:0;
-        $data['workmens_compensation_insurance_fg']=isset($data['workmens_compensation_insurance_fg'])?1:0;
+        $data['admin_fg']=$data['admin_fg']==false?0:1;
+        $data['workmens_compensation_insurance_fg']=$data['workmens_compensation_insurance_fg']==false?0:1;
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
         $mst_staff_job_experiences =  $data["mst_staff_job_experiences"];
@@ -244,12 +275,12 @@ class StaffsController extends Controller
             $id = $data["id"];
             $arrayInsert["modified_at"] = $currentTime;
             MStaffs::query()->where("id","=",$id)->update( $arrayInsert );
-//            if($this->beforeItem){
-//                MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
-//                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-//                    "modified_at" => $currentTime
-//                ]);
-//            }
+            if($this->beforeItem){
+                MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
+                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                    "modified_at" => $currentTime
+                ]);
+            }
             if(isset($data["clone"])){
                 MStaffs::query()->where("id","=",$data["id"])->update([
                     "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
@@ -264,9 +295,9 @@ class StaffsController extends Controller
         }
         $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
         $this->saveStaffAuth($id,$mst_staff_auths);
-        $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
-        $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications","qualifications_");
-        $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents","dept_",["disp_number"]);
+        $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences",@$data["id"]);
+        $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications",@$data["id"],"qualifications_");
+        $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents",@$data["id"],"dept_",["disp_number"]);
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
@@ -283,7 +314,6 @@ class StaffsController extends Controller
             }
         }
     }
-
     public function store(Request $request,$id=null)
     {
         $mGeneralPurposes = new MGeneralPurposes();
@@ -350,6 +380,7 @@ class StaffsController extends Controller
     {
         $listStaffJobEx = DB::table("mst_staff_job_experiences")
             ->select(
+                "id",
                 "job_duties",
                 "staff_tenure_start_dt",
                 "staff_tenure_end_dt"            )
@@ -366,6 +397,7 @@ class StaffsController extends Controller
     {
         $data = DB::table("mst_staff_qualifications")
             ->select(
+                "id",
                 "qualification_kind_id",
                 "acquisition_dt",
                 "period_validity_start_dt",
@@ -387,6 +419,7 @@ class StaffsController extends Controller
     {
         $data = DB::table("mst_staff_dependents")
             ->select(
+                "id",
                 "dependent_kb as dept_dependent_kb",
                 "last_nm as dept_last_nm",
                 "last_nm_kana as dept_last_nm_kana",
