@@ -23351,12 +23351,15 @@ var ctrStaffsVl = new Vue({
         }
       }
 
+      console.log(this.field);
+      that.field.drivers_license_picture = ""; //debug
+
       staffs_service.submit(this.field).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
         } else {
           that.errors = {};
-          window.location.href = '/staffs';
+          window.location.href = '/staffs/list';
         }
 
         _this2.field["clone"] = null;
@@ -23502,6 +23505,7 @@ var ctrStaffsVl = new Vue({
       var that = this;
       staffs_service.loadRoleConfig(this.field.mst_role_id).then(function (result) {
         var data = result.data;
+        console.log(data);
 
         if (data.length > 0) {
           data.forEach(function (item) {
@@ -23515,6 +23519,26 @@ var ctrStaffsVl = new Vue({
                 that.field.mst_staff_auths[item.screen_category_id].accessible_kb = item.accessible_kb;
             }
           });
+        } else {
+          that.field.mst_staff_auths = {
+            1: {
+              staffScreen: [],
+              screen_category_id: 1,
+              accessible_kb: 9
+            },
+            2: {
+              screen_category_id: 2,
+              accessible_kb: 9
+            },
+            3: {
+              screen_category_id: 3,
+              accessible_kb: 9
+            },
+            4: {
+              screen_category_id: 4,
+              accessible_kb: 9
+            }
+          };
         }
       });
     },
