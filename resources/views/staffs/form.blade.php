@@ -53,21 +53,24 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>(!empty($staff) ? "":true),'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                         <div class="break-row-form"></div>
-                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"type='password' class='w-100'"])
+                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>(!empty($staff) ? "":true),'attr_input'=>"type='password' class='w-100'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true])
+                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>(!empty($staff) ? "":true)])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
-                        </div>
+                            @if($flagRegisterHistory)
+                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'required'=>(!empty($staff) ? "":true) ])
+                            @else
+                                @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
+                            @endif                        </div>
                         @if($flagRegisterHistory)
                             <div class="break-row-form"></div>
                             <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true])
+                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>(!empty($staff) ? "":true)])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])

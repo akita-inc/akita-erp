@@ -22,7 +22,7 @@ class StaffsController extends Controller
     public $ruleValid = [
         'staff_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
-        'password'=>'required|length:50',
+        'password'=>'required_without:id|length:50',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana|nullable|length:25',
         'first_nm'  => 'length:50|nullable',
@@ -189,7 +189,6 @@ class StaffsController extends Controller
         }
     }
     protected function validAfter( &$validator,$data ){
-        //running in ValidateStaffTrait
         $this->validateBlockCollapse($validator,"mst_staff_job_experiences",$data,[
             'job_duties' => 'nullable|length:50'
         ]);
