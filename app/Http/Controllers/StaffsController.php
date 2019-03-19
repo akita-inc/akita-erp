@@ -292,17 +292,15 @@ class StaffsController extends Controller
                 ]);
             }
         }else {
-            $arrayInsert["created_at"] = $currentTime;
-            $arrayInsert["modified_at"] = $currentTime;
             $id = DB::table($this->table)->insertGetId( $arrayInsert );
 
         }
         $this->deleteFile($id,$deleteFile);
         $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
         $this->saveStaffAuth($id,$mst_staff_auths);
-        $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences",@$data["id"]);
-        $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications",@$data["id"],"qualifications_");
-        $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents",@$data["id"],"dept_",["disp_number"]);
+        $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
+        $this->saveBlock($id,$mst_staff_qualifications,"mst_staff_qualifications","qualifications_");
+        $this->saveBlock($id,$mst_staff_dependents,"mst_staff_dependents","dept_",["disp_number"]);
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
