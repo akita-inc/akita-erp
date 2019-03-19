@@ -1,6 +1,6 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import { Core } from '../package/yubinbango-core';
-import DatePicker from 'vue2-datepicker';
+import DatePicker from '../component/vue2-datepicker-master'
 import moment from "moment";
 import historykana from "historykana";
 import Dropdown from 'vue-simple-search-dropdown';

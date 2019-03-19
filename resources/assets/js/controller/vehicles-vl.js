@@ -1,5 +1,5 @@
 import { Core } from '../package/yubinbango-core';
-import DatePicker from 'vue2-datepicker'
+import DatePicker from '../component/vue2-datepicker-master'
 
 var ctrVehiclesVl = new Vue({
     el: '#ctrVehiclesVl',
