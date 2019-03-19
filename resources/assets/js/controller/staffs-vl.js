@@ -13,10 +13,16 @@ var ctrStaffsVl = new Vue({
         furigana: '',
         history: [],
         loading:false,
+        staff_edit:0,
+        staff_id:null,
         field:{
             staff_cd:"",
             adhibition_start_dt:"",
-            adhibition_end_dt:"2999/12/31",
+            adhibition_end_dt:$("#hd_adhibition_end_dt_default").val(),
+            adhibition_start_dt_edit:"",
+            adhibition_end_dt_edit:$("#hd_adhibition_end_dt_default").val(),
+            adhibition_start_dt_history:"",
+            adhibition_end_dt_history:$("#hd_adhibition_end_dt_default").val(),
             password:"",
             employment_pattern_id:"",
             position_id:"",
@@ -102,6 +108,7 @@ var ctrStaffsVl = new Vue({
             employment_insurance_numbers:"",
             health_insurance_numbers:"",
             employees_pension_insurance_numbers:"",
+            workmens_compensation_insurance_fg:"",
             admin_fg:"",
             mst_role_id:"",
             mst_staff_auths: {
@@ -139,6 +146,10 @@ var ctrStaffsVl = new Vue({
         autokana:[],
     },
     methods : {
+        clone: function(){
+            this.field["clone"] = true;
+            this.submit();
+        },
         showError: function ( errors ){
             return errors.join("<br/>");
         },
@@ -161,6 +172,16 @@ var ctrStaffsVl = new Vue({
         {
             let that = this;
             that.loading = true;
+            if(this.staff_edit == 1){
+                this.field["id"] = this.staff_edit;
+                if(this.field["clone"] == true){
+                    this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
+                    this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
+                }else{
+                    this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
+                    this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
+                }
+            }
             staffs_service.submit(this.field).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
@@ -170,8 +191,59 @@ var ctrStaffsVl = new Vue({
                     that.errors = {};
                     window.location.href = '/staffs';
                 }
+                this.field["clone"] = null;
                 that.loading = false;
             });
+        },
+        loadFormEdit: function () {
+            let that = this;
+            if($("#hd_staff_edit").val() == 1){
+                this.loading = true;
+                that.staff_edit = 1;
+                that.staff_id = $("#hd_id").val();
+                $.each(this.field,function (key,value) {
+                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_staff_job_experiences'){
+                        if(key == "adhibition_start_dt" || key == "adhibition_end_dt"){
+                            that.field[key + "_edit"] = $("#hd_"+key).val();
+                        }
+                        that.field.workmens_compensation_insurance_fg=that.field.workmens_compensation_insurance_fg==0?"":1;
+                        that.image_drivers_license_picture="/storage/staff/"+that.staff_id+"/image/"+that.field.drivers_license_picture;
+                        that.field[key] = $("#hd_"+key).val();
+                    }
+
+                });
+                that.getMstCollapses();
+
+            }
+        },
+        getMstCollapses:function()
+        {
+            let that=this;
+            staffs_service.getListStaffJobEx(that.staff_id).then((response) => {
+                if(response.data != null && response.data.length > 0){
+                    that.field.mst_staff_job_experiences = response.data;
+                    console.log(response.data);
+                }
+            });
+            staffs_service.getListStaffQualifications(that.staff_id).then((response) => {
+                if(response.data != null && response.data.length > 0){
+                    that.field.mst_staff_qualifications = response.data;
+                    console.log(response.data);
+                }
+            });
+            staffs_service.getStaffDependents(that.staff_id).then((response) => {
+                if(response.data != null && response.data.length > 0){
+                    that.field.mst_staff_dependents = response.data;
+                    console.log(response.data);
+                }
+            });
+            staffs_service.getStaffAuths(that.staff_id).then((response) => {
+                if(response.data != null && response.data.length > 0){
+                    that.field.mst_staff_auths = response.data;
+                    console.log(response.data);
+                }
+            });
+            that.loading = false;
         },
         onChange:function(event)
         {
@@ -294,19 +366,40 @@ var ctrStaffsVl = new Vue({
                 }
             });
         },
-        showKana:function (index) {
-            this.autokana ['mst_staff_dependents_last_nm'+index] = AutoKana.bind('#mst_staff_dependents_last_nm'+index, '#mst_staff_dependents_last_nm_kana'+index, { katakana: true });
-            this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
-        },
         handleSelect: function (selected) {
             if(typeof selected.id!="undefined"){
                 this.field.relocation_municipal_office_cd = selected.id;
             }
         },
-
+        deleteStaff: function(id){
+            var that = this;
+            staffs_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    that.backToList();
+                    return false;
+                } else {
+                    if (confirm(messages["MSG06001"])) {
+                        staffs_service.deleteStaffs(id).then((response) => {
+                            window.location.href = listRoute;
+                        });
+                    }
+                }
+            });
+        },
+        backToList: function () {
+            staffs_service.backHistory().then(function () {
+                window.location.href = listRoute;
+            });
+        },
+        showKana:function (index) {
+            this.autokana ['mst_staff_dependents_last_nm'+index] = AutoKana.bind('#mst_staff_dependents_last_nm'+index, '#mst_staff_dependents_last_nm_kana'+index, { katakana: true });
+            this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
+        },
     },
     mounted () {
         var that=this;
+        that.loadFormEdit();
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.dropdown_relocate_municipal_office_nm =  response.data;
         });

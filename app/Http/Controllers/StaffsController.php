@@ -240,9 +240,20 @@ class StaffsController extends Controller
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
     }
+    protected function beforeSubmit($data){
+        unset($this->ruleValid['adhibition_start_dt']);
+        if(isset($data["id"]) && $data["id"]) {
+            if (!isset($data["clone"])) {
+                $this->ruleValid['adhibition_start_dt_edit'] = 'required';
+                $this->ruleValid['adhibition_end_dt_edit'] = 'required';
+            }else{
+                $this->ruleValid['adhibition_start_dt_history'] = 'required';
+                $this->ruleValid['adhibition_end_dt_history'] = 'required';
+            }
+        }
+    }
 
-
-    public function create(Request $request)
+    public function store(Request $request,$id=null)
     {
         $mGeneralPurposes = new MGeneralPurposes();
         $mBusinessOffices=new MBusinessOffices();
@@ -265,8 +276,25 @@ class StaffsController extends Controller
         $listRoles = $mRoles->getListRoles();
         $listStaffScreens = $mScreen->getListScreensByCondition(['screen_category_id' => 1]);
         $listAccessiblePermission=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['accessible_kb'],'Empty');
-
-        return view('staffs.create', [
+        $staff=null;
+        $flagRegisterHistory = false;
+        //load form by update
+        if($id != null){
+            $staff = MStaffs::find( $id );
+            if(empty($staff)){
+                abort('404');
+            }else{
+                $staffLast = MStaffs::where('staff_cd', '=', $staff->staff_cd)
+                    ->orderByDesc("adhibition_start_dt")->first();
+                if($staffLast->id == $id){
+                    $flagRegisterHistory = true;
+                }
+                $staff = $staff->toArray();
+            }
+        }
+        return view('staffs.form', [
+            'staff'=>$staff,
+            'flagRegisterHistory'=>$flagRegisterHistory,
             'listEmployPattern' => $listEmployPattern,
             'listPosition'=>$listPosition,
             'listPrefecture'=>$listPrefecture,
@@ -287,4 +315,68 @@ class StaffsController extends Controller
         ]);
     }
 
+    public function getStaffJobEx($id)
+    {
+        $listStaffJobEx = DB::table("mst_staff_job_experiences")
+            ->select(
+                "job_duties",
+                "staff_tenure_start_dt",
+                "staff_tenure_end_dt"            )
+            ->where("mst_staff_id","=",$id)
+            ->where("deleted_at",null)
+            ->orderBy(DB::raw("disp_number*1"))
+            ->get();
+        if($listStaffJobEx){
+            $listStaffJobEx->toArray();
+        }
+        return Response()->json(array('success'=>true, 'data'=> $listStaffJobEx));
+    }
+    public function getStaffQualifications($id)
+    {
+        $data = DB::table("mst_staff_qualifications")
+            ->select(
+                "qualification_kind_id",
+                "acquisition_dt",
+                "period_validity_start_dt",
+                 "period_validity_end_dt",
+                "amounts",
+                "notes as qualifications_notes",
+                "payday"
+            )
+            ->where("mst_staff_id","=",$id)
+            ->where("deleted_at",null)
+            ->orderBy(DB::raw("disp_number*1"))
+            ->get();
+        if($data){
+            $data->toArray();
+        }
+        return Response()->json(array('success'=>true, 'data'=> $data));
+    }
+    public function getStaffDependents($id)
+    {
+        $data = DB::table("mst_staff_dependents")
+            ->select(
+                "dependent_kb as dept_dependent_kb",
+                "last_nm as dept_last_nm",
+                "last_nm_kana as dept_last_nm_kana",
+                "first_nm as dept_first_nm",
+                "first_nm_kana as dept_first_nm_kana",
+                "birthday as dept_birthday",
+                "sex_id as dept_sex_id",
+                "social_security_number as dept_social_security_number"
+            )
+            ->where("mst_staff_id","=",$id)
+            ->where("deleted_at",null)
+            ->orderBy("id","ASC")
+            ->get();
+        if($data){
+            $data->toArray();
+        }
+        return Response()->json(array('success'=>true, 'data'=> $data));
+    }
+    public function getStaffAuths($id)
+    {
+        return Response()->json(array('success'=>true, 'data'=> ""));
+
+    }
 }
