@@ -957,6 +957,9 @@
 @endsection
 @section("scripts")
     <script>
+        var messages = [];
+        messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
+        messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         var listRoute = "{{route('staffs.list')}}";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs.js') }}" charset="utf-8"></script>

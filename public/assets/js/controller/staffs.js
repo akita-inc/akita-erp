@@ -25581,13 +25581,22 @@ var ctrStaffsVl = new Vue({
     getAddrFromZipCode: function getAddrFromZipCode() {
       var that = this;
       var zip = that.field.zip_cd;
-      new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_1__["Core"](zip, function (addr) {
-        that.field.prefectures_cd = addr.region_id; // 都道府県ID
 
-        that.field.address1 = addr.locality; // 市区町村
+      if (zip == "") {
+        alert(messages["MSG07001"]);
+      } else {
+        new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_1__["Core"](zip, function (addr) {
+          if (addr.region_id == "") {
+            alert(messages["MSG07002"]);
+          } else {
+            that.field.prefectures_cd = addr.region_id; // 都道府県ID
 
-        that.field.address2 = addr.street; // 町域
-      });
+            that.field.address1 = addr.locality; // 市区町村
+
+            that.field.address2 = addr.street; // 町域
+          }
+        });
+      }
     },
     removeRows: function removeRows(block, index) {
       this.field[block].splice(index, 1);

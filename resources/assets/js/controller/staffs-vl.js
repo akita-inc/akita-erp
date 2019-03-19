@@ -332,11 +332,25 @@ var ctrStaffsVl = new Vue({
         getAddrFromZipCode: function() {
             var that=this;
             var zip = that.field.zip_cd;
-            new Core(zip, function (addr) {
-                that.field.prefectures_cd=addr.region_id;// 都道府県ID
-                that.field.address1=addr.locality;// 市区町村
-                that.field.address2=addr.street;// 町域
-            });
+            if(zip=="")
+            {
+                alert(messages["MSG07001"]);
+            }
+            else
+            {
+                new Core(zip, function (addr) {
+                    if(addr.region_id=="")
+                    {
+                        alert(messages["MSG07002"]);
+                    }
+                    else
+                    {
+                        that.field.prefectures_cd=addr.region_id;// 都道府県ID
+                        that.field.address1=addr.locality;// 市区町村
+                        that.field.address2=addr.street;// 町域
+                    }
+                });
+            }
         },
         removeRows: function (block,index) {
             this.field[block].splice(index, 1);

@@ -123,7 +123,6 @@ trait StaffTrait
     }
     protected function uploadFile($id,$file,$path)
     {
-        //upload file
         $directoryPath = $path. $id;
         if (!file_exists($directoryPath)) {
             mkdir($directoryPath, 0777, true);
