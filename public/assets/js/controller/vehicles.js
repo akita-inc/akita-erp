@@ -238,7 +238,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })

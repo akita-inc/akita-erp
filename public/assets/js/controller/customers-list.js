@@ -1159,7 +1159,7 @@ var ctrCustomersListVl = new Vue({
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {
-            customers_service.deleteSupplier(id).then(function (response) {
+            customers_service.deleteCustomer(id).then(function (response) {
               _this2.getItems(1);
             });
           }
@@ -1198,7 +1198,7 @@ var ctrCustomersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
 
 
 /***/ })
