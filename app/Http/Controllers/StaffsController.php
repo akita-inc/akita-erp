@@ -50,10 +50,12 @@ class StaffsController extends Controller
         "health_insurance_numbers"=>"length:20|nullable",
         "employees_pension_insurance_numbers"=>"length:10|nullable",
         "drivers_license_number"=>"length:12|nullable",
-        'drivers_license_picture' => 'nullable|is_image'
     ];
+    public $messagesCustom =[];
     public function __construct(){
         $this->labels = Lang::get("staffs.create.field");
+        $this->ruleValid['drivers_license_picture'] = 'nullable|mimes:jpeg,jpg,png|max_mb:'.config("params.max_file_size");
+        $this->messagesCustom['drivers_license_picture.mimes'] = Lang::get('messages.MSG02018');
     }
 
     protected function search($data)
@@ -258,6 +260,7 @@ class StaffsController extends Controller
         $mst_staff_dependents=$data["mst_staff_dependents"];
         $mst_staff_auths=$data["mst_staff_auths"];
         $drivers_license_picture=$data["drivers_license_picture"];
+        $deleteFile=$data["deleteFile"];
         DB::beginTransaction();
         unset($arrayInsert["adhibition_start_dt_edit"]);
         unset($arrayInsert["adhibition_end_dt_edit"]);
@@ -271,6 +274,7 @@ class StaffsController extends Controller
         unset($arrayInsert["mst_staff_dependents"]);
         unset($arrayInsert["mst_staff_auths"]);
         unset($arrayInsert["drivers_license_picture"]);
+        unset($arrayInsert["deleteFile"]);
         if(isset( $data["id"]) && $data["id"]){
             $id = $data["id"];
             $arrayInsert["modified_at"] = $currentTime;
@@ -293,6 +297,7 @@ class StaffsController extends Controller
             $id = DB::table($this->table)->insertGetId( $arrayInsert );
 
         }
+        $this->deleteFile($id,$deleteFile);
         $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
         $this->saveStaffAuth($id,$mst_staff_auths);
         $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences",@$data["id"]);
@@ -303,7 +308,7 @@ class StaffsController extends Controller
         return $id;
     }
     protected function beforeSubmit($data){
-        unset($this->ruleValid['adhibition_start_dt']);
+//        unset($this->ruleValid['adhibition_start_dt']);
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
                 $this->ruleValid['adhibition_start_dt_edit'] = 'required';
@@ -440,7 +445,16 @@ class StaffsController extends Controller
     }
     public function getStaffAuths($id)
     {
-        return Response()->json(array('success'=>true, 'data'=> ""));
+        $data = DB::table("mst_staff_auths")
+            ->select(DB::raw('mst_staff_auths.*, mst_screens.screen_category_id'))
+            ->join('mst_screens','mst_screens.id', '=', 'mst_staff_auths.mst_screen_id')
+            ->where("mst_staff_id","=",$id)
+            ->get();
+        if($data){
+            $data->toArray();
+            $data = $data->groupBy('screen_category_id');
+        }
+        return Response()->json(array('success'=>true, 'data'=> $data));
 
     }
 }

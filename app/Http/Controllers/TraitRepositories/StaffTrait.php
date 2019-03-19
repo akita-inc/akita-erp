@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\TraitRepositories;
 
 
+use App\Helpers\Common;
 use App\Models\MScreens;
 use App\Models\MStaffAuths;
 use Illuminate\Support\Facades\Validator;
@@ -150,36 +151,38 @@ trait StaffTrait
     }
     protected function uploadFile($id,$file,$path)
     {
-        $fileName="";
-        if(isset($file))
-        {
-            $processPath=$path.$id."/image";
-            if(!file_exists($processPath)){
-                mkdir($processPath, 0777, true);
-            }
-            $exploded=explode(",",$file);
-            $decoded=base64_decode($exploded[1]);
-            if(str_contains($exploded[0],'jpeg'))
-            {
-                $extension='jpg';
-            }
-            else
-            {
-                $extension='png';
-            }
-            $fileName=str_random().'.'.$extension;
-            $filePath=$processPath.'/'.$fileName;
-            file_put_contents($filePath,$decoded);
-
+        //upload file
+        $directoryPath = $path. $id;
+        if (!file_exists($directoryPath)) {
+            mkdir($directoryPath, 0777, true);
         }
-        try
-        {
-            DB::table('mst_staffs')
-                ->where('id', $id)
-                ->update(['drivers_license_picture' => $fileName]);
-        }catch (\Exception $e) {
-            dd($e);
-            return false;
+        if(!is_null($file)) {
+            try {
+                $fileName = Common::uploadFile($file, $directoryPath);
+                DB::table('mst_staffs')
+                    ->where('id', $id)
+                    ->update(['drivers_license_picture' => $fileName]);
+            } catch (\Exception $e) {
+                dd($e);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function deleteFile($id,$deleteFile)
+    {
+        if (isset($deleteFile) && $deleteFile!='') {
+            try
+            {
+                DB::table('mst_staffs')
+                    ->where('id', $id)
+                    ->update(['drivers_license_picture' => null]);
+            }catch (\Exception $e) {
+                dd($e);
+                return false;
+            }
+            return true;
         }
         return true;
     }
