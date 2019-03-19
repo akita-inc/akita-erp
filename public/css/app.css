@@ -528,3 +528,7 @@ span.note{
     background-image: none;
     border-radius: 0px !important;
 }
+input[type=text]::-ms-clear {
+    display: none;
+}
+

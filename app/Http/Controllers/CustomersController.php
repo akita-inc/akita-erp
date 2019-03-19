@@ -272,6 +272,10 @@ class CustomersController extends Controller
                         $this->beforeItem = $beforeItem;
                         $countExist = $countExist->where("id","<>",$beforeItem->id);
                     }
+                }else{
+                    if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
+                        $validator->errors()->add('adhibition_start_dt_history',str_replace(' :attribute',$this->labels['adhibition_start_dt_history'],Lang::get('messages.MSG02014')));
+                    }
                 }
                 $countExist = $countExist->where("id","<>",$data["id"]);
             }
