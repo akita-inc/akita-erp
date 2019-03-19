@@ -288,6 +288,7 @@ class CustomersController extends Controller
 
     protected function save($data){
         $arrayInsert = $data;
+        $currentTime = date("Y-m-d H:i:s",time());
         $mst_bill_issue_destinations =  $data["mst_bill_issue_destinations"];
         unset($arrayInsert["mst_bill_issue_destinations"]);
         unset($arrayInsert["adhibition_start_dt_edit"]);
@@ -304,17 +305,22 @@ class CustomersController extends Controller
         }
         if(isset( $data["id"]) && $data["id"] && !isset($data["clone"]) ){
             $id = $data["id"];
+            $arrayInsert["modified_at"] = $currentTime;
             MCustomers::query()->where("id","=",$id)->update( $arrayInsert );
             if($this->beforeItem){
                 MCustomers::query()->where("id","=",$this->beforeItem["id"])->update([
-                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d')
+                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                    "modified_at" => $currentTime
                 ]);
             }
-        }else{
+        }else {
+            $arrayInsert["created_at"] = $currentTime;
+            $arrayInsert["modified_at"] = $currentTime;
             $id =  MCustomers::query()->insertGetId( $arrayInsert );
             if(isset($data["clone"])){
                 MCustomers::query()->where("id","=",$data["id"])->update([
-                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d')
+                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                    "modified_at" => $currentTime
                 ]);
             }
         }
@@ -334,10 +340,13 @@ class CustomersController extends Controller
                     'disp_number' => $disp_number,
                 ];
                 if(isset($bill_issue_destination["id"]) && $bill_issue_destination["id"] && !isset($data["clone"])){
+                    $arrayInsertBill["modified_at"] = $currentTime;
                     MMstBillIssueDestinations::query()
                         ->where("id","=",$bill_issue_destination["id"])->update($arrayInsertBill);
                     $arrayIDInsert[] = $flagUpdate = $bill_issue_destination["id"];
                 }else{
+                    $arrayInsertBill["created_at"] = $currentTime;
+                    $arrayInsertBill["modified_at"] = $currentTime;
                     $flagUpdate = MMstBillIssueDestinations::query()->insertGetId($arrayInsertBill);
                     $arrayIDInsert[] = $flagUpdate;
                 }
