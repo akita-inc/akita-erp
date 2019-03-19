@@ -31,6 +31,7 @@ trait FormTrait
             $image = $data['image'];
             $data = json_decode($data['data'], true);
             $data['drivers_license_picture'] = $image;
+            array_walk_recursive($data, function (& $item, $key) {if ($item=='') { $item = null; }});
         }
         $this->beforeSubmit($data);
         $idInsert = "";

@@ -131,17 +131,33 @@ trait StaffTrait
         if (!file_exists($directoryPath)) {
             mkdir($directoryPath, 0777, true);
         }
-        try
-        {
-            if(!is_null($file)) {
+        if(!is_null($file)) {
+            try {
                 $fileName = Common::uploadFile($file, $directoryPath);
+                DB::table('mst_staffs')
+                    ->where('id', $id)
+                    ->update(['drivers_license_picture' => $fileName]);
+            } catch (\Exception $e) {
+                dd($e);
+                return false;
             }
-            DB::table('mst_staffs')
-                ->where('id', $id)
-                ->update(['drivers_license_picture' => $fileName]);
-        }catch (\Exception $e) {
-            dd($e);
-            return false;
+        }
+        return true;
+    }
+
+    protected function deleteFile($id,$deleteFile)
+    {
+        if (isset($deleteFile) && $deleteFile!='') {
+            try
+            {
+                DB::table('mst_staffs')
+                    ->where('id', $id)
+                    ->update(['drivers_license_picture' => null]);
+            }catch (\Exception $e) {
+                dd($e);
+                return false;
+            }
+            return true;
         }
         return true;
     }

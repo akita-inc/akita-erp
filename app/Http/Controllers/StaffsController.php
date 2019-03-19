@@ -229,6 +229,7 @@ class StaffsController extends Controller
         $mst_staff_dependents=$data["mst_staff_dependents"];
         $mst_staff_auths=$data["mst_staff_auths"];
         $drivers_license_picture=$data["drivers_license_picture"];
+        $deleteFile=$data["deleteFile"];
         DB::beginTransaction();
         unset($arrayInsert["adhibition_start_dt_edit"]);
         unset($arrayInsert["adhibition_end_dt_edit"]);
@@ -242,6 +243,7 @@ class StaffsController extends Controller
         unset($arrayInsert["mst_staff_dependents"]);
         unset($arrayInsert["mst_staff_auths"]);
         unset($arrayInsert["drivers_license_picture"]);
+        unset($arrayInsert["deleteFile"]);
         if(isset( $data["id"]) && $data["id"]){
             $id = $data["id"];
             $arrayInsert["modified_at"] = $currentTime;
@@ -264,6 +266,7 @@ class StaffsController extends Controller
             $id = DB::table($this->table)->insertGetId( $arrayInsert );
 
         }
+        $this->deleteFile($id,$deleteFile);
         $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
         $this->saveStaffAuth($id,$mst_staff_auths);
         $this->saveBlock($id,$mst_staff_job_experiences,"mst_staff_job_experiences");
@@ -274,7 +277,7 @@ class StaffsController extends Controller
         return $id;
     }
     protected function beforeSubmit($data){
-        unset($this->ruleValid['adhibition_start_dt']);
+//        unset($this->ruleValid['adhibition_start_dt']);
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
                 $this->ruleValid['adhibition_start_dt_edit'] = 'required';

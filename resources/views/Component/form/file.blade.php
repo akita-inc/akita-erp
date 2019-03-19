@@ -11,7 +11,7 @@
 </div>
 <div class="wrap-control-group">
     <input type="file" name="{!! $filed !!}" id="{!! $filed !!}" ref="{!! $filed !!}"
-           class="input-file" {!! isset($attr_input) ? $attr_input:"" !!}/>
+           class="input-file" {!! isset($attr_input) ? $attr_input:"" !!} ref="{!! $ref!!}"/>
     <label  class="label-file-image" for="{!! $filed !!}">{{trans($prefix.'btn_browse_license_picture')}}</label>
    @if(isset($attr_delete_path))
      <button  type="button" class="btn btn-dark float-right" {!! isset($attr_delete_path) ? $attr_delete_path:"" !!}>
