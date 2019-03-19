@@ -25,7 +25,7 @@ class StaffsController
 
     public function getRoleConfig(Request $request){
         $mRoleAuth = new MRoleAuths();
-        $data = $mRoleAuth->getListRolesByCondition($request->input('role_id'));
+        $data = $mRoleAuth->getListRolesByCondition(['mst_role_id'=>$request->get('role_id')]);
         return Response()->json(array('success'=>true,'data'=>$data));
     }
 }
