@@ -104,6 +104,8 @@ class MSupplier extends Model
             $suppliers = $suppliers->where('mst_suppliers_cd', "=", $where['suppliers_cd']);
         if (isset($where['id']) && $where['id'] != '')
             $suppliers = $suppliers->where('id', "!=", $where['id']);
+        if (isset($where['adhibition_start_dt']) && $where['adhibition_start_dt'] != '')
+            $suppliers = $suppliers->where('adhibition_start_dt', "<=", $where['adhibition_start_dt']);
 
         $suppliers->orderBy('mst_suppliers_cd', 'adhibition_start_dt');
 
