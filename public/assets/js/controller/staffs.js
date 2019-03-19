@@ -25437,8 +25437,9 @@ var ctrStaffsVl = new Vue({
       staffs_service.submit(formData).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
-        } else {// that.errors = {};
-          // window.location.href = '/staffs/list';
+        } else {
+          that.errors = {};
+          window.location.href = '/staffs/list';
         }
 
         _this.field["clone"] = null;
