@@ -25376,7 +25376,6 @@ var ctrStaffsVl = new Vue({
       health_insurance_numbers: "",
       employees_pension_insurance_numbers: "",
       workmens_compensation_insurance_fg: "",
-      admin_fg: "",
       mst_role_id: "",
       mst_staff_auths: {
         1: {
