@@ -37,8 +37,6 @@ class StaffsController extends Controller
         "corp_cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:3|nullable",
-        "health_insurance_class"=>"integer|nullable",
-        "welfare_annuity_class"=>"integer|nullable",
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
         "educational_background"=>"length:50|nullable",
