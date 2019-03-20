@@ -154,7 +154,8 @@ var ctrStaffsVl = new Vue({
     },
     computed: {
         inputProps: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChange ,initialValue: this.field.relocation_municipal_office_cd,maxlength:5}
+            var cls_error = this.errors.relocation_municipal_office_cd != undefined ? 'form-control is-invalid':'';
+            return {id:'autosuggest__input', onInputChange: this.onInputChange ,initialValue: this.field.relocation_municipal_office_cd,maxlength:6, class:cls_error}
         }
     },
     methods : {
@@ -213,14 +214,14 @@ var ctrStaffsVl = new Vue({
             formData.append('data', JSON.stringify(this.field));
             formData.append('image', this.field.drivers_license_picture);
             staffs_service.submit(formData).then((response) => {
-                // if(response.success == false){
-                //     that.errors = response.message;
-                // }
-                // else
-                // {
-                //     that.errors = {};
-                //     window.location.href = '/staffs/list';
-                // }
+                if(response.success == false){
+                    that.errors = response.message;
+                }
+                else
+                {
+                    that.errors = {};
+                    window.location.href = '/staffs/list';
+                }
                 this.field["clone"] = null;
                 that.loading = false;
             });

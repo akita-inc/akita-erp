@@ -25420,11 +25420,13 @@ var ctrStaffsVl = new Vue({
   },
   computed: {
     inputProps: function inputProps() {
+      var cls_error = this.errors.relocation_municipal_office_cd != undefined ? 'form-control is-invalid' : '';
       return {
         id: 'autosuggest__input',
         onInputChange: this.onInputChange,
         initialValue: this.field.relocation_municipal_office_cd,
-        maxlength: 5
+        maxlength: 6,
+        class: cls_error
       };
     }
   },
@@ -25487,14 +25489,13 @@ var ctrStaffsVl = new Vue({
       formData.append('data', JSON.stringify(this.field));
       formData.append('image', this.field.drivers_license_picture);
       staffs_service.submit(formData).then(function (response) {
-        // if(response.success == false){
-        //     that.errors = response.message;
-        // }
-        // else
-        // {
-        //     that.errors = {};
-        //     window.location.href = '/staffs/list';
-        // }
+        if (response.success == false) {
+          that.errors = response.message;
+        } else {
+          that.errors = {};
+          window.location.href = '/staffs/list';
+        }
+
         _this.field["clone"] = null;
         that.loading = false;
       });
@@ -25839,7 +25840,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })
