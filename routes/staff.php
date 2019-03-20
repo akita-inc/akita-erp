@@ -12,10 +12,10 @@ Route::group(['name' => 'staffs', 'prefix'=>'/staffs', 'middleware' => ['auth']]
         Route::any('/submit','StaffsController@submit')->name("staffs.validForm");
         Route::any('/checkIsExist/{id}','StaffsController@checkIsExist')->name("staffs.checkIsExist");
         Route::any('back-history', ['uses' => 'StaffsController@backHistory']);
-        Route::any('/list-staff-job-ex/{id}',['uses'=>'StaffsController@getStaffJobEx']);
-        Route::any('/list-staff-qualification/{id}',['uses'=>'StaffsController@getStaffQualifications']);
-        Route::any('/list-staff-dependents/{id}',['uses'=>'StaffsController@getStaffDependents']);
-        Route::any('/list-staff-auths/{id}',['uses'=>'StaffsController@getStaffAuths']);
+        Route::any('/list-staff-job-ex/{id}',['uses'=>'Api\StaffsController@getStaffJobEx']);
+        Route::any('/list-staff-qualification/{id}',['uses'=>'Api\StaffsController@getStaffQualifications']);
+        Route::any('/list-staff-dependents/{id}',['uses'=>'Api\StaffsController@getStaffDependents']);
+        Route::any('/list-staff-auths/{id}',['uses'=>'Api\StaffsController@getStaffAuths']);
         Route::any('/relocation-municipal-office', ['uses' => 'Api\StaffsController@getListReMunicipalOffice']);
         Route::any('/load-role-config', ['uses' => 'Api\StaffsController@getRoleConfig']);
     });
