@@ -28,7 +28,7 @@ class StaffsController extends Controller
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana|nullable|length:50',
-        'zip_cd'=>'one_bytes_string|length:7',
+        'zip_cd'=>'zip_code|nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         'address3'=>'length:50|nullable',
