@@ -155,7 +155,7 @@ var ctrStaffsVl = new Vue({
     },
     computed: {
         inputProps: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChange ,initialValue: this.field.relocation_municipal_office_cd}
+            return {id:'autosuggest__input', onInputChange: this.onInputChange ,initialValue: this.field.relocation_municipal_office_cd,maxlength:5}
         }
     },
     methods : {
