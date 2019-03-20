@@ -63,10 +63,9 @@ trait StaffTrait
         }
 
     }
-    protected function saveAccordion($id, $data, $name, $prefixField = null, $unsetFields = array())
+    protected function saveAccordion($id, $data, $name, $prefixField = null, $unsetFields = array(), $currentTime)
     {
         $dataAccordions=$data[$name];
-        $currentTime = date("Y-m-d H:i:s",time());
         $arrayIDInsert=[];
         $this->allNullAble = true;
         if (count($dataAccordions) > 0) {
@@ -152,7 +151,7 @@ trait StaffTrait
         }
         return null;
     }
-    protected function saveStaffAuth($id, $data= array()){
+    protected function saveStaffAuth($id, $data= array(), $currentTime){
         $mStaffAuth = new MStaffAuths();
         $dataInsert = [];
         $allScreen = MScreens::all();
@@ -160,12 +159,14 @@ trait StaffTrait
             switch ($key){
                 case "1":
                     foreach ($value['staffScreen'] as $screen_id){
-                        array_push($dataInsert, array('mst_screen_id' => (int)$screen_id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
+                        array_push($dataInsert, array('mst_screen_id' => (int)$screen_id,'accessible_kb' => $value['accessible_kb']
+                        ,'mst_staff_id' => $id, 'created_at' => $currentTime, 'modified_at' => $currentTime));
                     }
                     break;
                 default:
                     $mst_screen = MScreens::where('screen_category_id',$value['screen_category_id'])->first();
-                    array_push($dataInsert, array('mst_screen_id' => $mst_screen->id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
+                    array_push($dataInsert, array('mst_screen_id' => $mst_screen->id,'accessible_kb' => $value['accessible_kb']
+                    ,'mst_staff_id' => $id, 'created_at' => $currentTime, 'modified_at' => $currentTime));
             }
         }
         if(count($dataInsert) > 0){
@@ -178,6 +179,7 @@ trait StaffTrait
                         $dataExist = $mStaffAuth->where('mst_staff_id','=',$id)->where('mst_screen_id' ,'=',$item->id)->first();
                         if(is_numeric($key)){
                             if(!is_null($dataExist)){
+                                unset($dataInsert[$key]["created_at"]);
                                 $mStaffAuth->where('id',$dataExist->id)->update($dataInsert[$key]);
                             }else{
                                 $mStaffAuth->insert($dataInsert[$key]);
