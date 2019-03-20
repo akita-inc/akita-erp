@@ -1,15 +1,6 @@
 @extends('Layouts.app')
 @section('title',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
 @section('title_header',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
-@section('style')
-    <style>
-        @supports (-ms-ime-align: auto) {
-            #relocation_municipal_office_cd option:not(:first-child) {
-                font-size: 20px;
-            }
-        }
-    </style>
-@endsection
 @section('content')
     @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
@@ -238,21 +229,20 @@
                         @include('Component.form.input',['filed'=>'welfare_annuity_class'])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <div class="col-md-5 col-sm-12 no-padding">
+                        <div class="col-md-6 col-sm-12 no-padding">
                             <label class="grid-form-label pl-150">コード</label>
-                            @include('Component.form.select',[
-                            'filed'=>'relocation_municipal_office_cd',
-                            'array'=>$listReMunicipalOffice,
-                            'hiddenData'=>'true',
-                             'attr_input' => '@change="onChange($event)"'])
-                        </div>
-                        <div class="col-md-7 col-sm-12 pd-l-20">
-                            <label class="grid-form-label ">名称</label>
-                            <v-select id="relocation_municipal_office_cd" class="dropdown-search-list"  name="relocation_municipal_office_cd"
-                                    v-model="selected_relocate_municipal_office_nm"  :options="dropdown_relocate_municipal_office_nm"
-                                    @change="handleSelect"
-                            ></v-select>
-                        </div>
+                            <div class="wrap-control-group ">
+                                <label for="relocation_municipal_office_cd">
+                                    {{ trans($prefix.'relocation_municipal_office_cd') }}
+                                </label>
+                                <vue-autosuggest
+                                    :suggestions="filteredOptions"
+                                    :limit="10"
+                                    :input-props="inputProps"
+                                    :on-selected="onSelected"
+                                >
+                                </vue-autosuggest>
+                            </div>
                     </div>
                 </div>
             </div>

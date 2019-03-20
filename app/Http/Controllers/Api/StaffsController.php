@@ -20,7 +20,10 @@ class StaffsController
     {
         $mGeneralPurposes = new MGeneralPurposes();
         $data=$mGeneralPurposes->getNmByDataKB(config('params.data_kb')['relocation_municipal_office_cd'],'');
-        return Response()->json(array('success'=>true,'data'=>$data));
+        if($data){
+            $data = $data->toArray();
+        }
+        return Response()->json(array('success'=>true,'data'=>array_column($data,'date_id')));
     }
 
     public function getRoleConfig(Request $request){

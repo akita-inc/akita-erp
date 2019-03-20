@@ -5,6 +5,7 @@ import moment from "moment";
 import historykana from "historykana";
 import Dropdown from 'vue-simple-search-dropdown';
 import * as AutoKana from "vanilla-autokana";
+import { VueAutosuggest }  from "vue-autosuggest";
 var ctrStaffsVl = new Vue({
     el: '#ctrStaffsVl',
     data: {
@@ -132,7 +133,6 @@ var ctrStaffsVl = new Vue({
             deleteFile:''
         },
         image_drivers_license_picture:"",
-        dropdown_relocate_municipal_office_nm:[],
         selected_relocate_municipal_office_nm:"",
         errors:{},
         dateFormat: {
@@ -145,8 +145,37 @@ var ctrStaffsVl = new Vue({
         },
         index:0,
         autokana:[],
+        selected: "",
+        filteredOptions: [],
+        dropdown_relocate_municipal_office_nm: [{
+            data:[]
+        }],
+        limit: 10,
+
+    },
+    computed: {
+        inputProps: function() {
+            return {id:'autosuggest__input', onInputChange: this.onInputChange ,initialValue: this.field.relocation_municipal_office_cd}
+        }
     },
     methods : {
+        onInputChange(text) {
+            if (text === '' || text === undefined) {
+                return;
+            }
+            /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
+            const filteredData = this.dropdown_relocate_municipal_office_nm[0].data.filter(item => {
+                return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+            }).slice(0, this.limit);
+
+            this.filteredOptions = [{
+                data: filteredData
+            }];
+        },
+        onSelected(option) {
+            console.log(option);
+            this.field.relocation_municipal_office_cd = option.item;
+        },
         clone: function(){
             this.field["clone"] = true;
             this.submit();
@@ -217,6 +246,7 @@ var ctrStaffsVl = new Vue({
                         that.field[key] = $("#hd_"+key).val();
                         that.field.drivers_license_picture ='';
                         that.field.password="******";
+                        // that.onSelected({item: that.field.relocation_municipal_office_cd,label: that.field.relocation_municipal_office_cd,name: "default",type: "default-section"});
                     }
 
                 });
@@ -262,14 +292,6 @@ var ctrStaffsVl = new Vue({
                 }
             });
             that.loading = false;
-        },
-        onChange:function(event)
-        {
-            if(event.target.options.selectedIndex > -1) {
-                console.log(event.target.options[event.target.options.selectedIndex].dataset.foo);
-                this.field.relocation_municipal_office_cd=event.target.value;
-                this.selected_relocate_municipal_office_nm={value:event.target.value,label:event.target.options[event.target.options.selectedIndex].dataset.foo};
-            }
         },
         addRows: function (block) {
             let value;
@@ -424,11 +446,6 @@ var ctrStaffsVl = new Vue({
                 }
             });
         },
-        handleSelect: function () {
-            if(typeof this.selected_relocate_municipal_office_nm.value!="undefined"){
-                this.field.relocation_municipal_office_cd = this.selected_relocate_municipal_office_nm.value;
-            }
-        },
         deleteStaff: function(id){
             var that = this;
             staffs_service.checkIsExist(id).then((response) => {
@@ -455,11 +472,13 @@ var ctrStaffsVl = new Vue({
             this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
         },
     },
+    beforeMount(){
+        this.loadFormEdit();
+    },
     mounted () {
         var that=this;
-        that.loadFormEdit();
         staffs_service.loadListReMunicipalOffice().then((response) => {
-            that.dropdown_relocate_municipal_office_nm =  response.data;
+            that.dropdown_relocate_municipal_office_nm[0].data =  response.data;
         });
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
@@ -468,7 +487,8 @@ var ctrStaffsVl = new Vue({
     components: {
         DatePicker,
         PulseLoader,
-        Dropdown
+        Dropdown,
+        VueAutosuggest
     }
 });
 
