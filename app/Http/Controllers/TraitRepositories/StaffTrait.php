@@ -93,7 +93,7 @@ trait StaffTrait
                 }
                 if(!$this->allNullAble)
                 {
-                    if(isset($item["id"]) && $item["id"] && isset($data["clone"]))
+                    if(isset($item["id"]) && $item["id"] && !isset($data["clone"]))
                     {
                         $idUpdate=$this->updateRowsAccordion($arrayInsert,$name);
                         array_push($arrayIDInsert,$idUpdate);
