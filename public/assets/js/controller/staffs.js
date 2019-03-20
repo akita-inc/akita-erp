@@ -25424,7 +25424,8 @@ var ctrStaffsVl = new Vue({
       return {
         id: 'autosuggest__input',
         onInputChange: this.onInputChange,
-        initialValue: this.field.relocation_municipal_office_cd
+        initialValue: this.field.relocation_municipal_office_cd,
+        maxlength: 5
       };
     }
   },
@@ -25444,7 +25445,6 @@ var ctrStaffsVl = new Vue({
       }];
     },
     onSelected: function onSelected(option) {
-      console.log(option);
       this.field.relocation_municipal_office_cd = option.item;
     },
     clone: function clone() {
