@@ -115,7 +115,8 @@ trait StaffTrait
     protected function updateRowsAccordion($data,$name)
     {
         try{
-            $idUpdate=DB::table($name)->where("id","=",$data["id"])->update($data);
+            DB::table($name)->where("id","=",$data["id"])->update($data);
+            $idUpdate = $data["id"];
         }
         catch (\Exception $e)
         {
