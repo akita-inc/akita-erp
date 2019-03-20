@@ -284,55 +284,63 @@ class StaffsController extends Controller
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
         DB::beginTransaction();
-        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
-            $id = $data["id"];
-            $arrayInsert["modified_at"] = $currentTime;
-            MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
-            if($this->beforeItem){ //
-                MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
-                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                    "modified_at" => $currentTime
-                ]);
-            }
-        }else {
-            $id = DB::table($this->table)->insertGetId( $arrayInsert );
-            if(isset($data["clone"])){ //MODE REGISTER HISTORY
-                MStaffs::query()->where("id","=",$data["id"])->update([
-                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                    "modified_at" => $currentTime
-                ]);
+        try{
+            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+                $id = $data["id"];
+                $arrayInsert["modified_at"] = $currentTime;
+                MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
+                if($this->beforeItem){ //
+                    MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
+                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                        "modified_at" => $currentTime
+                    ]);
+                }
+            }else {
+                $id = DB::table($this->table)->insertGetId( $arrayInsert );
+                if(isset($data["clone"])){ //MODE REGISTER HISTORY
+                    MStaffs::query()->where("id","=",$data["id"])->update([
+                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                        "modified_at" => $currentTime
+                    ]);
 
-                //upload file
-                $oldStaff = MStaffs::find($data["id"]);
-                $src = config('params.staff_path') . $data["id"];
-                $des = config('params.staff_path') . $id;
-                mkdir($des, 0777, true);
-                mkdir($des.'/image', 0777, true);
-                if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture )){
-                    if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile=='drivers_license_picture')) {
-                        MStaffs::query()->where("id","=",$id)->update([
-                            "drivers_license_picture" => $oldStaff->drivers_license_picture
-                        ]);
-                        copy($src.'/image/'.$oldStaff->drivers_license_picture, $des.'/image/'.$oldStaff->drivers_license_picture);
+                    //upload file
+                    $oldStaff = MStaffs::find($data["id"]);
+                    $src = config('params.staff_path') . $data["id"];
+                    $des = config('params.staff_path') . $id;
+                    mkdir($des, 0777, true);
+                    mkdir($des.'/image', 0777, true);
+                    if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture )){
+                        if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile=='drivers_license_picture')) {
+                            MStaffs::query()->where("id","=",$id)->update([
+                                "drivers_license_picture" => $oldStaff->drivers_license_picture
+                            ]);
+                            copy($src.'/image/'.$oldStaff->drivers_license_picture, $des.'/image/'.$oldStaff->drivers_license_picture);
 
+                        }
                     }
                 }
             }
-        }
-        $this->deleteFile($id,$deleteFile);
-        $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
-        $this->saveStaffAuth($id,$mst_staff_auths);
-        $this->saveAccordion($id,$data,"mst_staff_job_experiences");
-        $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_");
-        $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"]);
-        DB::commit();
-        \Session::flash('message',Lang::get('messages.MSG03002'));
-        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
-            \Session::flash('message',Lang::get('messages.MSG04002'));
-        }else{
+            $this->deleteFile($id,$deleteFile);
+            $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
+            $this->saveStaffAuth($id,$mst_staff_auths);
+            $this->saveAccordion($id,$data,"mst_staff_job_experiences");
+            $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_");
+            $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"]);
+            DB::commit();
             \Session::flash('message',Lang::get('messages.MSG03002'));
+            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+                \Session::flash('message',Lang::get('messages.MSG04002'));
+            }else{
+                \Session::flash('message',Lang::get('messages.MSG03002'));
+            }
         }
-        return $id;
+        catch (\Exception $e)
+        {
+            \Session::flash('error',Lang::get('messages.MSG03001'));
+            DB::rollBack();
+            dd($e);
+        }
+
     }
     protected function beforeSubmit($data){
         $this->ruleValid["password"]=isset($data["id"])?'nullable|length:50':'required|length:50';
