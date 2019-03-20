@@ -25376,7 +25376,6 @@ var ctrStaffsVl = new Vue({
       health_insurance_numbers: "",
       employees_pension_insurance_numbers: "",
       workmens_compensation_insurance_fg: "",
-      admin_fg: "",
       mst_role_id: "",
       mst_staff_auths: {
         1: {
@@ -25488,13 +25487,14 @@ var ctrStaffsVl = new Vue({
       formData.append('data', JSON.stringify(this.field));
       formData.append('image', this.field.drivers_license_picture);
       staffs_service.submit(formData).then(function (response) {
-        if (response.success == false) {
-          that.errors = response.message;
-        } else {
-          that.errors = {};
-          window.location.href = '/staffs/list';
-        }
-
+        // if(response.success == false){
+        //     that.errors = response.message;
+        // }
+        // else
+        // {
+        //     that.errors = {};
+        //     window.location.href = '/staffs/list';
+        // }
         _this.field["clone"] = null;
         that.loading = false;
       });
@@ -25839,7 +25839,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })
