@@ -284,7 +284,8 @@ class StaffsController extends Controller
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
         DB::beginTransaction();
-        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+        try{
+            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 $id = $data["id"];
                 $arrayInsert["modified_at"] = $currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
@@ -326,12 +327,20 @@ class StaffsController extends Controller
             $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_");
             $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"]);
             DB::commit();
-            \Session::flash('message',Lang::get('messages.MSG03002'));
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 \Session::flash('message',Lang::get('messages.MSG04002'));
             }else{
                 \Session::flash('message',Lang::get('messages.MSG03002'));
             }
+            return $id;
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            dd($e);
+            return false;
+        }
+
 
     }
     protected function beforeSubmit($data){
