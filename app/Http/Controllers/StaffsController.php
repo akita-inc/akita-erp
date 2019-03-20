@@ -284,8 +284,7 @@ class StaffsController extends Controller
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
         DB::beginTransaction();
-        try{
-            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 $id = $data["id"];
                 $arrayInsert["modified_at"] = $currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
@@ -333,13 +332,6 @@ class StaffsController extends Controller
             }else{
                 \Session::flash('message',Lang::get('messages.MSG03002'));
             }
-        }
-        catch (\Exception $e)
-        {
-            \Session::flash('error',$e);
-            DB::rollBack();
-            dd($e);
-        }
 
     }
     protected function beforeSubmit($data){
