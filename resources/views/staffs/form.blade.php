@@ -64,7 +64,7 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>(!empty($staff) ? "":true),'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                         <div class="break-row-form"></div>
-                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>(!empty($staff) ? "":true),'attr_input'=>"type='password' class='w-100' autocomplete='new-password' autofill='off'"])
+                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>(!empty($staff) ? "":true),'attr_input'=>"maxlength='50' type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
@@ -107,24 +107,24 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                              'filed'=>'last_nm',
-                             'attr_input' => 'v-on:input="convertKana($event, \'last_nm_kana\')"'
+                             'attr_input' => 'maxlength=25 v-on:input="convertKana($event, \'last_nm_kana\')"'
                          ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'last_nm_kana'])
+                        @include('Component.form.input',['filed'=>'last_nm_kana','attr_input'=>'maxlength=50'])
                     </div>
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',[
                              'filed'=>'first_nm',
-                             'attr_input' => 'v-on:input="convertKana($event, \'first_nm_kana\')"'
+                             'attr_input' => 'maxlength=25 v-on:input="convertKana($event, \'first_nm_kana\')"'
                          ])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'first_nm_kana'])
+                        @include('Component.form.input',['filed'=>'first_nm_kana','attr_input'=>'maxlength=50'])
                     </div>
                 </div>
             </div>
@@ -227,7 +227,7 @@
                         @include('Component.form.input',['filed'=>'person_insured_number','attr_input' => "maxlength='11'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'health_insurance_class'])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'health_insurance_class','attr_input'=>"maxlength='20'"])
                     </div>
 
                     <div class="break-row-form"></div>
