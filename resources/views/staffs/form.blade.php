@@ -1,6 +1,15 @@
 @extends('Layouts.app')
 @section('title',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
 @section('title_header',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
+@section('style')
+    <style>
+        @supports (-ms-ime-align: auto) {
+            #relocation_municipal_office_cd option:not(:first-child) {
+                font-size: 20px;
+            }
+        }
+    </style>
+@endsection
 @section('content')
     @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
@@ -55,7 +64,7 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>(!empty($staff) ? "":true),'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                         <div class="break-row-form"></div>
-                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>(!empty($staff) ? "":true),'attr_input'=>"maxlength='50' type='password' class='w-100'"])
+                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>(!empty($staff) ? "":true),'attr_input'=>"maxlength='50' type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
