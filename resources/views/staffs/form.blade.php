@@ -59,18 +59,18 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>(!empty($staff) ? "":true)])
+                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             @if($flagRegisterHistory)
-                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'required'=>(!empty($staff) ? "":true) ])
+                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'required'=>true ])
                             @else
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
                             @endif                        </div>
                         @if($flagRegisterHistory)
                             <div class="break-row-form"></div>
                             <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>(!empty($staff) ? "":true)])
+                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])

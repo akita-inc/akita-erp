@@ -213,14 +213,14 @@ var ctrStaffsVl = new Vue({
             formData.append('data', JSON.stringify(this.field));
             formData.append('image', this.field.drivers_license_picture);
             staffs_service.submit(formData).then((response) => {
-                // if(response.success == false){
-                //     that.errors = response.message;
-                // }
-                // else
-                // {
-                //     that.errors = {};
-                //     window.location.href = '/staffs/list';
-                // }
+                if(response.success == false){
+                    that.errors = response.message;
+                }
+                else
+                {
+                    that.errors = {};
+                    window.location.href = '/staffs/list';
+                }
                 this.field["clone"] = null;
                 that.loading = false;
             });
