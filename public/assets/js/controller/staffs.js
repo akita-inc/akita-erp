@@ -25383,6 +25383,7 @@ var ctrStaffsVl = new Vue({
     },
     image_drivers_license_picture: "",
     dropdown_relocate_municipal_office_nm: [],
+    selected_relocate_municipal_office_nm: "",
     errors: {},
     dateFormat: {
       stringify: function stringify(date) {
@@ -25429,6 +25430,10 @@ var ctrStaffsVl = new Vue({
           this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
           this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
         }
+
+        if (that.field.password == "******") {
+          that.field.password = "";
+        }
       }
 
       var formData = new FormData();
@@ -25463,6 +25468,7 @@ var ctrStaffsVl = new Vue({
             that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
             that.field[key] = $("#hd_" + key).val();
             that.field.drivers_license_picture = '';
+            that.field.password = "******";
           }
         });
         that.getMstCollapses();
@@ -25504,8 +25510,14 @@ var ctrStaffsVl = new Vue({
       that.loading = false;
     },
     onChange: function onChange(event) {
-      this.field.relocation_municipal_office_cd = event.target.value; // this.handleSelect({id:event.target.value,name:event.target.selectedOptions[0].text});
-      // this.handleSelect({id:event.target.value,name:'abc2'});
+      if (event.target.options.selectedIndex > -1) {
+        console.log(event.target.options[event.target.options.selectedIndex].dataset.foo);
+        this.field.relocation_municipal_office_cd = event.target.value;
+        this.selected_relocate_municipal_office_nm = {
+          value: event.target.value,
+          label: event.target.options[event.target.options.selectedIndex].dataset.foo
+        };
+      }
     },
     addRows: function addRows(block) {
       var value;
@@ -25667,9 +25679,9 @@ var ctrStaffsVl = new Vue({
         }
       });
     },
-    handleSelect: function handleSelect(selected) {
-      if (typeof selected.id != "undefined") {
-        this.field.relocation_municipal_office_cd = selected.id;
+    handleSelect: function handleSelect() {
+      if (typeof this.selected_relocate_municipal_office_nm.value != "undefined") {
+        this.field.relocation_municipal_office_cd = this.selected_relocate_municipal_office_nm.value;
       }
     },
     deleteStaff: function deleteStaff(id) {
@@ -25707,6 +25719,7 @@ var ctrStaffsVl = new Vue({
     that.loadFormEdit();
     staffs_service.loadListReMunicipalOffice().then(function (response) {
       that.dropdown_relocate_municipal_office_nm = response.data;
+      console.log(response.data);
     });
     this.autokana['last_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_6__["bind"]('#last_nm', '#last_nm_kana', {
       katakana: true

@@ -5,7 +5,6 @@ import moment from "moment";
 import historykana from "historykana";
 import Dropdown from 'vue-simple-search-dropdown';
 import * as AutoKana from "vanilla-autokana";
-
 var ctrStaffsVl = new Vue({
     el: '#ctrStaffsVl',
     data: {
@@ -134,6 +133,7 @@ var ctrStaffsVl = new Vue({
         },
         image_drivers_license_picture:"",
         dropdown_relocate_municipal_office_nm:[],
+        selected_relocate_municipal_office_nm:"",
         errors:{},
         dateFormat: {
             stringify: (date) => {
@@ -179,13 +179,15 @@ var ctrStaffsVl = new Vue({
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
                 }
+                if(that.field.password=="******")
+                {
+                    that.field.password="";
+                }
             }
             let formData = new FormData();
 
             formData.append('data', JSON.stringify(this.field));
             formData.append('image', this.field.drivers_license_picture);
-
-
             staffs_service.submit(formData).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
@@ -214,6 +216,7 @@ var ctrStaffsVl = new Vue({
                         that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
                         that.field[key] = $("#hd_"+key).val();
                         that.field.drivers_license_picture ='';
+                        that.field.password="******";
                     }
 
                 });
@@ -262,9 +265,11 @@ var ctrStaffsVl = new Vue({
         },
         onChange:function(event)
         {
-            this.field.relocation_municipal_office_cd=event.target.value;
-            // this.handleSelect({id:event.target.value,name:event.target.selectedOptions[0].text});
-            // this.handleSelect({id:event.target.value,name:'abc2'});
+            if(event.target.options.selectedIndex > -1) {
+                console.log(event.target.options[event.target.options.selectedIndex].dataset.foo);
+                this.field.relocation_municipal_office_cd=event.target.value;
+                this.selected_relocate_municipal_office_nm={value:event.target.value,label:event.target.options[event.target.options.selectedIndex].dataset.foo};
+            }
         },
         addRows: function (block) {
             let value;
@@ -418,9 +423,9 @@ var ctrStaffsVl = new Vue({
                 }
             });
         },
-        handleSelect: function (selected) {
-            if(typeof selected.id!="undefined"){
-                this.field.relocation_municipal_office_cd = selected.id;
+        handleSelect: function () {
+            if(typeof this.selected_relocate_municipal_office_nm.value!="undefined"){
+                this.field.relocation_municipal_office_cd = this.selected_relocate_municipal_office_nm.value;
             }
         },
         deleteStaff: function(id){
@@ -465,3 +470,4 @@ var ctrStaffsVl = new Vue({
         Dropdown
     }
 });
+
