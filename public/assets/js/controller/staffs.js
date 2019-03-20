@@ -25470,7 +25470,7 @@ var ctrStaffsVl = new Vue({
     submit: function submit() {
       var _this = this;
 
-      if (this.field["password"] != "        ") {
+      if (this.field["password"] != "********" && $("#hd_staff_edit").val() != 1) {
         this.field["is_change_password"] = true;
       }
 
@@ -25523,7 +25523,7 @@ var ctrStaffsVl = new Vue({
             that.field.drivers_license_picture = '';
           }
         });
-        this.field["password"] = "        ";
+        this.field["password"] = "********";
         that.getMstCollapses();
       }
     },

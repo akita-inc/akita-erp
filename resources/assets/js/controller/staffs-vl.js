@@ -197,7 +197,7 @@ var ctrStaffsVl = new Vue({
         },
         submit:function()
         {
-            if(this.field["password"] != "********"){
+            if(this.field["password"] != "********" && $("#hd_staff_edit").val() != 1){
                 this.field["is_change_password"] = true;
             }
             let that = this;
