@@ -108,7 +108,7 @@ class MGeneralPurposes extends Model
     }
     public function getNmByDataKB($data_kb)
     {
-        return $this->select('date_id as value','date_nm as label')
+        return $this->select('date_id')
             ->where('data_kb',$data_kb)
             ->where('deleted_at','=',null)
             ->orderBy('disp_number','ASC')
