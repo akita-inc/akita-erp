@@ -229,7 +229,7 @@
                         @include('Component.form.input',['filed'=>'welfare_annuity_class'])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <div class="col-md-6 col-sm-12 no-padding">
+                        <div class="col-md-5 col-sm-12 no-padding">
                             <label class="grid-form-label pl-150">コード</label>
                             @include('Component.form.select',[
                             'class'=>'wd-300',
@@ -575,7 +575,7 @@
                                 <div class="col-md-12 col-sm-12">
                                     @include('Component.form.file',[
                                         'filed'=>'drivers_license_picture',
-                                        'attr_input'=>'v-on:change="onFileChange"',
+                                        'attr_input'=>'v-on:change="onFileChange" accept="image/jpeg, image/jpg, image/png"',
                                         'attr_delete_path'=>'@click="deleteFileUpload"',
                                         'filedId'=>"mst_staff_drivers_license_picture",
                                         'filedMode'=>"items.drivers_license_picture",

@@ -25575,6 +25575,7 @@ var ctrStaffsVl = new Vue({
       }
     },
     convertKanaBlock: function convertKanaBlock(input, destination) {
+      var index = input.target.id.replace(/^\D+/g, '');
       var kana = "";
 
       if (this.field[input.target.id] == "") {
@@ -25583,7 +25584,7 @@ var ctrStaffsVl = new Vue({
         kana = this.autokana[input.target.id].getFurigana();
       }
 
-      this.field.mst_staff_dependents[this.index][destination] = kana;
+      this.field.mst_staff_dependents[index][destination] = kana;
     },
     getAddrFromZipCode: function getAddrFromZipCode() {
       var that = this;
