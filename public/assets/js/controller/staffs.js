@@ -25290,7 +25290,7 @@ var ctrStaffsVl = new Vue({
       adhibition_end_dt_edit: $("#hd_adhibition_end_dt_default").val(),
       adhibition_start_dt_history: "",
       adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
-      password: "",
+      password: "        ",
       employment_pattern_id: "",
       position_id: "",
       last_nm: "",
@@ -25467,6 +25467,10 @@ var ctrStaffsVl = new Vue({
     },
     submit: function submit() {
       var _this = this;
+
+      if (this.field["password"] != "        ") {
+        this.field["is_change_password"] = true;
+      }
 
       var that = this;
       that.loading = true;
