@@ -300,22 +300,21 @@ class StaffsController extends Controller
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 $id = $data["id"];
                 $arrayInsert["modified_at"] = $currentTime;
-                $arrayInsert["created_at"]=$currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
                 if($this->beforeItem){ //
                     MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
                         "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
                         "modified_at" => $currentTime,
-                        "created_at"=>$currentTime
                     ]);
                 }
             }else {
+                $arrayInsert["modified_at"] = $currentTime;
+                $arrayInsert["created_at"]=$currentTime;
                 $id = DB::table($this->table)->insertGetId( $arrayInsert );
                 if(isset($data["clone"])){ //MODE REGISTER HISTORY
                     MStaffs::query()->where("id","=",$data["id"])->update([
                         "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
                         "modified_at" => $currentTime,
-                        "created_at"=>$currentTime
                     ]);
 
                     //upload file
@@ -337,10 +336,10 @@ class StaffsController extends Controller
             }
             $this->deleteFile($id,$deleteFile);
             $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
-            $this->saveStaffAuth($id,$mst_staff_auths);
-            $this->saveAccordion($id,$data,"mst_staff_job_experiences");
-            $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_");
-            $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"]);
+            $this->saveStaffAuth($id,$mst_staff_auths, $currentTime);
+            $this->saveAccordion($id,$data,"mst_staff_job_experiences", null, [], $currentTime);
+            $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_", [], $currentTime);
+            $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"], $currentTime);
             DB::commit();
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 \Session::flash('message',Lang::get('messages.MSG04002'));

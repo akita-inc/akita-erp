@@ -25330,8 +25330,7 @@ var ctrStaffsVl = new Vue({
         period_validity_end_dt: "",
         qualifications_notes: "",
         amounts: "",
-        payday: "",
-        disp_number: ""
+        payday: ""
       }],
       mst_staff_dependents: [{
         dept_dependent_kb: "",
@@ -25470,14 +25469,14 @@ var ctrStaffsVl = new Vue({
     submit: function submit() {
       var _this = this;
 
-      if (this.field["password"] != "        ") {
-        this.field["is_change_password"] = true;
-      }
-
       var that = this;
       that.loading = true;
 
       if (this.staff_edit == 1) {
+        if (this.field["password"] != "********") {
+          this.field["is_change_password"] = true;
+        }
+
         this.field["id"] = this.staff_id;
 
         if (this.field["clone"] == true) {
@@ -25501,6 +25500,7 @@ var ctrStaffsVl = new Vue({
         }
 
         _this.field["clone"] = null;
+        _this.field["is_change_password"] = null;
         that.loading = false;
       });
     },
@@ -25523,7 +25523,7 @@ var ctrStaffsVl = new Vue({
             that.field.drivers_license_picture = '';
           }
         });
-        this.field["password"] = "        ";
+        this.field["password"] = "********";
         that.getMstCollapses();
       }
     },
@@ -25583,8 +25583,7 @@ var ctrStaffsVl = new Vue({
             period_validity_end_dt: "",
             qualifications_notes: "",
             amounts: "",
-            payday: "",
-            disp_number: ""
+            payday: ""
           };
           break;
 
@@ -25845,7 +25844,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })
