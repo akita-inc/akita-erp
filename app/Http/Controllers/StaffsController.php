@@ -216,9 +216,6 @@ class StaffsController extends Controller
         if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
             $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
         }
-        if (Carbon::parse($data['retire_dt']) > Carbon::parse($data['death_dt'])) {
-            $validator->errors()->add('retire_dt', str_replace(' :attribute', $this->labels['retire_dt'], Lang::get('messages.MSG02014')));
-        }
         if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
             $validator->errors()->add('adhibition_start_dt_history',str_replace(' :attribute',$this->labels['adhibition_start_dt_history'],Lang::get('messages.MSG02014')));
         }
