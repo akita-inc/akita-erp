@@ -320,13 +320,14 @@ var ctrStaffsVl = new Vue({
             }
         },
         convertKanaBlock:function(input,destination){
+            var index = input.target.id.replace( /^\D+/g, '');
             let kana="";
             if(this.field[input.target.id] == ""){
                 kana = "";
             }else{
                 kana = this.autokana[input.target.id].getFurigana();
             }
-            this.field.mst_staff_dependents[this.index][destination]=kana;
+            this.field.mst_staff_dependents[index][destination]=kana;
 
         },
         getAddrFromZipCode: function() {
