@@ -288,11 +288,13 @@ class StaffsController extends Controller
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 $id = $data["id"];
                 $arrayInsert["modified_at"] = $currentTime;
+                $arrayInsert["created_at"]=$currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
                 if($this->beforeItem){ //
                     MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
                         "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                        "modified_at" => $currentTime
+                        "modified_at" => $currentTime,
+                        "created_at"=>$currentTime
                     ]);
                 }
             }else {
@@ -300,7 +302,8 @@ class StaffsController extends Controller
                 if(isset($data["clone"])){ //MODE REGISTER HISTORY
                     MStaffs::query()->where("id","=",$data["id"])->update([
                         "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                        "modified_at" => $currentTime
+                        "modified_at" => $currentTime,
+                        "created_at"=>$currentTime
                     ]);
 
                     //upload file
