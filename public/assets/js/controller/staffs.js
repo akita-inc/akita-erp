@@ -25470,6 +25470,10 @@ var ctrStaffsVl = new Vue({
     submit: function submit() {
       var _this = this;
 
+      if (this.field["password"] != "        ") {
+        this.field["is_change_password"] = true;
+      }
+
       var that = this;
       that.loading = true;
 
@@ -25519,6 +25523,7 @@ var ctrStaffsVl = new Vue({
             that.field.drivers_license_picture = '';
           }
         });
+        this.field["password"] = "        ";
         that.getMstCollapses();
       }
     },
@@ -25840,7 +25845,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

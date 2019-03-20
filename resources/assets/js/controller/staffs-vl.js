@@ -197,6 +197,9 @@ var ctrStaffsVl = new Vue({
         },
         submit:function()
         {
+            if(this.field["password"] != "        "){
+                this.field["is_change_password"] = true;
+            }
             let that = this;
             that.loading = true;
             if(this.staff_edit == 1){
@@ -243,6 +246,7 @@ var ctrStaffsVl = new Vue({
                         that.field.drivers_license_picture ='';
                     }
                 });
+                this.field["password"] = "        ";
                 that.getMstCollapses();
 
             }

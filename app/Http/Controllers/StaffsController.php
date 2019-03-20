@@ -269,7 +269,12 @@ class StaffsController extends Controller
 
     }
     protected function save($data){
-        $data['password']=bcrypt($data['password']);
+        if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
+            $data['password'] = bcrypt($data['password']);
+        }else{
+            $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
+            $data['password'] = $passwordStaff->password;
+        }
         $data['workmens_compensation_insurance_fg']=$data['workmens_compensation_insurance_fg']==false?0:1;
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
@@ -353,7 +358,9 @@ class StaffsController extends Controller
 
     }
     protected function beforeSubmit($data){
-        $this->ruleValid["password"]=isset($data["id"])?'nullable|length:50':'required|length:50';
+        if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])){
+            $this->ruleValid["password"]='required|length:50';
+        }
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
                 $this->ruleValid['adhibition_start_dt_edit'] = 'required';
