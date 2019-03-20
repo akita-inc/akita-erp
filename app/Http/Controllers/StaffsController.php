@@ -263,7 +263,6 @@ class StaffsController extends Controller
     }
     protected function save($data){
         $data['password']=bcrypt($data['password']);
-        $data['admin_fg']=$data['admin_fg']==false?0:1;
         $data['workmens_compensation_insurance_fg']=$data['workmens_compensation_insurance_fg']==false?0:1;
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
