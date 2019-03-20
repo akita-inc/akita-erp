@@ -153,25 +153,41 @@ trait StaffTrait
         $mStaffAuth = new MStaffAuths();
         $dataInsert = [];
         $allScreen = MScreens::all();
-        foreach ($allScreen as $item){
-            if($item->screen_category_id==1){
-                $accessible_kb = in_array($item->id,$data[$item->screen_category_id]['staffScreen']) ? $data[$item->screen_category_id]['accessible_kb'] : 9;
+        foreach ($data as $key => $value){
+            switch ($key){
+                case "1":
+                    foreach ($value['staffScreen'] as $screen_id){
+                        array_push($dataInsert, array('mst_screen_id' => (int)$screen_id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
+                    }
+                    break;
+                default:
+                    $mst_screen = MScreens::where('screen_category_id',$value['screen_category_id'])->first();
+                    array_push($dataInsert, array('mst_screen_id' => $mst_screen->id,'accessible_kb' => $value['accessible_kb'],'mst_staff_id' => $id));
             }
-           else{
-                $accessible_kb = $data[$item->screen_category_id]['accessible_kb'];
-            }
-
-            array_push($dataInsert, array(
-                'mst_screen_id' => $item->id,
-                'accessible_kb' => $accessible_kb,
-                'mst_staff_id' => $id
-            ));
         }
         if(count($dataInsert) > 0){
             DB::beginTransaction();
             try
             {
-                $mStaffAuth->insert($dataInsert);
+                if($mStaffAuth->where('mst_staff_id','=', $id)->count() > 0){
+                    foreach ($allScreen as $item){
+                        $key = array_search($item->id, array_column($dataInsert, 'mst_screen_id'));
+                        $dataExist = $mStaffAuth->where('mst_staff_id','=',$id)->where('mst_screen_id' ,'=',$item->id)->first();
+                        if(is_numeric($key)){
+                            if(!is_null($dataExist)){
+                                $mStaffAuth->where('id',$dataExist->id)->update($dataInsert[$key]);
+                            }else{
+                                $mStaffAuth->insert($dataInsert[$key]);
+                            }
+                        }else{
+                            if(!is_null($dataExist)) {
+                                $mStaffAuth->where('id', $dataExist->id)->delete();
+                            }
+                        }
+                    }
+                }else{
+                    $mStaffAuth->insert($dataInsert);
+                }
                 DB::commit();
             }catch (\Exception $e) {
                 DB::rollback();
