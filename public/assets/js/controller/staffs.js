@@ -25470,14 +25470,14 @@ var ctrStaffsVl = new Vue({
     submit: function submit() {
       var _this = this;
 
-      if (this.field["password"] != "********" && $("#hd_staff_edit").val() != 1) {
-        this.field["is_change_password"] = true;
-      }
-
       var that = this;
       that.loading = true;
 
       if (this.staff_edit == 1) {
+        if (this.field["password"] != "********") {
+          this.field["is_change_password"] = true;
+        }
+
         this.field["id"] = this.staff_id;
 
         if (this.field["clone"] == true) {
@@ -25501,6 +25501,7 @@ var ctrStaffsVl = new Vue({
         }
 
         _this.field["clone"] = null;
+        _this.field["is_change_password"] = null;
         that.loading = false;
       });
     },

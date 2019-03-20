@@ -197,12 +197,13 @@ var ctrStaffsVl = new Vue({
         },
         submit:function()
         {
-            if(this.field["password"] != "********" && $("#hd_staff_edit").val() != 1){
-                this.field["is_change_password"] = true;
-            }
+
             let that = this;
             that.loading = true;
             if(this.staff_edit == 1){
+                if(this.field["password"] != "********"){
+                    this.field["is_change_password"] = true;
+                }
                 this.field["id"] = this.staff_id;
                 if(this.field["clone"] == true){
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
@@ -226,6 +227,7 @@ var ctrStaffsVl = new Vue({
                     window.location.href = '/staffs/list';
                 }
                 this.field["clone"] = null;
+                this.field["is_change_password"] = null;
                 that.loading = false;
             });
         },
