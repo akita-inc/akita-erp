@@ -213,9 +213,9 @@ var ctrStaffsVl = new Vue({
                             that.field[key + "_edit"] = $("#hd_"+key).val();
                         }
                         that.field.workmens_compensation_insurance_fg=that.field.workmens_compensation_insurance_fg==0?"":1;
-                        that.image_drivers_license_picture = that.field.drivers_license_picture;
+                        that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
                         that.field[key] = $("#hd_"+key).val();
-                        that.field.drivers_license_picture = '';
+                        that.field.drivers_license_picture ='';
                         that.field.password="******";
                     }
 
@@ -243,27 +243,22 @@ var ctrStaffsVl = new Vue({
                 }
             });
             staffs_service.getStaffAuths(that.staff_id).then((response) => {
-                if(response.data != null && response.data.length > 0){
-                    that.field.mst_staff_auths = response.data;
-                    that.field.mst_staff_auths = {
-                        1: {
-                            staffScreen: [],
-                            screen_category_id:1,
-                            accessible_kb: 9,
-                        },
-                        2: {
-                            screen_category_id: 2,
-                            accessible_kb: 9,
-                        },
-                        3: {
-                            screen_category_id: 3,
-                            accessible_kb: 9,
-                        },
-                        4: {
-                            screen_category_id: 4,
-                            accessible_kb: 9,
-                        },
-                    }
+
+                if(response.data != null){
+                    $.each(response.data,function (key,value) {
+                        if(key==1){
+                            if(value.length > 0){
+                                $.each(value,function (key1,value1) {
+                                    that.field.mst_staff_auths[key].staffScreen.push(value1.mst_screen_id);
+                                    that.field.mst_staff_auths[key].accessible_kb = value1.accessible_kb
+                                });
+                            }
+
+                        }else{
+                            that.field.mst_staff_auths[key].accessible_kb = value[0].accessible_kb
+                        }
+
+                    });
                 }
             });
             that.loading = false;
@@ -314,6 +309,13 @@ var ctrStaffsVl = new Vue({
                     break;
             }
             this.field[block].push(value);
+            setTimeout(function(){
+                if(block=='mst_staff_dependents'){
+                    that.showKana(that.index);
+                }
+            }, 100);
+
+
         },
         convertKana: function (input , destination) {
             if(this.field[input.target.id] == ""){
@@ -323,13 +325,11 @@ var ctrStaffsVl = new Vue({
             }
         },
         convertKanaBlock:function(input,destination){
-            console.log(input.target.id);
             let kana="";
             if(this.field[input.target.id] == ""){
                 kana = "";
             }else{
                 kana = this.autokana[input.target.id].getFurigana();
-                console.log(kana);
             }
             this.field.mst_staff_dependents[this.index][destination]=kana;
 
@@ -367,9 +367,28 @@ var ctrStaffsVl = new Vue({
         },
         loadRoleConfig: function () {
             var that = this;
+            that.field.mst_staff_auths = {
+                1: {
+                    staffScreen: [],
+                    screen_category_id:1,
+                    accessible_kb: 9,
+                },
+                2: {
+                    screen_category_id: 2,
+                    accessible_kb: 9,
+                },
+                3: {
+                    screen_category_id: 3,
+                    accessible_kb: 9,
+                },
+                4: {
+                    screen_category_id: 4,
+                    accessible_kb: 9,
+                },
+            }
+            if(this.field.mst_role_id=='') return;
             staffs_service.loadRoleConfig(this.field.mst_role_id).then(function (result) {
                 var data =  result.data;
-                console.log(data);
                 if(data.length > 0){
                     data.forEach(function(item) {
                         switch (item.screen_category_id) {
@@ -380,7 +399,6 @@ var ctrStaffsVl = new Vue({
                             default:
                                 that.field.mst_staff_auths[item.screen_category_id].accessible_kb = item.accessible_kb;
                         }
-
                     });
                 }else{
                     that.field.mst_staff_auths = {
@@ -441,7 +459,6 @@ var ctrStaffsVl = new Vue({
         that.loadFormEdit();
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.dropdown_relocate_municipal_office_nm =  response.data;
-            console.log(response.data);
         });
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });

@@ -25465,7 +25465,7 @@ var ctrStaffsVl = new Vue({
             }
 
             that.field.workmens_compensation_insurance_fg = that.field.workmens_compensation_insurance_fg == 0 ? "" : 1;
-            that.image_drivers_license_picture = that.field.drivers_license_picture;
+            that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
             that.field[key] = $("#hd_" + key).val();
             that.field.drivers_license_picture = '';
             that.field.password = "******";
@@ -25492,27 +25492,19 @@ var ctrStaffsVl = new Vue({
         }
       });
       staffs_service.getStaffAuths(that.staff_id).then(function (response) {
-        if (response.data != null && response.data.length > 0) {
-          that.field.mst_staff_auths = response.data;
-          that.field.mst_staff_auths = {
-            1: {
-              staffScreen: [],
-              screen_category_id: 1,
-              accessible_kb: 9
-            },
-            2: {
-              screen_category_id: 2,
-              accessible_kb: 9
-            },
-            3: {
-              screen_category_id: 3,
-              accessible_kb: 9
-            },
-            4: {
-              screen_category_id: 4,
-              accessible_kb: 9
+        if (response.data != null) {
+          $.each(response.data, function (key, value) {
+            if (key == 1) {
+              if (value.length > 0) {
+                $.each(value, function (key1, value1) {
+                  that.field.mst_staff_auths[key].staffScreen.push(value1.mst_screen_id);
+                  that.field.mst_staff_auths[key].accessible_kb = value1.accessible_kb;
+                });
+              }
+            } else {
+              that.field.mst_staff_auths[key].accessible_kb = value[0].accessible_kb;
             }
-          };
+          });
         }
       });
       that.loading = false;
@@ -25569,6 +25561,11 @@ var ctrStaffsVl = new Vue({
       }
 
       this.field[block].push(value);
+      setTimeout(function () {
+        if (block == 'mst_staff_dependents') {
+          that.showKana(that.index);
+        }
+      }, 100);
     },
     convertKana: function convertKana(input, destination) {
       if (this.field[input.target.id] == "") {
@@ -25578,14 +25575,12 @@ var ctrStaffsVl = new Vue({
       }
     },
     convertKanaBlock: function convertKanaBlock(input, destination) {
-      console.log(input.target.id);
       var kana = "";
 
       if (this.field[input.target.id] == "") {
         kana = "";
       } else {
         kana = this.autokana[input.target.id].getFurigana();
-        console.log(kana);
       }
 
       this.field.mst_staff_dependents[this.index][destination] = kana;
@@ -25626,9 +25621,28 @@ var ctrStaffsVl = new Vue({
     },
     loadRoleConfig: function loadRoleConfig() {
       var that = this;
+      that.field.mst_staff_auths = {
+        1: {
+          staffScreen: [],
+          screen_category_id: 1,
+          accessible_kb: 9
+        },
+        2: {
+          screen_category_id: 2,
+          accessible_kb: 9
+        },
+        3: {
+          screen_category_id: 3,
+          accessible_kb: 9
+        },
+        4: {
+          screen_category_id: 4,
+          accessible_kb: 9
+        }
+      };
+      if (this.field.mst_role_id == '') return;
       staffs_service.loadRoleConfig(this.field.mst_role_id).then(function (result) {
         var data = result.data;
-        console.log(data);
 
         if (data.length > 0) {
           data.forEach(function (item) {
@@ -25790,7 +25804,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

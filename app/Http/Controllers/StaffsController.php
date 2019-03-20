@@ -74,8 +74,8 @@ class StaffsController extends Controller
             'mst_staffs.staff_cd',
             'employment_pattern.date_id',
             'employment_pattern.date_nm as employment_pattern_nm',
-            DB::raw('CONCAT(mst_staffs.last_nm,"    ",mst_staffs.first_nm) as staff_nm'),
-            DB::raw('CONCAT(mst_staffs.last_nm_kana,"   ",mst_staffs.first_nm_kana) as staff_nm_kana'),
+            DB::raw('CONCAT_WS("    ",mst_staffs.last_nm,mst_staffs.first_nm) as staff_nm'),
+            DB::raw('CONCAT_WS("    ",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana) as staff_nm_kana'),
             'position.date_nm as position_nm',
             'belong_company.date_nm as belong_company_nm',
             'mst_business_offices.business_office_nm',
@@ -99,12 +99,18 @@ class StaffsController extends Controller
             $join->on('sub.staff_cd', '=', 'mst_staffs.staff_cd');
         });
         $this->query->whereRaw('mst_staffs.deleted_at IS NULL');
-        $this->query->where('mst_staffs.staff_cd', 'LIKE', '%' . $where['staff_cd'] . '%')
-                    ->where( DB::raw('CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%');
+
         $this->queryDataKb('employment_pattern_id',$where['employment_pattern_id']);
         $this->queryDataKb('position_id',$where['position_id']);
         $this->queryDataKb('belong_company_id',$where['belong_company_id']);
         $this->queryDataKb('mst_business_office_id', $where['mst_business_office_id']);
+        if ($where['staff_cd'] != '') {
+            $this->query->where('mst_staffs.staff_cd', 'LIKE', '%' . $where['staff_cd'] . '%');
+        }
+        if ($where['staff_nm'] != '') {
+            $this->query->where( DB::raw('CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%');
+        }
+
         if ($where['status'] == '1' && $where['reference_date'] != null) {
             $this->query->where('mst_staffs.adhibition_start_dt','<=',$where['reference_date'])
                 ->where('mst_staffs.adhibition_end_dt','>=',$where['reference_date']);
@@ -297,6 +303,22 @@ class StaffsController extends Controller
                     "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
                     "modified_at" => $currentTime
                 ]);
+
+                //upload file
+                $oldStaff = MStaffs::find($data["id"]);
+                $src = config('params.staff_path') . $data["id"];
+                $des = config('params.staff_path') . $id;
+                mkdir($des, 0777, true);
+                mkdir($des.'/image', 0777, true);
+                if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture )){
+                    if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile=='drivers_license_picture')) {
+                        MStaffs::query()->where("id","=",$id)->update([
+                            "drivers_license_picture" => $oldStaff->drivers_license_picture
+                        ]);
+                        copy($src.'/image/'.$oldStaff->drivers_license_picture, $des.'/image/'.$oldStaff->drivers_license_picture);
+
+                    }
+                }
             }
         }
         $this->deleteFile($id,$deleteFile);
