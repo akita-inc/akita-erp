@@ -76,7 +76,7 @@ class MStaffs extends Authenticatable
 
     public function getListOption($kDefault =''){
         $result = array($kDefault => '==選択==');
-        $data =  $this->where('deleted_at','=',null)->where('admin_fg','=',1)
+        $data =  $this->where('deleted_at','=',null)->where('mst_role_id','=',1)
             ->get();
         foreach (json_decode(json_encode($data), true) as $key=>$item){
             $result[$item['id']] = $item['last_nm'].' '.$item['first_nm'];

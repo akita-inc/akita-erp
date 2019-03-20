@@ -64,7 +64,6 @@ var ctrStaffsVl = new Vue({
                 qualifications_notes: "",
                 amounts: "",
                 payday: "",
-                disp_number: "",
             }],
             mst_staff_dependents:[{
                 dept_dependent_kb:"",
@@ -197,9 +196,13 @@ var ctrStaffsVl = new Vue({
         },
         submit:function()
         {
+
             let that = this;
             that.loading = true;
             if(this.staff_edit == 1){
+                if(this.field["password"] != "********"){
+                    this.field["is_change_password"] = true;
+                }
                 this.field["id"] = this.staff_id;
                 if(this.field["clone"] == true){
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
@@ -223,6 +226,7 @@ var ctrStaffsVl = new Vue({
                     window.location.href = '/staffs/list';
                 }
                 this.field["clone"] = null;
+                this.field["is_change_password"] = null;
                 that.loading = false;
             });
         },
@@ -243,6 +247,7 @@ var ctrStaffsVl = new Vue({
                         that.field.drivers_license_picture ='';
                     }
                 });
+                this.field["password"] = "********";
                 that.getMstCollapses();
 
             }
@@ -306,7 +311,6 @@ var ctrStaffsVl = new Vue({
                         qualifications_notes:"",
                         amounts:"",
                         payday:"",
-                        disp_number:"",
                     };
                     break;
                 case 'mst_staff_dependents':

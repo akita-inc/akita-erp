@@ -28,7 +28,7 @@ class StaffsController extends Controller
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana|nullable|length:50',
-        'zip_cd'=>'one_bytes_string|length:7',
+        'zip_cd'=>'zip_code|nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         'address3'=>'length:50|nullable',
@@ -254,16 +254,27 @@ class StaffsController extends Controller
                 if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
                     $validator->errors()->add('adhibition_start_dt_history', str_replace(' :attribute', $this->labels['adhibition_start_dt_history'], Lang::get('messages.MSG02014')));
                 }
+                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($data['adhibition_start_dt_edit'])){
+                    $validator->errors()->add('adhibition_start_dt_history',Lang::get('messages.MSG02015'));
+                }
             }
             $countExist = $countExist->where("id", "<>", $data["id"]);
         }
-        $countExist = $countExist->count();
-        if( $countExist > 0 ){
-            $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
+        if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )){
+            $countExist = $countExist->count();
+            if( $countExist > 0 ){
+                $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
+            }
         }
+
     }
     protected function save($data){
-        $data['password']=bcrypt($data['password']);
+        if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
+            $data['password'] = bcrypt($data['password']);
+        }else{
+            $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
+            $data['password'] = $passwordStaff->password;
+        }
         $data['workmens_compensation_insurance_fg']=$data['workmens_compensation_insurance_fg']==false?0:1;
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
@@ -346,7 +357,9 @@ class StaffsController extends Controller
 
     }
     protected function beforeSubmit($data){
-        $this->ruleValid["password"]=isset($data["id"])?'nullable|length:50':'required|length:50';
+        if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])){
+            $this->ruleValid["password"]='required|length:50';
+        }
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
                 $this->ruleValid['adhibition_start_dt_edit'] = 'required';
