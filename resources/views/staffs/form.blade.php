@@ -574,7 +574,7 @@
                                 <div class="col-md-12 col-sm-12">
                                     @include('Component.form.file',[
                                         'filed'=>'drivers_license_picture',
-                                        'attr_input'=>'v-on:change="onFileChange" accept="image/jpeg, image/jpg, image/png"',
+                                        'attr_input'=>'v-on:change="onFileChange" accept=".png, .jpg, .jpeg"',
                                         'attr_delete_path'=>'@click="deleteFileUpload"',
                                         'filedId'=>"mst_staff_drivers_license_picture",
                                         'filedMode'=>"items.drivers_license_picture",
