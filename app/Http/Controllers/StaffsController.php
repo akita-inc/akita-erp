@@ -54,6 +54,8 @@ class StaffsController extends Controller
     public function __construct(){
         $this->labels = Lang::get("staffs.create.field");
         $this->ruleValid['drivers_license_picture'] = 'nullable|mimes:jpeg,jpg,png|max_mb:'.config("params.max_file_size");
+        $this->messagesCustom["drivers_license_picture.mimes"]= Lang::get('messages.MSG02018');
+
     }
 
     protected function search($data)
