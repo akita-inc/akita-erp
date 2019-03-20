@@ -160,6 +160,7 @@ var ctrStaffsVl = new Vue({
     },
     methods : {
         onInputChange(text) {
+            this.field.relocation_municipal_office_cd = text;
             if (text === '' || text === undefined) {
                 return;
             }
