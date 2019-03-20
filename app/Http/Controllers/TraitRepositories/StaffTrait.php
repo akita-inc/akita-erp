@@ -95,13 +95,13 @@ trait StaffTrait
                 {
                     if(isset($item["id"]) && $item["id"] && !isset($data["clone"]))
                     {
-                        $idUpdate=$this->updateRowsAccordion($arrayInsert,$name);
-                        array_push($arrayIDInsert,$idUpdate);
+                        $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
+                        array_push($arrayIDInsert,$idAccordionUpdate);
                     }
                     else
                     {
-                        $idInsert=$this->insertRowsAccordion($arrayInsert,$name);
-                        array_push($arrayIDInsert,$idInsert);
+                        $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                        array_push($arrayIDInsert,$idAccordionInsert);
                     }
                 }
             }
