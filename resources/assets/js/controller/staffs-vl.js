@@ -64,7 +64,6 @@ var ctrStaffsVl = new Vue({
                 qualifications_notes: "",
                 amounts: "",
                 payday: "",
-                disp_number: "",
             }],
             mst_staff_dependents:[{
                 dept_dependent_kb:"",
@@ -310,7 +309,6 @@ var ctrStaffsVl = new Vue({
                         qualifications_notes:"",
                         amounts:"",
                         payday:"",
-                        disp_number:"",
                     };
                     break;
                 case 'mst_staff_dependents':
