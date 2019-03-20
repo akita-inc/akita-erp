@@ -1,6 +1,15 @@
 @extends('Layouts.app')
 @section('title',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
 @section('title_header',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
+@section('style')
+    <style>
+        @supports (-ms-ime-align: auto) {
+            #relocation_municipal_office_cd option:not(:first-child) {
+                font-size: 20px;
+            }
+        }
+    </style>
+@endsection
 @section('content')
     @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
