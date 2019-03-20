@@ -1045,7 +1045,7 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_fronts">写真　前</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_fronts" name="picture_fronts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_fronts', $mVehicle->picture_fronts ? : '') }}" accept="image/jpeg, image/jpg, image/png">
+                                <input type="file" id="picture_fronts" name="picture_fronts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_fronts', $mVehicle->picture_fronts ? : '') }}" accept=".png, .jpg, .jpeg">
                                 <span id="picture_fronts_file_name" class="w-100 form-control">{{old('picture_fronts', $mVehicle->picture_fronts ? :'' )}}</span>
 
                             </div>
@@ -1069,7 +1069,7 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_rights">写真　側面右</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_rights" name="picture_rights" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rights', $mVehicle->picture_rights ? : '') }}" accept="image/jpeg, image/jpg, image/png">
+                                <input type="file" id="picture_rights" name="picture_rights" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rights', $mVehicle->picture_rights ? : '') }}" accept=".png, .jpg, .jpeg">
                                 <span id="picture_rights_file_name" class="w-100 form-control">{{old('picture_rights', $mVehicle->picture_rights ? :'' )}}</span>
 
                             </div>
@@ -1093,7 +1093,7 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_lefts">写真　側面左</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_lefts" name="picture_lefts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_lefts', $mVehicle->picture_lefts ? : '') }}" accept="image/jpeg, image/jpg, image/png">
+                                <input type="file" id="picture_lefts" name="picture_lefts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_lefts', $mVehicle->picture_lefts ? : '') }}" accept=".png, .jpg, .jpeg">
                                 <span id="picture_lefts_file_name" class="w-100 form-control">{{old('picture_lefts', $mVehicle->picture_lefts ? :'' )}}</span>
 
                             </div>
@@ -1117,7 +1117,7 @@
                         <label class="col-md-2 col-sm-2 label-input-file" for="picture_rears">写真　後</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
-                                <input type="file" id="picture_rears" name="picture_rears" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rears', $mVehicle->picture_rears ? : '') }}" accept="image/jpeg, image/jpg, image/png">
+                                <input type="file" id="picture_rears" name="picture_rears" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rears', $mVehicle->picture_rears ? : '') }}" accept=".png, .jpg, .jpeg">
                                 <span id="picture_rears_file_name" class="w-100 form-control">{{old('picture_rears', $mVehicle->picture_rears ? :'' )}}</span>
 
                             </div>
