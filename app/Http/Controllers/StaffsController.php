@@ -25,8 +25,8 @@ class StaffsController extends Controller
         'staff_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'kana|nullable|length:25',
-        'first_nm'  => 'length:50|nullable',
+        'last_nm_kana'  => 'kana|nullable|length:50',
+        'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana|nullable|length:50',
         'zip_cd'=>'one_bytes_string|length:7',
         'address1'=>'length:20|nullable',
@@ -37,6 +37,8 @@ class StaffsController extends Controller
         "corp_cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:3|nullable",
+        "health_insurance_class"=>"one_byte_number|length:10|number_range|nullable",
+        "welfare_annuity_class"=>"one_byte_number|length:10|number_range|nullable",
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
         "educational_background"=>"length:50|nullable",
@@ -203,7 +205,7 @@ class StaffsController extends Controller
         ]);
         $this->validateBlockCollapse($validator,"mst_staff_qualifications",$data,[
             'qualifications_notes' => 'nullable|length:100',
-            'amounts'=>'nullable|integer'
+            'amounts'=>'nullable|one_byte_number|length:10|number_range'
         ]);
         $this->validateBlockCollapse($validator,"mst_staff_dependents",$data,[
             'dept_last_nm' => 'nullable|length:25',

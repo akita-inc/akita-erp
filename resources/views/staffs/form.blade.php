@@ -227,7 +227,7 @@
                         @include('Component.form.input',['filed'=>'person_insured_number','attr_input' => "maxlength='11'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'health_insurance_class','attr_input'=>"maxlength='20'"])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'health_insurance_class','attr_input'=>"maxlength='10'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -235,7 +235,7 @@
                     <div class="break-row-form"></div>
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'welfare_annuity_class'])
+                        @include('Component.form.input',['filed'=>'welfare_annuity_class','attr_input'=>"maxlength='10'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-5 col-sm-12 no-padding">
@@ -402,6 +402,7 @@
                                         'filedId'=>"'mst_staff_qualifications_amounts'+index",
                                         'filedMode'=>"items.amounts",
                                         'filedErrors'=>"mst_staff_qualifications"
+                                        ,'attr_input' => "maxlength='10'"
                                     ])
                                     <div class="break-row-form"></div>
                                         @include('Component.form.date-picker-vue',[
@@ -731,7 +732,7 @@
                                         'filed'=>'retire_reasons',
                                         'filedId'=>"mst_others_retire_reasons",
                                         'filedMode'=>"items.retire_reasons",
-                                         'attr_input' => "maxlength='255'",
+                                         'attr_input' => "maxlength='50'",
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -750,7 +751,7 @@
                                         'filed'=>'death_reasons',
                                         'filedId'=>"mst_others_death_reasons",
                                         'filedMode'=>"items.death_reasons",
-                                        'attr_input' => "maxlength='255'",
+                                        'attr_input' => "maxlength='50'",
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
