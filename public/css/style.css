@@ -62,30 +62,22 @@
 .grid-form-label {
     position: absolute;
     top: -20px;
-    left: 20px;
+    left: 30px;
     font-size: 0.7rem;
 }
 .pl-150{
     padding-left: 150px;
 }
-.dropdown-search-list{
+.v-select .dropdown-toggle{
     height: 38px;
 }
-.dropdown-search-list .dropdown-input{
-    height: 100%!important;
-    width: 100%!important;
-    min-width: unset!important;
-    max-width: unset!important;
+.v-select .dropdown-toggle {
+    border-radius: 0px!important;
+    padding: 0px  !important;
 }
-.dropdown-search-list .dropdown-content{
-    min-width: unset!important;
-    max-width: unset!important;
-    width: 100%;
+.v-select .selected-tag {
+    margin:1px 0px!important;
 }
-.dropdown-search-list .dropdown-content .dropdown-item{
-    height: 38px;
-    line-height: 38px;
-    font-size: 1rem!important;
-    font-weight: 400!important;
-    color: #495057!important;
+.v-select .vs__actions {
+    display: none!important;
 }
