@@ -66,6 +66,7 @@ trait StaffTrait
     protected function saveAccordion($id, $data, $name, $prefixField = null, $unsetFields = array())
     {
         $dataAccordions=$data[$name];
+        $currentTime = date("Y-m-d H:i:s",time());
         $arrayIDInsert=[];
         $this->allNullAble = true;
         if (count($dataAccordions) > 0) {
@@ -84,6 +85,8 @@ trait StaffTrait
                 $arrayState = [
                     'mst_staff_id' => $id,
                     'disp_number' => $key + 1,
+                    "modified_at" => $currentTime,
+                    "created_at"=>$currentTime
                 ];
                 $arrayInsert = $arrayField + $arrayState;
                 if (count($unsetFields) > 0) {
