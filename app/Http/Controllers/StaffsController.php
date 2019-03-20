@@ -32,13 +32,14 @@ class StaffsController extends Controller
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         'address3'=>'length:50|nullable',
-        "landline_phone_number"=>"phone_number|length:20|nullable",
-        "cellular_phone_number"=>"phone_number|length:20|nullable",
-        "corp_cellular_phone_number"=>"phone_number|length:20|nullable",
+        "landline_phone_number"=>"length:20|nullable|phone_number",
+        "cellular_phone_number"=>"length:20|nullable|phone_number",
+        "corp_cellular_phone_number"=>"length:20|nullable|phone_number",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:3|nullable",
         "health_insurance_class"=>"one_byte_number|length:10|number_range|nullable",
         "welfare_annuity_class"=>"one_byte_number|length:10|number_range|nullable",
+        "relocation_municipal_office_cd"=>"nullable|length:6",
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
         "educational_background"=>"length:50|nullable",
@@ -253,13 +254,19 @@ class StaffsController extends Controller
                 if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
                     $validator->errors()->add('adhibition_start_dt_history', str_replace(' :attribute', $this->labels['adhibition_start_dt_history'], Lang::get('messages.MSG02014')));
                 }
+                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($data['adhibition_start_dt_edit'])){
+                    $validator->errors()->add('adhibition_start_dt_history',Lang::get('messages.MSG02015'));
+                }
             }
             $countExist = $countExist->where("id", "<>", $data["id"]);
         }
-        $countExist = $countExist->count();
-        if( $countExist > 0 ){
-            $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
+        if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )){
+            $countExist = $countExist->count();
+            if( $countExist > 0 ){
+                $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
+            }
         }
+
     }
     protected function save($data){
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
