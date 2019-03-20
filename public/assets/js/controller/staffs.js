@@ -25290,7 +25290,7 @@ var ctrStaffsVl = new Vue({
       adhibition_end_dt_edit: $("#hd_adhibition_end_dt_default").val(),
       adhibition_start_dt_history: "",
       adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
-      password: "        ",
+      password: "",
       employment_pattern_id: "",
       position_id: "",
       last_nm: "",
@@ -25523,6 +25523,7 @@ var ctrStaffsVl = new Vue({
             that.field.drivers_license_picture = '';
           }
         });
+        this.field["password"] = "        ";
         that.getMstCollapses();
       }
     },
@@ -25844,7 +25845,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

@@ -23,7 +23,7 @@ var ctrStaffsVl = new Vue({
             adhibition_end_dt_edit:$("#hd_adhibition_end_dt_default").val(),
             adhibition_start_dt_history:"",
             adhibition_end_dt_history:$("#hd_adhibition_end_dt_default").val(),
-            password:"        ",
+            password:"",
             employment_pattern_id:"",
             position_id:"",
             last_nm:"",
@@ -246,6 +246,7 @@ var ctrStaffsVl = new Vue({
                         that.field.drivers_license_picture ='';
                     }
                 });
+                this.field["password"] = "        ";
                 that.getMstCollapses();
 
             }
