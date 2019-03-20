@@ -25549,6 +25549,11 @@ var ctrStaffsVl = new Vue({
       }
 
       this.field[block].push(value);
+      setTimeout(function () {
+        if (block == 'mst_staff_dependents') {
+          that.showKana(that.index);
+        }
+      }, 100);
     },
     convertKana: function convertKana(input, destination) {
       if (this.field[input.target.id] == "") {
@@ -25558,14 +25563,12 @@ var ctrStaffsVl = new Vue({
       }
     },
     convertKanaBlock: function convertKanaBlock(input, destination) {
-      console.log(input.target.id);
       var kana = "";
 
       if (this.field[input.target.id] == "") {
         kana = "";
       } else {
         kana = this.autokana[input.target.id].getFurigana();
-        console.log(kana);
       }
 
       this.field.mst_staff_dependents[this.index][destination] = kana;
