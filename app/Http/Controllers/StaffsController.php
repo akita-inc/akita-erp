@@ -336,7 +336,7 @@ class StaffsController extends Controller
         }
         catch (\Exception $e)
         {
-            \Session::flash('error',Lang::get('messages.MSG03001'));
+            \Session::flash('error',$e);
             DB::rollBack();
             dd($e);
         }
