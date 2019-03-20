@@ -232,13 +232,12 @@
                         <div class="col-md-5 col-sm-12 no-padding">
                             <label class="grid-form-label pl-150">コード</label>
                             @include('Component.form.select',[
-                            'class'=>'wd-300',
                             'filed'=>'relocation_municipal_office_cd',
                             'array'=>$listReMunicipalOffice,
                             'hiddenData'=>'true',
                              'attr_input' => '@change="onChange($event)"'])
                         </div>
-                        <div class="col-md-6 col-sm-12 pd-l-20">
+                        <div class="col-md-7 col-sm-12 pd-l-20">
                             <label class="grid-form-label ">名称</label>
                             <v-select id="relocation_municipal_office_cd" class="dropdown-search-list"  name="relocation_municipal_office_cd"
                                     v-model="selected_relocate_municipal_office_nm"  :options="dropdown_relocate_municipal_office_nm"
