@@ -75,6 +75,7 @@ var ctrStaffsListVl = new Vue({
         },
         checkIsExist: function (id) {
             staffs_service.checkIsExist(id).then((response) => {
+                console.log(response.success);
                 if (!response.success) {
                     alert(response.msg);
                     this.getItems(1);

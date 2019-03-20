@@ -25582,21 +25582,27 @@ var ctrStaffsVl = new Vue({
       var that = this;
       var zip = that.field.zip_cd;
 
-      if (zip == "") {
-        alert(messages["MSG07001"]);
+      if (zip == '') {
+        alert(messages['MSG07001']);
+        return;
       } else {
-        new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_1__["Core"](zip, function (addr) {
-          if (addr.region_id == "") {
-            alert(messages["MSG07002"]);
-          } else {
-            that.field.prefectures_cd = addr.region_id; // 都道府県ID
-
-            that.field.address1 = addr.locality; // 市区町村
-
-            that.field.address2 = addr.street; // 町域
-          }
-        });
+        if (isNaN(zip)) {
+          alert(messages['MSG07002']);
+          return;
+        }
       }
+
+      new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_1__["Core"](zip, function (addr) {
+        if (addr.region_id == "" || addr.locality == "" || addr.street == "") {
+          alert(messages['MSG07002']);
+        } else {
+          that.field.prefectures_cd = addr.region_id; // 都道府県ID
+
+          that.field.address1 = addr.locality; // 市区町村
+
+          that.field.address2 = addr.street; // 町域
+        }
+      });
     },
     removeRows: function removeRows(block, index) {
       this.field[block].splice(index, 1);

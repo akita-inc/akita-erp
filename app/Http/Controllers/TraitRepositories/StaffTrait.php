@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\DB;
 trait StaffTrait
 {
+    public $allNullAble = false;
     public $labels = [
     ];
 
@@ -43,6 +44,7 @@ trait StaffTrait
         }
         return true;
     }
+
     protected function addAdditionRules( &$validator,$data,$nameBlocks ){
         switch ($nameBlocks)
         {
@@ -61,10 +63,18 @@ trait StaffTrait
         }
 
     }
-    protected function saveBlock($id, $dataBlocks = array(), $tableName, $prefixField = null, $unsetFields = array())
+    protected function saveAccordion($id, $data, $name, $prefixField = null, $unsetFields = array())
     {
-        if (count($dataBlocks) > 0) {
-            foreach ($dataBlocks as $key => $item) {
+        $dataAccordions=$data[$name];
+        $arrayIDInsert=[];
+        $this->allNullAble = true;
+        if (count($dataAccordions) > 0) {
+            foreach ($dataAccordions as $key => $item) {
+                foreach ($item as $valueChk){
+                    if(!empty($valueChk)){
+                        $this->allNullAble = false;
+                    }
+                }
                 $arrayField = [];
                 $fields = array_keys($item);
                 foreach ($fields as $fieldInput) {
@@ -81,13 +91,63 @@ trait StaffTrait
                         unset($arrayInsert[$field]);
                     }
                 }
-                if (!DB::table($tableName)->insert($arrayInsert)) {
-                    DB::rollBack();
-                    return false;
+                if(!$this->allNullAble)
+                {
+                    if(isset($item["id"]) && $item["id"] && isset($data["clone"]))
+                    {
+                        $idUpdate=$this->updateRowsAccordion($arrayInsert,$name);
+                        array_push($arrayIDInsert,$idUpdate);
+                    }
+                    else
+                    {
+                        $idInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                        array_push($arrayIDInsert,$idInsert);
+                    }
                 }
             }
         }
+        $this->deleteRowsAccordion($data,$arrayIDInsert,$name);
         return true;
+    }
+    protected function updateRowsAccordion($data,$name)
+    {
+        try{
+            $idUpdate=DB::table($name)->where("id","=",$data["id"])->update($data);
+        }
+        catch (\Exception $e)
+        {
+            DB::rollback();
+            dd($e);
+            return false;
+        }
+        return $idUpdate;
+    }
+    protected function insertRowsAccordion($data,$name)
+    {
+        try {
+            $idInsert = DB::table($name)->insertGetId($data);
+            $arrayIDInsert[] = $idInsert;
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            dd($e);
+            return false;
+        }
+        return $idInsert;
+    }
+    protected function deleteRowsAccordion($data,$arrayIDInsert,$name)
+    {
+        if(isset( $data["id"]) && $data["id"]) {
+            $deleteRows = DB::table($name)
+                ->where("mst_staff_id", $data["id"]);
+            if (!empty($arrayIDInsert)) {
+                $deleteRows = $deleteRows->whereNotIn("id", $arrayIDInsert);
+            }
+            $deleteRows->delete();
+            return true;
+        }
+        return null;
     }
     protected function saveStaffAuth($id, $data= array()){
         $mStaffAuth = new MStaffAuths();
