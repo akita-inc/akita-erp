@@ -211,8 +211,9 @@ var ctrStaffsVl = new Vue({
                             that.field[key + "_edit"] = $("#hd_"+key).val();
                         }
                         that.field.workmens_compensation_insurance_fg=that.field.workmens_compensation_insurance_fg==0?"":1;
-                        that.image_drivers_license_picture = that.field.drivers_license_picture;
+                        that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
                         that.field[key] = $("#hd_"+key).val();
+                        that.field.drivers_license_picture ='';
                     }
 
                 });
