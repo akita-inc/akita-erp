@@ -24,7 +24,6 @@ class StaffsController extends Controller
     public $ruleValid = [
         'staff_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
-        'password'=>'required_without:id|length:50',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana|nullable|length:25',
         'first_nm'  => 'length:50|nullable',
@@ -55,6 +54,7 @@ class StaffsController extends Controller
         $this->labels = Lang::get("staffs.create.field");
         $this->ruleValid['drivers_license_picture'] = 'nullable|mimes:jpeg,jpg,png|max_mb:'.config("params.max_file_size");
         $this->messagesCustom["drivers_license_picture.mimes"]= Lang::get('messages.MSG02018');
+        $this->messagesCustom["password.required"]=Lang::get('messages.MSG02001');
 
     }
 
@@ -335,7 +335,7 @@ class StaffsController extends Controller
         return $id;
     }
     protected function beforeSubmit($data){
-//        unset($this->ruleValid['adhibition_start_dt']);
+        $this->ruleValid["password"]=isset($data["id"])?'nullable|length:50':'required|length:50';
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
                 $this->ruleValid['adhibition_start_dt_edit'] = 'required';
