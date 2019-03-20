@@ -25720,7 +25720,6 @@ var ctrStaffsVl = new Vue({
     that.loadFormEdit();
     staffs_service.loadListReMunicipalOffice().then(function (response) {
       that.dropdown_relocate_municipal_office_nm = response.data;
-      console.log(response.data);
     });
     this.autokana['last_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_6__["bind"]('#last_nm', '#last_nm_kana', {
       katakana: true
@@ -25805,7 +25804,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })
