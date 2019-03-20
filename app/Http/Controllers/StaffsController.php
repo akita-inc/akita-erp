@@ -329,6 +329,11 @@ class StaffsController extends Controller
         $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"]);
         DB::commit();
         \Session::flash('message',Lang::get('messages.MSG03002'));
+        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+            \Session::flash('message',Lang::get('messages.MSG04002'));
+        }else{
+            \Session::flash('message',Lang::get('messages.MSG03002'));
+        }
         return $id;
     }
     protected function beforeSubmit($data){
