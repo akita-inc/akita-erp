@@ -208,10 +208,6 @@ var ctrStaffsVl = new Vue({
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
                     this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
                 }
-                if(that.field.password=="******")
-                {
-                    that.field.password="";
-                }
             }
             let formData = new FormData();
 
@@ -245,10 +241,7 @@ var ctrStaffsVl = new Vue({
                         that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
                         that.field[key] = $("#hd_"+key).val();
                         that.field.drivers_license_picture ='';
-                        that.field.password="******";
-                        // that.onSelected({item: that.field.relocation_municipal_office_cd,label: that.field.relocation_municipal_office_cd,name: "default",type: "default-section"});
                     }
-
                 });
                 that.getMstCollapses();
 

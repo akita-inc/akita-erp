@@ -24,10 +24,9 @@ class StaffsController extends Controller
     public $ruleValid = [
         'staff_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
-        'password'=>'required_without:id|length:50',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'kana|nullable|length:25',
-        'first_nm'  => 'length:50|nullable',
+        'last_nm_kana'  => 'kana|nullable|length:50',
+        'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana|nullable|length:50',
         'zip_cd'=>'one_bytes_string|length:7',
         'address1'=>'length:20|nullable',
@@ -38,8 +37,8 @@ class StaffsController extends Controller
         "corp_cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:3|nullable",
-        "health_insurance_class"=>"integer|nullable",
-        "welfare_annuity_class"=>"integer|nullable",
+        "health_insurance_class"=>"one_byte_number|length:10|number_range|nullable",
+        "welfare_annuity_class"=>"one_byte_number|length:10|number_range|nullable",
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
         "educational_background"=>"length:50|nullable",
@@ -55,6 +54,7 @@ class StaffsController extends Controller
         $this->labels = Lang::get("staffs.create.field");
         $this->ruleValid['drivers_license_picture'] = 'nullable|mimes:jpeg,jpg,png|max_mb:'.config("params.max_file_size");
         $this->messagesCustom["drivers_license_picture.mimes"]= Lang::get('messages.MSG02018');
+        $this->messagesCustom["password.required"]=Lang::get('messages.MSG02001');
 
     }
 
@@ -205,7 +205,7 @@ class StaffsController extends Controller
         ]);
         $this->validateBlockCollapse($validator,"mst_staff_qualifications",$data,[
             'qualifications_notes' => 'nullable|length:100',
-            'amounts'=>'nullable|integer'
+            'amounts'=>'nullable|one_byte_number|length:10|number_range'
         ]);
         $this->validateBlockCollapse($validator,"mst_staff_dependents",$data,[
             'dept_last_nm' => 'nullable|length:25',
@@ -284,58 +284,66 @@ class StaffsController extends Controller
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
         DB::beginTransaction();
-        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
-            $id = $data["id"];
-            $arrayInsert["modified_at"] = $currentTime;
-            MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
-            if($this->beforeItem){ //
-                MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
-                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                    "modified_at" => $currentTime
-                ]);
-            }
-        }else {
-            $id = DB::table($this->table)->insertGetId( $arrayInsert );
-            if(isset($data["clone"])){ //MODE REGISTER HISTORY
-                MStaffs::query()->where("id","=",$data["id"])->update([
-                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                    "modified_at" => $currentTime
-                ]);
+        try{
+            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+                $id = $data["id"];
+                $arrayInsert["modified_at"] = $currentTime;
+                MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
+                if($this->beforeItem){ //
+                    MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
+                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                        "modified_at" => $currentTime
+                    ]);
+                }
+            }else {
+                $id = DB::table($this->table)->insertGetId( $arrayInsert );
+                if(isset($data["clone"])){ //MODE REGISTER HISTORY
+                    MStaffs::query()->where("id","=",$data["id"])->update([
+                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                        "modified_at" => $currentTime
+                    ]);
 
-                //upload file
-                $oldStaff = MStaffs::find($data["id"]);
-                $src = config('params.staff_path') . $data["id"];
-                $des = config('params.staff_path') . $id;
-                mkdir($des, 0777, true);
-                mkdir($des.'/image', 0777, true);
-                if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture )){
-                    if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile=='drivers_license_picture')) {
-                        MStaffs::query()->where("id","=",$id)->update([
-                            "drivers_license_picture" => $oldStaff->drivers_license_picture
-                        ]);
-                        copy($src.'/image/'.$oldStaff->drivers_license_picture, $des.'/image/'.$oldStaff->drivers_license_picture);
+                    //upload file
+                    $oldStaff = MStaffs::find($data["id"]);
+                    $src = config('params.staff_path') . $data["id"];
+                    $des = config('params.staff_path') . $id;
+                    mkdir($des, 0777, true);
+                    mkdir($des.'/image', 0777, true);
+                    if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture )){
+                        if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile=='drivers_license_picture')) {
+                            MStaffs::query()->where("id","=",$id)->update([
+                                "drivers_license_picture" => $oldStaff->drivers_license_picture
+                            ]);
+                            copy($src.'/image/'.$oldStaff->drivers_license_picture, $des.'/image/'.$oldStaff->drivers_license_picture);
 
+                        }
                     }
                 }
             }
-        }
-        $this->deleteFile($id,$deleteFile);
-        $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
-        $this->saveStaffAuth($id,$mst_staff_auths);
-        $this->saveAccordion($id,$data,"mst_staff_job_experiences");
-        $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_");
-        $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"]);
-        DB::commit();
-        \Session::flash('message',Lang::get('messages.MSG03002'));
-        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
-            \Session::flash('message',Lang::get('messages.MSG04002'));
-        }else{
+            $this->deleteFile($id,$deleteFile);
+            $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
+            $this->saveStaffAuth($id,$mst_staff_auths);
+            $this->saveAccordion($id,$data,"mst_staff_job_experiences");
+            $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_");
+            $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"]);
+            DB::commit();
             \Session::flash('message',Lang::get('messages.MSG03002'));
+            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+                \Session::flash('message',Lang::get('messages.MSG04002'));
+            }else{
+                \Session::flash('message',Lang::get('messages.MSG03002'));
+            }
         }
-        return $id;
+        catch (\Exception $e)
+        {
+            \Session::flash('error',Lang::get('messages.MSG03001'));
+            DB::rollBack();
+            dd($e);
+        }
+
     }
     protected function beforeSubmit($data){
-//        unset($this->ruleValid['adhibition_start_dt']);
+        $this->ruleValid["password"]=isset($data["id"])?'nullable|length:50':'required|length:50';
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
                 $this->ruleValid['adhibition_start_dt_edit'] = 'required';
