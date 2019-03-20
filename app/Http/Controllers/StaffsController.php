@@ -54,7 +54,6 @@ class StaffsController extends Controller
     public function __construct(){
         $this->labels = Lang::get("staffs.create.field");
         $this->ruleValid['drivers_license_picture'] = 'nullable|mimes:jpeg,jpg,png|max_mb:'.config("params.max_file_size");
-        $this->messagesCustom['drivers_license_picture.mimes'] = '運転免許証の画像ファイルはJPEG、JPG、PNGのいずれかを選択してください。';
     }
 
     protected function search($data)
