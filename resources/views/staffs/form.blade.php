@@ -123,7 +123,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'zip_cd','attr_input' => "max-length='7'"])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'zip_cd','attr_input' => "maxlength=7"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode()">〒 → 住所</button>
@@ -138,7 +138,7 @@
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'address1','attr_input' => "max-length='20'"])
+                        @include('Component.form.input',['filed'=>'address1','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -146,33 +146,33 @@
                     <!--address2 address3-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'address2','attr_input' => "max-length='20'"])
+                        @include('Component.form.input',['filed'=>'address2','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'address3','attr_input' => "max-length='50'"])
+                        @include('Component.form.input',['filed'=>'address3','attr_input' => "maxlength='50'"])
                     </div>
 
                     <div class="break-row-form"></div>
                     <!--phone_number fax_number-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'landline_phone_number','attr_input' => "max-length='20'"])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'landline_phone_number','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'cellular_phone_number','attr_input' => "max-length='20'"])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'cellular_phone_number','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="break-row-form"></div>
 
                     <!--customer_category_id prime_business_office_id-->
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'corp_cellular_phone_number','attr_input' => "max-length='20'"])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'corp_cellular_phone_number','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="col-md-5 col-sm-12 pd-l-20">
-                        @include('Component.form.textarea',['filed'=>'notes','attr_input' => "max-length='50'"])
+                        @include('Component.form.textarea',['filed'=>'notes','attr_input' => "maxlength='50'"])
                     </div>
                 </div>
             </div>
@@ -206,16 +206,16 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'insurer_number','attr_input' => "max-length='3'"])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'insurer_number','attr_input' => "maxlength='3'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'basic_pension_number','attr_input' => "max-length='11'"])
+                        @include('Component.form.input',['class'=>'wd-350','filed'=>'basic_pension_number','attr_input' => "maxlength='11'"])
                     </div>
 
                     <div class="break-row-form"></div>
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['filed'=>'person_insured_number','attr_input' => "max-length='11'"])
+                        @include('Component.form.input',['filed'=>'person_insured_number','attr_input' => "maxlength='11'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         @include('Component.form.input',['class'=>'wd-350','filed'=>'health_insurance_class'])
@@ -260,7 +260,7 @@
                         <div class="grid-form items-collapse">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
-                                    @include('Component.form.input',['class'=>'w-75','filed'=>'educational_background','attr_input' => "max-length='50'"])
+                                    @include('Component.form.input',['class'=>'w-75','filed'=>'educational_background','attr_input' => "maxlength='50'"])
                                 </div>
 
                                 <div class="break-row-form"></div>
@@ -289,7 +289,7 @@
                                         'filedId'=>"'mst_staff_job_experiences_job_duties'+index",
                                         'filedMode'=>"items.job_duties",
                                         'filedErrors'=>"mst_staff_job_experiences",
-                                        'attr_input' => "max-length='50'"
+                                        'attr_input' => "maxlength='50'"
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -339,7 +339,7 @@
                                         'filedId'=>"'mst_staff_qualification_kind_id'+index",
                                         'filedMode'=>"items.qualification_kind_id",
                                         'filedErrors'=>"mst_staff_qualifications",
-                                        'attr_input' => "max-length='5'",
+                                        'attr_input' => "maxlength='5'",
                                         'array'=>@$listQualificationKind
 
                                     ])
@@ -383,7 +383,7 @@
                                         'filedId'=>"'mst_staff_qualifications_notes'+index",
                                         'filedMode'=>"items.qualifications_notes",
                                         'filedErrors'=>"mst_staff_qualifications"
-                                        ,'attr_input' => "max-length='100'"
+                                        ,'attr_input' => "maxlength='100'"
                                     ])
                                 </div>
 
@@ -507,7 +507,7 @@
                                     @include('Component.form.input-vue',[
                                         'filed'=>'dept_social_security_number',
                                         'class'=>'wd-350',
-                                        'attr_input' => "max-length='10'",
+                                        'attr_input' => "maxlength='10'",
                                         'filedId'=>"'mst_staff_dependents_social_security_number'+index",
                                         'filedMode'=>"items.dept_social_security_number",
                                         'filedErrors'=>"mst_staff_dependents"
@@ -538,7 +538,7 @@
                                         'filed'=>'drivers_license_number',
                                         'filedId'=>"mst_staff_driver_license_number",
                                         'filedMode'=>"items.drivers_license_number",
-                                        'attr_input' => "max-length='12'",
+                                        'attr_input' => "maxlength='12'",
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -723,7 +723,7 @@
                                         'filed'=>'retire_reasons',
                                         'filedId'=>"mst_others_retire_reasons",
                                         'filedMode'=>"items.retire_reasons",
-                                         'attr_input' => "max-length='255'",
+                                         'attr_input' => "maxlength='255'",
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -742,7 +742,7 @@
                                         'filed'=>'death_reasons',
                                         'filedId'=>"mst_others_death_reasons",
                                         'filedMode'=>"items.death_reasons",
-                                        'attr_input' => "max-length='255'",
+                                        'attr_input' => "maxlength='255'",
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -815,7 +815,7 @@
                                         'filed'=>'employment_insurance_numbers',
                                         'filedId'=>"mst_others_employment_insurance_numbers",
                                         'filedMode'=>"items.employment_insurance_numbers",
-                                         'attr_input' => "max-length='20'",
+                                         'attr_input' => "maxlength='20'",
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -824,7 +824,7 @@
                                         'class'=>'w-75',
                                         'filedId'=>"mst_others_health_insurance_numbers",
                                         'filedMode'=>"items.health_insurance_numbers",
-                                        'attr_input' => "max-length='20'",
+                                        'attr_input' => "maxlength='20'",
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -833,7 +833,7 @@
                                         'filed'=>'employees_pension_insurance_numbers',
                                         'filedId'=>"mst_others_employees_pension_insurance_numbers",
                                         'filedMode'=>"items.employees_pension_insurance_numbers",
-                                        'attr_input' => "max-length='10'",
+                                        'attr_input' => "maxlength='10'",
                                     ])
                                 </div>
 
