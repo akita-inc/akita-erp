@@ -45,7 +45,7 @@ class EditMstStaffsTable extends Migration
             $table->string('person_insured_number',11)->nullable();
             $table->integer('health_insurance_class')->nullable();
             $table->integer('welfare_annuity_class')->nullable();
-            $table->string('relocation_municipal_office_cd',5)->nullable();
+            $table->string('relocation_municipal_office_cd',6)->nullable();
             $table->string('educational_background',50)->nullable();
             $table->date('educational_background_dt')->nullable();
             $table->tinyInteger('enable_fg')->nullable()->default(1);
