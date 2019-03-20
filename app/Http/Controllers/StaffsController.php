@@ -297,6 +297,22 @@ class StaffsController extends Controller
                     "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
                     "modified_at" => $currentTime
                 ]);
+
+                //upload file
+                $oldStaff = MStaffs::find($data["id"]);
+                $src = config('params.staffs_path') . $data["id"];
+                $des = config('params.staffs_path') . $id;
+                mkdir($des, 0777, true);
+                mkdir($des.'/image', 0777, true);
+                if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture )){
+                    if ( !in_array('drivers_license_picture',$data['deleteFile'])) {
+                        MStaffs::query()->where("id","=",$id)->update([
+                            "drivers_license_picture" => $oldStaff->drivers_license_picture
+                        ]);
+                        copy($src.'/image/'.$oldStaff->drivers_license_picture, $des.'/image/'.$oldStaff->drivers_license_picture);
+
+                    }
+                }
             }
         }
         $this->deleteFile($id,$deleteFile);
