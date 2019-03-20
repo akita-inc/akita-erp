@@ -197,7 +197,7 @@ var ctrStaffsVl = new Vue({
         },
         submit:function()
         {
-            if(this.field["password"] != "        "){
+            if(this.field["password"] != "********"){
                 this.field["is_change_password"] = true;
             }
             let that = this;
@@ -246,7 +246,7 @@ var ctrStaffsVl = new Vue({
                         that.field.drivers_license_picture ='';
                     }
                 });
-                this.field["password"] = "        ";
+                this.field["password"] = "********";
                 that.getMstCollapses();
 
             }
