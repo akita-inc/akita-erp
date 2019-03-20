@@ -327,10 +327,24 @@ var ctrStaffsVl = new Vue({
         getAddrFromZipCode: function() {
             var that=this;
             var zip = that.field.zip_cd;
+            if(zip==''){
+                alert(messages['MSG07001']);
+                return;
+            }else{
+                if(isNaN(zip)){
+                    alert(messages['MSG07002']);
+                    return;
+                }
+            }
             new Core(zip, function (addr) {
-                that.field.prefectures_cd=addr.region_id;// 都道府県ID
-                that.field.address1=addr.locality;// 市区町村
-                that.field.address2=addr.street;// 町域
+                if(addr.region_id=="" || addr.locality=="" || addr.street==""){
+                        alert(messages['MSG07002']);
+                }
+                else{
+                        that.field.prefectures_cd=addr.region_id;// 都道府県ID
+                        that.field.address1=addr.locality;// 市区町村
+                        that.field.address2=addr.street;// 町域
+                }
             });
         },
         removeRows: function (block,index) {
