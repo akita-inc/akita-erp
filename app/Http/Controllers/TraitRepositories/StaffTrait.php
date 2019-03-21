@@ -95,9 +95,13 @@ trait StaffTrait
                 }
                 if(!$this->allNullAble)
                 {
-                    if(isset($item["id"]) && $item["id"] && !isset($data["clone"]))
+                    if(isset($item["id"]) && $item["id"])
                     {
                         unset($arrayInsert['created_at']);
+                        if(isset($data["clone"]) && $data["clone"])
+                        {
+                            unset($arrayIDInsert["id"]);
+                        }
                         $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
                         array_push($arrayIDInsert,$idAccordionUpdate);
                     }
@@ -120,6 +124,7 @@ trait StaffTrait
         }
         catch (\Exception $e)
         {
+            file_put_contents('/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
@@ -134,6 +139,7 @@ trait StaffTrait
         }
         catch(\Exception $e)
         {
+            file_put_contents('/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
