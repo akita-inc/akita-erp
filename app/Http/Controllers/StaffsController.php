@@ -256,19 +256,14 @@ class StaffsController extends Controller
                 if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
                     $validator->errors()->add('adhibition_start_dt_history', str_replace(' :attribute', $this->labels['adhibition_start_dt_history'], Lang::get('messages.MSG02014')));
                 }
-                $mStaff = MStaffs::find($data['id']);
-                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mStaff->adhibition_start_dt)){
-                    $validator->errors()->add('adhibition_start_dt_history',Lang::get('messages.MSG02015'));
-                }
             }
             $countExist = $countExist->where("id", "<>", $data["id"]);
         }
-        if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )){
-            $countExist = $countExist->count();
-            if( $countExist > 0 ){
-                $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
-            }
+        $countExist = $countExist->count();
+        if( $countExist > 0 ){
+            $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
         }
+
 
     }
     protected function save($data){

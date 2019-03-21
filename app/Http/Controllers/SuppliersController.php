@@ -161,7 +161,7 @@ class SuppliersController extends Controller
             if($mode=='registerHistoryLeft'){
                 $validator->after(function ($validator) use ($data,$mSupplier){
                     if (Carbon::parse($data['adhibition_start_dt_new']) <= Carbon::parse($mSupplier->adhibition_start_dt)){
-                        $validator->errors()->add('adhibition_start_dt_new',Lang::get('messages.MSG02015'));
+                        $validator->errors()->add('mst_suppliers_cd',str_replace(':screen','仕入先',Lang::get('messages.MSG10003')));
                     }
                     if (Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
                         $validator->errors()->add('adhibition_start_dt_new',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_new'],Lang::get('messages.MSG02014')));
