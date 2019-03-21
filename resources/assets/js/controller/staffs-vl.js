@@ -230,14 +230,14 @@ var ctrStaffsVl = new Vue({
                 that.loading = false;
             });
         },
-        loadFormEdit: function () {
+         loadFormEdit: async function () {
             let that = this;
             if($("#hd_staff_edit").val() == 1){
                 this.loading = true;
                 that.staff_edit = 1;
                 that.staff_id = $("#hd_id").val();
                 $.each(this.field,function (key,value) {
-                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_staff_job_experiences'){
+                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_staff_job_experiences' && key != 'mst_staff_dependents'){
                         if(key == "adhibition_start_dt" || key == "adhibition_end_dt"){
                             that.field[key + "_edit"] = $("#hd_"+key).val();
                         }
@@ -248,29 +248,30 @@ var ctrStaffsVl = new Vue({
                     }
                 });
                 this.field["password"] = "********";
-                that.getMstCollapses();
-
+                await that.getMstCollapses();
             }
         },
-        getMstCollapses:function()
+        getMstCollapses:async function()
         {
             let that=this;
-            staffs_service.getListStaffJobEx(that.staff_id).then((response) => {
+            await staffs_service.getListStaffJobEx(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_job_experiences = response.data;
                 }
             });
-            staffs_service.getListStaffQualifications(that.staff_id).then((response) => {
+            await staffs_service.getListStaffQualifications(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_qualifications = response.data;
                 }
             });
-            staffs_service.getStaffDependents(that.staff_id).then((response) => {
+
+            await staffs_service.getStaffDependents(that.staff_id).then((response) => {
                 if(response.data != null && response.data.length > 0){
                     that.field.mst_staff_dependents = response.data;
                 }
             });
-            staffs_service.getStaffAuths(that.staff_id).then((response) => {
+
+            await staffs_service.getStaffAuths(that.staff_id).then((response) => {
 
                 if(response.data != null){
                     $.each(response.data,function (key,value) {
@@ -340,7 +341,9 @@ var ctrStaffsVl = new Vue({
             if(this.field[input.target.id] == ""){
                 this.field[destination] = "";
             }else{
-                this.field[destination] = this.autokana[input.target.id].getFurigana();
+                var furigana = this.autokana[input.target.id].getFurigana();
+                var baseKana =  this.autokana[input.target.id].baseKana;
+                this.field[destination] = furigana=='' ? baseKana : furigana;
             }
         },
         convertKanaBlock:function(input,destination){
@@ -349,7 +352,9 @@ var ctrStaffsVl = new Vue({
             if(this.field[input.target.id] == ""){
                 kana = "";
             }else{
-                kana = this.autokana[input.target.id].getFurigana();
+                var furigana = this.autokana[input.target.id].getFurigana();
+                var baseKana =  this.autokana[input.target.id].baseKana;
+                kana = furigana=='' ? baseKana : furigana;
             }
             this.field.mst_staff_dependents[index][destination]=kana;
 
@@ -470,16 +475,23 @@ var ctrStaffsVl = new Vue({
         },
     },
     beforeMount(){
-        this.loadFormEdit();
+
     },
-    mounted () {
+    async mounted () {
+        await  this.loadFormEdit();
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.dropdown_relocate_municipal_office_nm[0].data =  response.data;
         });
         this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
-        this.showKana(this.index);
+        this.field.mst_staff_dependents.forEach( function(value,key) {
+            that.showKana(key);
+        });
+        if(this.staff_id==''){
+            this.showKana(this.index);
+        }
+
     },
     components: {
         DatePicker,
