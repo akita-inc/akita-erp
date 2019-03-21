@@ -73,8 +73,8 @@ trait StaffTrait
             $disp_number=0;
             foreach ($dataAccordions as $key => $item) {
                 $this->allNullAble = true;
-                foreach ($item as $valueChk){
-                    if(!empty($valueChk)){
+                foreach ($item as $k => $valueChk){
+                    if($k != 'id' && !empty($valueChk) ){
                         $this->allNullAble = false;
                     }
                 }
@@ -102,22 +102,37 @@ trait StaffTrait
                 }
                 if(!$this->allNullAble)
                 {
-                    if(isset($item["id"]) && $item["id"])
+                    if(isset($data["clone"]))
                     {
-                        unset($arrayInsert['created_at']);
-                        if(isset($data["clone"]) && $data["clone"])
-                        {
-                            unset($arrayIDInsert["id"]);
-                        }
-                        $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
-                        array_push($arrayIDInsert,$idAccordionUpdate);
-                    }
-                    else
-                    {
+                        unset($arrayInsert['id']);
                         $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
                         array_push($arrayIDInsert,$idAccordionInsert);
                     }
+                    else
+                    {
+                        if(isset($item["id"]) && $item["id"])
+                        {
+                            unset($arrayInsert['created_at']);
+                            $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
+                            array_push($arrayIDInsert,$idAccordionUpdate);
+                        }
+                        else
+                        {
+                            $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                            array_push($arrayIDInsert,$idAccordionInsert);
+                        }
+
+                    }
                 }
+                else
+                {
+                    if(isset($item["id"]) && $item["id"])
+                    {
+                        DB::table($name)->where("id", $item["id"])
+                                        ->update(['deleted_at' => $currentTime]);
+                    }
+                }
+
             }
         }
         $this->deleteRowsAccordion($data,$arrayIDInsert,$name,$currentTime);
@@ -131,7 +146,6 @@ trait StaffTrait
         }
         catch (\Exception $e)
         {
-            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
@@ -146,7 +160,6 @@ trait StaffTrait
         }
         catch(\Exception $e)
         {
-            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
