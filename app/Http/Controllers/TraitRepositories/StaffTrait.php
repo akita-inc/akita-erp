@@ -67,7 +67,7 @@ trait StaffTrait
     {
         $dataAccordions=$data[$name];
         $arrayIDInsert=[];
-        $this->allNullAble = false;
+        $this->allNullAble = true;
         if (count($dataAccordions) > 0) {
             foreach ($dataAccordions as $key => $item) {
                 foreach ($item as $valueChk){
