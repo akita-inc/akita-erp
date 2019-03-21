@@ -446,7 +446,7 @@
                                         'filed'=>'dept_last_nm',
                                         'filedId'=>"'mst_staff_dependents_last_nm'+index",
                                         'filedMode'=>"items.dept_last_nm",
-                                        'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_last_nm_kana\')"',
+                                        'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_last_nm\', \'dept_last_nm_kana\')"',
                                         'filedErrors'=>"mst_staff_dependents",
 
                                     ])
@@ -468,7 +468,7 @@
                                         'filed'=>'dept_first_nm',
                                         'filedId'=>"'mst_staff_dependents_first_nm'+index",
                                         'filedMode'=>"items.dept_first_nm",
-                                        'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_first_nm_kana\')"',
+                                        'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_first_nm\',\'dept_first_nm_kana\')"',
                                         'filedErrors'=>"mst_staff_dependents"
                                     ])
                                 </div>
