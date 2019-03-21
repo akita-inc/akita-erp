@@ -474,11 +474,11 @@ var ctrStaffsVl = new Vue({
             this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
         },
     },
-    beforeMount(){
-
+    async beforeMount(){
+        await this.loadFormEdit();
     },
     async mounted () {
-        await  this.loadFormEdit();
+        await this.loadFormEdit();
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.dropdown_relocate_municipal_office_nm[0].data =  response.data;
@@ -487,6 +487,7 @@ var ctrStaffsVl = new Vue({
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
         this.field.mst_staff_dependents.forEach( function(value,key) {
             that.showKana(key);
+            that.index = key;
         });
         if(this.staff_id==''){
             this.showKana(this.index);

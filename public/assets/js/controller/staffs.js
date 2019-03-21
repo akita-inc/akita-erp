@@ -26616,17 +26616,41 @@ var ctrStaffsVl = new Vue({
       });
     }
   },
-  beforeMount: function beforeMount() {},
-  mounted: function () {
-    var _mounted = _asyncToGenerator(
+  beforeMount: function () {
+    var _beforeMount = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-      var that;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
+              return this.loadFormEdit();
+
+            case 2:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, this);
+    }));
+
+    function beforeMount() {
+      return _beforeMount.apply(this, arguments);
+    }
+
+    return beforeMount;
+  }(),
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      var that;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
               return this.loadFormEdit();
 
             case 2:
@@ -26642,6 +26666,7 @@ var ctrStaffsVl = new Vue({
               });
               this.field.mst_staff_dependents.forEach(function (value, key) {
                 that.showKana(key);
+                that.index = key;
               });
 
               if (this.staff_id == '') {
@@ -26650,10 +26675,10 @@ var ctrStaffsVl = new Vue({
 
             case 8:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, this);
+      }, _callee4, this);
     }));
 
     function mounted() {
