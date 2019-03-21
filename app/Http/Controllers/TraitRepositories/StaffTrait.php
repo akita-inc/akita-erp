@@ -67,9 +67,10 @@ trait StaffTrait
     {
         $dataAccordions=$data[$name];
         $arrayIDInsert=[];
-        $this->allNullAble = true;
         if (count($dataAccordions) > 0) {
+            $disp_number=0;
             foreach ($dataAccordions as $key => $item) {
+                $this->allNullAble = true;
                 foreach ($item as $valueChk){
                     if(!empty($valueChk)){
                         $this->allNullAble = false;
@@ -81,9 +82,13 @@ trait StaffTrait
                     $fieldDB = str_replace($prefixField, "", $fieldInput);
                     $arrayField += [$fieldDB => $item[$fieldInput]];
                 }
+                if(!$this->allNullAble)
+                {
+                    $disp_number++;
+                }
                 $arrayState = [
                     'mst_staff_id' => $id,
-                    'disp_number' => $key + 1,
+                    'disp_number' => $disp_number,
                     "modified_at" => $currentTime,
                     "created_at"=>$currentTime
                 ];
@@ -124,7 +129,7 @@ trait StaffTrait
         }
         catch (\Exception $e)
         {
-            file_put_contents('/error.html',$e);
+            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
@@ -139,7 +144,7 @@ trait StaffTrait
         }
         catch(\Exception $e)
         {
-            file_put_contents('/error.html',$e);
+            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
