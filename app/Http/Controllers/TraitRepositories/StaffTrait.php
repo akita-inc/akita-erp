@@ -49,12 +49,14 @@ trait StaffTrait
         switch ($nameBlocks)
         {
             case "mst_staff_job_experiences":
-                if (Carbon::parse($data['staff_tenure_start_dt']) > Carbon::parse($data['staff_tenure_end_dt'])) {
+                if ($data['staff_tenure_start_dt'] != "" && $data['staff_tenure_end_dt'] != ""
+                    && Carbon::parse($data['staff_tenure_start_dt']) > Carbon::parse($data['staff_tenure_end_dt'])) {
                     $validator->errors()->add('staff_tenure_start_dt', str_replace(' :attribute', $this->labels['staff_tenure_start_dt'], Lang::get('messages.MSG02014')));
                 }
                 break;
             case "mst_staff_qualifications":
-                if (Carbon::parse($data['period_validity_start_dt']) > Carbon::parse($data['period_validity_end_dt'])) {
+                if ($data['period_validity_start_dt'] != "" && $data['period_validity_end_dt'] != ""
+                    && Carbon::parse($data['period_validity_start_dt']) > Carbon::parse($data['period_validity_end_dt'])) {
                     $validator->errors()->add('period_validity_start_dt', str_replace(' :attribute', $this->labels['period_validity_start_dt'], Lang::get('messages.MSG02014')));
                 }
                 break;
@@ -67,9 +69,10 @@ trait StaffTrait
     {
         $dataAccordions=$data[$name];
         $arrayIDInsert=[];
-        $this->allNullAble = true;
         if (count($dataAccordions) > 0) {
+            $disp_number=0;
             foreach ($dataAccordions as $key => $item) {
+                $this->allNullAble = true;
                 foreach ($item as $valueChk){
                     if(!empty($valueChk)){
                         $this->allNullAble = false;
@@ -81,9 +84,13 @@ trait StaffTrait
                     $fieldDB = str_replace($prefixField, "", $fieldInput);
                     $arrayField += [$fieldDB => $item[$fieldInput]];
                 }
+                if(!$this->allNullAble)
+                {
+                    $disp_number++;
+                }
                 $arrayState = [
                     'mst_staff_id' => $id,
-                    'disp_number' => $key + 1,
+                    'disp_number' => $disp_number,
                     "modified_at" => $currentTime,
                     "created_at"=>$currentTime
                 ];
@@ -124,7 +131,7 @@ trait StaffTrait
         }
         catch (\Exception $e)
         {
-            file_put_contents('/error.html',$e);
+            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
@@ -139,7 +146,7 @@ trait StaffTrait
         }
         catch(\Exception $e)
         {
-            file_put_contents('/error.html',$e);
+            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
