@@ -180,8 +180,10 @@ class StaffsController extends Controller
         $mStaffs = new MStaffs();
         try {
             if ($mStaffs->deleteStaffs($id)) {
+                \Session::flash('message',Lang::get('messages.MSG10004'));
                 $response = ['data' => 'success'];
             } else {
+                \Session::flash('message',Lang::get('messages.MSG06002'));
                 $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
             }
 

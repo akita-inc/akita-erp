@@ -108,7 +108,10 @@ trait StaffTrait
                 }
             }
         }
-        $this->deleteRowsAccordion($data,$arrayIDInsert,$name);
+        if(count($arrayIDInsert)>0)
+        {
+            $this->deleteRowsAccordion($data,$arrayIDInsert,$name);
+        }
         return true;
     }
     protected function updateRowsAccordion($data,$name)
