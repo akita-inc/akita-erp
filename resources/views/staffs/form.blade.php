@@ -429,7 +429,7 @@
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.select-vue',[
                                         'filed'=>'dept_dependent_kb',
-                                         'class'=>'wd-300',
+                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_dependents_dependent_kb'+index",
                                         'filedMode'=>"items.dept_dependent_kb",
                                         'array'=>$listDependentKBs,
