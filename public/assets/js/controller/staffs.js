@@ -26392,6 +26392,26 @@ var ctrStaffsVl = new Vue({
               case 7:
                 _context2.next = 9;
                 return staffs_service.getStaffAuths(that.staff_id).then(function (response) {
+                  that.field.mst_staff_auths = {
+                    1: {
+                      staffScreen: [],
+                      screen_category_id: 1,
+                      accessible_kb: 9
+                    },
+                    2: {
+                      screen_category_id: 2,
+                      accessible_kb: 9
+                    },
+                    3: {
+                      screen_category_id: 3,
+                      accessible_kb: 9
+                    },
+                    4: {
+                      screen_category_id: 4,
+                      accessible_kb: 9
+                    }
+                  };
+
                   if (response.data != null) {
                     $.each(response.data, function (key, value) {
                       if (key == 1) {
