@@ -254,7 +254,8 @@ class StaffsController extends Controller
                 if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
                     $validator->errors()->add('adhibition_start_dt_history', str_replace(' :attribute', $this->labels['adhibition_start_dt_history'], Lang::get('messages.MSG02014')));
                 }
-                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($data['adhibition_start_dt_edit'])){
+                $mStaff = MStaffs::find($data['id']);
+                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mStaff->adhibition_start_dt)){
                     $validator->errors()->add('adhibition_start_dt_history',Lang::get('messages.MSG02015'));
                 }
             }
