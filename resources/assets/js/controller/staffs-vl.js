@@ -366,10 +366,10 @@ var ctrStaffsVl = new Vue({
                 this.field[destination] = furigana=='' ? baseKana : furigana;
             }
         },
-        convertKanaBlock:function(input,destination){
+        convertKanaBlock:function(input,field, destination){
             var index = input.target.id.replace( /^\D+/g, '');
             let kana="";
-            if(this.field[input.target.id] == ""){
+            if(this.field.mst_staff_dependents[index][field] == ""){
                 kana = "";
             }else{
                 var furigana = this.autokana[input.target.id].getFurigana();
