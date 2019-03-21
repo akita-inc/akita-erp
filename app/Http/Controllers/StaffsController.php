@@ -295,6 +295,7 @@ class StaffsController extends Controller
         unset($arrayInsert["mst_staff_auths"]);
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
+        unset($arrayInsert["is_change_password"]);
         DB::beginTransaction();
         try{
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
