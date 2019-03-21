@@ -196,7 +196,6 @@ var ctrStaffsVl = new Vue({
         },
         submit:function()
         {
-
             let that = this;
             that.loading = true;
             if(this.staff_edit == 1){
@@ -275,7 +274,25 @@ var ctrStaffsVl = new Vue({
             });
 
             await staffs_service.getStaffAuths(that.staff_id).then((response) => {
-
+                that.field.mst_staff_auths = {
+                    1: {
+                        staffScreen: [],
+                        screen_category_id:1,
+                        accessible_kb: 9,
+                    },
+                    2: {
+                        screen_category_id: 2,
+                        accessible_kb: 9,
+                    },
+                    3: {
+                        screen_category_id: 3,
+                        accessible_kb: 9,
+                    },
+                    4: {
+                        screen_category_id: 4,
+                        accessible_kb: 9,
+                    },
+                };
                 if(response.data != null){
                     $.each(response.data,function (key,value) {
                         if(key==1){
