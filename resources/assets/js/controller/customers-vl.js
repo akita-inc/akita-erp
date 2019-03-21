@@ -128,7 +128,9 @@ var ctrCustomersVl = new Vue({
             if(this.field[input.target.id] == ""){
                 this.field[destination] = "";
             }else{
-                this.field[destination] = this.autokana[input.target.id].getFurigana();
+                var furigana = this.autokana[input.target.id].getFurigana();
+                var baseKana =  this.autokana[input.target.id].baseKana;
+                this.field[destination] = furigana=='' ? baseKana : furigana;
             }
         },
         getAddrFromZipCode: function() {

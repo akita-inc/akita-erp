@@ -20951,7 +20951,9 @@ var ctrCustomersVl = new Vue({
       if (this.field[input.target.id] == "") {
         this.field[destination] = "";
       } else {
-        this.field[destination] = this.autokana[input.target.id].getFurigana();
+        var furigana = this.autokana[input.target.id].getFurigana();
+        var baseKana = this.autokana[input.target.id].baseKana;
+        this.field[destination] = furigana == '' ? baseKana : furigana;
       }
     },
     getAddrFromZipCode: function getAddrFromZipCode() {
@@ -21155,7 +21157,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
