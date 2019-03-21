@@ -49,12 +49,14 @@ trait StaffTrait
         switch ($nameBlocks)
         {
             case "mst_staff_job_experiences":
-                if (Carbon::parse($data['staff_tenure_start_dt']) > Carbon::parse($data['staff_tenure_end_dt'])) {
+                if ($data['staff_tenure_start_dt'] != "" && $data['staff_tenure_end_dt'] != ""
+                    && Carbon::parse($data['staff_tenure_start_dt']) > Carbon::parse($data['staff_tenure_end_dt'])) {
                     $validator->errors()->add('staff_tenure_start_dt', str_replace(' :attribute', $this->labels['staff_tenure_start_dt'], Lang::get('messages.MSG02014')));
                 }
                 break;
             case "mst_staff_qualifications":
-                if (Carbon::parse($data['period_validity_start_dt']) > Carbon::parse($data['period_validity_end_dt'])) {
+                if ($data['period_validity_start_dt'] != "" && $data['period_validity_end_dt'] != ""
+                    && Carbon::parse($data['period_validity_start_dt']) > Carbon::parse($data['period_validity_end_dt'])) {
                     $validator->errors()->add('period_validity_start_dt', str_replace(' :attribute', $this->labels['period_validity_start_dt'], Lang::get('messages.MSG02014')));
                 }
                 break;
