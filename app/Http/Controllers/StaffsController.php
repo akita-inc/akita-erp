@@ -256,7 +256,8 @@ class StaffsController extends Controller
                 if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
                     $validator->errors()->add('adhibition_start_dt_history', str_replace(' :attribute', $this->labels['adhibition_start_dt_history'], Lang::get('messages.MSG02014')));
                 }
-                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($data['adhibition_start_dt_edit'])){
+                $mStaff = MStaffs::find($data['id']);
+                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mStaff->adhibition_start_dt)){
                     $validator->errors()->add('adhibition_start_dt_history',Lang::get('messages.MSG02015'));
                 }
             }
@@ -296,18 +297,24 @@ class StaffsController extends Controller
         unset($arrayInsert["mst_staff_auths"]);
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
+        unset($arrayInsert["is_change_password"]);
         DB::beginTransaction();
         try{
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 $id = $data["id"];
+
+                $mStaff = MStaffs::find($id);
+                if (Carbon::parse($arrayInsert["adhibition_start_dt"]) != Carbon::parse($mStaff->adhibition_start_dt)) {
+                    if ($this->beforeItem) { //
+                        MStaffs::query()->where("id", "=", $this->beforeItem["id"])->update([
+                            "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                            "modified_at" => $currentTime,
+                        ]);
+                    }
+                }
+
                 $arrayInsert["modified_at"] = $currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
-                if($this->beforeItem){ //
-                    MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
-                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                        "modified_at" => $currentTime,
-                    ]);
-                }
             }else {
                 $arrayInsert["modified_at"] = $currentTime;
                 $arrayInsert["created_at"]=$currentTime;

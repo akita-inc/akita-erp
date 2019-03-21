@@ -97,6 +97,7 @@ trait StaffTrait
                 {
                     if(isset($item["id"]) && $item["id"] && !isset($data["clone"]))
                     {
+                        unset($arrayInsert['created_at']);
                         $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
                         array_push($arrayIDInsert,$idAccordionUpdate);
                     }
