@@ -300,14 +300,19 @@ class StaffsController extends Controller
         try{
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 $id = $data["id"];
+
+                $mStaff = MStaffs::find($id);
+                if (Carbon::parse($arrayInsert["adhibition_start_dt"]) != Carbon::parse($mStaff->adhibition_start_dt)) {
+                    if ($this->beforeItem) { //
+                        MStaffs::query()->where("id", "=", $this->beforeItem["id"])->update([
+                            "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
+                            "modified_at" => $currentTime,
+                        ]);
+                    }
+                }
+
                 $arrayInsert["modified_at"] = $currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
-                if($this->beforeItem){ //
-                    MStaffs::query()->where("id","=",$this->beforeItem["id"])->update([
-                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                        "modified_at" => $currentTime,
-                    ]);
-                }
             }else {
                 $arrayInsert["modified_at"] = $currentTime;
                 $arrayInsert["created_at"]=$currentTime;
