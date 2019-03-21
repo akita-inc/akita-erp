@@ -49,9 +49,9 @@ class MStaffs extends Authenticatable
     }
 
     public function deleteStaffs($id){
+        $currentTime = date("Y-m-d H:i:s",time());
         $mMStaffs = new MStaffs();
         $mMStaffs = $mMStaffs->find($id);
-
         DB::beginTransaction();
         try
         {
@@ -60,11 +60,43 @@ class MStaffs extends Authenticatable
                 $historyStaffs->adhibition_end_dt = $mMStaffs->adhibition_end_dt;
                 $historyStaffs->save();
             }
+            $this->deleteAccordions($id,"mst_staff_job_experiences",$currentTime);
+            $this->deleteAccordions($id,"mst_staff_qualifications",$currentTime);
+            $this->deleteAccordions($id,"mst_staff_dependents",$currentTime);
+            $this->deleteStaffAuth($id);
             $mMStaffs->delete();
             DB::commit();
             return true;
         } catch (\Exception $ex){
             DB::rollBack();
+            return false;
+        }
+    }
+    protected function deleteAccordions($id,$name,$currentTime)
+    {
+        try {
+            DB::table($name)
+                    ->where("mst_staff_id", $id)
+                    ->update(['deleted_at' => $currentTime]);
+                return true;
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            return false;
+        }
+    }
+    protected function deleteStaffAuth($id)
+    {
+        try {
+            DB::table("mst_staff_auths")
+                ->where("mst_staff_id", $id)
+                ->delete();
+            return true;
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
             return false;
         }
     }
