@@ -71,8 +71,8 @@ trait StaffTrait
             $disp_number=0;
             foreach ($dataAccordions as $key => $item) {
                 $this->allNullAble = true;
-                foreach ($item as $valueChk){
-                    if(!empty($valueChk) ){
+                foreach ($item as $k => $valueChk){
+                    if($k != 'id' && !empty($valueChk) ){
                         $this->allNullAble = false;
                     }
                 }
@@ -122,6 +122,15 @@ trait StaffTrait
 
                     }
                 }
+                else
+                {
+                    if(isset($item["id"]) && $item["id"])
+                    {
+                        DB::table($name)->where("id", $item["id"])
+                                        ->update(['deleted_at' => $currentTime]);
+                    }
+                }
+
             }
         }
         $this->deleteRowsAccordion($data,$arrayIDInsert,$name,$currentTime);
@@ -135,7 +144,6 @@ trait StaffTrait
         }
         catch (\Exception $e)
         {
-            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
@@ -150,7 +158,6 @@ trait StaffTrait
         }
         catch(\Exception $e)
         {
-            file_put_contents('storage/error.html',$e);
             DB::rollback();
             dd($e);
             return false;
