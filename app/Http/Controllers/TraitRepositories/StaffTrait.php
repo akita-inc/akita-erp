@@ -67,7 +67,7 @@ trait StaffTrait
     {
         $dataAccordions=$data[$name];
         $arrayIDInsert=[];
-        $this->allNullAble = true;
+        $this->allNullAble = false;
         if (count($dataAccordions) > 0) {
             foreach ($dataAccordions as $key => $item) {
                 foreach ($item as $valueChk){
@@ -109,10 +109,7 @@ trait StaffTrait
                 }
             }
         }
-        if(count($arrayIDInsert)>0)
-        {
-            $this->deleteRowsAccordion($data,$arrayIDInsert,$name);
-        }
+        $this->deleteRowsAccordion($data,$arrayIDInsert,$name,$currentTime);
         return true;
     }
     protected function updateRowsAccordion($data,$name)
@@ -143,18 +140,23 @@ trait StaffTrait
         }
         return $idInsert;
     }
-    protected function deleteRowsAccordion($data,$arrayIDInsert,$name)
+    protected function deleteRowsAccordion($data,$arrayIDInsert,$name,$currentTime)
     {
-        if(isset( $data["id"]) && $data["id"]) {
-            $deleteRows = DB::table($name)
-                ->where("mst_staff_id", $data["id"]);
-            if (!empty($arrayIDInsert)) {
-                $deleteRows = $deleteRows->whereNotIn("id", $arrayIDInsert);
+
+        try {
+            if (isset($data["id"]) && $data["id"] && !isset($data["clone"])) {
+                DB::table($name)
+                    ->where("mst_staff_id", $data["id"])
+                    ->whereNotIn("id", $arrayIDInsert)
+                    ->update(['deleted_at' => $currentTime]);
+                return true;
             }
-            $deleteRows->delete();
-            return true;
         }
-        return null;
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            return false;
+        }
     }
     protected function saveStaffAuth($id, $data= array(), $currentTime){
         $mStaffAuth = new MStaffAuths();
