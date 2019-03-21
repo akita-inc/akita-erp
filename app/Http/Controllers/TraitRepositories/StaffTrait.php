@@ -100,21 +100,25 @@ trait StaffTrait
                 }
                 if(!$this->allNullAble)
                 {
-                    if(isset($item["id"]) && $item["id"])
+                    if(isset($item["id"]) && $item["id"] && !isset($data["clone"]))
                     {
                         unset($arrayInsert['created_at']);
-                        if(isset($data["clone"]) && $data["clone"])
-                        {
-                            unset($arrayIDInsert["id"]);
-                        }
                         $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
                         array_push($arrayIDInsert,$idAccordionUpdate);
+
+                    }
+                    else if(isset($item["id"]) && $item["id"] && isset($data["clone"]))
+                    {
+                        unset($arrayInsert['id']);
+                        $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                        array_push($arrayIDInsert,$idAccordionInsert);
                     }
                     else
                     {
                         $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
                         array_push($arrayIDInsert,$idAccordionInsert);
                     }
+
                 }
             }
         }
