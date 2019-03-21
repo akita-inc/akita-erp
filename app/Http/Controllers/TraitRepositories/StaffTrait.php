@@ -74,7 +74,7 @@ trait StaffTrait
             foreach ($dataAccordions as $key => $item) {
                 $this->allNullAble = true;
                 foreach ($item as $valueChk){
-                    if(!empty($valueChk)){
+                    if(!empty($valueChk) ){
                         $this->allNullAble = false;
                     }
                 }
@@ -102,20 +102,26 @@ trait StaffTrait
                 }
                 if(!$this->allNullAble)
                 {
-                    if(isset($item["id"]) && $item["id"])
+                    if(isset($data["clone"]))
                     {
-                        unset($arrayInsert['created_at']);
-                        if(isset($data["clone"]) && $data["clone"])
-                        {
-                            unset($arrayIDInsert["id"]);
-                        }
-                        $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
-                        array_push($arrayIDInsert,$idAccordionUpdate);
+                        unset($arrayInsert['id']);
+                        $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                        array_push($arrayIDInsert,$idAccordionInsert);
                     }
                     else
                     {
-                        $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
-                        array_push($arrayIDInsert,$idAccordionInsert);
+                        if(isset($item["id"]) && $item["id"])
+                        {
+                            unset($arrayInsert['created_at']);
+                            $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
+                            array_push($arrayIDInsert,$idAccordionUpdate);
+                        }
+                        else
+                        {
+                            $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                            array_push($arrayIDInsert,$idAccordionInsert);
+                        }
+
                     }
                 }
             }
