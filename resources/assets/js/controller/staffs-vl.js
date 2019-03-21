@@ -383,6 +383,7 @@ var ctrStaffsVl = new Vue({
             });
         },
         removeRows: function (block,index) {
+            this.index-=1;
             this.field[block].splice(index, 1);
         },
         backHistory: function () {
