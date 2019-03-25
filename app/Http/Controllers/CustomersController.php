@@ -201,7 +201,6 @@ class CustomersController extends Controller
     }
 
     protected function beforeSubmit($data){
-        unset($this->ruleValid['adhibition_start_dt']);
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
                 $this->ruleValid['adhibition_start_dt_edit'] = 'required';
