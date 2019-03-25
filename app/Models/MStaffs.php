@@ -106,13 +106,30 @@ class MStaffs extends Authenticatable
         "password" => "ログインPW",
     );
 
-    public function getListOption($kDefault =''){
-        $result = array($kDefault => '==選択==');
-        $data =  $this->where('deleted_at','=',null)->where('mst_role_id','=',1)
+    public function getListOption($adhibition_start_dt){
+        $data =  $this
+            ->select(DB::raw("staff_cd as value, concat(staff_cd,'：',last_nm,'　',first_nm) as text"))
+            ->where('deleted_at','=',null)
+            ->where('mst_role_id','=',1)
+            ->where('adhibition_start_dt','<=',$adhibition_start_dt)
+            ->where('adhibition_end_dt','>=',$adhibition_start_dt)
+            ->orderBy(DB::raw("concat( last_nm_kana,first_nm_kana,staff_cd)"))
             ->get();
-        foreach (json_decode(json_encode($data), true) as $key=>$item){
-            $result[$item['id']] = $item['last_nm'].' '.$item['first_nm'];
+        if($data){
+            $data = $data->toArray();
+            array_unshift($data,array('value' => '','text' => '==選択=='));
         }
-        return $result;
+        return $data;
+    }
+
+    public function checkVaildStaffCd($adhibition_start_dt, $staff_cd){
+        $data =  $this
+            ->where('deleted_at','=',null)
+            ->where('staff_cd','=',$staff_cd)
+            ->where('mst_role_id','=',1)
+            ->where('adhibition_start_dt','<=',$adhibition_start_dt)
+            ->where('adhibition_end_dt','>=',$adhibition_start_dt)
+            ->count();
+        return $data;
     }
 }

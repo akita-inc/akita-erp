@@ -140,9 +140,7 @@ class VehiclesController extends Controller
         $mVehicle = new MVehicles();
         $mGeneralPurposes = new MGeneralPurposes();
         $mBusinessOffices = new MBusinessOffices();
-        $mStaff = new MStaffs();
         $listBusinessOffices = $mBusinessOffices->getListBusinessOffices();
-        $listAdminStaffs = $mStaff->getListOption();
         $listVehicleKb= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicles_kb'],'');
         $listVehicleSize= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_size_kb'],'');
         $listVehiclePurpose= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_purpose'],'');
@@ -253,6 +251,14 @@ class VehiclesController extends Controller
                     if (Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
                         $validator->errors()->add('adhibition_start_dt_new',str_replace(' :attribute',$mVehicle->label['adhibition_start_dt_new'],Lang::get('messages.MSG02014')));
                     }
+
+                    if($data['mst_staff_cd']!='' && $data['adhibition_start_dt_new']!=''){
+                        $mStaff = new MStaffs();
+                        $count = $mStaff->checkVaildStaffCd($data['adhibition_start_dt_new'],$data['mst_staff_cd']);
+                        if($count<=0){
+                            $validator->errors()->add('mst_staff_cd',str_replace(':attribute',$mVehicle->label['mst_staff_cd'],Lang::get('messages.MSG10005')));
+                        }
+                    }
                 });
             }elseif ($mode=='edit'){
                 $validator->after(function ($validator) use ($data,$mVehicle){
@@ -302,11 +308,11 @@ class VehiclesController extends Controller
                     }
                     $mVehicle->vehicles_cd = $data["vehicles_cd"];
                     if ($mode == 'registerHistoryLeft') {
-                        $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt_new"], 'yyyy-mm-dd');
-                        $mVehicle->adhibition_end_dt = TimeFunction::dateFormat(config('params.adhibition_end_dt_default'), 'yyyy-mm-dd');
+                        $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt_new"], 'Y-m-d');
+                        $mVehicle->adhibition_end_dt = TimeFunction::dateFormat(config('params.adhibition_end_dt_default'), 'Y-m-d');
                     } else {
-                        $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt"], 'yyyy-mm-dd');
-                        $mVehicle->adhibition_end_dt = TimeFunction::dateFormat($mode == 'edit' ? $data["adhibition_end_dt"] : config('params.adhibition_end_dt_default'), 'yyyy-mm-dd');
+                        $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt"], 'Y-m-d');
+                        $mVehicle->adhibition_end_dt = TimeFunction::dateFormat($mode == 'edit' ? $data["adhibition_end_dt"] : config('params.adhibition_end_dt_default'), 'Y-m-d');
                     }
 
 
@@ -317,7 +323,7 @@ class VehiclesController extends Controller
                     $mVehicle->vehicle_size_kb = $data["vehicle_size_kb"];
                     $mVehicle->vehicle_purpose_id = $data["vehicle_purpose_id"];
                     $mVehicle->land_transport_office_cd = $data["land_transport_office_cd"];
-                    $mVehicle->registration_dt = TimeFunction::dateFormat($data["registration_dt"], 'yyyy-mm-dd');
+                    $mVehicle->registration_dt = TimeFunction::dateFormat($data["registration_dt"], 'Y-m-d');
                     $mVehicle->first_year_registration_dt = $data["first_year_registration_dt"];
                     $mVehicle->vehicle_classification_id = $data["vehicle_classification_id"];
                     $mVehicle->private_commercial_id = $data["private_commercial_id"];
@@ -348,7 +354,7 @@ class VehiclesController extends Controller
                     $mVehicle->user_nm = $data["user_nm"];
                     $mVehicle->user_address = $data["user_address"];
                     $mVehicle->user_base_locations = $data["user_base_locations"];
-                    $mVehicle->expiry_dt = TimeFunction::dateFormat($data["expiry_dt"], 'yyyy-mm-dd');
+                    $mVehicle->expiry_dt = TimeFunction::dateFormat($data["expiry_dt"], 'Y-m-d');
                     $mVehicle->car_inspections_notes = $data["car_inspections_notes"];
                     $mVehicle->digital_tachograph_numbers = $data["digital_tachograph_numbers"];
                     $mVehicle->etc_numbers = $data["etc_numbers"];
@@ -371,9 +377,9 @@ class VehiclesController extends Controller
                     $mVehicle->floor_roller_fg = isset($data["floor_roller_fg"]) ? 1 : 0;
                     $mVehicle->floor_joloda_conveyor_fg = isset($data["floor_joloda_conveyor_fg"]) ? 1 : 0;
                     $mVehicle->power_gate_cd = $data["power_gate_cd"];
-                    $mVehicle->vehicle_delivery_dt = TimeFunction::dateFormat($data["vehicle_delivery_dt"], 'yyyy-mm-dd');
+                    $mVehicle->vehicle_delivery_dt = TimeFunction::dateFormat($data["vehicle_delivery_dt"], 'Y-m-d');
                     $mVehicle->specification_notes = $data["specification_notes"];
-                    $mVehicle->mst_staffs_id = $data["mst_staffs_id"];
+                    $mVehicle->mst_staff_cd = $data["mst_staff_cd"];
                     $mVehicle->personal_insurance_prices = $data["personal_insurance_prices"];
                     $mVehicle->property_damage_insurance_prices = $data["property_damage_insurance_prices"];
                     $mVehicle->vehicle_insurance_prices = $data["vehicle_insurance_prices"];
@@ -382,7 +388,7 @@ class VehiclesController extends Controller
                     $mVehicle->durable_years = $data["durable_years"];
                     $mVehicle->tire_sizes = $data["tire_sizes"];
                     $mVehicle->battery_sizes = $data["battery_sizes"];
-                    $mVehicle->dispose_dt = TimeFunction::dateFormat($data["dispose_dt"], 'yyyy-mm-dd');
+                    $mVehicle->dispose_dt = TimeFunction::dateFormat($data["dispose_dt"], 'Y-m-d');
                     $mVehicle->notes = $data["notes"];
 
                     $mVehicle->save();
@@ -460,8 +466,18 @@ class VehiclesController extends Controller
             'listTransmissions' => $listTransmissions,
             'listSuspensionsCd' => $listSuspensionsCd,
             'listPowerGate' => $listPowerGate,
-            'listAdminStaffs' => $listAdminStaffs,
             'flagLasted' => $flagLasted,
         ]);
+    }
+
+    public function loadListStaff(Request $request){
+        $mStaff = new MStaffs();
+        $adhibition_start_dt = TimeFunction::dateFormat($request->get('adhibition_start_dt'), 'Y-m-d');
+        if(is_null($adhibition_start_dt)) {
+            return Response()->json(array('success'=>true, 'info'=> [array('value' => '','text' => '==選択==')]));
+        }
+        $list = $mStaff->getListOption($adhibition_start_dt);
+        return Response()->json(array('success'=>true, 'info'=> $list));
+
     }
 }

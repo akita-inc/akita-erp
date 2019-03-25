@@ -71,6 +71,7 @@
                                              :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                              :value-type="'format'"
                                              :input-name="'adhibition_start_dt'"
+                                             v-on:change="getListStaff"
                                 >
                                 </date-picker>
                             </div>
@@ -161,6 +162,7 @@
                                                  :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                                  :value-type="'format'"
                                                  :input-name="'adhibition_start_dt'"
+                                                 v-on:change="getListStaff"
                                     >
                                     </date-picker>
                                 </div>
@@ -993,14 +995,17 @@
             <div class="grid-form mb-5">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5" for="mst_staffs_id">車輌管理責任者号</label>
+                        <label class="col-md-5 col-sm-5" for="mst_staff_cd">車輌管理責任者</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-100" id="mst_staffs_id" name="mst_staffs_id">
-                                @foreach($listAdminStaffs as $key => $value)
-                                    <option value="{{$key}}" {{Common::selectIfValue('mst_staffs_id', $key, $mVehicle->mst_staffs_id)}}>{{$value}}</option>
-                                @endforeach
+                            <select class="form-control w-100" id="mst_staff_cd" name="mst_staff_cd" v-cloak="">
+                                <option v-for="option in listStaffs" :value="option.value" v-cloak="" :selected="option.value == '{{ old('mst_staff_cd', !is_null($mVehicle->mst_staff_cd) ? $mVehicle->mst_staff_cd : '') }}'">@{{option.text}}</option>
                             </select>
                         </div>
+                        @if ($errors->has('mst_staff_cd'))
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ $errors->first('mst_staff_cd') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100"></div>
                     <div class="break-row-form"></div>
