@@ -26293,6 +26293,9 @@ var ctrStaffsVl = new Vue({
       formData.append('image', this.field.drivers_license_picture);
       staffs_service.submit(formData).then(function (response) {
         if (response.success == false) {
+          that.$refs.drivers_license_picture.value = '';
+          that.field.drivers_license_picture = '';
+          that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
           that.errors = response.message;
         } else {
           that.errors = {};
@@ -26389,6 +26392,26 @@ var ctrStaffsVl = new Vue({
               case 7:
                 _context2.next = 9;
                 return staffs_service.getStaffAuths(that.staff_id).then(function (response) {
+                  that.field.mst_staff_auths = {
+                    1: {
+                      staffScreen: [],
+                      screen_category_id: 1,
+                      accessible_kb: 9
+                    },
+                    2: {
+                      screen_category_id: 2,
+                      accessible_kb: 9
+                    },
+                    3: {
+                      screen_category_id: 3,
+                      accessible_kb: 9
+                    },
+                    4: {
+                      screen_category_id: 4,
+                      accessible_kb: 9
+                    }
+                  };
+
                   if (response.data != null) {
                     $.each(response.data, function (key, value) {
                       if (key == 1) {
@@ -26478,11 +26501,11 @@ var ctrStaffsVl = new Vue({
         this.field[destination] = furigana == '' ? baseKana : furigana;
       }
     },
-    convertKanaBlock: function convertKanaBlock(input, destination) {
+    convertKanaBlock: function convertKanaBlock(input, field, destination) {
       var index = input.target.id.replace(/^\D+/g, '');
       var kana = "";
 
-      if (this.field[input.target.id] == "") {
+      if (this.field.mst_staff_dependents[index][field] == "") {
         kana = "";
       } else {
         var furigana = this.autokana[input.target.id].getFurigana();
@@ -26519,6 +26542,7 @@ var ctrStaffsVl = new Vue({
       });
     },
     removeRows: function removeRows(block, index) {
+      this.index -= 1;
       this.field[block].splice(index, 1);
     },
     backHistory: function backHistory() {
@@ -26616,17 +26640,41 @@ var ctrStaffsVl = new Vue({
       });
     }
   },
-  beforeMount: function beforeMount() {},
-  mounted: function () {
-    var _mounted = _asyncToGenerator(
+  beforeMount: function () {
+    var _beforeMount = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-      var that;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
+              return this.loadFormEdit();
+
+            case 2:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, this);
+    }));
+
+    function beforeMount() {
+      return _beforeMount.apply(this, arguments);
+    }
+
+    return beforeMount;
+  }(),
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      var that;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
               return this.loadFormEdit();
 
             case 2:
@@ -26642,6 +26690,7 @@ var ctrStaffsVl = new Vue({
               });
               this.field.mst_staff_dependents.forEach(function (value, key) {
                 that.showKana(key);
+                that.index = key;
               });
 
               if (this.staff_id == '') {
@@ -26650,10 +26699,10 @@ var ctrStaffsVl = new Vue({
 
             case 8:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, this);
+      }, _callee4, this);
     }));
 
     function mounted() {

@@ -275,12 +275,18 @@ class CustomersController extends Controller
                     if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
                         $validator->errors()->add('adhibition_start_dt_history',str_replace(' :attribute',$this->labels['adhibition_start_dt_history'],Lang::get('messages.MSG02014')));
                     }
+                    $mCustomer = MCustomers::find($data['id']);
+                    if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mCustomer->adhibition_start_dt)){
+                        $validator->errors()->add('mst_customers_cd', str_replace(':screen', '得意先', Lang::get('messages.MSG10003')));
+                    }
                 }
                 $countExist = $countExist->where("id","<>",$data["id"]);
             }
-            $countExist = $countExist->count();
-            if( $countExist > 0 ){
-                $validator->errors()->add('mst_customers_cd',str_replace(':screen','得意先',Lang::get('messages.MSG10003')));
+            if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )) {
+                $countExist = $countExist->count();
+                if ($countExist > 0) {
+                    $validator->errors()->add('mst_customers_cd', str_replace(':screen', '得意先', Lang::get('messages.MSG10003')));
+                }
             }
         }
     }

@@ -196,7 +196,6 @@ var ctrStaffsVl = new Vue({
         },
         submit:function()
         {
-
             let that = this;
             that.loading = true;
             if(this.staff_edit == 1){
@@ -218,6 +217,9 @@ var ctrStaffsVl = new Vue({
             formData.append('image', this.field.drivers_license_picture);
             staffs_service.submit(formData).then((response) => {
                 if(response.success == false){
+                    that.$refs.drivers_license_picture.value = '';
+                    that.field.drivers_license_picture = '';
+                    that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
                     that.errors = response.message;
                 }
                 else
@@ -272,7 +274,25 @@ var ctrStaffsVl = new Vue({
             });
 
             await staffs_service.getStaffAuths(that.staff_id).then((response) => {
-
+                that.field.mst_staff_auths = {
+                    1: {
+                        staffScreen: [],
+                        screen_category_id:1,
+                        accessible_kb: 9,
+                    },
+                    2: {
+                        screen_category_id: 2,
+                        accessible_kb: 9,
+                    },
+                    3: {
+                        screen_category_id: 3,
+                        accessible_kb: 9,
+                    },
+                    4: {
+                        screen_category_id: 4,
+                        accessible_kb: 9,
+                    },
+                };
                 if(response.data != null){
                     $.each(response.data,function (key,value) {
                         if(key==1){
@@ -346,10 +366,10 @@ var ctrStaffsVl = new Vue({
                 this.field[destination] = furigana=='' ? baseKana : furigana;
             }
         },
-        convertKanaBlock:function(input,destination){
+        convertKanaBlock:function(input,field, destination){
             var index = input.target.id.replace( /^\D+/g, '');
             let kana="";
-            if(this.field[input.target.id] == ""){
+            if(this.field.mst_staff_dependents[index][field] == ""){
                 kana = "";
             }else{
                 var furigana = this.autokana[input.target.id].getFurigana();
@@ -383,6 +403,7 @@ var ctrStaffsVl = new Vue({
             });
         },
         removeRows: function (block,index) {
+            this.index-=1;
             this.field[block].splice(index, 1);
         },
         backHistory: function () {
@@ -474,11 +495,11 @@ var ctrStaffsVl = new Vue({
             this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
         },
     },
-    beforeMount(){
-
+    async beforeMount(){
+        await this.loadFormEdit();
     },
     async mounted () {
-        await  this.loadFormEdit();
+        await this.loadFormEdit();
         var that=this;
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.dropdown_relocate_municipal_office_nm[0].data =  response.data;
@@ -487,6 +508,7 @@ var ctrStaffsVl = new Vue({
         this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
         this.field.mst_staff_dependents.forEach( function(value,key) {
             that.showKana(key);
+            that.index = key;
         });
         if(this.staff_id==''){
             this.showKana(this.index);
