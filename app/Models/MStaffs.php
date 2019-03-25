@@ -113,7 +113,9 @@ class MStaffs extends Authenticatable
             ->where('mst_role_id','=',1)
             ->where('adhibition_start_dt','<=',$adhibition_start_dt)
             ->where('adhibition_end_dt','>=',$adhibition_start_dt)
-            ->orderBy(DB::raw("concat( last_nm_kana,first_nm_kana,staff_cd)"))
+            ->orderBy('last_nm_kana', 'ASC')
+            ->orderBy('first_nm_kana', 'ASC')
+            ->orderBy('staff_cd', 'ASC')
             ->get();
         if($data){
             $data = $data->toArray();
