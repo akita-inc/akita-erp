@@ -108,7 +108,7 @@ class MStaffs extends Authenticatable
 
     public function getListOption($adhibition_start_dt){
         $data =  $this
-            ->select(DB::raw("staff_cd as value, concat(staff_cd,'：',last_nm,'　',first_nm) as text"))
+            ->select(DB::raw("staff_cd as value, concat(staff_cd,'：',COALESCE(last_nm,''),'　',COALESCE(first_nm,'')) as text"))
             ->where('deleted_at','=',null)
             ->where('mst_role_id','=',1)
             ->where('adhibition_start_dt','<=',$adhibition_start_dt)
