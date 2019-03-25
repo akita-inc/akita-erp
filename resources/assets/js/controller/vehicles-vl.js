@@ -13,6 +13,9 @@ var ctrVehiclesVl = new Vue({
         vehicle_delivery_dt:$('#vehicle_delivery_dt').val(),
         dispose_dt:$('#dispose_dt').val(),
         lang:lang_date_picker,
+        listStaffs: [
+            {'value': '', 'text': '==選択=='},
+        ],
     },
     methods : {
         onBlur: function(){
@@ -46,10 +49,27 @@ var ctrVehiclesVl = new Vue({
             vehicles_service.backHistory().then(function () {
                 window.location.href = listRoute;
             });
+        },
+        getListStaff: function(){
+            var that = this;
+            that.listStaffs = [
+                {'value': '', 'text': '==選択=='},
+            ];
+            vehicles_service.getListStaff({adhibition_start_dt:this.adhibition_start_dt}).then(function (result) {
+                var list = result.info;
+                if(list.length > 0){
+                    list.forEach(function (value){
+                        that.listStaffs.push(value);
+                    });
+                }
+            });
         }
     },
+    beforeMount(){
+        this.getListStaff();
+    },
     mounted () {
-
+        // this.getListStaff();
     },
     components: {
         DatePicker
