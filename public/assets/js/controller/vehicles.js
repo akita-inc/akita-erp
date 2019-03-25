@@ -2259,14 +2259,11 @@ var ctrVehiclesVl = new Vue({
       });
     },
     deleteVehicle: function deleteVehicle(id) {
-      var _this = this;
-
+      var that = this;
       vehicles_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
-
-          _this.backHistory();
-
+          that.backHistory();
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {
@@ -2356,7 +2353,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })

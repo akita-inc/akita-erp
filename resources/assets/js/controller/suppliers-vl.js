@@ -32,6 +32,7 @@ var ctrSupplierrsVl = new Vue({
             });
         },
         deleteSupplier: function(id){
+            var that = this;
             suppliers_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
