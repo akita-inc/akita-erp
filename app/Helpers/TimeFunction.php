@@ -22,6 +22,7 @@ class TimeFunction
 		if($time == '' || $time == "null") return null;
 		$dt = Carbon::parse($time);
 		switch ($type) {
+            case $type: return $dt->format($type);break;
 			default: return $dt->format('Y/m/d');
 		}
 

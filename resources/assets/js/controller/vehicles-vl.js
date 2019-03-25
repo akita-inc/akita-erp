@@ -13,6 +13,7 @@ var ctrVehiclesVl = new Vue({
         vehicle_delivery_dt:$('#vehicle_delivery_dt').val(),
         dispose_dt:$('#dispose_dt').val(),
         lang:lang_date_picker,
+        listStaffs: [],
     },
     methods : {
         onBlur: function(){
@@ -46,10 +47,16 @@ var ctrVehiclesVl = new Vue({
             vehicles_service.backHistory().then(function () {
                 window.location.href = listRoute;
             });
+        },
+        getListStaff: function(){
+            var that = this;
+            vehicles_service.getListStaff({adhibition_start_dt:this.adhibition_start_dt}).then(function (result) {
+                that.listStaffs = result.info;
+            });
         }
     },
     mounted () {
-
+        this.getListStaff();
     },
     components: {
         DatePicker
