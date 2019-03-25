@@ -77,6 +77,7 @@
                             </div>
                         @endif
                     </div>
+                </div>
             </div>
             <!--Block 2-->
             <div class="grid-form">
@@ -248,6 +249,7 @@
                             <span v-cloak v-if="errors.relocation_municipal_office_cd != undefined" class="message-error" v-html="errors.relocation_municipal_office_cd.join('<br />')"></span>
                         </div>
                     </div>
+                </div>
             </div>
             <!--Block 8-->
             <div class="grid-form">
