@@ -81,7 +81,7 @@ class CreateMstVehiclesTable extends Migration
             $table->integer('power_gate_cd')->nullable();
             $table->date('vehicle_delivery_dt')->nullable();
             $table->text('specification_notes')->nullable();
-            $table->integer('mst_staffs_id')->nullable();
+            $table->string('mst_staff_cd', 5)->nullable();
             $table->decimal('personal_insurance_prices',10,3)->nullable();
             $table->decimal('property_damage_insurance_prices',10,3)->nullable();
             $table->decimal('vehicle_insurance_prices',10,3)->nullable();
