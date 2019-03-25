@@ -28,10 +28,11 @@ var ctrVehiclesVl = new Vue({
             });
         },
         deleteVehicle: function(id){
+            var that = this;
             vehicles_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
-                    this.backHistory();
+                    that.backHistory();
                     return false;
                 } else {
                     if (confirm(messages["MSG06001"])) {
