@@ -474,7 +474,7 @@ class VehiclesController extends Controller
         $mStaff = new MStaffs();
         $adhibition_start_dt = TimeFunction::dateFormat($request->get('adhibition_start_dt'), 'Y-m-d');
         if(is_null($adhibition_start_dt)) {
-            return Response()->json(array('success'=>true, 'info'=> []));
+            return Response()->json(array('success'=>true, 'info'=> [array('value' => '','text' => '==選択==')]));
         }
         $list = $mStaff->getListOption($adhibition_start_dt);
         return Response()->json(array('success'=>true, 'info'=> $list));
