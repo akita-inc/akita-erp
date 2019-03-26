@@ -105,18 +105,21 @@ trait StaffTrait
                     if(isset($data["clone"]))
                     {
                         unset($arrayInsert['id']);
-                        $this->insertRowsAccordion($arrayInsert,$name);
+                        $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                        array_push($arrayIDInsert,$idAccordionInsert);
                     }
                     else
                     {
                         if(isset($item["id"]) && $item["id"])
                         {
                             unset($arrayInsert['created_at']);
-                            $this->updateRowsAccordion($item["id"],$arrayInsert,$name);
+                            $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
+                            array_push($arrayIDInsert,$idAccordionUpdate);
                         }
                         else
                         {
-                            $this->insertRowsAccordion($arrayInsert,$name);
+                            $idAccordionInsert=$this->insertRowsAccordion($arrayInsert,$name);
+                            array_push($arrayIDInsert,$idAccordionInsert);
                         }
 
                     }
@@ -125,18 +128,21 @@ trait StaffTrait
                 {
                     if(isset($item["id"]) && $item["id"])
                     {
-                        $this->updateRowsAccordion($item["id"],['deleted_at'=>$currentTime],$name);
+                        DB::table($name)->where("id", $item["id"])
+                            ->update(['deleted_at' => $currentTime]);
                     }
                 }
 
             }
         }
+        $this->deleteRowsAccordion($data,$arrayIDInsert,$name,$currentTime);
         return true;
     }
-    protected function updateRowsAccordion($id,$data,$name)
+    protected function updateRowsAccordion($data,$name)
     {
         try{
-            DB::table($name)->where("id","=",$id)->update($data);
+            DB::table($name)->where("id","=",$data["id"])->update($data);
+            $idUpdate = $data["id"];
         }
         catch (\Exception $e)
         {
@@ -144,12 +150,32 @@ trait StaffTrait
             dd($e);
             return false;
         }
-        return true;
+        return $idUpdate;
+    }
+    protected function deleteRowsAccordion($data,$arrayIDInsert,$name,$currentTime)
+    {
+
+        try {
+            if (isset($data["id"]) && $data["id"] && !isset($data["clone"])) {
+                DB::table($name)
+                    ->where("mst_staff_id", $data["id"])
+                    ->whereNotIn("id", $arrayIDInsert)
+                    ->update(['deleted_at' => $currentTime]);
+                return true;
+            }
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            return false;
+        }
     }
     protected function insertRowsAccordion($data,$name)
     {
         try {
             $idInsert = DB::table($name)->insertGetId($data);
+            $arrayIDInsert[] = $idInsert;
+
         }
         catch(\Exception $e)
         {
