@@ -142,7 +142,7 @@
                                     <span>{!! "@{{ item['staff_nm'] }}" !!}</span>
                                     @break
                                 @case('delete')
-                                    <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
+                                    <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="auth_staff_cd != item['staff_cd'] && item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
                                     @break
                                 @default
                                     <span>{!! "@{{ item['$key'] }}" !!}</span>
