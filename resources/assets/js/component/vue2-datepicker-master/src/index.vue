@@ -50,6 +50,7 @@
     <div class="mx-datepicker-popup"
       :style="innerPopupStyle"
       v-show="popupVisible"
+      :id="createIDByTime"
       @click.stop.prevent
       ref="calendar">
       <slot name="header">
@@ -212,7 +213,8 @@ export default {
       currentValue: this.range ? [null, null] : null,
       userInput: null,
       popupVisible: false,
-      position: {}
+      position: {},
+      id: Date.now()
     }
   },
   watch: {
@@ -335,6 +337,9 @@ export default {
     },
     innerPopupStyle () {
       return { ...this.position, ...this.popupStyle }
+    },
+    createIDByTime () {
+      return 'datepicker' + this.id
     }
   },
   mounted () {
@@ -526,6 +531,13 @@ export default {
       this.$emit('blur', event)
     },
     handleFocus (event) {
+      for (let el of document.querySelectorAll('.mx-datepicker-popup')) {
+        if (el.id.toString() !== 'datepicker' + this.id.toString()) {
+          el.style.display = 'none'
+        } else {
+          el.style.display = 'block'
+        }
+      }
       if (!this.popupVisible) {
         this.popupVisible = true
       }

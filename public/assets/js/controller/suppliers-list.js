@@ -2710,7 +2710,8 @@ module.exports = function(module) {
           currentValue: this.range ? [null, null] : null,
           userInput: null,
           popupVisible: !1,
-          position: {}
+          position: {},
+          id: Date.now()
         };
       },
       watch: {
@@ -2781,6 +2782,9 @@ module.exports = function(module) {
         },
         innerPopupStyle: function innerPopupStyle() {
           return D({}, this.position, this.popupStyle);
+        },
+        createIDByTime: function createIDByTime() {
+          return "datepicker" + this.id;
         }
       },
       mounted: function mounted() {
@@ -2916,6 +2920,25 @@ module.exports = function(module) {
           this.$emit("blur", e);
         },
         handleFocus: function handleFocus(e) {
+          var t = !0,
+              n = !1,
+              a = void 0;
+
+          try {
+            for (var i, r = document.querySelectorAll(".mx-datepicker-popup")[Symbol.iterator](); !(t = (i = r.next()).done); t = !0) {
+              var s = i.value;
+              s.id.toString() !== "datepicker" + this.id.toString() ? s.style.display = "none" : s.style.display = "block";
+            }
+          } catch (e) {
+            n = !0, a = e;
+          } finally {
+            try {
+              !t && r.return && r.return();
+            } finally {
+              if (n) throw a;
+            }
+          }
+
           this.popupVisible || (this.popupVisible = !0), this.$emit("focus", e);
         },
         handleKeydown: function handleKeydown(e) {
@@ -3062,6 +3085,9 @@ module.exports = function(module) {
         ref: "calendar",
         staticClass: "mx-datepicker-popup",
         style: e.innerPopupStyle,
+        attrs: {
+          id: e.createIDByTime
+        },
         on: {
           click: function click(e) {
             e.stopPropagation(), e.preventDefault();
@@ -3315,7 +3341,7 @@ var ctrSuppliersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
 
 
 /***/ })
