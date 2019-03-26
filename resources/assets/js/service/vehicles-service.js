@@ -28,4 +28,11 @@ vehicles_service = {
             return error;
         });
     },
+    getListStaff: function (data) {
+        return axios.post('/vehicles/api-v1/load-list-staff',data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }

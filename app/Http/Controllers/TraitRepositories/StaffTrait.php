@@ -129,7 +129,7 @@ trait StaffTrait
                     if(isset($item["id"]) && $item["id"])
                     {
                         DB::table($name)->where("id", $item["id"])
-                                        ->update(['deleted_at' => $currentTime]);
+                            ->update(['deleted_at' => $currentTime]);
                     }
                 }
 
@@ -152,20 +152,6 @@ trait StaffTrait
         }
         return $idUpdate;
     }
-    protected function insertRowsAccordion($data,$name)
-    {
-        try {
-            $idInsert = DB::table($name)->insertGetId($data);
-            $arrayIDInsert[] = $idInsert;
-        }
-        catch(\Exception $e)
-        {
-            DB::rollback();
-            dd($e);
-            return false;
-        }
-        return $idInsert;
-    }
     protected function deleteRowsAccordion($data,$arrayIDInsert,$name,$currentTime)
     {
 
@@ -183,6 +169,21 @@ trait StaffTrait
             DB::rollback();
             return false;
         }
+    }
+    protected function insertRowsAccordion($data,$name)
+    {
+        try {
+            $idInsert = DB::table($name)->insertGetId($data);
+            $arrayIDInsert[] = $idInsert;
+
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            dd($e);
+            return false;
+        }
+        return $idInsert;
     }
     protected function saveStaffAuth($id, $data= array(), $currentTime){
         $mStaffAuth = new MStaffAuths();

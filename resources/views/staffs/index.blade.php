@@ -167,8 +167,10 @@
         var messages = [];
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         var auth_staff_cd="@php echo @Auth::user()->staff_cd; @endphp";
+        var auth_staff_id="@php echo @Auth::user()->id; @endphp";
         var date_now ="@php echo date('Y/m/d'); @endphp";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs-list.js') }}" charset="utf-8"></script>

@@ -77,6 +77,7 @@
                             </div>
                         @endif
                     </div>
+                </div>
             </div>
             <!--Block 2-->
             <div class="grid-form">
@@ -248,6 +249,7 @@
                             <span v-cloak v-if="errors.relocation_municipal_office_cd != undefined" class="message-error" v-html="errors.relocation_municipal_office_cd.join('<br />')"></span>
                         </div>
                     </div>
+                </div>
             </div>
             <!--Block 8-->
             <div class="grid-form">
@@ -973,9 +975,11 @@
     <script>
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         var listRoute = "{{route('staffs.list')}}";
+        var auth_staff_id="{{Auth::user()->id}}";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs.js') }}" charset="utf-8"></script>
 @endsection

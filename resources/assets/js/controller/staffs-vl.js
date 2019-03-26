@@ -477,6 +477,11 @@ var ctrStaffsVl = new Vue({
                     that.backToList();
                     return false;
                 } else {
+                    if(id==auth_staff_id)
+                    {
+                        alert(messages["MSG06005"]);
+                        return;
+                    }
                     if (confirm(messages["MSG06001"])) {
                         staffs_service.deleteStaffs(id).then((response) => {
                             window.location.href = listRoute;

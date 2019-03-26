@@ -51,6 +51,10 @@ var ctrStaffsListVl = new Vue({
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
+                $.each(that.fileSearch, function (key, value) {
+                    if (value === null)
+                        that.fileSearch[key] = '';
+                });
                 that.loading = false;
                 that.auth_staff_cd=auth_staff_cd;
             });
@@ -60,6 +64,11 @@ var ctrStaffsListVl = new Vue({
             this.getItems(page);
         },
         deleteStaffs: function (id){
+            if (id == auth_staff_id) {
+                alert(messages["MSG06005"]);
+                return false;
+            }
+
             staffs_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);

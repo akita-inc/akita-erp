@@ -86,7 +86,7 @@ class MVehicles extends Model
         'power_gate_cd' => 'パワーゲート',
         'vehicle_delivery_dt' => '納車日',
         'specification_notes' => '仕様に関する備考',
-        'mst_staffs_id' => '車輌管理責任者号',
+        'mst_staff_cd' => '車輌管理責任者',
         'personal_insurance_prices' => '対人保険料（円）',
         'property_damage_insurance_prices' => '対物保険料（円）',
         'vehicle_insurance_prices' => '車両保険料（円）',

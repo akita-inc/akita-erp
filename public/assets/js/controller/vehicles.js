@@ -2267,7 +2267,8 @@ var ctrVehiclesVl = new Vue({
     expiry_dt: $('#expiry_dt').val(),
     vehicle_delivery_dt: $('#vehicle_delivery_dt').val(),
     dispose_dt: $('#dispose_dt').val(),
-    lang: lang_date_picker
+    lang: lang_date_picker,
+    listStaffs: []
   },
   methods: {
     onBlur: function onBlur() {
@@ -2285,14 +2286,11 @@ var ctrVehiclesVl = new Vue({
       });
     },
     deleteVehicle: function deleteVehicle(id) {
-      var _this = this;
-
+      var that = this;
       vehicles_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
-
-          _this.backHistory();
-
+          that.backHistory();
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {
@@ -2306,9 +2304,19 @@ var ctrVehiclesVl = new Vue({
       vehicles_service.backHistory().then(function () {
         window.location.href = listRoute;
       });
+    },
+    getListStaff: function getListStaff() {
+      var that = this;
+      vehicles_service.getListStaff({
+        adhibition_start_dt: this.adhibition_start_dt
+      }).then(function (result) {
+        that.listStaffs = result.info;
+      });
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    this.getListStaff();
+  },
   components: {
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a
   }
