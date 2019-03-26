@@ -3247,6 +3247,9 @@ var ctrVehiclesListVl = new Vue({
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.fieldSearch = response.fieldSearch;
+        $.each(that.fieldSearch, function (key, value) {
+          if (value === null) that.fieldSearch[key] = '';
+        });
         that.loading = false;
       });
     },
@@ -3321,7 +3324,7 @@ var ctrVehiclesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
 
 
 /***/ })

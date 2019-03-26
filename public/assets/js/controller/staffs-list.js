@@ -3249,6 +3249,9 @@ var ctrStaffsListVl = new Vue({
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.fileSearch = response.fieldSearch;
+        $.each(that.fileSearch, function (key, value) {
+          if (value === null) that.fileSearch[key] = '';
+        });
         that.loading = false;
         that.auth_staff_cd = auth_staff_cd;
       });
@@ -3328,7 +3331,7 @@ var ctrStaffsListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
 
 
 /***/ })
