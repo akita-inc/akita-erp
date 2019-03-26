@@ -31,7 +31,7 @@ class CustomersController extends Controller
     public $ruleValid = [
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
         'adhibition_start_dt'  => 'required',
-        'discount_rate'  => 'nullable|numeric|length:3',
+        'discount_rate'  => 'nullable|one_byte_number|length:3',
         'customer_nm'  => 'required|nullable|length:200',
         'customer_nm_kana'  => 'kana|nullable|length:200',
         'customer_nm_formal'  => 'length:200|nullable',
