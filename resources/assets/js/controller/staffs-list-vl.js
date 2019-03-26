@@ -63,8 +63,8 @@ var ctrStaffsListVl = new Vue({
             this.pagination.current_page = page;
             this.getItems(page);
         },
-        deleteStaffs: function (id){
-            if (id == auth_staff_id) {
+        deleteStaffs: function (id, cd){
+            if (cd == auth_staff_cd) {
                 alert(messages["MSG06005"]);
                 return false;
             }
