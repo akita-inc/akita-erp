@@ -142,7 +142,7 @@
                                     <span>{!! "@{{ item['staff_nm'] }}" !!}</span>
                                     @break
                                 @case('delete')
-                                    <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id, item.staff_cd)" v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
+                                    <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
                                     @break
                                 @default
                                     <span>{!! "@{{ item['$key'] }}" !!}</span>
@@ -170,6 +170,7 @@
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         var auth_staff_cd="@php echo @Auth::user()->staff_cd; @endphp";
+        var auth_staff_id="@php echo @Auth::user()->id; @endphp";
         var date_now ="@php echo date('Y/m/d'); @endphp";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs-list.js') }}" charset="utf-8"></script>
