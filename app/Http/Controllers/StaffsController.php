@@ -14,7 +14,7 @@ use App\Models\MStaffs;
 use App\Models\MGeneralPurposes;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Auth;
 class StaffsController extends Controller
 {
     use ListTrait, FormTrait,StaffTrait;
@@ -179,14 +179,21 @@ class StaffsController extends Controller
     {
         $mStaffs = new MStaffs();
         try {
-            if ($mStaffs->deleteStaffs($id)) {
-                \Session::flash('message',Lang::get('messages.MSG10004'));
-                $response = ['data' => 'success'];
-            } else {
-                \Session::flash('message',Lang::get('messages.MSG06002'));
-                $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
+            if($id==Auth::user()->id)
+            {
+                \Session::flash('error',Lang::get('messages.MSG06005'));
+                $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06005')];
             }
-
+            else
+            {
+                if ($mStaffs->deleteStaffs($id)) {
+                    \Session::flash('message',Lang::get('messages.MSG10004'));
+                    $response = ['data' => 'success'];
+                } else {
+                    \Session::flash('error',Lang::get('messages.MSG06002'));
+                    $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
+                }
+            }
         } catch (\Exception $ex) {
             $response = ['data' => $ex];
         }
