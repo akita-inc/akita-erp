@@ -26575,7 +26575,7 @@ var ctrStaffsVl = new Vue({
           that.backToList();
           return false;
         } else {
-          if (auth_staff_cd == that.field.staff_cd) {
+          if (id == auth_staff_id) {
             alert(messages["MSG06005"]);
             return;
           }
