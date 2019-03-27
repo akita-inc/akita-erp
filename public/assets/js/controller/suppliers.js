@@ -2325,24 +2325,26 @@ var ctrSupplierrsVl = new Vue({
     }
   },
   mounted: function mounted() {
-    vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#supplier_nm', '#supplier_nm_kana', {
-      katakana: true
-    });
-    vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#supplier_nm_formal', '#supplier_nm_kana_formal', {
-      katakana: true
-    });
-    vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#dealing_person_in_charge_last_nm', '#dealing_person_in_charge_last_nm_kana', {
-      katakana: true
-    });
-    vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#dealing_person_in_charge_first_nm', '#dealing_person_in_charge_first_nm_kana', {
-      katakana: true
-    });
-    vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#accounting_person_in_charge_last_nm', '#accounting_person_in_charge_last_nm_kana', {
-      katakana: true
-    });
-    vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#accounting_person_in_charge_first_nm', '#accounting_person_in_charge_first_nm_kana', {
-      katakana: true
-    });
+    if (role != 9) {
+      vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#supplier_nm', '#supplier_nm_kana', {
+        katakana: true
+      });
+      vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#supplier_nm_formal', '#supplier_nm_kana_formal', {
+        katakana: true
+      });
+      vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#dealing_person_in_charge_last_nm', '#dealing_person_in_charge_last_nm_kana', {
+        katakana: true
+      });
+      vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#dealing_person_in_charge_first_nm', '#dealing_person_in_charge_first_nm_kana', {
+        katakana: true
+      });
+      vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#accounting_person_in_charge_last_nm', '#accounting_person_in_charge_last_nm_kana', {
+        katakana: true
+      });
+      vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#accounting_person_in_charge_first_nm', '#accounting_person_in_charge_first_nm_kana', {
+        katakana: true
+      });
+    }
   },
   components: {
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a
