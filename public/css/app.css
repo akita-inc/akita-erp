@@ -596,3 +596,7 @@ input[type=text]::-ms-clear {
 .mx-datepicker.disabled {
      opacity: 1 !important;
 }
+.inputfile-box span.disabled{
+    background-color: #D9D9D9;
+    opacity: 1;
+}

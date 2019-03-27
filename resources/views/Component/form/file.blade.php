@@ -5,7 +5,7 @@
         </label>
         <input  type="text" v-bind:class="errors.{!! $filed !!} != undefined ? 'form-control is-invalid':'form-control' "
                class="form-control"
-               v-model="image_{!! $filed !!}" readonly style="background-color: white">
+               v-model="image_{!! $filed !!}" readonly style="background-color: white; {{$role==2 ? ';background-color: #D9D9D9;opacity: 1;' : ''}}">
     </div>
     <span v-cloak v-if="errors.{!! $filed !!} != undefined" class="message-error" v-html="errors.{!! $filed !!}.join('<br />')"></span>
 </div>
