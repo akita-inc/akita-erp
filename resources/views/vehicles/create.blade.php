@@ -6,20 +6,20 @@
 @endsection
 @section('content')
     <div class="row row-xs" id="ctrVehiclesVl">
-        <form class="form-inline" role="form" method="post" id="form1" enctype="multipart/form-data"  data-ajax="false" action="{{$mVehicle->id ? route('vehicles.edit.post',['id' => $mVehicle->id, 'mode'=>'edit']): ''}}">
+        <form class="form-inline w-100" role="form" method="post" id="form1" enctype="multipart/form-data"  data-ajax="false" action="{{$mVehicle->id ? route('vehicles.edit.post',['id' => $mVehicle->id, 'mode'=>'edit']): ''}}">
             @csrf
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
                         <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
                     </div>
-                    @if($mVehicle->id)
+                    @if($mVehicle->id && $role==1)
                     <div class="d-flex ml-auto">
                         <button class="btn btn-danger text-white" v-on:click='deleteVehicle("{{$mVehicle->id}}")' type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                     @endif
                 </div>
-                @if($mVehicle->id)
+                @if($mVehicle->id && $role==1)
                     <div class="grid-form border-0">
                         <div class="row">
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
@@ -31,13 +31,21 @@
                             </div>
                         </div>
                     </div>
-                @else
+                @elseif($role==1)
                     <div class="sub-header-line-two">
                         <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.register") }}</button>
                     </div>
                 @endif
             </div>
-
+            @if($role==9 || ($role==2 && !$mVehicle->id))
+                <div class="alert alert-danger w-100 mt-2">
+                    {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
+                </div>
+            @endif
+            @if($role==1 || ($role==2 && $mVehicle->id))
+                @if($role==2)
+                    <fieldset disabled="disabled">
+                @endif
             <div class="text-danger w-100">*　は必須入力の項目です。</div>
             <div class="w-100 alert-area">
                 @include('Layouts.alert')
@@ -72,6 +80,7 @@
                                              :value-type="'format'"
                                              :input-name="'adhibition_start_dt'"
                                              v-on:change="getListStaff"
+                                             @if($role!=1) :disabled="true" @endif
                                 >
                                 </date-picker>
                             </div>
@@ -92,6 +101,7 @@
                                                  :input-class="{{ $errors->has('adhibition_end_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                                  :value-type="'format'"
                                                  :input-name="'adhibition_end_dt'"
+                                                 @if($role!=1) :disabled="true" @endif
                                     >
                                     </date-picker>
                                     <input type="hidden" id="adhibition_end_dt" value="{{ old('adhibition_end_dt', $mVehicle->adhibition_end_dt ? : '') }}">
@@ -117,6 +127,7 @@
                                                  :input-class="{{ $errors->has('adhibition_start_dt_new')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                                  :value-type="'format'"
                                                  :input-name="'adhibition_start_dt_new'"
+                                                 @if($role!=1) :disabled="true" @endif
                                     >
                                     </date-picker>
                                     <input type="hidden" id="adhibition_start_dt_new" value="{{ old('adhibition_start_dt_new') }}" >
@@ -163,6 +174,7 @@
                                                  :value-type="'format'"
                                                  :input-name="'adhibition_start_dt'"
                                                  v-on:change="getListStaff"
+                                                 @if($role!=1) :disabled="true" @endif
                                     >
                                     </date-picker>
                                 </div>
@@ -323,6 +335,7 @@
                                          :input-class="'form-control w-100'"
                                          :value-type="'format'"
                                          :input-name="'registration_dt'"
+                                         @if($role!=1) :disabled="true" @endif
                             >
                             </date-picker>
                             <input type="hidden" class="form-control {{$errors->has('registration_dt')? 'is-invalid': ''}}" id="registration_dt" value="{{ old('registration_dt', $mVehicle->registration_dt ? : '') }}" >
@@ -711,6 +724,7 @@
                                          :input-class="'form-control w-100'"
                                          :value-type="'format'"
                                          :input-name="'expiry_dt'"
+                                         @if($role!=1) :disabled="true" @endif
                             >
                             </date-picker>
                             <input type="hidden" class="form-control {{$errors->has('expiry_dt')? 'is-invalid': ''}}" id="expiry_dt" value="{{ old('expiry_dt', $mVehicle->expiry_dt ? : '') }}" >
@@ -973,6 +987,7 @@
                                          :input-class="'form-control w-100'"
                                          :value-type="'format'"
                                          :input-name="'vehicle_delivery_dt'"
+                                         @if($role!=1) :disabled="true" @endif
                             >
                             </date-picker>
                             <input type="hidden" class="form-control {{$errors->has('vehicle_delivery_dt')? 'is-invalid': ''}}" id="vehicle_delivery_dt" value="{{ old('vehicle_delivery_dt',$mVehicle->vehicle_delivery_dt ? : '') }}" >
@@ -1209,6 +1224,7 @@
                                          :input-class="{{ $errors->has('dispose_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                          :value-type="'format'"
                                          :input-name="'dispose_dt'"
+                                         @if($role!=1) :disabled="true" @endif
                             >
                             </date-picker>
                             <input type="hidden" class="form-control {{$errors->has('dispose_dt')? 'is-invalid': ''}}" id="dispose_dt" value="{{ old('dispose_dt',$mVehicle->dispose_dt  ? : '') }}" >
@@ -1228,6 +1244,10 @@
                     </div>
                 </div>
             </div>
+            @endif
+              @if($role==2)
+               </fieldset>
+             @endif
         </form>
     </div>
 @endsection

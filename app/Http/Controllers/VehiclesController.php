@@ -9,6 +9,7 @@ use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MStaffs;
 use App\Models\MVehicles;
+use App\Models\MStaffAuths;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -21,6 +22,10 @@ class VehiclesController extends Controller
 
     use ListTrait,FormTrait;
     public $table = "mst_vehicles";
+
+    public function __construct(){
+        parent::__construct();
+    }
 
     public function index(Request $request)
     {
@@ -154,7 +159,8 @@ class VehiclesController extends Controller
         $listTransmissions= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['transmissions'],'');
         $listSuspensionsCd= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['suspensions_cd'],'');
         $listPowerGate= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['power_gate_cd'],'');
-
+        $mStaffAuth =  new MStaffAuths();
+        $role = $mStaffAuth->getDataByCondition(4);
 
         $flagLasted = false;
         if(!is_null($id)){
@@ -467,6 +473,7 @@ class VehiclesController extends Controller
             'listSuspensionsCd' => $listSuspensionsCd,
             'listPowerGate' => $listPowerGate,
             'flagLasted' => $flagLasted,
+            'role' => count($role)<=0 ? 1 : $role[0]->accessible_kb,
         ]);
     }
 
