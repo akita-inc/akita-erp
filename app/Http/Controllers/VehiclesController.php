@@ -473,7 +473,7 @@ class VehiclesController extends Controller
             'listSuspensionsCd' => $listSuspensionsCd,
             'listPowerGate' => $listPowerGate,
             'flagLasted' => $flagLasted,
-            'role' => count($role)<=0 ? 1 : $role[0]->accessible_kb,
+            'role' => count($role)<=0 ?9: $role[0]->accessible_kb,
         ]);
     }
 

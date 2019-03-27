@@ -451,7 +451,7 @@ class StaffsController extends Controller
             'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
             'listDriversLicenseColors'=>$listDriversLicenseColors,
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
-            'role' => count($role)<=0 ? 1 : $role[0]->accessible_kb,
+            'role' => count($role)<=0 ? 9 : $role[0]->accessible_kb,
         ]);
     }
 }
