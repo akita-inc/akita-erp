@@ -651,6 +651,7 @@
     <script>
         var listRoute = "{{route('suppliers.list')}}";
         var deleteRoute = "{{route('suppliers.delete.post',['id' => $mSupplier->id])}}";
+        var role = "{{$role}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";

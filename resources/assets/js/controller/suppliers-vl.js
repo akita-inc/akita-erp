@@ -53,12 +53,14 @@ var ctrSupplierrsVl = new Vue({
         }
     },
     mounted () {
-        AutoKana.bind('#supplier_nm', '#supplier_nm_kana', { katakana: true });
-        AutoKana.bind('#supplier_nm_formal', '#supplier_nm_kana_formal', { katakana: true });
-        AutoKana.bind('#dealing_person_in_charge_last_nm', '#dealing_person_in_charge_last_nm_kana', { katakana: true });
-        AutoKana.bind('#dealing_person_in_charge_first_nm', '#dealing_person_in_charge_first_nm_kana', { katakana: true });
-        AutoKana.bind('#accounting_person_in_charge_last_nm', '#accounting_person_in_charge_last_nm_kana', { katakana: true });
-        AutoKana.bind('#accounting_person_in_charge_first_nm', '#accounting_person_in_charge_first_nm_kana', { katakana: true });
+        if(role!=9) {
+            AutoKana.bind('#supplier_nm', '#supplier_nm_kana', {katakana: true});
+            AutoKana.bind('#supplier_nm_formal', '#supplier_nm_kana_formal', {katakana: true});
+            AutoKana.bind('#dealing_person_in_charge_last_nm', '#dealing_person_in_charge_last_nm_kana', {katakana: true});
+            AutoKana.bind('#dealing_person_in_charge_first_nm', '#dealing_person_in_charge_first_nm_kana', {katakana: true});
+            AutoKana.bind('#accounting_person_in_charge_last_nm', '#accounting_person_in_charge_last_nm_kana', {katakana: true});
+            AutoKana.bind('#accounting_person_in_charge_first_nm', '#accounting_person_in_charge_first_nm_kana', {katakana: true});
+        }
     },
     components: {
         DatePicker
