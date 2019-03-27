@@ -219,11 +219,11 @@ class SuppliersController extends Controller
                     }
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
                     if($mode=='registerHistoryLeft'){
-                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt_new"],'yyyy-mm-dd');
-                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt_new"],'Y-m-d');
+                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'Y-m-d');
                     }else{
-                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'yyyy-mm-dd');
-                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat($mode=='edit' ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'yyyy-mm-dd');
+                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'Y-m-d');
+                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat($mode=='edit' ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'Y-m-d');
                     }
                     $mSupplier->supplier_nm= $data["supplier_nm"];
                     $mSupplier->supplier_nm_kana= $data["supplier_nm_kana"];
@@ -251,7 +251,7 @@ class SuppliersController extends Controller
                     $mSupplier->payment_day= $data["payment_day"];
                     $mSupplier->payment_method_id= $data["payment_method_id"];
                     $mSupplier->explanations_bill= $data["explanations_bill"];
-                    $mSupplier->business_start_dt= TimeFunction::dateFormat($data["business_start_dt"],'yyyy-mm-dd');
+                    $mSupplier->business_start_dt= TimeFunction::dateFormat($data["business_start_dt"],'Y-m-d');
                     $mSupplier->consumption_tax_calc_unit_id= $data["consumption_tax_calc_unit_id"];
                     $mSupplier->rounding_method_id= $data["rounding_method_id"];
                     $mSupplier->payment_bank_cd= $data["payment_bank_cd"];
