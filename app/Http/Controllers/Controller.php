@@ -17,6 +17,10 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
+            Session::put('staffs_accessible_kb', 9);
+            Session::put('suppliers_accessible_kb', 9);
+            Session::put('customers_accessible_kb', 9);
+            Session::put('vehicles_accessible_kb', 9);
             $auths = new MStaffAuths();
             $auths = $auths->getStaffAuthByCondition(['mst_staff_id' => Auth::user()->id]);
             if (count($auths) > 0) {
