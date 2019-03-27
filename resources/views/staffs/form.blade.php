@@ -604,6 +604,7 @@
                                         'filedId'=>"mst_staff_drivers_license_picture",
                                         'filedMode'=>"items.drivers_license_picture",
                                         'ref'=>"'drivers_license_picture'",
+                                        'role' => $role
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>

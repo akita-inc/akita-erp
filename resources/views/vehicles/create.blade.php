@@ -303,7 +303,7 @@
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
                                 <input type="file" id="vehicle_inspection_sticker_pdf" name="vehicle_inspection_sticker_pdf" class="input-file" onchange='uploadFile(this)' value="{{old('vehicle_inspection_sticker_pdf', $mVehicle->vehicle_inspection_sticker_pdf ? : '') }}" accept="application/pdf" >
-                                <span id="vehicle_inspection_sticker_pdf_file_name" class="w-100 form-control">{{old('vehicle_inspection_sticker_pdf', $mVehicle->vehicle_inspection_sticker_pdf? :'')}}</span>
+                                <span id="vehicle_inspection_sticker_pdf_file_name" class="w-100 form-control {{$role==2 ? 'disabled' : ''}}">{{old('vehicle_inspection_sticker_pdf', $mVehicle->vehicle_inspection_sticker_pdf? :'')}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1066,7 +1066,7 @@
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
                                 <input type="file" id="picture_fronts" name="picture_fronts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_fronts', $mVehicle->picture_fronts ? : '') }}" accept=".png, .jpg, .jpeg">
-                                <span id="picture_fronts_file_name" class="w-100 form-control">{{old('picture_fronts', $mVehicle->picture_fronts ? :'' )}}</span>
+                                <span id="picture_fronts_file_name" class="w-100 form-control {{$role==2 ? 'disabled' : ''}}">{{old('picture_fronts', $mVehicle->picture_fronts ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1090,7 +1090,7 @@
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
                                 <input type="file" id="picture_rights" name="picture_rights" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rights', $mVehicle->picture_rights ? : '') }}" accept=".png, .jpg, .jpeg">
-                                <span id="picture_rights_file_name" class="w-100 form-control">{{old('picture_rights', $mVehicle->picture_rights ? :'' )}}</span>
+                                <span id="picture_rights_file_name" class="w-100 form-control {{$role==2 ? 'disabled' : ''}}">{{old('picture_rights', $mVehicle->picture_rights ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1114,7 +1114,7 @@
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
                                 <input type="file" id="picture_lefts" name="picture_lefts" class="input-file" onchange='uploadFile(this)' value="{{old('picture_lefts', $mVehicle->picture_lefts ? : '') }}" accept=".png, .jpg, .jpeg">
-                                <span id="picture_lefts_file_name" class="w-100 form-control">{{old('picture_lefts', $mVehicle->picture_lefts ? :'' )}}</span>
+                                <span id="picture_lefts_file_name" class="w-100 form-control {{$role==2 ? 'disabled' : ''}}">{{old('picture_lefts', $mVehicle->picture_lefts ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
@@ -1138,7 +1138,7 @@
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
                                 <input type="file" id="picture_rears" name="picture_rears" class="input-file" onchange='uploadFile(this)' value="{{old('picture_rears', $mVehicle->picture_rears ? : '') }}" accept=".png, .jpg, .jpeg">
-                                <span id="picture_rears_file_name" class="w-100 form-control">{{old('picture_rears', $mVehicle->picture_rears ? :'' )}}</span>
+                                <span id="picture_rears_file_name" class="w-100 form-control {{$role==2 ? 'disabled' : ''}}">{{old('picture_rears', $mVehicle->picture_rears ? :'' )}}</span>
 
                             </div>
                             <div class="d-flex">
