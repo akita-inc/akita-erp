@@ -170,7 +170,7 @@ class VehiclesController extends Controller
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
-                'vehicles_cd'=>'required|one_byte_number|length:5',
+                'vehicles_cd'=>'required|one_byte_number|length:10|number_range',
                 'adhibition_start_dt'=>'required',
                 'door_number'=>'required|one_byte_number|length:10|number_range',
                 'registration_numbers'=>'required|length:50',
