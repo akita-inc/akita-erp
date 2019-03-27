@@ -14,7 +14,8 @@
                 v-bind:class="errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!} != undefined
                && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index] != undefined
                && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index].{!! $filed !!} != undefined ? 'is-invalid':'' "
-                v-model="{!! $filedMode !!}">
+                v-model="{!! $filedMode !!}"
+                @if(isset($role) && $role!=1) :disabled="true" @endif>
         </date-picker>
     </div>
     <span v-cloak v-if="errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!} != undefined

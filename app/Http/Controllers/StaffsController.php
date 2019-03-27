@@ -15,6 +15,7 @@ use App\Models\MGeneralPurposes;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MStaffAuths;
 class StaffsController extends Controller
 {
     use ListTrait, FormTrait,StaffTrait;
@@ -221,7 +222,8 @@ class StaffsController extends Controller
             'dept_first_nm_kana' => 'kana|nullable|length:50',
             'dept_social_security_number'=>'nullable|length:10'
         ]);
-        if($data["mst_staff_auths"][1]["accessible_kb"]==1)
+        $staffScreen=$data["mst_staff_auths"][1]["staffScreen"];
+        if($data["mst_staff_auths"][1]["accessible_kb"]==1 && !in_array("1",$staffScreen))
         {
             $validator->errors()->add('staffScreen',str_replace(' :attribute',"基本情報",Lang::get('messages.MSG10007'))
 );
@@ -394,6 +396,8 @@ class StaffsController extends Controller
         $mBusinessOffices=new MBusinessOffices();
         $mRoles = new MRoles();
         $mScreen = new MScreens();
+        $mStaffAuth =  new MStaffAuths();
+        $role = $mStaffAuth->getDataByCondition(1);
         $listEmployPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
         $listPosition=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['position'], '');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
@@ -447,6 +451,7 @@ class StaffsController extends Controller
             'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
             'listDriversLicenseColors'=>$listDriversLicenseColors,
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
+            'role' => count($role)<=0 ? 1 : $role[0]->accessible_kb,
         ]);
     }
 }
