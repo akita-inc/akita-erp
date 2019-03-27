@@ -10,7 +10,9 @@
                      placeholder=""
                      format="YYYY/MM/DD"
                      value-type="format"
-                     v-model="field.{!! $filed !!}">
+                     v-model="field.{!! $filed !!}"
+                    :input-class="'form-control w-100'"
+                    @if(isset($role) && $role!=1) :disabled="true" @endif>
         </date-picker>
     </div>
     <span v-cloak v-if="errors.{!! $filed !!} != undefined" class="message-error">@{{errors.{!! $filed !!}[0]}}</span>

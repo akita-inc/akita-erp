@@ -6,20 +6,20 @@
 @endsection
 @section('content')
     <div class="row row-xs" id="ctrSupplierrsVl">
-        <form class="form-inline" role="form" method="post" id="form1" action="{{$mSupplier->id ? route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'edit']): ''}}">
+        <form class="form-inline w-100" role="form" method="post" id="form1" action="{{$mSupplier->id ? route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'edit']): ''}}">
             @csrf
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
                         <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
                     </div>
-                    @if($mSupplier->id)
+                    @if($mSupplier->id && $role==1)
                     <div class="d-flex ml-auto">
                         <button class="btn btn-danger text-white" v-on:click='deleteSupplier("{{$mSupplier->id}}")' type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                     @endif
                 </div>
-                @if($mSupplier->id)
+                @if($mSupplier->id && $role==1)
                     <div class="grid-form border-0">
                         <div class="row">
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
@@ -31,13 +31,21 @@
                             </div>
                         </div>
                     </div>
-                @else
+                @elseif($role==1)
                     <div class="sub-header-line-two">
                         <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.register") }}</button>
                     </div>
                 @endif
             </div>
-
+            @if($role!=1)
+                <div class="alert alert-danger w-100 mt-2">
+                    {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
+                </div>
+            @endif
+            @if($role==1 || ($role==2 && $mSupplier->id))
+            @if($role==2)
+            <fieldset disabled="disabled">
+            @endif
             <div class="text-danger w-100">*　は必須入力の項目です。</div>
             <div class="w-100">
                 @include('Layouts.alert')
@@ -71,6 +79,7 @@
                                              :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                              :value-type="'format'"
                                              :input-name="'adhibition_start_dt'"
+                                             @if($role!=1) :disabled="true" @endif
                                 >
                                 </date-picker>
                             </div>
@@ -91,6 +100,7 @@
                                                  :input-class="{{ $errors->has('adhibition_end_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                                  :value-type="'format'"
                                                  :input-name="'adhibition_end_dt'"
+                                                 @if($role!=1) :disabled="true" @endif
                                     >
                                     </date-picker>
                                     <input type="hidden" id="adhibition_end_dt" value="{{ old('adhibition_end_dt',$mSupplier->adhibition_end_dt ? :'') }}">
@@ -117,6 +127,7 @@
                                              :input-class="{{ $errors->has('adhibition_start_dt_new')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                              :value-type="'format'"
                                              :input-name="'adhibition_start_dt_new'"
+                                             @if($role!=1) :disabled="true" @endif
                                 >
                                 </date-picker>
                                 <input type="hidden" id="adhibition_start_dt_new" value="{{ old('adhibition_start_dt_new') }}" >
@@ -162,6 +173,7 @@
                                                  :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
                                                  :value-type="'format'"
                                                  :input-name="'adhibition_start_dt'"
+                                                 @if($role!=1) :disabled="true" @endif
                                     >
                                     </date-picker>
                                 </div>
@@ -494,6 +506,7 @@
                                          :input-class="'form-control w-100'"
                                          :value-type="'format'"
                                          :input-name="'business_start_dt'"
+                                         @if($role!=1) :disabled="true" @endif
                             >
                             </date-picker>
                             <input type="hidden" id="business_start_dt" value="{{ old('business_start_dt', $mSupplier->business_start_dt ? : '')}}" >
@@ -627,6 +640,10 @@
                     </div>
                 </div>
             </div>
+            @endif
+            @if($role==2)
+            </fieldset>
+            @endif
         </form>
     </div>
 @endsection
@@ -634,6 +651,7 @@
     <script>
         var listRoute = "{{route('suppliers.list')}}";
         var deleteRoute = "{{route('suppliers.delete.post',['id' => $mSupplier->id])}}";
+        var role = "{{$role}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";

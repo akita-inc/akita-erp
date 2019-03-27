@@ -24,10 +24,13 @@
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
+                        @if($role==1)
                         <button class="btn btn-danger text-white" v-on:click="deleteCustomer('{{$customer['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                        @endif
                     </div>
                 @endif
             </div>
+            @if($role==1)
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
@@ -43,9 +46,18 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
-
+        @if($role!=1)
+            <div class="alert alert-danger w-100 mt-2">
+                {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
+            </div>
+        @endif
+        @if($role==1 || ($role==2 && !empty($customer)))
         <form class="form-inline" role="form">
+            @if($role==2)
+                <fieldset disabled="disabled">
+            @endif
             <div class="text-danger">
                 {{ trans("common.description-form.indicates_required_items") }}
             </div>
@@ -62,11 +74,11 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($customer) ? '_edit':''),'required'=>true])
+                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($customer) ? '_edit':''),'required'=>true,'role' => $role])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             @if($flagRegisterHistory)
-                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($customer) ? '_edit':''),'required'=>true ])
+                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($customer) ? '_edit':''),'required'=>true,'role' => $role ])
                             @else
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($customer) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
                             @endif
@@ -74,7 +86,7 @@
                         @if($flagRegisterHistory)
                             <div class="break-row-form"></div>
                             <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true])
+                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true,'role' => $role])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
@@ -224,7 +236,7 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_method_id','array'=>$listDepositMethods])
                         <div class="break-row-form"></div>
-                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'business_start_dt'])
+                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'business_start_dt','role' => $role])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         @include('Component.form.textarea',['filed'=>'deposit_method_notes','attr_input' => "maxlength='200'"])
@@ -383,12 +395,17 @@
                     </div>
                 </div>
             </div>
+        @if($role==2)
+        </fieldset>
+        @endif
         </form>
+        @endif
     </div>
 @endsection
 @section("scripts")
     <script>
         var listRoute = "{{route('customers.list')}}";
+        var role = "{{$role}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
