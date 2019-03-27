@@ -8,6 +8,7 @@
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrSuppliersListVl">
         <pulse-loader :loading="loading"></pulse-loader>
+        @php $accessible_kb = \Illuminate\Support\Facades\Session::get('suppliers_accessible_kb'); @endphp
         <div class="sub-header">
             @if ($accessible_kb == 1)
             <div class="sub-header-line-one text-right">
@@ -64,7 +65,7 @@
                     <th class="wd-120">{{trans('suppliers.list.table.adhibition_start_dt')}}</th>
                     <th class="wd-120">{{trans('suppliers.list.table.adhibition_end_dt')}}</th>
                     <th class="wd-120">{{trans('suppliers.list.table.modified_at')}}</th>
-                    <th class="wd-60"></th>
+                    @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>
                 <tbody>
@@ -86,11 +87,11 @@
                         <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
+                        @if ($accessible_kb == 1)
                         <td class="no-padding">
-                            @if ($accessible_kb == 1)
                             <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
-                            @endif
                         </td>
+                        @endif
                     </tr>
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="8">@{{message}} </td>
