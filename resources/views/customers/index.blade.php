@@ -5,12 +5,15 @@
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrCustomersListVl">
         <pulse-loader :loading="loading"></pulse-loader>
+        @php $accessible_kb = \Illuminate\Support\Facades\Session::get('customers_accessible_kb'); @endphp
         <div class="sub-header">
+            @if ($accessible_kb == 1)
             <div class="sub-header-line-one text-right">
                 <button class="btn btn-yellow" onclick="window.location.href= '{{route('customers.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>
+            @endif
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
                     <div class="col-md-4 col-sm-12 row">
@@ -55,7 +58,7 @@
                     @foreach($fieldShowTable as $key => $field)
                         <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("customers.list.table.".$key)}}</th>
                     @endforeach
-                    <th class="wd-60"></th>
+                    @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>
                 <tbody>
@@ -65,16 +68,18 @@
                                 @if ($key == 'customer_nm')
                                     <span class="xsmall">{!! "@{{ item['customer_nm_kana'] }}" !!}</span><br v-if="item['customer_nm_kana']">
                                 @endif
-                                @if( $key == 'mst_customers_cd' )
+                                @if( $key == 'mst_customers_cd' && $accessible_kb != 9)
                                     <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
                                 @else
                                     <span>{!! "@{{ item['$key'] }}" !!}</span>
                                 @endif
                             </td>
                         @endforeach
+                        @if ($accessible_kb == 1)
                         <td class="no-padding">
                             <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
+                        @endif
                     </tr>
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="8">@{{message}} </td>

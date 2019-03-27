@@ -63,6 +63,7 @@ class CustomersController extends Controller
 
     public function __construct(){
         $this->labels = Lang::get("customers.create.field");
+        parent::__construct();
     }
 
     protected function search($data){

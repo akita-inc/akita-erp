@@ -8,12 +8,15 @@
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrVehiclesListVl">
         <pulse-loader :loading="loading"></pulse-loader>
+        @php $accessible_kb = \Illuminate\Support\Facades\Session::get('vehicles_accessible_kb'); @endphp
         <div class="sub-header">
+            @if ($accessible_kb == 1)
             <div class="sub-header-line-one text-right">
                 <button class="btn btn-yellow" onclick="window.location.href= '{{route('vehicles.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>
+            @endif
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
                     <div class="col-md-12 col-sm-12 no-padding form-inline mb-3">
@@ -104,12 +107,18 @@
                     <th class="wd-120">{{trans("vehicles.list.table.adhibition_start_dt")}}</th>
                     <th class="wd-120">{{trans("vehicles.list.table.adhibition_end_dt")}}</th>
                     <th class="wd-120">{{trans("vehicles.list.table.modified_at")}}</th>
-                    <th class="wd-60"></th>
+                    @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>
                 <tbody>
                     <tr v-cloak v-for="item in items">
-                        <td><div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['vehicles_cd'] }}" !!}</div></td>
+                        <td>
+                            @if ($accessible_kb == 9)
+                                {!! "@{{ item['vehicles_cd'] }}" !!}
+                            @else
+                                <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['vehicles_cd'] }}" !!}</div>
+                            @endif
+                        </td>
                         <td>{!! "@{{ item['door_number'] }}" !!}</td>
                         <td>{!! "@{{ item['vehicles_kb_nm'] }}" !!}</td>
                         <td>{!! "@{{ item['registration_numbers'] }}" !!}</td>
@@ -119,9 +128,11 @@
                         <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
+                        @if ($accessible_kb == 1)
                         <td class="no-padding">
                             <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteVehicle(item['id'])">削除</button>
                         </td>
+                        @endif
                     </tr>
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="8">@{{message}} </td>

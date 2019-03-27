@@ -56,6 +56,7 @@ class StaffsController extends Controller
         $this->ruleValid['drivers_license_picture'] = 'nullable|mimes:jpeg,jpg,png|max_mb:'.config("params.max_file_size");
         $this->messagesCustom["drivers_license_picture.mimes"]= Lang::get('messages.MSG02018');
         $this->messagesCustom["password.required"]=Lang::get('messages.MSG02001');
+        parent::__construct();
 
     }
 
@@ -154,10 +155,6 @@ class StaffsController extends Controller
                 "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
-            'delete' => [
-                "classTH" => "wd-60",
-                "classTD" => "no-padding"
-            ]
 
         ];
         $mGeneralPurpose = new MGeneralPurposes();
