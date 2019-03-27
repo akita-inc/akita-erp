@@ -49,6 +49,7 @@ input,select{
     position: absolute;
     right: 0px;
     top: 43px;
+    z-index: 999;
 }
 #navbarRightContent .list-group .list-group-item:first-child{
     border-top: 0px;

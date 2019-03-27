@@ -78,7 +78,7 @@
         </div>
         <a href="#menu3sub1" class="list-group-item" data-toggle="collapse" aria-expanded="true">マスタ</a>
         <div class="collapse show" id="menu3sub1">
-            @if (\Illuminate\Support\Facades\Session::exists('staffs_accessible_kb') && \Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9)
+            @if (\Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9)
             <a href="{{ route('staffs.list') }}" class="list-group-item" data-parent="#menu3sub1">社員</a>
             @endif
             @if (\Illuminate\Support\Facades\Session::get('suppliers_accessible_kb') != 9)
