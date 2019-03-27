@@ -286,7 +286,7 @@ class SuppliersController extends Controller
             'listRoundingMethod' => $listRoundingMethod,
             'listPaymentAccountType' => $listPaymentAccountType,
             'flagLasted' => $flagLasted,
-            'role' => count($role)<=0 ? 1 : $role[0]->accessible_kb,
+            'role' => count($role)<=0 ? 9 : $role[0]->accessible_kb,
         ]);
     }
 
