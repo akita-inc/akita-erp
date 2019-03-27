@@ -21095,19 +21095,21 @@ var ctrCustomersVl = new Vue({
     }
   },
   mounted: function mounted() {
-    this.loadFormEdit();
-    this.autokana['customer_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm', '#customer_nm_kana', {
-      katakana: true
-    });
-    this.autokana['customer_nm_formal'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm_formal', '#customer_nm_kana_formal', {
-      katakana: true
-    });
-    this.autokana['person_in_charge_last_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', {
-      katakana: true
-    });
-    this.autokana['person_in_charge_first_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', {
-      katakana: true
-    });
+    if (role != 9) {
+      this.loadFormEdit();
+      this.autokana['customer_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm', '#customer_nm_kana', {
+        katakana: true
+      });
+      this.autokana['customer_nm_formal'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm_formal', '#customer_nm_kana_formal', {
+        katakana: true
+      });
+      this.autokana['person_in_charge_last_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', {
+        katakana: true
+      });
+      this.autokana['person_in_charge_first_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', {
+        katakana: true
+      });
+    }
   },
   components: {
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a,
@@ -21183,7 +21185,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })

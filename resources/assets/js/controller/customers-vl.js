@@ -238,11 +238,14 @@ var ctrCustomersVl = new Vue({
         },
     },
     mounted () {
-        this.loadFormEdit();
-        this.autokana ['customer_nm'] = AutoKana.bind('#customer_nm', '#customer_nm_kana', { katakana: true });
-        this.autokana ['customer_nm_formal'] = AutoKana.bind('#customer_nm_formal', '#customer_nm_kana_formal', { katakana: true });
-        this.autokana ['person_in_charge_last_nm'] = AutoKana.bind('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', { katakana: true });
-        this.autokana ['person_in_charge_first_nm'] = AutoKana.bind('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', { katakana: true });
+        if(role!=9) {
+            this.loadFormEdit();
+
+            this.autokana ['customer_nm'] = AutoKana.bind('#customer_nm', '#customer_nm_kana', {katakana: true});
+            this.autokana ['customer_nm_formal'] = AutoKana.bind('#customer_nm_formal', '#customer_nm_kana_formal', {katakana: true});
+            this.autokana ['person_in_charge_last_nm'] = AutoKana.bind('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', {katakana: true});
+            this.autokana ['person_in_charge_first_nm'] = AutoKana.bind('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', {katakana: true});
+        }
     },
     components: {
         DatePicker,

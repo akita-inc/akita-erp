@@ -127,6 +127,8 @@ class SuppliersController extends Controller
         $listConsumptionTaxCalcUnit= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
         $listRoundingMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
         $listPaymentAccountType= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_account_type'],'');
+        $mStaffAuth =  new MStaffAuths();
+        $role = $mStaffAuth->getDataByCondition(2);
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
@@ -299,6 +301,7 @@ class SuppliersController extends Controller
             'listRoundingMethod' => $listRoundingMethod,
             'listPaymentAccountType' => $listPaymentAccountType,
             'flagLasted' => $flagLasted,
+            'role' => count($role)<=0 ? 1 : $role[0]->accessible_kb,
         ]);
     }
 
