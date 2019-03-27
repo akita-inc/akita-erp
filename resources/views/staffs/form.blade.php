@@ -892,6 +892,8 @@
                                                 <span for="info_target_{{$item->id}}">{{$item->screen_nm}}</span>
                                             @endforeach
                                             @endif
+                                            <br/>
+                                             <span v-cloak v-if="errors.staffScreen != undefined" class="message-error" v-html="errors.staffScreen.join('<br />')"></span>
                                         </div>
                                         <div class="col-md-12 col-sm-12">
                                             ■ アクセス許可区分
