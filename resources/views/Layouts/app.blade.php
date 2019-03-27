@@ -78,10 +78,18 @@
         </div>
         <a href="#menu3sub1" class="list-group-item" data-toggle="collapse" aria-expanded="true">マスタ</a>
         <div class="collapse show" id="menu3sub1">
+            @if (\Illuminate\Support\Facades\Session::exists('staffs_accessible_kb') && \Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9)
             <a href="{{ route('staffs.list') }}" class="list-group-item" data-parent="#menu3sub1">社員</a>
+            @endif
+            @if (\Illuminate\Support\Facades\Session::get('suppliers_accessible_kb') != 9)
             <a href="{{ route('suppliers.list') }}" class="list-group-item" data-parent="#menu3sub1">仕入先</a>
+            @endif
+            @if (\Illuminate\Support\Facades\Session::get('customers_accessible_kb') != 9)
             <a href="{{ route('customers.list') }}" class="list-group-item" data-parent="#menu3sub1">得意先</a>
+            @endif
+            @if (\Illuminate\Support\Facades\Session::get('vehicles_accessible_kb') != 9)
             <a href="{{ route('vehicles.list') }}" class="list-group-item" data-parent="#menu3sub1">車両</a>
+            @endif
         </div>
     </div>
 </nav>

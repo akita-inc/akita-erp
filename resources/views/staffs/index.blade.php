@@ -8,12 +8,15 @@
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrStaffsListVl">
         <pulse-loader :loading="loading"></pulse-loader>
+        @php $accessible_kb = \Illuminate\Support\Facades\Session::get('staffs_accessible_kb'); @endphp
         <div class="sub-header">
+            @if ($accessible_kb == 1)
             <div class="sub-header-line-one text-right">
                 <button class="btn btn-yellow" onclick="window.location.href= '{{route('staffs.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>
+            @endif
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row">
@@ -127,6 +130,7 @@
                     @foreach($fieldShowTable as $key => $field)
                         <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("staffs.list.table.".$key)}}</th>
                     @endforeach
+                    @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>
                 <tbody>
@@ -135,14 +139,15 @@
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('staff_cd')
-                                    <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
+                                    @if ($accessible_kb == 9)
+                                        {!! "@{{ item['$key'] }}" !!}
+                                    @else
+                                        <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
+                                    @endif
                                     @break
                                 @case('staff_nm')
                                     <span class="xsmall">{!! "@{{ item['staff_nm_kana'] }}" !!}</span><br v-if="item['staff_nm_kana']">
                                     <span>{!! "@{{ item['staff_nm'] }}" !!}</span>
-                                    @break
-                                @case('delete')
-                                    <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
                                     @break
                                 @default
                                     <span>{!! "@{{ item['$key'] }}" !!}</span>
@@ -150,6 +155,11 @@
                              @endswitch
                         </td>
                     @endforeach
+                    @if ($accessible_kb == 1)
+                        <td class="no-padding">
+                            <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
+                        </td>
+                    @endif
                 </tr>
                 <tr v-cloak v-if="message !== ''">
                     <td colspan="10">@{{message}} </td>
