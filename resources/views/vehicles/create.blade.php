@@ -49,7 +49,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="vehicles_cd">車両コード</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" readonly maxlength="5" value="{{ old('vehicles_cd', !is_null($mVehicle->vehicles_cd) ? $mVehicle->vehicles_cd : '') }}">
+                            <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" readonly maxlength="10" value="{{ old('vehicles_cd', !is_null($mVehicle->vehicles_cd) ? $mVehicle->vehicles_cd : '') }}">
                         </div>
                         <span class="note">
                             ※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。
@@ -143,7 +143,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100">
                             <label class="col-md-5 col-sm-5 required" for="vehicles_cd">車両コード</label>
                             <div class="col-md-7 col-sm-7 wrap-control">
-                                <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" maxlength="5" value="{{ old('vehicles_cd') }}">
+                                <input type="text" class="form-control w-50 {{$errors->has('vehicles_cd')? 'is-invalid': ''}}" name="vehicles_cd" id="vehicles_cd" maxlength="10" value="{{ old('vehicles_cd') }}">
                             </div>
                             @if ($errors->has('vehicles_cd'))
                                 <span class="invalid-feedback d-block" role="alert">
