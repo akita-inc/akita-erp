@@ -6,6 +6,7 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Helpers\TimeFunction;
 use App\Models\MGeneralPurposes;
+use App\Models\MStaffAuths;
 use App\Models\MSupplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
