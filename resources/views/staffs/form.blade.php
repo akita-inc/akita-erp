@@ -24,10 +24,13 @@
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
+                        @if($role==1)
                         <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                        @endif
                     </div>
                 @endif
             </div>
+            @if($role==1)
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
@@ -43,9 +46,18 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
-
+        @if($role==9 || ($role==2 && !empty($staff)))
+            <div class="alert alert-danger w-100 mt-2">
+                {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
+            </div>
+        @endif
+        @if($role==1 || ($role==2 && !empty($staff)))
         <form class="form-inline" role="form" enctype="multipart/form-data" >
+            @if($role==2)
+                <fieldset disabled="disabled">
+            @endif
             <div class="text-danger">
                 {{ trans("common.description-form.indicates_required_items") }}
             </div>
@@ -59,18 +71,18 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true])
+                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true,'role' => $role])
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             @if($flagRegisterHistory)
-                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'required'=>true ])
+                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'required'=>true ,'role' => $role])
                             @else
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
                             @endif                        </div>
                         @if($flagRegisterHistory)
                             <div class="break-row-form"></div>
                             <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true])
+                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true,'role' => $role])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
@@ -185,7 +197,7 @@
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'birthday'])
+                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'birthday','role' => $role])
                     </div>
 
                 </div>
@@ -194,11 +206,11 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'enter_date'])
+                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'enter_date','role' => $role])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'retire_date'])
+                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'retire_date','role' => $role])
                     </div>
 
                 </div>
@@ -268,7 +280,7 @@
 
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',['filed'=>'educational_background_dt','class'=>'wd-350'])
+                                    @include('Component.form.date-picker',['filed'=>'educational_background_dt','class'=>'wd-350','role' => $role])
                                 </div>
                             </div>
                         </div>
@@ -304,7 +316,8 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_job_experiences_staff_tenure_start_dt'+index",
                                         'filedMode'=>"items.staff_tenure_start_dt",
-                                        'filedErrors'=>"mst_staff_job_experiences"
+                                        'filedErrors'=>"mst_staff_job_experiences",
+                                        'role' => $role
                                     ])
                                 </div>
 
@@ -314,7 +327,8 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_job_experiences_staff_tenure_start_dt'+index",
                                         'filedMode'=>"items.staff_tenure_end_dt",
-                                        'filedErrors'=>"mst_staff_job_experiences"
+                                        'filedErrors'=>"mst_staff_job_experiences",
+                                        'role' => $role
                                     ])
                                 </div>
 
@@ -353,7 +367,8 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_qualifications_acquisition_dt'+index",
                                         'filedMode'=>"items.acquisition_dt",
-                                        'filedErrors'=>"mst_staff_qualifications"
+                                        'filedErrors'=>"mst_staff_qualifications",
+                                        'role' => $role
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -365,7 +380,8 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_qualifications_period_validity_start_dt'+index",
                                         'filedMode'=>"items.period_validity_start_dt",
-                                         'filedErrors'=>"mst_staff_qualifications"
+                                         'filedErrors'=>"mst_staff_qualifications",
+                                         'role' => $role
 
                                     ])
                                 </div>
@@ -376,7 +392,8 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_qualifications_period_validity_end_dt'+index",
                                         'filedMode'=>"items.period_validity_end_dt",
-                                        'filedErrors'=>"mst_staff_qualifications"
+                                        'filedErrors'=>"mst_staff_qualifications",
+                                        'role' => $role
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -405,8 +422,8 @@
                                             'class'=>'wd-350',
                                             'filedId'=>"'mst_staff_qualifications_payday'+index",
                                             'filedMode'=>"items.payday",
-                                            'filedErrors'=>"mst_staff_qualifications"
-
+                                            'filedErrors'=>"mst_staff_qualifications",
+                                            'role' => $role
                                          ])
                                 </div>
 
@@ -492,7 +509,8 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"'mst_staff_dependents_birthday'+index",
                                         'filedMode'=>"items.dept_birthday",
-                                        'filedErrors'=>"mst_staff_dependents"
+                                        'filedErrors'=>"mst_staff_dependents",
+                                        'role' => $role
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -563,6 +581,7 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"mst_staff_driver_license_issued_dt",
                                         'filedMode'=>"items.drivers_license_issued_dt",
+                                        'role' => $role
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -571,6 +590,7 @@
                                          'class'=>'wd-350',
                                         'filedId'=>"mst_staff_drivers_license_period_validity",
                                         'filedMode'=>"items.drivers_license_period_validity",
+                                        'role' => $role
                                     ])
                                 </div>
 
@@ -736,6 +756,7 @@
                                         'class'=>'wd-350',
                                        'filedId'=>"mst_others_retire_dt",
                                        'filedMode'=>"items.retire_dt",
+                                       'role' => $role
                                    ])
                                 </div>
 
@@ -755,6 +776,7 @@
                                          'class'=>'wd-350',
                                         'filedId'=>"mst_others_death_dt",
                                         'filedMode'=>"items.death_dt",
+                                        'role' => $role
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
@@ -802,6 +824,7 @@
                                         'class'=>'wd-350',
                                         'filedId'=>"mst_others_driver_election_dt",
                                         'filedMode'=>"items.driver_election_dt",
+                                        'role' => $role
                                     ])
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
@@ -969,8 +992,12 @@
                 </div>
             </div>
             <!--End-->
-            </div>
+            @if($role==2)
+            </fieldset>
+            @endif
         </form>
+        @endif
+
     </div>
 @endsection
 @section("scripts")
@@ -982,6 +1009,7 @@
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         var listRoute = "{{route('staffs.list')}}";
         var auth_staff_id="{{Auth::user()->id}}";
+        var role = "{{$role}}";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs.js') }}" charset="utf-8"></script>
 @endsection
