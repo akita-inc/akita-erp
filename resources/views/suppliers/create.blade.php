@@ -37,7 +37,7 @@
                     </div>
                 @endif
             </div>
-            @if($role!=1)
+            @if($role==9 || ($role==2 && !$mSupplier->id))
                 <div class="alert alert-danger w-100 mt-2">
                     {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
                 </div>
@@ -652,6 +652,7 @@
         var listRoute = "{{route('suppliers.list')}}";
         var deleteRoute = "{{route('suppliers.delete.post',['id' => $mSupplier->id])}}";
         var role = "{{$role}}";
+        var supplier_id = "{{$mSupplier->id}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";

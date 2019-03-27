@@ -238,9 +238,8 @@ var ctrCustomersVl = new Vue({
         },
     },
     mounted () {
-        if(role!=9) {
-            this.loadFormEdit();
-
+        this.loadFormEdit();
+        if(role==1 || (role==2 && this.customer_id!=null)) {
             this.autokana ['customer_nm'] = AutoKana.bind('#customer_nm', '#customer_nm_kana', {katakana: true});
             this.autokana ['customer_nm_formal'] = AutoKana.bind('#customer_nm_formal', '#customer_nm_kana_formal', {katakana: true});
             this.autokana ['person_in_charge_last_nm'] = AutoKana.bind('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', {katakana: true});

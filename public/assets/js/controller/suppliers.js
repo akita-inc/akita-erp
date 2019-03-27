@@ -2325,7 +2325,7 @@ var ctrSupplierrsVl = new Vue({
     }
   },
   mounted: function mounted() {
-    if (role != 9) {
+    if (role == 1 || role == 2 && supplier_id != '') {
       vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#supplier_nm', '#supplier_nm_kana', {
         katakana: true
       });
