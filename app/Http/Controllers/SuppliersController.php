@@ -6,9 +6,11 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Helpers\TimeFunction;
 use App\Models\MGeneralPurposes;
+use App\Models\MStaffAuths;
 use App\Models\MSupplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -18,10 +20,23 @@ class SuppliersController extends Controller
 
     use ListTrait,FormTrait;
     public $table = "mst_suppliers";
+    private $accessible_kb = 9;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $auth = new MStaffAuths();
+            $auth = $auth->getStaffAuthByCondition(['mst_staff_id' => Auth::user()->id,'screen_category_id' => 2]);
+            if (count($auth) > 0) {
+                $this->accessible_kb = $auth[0]['accessible_kb'];
+            }
+            return $next($request);
+        });
+    }
 
     public function index(Request $request)
     {
-        return view('suppliers.index');
+        return view('suppliers.index', ['accessible_kb' => $this->accessible_kb]);
     }
 
     protected function search($data){
