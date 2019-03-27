@@ -15,6 +15,7 @@ use App\Models\MCustomers;
 use App\Models\MCustomersCategories;
 use App\Models\MGeneralPurposes;
 use App\Models\MMstBillIssueDestinations;
+use App\Models\MStaffAuths;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -170,6 +171,8 @@ class CustomersController extends Controller
         $listDepositMonths=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['deposit_month'],'');
         $listConsumptionTaxCalcUnit=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
         $listRoundingMethod=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
+        $mStaffAuth =  new MStaffAuths();
+        $role = $mStaffAuth->getDataByCondition(3);
         $customer = null;
         $flagRegisterHistory = false;
         //load form by update
@@ -196,7 +199,8 @@ class CustomersController extends Controller
             'listDepositMonths'=>$listDepositMonths,
             'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
             'listRoundingMethod'=>$listRoundingMethod,
-            'listAccountTitles'=>$listAccountTitles
+            'listAccountTitles'=>$listAccountTitles,
+            'role' => count($role)<=0 ? 1 : $role[0]->accessible_kb,
         ]);
     }
 
