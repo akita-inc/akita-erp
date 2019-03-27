@@ -53,7 +53,7 @@ var ctrSupplierrsVl = new Vue({
         }
     },
     mounted () {
-        if(role!=9) {
+        if(role==1 || (role==2 && supplier_id!='')) {
             AutoKana.bind('#supplier_nm', '#supplier_nm_kana', {katakana: true});
             AutoKana.bind('#supplier_nm_formal', '#supplier_nm_kana_formal', {katakana: true});
             AutoKana.bind('#dealing_person_in_charge_last_nm', '#dealing_person_in_charge_last_nm_kana', {katakana: true});

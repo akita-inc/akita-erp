@@ -48,7 +48,7 @@
             </div>
             @endif
         </div>
-        @if($role!=1)
+        @if($role==9 || ($role==2 && empty($customer)))
             <div class="alert alert-danger w-100 mt-2">
                 {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
             </div>

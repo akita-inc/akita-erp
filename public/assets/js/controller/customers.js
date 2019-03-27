@@ -21095,8 +21095,9 @@ var ctrCustomersVl = new Vue({
     }
   },
   mounted: function mounted() {
-    if (role != 9) {
-      this.loadFormEdit();
+    this.loadFormEdit();
+
+    if (role == 1 || role == 2 && this.customer_id != null) {
       this.autokana['customer_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm', '#customer_nm_kana', {
         katakana: true
       });
