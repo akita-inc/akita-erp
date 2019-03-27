@@ -224,6 +224,11 @@ class StaffsController extends Controller
             'dept_first_nm_kana' => 'kana|nullable|length:50',
             'dept_social_security_number'=>'nullable|length:10'
         ]);
+        if($data["mst_staff_auths"][1]["accessible_kb"]==1)
+        {
+            $validator->errors()->add('staffScreen',str_replace(' :attribute',"基本情報",Lang::get('messages.MSG10007'))
+);
+        }
         if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
             $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
         }

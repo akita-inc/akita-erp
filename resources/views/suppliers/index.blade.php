@@ -9,11 +9,13 @@
     <div class="row row-xs" id="ctrSuppliersListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
+            @if ($accessible_kb == 1)
             <div class="sub-header-line-one text-right">
                 <button class="btn btn-yellow" onclick="window.location.href= '{{route('suppliers.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>
+            @endif
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
                     <div class="col-md-4 col-sm-12 row">
@@ -67,7 +69,13 @@
                 </thead>
                 <tbody>
                     <tr v-cloak v-for="item in items">
-                        <td><div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</div></td>
+                        <td>
+                            @if ($accessible_kb == 9)
+                                {!! "@{{ item['mst_suppliers_cd'] }}" !!}
+                            @else
+                                <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</div>
+                            @endif
+                        </td>
                         <td>
                             <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
                             <br v-if="item['supplier_nm_kana']">
@@ -79,7 +87,9 @@
                         <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
                         <td class="no-padding">
+                            @if ($accessible_kb == 1)
                             <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
+                            @endif
                         </td>
                     </tr>
                     <tr v-cloak v-if="message !== ''">
