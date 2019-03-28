@@ -16,6 +16,7 @@ Route::group(['name' => 'vehicles', 'prefix' => 'vehicles', 'middleware' => ['au
         Route::any('/checkIsExist/{id}','VehiclesController@checkIsExist')->name("vehicles.checkIsExist");
         Route::any('back-history', ['uses' => 'VehiclesController@backHistory']);
         Route::any('load-list-staff', ['uses' => 'VehiclesController@loadListStaff']);
+        Route::any('/submit','VehiclesController@save')->name("vehicles.save");
 
     });
 });
