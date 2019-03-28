@@ -13,6 +13,7 @@
                 </div>
                 <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                 <input type="hidden" id="hd_staff_edit" value="{!! !empty($staff) ? 1:0 !!}">
+                <input type="hidden" id="roles_staff_screen" value="@php print_r($rolesStaffScreen) @endphp">
                 @if(!empty($staff))
                     @foreach($staff as $key=>$value)
                         @if($key == 'adhibition_start_dt'
