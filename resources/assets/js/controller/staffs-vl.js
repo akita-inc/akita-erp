@@ -509,15 +509,22 @@ var ctrStaffsVl = new Vue({
         staffs_service.loadListReMunicipalOffice().then((response) => {
             that.dropdown_relocate_municipal_office_nm[0].data =  response.data;
         });
-        this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
-        this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
-        this.field.mst_staff_dependents.forEach( function(value,key) {
-            that.showKana(key);
-            that.index = key;
-        });
-        if(this.staff_id==''){
-            this.showKana(this.index);
+        if(info_basic_screen)
+        {
+            this.autokana ['last_nm'] = AutoKana.bind('#last_nm', '#last_nm_kana', { katakana: true });
+            this.autokana ['first_nm'] = AutoKana.bind('#first_nm', '#first_nm_kana', { katakana: true });
         }
+        if(dependents_screen)
+        {
+            this.field.mst_staff_dependents.forEach( function(value,key) {
+                that.showKana(key);
+                that.index = key;
+            });
+            if(this.staff_id==''){
+                this.showKana(this.index);
+            }
+        }
+
 
     },
     components: {

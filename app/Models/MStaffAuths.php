@@ -46,4 +46,17 @@ class MStaffAuths  extends Model
             ->get();
         return $data;
     }
+    public function getDataScreenStaffAuth(){
+        $result = [];
+        $data =  $this
+            ->select('mst_staff_auths.mst_screen_id as mst_screen_auth')
+            ->join('mst_screens','mst_screens.id', '=', 'mst_staff_auths.mst_screen_id')
+            ->where('mst_staff_id','=',Auth::user()->id)
+            ->where('mst_screens.screen_category_id','=',1)
+            ->get();
+        foreach (json_decode(json_encode($data), true) as $key => $item) {
+            $result[$key] = $item['mst_screen_auth'];
+        }
+        return $result;
+    }
 }

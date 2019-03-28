@@ -55,9 +55,10 @@
         @endif
         @if($role==1 || ($role==2 && !empty($staff)))
         <form class="form-inline" role="form" enctype="multipart/form-data" >
-            @if($role==2)
-                <fieldset disabled="disabled">
-            @endif
+        @if($role==2)
+                <fieldset disabled="disabled" class="w-100">
+        @endif
+        @if(in_array(1,$rolesStaffScreen))
             <div class="text-danger">
                 {{ trans("common.description-form.indicates_required_items") }}
             </div>
@@ -263,7 +264,9 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--Block 8-->
+            @if(in_array(2,$rolesStaffScreen))
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_educational_background" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -287,7 +290,9 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--Block 9-->
+            @if(in_array(3,$rolesStaffScreen))
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_staff_job_experiences" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -339,7 +344,9 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--Block 10-->
+            @if(in_array(4,$rolesStaffScreen))
             <div class="grid-form">
                 <p class="header-collapse">
                     <a data-toggle="collapse" href="#b_mst_staff_qualifications" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -434,8 +441,10 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--Block 11-->
-            <div class="grid-form">
+            @if(in_array(5,$rolesStaffScreen))
+            <div class="grid-form ">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_staff_dependents" role="button" aria-expanded="false" aria-controls="collapseExample">
                          {{trans($prefix."mst_staff_dependents_title")}}
@@ -544,8 +553,10 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--Block 12-->
-            <div class="grid-form">
+            @if(in_array(6,$rolesStaffScreen))
+            <div class="grid-form ">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_staff_driver_license" role="button" aria-expanded="false" aria-controls="collapseExample">
                         運転免許証
@@ -731,7 +742,9 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--Block 13-->
+            @if(in_array(7,$rolesStaffScreen))
             <div class="grid-form">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_others" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -877,8 +890,10 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--Block 14-->
-            <div class="grid-form">
+            @if(in_array(8,$rolesStaffScreen))
+            <div class="grid-form ">
                 <p class="header-collapse" >
                     <a data-toggle="collapse" href="#b_mst_access_authority" role="button" aria-expanded="false" aria-controls="collapseExample">
                         アクセス権限
@@ -991,6 +1006,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!--End-->
             @if($role==2)
             </fieldset>
@@ -1009,6 +1025,8 @@
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         var listRoute = "{{route('staffs.list')}}";
         var auth_staff_id="{{Auth::user()->id}}";
+        var info_basic_screen="{{in_array(1,$rolesStaffScreen)}}";
+        var dependents_screen="{{in_array(5,$rolesStaffScreen)}}";
         var role = "{{$role}}";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs.js') }}" charset="utf-8"></script>
