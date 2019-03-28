@@ -35,4 +35,11 @@ vehicles_service = {
             return error;
         });
     },
+    submit: function (data) {
+        return axios.post('/vehicles/api-v1/submit', data,{ 'content-type': 'multipart/form-data' }).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
