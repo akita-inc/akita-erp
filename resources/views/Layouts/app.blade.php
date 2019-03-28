@@ -64,18 +64,16 @@
         <a href="#" class="list-group-item" data-parent="#menu1">Top</a>
         <a href="#menu1sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">販売</a>
         <div class="collapse" id="menu1sub1">
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">社員</a>
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">仕入先</a>
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">得意先</a>
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">車両</a>
+            <a href="#" class="list-group-item" data-parent="#menu1sub1">サンプル</a>
         </div>
         <a href="#menu2sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">購買</a>
         <div class="collapse" id="menu2sub1">
-            <a href="#" class="list-group-item" data-parent="#menu2sub1">社員</a>
-            <a href="#" class="list-group-item" data-parent="#menu2sub1">仕入先</a>
-            <a href="#" class="list-group-item" data-parent="#menu2sub1">得意先</a>
-            <a href="#" class="list-group-item" data-parent="#menu2sub1">車両</a>
+            <a href="#" class="list-group-item" data-parent="#menu2sub1">サンプル</a>
         </div>
+        @if (\Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9
+                || \Illuminate\Support\Facades\Session::get('suppliers_accessible_kb') != 9
+                || \Illuminate\Support\Facades\Session::get('customers_accessible_kb') != 9
+                || \Illuminate\Support\Facades\Session::get('vehicles_accessible_kb') != 9)
         <a href="#menu3sub1" class="list-group-item" data-toggle="collapse" aria-expanded="true">マスタ</a>
         <div class="collapse show" id="menu3sub1">
             @if (\Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9)
@@ -91,6 +89,7 @@
             <a href="{{ route('vehicles.list') }}" class="list-group-item" data-parent="#menu3sub1">車両</a>
             @endif
         </div>
+        @endif
     </div>
 </nav>
 
