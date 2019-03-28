@@ -398,6 +398,7 @@ class StaffsController extends Controller
         $mScreen = new MScreens();
         $mStaffAuth =  new MStaffAuths();
         $role = $mStaffAuth->getDataByCondition(1);
+        $rolesStaffScreen=$mStaffAuth->getDataScreenStaffAuth();
         $listEmployPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
         $listPosition=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['position'], '');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
@@ -452,6 +453,7 @@ class StaffsController extends Controller
             'listDriversLicenseColors'=>$listDriversLicenseColors,
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
             'role' => count($role)<=0 ? 9 : $role[0]->accessible_kb,
+            'rolesStaffScreen'=>$rolesStaffScreen,
         ]);
     }
 }
