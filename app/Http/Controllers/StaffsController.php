@@ -342,7 +342,7 @@ class StaffsController extends Controller
                     $des = config('params.staff_path') . $id;
                     mkdir($des, 0777, true);
                     mkdir($des.'/image', 0777, true);
-                    if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture )){
+                    if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture ) ){
                         if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile=='drivers_license_picture')) {
                             MStaffs::query()->where("id","=",$id)->update([
                                 "drivers_license_picture" => $oldStaff->drivers_license_picture
