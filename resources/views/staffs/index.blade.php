@@ -6,9 +6,14 @@
 @endsection
 @section('content')
     @include('Layouts.alert')
+    @php $accessible_kb = \Illuminate\Support\Facades\Session::get('staffs_accessible_kb'); @endphp
+    @if ($accessible_kb == 9)
+        <div class="alert alert-danger w-100 mt-2">
+            {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
+        </div>
+    @else
     <div class="row row-xs" id="ctrStaffsListVl">
         <pulse-loader :loading="loading"></pulse-loader>
-        @php $accessible_kb = \Illuminate\Support\Facades\Session::get('staffs_accessible_kb'); @endphp
         <div class="sub-header">
             @if ($accessible_kb == 1)
             <div class="sub-header-line-one text-right">
@@ -139,11 +144,7 @@
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('staff_cd')
-                                    @if ($accessible_kb == 9)
-                                        {!! "@{{ item['$key'] }}" !!}
-                                    @else
-                                        <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
-                                    @endif
+                                    <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
                                     @break
                                 @case('staff_nm')
                                     <span class="xsmall">{!! "@{{ item['staff_nm_kana'] }}" !!}</span><br v-if="item['staff_nm_kana']">
@@ -171,6 +172,7 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 @section("scripts")
     <script>
