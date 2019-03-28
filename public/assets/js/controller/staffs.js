@@ -26319,9 +26319,6 @@ var ctrStaffsVl = new Vue({
       formData.append('image', this.field.drivers_license_picture);
       staffs_service.submit(formData).then(function (response) {
         if (response.success == false) {
-          that.$refs.drivers_license_picture.value = '';
-          that.field.drivers_license_picture = '';
-          that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
           that.errors = response.message;
         } else {
           that.errors = {};
