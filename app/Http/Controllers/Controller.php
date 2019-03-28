@@ -22,7 +22,7 @@ class Controller extends BaseController
             Session::put('customers_accessible_kb', 9);
             Session::put('vehicles_accessible_kb', 9);
             $auths = new MStaffAuths();
-            $auths = $auths->getStaffAuthByCondition(['mst_staff_id' => Auth::user()->id]);
+            $auths = $auths->getAccessibleKbByCondition(['mst_staff_id' => Auth::user()->id]);
             if (count($auths) > 0) {
                 foreach ($auths as $auth) {
                     if ($auth['screen_category_id'] == 1)

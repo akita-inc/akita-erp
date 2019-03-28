@@ -24,9 +24,9 @@ class MStaffAuths  extends Model
         return $this->get();
     }
 
-    public function getStaffAuthByCondition($where = array()){
+    public function getAccessibleKbByCondition($where = array()){
         $mStaffAuth = new MStaffAuths();
-        $mStaffAuth = $mStaffAuth->select("*")
+        $mStaffAuth = $mStaffAuth->select(DB::raw("DISTINCT mst_screens.screen_category_id, mst_staff_auths.accessible_kb"))
             ->join('mst_screens','mst_screens.id', '=', 'mst_staff_auths.mst_screen_id');;
 
         // 検索条件
