@@ -6,9 +6,14 @@
 @endsection
 @section('content')
     @include('Layouts.alert')
+    @php $accessible_kb = \Illuminate\Support\Facades\Session::get('suppliers_accessible_kb'); @endphp
+    @if ($accessible_kb == 9)
+        <div class="alert alert-danger w-100 mt-2">
+            {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
+        </div>
+    @else
     <div class="row row-xs" id="ctrSuppliersListVl">
         <pulse-loader :loading="loading"></pulse-loader>
-        @php $accessible_kb = \Illuminate\Support\Facades\Session::get('suppliers_accessible_kb'); @endphp
         <div class="sub-header">
             @if ($accessible_kb == 1)
             <div class="sub-header-line-one text-right">
@@ -71,11 +76,7 @@
                 <tbody>
                     <tr v-cloak v-for="item in items">
                         <td>
-                            @if ($accessible_kb == 9)
-                                {!! "@{{ item['mst_suppliers_cd'] }}" !!}
-                            @else
-                                <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</div>
-                            @endif
+                            <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</div>
                         </td>
                         <td>
                             <span class="xsmall">{!! "@{{ item['supplier_nm_kana'] }}" !!}</span>
@@ -104,6 +105,7 @@
             </div>
         </div>
     </div>
+    @endif
 @stop
 @section('scripts')
     <script>
