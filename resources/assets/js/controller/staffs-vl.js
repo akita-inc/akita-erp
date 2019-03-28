@@ -15,6 +15,7 @@ var ctrStaffsVl = new Vue({
         loading:false,
         staff_edit:0,
         staff_id:null,
+        roles_staff_screen:$("#roles_staff_screen").val(),
         field:{
             staff_cd:"",
             adhibition_start_dt:"",
@@ -177,6 +178,85 @@ var ctrStaffsVl = new Vue({
         },
         clone: function(){
             this.field["clone"] = true;
+            let that=this;
+            if (that.roles_staff_screen.indexOf(2)==-1)
+            {
+                that.field.educational_background="";
+                that.field.educational_background_dt="";
+            }
+            if(that.roles_staff_screen.indexOf(3)==-1)
+            {
+                that.field.mst_staff_job_experiences=[];
+            }
+            if(that.roles_staff_screen.indexOf(4)==-1)
+            {
+                that.field.mst_staff_qualifications=[];
+            }
+            if(that.roles_staff_screen.indexOf(5)==-1)
+            {
+                that.field.mst_staff_dependents=[];
+            }
+            if(that.roles_staff_screen.indexOf(6)==-1)
+            {
+                that.field.drivers_license_number="";
+                that.field.drivers_license_color_id="";
+                that.field.drivers_license_issued_dt="";
+                that.field.drivers_license_period_validity="";
+                that.field.drivers_license_picture="";
+                that.field.drivers_license_divisions_1="";
+                that.field.drivers_license_divisions_2="";
+                that.field.drivers_license_divisions_3="";
+                that.field.drivers_license_divisions_4="";
+                that.field.drivers_license_divisions_5="";
+                that.field.drivers_license_divisions_6="";
+                that.field.drivers_license_divisions_7="";
+                that.field.drivers_license_divisions_8="";
+                that.field.drivers_license_divisions_9="";
+                that.field.drivers_license_divisions_10="";
+                that.field.drivers_license_divisions_11="";
+                that.field.drivers_license_divisions_12="";
+                that.field.drivers_license_divisions_13="";
+                that.field.drivers_license_divisions_14="";
+            }
+            if(that.roles_staff_screen.indexOf(7)==-1)
+            {
+                that.field.retire_reasons="";
+                that.field.retire_dt="";
+                that.field.death_reasons="";
+                that.field.death_dt="";
+                that.field.belong_company_id="";
+                that.field.occupation_id="";
+                that.field.mst_business_office_id="";
+                that.field.depertment_id="";
+                that.field.driver_election_dt="";
+                that.field.medical_checkup_interval_id="";
+                that.field.employment_insurance_numbers="";
+                that.field.health_insurance_numbers="";
+                that.field.employees_pension_insurance_numbers="";
+                that.field.workmens_compensation_insurance_fg="";
+            }
+            if(that.roles_staff_screen.indexOf(8)==-1)
+            {
+                that.field.mst_staff_auths={
+                    1: {
+                        staffScreen: [],
+                            screen_category_id:1,
+                            accessible_kb: 9,
+                    },
+                    2: {
+                        screen_category_id: 2,
+                            accessible_kb: 9,
+                    },
+                    3: {
+                        screen_category_id: 3,
+                            accessible_kb: 9,
+                    },
+                    4: {
+                        screen_category_id: 4,
+                            accessible_kb: 9,
+                    },
+                };
+            }
             this.submit();
         },
         showError: function ( errors ){

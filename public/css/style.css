@@ -72,3 +72,7 @@
     padding: .375rem .75rem!important;
     border: 1px solid #ced4da!important;
 }
+.mx-input:disabled, .mx-input.disabled {
+    background-color:#ccc;
+    color:#000000!important;
+}
