@@ -3365,9 +3365,13 @@ var ctrVehiclesVl = new Vue({
       });
     },
     backHistory: function backHistory() {
-      vehicles_service.backHistory().then(function () {
+      if (this.vehicle_edit == 1) {
+        vehicles_service.backHistory().then(function () {
+          window.location.href = listRoute;
+        });
+      } else {
         window.location.href = listRoute;
-      });
+      }
     },
     getListStaff: function getListStaff() {
       var that = this;

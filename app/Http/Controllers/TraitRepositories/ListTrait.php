@@ -48,7 +48,7 @@ trait ListTrait
         }
         $this->getQuery();
         $this->search( $data );
-        $items = $this->query->paginate(config('params.page_size'));
+        $items = $this->query->paginate(config('params.page_size'), ['*'], 'page', $data['page']);
         $response = [
             'pagination' => [
                 'total' => $items->total(),

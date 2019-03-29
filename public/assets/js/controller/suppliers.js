@@ -2319,9 +2319,13 @@ var ctrSupplierrsVl = new Vue({
       });
     },
     backHistory: function backHistory() {
-      suppliers_service.backHistory().then(function () {
+      if (supplier_id == "") {
         window.location.href = listRoute;
-      });
+      } else {
+        suppliers_service.backHistory().then(function () {
+          window.location.href = listRoute;
+        });
+      }
     }
   },
   mounted: function mounted() {
