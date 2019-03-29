@@ -112,20 +112,12 @@ class VehiclesController extends Controller
     public function delete(Request $request,$id)
     {
         $mVehicle = new MVehicles();
-
-        if ($request->getMethod() == 'POST') {
-            $this->backHistory();
-            if ($mVehicle->deleteVehicle($id)) {
-                \Session::flash('message',Lang::get('messages.MSG10004'));
-            } else {
-                \Session::flash('message',Lang::get('messages.MSG06002'));
-            }
-
-            return redirect()->route('vehicles.list');
-        }
+        $this->backHistory();
         if ($mVehicle->deleteVehicle($id)) {
+            \Session::flash('message',Lang::get('messages.MSG10004'));
             $response = ['data' => 'success'];
         } else {
+            \Session::flash('message',Lang::get('messages.MSG06002'));
             $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
         }
         return response()->json($response);
@@ -480,7 +472,6 @@ class VehiclesController extends Controller
 
                 $mVehicle->save();
                 DB::commit();
-                $this->backHistory();
                 if($mode=='edit'){
                     \Session::flash('message',Lang::get('messages.MSG04002'));
                 }else{

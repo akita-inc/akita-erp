@@ -264,7 +264,9 @@ class SuppliersController extends Controller
                     $mSupplier->notes= $data["notes"];
                     $mSupplier->save();
                     DB::commit();
-                    $this->backHistory();
+                    if($mode=='edit' || $mode=='registerHistoryLeft'){
+                        $this->backHistory();
+                    }
                     if($mode=='edit'){
                         \Session::flash('message',Lang::get('messages.MSG04002'));
                     }else{

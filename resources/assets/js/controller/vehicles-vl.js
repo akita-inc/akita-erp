@@ -144,13 +144,15 @@ var ctrVehiclesVl = new Vue({
                     return false;
                 } else {
                     if (confirm(messages["MSG06001"])) {
-                        $('#form1').attr('action',deleteRoute);
-                        $('#form1').submit();
+                        vehicles_service.delete(id).then((response) => {
+                            window.location.href = listRoute;
+                        });
                     }
                 }
             });
         },
         backHistory: function () {
+            console.log(this.vehicle_edit);
             if(this.vehicle_edit == 1){
                 vehicles_service.backHistory().then(function () {
                     window.location.href = listRoute;
@@ -180,12 +182,12 @@ var ctrVehiclesVl = new Vue({
             formData.append('picture_rights', this.file.picture_rights);
             formData.append('picture_lefts', this.file.picture_lefts);
             formData.append('picture_rears', this.file.picture_rears);
-            vehicles_service.submit(formData).then((response) => {
+            vehicles_service.submit(formData).then((response) =>  {
                 if(response.success == false){
                     that.errors = response.message;
                 }else{
                     that.errors = [];
-                    window.location.href = '/vehicles/list'
+                    that.backHistory();
                 }
                 that.field["mode"] = null;
                 that.loading = false;

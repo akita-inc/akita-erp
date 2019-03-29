@@ -3358,13 +3358,16 @@ var ctrVehiclesVl = new Vue({
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {
-            $('#form1').attr('action', deleteRoute);
-            $('#form1').submit();
+            vehicles_service.delete(id).then(function (response) {
+              window.location.href = listRoute;
+            });
           }
         }
       });
     },
     backHistory: function backHistory() {
+      console.log(this.vehicle_edit);
+
       if (this.vehicle_edit == 1) {
         vehicles_service.backHistory().then(function () {
           window.location.href = listRoute;
@@ -3402,7 +3405,7 @@ var ctrVehiclesVl = new Vue({
           that.errors = response.message;
         } else {
           that.errors = [];
-          window.location.href = '/vehicles/list';
+          that.backHistory();
         }
 
         that.field["mode"] = null;
