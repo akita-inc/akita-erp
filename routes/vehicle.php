@@ -6,8 +6,6 @@ Route::group(['name' => 'vehicles', 'prefix' => 'vehicles', 'middleware' => ['au
     Route::post('/create', 'VehiclesController@create');
     Route::get('/edit/{id}', 'VehiclesController@create')->name('vehicles.edit');
     Route::post('/edit/{id}/{mode}', 'VehiclesController@create')->name('vehicles.edit.post');
-    Route::get('/delete/{id}', 'VehiclesController@delete')->name('vehicles.delete');
-    Route::post('/delete/{id}', 'VehiclesController@delete')->name('vehicles.delete.post');
 
 
     /*Api using Vue*/
@@ -17,6 +15,6 @@ Route::group(['name' => 'vehicles', 'prefix' => 'vehicles', 'middleware' => ['au
         Route::any('back-history', ['uses' => 'VehiclesController@backHistory']);
         Route::any('load-list-staff', ['uses' => 'VehiclesController@loadListStaff']);
         Route::any('/submit','VehiclesController@save')->name("vehicles.save");
-
+        Route::get('/delete/{id}', 'VehiclesController@delete')->name('vehicles.delete');
     });
 });

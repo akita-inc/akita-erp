@@ -176,6 +176,7 @@ class StaffsController extends Controller
     public function delete($id)
     {
         $mStaffs = new MStaffs();
+        $this->backHistory();
         try {
             if($id==Auth::user()->id)
             {

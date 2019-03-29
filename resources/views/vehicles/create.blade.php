@@ -983,29 +983,8 @@
 @section("scripts")
     <script type="text/javascript">
         var listRoute = "{{route('vehicles.list')}}";
-        var deleteRoute = "{{route('vehicles.delete.post',['id' => @$mVehicle['id']])}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
-        {{--function registerHistoryLeft() {--}}
-            {{--$('#form1').attr('action','{{route('vehicles.edit.post',['id' => $mVehicle->id, 'mode'=>'registerHistoryLeft'])}}');--}}
-            {{--$('#form1').submit();--}}
-        {{--}--}}
-        // function uploadFile(target) {
-        //     document.getElementById(target.name+"_file_name").innerHTML = target.files[0].name;
-        // }
-        // function deleteFileUpload(e,destination) {
-        //     $('#'+destination+"_file_name").html('');
-        //     $('#'+destination).wrap('<form>').closest('form').get(0).reset();
-        //     $('#'+destination).unwrap();
-        //     if($('div.alert-area :input[value='+destination+']').length <= 0){
-        //         $('div.alert-area').append("<input type='hidden' class='deleteFile' name='deleteFile[]' value='"+ destination+"'>");
-        //     }
-        // }
-        
-        function copyText() {
-            $('#user_nm').val($('#owner_nm').val());
-            $('#user_address').val($('#owner_address').val());
-        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/vehicles.js') }}" charset="utf-8"></script>
 @endsection

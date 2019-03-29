@@ -105,7 +105,7 @@ var ctrCustomersVl = new Vue({
                     that.errors = response.message;
                 }else{
                     that.errors = [];
-                    window.location.href = '/customers/list'
+                    that.backHistory();
                 }
                 this.field["clone"] = null;
                 that.loading = false;

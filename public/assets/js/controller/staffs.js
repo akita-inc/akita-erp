@@ -26405,7 +26405,7 @@ var ctrStaffsVl = new Vue({
           that.errors = response.message;
         } else {
           that.errors = {};
-          window.location.href = '/staffs/list';
+          that.backHistory();
         }
 
         _this.field["clone"] = null;
@@ -26725,7 +26725,7 @@ var ctrStaffsVl = new Vue({
       staffs_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
-          that.backToList();
+          that.backHistory();
           return false;
         } else {
           if (id == auth_staff_id) {
@@ -26739,11 +26739,6 @@ var ctrStaffsVl = new Vue({
             });
           }
         }
-      });
-    },
-    backToList: function backToList() {
-      staffs_service.backHistory().then(function () {
-        window.location.href = listRoute;
       });
     },
     showKana: function showKana(index) {

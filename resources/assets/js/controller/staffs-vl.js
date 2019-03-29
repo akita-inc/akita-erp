@@ -304,7 +304,7 @@ var ctrStaffsVl = new Vue({
                 else
                 {
                     that.errors = {};
-                    window.location.href = '/staffs/list';
+                    that.backHistory();
                 }
                 this.field["clone"] = null;
                 this.field["is_change_password"] = null;
@@ -557,7 +557,7 @@ var ctrStaffsVl = new Vue({
             staffs_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
-                    that.backToList();
+                    that.backHistory();
                     return false;
                 } else {
                     if(id==auth_staff_id)
@@ -571,11 +571,6 @@ var ctrStaffsVl = new Vue({
                         });
                     }
                 }
-            });
-        },
-        backToList: function () {
-            staffs_service.backHistory().then(function () {
-                window.location.href = listRoute;
             });
         },
         showKana:function (index) {
