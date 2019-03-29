@@ -284,6 +284,8 @@ class StaffsController extends Controller
 
     }
     protected function save($data){
+        $mStaffAuth =  new MStaffAuths();
+        $rolesStaffScreen=$mStaffAuth->getDataScreenStaffAuth();
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
             $data['password'] = bcrypt($data['password']);
         }else{
@@ -341,10 +343,10 @@ class StaffsController extends Controller
                     $oldStaff = MStaffs::find($data["id"]);
                     $src = config('params.staff_path') . $data["id"];
                     $des = config('params.staff_path') . $id;
-                    mkdir($des, 0777, true);
-                    mkdir($des.'/image', 0777, true);
-                    if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture ) && file_exists($src.'/image/'.$oldStaff->drivers_license_picture)  ){
+                    if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture ) && in_array(6,$rolesStaffScreen) && file_exists($src.'/image/'.$oldStaff->drivers_license_picture)  ){
                         if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile!='drivers_license_picture' && $deleteFile!='unset_roles_clone')) {
+                            mkdir($des, 0777, true);
+                            mkdir($des.'/image', 0777, true);
                             MStaffs::query()->where("id","=",$id)->update([
                                 "drivers_license_picture" => $oldStaff->drivers_license_picture
                             ]);
