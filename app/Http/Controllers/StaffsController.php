@@ -344,7 +344,7 @@ class StaffsController extends Controller
                     mkdir($des, 0777, true);
                     mkdir($des.'/image', 0777, true);
                     if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture ) && file_exists($src.'/image/'.$oldStaff->drivers_license_picture)  ){
-                        if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile=='drivers_license_picture')) {
+                        if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile!='drivers_license_picture' && $deleteFile!='unset_roles_clone')) {
                             MStaffs::query()->where("id","=",$id)->update([
                                 "drivers_license_picture" => $oldStaff->drivers_license_picture
                             ]);
