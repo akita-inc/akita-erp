@@ -361,6 +361,9 @@ class StaffsController extends Controller
             $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_", [], $currentTime);
             $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"], $currentTime);
             DB::commit();
+            if(isset( $data["id"]) || isset($data["clone"])){
+                $this->backHistory();
+            }
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
                 \Session::flash('message',Lang::get('messages.MSG04002'));
             }else{

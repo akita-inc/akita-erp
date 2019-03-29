@@ -105,7 +105,7 @@ var ctrCustomersVl = new Vue({
                     that.errors = response.message;
                 }else{
                     that.errors = [];
-                    that.backHistory();
+                    window.location.href = listRoute;
                 }
                 this.field["clone"] = null;
                 that.loading = false;
