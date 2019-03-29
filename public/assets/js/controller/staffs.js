@@ -26362,7 +26362,7 @@ var ctrStaffsVl = new Vue({
           that.errors = response.message;
         } else {
           that.errors = {};
-          that.backHistory();
+          window.location.href = listRoute;
         }
 
         _this.field["clone"] = null;

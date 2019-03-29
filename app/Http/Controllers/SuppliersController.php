@@ -71,9 +71,8 @@ class SuppliersController extends Controller
     public function delete(Request $request,$id)
     {
         $mSuppliers = new MSupplier();
-
+        $this->backHistory();
         if ($request->getMethod() == 'POST') {
-            $this->backHistory();
             if ($mSuppliers->deleteSupplier($id)) {
                 \Session::flash('message',Lang::get('messages.MSG10004'));
             } else {

@@ -152,7 +152,6 @@ var ctrVehiclesVl = new Vue({
             });
         },
         backHistory: function () {
-            console.log(this.vehicle_edit);
             if(this.vehicle_edit == 1){
                 vehicles_service.backHistory().then(function () {
                     window.location.href = listRoute;
@@ -167,7 +166,7 @@ var ctrVehiclesVl = new Vue({
                 that.listStaffs = result.info;
             });
         },
-        submit: function(mode){
+        submit: async function(mode){
             let that = this;
             that.loading = true;
             if(this.vehicle_edit == 1){
@@ -183,15 +182,16 @@ var ctrVehiclesVl = new Vue({
             formData.append('picture_lefts', this.file.picture_lefts);
             formData.append('picture_rears', this.file.picture_rears);
             vehicles_service.submit(formData).then((response) =>  {
+                that.field["mode"] = null;
+                that.loading = false;
                 if(response.success == false){
                     that.errors = response.message;
                 }else{
                     that.errors = [];
-                    that.backHistory();
+                    window.location.href = listRoute;
                 }
-                that.field["mode"] = null;
-                that.loading = false;
             });
+
         },
         loadFormEdit: function () {
             let that = this;

@@ -304,7 +304,7 @@ var ctrStaffsVl = new Vue({
                 else
                 {
                     that.errors = {};
-                    that.backHistory();
+                    window.location.href = listRoute;
                 }
                 this.field["clone"] = null;
                 this.field["is_change_password"] = null;

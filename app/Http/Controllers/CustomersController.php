@@ -376,6 +376,9 @@ class CustomersController extends Controller
             $deleteBill->delete();
         }
         DB::commit();
+        if(isset( $data["id"]) || isset($data["clone"])){
+            $this->backHistory();
+        }
         \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
     }

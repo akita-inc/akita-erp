@@ -472,6 +472,9 @@ class VehiclesController extends Controller
 
                 $mVehicle->save();
                 DB::commit();
+                if($mode=='edit' || $mode=='registerHistoryLeft'){
+                    $this->backHistory();
+                }
                 if($mode=='edit'){
                     \Session::flash('message',Lang::get('messages.MSG04002'));
                 }else{
