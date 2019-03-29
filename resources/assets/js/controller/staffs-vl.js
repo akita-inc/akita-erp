@@ -179,24 +179,24 @@ var ctrStaffsVl = new Vue({
         clone: function(){
             this.field["clone"] = true;
             let that=this;
-            if (that.roles_staff_screen.indexOf(2)==-1)
+            if (that.roles_staff_screen.indexOf(2)<0)
             {
                 that.field.educational_background="";
                 that.field.educational_background_dt="";
             }
-            if(that.roles_staff_screen.indexOf(3)==-1)
+            if(that.roles_staff_screen.indexOf(3)<0)
             {
                 that.field.mst_staff_job_experiences=[];
             }
-            if(that.roles_staff_screen.indexOf(4)==-1)
+            if(that.roles_staff_screen.indexOf(4)<0)
             {
                 that.field.mst_staff_qualifications=[];
             }
-            if(that.roles_staff_screen.indexOf(5)==-1)
+            if(that.roles_staff_screen.indexOf(5)<0)
             {
                 that.field.mst_staff_dependents=[];
             }
-            if(that.roles_staff_screen.indexOf(6)==-1)
+            if(that.roles_staff_screen.indexOf(6)<0)
             {
                 that.field.drivers_license_number="";
                 that.field.drivers_license_color_id="";
@@ -220,7 +220,7 @@ var ctrStaffsVl = new Vue({
                 that.field.drivers_license_divisions_13="";
                 that.field.drivers_license_divisions_14="";
             }
-            if(that.roles_staff_screen.indexOf(7)==-1)
+            if(that.roles_staff_screen.indexOf(7)<0)
             {
                 that.field.retire_reasons="";
                 that.field.retire_dt="";
@@ -237,7 +237,7 @@ var ctrStaffsVl = new Vue({
                 that.field.employees_pension_insurance_numbers="";
                 that.field.workmens_compensation_insurance_fg="";
             }
-            if(that.roles_staff_screen.indexOf(8)==-1)
+            if(that.roles_staff_screen.indexOf(8)<0)
             {
                 that.field.mst_staff_auths={
                     1: {
