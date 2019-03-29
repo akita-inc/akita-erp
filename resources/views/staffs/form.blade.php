@@ -9,7 +9,7 @@
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
                 <div class="d-flex">
-                <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
+                <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                 </div>
                 <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                 <input type="hidden" id="hd_staff_edit" value="{!! !empty($staff) ? 1:0 !!}">

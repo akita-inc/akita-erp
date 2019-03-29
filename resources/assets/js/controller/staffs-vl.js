@@ -486,9 +486,13 @@ var ctrStaffsVl = new Vue({
             this.field[block].splice(index, 1);
         },
         backHistory: function () {
-            staffs_service.backHistory().then(function () {
+            if(this.staff_edit == 1) {
+                staffs_service.backHistory().then(function () {
+                    window.location.href = listRoute;
+                });
+            }else{
                 window.location.href = listRoute;
-            });
+            }
         },
         loadRoleConfig: function () {
             var that = this;

@@ -21039,7 +21039,13 @@ var ctrCustomersVl = new Vue({
       this.field.mst_bill_issue_destinations.splice(index, 1);
     },
     backHistory: function backHistory() {
-      window.history.back();
+      if (this.customer_edit == 1) {
+        customers_service.backHistory().then(function () {
+          window.location.href = listRoute;
+        });
+      } else {
+        window.location.href = listRoute;
+      }
     },
     loadFormEdit: function loadFormEdit() {
       var that = this;
@@ -21072,17 +21078,12 @@ var ctrCustomersVl = new Vue({
         });
       }
     },
-    backToList: function backToList() {
-      customers_service.backHistory().then(function () {
-        window.location.href = listRoute;
-      });
-    },
     deleteCustomer: function deleteCustomer(id) {
       var that = this;
       customers_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
-          that.backToList();
+          that.backHistory();
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {

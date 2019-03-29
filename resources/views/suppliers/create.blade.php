@@ -11,7 +11,7 @@
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
-                        <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
+                        <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
                     @if($mSupplier->id && $role==1)
                     <div class="d-flex ml-auto">

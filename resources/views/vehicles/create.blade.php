@@ -13,7 +13,7 @@
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
-                        <button class="btn btn-black" type="button" onclick="window.history.back();">{{ trans("common.button.back") }}</button>
+                        <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
                     <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                     <input type="hidden" id="hd_vehicle_edit" value="{!! !empty($mVehicle) ? 1:0 !!}">
