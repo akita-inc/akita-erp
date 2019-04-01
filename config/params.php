@@ -46,6 +46,8 @@ return [
         // 'screen_disp_auth_kb'           => '09002', // データ項目表示許可区分
         'screen_category'               => '09003', // システム画面カテゴリID
         'payment_account_type'          => '09004', // 支払口座種別
+        'vehicle_size'                  => '11001',    //車両区分
+        'asking_baggage'                => '11003', //希望荷物
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),
