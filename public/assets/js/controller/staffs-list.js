@@ -3250,7 +3250,11 @@ var ctrStaffsListVl = new Vue({
       current_page: 1,
       last_page: 0
     },
-    getItems: function getItems(page) {
+    getItems: function getItems(page, show_msg) {
+      if (show_msg !== true) {
+        $('.alert').hide();
+      }
+
       if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
         alert(messages["MSG02001"].replace(':attribute', '基準日'));
         $('#reference_date').focus();
@@ -3345,7 +3349,7 @@ var ctrStaffsListVl = new Vue({
 
   },
   mounted: function mounted() {
-    this.getItems(1);
+    this.getItems(1, true);
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -3362,7 +3366,7 @@ var ctrStaffsListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
 
 
 /***/ })
