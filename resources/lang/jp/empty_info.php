@@ -32,7 +32,7 @@ return [
             'regist_office' => '営業所',
             'vehicle_classification' => '車両区分',
             'registration_numbers'=>'車番',
-            'car_compartment'=>'車格',
+            'vehicle_size'=>'車格',
             'vehicle_body_shape'=>'形状',
             'max_load_capacity'=>'最大積載量',
             'equipment'=>'搭載物',

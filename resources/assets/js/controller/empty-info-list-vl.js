@@ -54,6 +54,7 @@ var ctrEmptyInfoListVl = new Vue({
                 }
 
                 that.items = response.data.data;
+                console.log( that.items);
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
                 that.loading = false;

@@ -56,35 +56,20 @@ class EmptyInfoController extends Controller {
         parent::__construct();
     }
     protected function search($data){
-            $this->query->select('mst_business_offices.business_office_nm as regist_office'
-//            'empty_info.vehicles_cd',
-//            'empty_info.door_number',
-//            'empty_info.registration_numbers'
-//            DB::raw("DATE_FORMAT(empty_info.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
-//            DB::raw("DATE_FORMAT(empty_info.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
-//            DB::raw("DATE_FORMAT(empty_info.modified_at, '%Y/%m/%d') as modified_at")
-//            DB::raw("DATE_FORMAT(sub.max_adhibition_end_dt, '%Y/%m/%d') as max_adhibition_end_dt")
+            $this->query->select('mst_business_offices.business_office_nm as regist_office',
+               'vehicle_classification.date_nm as vehicle_classification',
+               'empty_info.registration_numbers',
+               'empty_info.vehicle_size',
+               'empty_info.vehicle_body_shape',
+               'empty_info.max_load_capacity'
             );
-
             $this->query->leftJoin('mst_business_offices', function ($join) {
-                $join->on('mst_business_offices.id', '=', 'empty_info.vehicle_size');
-            })->leftjoin('mst_general_purposes', function ($join) {
-                $join->on('mst_general_purposes.date_id', '=', 'empty_info.vehicle_size')
-                    ->where('mst_general_purposes.data_kb', config('params.data_kb.vehicles_kb'));
+                $join->on('mst_business_offices.id', '=', 'empty_info.regist_office_id');
+            })->leftjoin('mst_general_purposes as vehicle_classification', function ($join) {
+                $join->on('vehicle_classification.date_id', '=', 'empty_info.vehicle_kb')
+                    ->where('vehicle_classification.data_kb', config('params.data_kb.vehicle_classification_for_empty_car_info'));
             });
-////            ->leftjoin(DB::raw('(select vehicles_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from empty_info where deleted_at IS NULL group by vehicles_cd) sub'), function ($join) {
-////                $join->on('sub.vehicles_cd', '=', 'empty_info.vehicles_cd');
-////            })
-////            ->whereRaw('empty_info.deleted_at IS NULL')
-////            ->where('empty_info.vehicles_cd', "LIKE", "%{$where['suppliers_cd']}%");
-//
-////        if ($where['radio_reference_date'] == '1' && $where['reference_date'] != '') {
-////            $this->query->where('empty_info.adhibition_start_dt', "<=", $where['reference_date']);
-////            $this->query->where('empty_info.adhibition_end_dt', ">=", $where['reference_date']);
-////        }
-//
-//        $this->query->orderby('empty_info.vehicles_cd');
-//        $this->query->orderby('empty_info.adhibition_start_dt');
+
     }
     public function store(Request $request, $id=null){
         $mEmptyInfo = new MEmptyInfo();
@@ -159,7 +144,7 @@ class EmptyInfoController extends Controller {
             'registration_numbers'=> [
                 "classTH" => ""
             ],
-            'car_compartment'=> [
+            'vehicle_size'=> [
                 "classTH" => "",
                 "classTD" => "td-nl2br",
             ],
@@ -199,7 +184,7 @@ class EmptyInfoController extends Controller {
         ];
         $mBussinessOffice = new MBusinessOffices();
         $mGeneralPurpose = new MGeneralPurposes();
-        $askingBaggages = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['asking_baggage']);
+        $askingBaggages = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['preferred_package']);
         $startPrefCds = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['prefecture_cd']);
         $businessOffices = $mBussinessOffice->getAllData();
         return view('empty_info.index',[
