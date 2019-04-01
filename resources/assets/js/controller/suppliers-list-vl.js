@@ -23,7 +23,11 @@ var ctrSuppliersListVl = new Vue({
             current_page: 1,
             last_page:0
         },
-        getItems: function(page){
+        getItems: function(page, show_msg){
+            if (show_msg !== true) {
+                $('.alert').hide();
+            }
+
             if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
                 alert(messages["MSG02001"].replace(':attribute', '基準日'));
                 $('#reference_date').focus();
@@ -95,7 +99,7 @@ var ctrSuppliersListVl = new Vue({
         }
     },
     mounted () {
-        this.getItems(1);
+        this.getItems(1, true);
     },
     components: {
         PulseLoader,
