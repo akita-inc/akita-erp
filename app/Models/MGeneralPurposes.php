@@ -52,7 +52,7 @@ class MGeneralPurposes extends Model
         }
     }
 
-    public function getInfoByMngDiv($data_kb,$kDefault = "default",$order=[]){
+    public function getInfoByDataKB($data_kb){
         $data = $this->getMConfigByConditions(
             array(
                 [
@@ -61,15 +61,15 @@ class MGeneralPurposes extends Model
                     'value' => $data_kb
                 ]
             ),
-            array('id', 'info_1','date_id'),
-            $order
+            array('id', 'date_nm','date_id','contents1'),
+            array(
+                [
+                    'field' => 'disp_number',
+                    'sortby' => 'asc',
+                ]
+            )
         );
-        $result = array($kDefault => '==選択==');
-
-        foreach (json_decode(json_encode($data), true) as $key=>$item){
-            $result[$item['date_id']] = $item['info_1'];
-        }
-        return $result;
+        return $data;
     }
 
     public function getDateIDByDataKB($data_kb,$kDefault = "default"){

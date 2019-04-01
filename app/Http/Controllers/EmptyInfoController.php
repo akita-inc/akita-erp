@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Models\MBusinessOffices;
 use App\Models\MEmptyInfo;
+use App\Models\MGeneralPurposes;
+use App\Models\MVehicles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 
 class EmptyInfoController extends Controller {
@@ -54,9 +58,65 @@ class EmptyInfoController extends Controller {
 
     public function store(Request $request, $id=null){
         $mEmptyInfo = new MEmptyInfo();
+        $mBusinessOffices = new MBusinessOffices();
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices();
+        $listVehicleClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_classification_for_empty_car_info'],'Empty');
+        $listEquipment= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb')['loaded_item']);
+        $listPreferredPackage= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['preferred_package'],'');
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
         return view('empty_info.form', [
             '$mEmptyInfo' => $mEmptyInfo,
+            'listBusinessOffices' =>$listBusinessOffices,
+            'listVehicleClassification' =>$listVehicleClassification,
+            'listEquipment' =>$listEquipment,
+            'listPreferredPackage' =>$listPreferredPackage,
+            'listPrefecture' => $listPrefecture,
+            'role' => 1,
         ]);
+    }
+
+    public function searchVehicle(Request $request){
+        $input = $request->all();
+        $mVehicle =  new MVehicles();
+        $data =  $mVehicle
+            ->select(
+                'mst_vehicles.registration_numbers',
+                'mst_vehicles.max_loading_capacity',
+                'size.date_nm as vehicle_size_kb',
+                'shape.date_nm as car_body_shape'
+            )
+            ->leftjoin(DB::raw('mst_general_purposes size'), function ($join) {
+                $join->on('size.date_id', '=', 'mst_vehicles.vehicle_size_kb')
+                    ->where('size.data_kb', config('params.data_kb.vehicle_size_kb'));
+            })
+             ->leftjoin(DB::raw('mst_general_purposes shape'), function ($join) {
+                $join->on('shape.date_id', '=', 'mst_vehicles.car_body_shape_id')
+                    ->where('shape.data_kb', config('params.data_kb.car_body_shape'));
+            })
+            ->where('mst_vehicles.deleted_at','=',null)
+            ->where('mst_vehicles.mst_business_office_id','=',$input['mst_business_office_id'])
+            ->where(function($q) use ($input) {
+                $q->where('registration_numbers','LIKE','%'.$input['registration_numbers'].'%')->orWhere('registration_numbers','LIKE','%'.mb_convert_kana($input['registration_numbers'], "A", 'UTF-8').'%');
+            })
+            ->get();
+        if(count($data) > 0){
+            if(count($data) > 1){
+                return response()->json([
+                    'success'=>false,
+                    'msg'=> Lang::get('messages.MSG10011'),
+                ]);
+            }
+            return response()->json([
+                'success'=>true,
+                'info'=> $data[0],
+            ]);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'msg'=> Lang::get('messages.MSG10010'),
+            ]);
+        }
     }
 
 }
