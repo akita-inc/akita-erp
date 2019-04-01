@@ -3244,8 +3244,12 @@ var ctrSuppliersListVl = new Vue({
       current_page: 1,
       last_page: 0
     },
-    getItems: function getItems(page) {
+    getItems: function getItems(page, show_msg) {
       var _this = this;
+
+      if (show_msg !== true) {
+        $('.alert').hide();
+      }
 
       if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
         alert(messages["MSG02001"].replace(':attribute', '基準日'));
@@ -3324,7 +3328,7 @@ var ctrSuppliersListVl = new Vue({
     }
   },
   mounted: function mounted() {
-    this.getItems(1);
+    this.getItems(1, true);
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -3341,7 +3345,7 @@ var ctrSuppliersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
 
 
 /***/ })
