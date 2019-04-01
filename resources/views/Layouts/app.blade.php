@@ -90,6 +90,7 @@
             @endif
         </div>
         @endif
+        <a href="{{ route('empty_info.list')  }}" class="list-group-item">KARAマッチ</a>
     </div>
 </nav>
 
