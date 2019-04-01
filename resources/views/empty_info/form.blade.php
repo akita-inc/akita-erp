@@ -58,15 +58,15 @@
                         <!--Block 1-->
                         <div class="grid-form">
                             <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    @include('Component.form.select',['class'=>'wd-350','filed'=>'regist_office_id','array'=>$listBusinessOffices,'required'=>true])
+                                <div class="col-md-4 col-sm-12">
+                                    @include('Component.form.select',['filed'=>'regist_office_id','array'=>$listBusinessOffices,'required'=>true])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-12 col-sm-12">
                                     @include('Component.form.radio',['class'=>'w-100','filed'=>'vehicle_kb','array' => $listVehicleClassification,'required'=>true])
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
+                                <div class="col-md-4 col-sm-12">
                                     <div class="wrap-control-group">
                                         <label for="search_vehicle">ナンバー検索</label>
                                         <input v-model="registration_numbers"
@@ -76,8 +76,8 @@
                                                maxlength="4">
                                     </div>
                                 </div>
-                                <div class="col-md-7 col-sm-12">
-                                        <button class="btn btn-primary btn-submit" type="button" @click="searchVehicle">{{ trans("common.button.search") }}</button>
+                                <div class="col-md-8 col-sm-12">
+                                        <button class="btn btn-primary" type="button" @click="searchVehicle">{{ trans("common.button.search") }}</button>
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
@@ -95,16 +95,16 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-8 col-sm-12">
-                                    @include('Component.form.multiple_checkbox',['filed'=>'equipment','array' => $listEquipment ])
+                                    @include('Component.form.multiple_checkbox',['filed'=>'equipment','array' => $listEquipment ,'required'=>true])
                                 </div>
                             </div>
                             <div class="grid-form">
                                 <div class="row">
-                                    <div class="col-md-6 col-sm-12">
+                                    <div class="col-md-4 col-sm-12">
                                         @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $role])
 
                                     </div>
-                                    <div class="col-md-6 col-sm-12">
+                                    <div class="col-md-8 col-sm-12">
                                         @include('Component.form.time-picker',['class' => 'pl-0 wd-150','filed'=>'start_time','role' => $role])
                                     </div>
                                     <div class="break-row-form"></div>

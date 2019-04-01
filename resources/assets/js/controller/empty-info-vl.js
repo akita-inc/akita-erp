@@ -22,7 +22,7 @@ var ctrEmptyInfoVl = new Vue({
             vehicle_size:"",
             vehicle_body_shape:"",
             max_load_capacity:"",
-            equipment:"",
+            equipment:[],
             start_date:"",
             start_time:"",
             start_pref_cd:"",
@@ -148,7 +148,7 @@ var ctrEmptyInfoVl = new Vue({
         searchVehicle: function () {
             var that = this;
             if(that.registration_numbers==''){
-                alert(messages['MSG07001']);
+                alert(messages['MSG10009']);
                 return;
             }else{
                 if(isNaN(that.registration_numbers)){
@@ -156,7 +156,6 @@ var ctrEmptyInfoVl = new Vue({
                     return;
                 }
             }
-            console.log(that.field.vehicle_kb);
             if(that.field.vehicle_kb==1){
                 empty_info_service.searchVehicle({registration_numbers: that.registration_numbers,mst_business_office_id:that.field.regist_office_id}).then((response) => {
                     if (!response.success) {
@@ -172,6 +171,23 @@ var ctrEmptyInfoVl = new Vue({
                 });
             }
 
+        },
+        check: function (e) {
+            let index = e.target.getAttribute('index');
+            if(typeof this.field.equipment[index]== "undefined") {
+                this.field.equipment[index] = {
+                    id: e.target.value,
+                    value: $('#equipment_value' + index).val()
+                };
+            }else{
+                this.field.equipment.splice(index);
+            }
+        },
+        input: function (e) {
+            let index = e.target.getAttribute('index');
+            if(typeof this.field.equipment[index]!= "undefined"){
+                this.field.equipment[index].value = e.target.value;
+            }
         }
     },
     mounted () {
