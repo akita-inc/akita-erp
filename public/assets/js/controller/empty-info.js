@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -20824,10 +20824,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/controller/customers-vl.js":
-/*!********************************************************!*\
-  !*** ./resources/assets/js/controller/customers-vl.js ***!
-  \********************************************************/
+/***/ "./resources/assets/js/controller/empty-info-vl.js":
+/*!*********************************************************!*\
+  !*** ./resources/assets/js/controller/empty-info-vl.js ***!
+  \*********************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20847,89 +20847,44 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var ctrCustomersVl = new Vue({
-  el: '#ctrCustomersVl',
+var ctrEmptyInfoVl = new Vue({
+  el: '#ctrEmptyInfoVl',
   data: {
     lang: lang_date_picker,
     loading: false,
     customer_edit: 0,
     customer_id: null,
     field: {
-      adhibition_start_dt: "",
-      adhibition_end_dt: $("#hd_adhibition_end_dt_default").val(),
-      adhibition_start_dt_edit: "",
-      adhibition_end_dt_edit: $("#hd_adhibition_end_dt_default").val(),
-      adhibition_start_dt_history: "",
-      adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
-      mst_customers_cd: "",
-      customer_nm: "",
-      customer_nm_kana: "",
-      customer_nm_formal: "",
-      customer_nm_kana_formal: "",
-      person_in_charge_last_nm: "",
-      person_in_charge_first_nm: "",
-      person_in_charge_last_nm_kana: "",
-      person_in_charge_first_nm_kana: "",
-      zip_cd: "",
-      prefectures_cd: "",
-      address1: "",
-      address2: "",
-      address3: "",
-      phone_number: "",
-      fax_number: "",
-      hp_url: "",
-      customer_category_id: "",
-      prime_business_office_id: "",
-      explanations_bill: "",
-      bundle_dt: "",
-      deposit_month_id: "",
-      deposit_day: "",
-      deposit_method_id: "",
-      deposit_method_notes: "",
-      business_start_dt: "",
-      consumption_tax_calc_unit_id: "",
-      rounding_method_id: "",
-      discount_rate: "",
-      except_g_drive_bill_fg: false,
-      mst_bill_issue_destinations: [{
-        prefectures_cd: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        phone_number: "",
-        fax_number: ""
-      }],
-      deposit_bank_cd: "",
-      mst_account_titles_id: "",
-      mst_account_titles_id_2: "",
-      mst_account_titles_id_3: "",
-      notes: ""
+      id: "",
+      status: "",
+      regist_staff: "",
+      regist_office_id: "",
+      email_address: "",
+      vehicle_kb: 1,
+      registration_numbers: "",
+      vehicle_size: "",
+      vehicle_body_shape: "",
+      max_load_capacity: "",
+      equipment: "",
+      start_date: "",
+      start_time: "",
+      start_pref_cd: "",
+      start_address: "",
+      asking_price: "",
+      asking_baggage: "",
+      arrive_pref_cd: "",
+      arrive_address: "",
+      arrive_date: "",
+      ask_date: "",
+      ask_office: "",
+      ask_staff: "",
+      ask_staff_email_address: "",
+      apr_date: ""
     },
-    errors: {},
-    dateFormat: {
-      stringify: function stringify(date) {
-        return date ? moment__WEBPACK_IMPORTED_MODULE_3___default()(date).format('YYYY MM DD') : null;
-      },
-      parse: function parse(value) {
-        return value ? moment__WEBPACK_IMPORTED_MODULE_3___default()(value, 'YYYY MM DD').toDate() : null;
-      }
-    },
-    autokana: []
+    registration_numbers: "",
+    errors: {}
   },
   methods: {
-    testblur: function testblur(event) {
-      var keyCode = event.keyCode;
-      console.log(keyCode); // Tab 9 or Enter 13
-
-      if (keyCode === 9 || keyCode === 13) {
-        this.popupVisible = false;
-        event.stopPropagation();
-      }
-    },
-    clone: function clone() {
-      this.field["clone"] = true;
-      this.submit();
-    },
     submit: function submit() {
       var _this = this;
 
@@ -20963,25 +20918,6 @@ var ctrCustomersVl = new Vue({
     showError: function showError(errors) {
       return errors.join("<br/>");
     },
-    addRows: function addRows() {
-      this.field.mst_bill_issue_destinations.push({
-        prefectures_cd: "",
-        address1: "",
-        address2: "",
-        address3: "",
-        phone_number: "",
-        fax_number: ""
-      });
-    },
-    convertKana: function convertKana(input, destination) {
-      if (this.field[input.target.id] == "") {
-        this.field[destination] = "";
-      } else {
-        var furigana = this.autokana[input.target.id].getFurigana();
-        var baseKana = this.autokana[input.target.id].baseKana;
-        this.field[destination] = furigana == '' ? baseKana : furigana;
-      }
-    },
     getAddrFromZipCode: function getAddrFromZipCode() {
       var that = this;
       var zip = $('#zip_cd').val();
@@ -21005,38 +20941,6 @@ var ctrCustomersVl = new Vue({
           that.field.address2 = addr.street;
         }
       });
-    },
-    getAddrFromZipCodeCollapse: function getAddrFromZipCodeCollapse(index) {
-      var that = this;
-      var zip = this.field.mst_bill_issue_destinations[index].zip_cd;
-
-      if (zip == '') {
-        alert(messages['MSG07001']);
-        return;
-      } else {
-        if (isNaN(zip)) {
-          alert(messages['MSG07002']);
-          return;
-        }
-      }
-
-      new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_2__["Core"](zip, function (addr) {
-        if (addr.region_id == "" || addr.locality == "" || addr.street == "") {
-          alert(messages['MSG07002']);
-        } else {
-          that.field.mst_bill_issue_destinations[index].prefectures_cd = addr.region_id; // 都道府県ID
-
-          that.field.mst_bill_issue_destinations[index].address1 = addr.locality; // 市区町村
-
-          that.field.mst_bill_issue_destinations[index].address2 = addr.street; // 町域
-
-          that.field.mst_bill_issue_destinations.push({});
-          that.field.mst_bill_issue_destinations.splice(that.field.mst_bill_issue_destinations.length - 1, 1);
-        }
-      });
-    },
-    removeRows: function removeRows(index) {
-      this.field.mst_bill_issue_destinations.splice(index, 1);
     },
     backHistory: function backHistory() {
       if (this.customer_edit == 1) {
@@ -21078,40 +20982,58 @@ var ctrCustomersVl = new Vue({
         });
       }
     },
-    deleteCustomer: function deleteCustomer(id) {
+    delete: function _delete(id) {
       var that = this;
-      customers_service.checkIsExist(id).then(function (response) {
+      empty_info_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
           that.backHistory();
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {
-            customers_service.deleteCustomer(id).then(function (response) {
+            customers_service.delete(id).then(function (response) {
               window.location.href = listRoute;
             });
           }
         }
       });
+    },
+    searchVehicle: function searchVehicle() {
+      var that = this;
+
+      if (that.registration_numbers == '') {
+        alert(messages['MSG07001']);
+        return;
+      } else {
+        if (isNaN(that.registration_numbers)) {
+          alert(messages['MSG10009']);
+          return;
+        }
+      }
+
+      console.log(that.field.vehicle_kb);
+
+      if (that.field.vehicle_kb == 1) {
+        empty_info_service.searchVehicle({
+          registration_numbers: that.registration_numbers,
+          mst_business_office_id: that.field.regist_office_id
+        }).then(function (response) {
+          if (!response.success) {
+            alert(response.msg);
+            return false;
+          } else {
+            var result = response.info;
+            that.field.registration_numbers = result.registration_numbers;
+            that.field.vehicle_size = result.vehicle_size_kb;
+            that.field.vehicle_body_shape = result.car_body_shape;
+            that.field.max_load_capacity = result.max_loading_capacity;
+          }
+        });
+      }
     }
   },
   mounted: function mounted() {
     this.loadFormEdit();
-
-    if (role == 1 || role == 2 && this.customer_id != null) {
-      this.autokana['customer_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm', '#customer_nm_kana', {
-        katakana: true
-      });
-      this.autokana['customer_nm_formal'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#customer_nm_formal', '#customer_nm_kana_formal', {
-        katakana: true
-      });
-      this.autokana['person_in_charge_last_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', {
-        katakana: true
-      });
-      this.autokana['person_in_charge_first_nm'] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_4__["bind"]('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', {
-        katakana: true
-      });
-    }
   },
   components: {
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a,
@@ -21180,14 +21102,14 @@ var CACHE = [],
 
 /***/ }),
 
-/***/ 3:
-/*!**************************************************************!*\
-  !*** multi ./resources/assets/js/controller/customers-vl.js ***!
-  \**************************************************************/
+/***/ 11:
+/*!***************************************************************!*\
+  !*** multi ./resources/assets/js/controller/empty-info-vl.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })
