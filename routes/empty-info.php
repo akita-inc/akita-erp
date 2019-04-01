@@ -13,5 +13,6 @@ Route::group(['name' => 'empty-info', 'prefix' => 'empty_info', 'middleware' => 
         Route::any('back-history', ['uses' => 'EmptyInfoController@backHistory']);
         Route::any('/submit','EmptyInfoController@save')->name("empty_info.save");
         Route::get('/delete/{id}', 'EmptyInfoController@delete')->name('empty_info.delete');
+        Route::any('/search-vehicle', 'EmptyInfoController@searchVehicle');
     });
 });
