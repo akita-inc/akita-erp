@@ -61,13 +61,20 @@ class EmptyInfoController extends Controller {
                'empty_info.registration_numbers',
                'empty_info.vehicle_size',
                'empty_info.vehicle_body_shape',
-               'empty_info.max_load_capacity'
+               'empty_info.max_load_capacity',
+                'empty_info.equipment',
+                DB::raw("DATE_FORMAT(empty_info.start_date, '%Y/%m/%d') as adhibition_start_dt"),
+                DB::raw("CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i')) as schedule_date")
+
             );
             $this->query->leftJoin('mst_business_offices', function ($join) {
                 $join->on('mst_business_offices.id', '=', 'empty_info.regist_office_id');
             })->leftjoin('mst_general_purposes as vehicle_classification', function ($join) {
                 $join->on('vehicle_classification.date_id', '=', 'empty_info.vehicle_kb')
                     ->where('vehicle_classification.data_kb', config('params.data_kb.vehicle_classification_for_empty_car_info'));
+            })->leftjoin('mst_general_purposes as empty_car_location', function ($join) {
+                $join->on('empty_car_location.date_id', '=', 'empty_info.start_pref_cd')
+                    ->where('empty_car_location.data_kb', config('params.data_kb.prefecture_cd'));
             });
 
     }
@@ -161,6 +168,10 @@ class EmptyInfoController extends Controller {
                 "classTD" => "text-center"
             ],
             'schedule_date'=> [
+                "classTH" => "wd-160",
+                "classTD" => "text-center"
+            ],
+            'start_pref_cd'=> [
                 "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],

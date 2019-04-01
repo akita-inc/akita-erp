@@ -37,7 +37,7 @@ return [
             'max_load_capacity'=>'最大積載量',
             'equipment'=>'搭載物',
             'schedule_date'=>'空車予定日時',
-            'empty_car_location'=>'空車場所',
+            'start_pref_cd'=>'空車場所',
             'asking_price'=>'希望運賃',
             'asking_baggage'=>'希望荷物',
             'expected_location'=>'到着予定地',
