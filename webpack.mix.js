@@ -21,6 +21,7 @@ mix.js([
     'resources/assets/js/service/suppliers-service.js',
     'resources/assets/js/service/staffs-service.js',
     'resources/assets/js/service/vehicles-service.js',
+    'resources/assets/js/service/empty-info-service.js',
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -60,3 +61,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/vehicles-vl.js'
 ], 'public/assets/js/controller/vehicles.js');
+
+mix.js([
+    'resources/assets/js/controller/empty-info-vl.js'
+], 'public/assets/js/controller/empty-info.js');

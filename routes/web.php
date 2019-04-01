@@ -25,3 +25,4 @@ include "supplier.php";
 include "customer.php";
 include "staff.php";
 include "vehicle.php";
+include "empty-info.php";
