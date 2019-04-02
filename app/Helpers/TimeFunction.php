@@ -64,4 +64,14 @@ class TimeFunction
     static function subOneDay($date, $format='Y-m-d'){
         return Carbon::parse($date)->subDay()->format($format);
     }
+
+    static function parseStringToTime($time, $format='H:i:s'){
+        return  date($format, strtotime($time));
+    }
+
+    static function convertTime24To12($time, $format="g:i A"){
+        return  date($format, strtotime($time));
+    }
+
+
 }

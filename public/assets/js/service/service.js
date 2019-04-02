@@ -156,7 +156,7 @@ empty_info_service = {
     });
   },
   delete: function _delete(id) {
-    return axios.get('/empty_info/delete/' + id).then(function (response) {
+    return axios.get('/empty_info/api-v1/delete/' + id).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
