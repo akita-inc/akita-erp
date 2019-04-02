@@ -147,7 +147,50 @@ customers_service = {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-
+empty_info_service = {
+  loadList: function loadList(data) {
+    return axios.post('/empty_info/api-v1/getItems', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  delete: function _delete(id) {
+    return axios.get('/empty_info/delete/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  submit: function submit(data) {
+    return axios.post('/empty_info/api-v1/submit', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  checkIsExist: function checkIsExist(id) {
+    return axios.get('/empty_info/api-v1/checkIsExist/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/empty_info/api-v1/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  searchVehicle: function searchVehicle(data) {
+    return axios.post('/empty_info/api-v1/search-vehicle', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  }
+};
 
 /***/ }),
 
