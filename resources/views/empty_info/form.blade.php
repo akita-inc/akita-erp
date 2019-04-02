@@ -63,7 +63,7 @@
                                     @include('Component.form.radio',['class'=>'w-100','filed'=>'vehicle_kb','array' => $listVehicleClassification,'required'=>true])
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-4 col-sm-12">
+                                <div class="col-md-5 col-sm-12">
                                     <div class="wrap-control-group">
                                         <label for="search_vehicle">ナンバー検索</label>
                                         <input v-model="registration_numbers"
@@ -71,25 +71,30 @@
                                                class="form-control w-50"
                                                id="search_vehicle"
                                                maxlength="4">
+                                        <span>※ナンバー4桁を入力してください。</span>
                                     </div>
+
                                 </div>
-                                <div class="col-md-8 col-sm-12">
-                                        <button class="btn btn-primary" type="button" @click="searchVehicle">{{ trans("common.button.search") }}</button>
+                                <div class="col-md-7 col-sm-12">
+                                        <button class="btn btn-outline-secondary" type="button" @click="searchVehicle">{{ trans("common.button.search") }}</button>
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-12 col-sm-12">
                                     @include('Component.form.input',['filed'=>'registration_numbers','attr_input' => "maxlength='50'"])
                                 </div>
-                                <div class="col-md-6 col-sm-12">
+                                <div class="break-row-form"></div>
+                                <div class="col-md-12 col-sm-12">
                                     @include('Component.form.input',['filed'=>'vehicle_size','required'=>true,'attr_input' => "maxlength='50'"])
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-12 col-sm-12">
                                     @include('Component.form.input',['filed'=>'vehicle_body_shape','required'=>true,'attr_input' => "maxlength='50'"])
                                 </div>
-                                <div class="col-md-6 col-sm-12">
+                                <div class="break-row-form"></div>
+                                <div class="col-md-5 col-sm-10">
                                     @include('Component.form.input',['filed'=>'max_load_capacity','required'=>true,'attr_input' => "maxlength='5'"])
                                 </div>
+                                <div class="col-md-7 col-sm-2 pl-0 d-flex align-items-center">kg</div>
                                 <div class="break-row-form"></div>
                                 @if(empty($mEmptyInfo))
                                 <div class="col-md-8 col-sm-12">
