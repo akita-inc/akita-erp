@@ -120,18 +120,12 @@ class StaffsController extends Controller
                 ->where('mst_staffs.adhibition_end_dt','>=',$where['reference_date']);
         }
 
-        if ($data["orderBy"] != '') {
-            if ($data["orderBy"] == 'employment_pattern_nm')
-                $orderCol = "employment_pattern.date_nm";
-            else if ($data["orderBy"] == 'position_nm')
-                $orderCol = "position.date_nm";
-            else if ($data["orderBy"] == 'staff_nm')
+        if ($data["order"]["col"] != '') {
+            if ($data["order"]["col"] == 'staff_nm')
                 $orderCol = 'CONCAT_WS("    ",mst_staffs.last_nm,mst_staffs.first_nm)';
-            else if ($data["orderBy"] == 'belong_company_nm')
-                $orderCol = "belong_company.date_nm";
             else
-                $orderCol = $data["orderBy"];
-            if (isset($data["descFlg"]) && $data["descFlg"]) {
+                $orderCol = $data["order"]["col"];
+            if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
                 $orderCol .= " DESC";
             }
             $this->query->orderbyRaw($orderCol);
@@ -145,34 +139,43 @@ class StaffsController extends Controller
     {
         $fieldShowTable = [
             'staff_cd' => [
-                "classTH" => "wd-120"
+                "classTH" => "wd-120",
+                "sortBy" => "staff_cd"
             ],
             'employment_pattern_nm' => [
-                "classTH" => ""
+                "classTH" => "",
+                "sortBy" => "employment_pattern.date_nm"
             ],
             'position_nm' => [
-                "classTH" => ""
+                "classTH" => "",
+                "sortBy" => "position.date_nm"
             ],
             'staff_nm' => [
-                "classTH" => ""
+                "classTH" => "",
+                "sortBy" => "staff_nm"
             ],
             'belong_company_nm' => [
-                "classTH" => ""
+                "classTH" => "",
+                "sortBy" => "belong_company.date_nm"
             ],
             'business_office_nm' => [
-                "classTH" => ""
+                "classTH" => "",
+                "sortBy" => "business_office_nm"
             ],
             'adhibition_start_dt' => [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy" => "adhibition_start_dt"
             ],
             'adhibition_end_dt' => [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy" => "adhibition_end_dt"
             ],
             'modified_at' => [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy" => "modified_at"
             ],
 
         ];

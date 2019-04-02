@@ -133,7 +133,7 @@
                 <thead>
                 <tr>
                     @foreach($fieldShowTable as $key => $field)
-                        <th v-on:click="sortList($event, '{{$key}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("staffs.list.table.".$key)}}</th>
+                        <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("staffs.list.table.".$key)}}</th>
                     @endforeach
                     @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>

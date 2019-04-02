@@ -65,8 +65,7 @@ trait ListTrait
             ],
             'data' => $items,
             'fieldSearch' => $data['fieldSearch'],
-            'orderBy' => $data['orderBy'],
-            'descFlg' => $data['descFlg'],
+            'order' => $data['order'],
         ];
         return response()->json($response);
     }

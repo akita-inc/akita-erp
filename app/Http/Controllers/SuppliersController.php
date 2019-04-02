@@ -64,12 +64,12 @@ class SuppliersController extends Controller
             $this->query->where('mst_suppliers.adhibition_end_dt', ">=", $where['reference_date']);
         }
 
-        if ($data["orderBy"] != '') {
-            if ($data["orderBy"] == 'street_address')
+        if ($data["order"]["col"] != '') {
+            if ($data["order"]["col"] == 'street_address')
                 $orderCol = "CONCAT_WS('',mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3)";
             else
-                $orderCol = $data["orderBy"];
-            if (isset($data["descFlg"]) && $data["descFlg"]) {
+                $orderCol = $data["order"]["col"];
+            if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
                 $orderCol .= " DESC";
             }
             $this->query->orderbyRaw($orderCol);

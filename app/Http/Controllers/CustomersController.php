@@ -100,12 +100,12 @@ class CustomersController extends Controller
                         ->where('mst_customers.adhibition_end_dt','>=',$reference_date);
         }
 
-        if ($data["orderBy"] != '') {
-            if ($data["orderBy"] == 'street_address')
+        if ($data["order"]["col"] != '') {
+            if ($data["order"]["col"] == 'street_address')
                 $orderCol = "CONCAT_WS('',mst_general_purposes.date_nm,mst_customers.address1,mst_customers.address2,mst_customers.address3)";
             else
-                $orderCol = $data["orderBy"];
-            if (isset($data["descFlg"]) && $data["descFlg"]) {
+                $orderCol = $data["order"]["col"];
+            if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
                 $orderCol .= " DESC";
             }
             $this->query->orderbyRaw($orderCol);

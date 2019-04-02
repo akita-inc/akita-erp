@@ -23,8 +23,11 @@ var ctrSuppliersListVl = new Vue({
             current_page: 1,
             last_page: 0
         },
-        orderBy: '',
-        descFlg: true,
+        order: {
+            col:'',
+            descFlg: true,
+            divId:''
+        },
         getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
@@ -40,8 +43,7 @@ var ctrSuppliersListVl = new Vue({
                 pageSize:this.pageSize,
                 page:page,
                 fieldSearch:this.fieldSearch,
-                orderBy:this.orderBy,
-                descFlg: this.descFlg,
+                order:this.order,
             };
 
             var that = this;
@@ -56,11 +58,10 @@ var ctrSuppliersListVl = new Vue({
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fieldSearch = response.fieldSearch;
-                that.orderBy = response.orderBy;
-                that.descFlg = response.descFlg;
+                that.order = response.order;
                 that.loading = false;
-                if (that.orderBy !== null)
-                    $('#th_'+ that.orderBy).addClass(that.descFlg ? 'sort-desc' : 'sort-asc');
+                if (that.order.col !== null)
+                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
             });
         },
         changePage: function (page) {
@@ -69,14 +70,15 @@ var ctrSuppliersListVl = new Vue({
         },
         sortList: function(event, order_by) {
             $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
-            if (this.orderBy === order_by && this.descFlg) {
-                this.descFlg = false;
+            if (this.order.col === order_by && this.order.descFlg) {
+                this.order.descFlg = false;
                 event.target.classList.toggle('sort-asc');
             } else {
-                this.descFlg = true;
+                this.order.descFlg = true;
                 event.target.classList.toggle('sort-desc');
             }
-            this.orderBy = order_by;
+            this.order.col = order_by;
+            this.order.divId = event.currentTarget.id;
             this.getItems(this.pagination.current_page);
         }
     },
