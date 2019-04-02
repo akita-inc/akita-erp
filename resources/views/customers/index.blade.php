@@ -58,10 +58,10 @@
         </div>
         <div class="wrapper-table">
             <table class="table table-striped table-bordered table-green">
-                <thead>
+                <thead class="cursor-pointer">
                 <tr>
                     @foreach($fieldShowTable as $key => $field)
-                        <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("customers.list.table.".$key)}}</th>
+                        <th v-on:click="sortList($event, '{{$key}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("customers.list.table.".$key)}}</th>
                     @endforeach
                     @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>

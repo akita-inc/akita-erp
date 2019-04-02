@@ -382,9 +382,23 @@ input,select{
     text-align: center;
     border: #a6a6a6 1px solid;
 }
-
 .table-green td{
     vertical-align: middle;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+.sort-asc:after {
+    content: " \f0d8";
+    font-family: FontAwesome;
+    display: inline;
+    float: right;
+}
+.sort-desc:after {
+    content: " \f0d7";
+    font-family: FontAwesome;
+    display: inline;
+    float: right;
 }
 .xsmall {
     font-size: 65%;
