@@ -30,6 +30,7 @@ var ctrEmptyInfoListVl = new Vue({
             current_page: 1,
             last_page:0
         },
+        order:"",
         errors:[],
         auth_offfice_id:auth_offfice_id,
         getItems: function(page,show_msg){
@@ -43,8 +44,7 @@ var ctrEmptyInfoListVl = new Vue({
                 order:this.order
             };
             var that = this;
-            this.loading = true;
-            console.log(this.fileSearch.status);
+            this.loading = false;
             empty_info_service.loadList(data).then((response) => {
                 if (response.data.data.length===0) {
                     that.message = messages["MSG05001"];
