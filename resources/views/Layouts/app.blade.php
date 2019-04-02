@@ -114,6 +114,16 @@
         }
     };
     format_date_picker = "YYYY/MM/DD";
+    $.ajax({
+        statusCode: {
+            400: function() {
+                alert('400 status code! user error');
+            },
+            500: function() {
+                alert('500 status code! server error');
+            }
+        }
+    });
 </script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>

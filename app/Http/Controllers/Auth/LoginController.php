@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MStaffs;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
 use Validator;
 use Illuminate\Support\MessageBag;
 class LoginController extends Controller
@@ -69,7 +71,8 @@ class LoginController extends Controller
                 ->where('adhibition_start_dt', '<=', date('Y-m-d'))
                 ->where('adhibition_end_dt', '>=', date('Y-m-d'))
                 ->first();
-            if (isset($staff) && Auth::attempt(['id' => $staff->id, 'password' => $data['password']], $remember)) {
+            if ( isset($staff) && Auth::attempt(['id' => $staff->id, 'password' => $data['password']], $remember)) {
+                Session::put('password_old', $staff->password);
                 return redirect('/');
             } else {
                 $errors = new MessageBag(['errorlogin' => trans('messages.MSG01003')]);
@@ -78,9 +81,17 @@ class LoginController extends Controller
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        Session::put('password_old',null);
+        return redirect('/login');
+    }
+    public function logoutError(Request $request)
+    {
+        Auth::logout();
+        Session::put('password_old',null);
+        Session::flash('message',Lang::get('messages.MSG10008'));
         return redirect('/login');
     }
 }
