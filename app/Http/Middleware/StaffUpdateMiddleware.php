@@ -12,8 +12,6 @@ class StaffUpdateMiddleware
 {
     public function handle($request, Closure $next)
     {
-        print_r($request->session());
-        exit;
         if(Auth::check())
         {
             $staff = DB::table("mst_staffs")
