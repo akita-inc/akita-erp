@@ -18,8 +18,8 @@ var ctrEmptyInfoListVl = new Vue({
             start_address:"",
             arrive_pref_cd:"",
             arrive_address:"",
-            status:0,
-            arrive_date:0,
+            status:false,
+            arrive_date:false,
         },
         message: '',
         pagination:{
@@ -31,13 +31,11 @@ var ctrEmptyInfoListVl = new Vue({
             last_page:0
         },
         errors:[],
-        getItems: function(page){
-            if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
-                alert(messages["MSG02001"].replace(':attribute', '基準日'));
-                $('#reference_date').focus();
-                return;
+        auth_offfice_id:auth_offfice_id,
+        getItems: function(page,show_msg){
+            if (show_msg !== true) {
+                $('.alert').hide();
             }
-
             var data = {
                 pageSize:this.pageSize,
                 page:page,
@@ -45,18 +43,21 @@ var ctrEmptyInfoListVl = new Vue({
                 order:this.order
             };
             var that = this;
-            this.loading = false;
+            this.loading = true;
+            console.log(this.fileSearch.status);
             empty_info_service.loadList(data).then((response) => {
                 if (response.data.data.length===0) {
-                    this.message = messages["MSG05001"];
+                    that.message = messages["MSG05001"];
                 } else {
-                    this.message = '';
+                    that.message = '';
                 }
-
                 that.items = response.data.data;
-                console.log( that.items);
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
+                $.each(that.fileSearch, function (key, value) {
+                    if (value === null)
+                        that.fileSearch[key] = '';
+                });
                 that.loading = false;
             });
         },
@@ -66,16 +67,27 @@ var ctrEmptyInfoListVl = new Vue({
         },
     },
     methods : {
+        setBgColor:function(status){
+            let bgColor="";
+            if(status==2)
+            {
+                bgColor="#FFFED8";
+            }
+            else if(status==8 || status==9)
+            {
+                bgColor="#DDDDDD";
+            }
+            else
+            {
+                bgColor="rgb(255, 255, 255)";
+            }
+            return bgColor;
+        },
         clearCondition: function clearCondition() {
-            this.fileSearch.mst_customers_cd = '';
-            this.fileSearch.customer_nm = '';
-            this.fileSearch.status = 1;
-            this.fileSearch.reference_date = date_now;
+
         },
         setDefault: function (){
-            if (this.fileSearch.reference_date === '') {
-                this.fileSearch.reference_date = date_now;
-            }
+
         },
         deleteSupplier: function (id){
             customers_service.checkIsExist(id).then((response) => {
@@ -104,7 +116,7 @@ var ctrEmptyInfoListVl = new Vue({
         }
     },
     mounted () {
-        this.getItems(1);
+        this.getItems(1, true);
     },
     components: {
         PulseLoader,

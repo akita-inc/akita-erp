@@ -3354,7 +3354,7 @@ var ctrVehiclesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
 
 
 /***/ })

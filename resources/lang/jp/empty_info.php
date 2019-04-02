@@ -40,7 +40,7 @@ return [
             'start_pref_cd'=>'空車場所',
             'asking_price'=>'希望運賃',
             'asking_baggage'=>'希望荷物',
-            'expected_location'=>'到着予定地',
+            'arrive_location'=>'到着予定地',
             'arrive_date'=>'到着日'
         ]
     ],

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\Common;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
@@ -56,16 +57,23 @@ class EmptyInfoController extends Controller {
         parent::__construct();
     }
     protected function search($data){
-            $this->query->select('mst_business_offices.business_office_nm as regist_office',
+        $currentDate = date("Y-m-d",time());
+        $dataSearch=$data['fieldSearch'];
+        $this->query->select('mst_business_offices.business_office_nm as regist_office',
+               'empty_info.regist_office_id',
                'vehicle_classification.date_nm as vehicle_classification',
                'empty_info.registration_numbers',
                'empty_info.vehicle_size',
                'empty_info.vehicle_body_shape',
                'empty_info.max_load_capacity',
-                'empty_info.equipment',
-                DB::raw("DATE_FORMAT(empty_info.start_date, '%Y/%m/%d') as adhibition_start_dt"),
-                DB::raw("CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i')) as schedule_date")
-
+               'empty_info.equipment',
+               'pref_asking_baggage.date_nm as asking_baggage',
+                'empty_info.status',
+                DB::raw('format(empty_info.asking_price, "#,##0") as asking_price'),
+                DB::raw("CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i')) as schedule_date"),
+                DB::raw("CONCAT_WS(' ',empty_car_location.date_nm, empty_info.start_address) as start_pref_cd"),
+                DB::raw("CONCAT_WS(' ',arrive_location.date_nm, empty_info.arrive_address) as arrive_location"),
+                DB::raw("DATE_FORMAT(empty_info.arrive_date, '%Y/%m/%d') as arrive_date")
             );
             $this->query->leftJoin('mst_business_offices', function ($join) {
                 $join->on('mst_business_offices.id', '=', 'empty_info.regist_office_id');
@@ -75,8 +83,52 @@ class EmptyInfoController extends Controller {
             })->leftjoin('mst_general_purposes as empty_car_location', function ($join) {
                 $join->on('empty_car_location.date_id', '=', 'empty_info.start_pref_cd')
                     ->where('empty_car_location.data_kb', config('params.data_kb.prefecture_cd'));
+            })->leftjoin('mst_general_purposes as arrive_location', function ($join) {
+                $join->on('arrive_location.date_id', '=', 'empty_info.arrive_pref_cd')
+                    ->where('arrive_location.data_kb',config('params.data_kb.prefecture_cd'));
+            })->leftjoin('mst_general_purposes as pref_asking_baggage', function ($join) {
+                $join->on('pref_asking_baggage.date_id', '=', 'empty_info.asking_baggage')
+                    ->where('pref_asking_baggage.data_kb',config('params.data_kb.preferred_package'));
             });
-
+            if ($dataSearch['regist_office_id'] != '') {
+                $this->query->where('empty_info.regist_office_id', '=', $dataSearch['regist_office_id'] );
+            };
+            if ($dataSearch['start_pref_cd'] != '') {
+                $this->query->where('empty_info.start_pref_cd', '=',  $dataSearch['start_pref_cd']);
+            }
+            if ($dataSearch['start_address'] != '') {
+                $this->query->where('empty_info.start_address', 'LIKE', '%' . $dataSearch['start_address'] . '%');
+            }
+            if ($dataSearch['arrive_pref_cd'] != '') {
+                $this->query->where('empty_info.arrive_pref_cd', '=',  $dataSearch['arrive_pref_cd']);
+            }
+            if ($dataSearch['arrive_address'] != '') {
+                $this->query->where('empty_info.arrive_address', 'LIKE', '%' . $dataSearch['arrive_address'] . '%');
+            }
+            if ($dataSearch['vehicle_size'] != '') {
+                $this->query->where('empty_info.vehicle_size', 'LIKE', '%' . $dataSearch['vehicle_size'] . '%');
+            }
+            if ($dataSearch['vehicle_body_shape'] != '') {
+                $this->query->where('empty_info.vehicle_body_shape', 'LIKE', '%' . $dataSearch['vehicle_body_shape'] . '%');
+            }
+            if ($dataSearch['asking_baggage'] != '') {
+                $this->query->where('empty_info.asking_baggage', 'LIKE', '%' . $dataSearch['asking_baggage'] . '%');
+            }
+            if ($dataSearch['equipment'] != '') {
+                $this->query->where('empty_info.equipment', 'LIKE', '%' . $dataSearch['equipment'] . '%');
+            }
+            if(!$dataSearch['status'] || $dataSearch['status']==false)
+            {
+                $this->query->where(function ($query) {
+                        $query->where('empty_info.status', 0)
+                            ->orWhere('empty_info.status', 1);
+                });
+            }
+            if(!$dataSearch['arrive_date'] || $dataSearch['arrive_date']==false)
+            {
+                $this->query->where('empty_info.arrive_date','>',$currentDate);
+            }
+            $this->query->where('empty_info.deleted_at',null);
     }
     public function store(Request $request, $id=null){
         $mEmptyInfo = new MEmptyInfo();
@@ -143,16 +195,16 @@ class EmptyInfoController extends Controller {
     public function index(Request $request){
         $fieldShowTable = [
             'regist_office' => [
-                "classTH" => "wd-120"
+                "classTH" => "wd-100"
             ],
             'vehicle_classification'=> [
-                "classTH" => ""
+                "classTH" => "wd-60"
             ],
             'registration_numbers'=> [
-                "classTH" => ""
+                "classTH" => "wd-120"
             ],
             'vehicle_size'=> [
-                "classTH" => "",
+                "classTH" => "wd-60",
                 "classTD" => "td-nl2br",
             ],
             'vehicle_body_shape'=> [
@@ -160,7 +212,7 @@ class EmptyInfoController extends Controller {
                 "classTD" => "text-center"
             ],
             'max_load_capacity'=> [
-                "classTH" => "wd-120",
+                "classTH" => "wd-100",
                 "classTD" => "text-center"
             ],
             'equipment'=> [
@@ -168,7 +220,7 @@ class EmptyInfoController extends Controller {
                 "classTD" => "text-center"
             ],
             'schedule_date'=> [
-                "classTH" => "wd-160",
+                "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
             'start_pref_cd'=> [
@@ -176,14 +228,14 @@ class EmptyInfoController extends Controller {
                 "classTD" => "text-center"
             ],
             'asking_price'=> [
-                "classTH" => "wd-120",
+                "classTH" => "wd-100",
                 "classTD" => "text-center"
             ],
             'asking_baggage'=> [
-                "classTH" => "wd-120",
+                "classTH" => "wd-100",
                 "classTD" => "text-center"
             ],
-            'expected_location'=> [
+            'arrive_location'=> [
                 "classTH" => "wd-120",
                 "classTD" => "text-center"
             ],
