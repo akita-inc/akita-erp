@@ -21032,29 +21032,34 @@ var ctrEmptyInfoVl = new Vue({
       this.registration_numbers = "";
       this.errors = {};
       this.checkOther = false;
-      this.field = {
-        id: "",
-        status: "",
-        regist_staff: "",
-        regist_office_id: user_login_mst_business_office_id,
-        email_address: "",
-        vehicle_kb: 1,
-        registration_numbers: "",
-        vehicle_size: "",
-        vehicle_body_shape: "",
-        max_load_capacity: "",
-        equipment: [],
-        start_date: "",
-        start_time: "",
-        start_pref_cd: "",
-        start_address: "",
-        asking_price: "",
-        asking_baggage: "",
-        arrive_pref_cd: "",
-        arrive_address: "",
-        arrive_date: ""
-      };
-      $('input:checkbox').prop('checked', false);
+
+      if ($("#hd_empty_info_edit").val() == 1) {
+        this.loadFormEdit();
+      } else {
+        this.field = {
+          id: "",
+          status: "",
+          regist_staff: "",
+          regist_office_id: user_login_mst_business_office_id,
+          email_address: "",
+          vehicle_kb: 1,
+          registration_numbers: "",
+          vehicle_size: "",
+          vehicle_body_shape: "",
+          max_load_capacity: "",
+          equipment: [],
+          start_date: "",
+          start_time: "",
+          start_pref_cd: "",
+          start_address: "",
+          asking_price: "",
+          asking_baggage: "",
+          arrive_pref_cd: "",
+          arrive_address: "",
+          arrive_date: ""
+        };
+        $('input:checkbox').prop('checked', false);
+      }
     }
   },
   mounted: function mounted() {
