@@ -43,7 +43,7 @@ return [
             "vehicle_body_shape" => "形状",
             "max_load_capacity" => "最大積載量",
             "equipment" => "搭載物",
-            "start_date" => "空車予定日",
+            "start_date" => "空車予定日時",
             "start_time" => "",
             "start_pref_cd" => "空車場所",
             "start_address" => "",

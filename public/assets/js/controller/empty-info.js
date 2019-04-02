@@ -20852,14 +20852,10 @@ var ctrEmptyInfoVl = new Vue({
   data: {
     lang: lang_date_picker,
     loading: false,
-    customer_edit: 0,
-    customer_id: null,
+    empty_info_edit: 0,
+    empty_info_id: null,
     field: {
-      id: "",
-      status: "",
-      regist_staff: "",
-      regist_office_id: "",
-      email_address: "",
+      regist_office_id: user_login_mst_business_office_id,
       vehicle_kb: 1,
       registration_numbers: "",
       vehicle_size: "",
@@ -20874,77 +20870,46 @@ var ctrEmptyInfoVl = new Vue({
       asking_baggage: "",
       arrive_pref_cd: "",
       arrive_address: "",
-      arrive_date: "",
-      ask_date: "",
-      ask_office: "",
-      ask_staff: "",
-      ask_staff_email_address: "",
-      apr_date: ""
+      arrive_date: ""
     },
     registration_numbers: "",
-    errors: {}
+    errors: {},
+    checkOther: false
   },
   methods: {
     submit: function submit() {
-      var _this = this;
-
       var that = this;
       that.loading = true;
 
-      if (this.customer_edit == 1) {
-        this.field["id"] = this.customer_id;
-
-        if (this.field["clone"] == true) {
-          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
-          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
-        } else {
-          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
-          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
-        }
+      if (this.empty_info_edit == 1) {
+        this.field["id"] = this.empty_info_id;
       }
 
-      customers_service.submit(this.field).then(function (response) {
+      var data = this.field;
+      var asking_price = data.asking_price;
+
+      if (asking_price != "") {
+        data.asking_price = asking_price.replace(/,/g, '');
+      }
+
+      empty_info_service.submit(this.field).then(function (response) {
         if (response.success == false) {
+          that.addComma();
           that.errors = response.message;
         } else {
           that.errors = [];
           window.location.href = listRoute;
         }
 
-        _this.field["clone"] = null;
         that.loading = false;
       });
     },
     showError: function showError(errors) {
       return errors.join("<br/>");
     },
-    getAddrFromZipCode: function getAddrFromZipCode() {
-      var that = this;
-      var zip = $('#zip_cd').val();
-
-      if (zip == '') {
-        alert(messages['MSG07001']);
-        return;
-      } else {
-        if (isNaN(zip)) {
-          alert(messages['MSG07002']);
-          return;
-        }
-      }
-
-      new _package_yubinbango_core__WEBPACK_IMPORTED_MODULE_2__["Core"](zip, function (addr) {
-        if (addr.region_id == "" || addr.locality == "" || addr.street == "") {
-          alert(messages['MSG07002']);
-        } else {
-          that.field.prefectures_cd = addr.region_id;
-          that.field.address1 = addr.locality;
-          that.field.address2 = addr.street;
-        }
-      });
-    },
     backHistory: function backHistory() {
-      if (this.customer_edit == 1) {
-        customers_service.backHistory().then(function () {
+      if (this.empty_info_edit == 1) {
+        empty_info_service.backHistory().then(function () {
           window.location.href = listRoute;
         });
       } else {
@@ -20954,35 +20919,23 @@ var ctrEmptyInfoVl = new Vue({
     loadFormEdit: function loadFormEdit() {
       var that = this;
 
-      if ($("#hd_customer_edit").val() == 1) {
+      if ($("#hd_empty_info_edit").val() == 1) {
         this.loading = true;
-        that.customer_edit = 1;
-        that.customer_id = $("#hd_id").val();
+        that.empty_info_edit = 1;
+        that.empty_info_id = $("#hd_id").val();
         $.each(this.field, function (key, value) {
           if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
-            if (key == "adhibition_start_dt" || key == "adhibition_end_dt") {
-              that.field[key + "_edit"] = $("#hd_" + key).val();
-            }
+            that.field[key] = $("#hd_" + key).val();
 
-            if (key == "except_g_drive_bill_fg") {
-              if ($("#hd_" + key).val() == 1) {
-                that.field[key] = true;
-              }
-            } else {
-              that.field[key] = $("#hd_" + key).val();
+            if (key == "asking_price") {
+              that.field[key] = $("#hd_" + key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
           }
         });
-        customers_service.getListBill(that.customer_id).then(function (response) {
-          if (response.data != null && response.data.length > 0) {
-            that.field.mst_bill_issue_destinations = response.data;
-          }
-
-          that.loading = false;
-        });
+        this.loading = false;
       }
     },
-    delete: function _delete(id) {
+    deleteInfo: function deleteInfo(id) {
       var that = this;
       empty_info_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
@@ -20991,7 +20944,7 @@ var ctrEmptyInfoVl = new Vue({
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {
-            customers_service.delete(id).then(function (response) {
+            empty_info_service.delete(id).then(function (response) {
               window.location.href = listRoute;
             });
           }
@@ -21030,23 +20983,78 @@ var ctrEmptyInfoVl = new Vue({
       }
     },
     check: function check(e) {
-      var index = e.target.getAttribute('index');
+      var id = e.target.getAttribute('index');
+      var index = this.field.equipment.findIndex(function (elem) {
+        return elem.id == id;
+      });
 
-      if (typeof this.field.equipment[index] == "undefined") {
-        this.field.equipment[index] = {
+      if (index == -1) {
+        if (id == 0) {
+          this.checkOther = true;
+        }
+
+        this.field.equipment.push({
           id: e.target.value,
-          value: $('#equipment_value' + index).val()
-        };
+          value: $('#equipment_value' + id).val()
+        });
       } else {
-        this.field.equipment.splice(index);
+        if (id == 0) {
+          this.checkOther = false;
+        }
+
+        this.field.equipment.splice(index, 1);
       }
     },
     input: function input(e) {
-      var index = e.target.getAttribute('index');
+      var id = e.target.getAttribute('index');
+      var index = this.field.equipment.findIndex(function (elem) {
+        return elem.id == id;
+      });
 
-      if (typeof this.field.equipment[index] != "undefined") {
+      if (index != -1) {
         this.field.equipment[index].value = e.target.value;
+      } else {
+        if (id == 0) {
+          if (e.target.value != '') {
+            this.checkOther = true;
+            this.field.equipment.push({
+              id: 0,
+              value: e.target.value
+            });
+          }
+        }
       }
+    },
+    addComma: function addComma() {
+      this.field.asking_price = this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    resetForm: function resetForm() {
+      this.registration_numbers = "";
+      this.errors = {};
+      this.checkOther = false;
+      this.field = {
+        id: "",
+        status: "",
+        regist_staff: "",
+        regist_office_id: user_login_mst_business_office_id,
+        email_address: "",
+        vehicle_kb: 1,
+        registration_numbers: "",
+        vehicle_size: "",
+        vehicle_body_shape: "",
+        max_load_capacity: "",
+        equipment: [],
+        start_date: "",
+        start_time: "",
+        start_pref_cd: "",
+        start_address: "",
+        asking_price: "",
+        asking_baggage: "",
+        arrive_pref_cd: "",
+        arrive_address: "",
+        arrive_date: ""
+      };
+      $('input:checkbox').prop('checked', false);
     }
   },
   mounted: function mounted() {
