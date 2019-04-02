@@ -13,9 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::group(array('prefix' => 'api/supplier'), function() {
     Route::any('convert-to-kana', ['uses' => 'Api\SuppliersController@convertToKana']);
     Route::any('back-history', ['uses' => 'Api\SuppliersController@backHistory']);

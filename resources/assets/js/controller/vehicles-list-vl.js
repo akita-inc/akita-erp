@@ -26,6 +26,11 @@ var ctrVehiclesListVl = new Vue({
             current_page: 1,
             last_page:0
         },
+        order: {
+            col:'',
+            descFlg: true,
+            divId:''
+        },
         getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
@@ -41,6 +46,7 @@ var ctrVehiclesListVl = new Vue({
                 pageSize:this.pageSize,
                 page:page,
                 fieldSearch:this.fieldSearch,
+                order:this.order,
             };
 
             var that = this;
@@ -55,16 +61,32 @@ var ctrVehiclesListVl = new Vue({
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fieldSearch = response.fieldSearch;
+                that.order = response.order;
                 $.each(that.fieldSearch, function (key, value) {
                     if (value === null)
                         that.fieldSearch[key] = '';
                 });
                 that.loading = false;
+                if (that.order.col !== null)
+                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
             });
         },
         changePage: function (page) {
             this.pagination.current_page = page;
             this.getItems(page);
+        },
+        sortList: function(event, order_by) {
+            $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
+            if (this.order.col === order_by && this.order.descFlg) {
+                this.order.descFlg = false;
+                event.target.classList.toggle('sort-asc');
+            } else {
+                this.order.descFlg = true;
+                event.target.classList.toggle('sort-desc');
+            }
+            this.order.col = order_by;
+            this.order.divId = event.currentTarget.id;
+            this.getItems(this.pagination.current_page);
         }
     },
     methods : {

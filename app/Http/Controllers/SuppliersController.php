@@ -64,8 +64,19 @@ class SuppliersController extends Controller
             $this->query->where('mst_suppliers.adhibition_end_dt', ">=", $where['reference_date']);
         }
 
-        $this->query->orderby('mst_suppliers.mst_suppliers_cd');
-        $this->query->orderby('mst_suppliers.adhibition_start_dt');
+        if ($data["order"]["col"] != '') {
+            if ($data["order"]["col"] == 'street_address')
+                $orderCol = "CONCAT_WS('',mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3)";
+            else
+                $orderCol = $data["order"]["col"];
+            if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
+                $orderCol .= " DESC";
+            }
+            $this->query->orderbyRaw($orderCol);
+        } else {
+            $this->query->orderby('mst_suppliers.mst_suppliers_cd');
+            $this->query->orderby('mst_suppliers.adhibition_start_dt');
+        }
     }
 
     public function delete(Request $request,$id)

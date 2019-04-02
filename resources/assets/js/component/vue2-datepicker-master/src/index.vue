@@ -278,7 +278,7 @@ export default {
       return this.width
     },
     showClearIcon () {
-      return !this.disabled && this.clearable && (this.range ? this.isValidRangeValue(this.value) : this.isValidValue(this.value))
+      return false
     },
     innerType () {
       return String(this.type).toLowerCase()

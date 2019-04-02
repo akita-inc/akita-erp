@@ -38,6 +38,7 @@
 <nav class="navbar navbar-light bg-light">
     <a class="navbar-brand" href="/">システムタイトル</a>
     <h1>@yield('title_header')</h1>
+    <p class="nav-user-name">{{Auth::user()->last_nm.Auth::user()->first_nm}}</p>
     <!--Ringt menu -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarRightContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -114,6 +115,16 @@
         }
     };
     format_date_picker = "YYYY/MM/DD";
+    $.ajax({
+        statusCode: {
+            400: function() {
+                alert('400 status code! user error');
+            },
+            500: function() {
+                alert('500 status code! server error');
+            }
+        }
+    });
 </script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>

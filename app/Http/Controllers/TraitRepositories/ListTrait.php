@@ -64,7 +64,8 @@ trait ListTrait
                 'to' => $items->lastItem()
             ],
             'data' => $items,
-            'fieldSearch' => $data['fieldSearch']
+            'fieldSearch' => $data['fieldSearch'],
+            'order' => $data['order'],
         ];
         return response()->json($response);
     }
