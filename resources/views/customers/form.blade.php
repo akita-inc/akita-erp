@@ -399,6 +399,49 @@
         </fieldset>
         @endif
         </form>
+        <div class="sub-header mt-3">
+                <div class="sub-header-line-one d-flex">
+                    <div class="d-flex">
+                        <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
+                    </div>
+
+                    <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
+                    <input type="hidden" id="hd_customer_edit" value="{!! !empty($customer) ? 1:0 !!}">
+                    @if(!empty($customer))
+                        @foreach($customer as $key=>$value)
+                            @if($key == 'adhibition_start_dt'
+                                || $key == 'adhibition_end_dt'
+                                || $key == 'business_start_dt'
+                            )
+                                @php($value = date("Y/m/d",strtotime($value)))
+                            @endif
+                            <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
+                        @endforeach
+                        <div class="d-flex ml-auto">
+                            @if($role==1)
+                                <button class="btn btn-danger text-white" v-on:click="deleteCustomer('{{$customer['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+                @if($role==1)
+                    <div class="sub-header-line-two">
+                        <div class="grid-form border-0">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                                <div class="col-md-7 col-sm-12 row grid-col h-100">
+                                    <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($customer) ? "edit":"register")) }}</button>
+                                    @if($flagRegisterHistory)
+                                        <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
+                                            {{ trans("common.button.register_history_left") }}
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+        </div>
         @endif
     </div>
 @endsection
