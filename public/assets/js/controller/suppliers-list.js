@@ -3244,6 +3244,8 @@ var ctrSuppliersListVl = new Vue({
       current_page: 1,
       last_page: 0
     },
+    orderBy: '',
+    descFlg: true,
     getItems: function getItems(page, show_msg) {
       var _this = this;
 
@@ -3260,7 +3262,9 @@ var ctrSuppliersListVl = new Vue({
       var data = {
         pageSize: this.pageSize,
         page: page,
-        fieldSearch: this.fieldSearch
+        fieldSearch: this.fieldSearch,
+        orderBy: this.orderBy,
+        desc: this.descFlg
       };
       var that = this;
       this.loading = true;
@@ -3280,6 +3284,20 @@ var ctrSuppliersListVl = new Vue({
     changePage: function changePage(page) {
       this.pagination.current_page = page;
       this.getItems(page);
+    },
+    sortList: function sortList(event, order_by) {
+      $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
+
+      if (this.orderBy === order_by && this.descFlg) {
+        this.descFlg = false;
+        event.target.classList.toggle('sort-asc');
+      } else {
+        this.descFlg = true;
+        event.target.classList.toggle('sort-desc');
+      }
+
+      this.orderBy = order_by;
+      this.getItems(this.pagination.current_page);
     }
   },
   methods: {
