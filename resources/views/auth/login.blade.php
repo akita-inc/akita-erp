@@ -68,5 +68,10 @@
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{{asset('js/ie10-viewport-bug-workaround.js')}}"></script>
+@if(session('message'))
+    <script>
+        alert("{!! session('message') !!}");
+    </script>
+@endif
 </body>
 </html>

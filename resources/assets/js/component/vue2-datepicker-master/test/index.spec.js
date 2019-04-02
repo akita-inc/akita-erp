@@ -97,21 +97,6 @@ describe('datepicker', () => {
     expect(vm.text).toBe('2018-05-03')
   })
 
-  it('click: clear icon', () => {
-    wrapper = shallowMount(DatePicker, {
-      propsData: {
-        value: new Date(2018, 4, 2)
-      }
-    })
-    const vm = wrapper.vm
-    const clear = wrapper.find('.mx-clear-wrapper')
-    clear.trigger('click')
-    const emitted = wrapper.emitted()
-    expect(emitted.input[0][0]).toBe(null)
-    wrapper.setProps({ value: null })
-    expect(vm.text).toBe('')
-  })
-
   it('prop: range', (done) => {
     wrapper = mount(DatePicker, {
       propsData: {
