@@ -102,16 +102,16 @@
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
-                    <th>{{trans("vehicles.list.search.vehicle_cd")}}</th>
-                    <th>{{trans("vehicles.list.search.door_number")}}</th>
-                    <th>{{trans("vehicles.list.search.vehicles_kb")}}</th>
-                    <th>{{trans("vehicles.list.search.registration_numbers")}}</th>
-                    <th>{{trans("vehicles.list.search.mst_business_office")}}</th>
-                    <th>{{trans("vehicles.list.table.vehicle_size")}}</th>
-                    <th>{{trans("vehicles.list.table.vehicle_purpose")}}</th>
-                    <th class="wd-120">{{trans("vehicles.list.table.adhibition_start_dt")}}</th>
-                    <th class="wd-120">{{trans("vehicles.list.table.adhibition_end_dt")}}</th>
-                    <th class="wd-120">{{trans("vehicles.list.table.modified_at")}}</th>
+                    <th v-on:click="sortList($event, 'vehicles_cd')" id="th_vehicles_cd">{{trans("vehicles.list.search.vehicle_cd")}}</th>
+                    <th v-on:click="sortList($event, 'door_number')" id="th_door_number">{{trans("vehicles.list.search.door_number")}}</th>
+                    <th v-on:click="sortList($event, 'vehicles_kb')" id="th_vehicles_kb">{{trans("vehicles.list.search.vehicles_kb")}}</th>
+                    <th v-on:click="sortList($event, 'registration_numbers')" id="th_registration_numbers">{{trans("vehicles.list.search.registration_numbers")}}</th>
+                    <th v-on:click="sortList($event, 'business_office_nm')" id="th_business_office_nm">{{trans("vehicles.list.search.mst_business_office")}}</th>
+                    <th v-on:click="sortList($event, 'vehicle_size')" id="th_vehicle_size">{{trans("vehicles.list.table.vehicle_size")}}</th>
+                    <th v-on:click="sortList($event, 'vehicle_purpose')" id="th_vehicle_purpose">{{trans("vehicles.list.table.vehicle_purpose")}}</th>
+                    <th v-on:click="sortList($event, 'adhibition_start_dt')" id="th_adhibition_start_dt" class="wd-120">{{trans("vehicles.list.table.adhibition_start_dt")}}</th>
+                    <th v-on:click="sortList($event, 'adhibition_end_dt')" id="th_adhibition_end_dt" class="wd-120">{{trans("vehicles.list.table.adhibition_end_dt")}}</th>
+                    <th v-on:click="sortList($event, 'modified_at')" id="th_modified_at" class="wd-120">{{trans("vehicles.list.table.modified_at")}}</th>
                     @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>

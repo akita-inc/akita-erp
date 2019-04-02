@@ -3264,7 +3264,7 @@ var ctrSuppliersListVl = new Vue({
         page: page,
         fieldSearch: this.fieldSearch,
         orderBy: this.orderBy,
-        desc: this.descFlg
+        descFlg: this.descFlg
       };
       var that = this;
       this.loading = true;
@@ -3278,7 +3278,10 @@ var ctrSuppliersListVl = new Vue({
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.fieldSearch = response.fieldSearch;
+        that.orderBy = response.orderBy;
+        that.descFlg = response.descFlg;
         that.loading = false;
+        if (that.orderBy !== null) $('#th_' + that.orderBy).addClass(that.descFlg ? 'sort-desc' : 'sort-asc');
       });
     },
     changePage: function changePage(page) {

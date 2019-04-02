@@ -4,24 +4,24 @@ import DatePicker from '../component/vue2-datepicker-master'
 var ctrSuppliersListVl = new Vue({
     el: '#ctrSuppliersListVl',
     data: {
-        lang:lang_date_picker,
+        lang: lang_date_picker,
         format_date: format_date_picker,
-        loading:false,
-        items:[],
-        fieldSearch:{
-            mst_suppliers_cd:"",
-            supplier_nm:"",
-            radio_reference_date : "1",
+        loading: false,
+        items: [],
+        fieldSearch: {
+            mst_suppliers_cd: "",
+            supplier_nm: "",
+            radio_reference_date: "1",
             reference_date: date_now,
         },
         message: '',
-        pagination:{
+        pagination: {
             total: 0,
             per_page: 0,
             from: 1,
             to: 0,
             current_page: 1,
-            last_page:0
+            last_page: 0
         },
         orderBy: '',
         descFlg: true,
@@ -41,7 +41,7 @@ var ctrSuppliersListVl = new Vue({
                 page:page,
                 fieldSearch:this.fieldSearch,
                 orderBy:this.orderBy,
-                desc: this.descFlg,
+                descFlg: this.descFlg,
             };
 
             var that = this;
@@ -56,7 +56,11 @@ var ctrSuppliersListVl = new Vue({
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fieldSearch = response.fieldSearch;
+                that.orderBy = response.orderBy;
+                that.descFlg = response.descFlg;
                 that.loading = false;
+                if (that.orderBy !== null)
+                    $('#th_'+ that.orderBy).addClass(that.descFlg ? 'sort-desc' : 'sort-asc');
             });
         },
         changePage: function (page) {

@@ -119,15 +119,33 @@ class StaffsController extends Controller
             $this->query->where('mst_staffs.adhibition_start_dt','<=',$where['reference_date'])
                 ->where('mst_staffs.adhibition_end_dt','>=',$where['reference_date']);
         }
-        $this->query->orderby('mst_staffs.staff_cd')
-                    ->orderby('mst_staffs.adhibition_start_dt');
+
+        if ($data["orderBy"] != '') {
+            if ($data["orderBy"] == 'employment_pattern_nm')
+                $orderCol = "employment_pattern.date_nm";
+            else if ($data["orderBy"] == 'position_nm')
+                $orderCol = "position.date_nm";
+            else if ($data["orderBy"] == 'staff_nm')
+                $orderCol = 'CONCAT_WS("    ",mst_staffs.last_nm,mst_staffs.first_nm)';
+            else if ($data["orderBy"] == 'belong_company_nm')
+                $orderCol = "belong_company.date_nm";
+            else
+                $orderCol = $data["orderBy"];
+            if (isset($data["descFlg"]) && $data["descFlg"]) {
+                $orderCol .= " DESC";
+            }
+            $this->query->orderbyRaw($orderCol);
+        } else {
+            $this->query->orderby('mst_staffs.staff_cd')
+                ->orderby('mst_staffs.adhibition_start_dt');
+        }
     }
 
     public function index(Request $request)
     {
         $fieldShowTable = [
             'staff_cd' => [
-                "classTH" => "wd-100"
+                "classTH" => "wd-120"
             ],
             'employment_pattern_nm' => [
                 "classTH" => ""

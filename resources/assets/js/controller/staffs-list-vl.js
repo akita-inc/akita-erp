@@ -28,6 +28,8 @@ var ctrStaffsListVl = new Vue({
             current_page: 1,
             last_page:0
         },
+        orderBy: '',
+        descFlg: true,
         getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
@@ -42,7 +44,8 @@ var ctrStaffsListVl = new Vue({
                 pageSize:this.pageSize,
                 page:page,
                 fieldSearch:this.fileSearch,
-                order:this.order
+                orderBy:this.orderBy,
+                descFlg: this.descFlg,
             };
             var that = this;
             this.loading = true;
@@ -55,12 +58,16 @@ var ctrStaffsListVl = new Vue({
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
+                that.orderBy = response.orderBy;
+                that.descFlg = response.descFlg;
                 $.each(that.fileSearch, function (key, value) {
                     if (value === null)
                         that.fileSearch[key] = '';
                 });
                 that.loading = false;
                 that.auth_staff_cd=auth_staff_cd;
+                if (that.orderBy !== null)
+                    $('#th_'+ that.orderBy).addClass(that.descFlg ? 'sort-desc' : 'sort-asc');
             });
         },
         changePage: function (page) {
@@ -96,6 +103,18 @@ var ctrStaffsListVl = new Vue({
                     window.location.href = 'edit/' + id;
                 }
             });
+        },
+        sortList: function(event, order_by) {
+            $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
+            if (this.orderBy === order_by && this.descFlg) {
+                this.descFlg = false;
+                event.target.classList.toggle('sort-asc');
+            } else {
+                this.descFlg = true;
+                event.target.classList.toggle('sort-desc');
+            }
+            this.orderBy = order_by;
+            this.getItems(this.pagination.current_page);
         }
     },
     methods : {

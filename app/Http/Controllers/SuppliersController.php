@@ -69,7 +69,7 @@ class SuppliersController extends Controller
                 $orderCol = "CONCAT_WS('',mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3)";
             else
                 $orderCol = $data["orderBy"];
-            if (isset($data["desc"]) && $data["desc"]) {
+            if (isset($data["descFlg"]) && $data["descFlg"]) {
                 $orderCol .= " DESC";
             }
             $this->query->orderbyRaw($orderCol);

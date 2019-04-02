@@ -105,8 +105,23 @@ class VehiclesController extends Controller
             $this->query->where('mst_vehicles.adhibition_end_dt', ">=", $where['reference_date']);
         }
 
-        $this->query->orderby('mst_vehicles.vehicles_cd');
-        $this->query->orderby('mst_vehicles.adhibition_start_dt');
+        if ($data["orderBy"] != '') {
+            if ($data["orderBy"] == 'vehicles_kb')
+                $orderCol = 'mst_general_purposes.date_nm';
+            else if ($data["orderBy"] == 'vehicle_size')
+                $orderCol = 'size.date_nm';
+            else if ($data["orderBy"] == 'vehicle_purpose')
+                $orderCol = 'purpose.date_nm';
+            else
+                $orderCol = $data["orderBy"];
+            if (isset($data["descFlg"]) && $data["descFlg"]) {
+                $orderCol .= " DESC";
+            }
+            $this->query->orderbyRaw($orderCol);
+        } else {
+            $this->query->orderby('mst_vehicles.vehicles_cd');
+            $this->query->orderby('mst_vehicles.adhibition_start_dt');
+        }
     }
 
     public function delete(Request $request,$id)

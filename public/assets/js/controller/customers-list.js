@@ -3244,6 +3244,8 @@ var ctrCustomersListVl = new Vue({
       current_page: 1,
       last_page: 0
     },
+    orderBy: '',
+    descFlg: true,
     getItems: function getItems(page, show_msg) {
       var _this = this;
 
@@ -3261,7 +3263,8 @@ var ctrCustomersListVl = new Vue({
         pageSize: this.pageSize,
         page: page,
         fieldSearch: this.fileSearch,
-        order: this.order
+        orderBy: this.orderBy,
+        descFlg: this.descFlg
       };
       var that = this;
       this.loading = true;
@@ -3275,12 +3278,29 @@ var ctrCustomersListVl = new Vue({
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.fileSearch = response.fieldSearch;
+        that.orderBy = response.orderBy;
+        that.descFlg = response.descFlg;
         that.loading = false;
+        if (that.orderBy !== null) $('#th_' + that.orderBy).addClass(that.descFlg ? 'sort-desc' : 'sort-asc');
       });
     },
     changePage: function changePage(page) {
       this.pagination.current_page = page;
       this.getItems(page);
+    },
+    sortList: function sortList(event, order_by) {
+      $('.table-green thead th').removeClass('sort-asc').removeClass('sort-desc');
+
+      if (this.orderBy === order_by && this.descFlg) {
+        this.descFlg = false;
+        event.target.classList.toggle('sort-asc');
+      } else {
+        this.descFlg = true;
+        event.target.classList.toggle('sort-desc');
+      }
+
+      this.orderBy = order_by;
+      this.getItems(this.pagination.current_page);
     }
   },
   methods: {

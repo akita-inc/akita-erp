@@ -3,18 +3,6 @@
     color: #ffffff;
     cursor: pointer;
 }
-.search-content thead .sort-asc:after {
-    content: " \f0d8";
-    font-family: FontAwesome;
-    display: inline;
-    float: right;
-}
-.search-content thead .sort-desc:after {
-    content: " \f0d7";
-    font-family: FontAwesome;
-    display: inline;
-    float: right;
-}
 .search-content td {
     vertical-align: middle;
 }
