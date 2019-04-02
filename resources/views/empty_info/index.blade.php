@@ -7,7 +7,7 @@
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
-                <button class="btn btn-yellow" onclick="window.location.href= '{{route('customers.create')}}'">
+                <button class="btn btn-primary" onclick="window.location.href= '{{route('empty_info.create')}}'">
                     {{trans('common.button.add')}}
                 </button>
             </div>
@@ -126,7 +126,7 @@
                         </div>
                     </div>
                     <div class="col-md-1 lh-38 text-right no-padding">
-                        <button class="btn btn-primary w-100" v-on:click="getItems(1)">
+                        <button class="btn btn-light m-auto w-100" v-on:click="getItems(1)">
                             {{trans('common.button.search')}}
                         </button>
                     </div>

@@ -44,7 +44,7 @@ var ctrEmptyInfoListVl = new Vue({
                 order:this.order
             };
             var that = this;
-            this.loading = false;
+            this.loading = true;
             empty_info_service.loadList(data).then((response) => {
                 if (response.data.data.length===0) {
                     that.message = messages["MSG05001"];
