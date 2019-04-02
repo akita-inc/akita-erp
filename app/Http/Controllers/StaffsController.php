@@ -143,11 +143,11 @@ class StaffsController extends Controller
                 "sortBy" => "staff_cd"
             ],
             'employment_pattern_nm' => [
-                "classTH" => "",
+                "classTH" => "min-wd-100",
                 "sortBy" => "employment_pattern.date_nm"
             ],
             'position_nm' => [
-                "classTH" => "",
+                "classTH" => "min-wd-100",
                 "sortBy" => "position.date_nm"
             ],
             'staff_nm' => [
@@ -155,11 +155,11 @@ class StaffsController extends Controller
                 "sortBy" => "staff_nm"
             ],
             'belong_company_nm' => [
-                "classTH" => "",
+                "classTH" => "min-wd-100",
                 "sortBy" => "belong_company.date_nm"
             ],
             'business_office_nm' => [
-                "classTH" => "",
+                "classTH" => "min-wd-100",
                 "sortBy" => "business_office_nm"
             ],
             'adhibition_start_dt' => [
