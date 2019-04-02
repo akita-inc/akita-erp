@@ -42,7 +42,7 @@ class LoginController extends Controller
     {
 //        $this->middleware('guest')->except('logout');
     }
-    public function getLogin()
+    public function getLogin(Request $request)
     {
         if(Auth::check())
         {
@@ -50,6 +50,9 @@ class LoginController extends Controller
         }
         else
         {
+            if(!empty($request->session()->get("password_old"))){
+                return redirect('/logoutError');
+            }
             return view('auth.login');
         }
     }

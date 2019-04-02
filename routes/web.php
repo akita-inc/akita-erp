@@ -11,7 +11,7 @@
 |
 */
 Auth::routes();
-Route::group(['middleware' => ['auth','StaffUpdateMiddleware']], function () {
+Route::group(['middleware' => ['StaffUpdateMiddleware','auth']], function () {
     Route::get('/', 'WelcomeController@index');
 
 });
