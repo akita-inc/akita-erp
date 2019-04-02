@@ -433,6 +433,9 @@ input,select{
 .wd-350{
     width: 350px !important;
 }
+.min-wd-100 {
+    min-width: 100px;
+}
 .pagination-custom{
     padding: 0px;
 }
