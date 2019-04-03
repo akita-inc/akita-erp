@@ -56,10 +56,10 @@
         @endif
         @if($role==1 || ($role==2 && !empty($staff)))
         <form class="form-inline" role="form" enctype="multipart/form-data" >
-        @if($role==2)
-                <fieldset disabled="disabled" class="w-100">
-        @endif
-        @if(in_array(1,$rolesStaffScreen))
+            @if($role==2)
+                    <fieldset disabled="disabled" class="w-100">
+            @endif
+            @if(in_array(1,$rolesStaffScreen))
             <div class="text-danger">
                 {{ trans("common.description-form.indicates_required_items") }}
             </div>
@@ -1014,8 +1014,38 @@
             </fieldset>
             @endif
         </form>
+            <div class="sub-header mt-3">
+                <div class="sub-header-line-one d-flex">
+                    <div class="d-flex">
+                        <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
+                    </div>
+                    @if(!empty($staff))
+                        <div class="d-flex ml-auto">
+                            @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
+                                <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+                @if($role==1)
+                    <div class="sub-header-line-two">
+                        <div class="grid-form border-0">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                                <div class="col-md-7 col-sm-12 row grid-col h-100">
+                                    <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($staff) ? "edit":"register")) }}</button>
+                                    @if($flagRegisterHistory)
+                                        <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
+                                            {{ trans("common.button.register_history_left") }}
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
         @endif
-
     </div>
 @endsection
 @section("scripts")
