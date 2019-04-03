@@ -149,8 +149,10 @@ class EmptyInfoController extends Controller {
             if ($data["order"]["col"] != '') {
                 if ($data["order"]["col"] == 'arrive_location')
                     $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm, empty_info.arrive_address)';
-                else if($data["order"]["col"] == 'regist_office')
-                    $orderCol = "empty_info.regist_office_id";
+                else if($data["order"]["col"]=='schedule_date')
+                    $orderCol="CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i'))";
+                else if($data["order"]["col"]=='start_pref_cd')
+                    $orderCol="CONCAT_WS(' ',empty_car_location.date_nm, empty_info.start_address)";
                 else
                     $orderCol = $data["order"]["col"];
                 if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
@@ -158,89 +160,9 @@ class EmptyInfoController extends Controller {
                 }
                 $this->query->orderbyRaw($orderCol);
             } else {
-                $this->query->orderby('empty_info.id')
-                    ->orderby('empty_info.arrive_date');
+                $this->query->orderBy('empty_info.arrive_date','asc')
+                    ->orderBy('empty_info.id','desc');
             }
-    }
-
-    public function store(Request $request, $id=null){
-        $mEmptyInfo = null;
-        $mode = "register";
-        if($id != null){
-            $mEmptyInfo = MEmptyInfo::find( $id );
-            if(empty($mEmptyInfo)){
-                abort('404');
-            }else{
-                $mEmptyInfo->start_time = TimeFunction::convertTime24To12($mEmptyInfo->start_time);
-                $mEmptyInfo = $mEmptyInfo->toArray();
-                $routeName = $request->route()->getName();
-                switch ($routeName){
-                    case 'empty_info.reservation':  $mode = 'reservation'; break;
-                    default: $mode ='edit';
-                }
-            }
-        }
-        $mBusinessOffices = new MBusinessOffices();
-        $mGeneralPurposes = new MGeneralPurposes();
-        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices();
-        $listVehicleClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_classification_for_empty_car_info'],'Empty');
-        $listEquipment= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb')['loaded_item']);
-        $listPreferredPackage= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['preferred_package'],'');
-        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
-        return view('empty_info.form', [
-            'mEmptyInfo' => $mEmptyInfo,
-            'listBusinessOffices' =>$listBusinessOffices,
-            'listVehicleClassification' =>$listVehicleClassification,
-            'listEquipment' =>$listEquipment,
-            'listPreferredPackage' =>$listPreferredPackage,
-            'listPrefecture' => $listPrefecture,
-            'role' => 1,
-            'mode' => $mode
-        ]);
-    }
-
-    public function searchVehicle(Request $request){
-        $input = $request->all();
-        $input['registration_numbers'] = str_pad($input['registration_numbers'], 4, '0', STR_PAD_LEFT);
-        $mVehicle =  new MVehicles();
-        $data =  $mVehicle
-            ->select(
-                'mst_vehicles.registration_numbers',
-                'mst_vehicles.max_loading_capacity',
-                'size.date_nm as vehicle_size_kb',
-                'shape.date_nm as car_body_shape'
-            )
-            ->leftjoin(DB::raw('mst_general_purposes size'), function ($join) {
-                $join->on('size.date_id', '=', 'mst_vehicles.vehicle_size_kb')
-                    ->where('size.data_kb', config('params.data_kb.vehicle_size_kb'));
-            })
-             ->leftjoin(DB::raw('mst_general_purposes shape'), function ($join) {
-                $join->on('shape.date_id', '=', 'mst_vehicles.car_body_shape_id')
-                    ->where('shape.data_kb', config('params.data_kb.car_body_shape'));
-            })
-            ->where('mst_vehicles.deleted_at','=',null)
-            ->where('mst_vehicles.mst_business_office_id','=',$input['mst_business_office_id'])
-            ->where(function($q) use ($input) {
-                $q->where('registration_numbers','LIKE','%'.$input['registration_numbers'].'%')->orWhere('registration_numbers','LIKE','%'.mb_convert_kana($input['registration_numbers'], "A", 'UTF-8').'%');
-            })
-            ->get();
-        if(count($data) > 0){
-            if(count($data) > 1){
-                return response()->json([
-                    'success'=>false,
-                    'msg'=> Lang::get('messages.MSG10011'),
-                ]);
-            }
-            return response()->json([
-                'success'=>true,
-                'info'=> $data[0],
-            ]);
-        }else{
-            return response()->json([
-                'success'=>false,
-                'msg'=> Lang::get('messages.MSG10010'),
-            ]);
-        }
     }
 
     public function index(Request $request){
@@ -305,7 +227,7 @@ class EmptyInfoController extends Controller {
             'arrive_date'=> [
                 "classTH" => "wd-120",
                 "classTD" => "text-center",
-               "sortBy"=>"arrive_date",
+                "sortBy"=>"arrive_date",
             ],
 
         ];
@@ -315,10 +237,97 @@ class EmptyInfoController extends Controller {
         $startPrefCds = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['prefecture_cd']);
         $businessOffices = $mBussinessOffice->getAllData();
         return view('empty_info.index',[
-                                    'fieldShowTable'=>$fieldShowTable,
-                                    'businessOffices'=> $businessOffices,
-                                    'askingBaggages'=>$askingBaggages,
-                                    'startPrefCds'=>$startPrefCds]);
+            'fieldShowTable'=>$fieldShowTable,
+            'businessOffices'=> $businessOffices,
+            'askingBaggages'=>$askingBaggages,
+            'startPrefCds'=>$startPrefCds]);
+    }
+
+
+    public function store(Request $request, $id=null){
+        $mEmptyInfo = null;
+        $mode = "register";
+        $role = 1;
+        if($id != null){
+            $mEmptyInfo = MEmptyInfo::find( $id );
+            if(empty($mEmptyInfo)){
+                abort('404');
+            }else{
+                $mEmptyInfo->start_time = TimeFunction::convertTime24To12($mEmptyInfo->start_time);
+                $mEmptyInfo = $mEmptyInfo->toArray();
+                $routeName = $request->route()->getName();
+                switch ($routeName){
+                    case 'empty_info.reservation':  $mode = 'reservation'; break;
+                    default:
+                        $mode ='edit';
+                        if($mEmptyInfo['status']!=1 || $mEmptyInfo['regist_office_id']!= Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
+                }
+            }
+        }
+        $mBusinessOffices = new MBusinessOffices();
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices();
+        $listVehicleClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['vehicle_classification_for_empty_car_info'],'Empty');
+        $listEquipment= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb')['loaded_item']);
+        $listPreferredPackage= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['preferred_package'],'');
+        $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
+        return view('empty_info.form', [
+            'mEmptyInfo' => $mEmptyInfo,
+            'listBusinessOffices' =>$listBusinessOffices,
+            'listVehicleClassification' =>$listVehicleClassification,
+            'listEquipment' =>$listEquipment,
+            'listPreferredPackage' =>$listPreferredPackage,
+            'listPrefecture' => $listPrefecture,
+            'role' => $role,
+            'mode' => $mode
+        ]);
+    }
+
+    public function searchVehicle(Request $request){
+        $input = $request->all();
+        $input['registration_numbers'] = str_pad($input['registration_numbers'], 4, '0', STR_PAD_LEFT);
+        $mVehicle =  new MVehicles();
+        $data =  $mVehicle
+            ->select(
+                'mst_vehicles.registration_numbers',
+                'mst_vehicles.max_loading_capacity',
+                'size.date_nm as vehicle_size_kb',
+                'shape.date_nm as car_body_shape'
+            )
+            ->leftjoin(DB::raw('mst_general_purposes size'), function ($join) {
+                $join->on('size.date_id', '=', 'mst_vehicles.vehicle_size_kb')
+                    ->where('size.data_kb', config('params.data_kb.vehicle_size_kb'));
+            })
+             ->leftjoin(DB::raw('mst_general_purposes shape'), function ($join) {
+                $join->on('shape.date_id', '=', 'mst_vehicles.car_body_shape_id')
+                    ->where('shape.data_kb', config('params.data_kb.car_body_shape'));
+            })
+            ->where('mst_vehicles.deleted_at','=',null)
+            ->where('mst_vehicles.mst_business_office_id','=',$input['mst_business_office_id'])
+            ->where(function($q) use ($input) {
+                $q->where('registration_numbers','LIKE','%'.$input['registration_numbers'].'%')->orWhere('registration_numbers','LIKE','%'.mb_convert_kana($input['registration_numbers'], "A", 'UTF-8').'%');
+            })
+            ->get();
+        if(count($data) > 0){
+            if(count($data) > 1){
+                return response()->json([
+                    'success'=>false,
+                    'msg'=> Lang::get('messages.MSG10011'),
+                ]);
+            }
+            return response()->json([
+                'success'=>true,
+                'info'=> $data[0],
+            ]);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'msg'=> Lang::get('messages.MSG10010'),
+            ]);
+        }
     }
 
     protected function validAfter( &$validator,$data ){

@@ -801,7 +801,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-form mb-5">
+            <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="mst_staff_cd">車輌管理責任者</label>
@@ -1017,6 +1017,42 @@
               @if($role==2)
                </fieldset>
              @endif
+              <div class="sub-header mt-3 mb-5">
+                        <div class="sub-header-line-one d-flex">
+                            <div class="d-flex">
+                                <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
+                            </div>
+                            <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
+                            <input type="hidden" id="hd_vehicle_edit" value="{!! !empty($mVehicle) ? 1:0 !!}">
+                            @if(!empty($mVehicle))
+                                @foreach($mVehicle as $key=>$value)
+                                    <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
+                                @endforeach
+                                <div class="d-flex ml-auto">
+                                    @if($role==1)
+                                        <button class="btn btn-danger text-white" v-on:click='deleteVehicle("{{$mVehicle['id']}}")' type="button">{{ trans("common.button.delete") }}</button>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                        @if(!empty($mVehicle) && $role==1)
+                            <div class="grid-form border-0">
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                                    <div class="col-md-7 col-sm-12 row grid-col h-100">
+                                        <button class="btn btn-primary btn-submit" type="button" @click="submit('edit')">{{ trans("common.button.edit") }}</button>
+                                        @if($flagLasted)
+                                            <button class="btn btn-primary btn-submit m-auto" type="button" @click="submit('registerHistoryLeft')" >{{ trans("common.button.register_history_left") }}</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($role==1)
+                            <div class="sub-header-line-two">
+                                <button class="btn btn-primary btn-submit" type="button" @click="submit(null)">{{ trans("common.button.register") }}</button>
+                            </div>
+                        @endif
+          </div>
         </form>
     </div>
 @endsection

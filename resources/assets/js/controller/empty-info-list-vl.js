@@ -113,22 +113,17 @@ var ctrEmptyInfoListVl = new Vue({
 
         },
         handleLinkEmptyInfo:function (id,status,regist_office_id){
-            console.log(id+" "+status+" "+regist_office_id);
-            if(status==8 || status==9)
-            {
+            console.log(" status" + status + " office" + regist_office_id);
+            if (status == 8 || status == 9) {
+                window.location.href = 'reservation/' + id;
             }
-            else if(this.auth_offfice_id!=regist_office_id)
-            {
+            else if (this.auth_offfice_id != regist_office_id) {
+                window.location.href = 'reservation/' + id;
             }
-            else if(this.auth_offfice_id==regist_office_id && status==1)
-            {
+            else if (this.auth_offfice_id == regist_office_id && status == 1) {
                 this.checkIsExist(id);
             }
-            else if(this.auth_offfice_id==regist_office_id && status==2)
-            {
-            }
-            else
-            {
+            else if (this.auth_offfice_id == regist_office_id && status == 2) {
             }
         },
         deleteSupplier: function (id){

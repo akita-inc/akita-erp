@@ -1,13 +1,13 @@
 @extends('Layouts.app')
-@section('title',trans("empty_info.title"))
-@section('title_header',trans("empty_info.title"))
+@section('title',trans("empty_info.list.title"))
+@section('title_header',trans("empty_info.list.title"))
 @section('content')
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrEmptyInfoListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
-                <button class="btn btn-primary" onclick="window.location.href= '{{route('empty_info.create')}}'">
+                <button class="btn btn-yellow" onclick="window.location.href= '{{route('empty_info.create')}}'">
                     {{trans('common.btn_kara.add')}}
                 </button>
             </div>
@@ -126,7 +126,7 @@
                         </div>
                     </div>
                     <div class="col-md-1 lh-38 text-right no-padding">
-                        <button class="btn btn-light m-auto w-100" v-on:click="getItems(1)">
+                        <button class="btn btn-primary m-auto w-100" v-on:click="getItems(1)">
                             {{trans('common.button.search')}}
                         </button>
                     </div>
@@ -139,14 +139,14 @@
                 <tr>
                     <th class="wd-60"></th>
                     @foreach($fieldShowTable as $key => $field)
-                        <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("empty_info.list.table.".$key)}}</th>
+                        <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("empty_info.list.table.".$key)}}</th>
                     @endforeach
                 </tr>
                 </thead>
                 <tbody>
                 <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.status) }">
-                    <td class="no-padding wd-100">
-                        <button type="button" class="btn btn-secondary w-100" v-on:click="handleLinkEmptyInfo(item.id,item.status,item.regist_office_id)">
+                    <td class="no-padding wd-100 text-center">
+                        <button type="button" class="btn  btn-handle-empty-info  w-75" v-on:click="handleLinkEmptyInfo(item.id,item.status,item.regist_office_id)">
                             <span v-if="item.status==8 || item.status==9"> {{trans("empty_info.list.search.button.inquiry")}} </span>
                             <span v-else-if="auth_offfice_id!=item.regist_office_id">{{trans("empty_info.list.search.button.select")}}</span>
                             <span v-else-if="auth_offfice_id==item.regist_office_id && item.status==1">{{trans("empty_info.list.search.button.edit")}}</span>
