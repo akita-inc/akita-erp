@@ -201,6 +201,7 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG10009"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10009'); ?>";
+        messages["MSG10012"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10012'); ?>";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/empty-info.js') }}" charset="utf-8"></script>
 @endsection

@@ -20976,17 +20976,17 @@ var ctrEmptyInfoVl = new Vue({
     searchVehicle: function searchVehicle() {
       var that = this;
 
-      if (that.registration_numbers == '') {
-        alert(messages['MSG10009']);
-        return;
-      } else {
-        if (isNaN(that.registration_numbers)) {
+      if (that.field.vehicle_kb == 1) {
+        if (that.registration_numbers == '') {
           alert(messages['MSG10009']);
           return;
+        } else {
+          if (isNaN(that.registration_numbers)) {
+            alert(messages['MSG10009']);
+            return;
+          }
         }
-      }
 
-      if (that.field.vehicle_kb == 1) {
         empty_info_service.searchVehicle({
           registration_numbers: that.registration_numbers,
           mst_business_office_id: that.field.regist_office_id
@@ -21002,6 +21002,8 @@ var ctrEmptyInfoVl = new Vue({
             that.field.max_load_capacity = result.max_loading_capacity;
           }
         });
+      } else {
+        alert(messages['MSG10012']);
       }
     },
     check: function check(e) {
