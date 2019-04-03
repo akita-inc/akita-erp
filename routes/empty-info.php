@@ -3,6 +3,7 @@ Route::group(['name' => 'empty-info', 'prefix' => 'empty_info', 'middleware' => 
     Route::any('/list', 'EmptyInfoController@index')->name('empty_info.list');
     Route::get('/create', 'EmptyInfoController@store')->name('empty_info.create');
     Route::get('/edit/{id}', 'EmptyInfoController@store')->name('empty_info.edit');
+    Route::get('/reservation/{id}', 'EmptyInfoController@store')->name('empty_info.reservation');
 
 
     /*Api using Vue*/
@@ -13,5 +14,6 @@ Route::group(['name' => 'empty-info', 'prefix' => 'empty_info', 'middleware' => 
         Route::any('/submit','EmptyInfoController@submit')->name("empty_info.save");
         Route::get('/delete/{id}', 'EmptyInfoController@delete')->name('empty_info.delete');
         Route::any('/search-vehicle', 'EmptyInfoController@searchVehicle');
+        Route::any('/reservation/{id}', 'EmptyInfoController@reservation');
     });
 });

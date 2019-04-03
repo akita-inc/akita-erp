@@ -28,6 +28,7 @@ var ctrEmptyInfoVl = new Vue({
             arrive_pref_cd:"",
             arrive_address:"",
             arrive_date:"",
+            mode:$('#mode').val(),
         },
         registration_numbers:"",
         errors:{},
@@ -37,7 +38,7 @@ var ctrEmptyInfoVl = new Vue({
         submit: function(){
             let that = this;
             that.loading = true;
-            if(this.empty_info_edit == 1){
+            if(this.field.mode != 'register'){
                 this.field["id"] = this.empty_info_id;
             }
             let data = this.field;
@@ -45,16 +46,36 @@ var ctrEmptyInfoVl = new Vue({
             if(asking_price!=""){
                 data.asking_price = asking_price.replace(/,/g, '');
             }
-            empty_info_service.submit(this.field).then((response) => {
-                if(response.success == false){
-                    that.addComma();
-                    that.errors = response.message;
-                }else{
-                    that.errors = [];
-                    window.location.href = listRoute;
-                }
-                that.loading = false;
-            });
+            switch (this.field.mode) {
+                case 'register':
+                case 'edit':
+                    empty_info_service.submit(this.field).then((response) => {
+                        if(response.success == false){
+                            that.addComma();
+                            that.errors = response.message;
+                        }else{
+                            that.errors = [];
+                            window.location.href = listRoute;
+                        }
+                        that.loading = false;
+                    });
+                    break;
+                case 'reservation':
+                    empty_info_service.checkIsExist(that.empty_info_id).then((response) => {
+                        if (!response.success) {
+                            that.loading = false;
+                            alert(response.msg);
+                            that.backHistory();
+                            return false;
+                        } else {
+                            empty_info_service.reservation(that.empty_info_id).then((response) => {
+                                that.loading = false;
+                                window.location.href = listRoute;
+                            });
+                        }
+                    });
+                    break;
+            }
         },
         showError: function ( errors ){
             return errors.join("<br/>");
@@ -70,7 +91,7 @@ var ctrEmptyInfoVl = new Vue({
         },
         loadFormEdit: function () {
             let that = this;
-            if($("#hd_empty_info_edit").val() == 1){
+            if(this.field.mode != 'register'){
                 this.loading = true;
                 that.empty_info_edit = 1;
                 that.empty_info_id = $("#hd_id").val();
@@ -203,7 +224,7 @@ var ctrEmptyInfoVl = new Vue({
                 };
                 $('input:checkbox').prop('checked',false);
             }
-        }
+        },
     },
     mounted () {
         this.loadFormEdit();

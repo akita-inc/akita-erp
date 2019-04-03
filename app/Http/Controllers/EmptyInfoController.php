@@ -146,8 +146,10 @@ class EmptyInfoController extends Controller {
             }
             $this->query->where('empty_info.deleted_at',null);
     }
+
     public function store(Request $request, $id=null){
         $mEmptyInfo = null;
+        $mode = "register";
         if($id != null){
             $mEmptyInfo = MEmptyInfo::find( $id );
             if(empty($mEmptyInfo)){
@@ -155,6 +157,11 @@ class EmptyInfoController extends Controller {
             }else{
                 $mEmptyInfo->start_time = TimeFunction::convertTime24To12($mEmptyInfo->start_time);
                 $mEmptyInfo = $mEmptyInfo->toArray();
+                $routeName = $request->route()->getName();
+                switch ($routeName){
+                    case 'empty_info.reservation':  $mode = 'reservation'; break;
+                    default: $mode ='edit';
+                }
             }
         }
         $mBusinessOffices = new MBusinessOffices();
@@ -172,6 +179,7 @@ class EmptyInfoController extends Controller {
             'listPreferredPackage' =>$listPreferredPackage,
             'listPrefecture' => $listPrefecture,
             'role' => 1,
+            'mode' => $mode
         ]);
     }
 
@@ -218,6 +226,7 @@ class EmptyInfoController extends Controller {
             ]);
         }
     }
+
     public function index(Request $request){
         $fieldShowTable = [
             'regist_office' => [
@@ -355,6 +364,7 @@ class EmptyInfoController extends Controller {
         $arrayInsert['email_address'] = $empty_mail_add ?$empty_mail_add->email_address : null;
         $arrayInsert['start_time'] = TimeFunction::parseStringToTime($arrayInsert['start_time']);
         unset($arrayInsert["id"]);
+        unset($arrayInsert["mode"]);
         DB::beginTransaction();
         if(isset( $data["id"]) && $data["id"]){
             $id = $data["id"];
@@ -395,5 +405,26 @@ class EmptyInfoController extends Controller {
         } else {
             return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
         }
+    }
+
+    public function reservation($id){
+        $mEmptyInfo = MEmptyInfo::find( $id );
+        DB::beginTransaction();
+        try {
+            $mEmptyInfo->status = 2;
+            $mEmptyInfo->ask_date = TimeFunction::getTimestamp();
+            $mEmptyInfo->ask_office = Auth::user()->mst_business_office_id ;
+            $mEmptyInfo->ask_staff = Auth::user()->id;
+            $mEmptyInfo->save();
+            DB::commit();
+            $this->backHistory();
+        }catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+        }
+        return response()->json([
+            'success'=>true,
+            'message'=> [],
+        ]);
     }
 }
