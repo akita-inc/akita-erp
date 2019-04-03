@@ -3300,11 +3300,6 @@ var ctrStaffsListVl = new Vue({
     deleteStaffs: function deleteStaffs(id) {
       var _this = this;
 
-      if (id == auth_staff_id) {
-        alert(messages["MSG06005"]);
-        return false;
-      }
-
       staffs_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
@@ -3386,7 +3381,7 @@ var ctrStaffsListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
 
 
 /***/ })
