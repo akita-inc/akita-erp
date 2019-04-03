@@ -296,13 +296,19 @@ class StaffsController extends Controller
             }
             $countExist = $countExist->where("id", "<>", $data["id"]);
         }
+        else
+        {
+            if ($data['password']!= $data['confirm_password'] && (isset($data['confirm_password']) || $data['confirm_password'])){
+                $validator->errors()->add('confirm_password',Lang::get('messages.MSG02022'));
+            }
+        }
+
         if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )){
             $countExist = $countExist->count();
             if( $countExist > 0 ){
                 $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
             }
         }
-
     }
     protected function save($data){
         $mStaffAuth =  new MStaffAuths();
@@ -333,6 +339,7 @@ class StaffsController extends Controller
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
         unset($arrayInsert["is_change_password"]);
+        unset($arrayInsert["confirm_password"]);
         DB::beginTransaction();
         try{
             if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
@@ -415,6 +422,10 @@ class StaffsController extends Controller
                 $this->ruleValid['adhibition_start_dt_history'] = 'required';
                 $this->ruleValid['adhibition_end_dt_history'] = 'required';
             }
+        }
+        else
+        {
+            $this->ruleValid["confirm_password"]='required|length:50';
         }
     }
     public function store(Request $request,$id=null)

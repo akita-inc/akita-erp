@@ -74,6 +74,10 @@
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true,'role' => $role])
+                            <div class="break-row-form"></div>
+                            @if(empty($staff))
+                                @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
+                            @endif
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             @if($flagRegisterHistory)
@@ -1014,7 +1018,7 @@
             </fieldset>
             @endif
         </form>
-            <div class="sub-header mt-3">
+        <div class="sub-header mt-3">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
                         <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
