@@ -51,6 +51,7 @@ return [
             "adhibition_start_dt_history" => "適用開始日（新規用）",
             "adhibition_end_dt_history" => "適用終了日（新規用）",
             "password"=>"パスワード",
+            "confirm_password"=>"パスワード(確認用)",
             "employment_pattern_id"=>"雇用形態",
             "position_id"=>"役職",
             "last_nm"=>"社員名（姓）",
