@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
 class Common {
@@ -208,6 +209,16 @@ class Common {
             }
         } else if (file_exists($src)){
             copy($src, $dst);
+        }
+    }
+
+    public static function getPathVehicles( $mVehicle,$filed ){
+        $des = 'vehicles/' . $mVehicle["id"];
+        $ext = explode(".",$mVehicle["$filed"]);
+        if($ext[count($ext)-1] == "pdf"){
+            return Storage::url($des."/pdf/".$mVehicle["$filed"]);
+        }else{
+            return Storage::url($des."/image/".$mVehicle["$filed"]);
         }
     }
 }

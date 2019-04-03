@@ -81,3 +81,6 @@
     right: 65px;
     top: 7px;
 }
+.pdfobject-container {
+    margin-top: 0px !important;
+}

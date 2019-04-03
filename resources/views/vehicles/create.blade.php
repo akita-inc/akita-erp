@@ -267,6 +267,14 @@
                                 <label for="vehicle_inspection_sticker_pdf" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
+                                @if(!empty($mVehicle["vehicle_inspection_sticker_pdf"]))
+                                    <modal-viewer-file
+                                        :header="'{{$mVehicle["vehicle_inspection_sticker_pdf"]}}'"
+                                        :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"vehicle_inspection_sticker_pdf")}}'"
+                                    >
+                                        プレビュー
+                                    </modal-viewer-file>
+                                @endif
                                 <div class="ml-auto">
                                     <button type="button" class="btn btn-dark" @click="deleteFileUpload($event,'vehicle_inspection_sticker_pdf')">ファイル削除</button>
                                 </div>
@@ -843,6 +851,14 @@
                                 <label for="picture_fronts" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
+                                @if(!empty($mVehicle["picture_fronts"]))
+                                    <modal-viewer-file
+                                        :header="'{{$mVehicle["picture_fronts"]}}'"
+                                        :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_fronts")}}'"
+                                    >
+                                        プレビュー
+                                    </modal-viewer-file>
+                                @endif
                                 <div class="ml-auto">
                                     <button type="button" class="btn btn-dark" @click="deleteFileUpload($event,'picture_fronts')">ファイル削除</button>
                                 </div>
@@ -863,6 +879,14 @@
                                 <label for="picture_rights" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
+                                @if(!empty($mVehicle["picture_rights"]))
+                                    <modal-viewer-file
+                                        :header="'{{$mVehicle["picture_rights"]}}'"
+                                        :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_rights")}}'"
+                                    >
+                                        プレビュー
+                                    </modal-viewer-file>
+                                @endif
                                 <div class="ml-auto">
                                     <button type="button" class="btn btn-dark" @click="deleteFileUpload($event,'picture_rights')">ファイル削除</button>
                                 </div>
@@ -883,6 +907,14 @@
                                 <label for="picture_lefts" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
+                                @if(!empty($mVehicle["picture_lefts"]))
+                                    <modal-viewer-file
+                                        :header="'{{$mVehicle["picture_lefts"]}}'"
+                                        :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_lefts")}}'"
+                                    >
+                                        プレビュー
+                                    </modal-viewer-file>
+                                @endif
                                 <div class="ml-auto">
                                     <button type="button" class="btn btn-dark" @click="deleteFileUpload($event,'picture_lefts')">ファイル削除</button>
                                 </div>
@@ -903,6 +935,14 @@
                                 <label for="picture_rears" class="d-inline">
                                     <span class="btn btn-secondary">ファイル選択</span>
                                 </label>
+                                @if(!empty($mVehicle["picture_rears"]))
+                                    <modal-viewer-file
+                                        :header="'{{$mVehicle["picture_rears"]}}'"
+                                        :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_rears")}}'"
+                                    >
+                                        プレビュー
+                                    </modal-viewer-file>
+                                @endif
                                 <div class="ml-auto">
                                     <button type="button" class="btn btn-dark" @click="deleteFileUpload($event,'picture_rears')">ファイル削除</button>
                                 </div>
@@ -986,5 +1026,6 @@
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
     </script>
+    <script type="text/javascript" src="{{ url('/js/PDFObject/pdfobject.min.js') }}" charset="utf-8"></script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/vehicles.js') }}" charset="utf-8"></script>
 @endsection
