@@ -65,3 +65,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/empty-info-vl.js'
 ], 'public/assets/js/controller/empty-info.js');
+
+mix.js([
+    'resources/assets/js/controller/empty-info-list-vl.js'
+], 'public/assets/js/controller/empty-info-list.js');
