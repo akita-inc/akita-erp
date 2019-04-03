@@ -121,8 +121,8 @@ class StaffsController extends Controller
         }
 
         if ($data["order"]["col"] != '') {
-            if ($data["order"]["col"] == 'staff_nm')
-                $orderCol = 'CONCAT_WS("    ",mst_staffs.last_nm,mst_staffs.first_nm)';
+            if ($data["order"]["col"] == 'staff_nm_kana')
+                $orderCol = 'CONCAT_WS("    ",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)';
             else
                 $orderCol = $data["order"]["col"];
             if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
@@ -152,7 +152,7 @@ class StaffsController extends Controller
             ],
             'staff_nm' => [
                 "classTH" => "",
-                "sortBy" => "staff_nm"
+                "sortBy" => "staff_nm_kana"
             ],
             'belong_company_nm' => [
                 "classTH" => "min-wd-100",

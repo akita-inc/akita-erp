@@ -121,7 +121,8 @@ class CustomersController extends Controller
                 "classTH" => "wd-100"
             ],
             'customer_nm'=> [
-                "classTH" => ""
+                "classTH" => "",
+                "sortBy" => "customer_nm_kana"
             ],
             'street_address'=> [
                 "classTH" => ""
