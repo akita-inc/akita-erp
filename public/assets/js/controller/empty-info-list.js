@@ -3330,11 +3330,15 @@ var ctrEmptyInfoListVl = new Vue({
     clearCondition: function clearCondition() {},
     setDefault: function setDefault() {},
     handleLinkEmptyInfo: function handleLinkEmptyInfo(id, status, regist_office_id) {
-      console.log(id + " " + status + " " + regist_office_id);
+      console.log(" status" + status + " office" + regist_office_id);
 
-      if (status == 8 || status == 9) {} else if (this.auth_offfice_id != regist_office_id) {} else if (this.auth_offfice_id == regist_office_id && status == 1) {
+      if (status == 8 || status == 9) {
+        window.location.href = 'reservation/' + id;
+      } else if (this.auth_offfice_id != regist_office_id) {
+        window.location.href = 'reservation/' + id;
+      } else if (this.auth_offfice_id == regist_office_id && status == 1) {
         this.checkIsExist(id);
-      } else if (this.auth_offfice_id == regist_office_id && status == 2) {} else {}
+      } else if (this.auth_offfice_id == regist_office_id && status == 2) {}
     },
     deleteSupplier: function deleteSupplier(id) {
       var _this = this;

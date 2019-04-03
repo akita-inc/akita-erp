@@ -26075,6 +26075,7 @@ var ctrStaffsVl = new Vue({
       adhibition_start_dt_history: "",
       adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
       password: "",
+      confirm_password: "",
       employment_pattern_id: "",
       position_id: "",
       last_nm: "",
