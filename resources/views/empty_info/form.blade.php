@@ -44,14 +44,14 @@
                 </div>
             @endif
         </div>
-        @if($role==9 || ($role==2 && empty($mEmptyInfo)))
+        @if($role==2)
             <div class="alert alert-danger w-100 mt-2">
                 {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
             </div>
         @endif
-        @if($role==1 || ($role==2 && !empty($mEmptyInfo)))
+        @if($role==1)
             <form class="form-inline" role="form">
-                @if($role==2 || $mode=='reservation')
+                @if($mode=='reservation')
                 <fieldset disabled="disabled">
                 @endif
                     <div class="text-danger">
@@ -115,11 +115,11 @@
                     <div class="grid-form">
                         <div class="row">
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $role])
+                                @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2])
 
                             </div>
                             <div class="col-md-8 col-sm-12">
-                                @include('Component.form.time-picker',['class' => 'pl-0 wd-150','filed'=>'start_time','role' => $role])
+                                @include('Component.form.time-picker',['class' => 'pl-0 wd-150','filed'=>'start_time','role' => $mode=='register' || $mode=='edit' ? 1 :2])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-4 col-sm-12">
@@ -145,12 +145,12 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.date-picker',['filed'=>'arrive_date','required'=>true,'role' => $role])
+                                @include('Component.form.date-picker',['filed'=>'arrive_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2])
                             </div>
                         </div>
 
                     </div>
-                @if($role==2 || $mode=='reservation')
+                @if($mode=='reservation')
                 </fieldset>
                 @endif
             </form>

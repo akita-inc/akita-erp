@@ -247,6 +247,7 @@ class EmptyInfoController extends Controller {
     public function store(Request $request, $id=null){
         $mEmptyInfo = null;
         $mode = "register";
+        $role = 1;
         if($id != null){
             $mEmptyInfo = MEmptyInfo::find( $id );
             if(empty($mEmptyInfo)){
@@ -257,7 +258,12 @@ class EmptyInfoController extends Controller {
                 $routeName = $request->route()->getName();
                 switch ($routeName){
                     case 'empty_info.reservation':  $mode = 'reservation'; break;
-                    default: $mode ='edit';
+                    default:
+                        $mode ='edit';
+                        if($mEmptyInfo['status']!=1 || $mEmptyInfo['regist_office_id']!= Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
                 }
             }
         }
@@ -275,7 +281,7 @@ class EmptyInfoController extends Controller {
             'listEquipment' =>$listEquipment,
             'listPreferredPackage' =>$listPreferredPackage,
             'listPrefecture' => $listPrefecture,
-            'role' => 1,
+            'role' => $role,
             'mode' => $mode
         ]);
     }
