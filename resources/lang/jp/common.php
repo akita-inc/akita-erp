@@ -23,6 +23,9 @@ return [
         'register_history_left' =>'新規登録(履歴残し)',
         'reset' =>'リセット'
     ],
+    'btn_kara'=>[
+        'add'=>'新規登録'
+    ],
     "description-form" =>[
         "indicates_required_items" => "*　は必須入力の項目です。"
     ],

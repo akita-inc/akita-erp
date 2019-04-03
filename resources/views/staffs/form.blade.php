@@ -25,7 +25,7 @@
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
-                        @if($role==1)
+                        @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
                         <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
