@@ -25,7 +25,7 @@
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
-                        @if($role==1)
+                        @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
                         <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
@@ -758,6 +758,44 @@
                         <div class="grid-form items-collapse">
                             <div class="row">
                                 <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.select',[
+                                        'filed'=>'belong_company_id',
+                                        'filedId'=>"mst_others_belong_company_id",
+                                        'filedMode'=>"items.belong_company_id",
+                                        'array'=>$listBelongCompanies,
+                                    ])
+                                </div>
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.select',[
+                                        'filed'=>'occupation_id',
+                                        'class'=>'w-75',
+                                        'filedId'=>"mst_others_occupation_id",
+                                        'filedMode'=>"items.occupation_id",
+                                        'array'=>$listOccupation,
+                                    ])
+                                </div>
+                                <div class="break-row-form"></div>
+
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.select',[
+                                        'filed'=>'mst_business_office_id',
+                                        'filedId'=>"mst_others_mst_business_office_id",
+                                        'filedMode'=>"items.mst_business_office_id",
+                                        'array'=>$mBusinessOffices
+                                    ])
+                                </div>
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.select',[
+                                        'filed'=>'depertment_id',
+                                        'class'=>'w-75',
+                                        'filedId'=>"mst_others_depertment_id",
+                                        'filedMode'=>"items.depertment_id",
+                                        'array'=>$listDepartments
+                                    ])
+                                </div>
+                                <div class="break-row-form"></div>
+
+                                <div class="col-md-5 col-sm-12">
                                     @include('Component.form.input',[
                                         'filed'=>'retire_reasons',
                                         'filedId'=>"mst_others_retire_reasons",
@@ -792,44 +830,6 @@
                                         'filedId'=>"mst_others_death_dt",
                                         'filedMode'=>"items.death_dt",
                                         'role' => $role
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                        'filed'=>'belong_company_id',
-                                        'filedId'=>"mst_others_belong_company_id",
-                                        'filedMode'=>"items.belong_company_id",
-                                        'array'=>$listBelongCompanies,
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                        'filed'=>'occupation_id',
-                                        'class'=>'w-75',
-                                        'filedId'=>"mst_others_occupation_id",
-                                        'filedMode'=>"items.occupation_id",
-                                        'array'=>$listOccupation,
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                        'filed'=>'mst_business_office_id',
-                                        'filedId'=>"mst_others_mst_business_office_id",
-                                        'filedMode'=>"items.mst_business_office_id",
-                                        'array'=>$mBusinessOffices
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                        'filed'=>'depertment_id',
-                                        'class'=>'w-75',
-                                        'filedId'=>"mst_others_depertment_id",
-                                        'filedMode'=>"items.depertment_id",
-                                        'array'=>$listDepartments
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>

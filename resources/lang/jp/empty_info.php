@@ -26,7 +26,13 @@ return [
             'status'=>'マッチング済も表示',
             'arrive_date'=>'過去データも表示',
             'edit'=>'編集',
-            'choose'=>'選択'
+            'choose'=>'選択',
+            'button'=>[
+                'inquiry'=>'照会',//「照会・仮押さえ」
+                'select'=>'選択',//「照会・仮押さえ」
+                'edit'=>'編集',//空車登録（編集）
+                'approve'=>'承認' //「予約承認」
+            ]
         ],
         'table' => [
             'regist_office' => '営業所',

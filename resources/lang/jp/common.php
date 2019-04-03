@@ -24,6 +24,9 @@ return [
         'reset' =>'リセット',
         'reservation' =>'予約',
     ],
+    'btn_kara'=>[
+        'add'=>'新規登録'
+    ],
     "description-form" =>[
         "indicates_required_items" => "*　は必須入力の項目です。"
     ],

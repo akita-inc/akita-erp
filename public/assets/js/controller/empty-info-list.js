@@ -3251,7 +3251,11 @@ var ctrEmptyInfoListVl = new Vue({
       current_page: 1,
       last_page: 0
     },
-    order: "",
+    order: {
+      col: '',
+      descFlg: true,
+      divId: ''
+    },
     errors: [],
     auth_offfice_id: auth_offfice_id,
     getItems: function getItems(page, show_msg) {
@@ -3277,15 +3281,36 @@ var ctrEmptyInfoListVl = new Vue({
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.fileSearch = response.fieldSearch;
+        that.order = response.order;
         $.each(that.fileSearch, function (key, value) {
           if (value === null) that.fileSearch[key] = '';
         });
         that.loading = false;
+        that.auth_offfice_id = auth_offfice_id;
+
+        if (that.order.col !== null) {
+          $('#' + that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+        }
       });
     },
     changePage: function changePage(page) {
       this.pagination.current_page = page;
       this.getItems(page);
+    },
+    sortList: function sortList(event, order_by) {
+      $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
+
+      if (this.order.col === order_by && this.order.descFlg) {
+        this.order.descFlg = false;
+        event.target.classList.toggle('sort-asc');
+      } else {
+        this.order.descFlg = true;
+        event.target.classList.toggle('sort-desc');
+      }
+
+      this.order.col = order_by;
+      this.order.divId = event.currentTarget.id;
+      this.getItems(this.pagination.current_page);
     }
   },
   methods: {
@@ -3304,10 +3329,17 @@ var ctrEmptyInfoListVl = new Vue({
     },
     clearCondition: function clearCondition() {},
     setDefault: function setDefault() {},
+    handleLinkEmptyInfo: function handleLinkEmptyInfo(id, status, regist_office_id) {
+      console.log(id + " " + status + " " + regist_office_id);
+
+      if (status == 8 || status == 9) {} else if (this.auth_offfice_id != regist_office_id) {} else if (this.auth_offfice_id == regist_office_id && status == 1) {
+        this.checkIsExist(id);
+      } else if (this.auth_offfice_id == regist_office_id && status == 2) {} else {}
+    },
     deleteSupplier: function deleteSupplier(id) {
       var _this = this;
 
-      customers_service.checkIsExist(id).then(function (response) {
+      empty_info_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
 
@@ -3326,7 +3358,7 @@ var ctrEmptyInfoListVl = new Vue({
     checkIsExist: function checkIsExist(id) {
       var _this2 = this;
 
-      customers_service.checkIsExist(id).then(function (response) {
+      empty_info_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
 

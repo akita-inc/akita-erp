@@ -76,6 +76,7 @@ class EmptyInfoController extends Controller {
         $currentDate = date("Y-m-d",time());
         $dataSearch=$data['fieldSearch'];
         $this->query->select('mst_business_offices.business_office_nm as regist_office',
+               'empty_info.id',
                'empty_info.regist_office_id',
                'vehicle_classification.date_nm as vehicle_classification',
                'empty_info.registration_numbers',
@@ -145,6 +146,21 @@ class EmptyInfoController extends Controller {
                 $this->query->where('empty_info.arrive_date','>',$currentDate);
             }
             $this->query->where('empty_info.deleted_at',null);
+            if ($data["order"]["col"] != '') {
+                if ($data["order"]["col"] == 'arrive_location')
+                    $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm, empty_info.arrive_address)';
+                else if($data["order"]["col"] == 'regist_office')
+                    $orderCol = "empty_info.regist_office_id";
+                else
+                    $orderCol = $data["order"]["col"];
+                if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
+                    $orderCol .= " DESC";
+                }
+                $this->query->orderbyRaw($orderCol);
+            } else {
+                $this->query->orderby('empty_info.id')
+                    ->orderby('empty_info.arrive_date');
+            }
     }
 
     public function store(Request $request, $id=null){
@@ -230,53 +246,66 @@ class EmptyInfoController extends Controller {
     public function index(Request $request){
         $fieldShowTable = [
             'regist_office' => [
-                "classTH" => "wd-100"
+                "classTH" => "wd-100",
+                "sortBy"=>"regist_office"
             ],
             'vehicle_classification'=> [
-                "classTH" => "wd-60"
+                "classTH" => "wd-60",
+                "sortBy"=>"vehicle_classification"
             ],
             'registration_numbers'=> [
-                "classTH" => "wd-120"
+                "classTH" => "wd-120",
+                "sortBy"=>"registration_numbers"
             ],
             'vehicle_size'=> [
                 "classTH" => "wd-60",
                 "classTD" => "td-nl2br",
+                "sortBy"=>"vehicle_size"
             ],
             'vehicle_body_shape'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"vehicle_body_shape"
             ],
             'max_load_capacity'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"max_load_capacity"
             ],
             'equipment'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"equipment"
             ],
             'schedule_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"schedule_date"
             ],
             'start_pref_cd'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"start_pref_cd"
             ],
             'asking_price'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"asking_price"
             ],
             'asking_baggage'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"asking_baggage"
             ],
             'arrive_location'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"arrive_location",
             ],
             'arrive_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+               "sortBy"=>"arrive_date",
             ],
 
         ];
