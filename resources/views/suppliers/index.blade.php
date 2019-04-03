@@ -64,7 +64,7 @@
                 <thead>
                 <tr>
                     <th v-on:click="sortList($event, 'mst_suppliers_cd')" id="th_mst_suppliers_cd" class="wd-100">{{trans('suppliers.list.table.mst_suppliers_cd')}}</th>
-                    <th v-on:click="sortList($event, 'supplier_nm')" id="th_supplier_nm">{{trans('suppliers.list.table.supplier_nm')}}</th>
+                    <th v-on:click="sortList($event, 'supplier_nm_kana')" id="th_supplier_nm">{{trans('suppliers.list.table.supplier_nm')}}</th>
                     <th v-on:click="sortList($event, 'street_address')" id="th_street_address">{{trans('suppliers.list.table.street_address')}}</th>
                     <th v-on:click="sortList($event, 'explanations_bill')" id="th_explanations_bill">{{trans('suppliers.list.table.explanations_bill')}}</th>
                     <th v-on:click="sortList($event, 'adhibition_start_dt')" id="th_adhibition_start_dt" class="wd-120">{{trans('suppliers.list.table.adhibition_start_dt')}}</th>

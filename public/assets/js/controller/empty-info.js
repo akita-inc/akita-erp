@@ -20870,7 +20870,8 @@ var ctrEmptyInfoVl = new Vue({
       asking_baggage: "",
       arrive_pref_cd: "",
       arrive_address: "",
-      arrive_date: ""
+      arrive_date: "",
+      mode: $('#mode').val()
     },
     registration_numbers: "",
     errors: {},
@@ -20881,7 +20882,7 @@ var ctrEmptyInfoVl = new Vue({
       var that = this;
       that.loading = true;
 
-      if (this.empty_info_edit == 1) {
+      if (this.field.mode != 'register') {
         this.field["id"] = this.empty_info_id;
       }
 
@@ -20892,17 +20893,38 @@ var ctrEmptyInfoVl = new Vue({
         data.asking_price = asking_price.replace(/,/g, '');
       }
 
-      empty_info_service.submit(this.field).then(function (response) {
-        if (response.success == false) {
-          that.addComma();
-          that.errors = response.message;
-        } else {
-          that.errors = [];
-          window.location.href = listRoute;
-        }
+      switch (this.field.mode) {
+        case 'register':
+        case 'edit':
+          empty_info_service.submit(this.field).then(function (response) {
+            if (response.success == false) {
+              that.addComma();
+              that.errors = response.message;
+            } else {
+              that.errors = [];
+              window.location.href = listRoute;
+            }
 
-        that.loading = false;
-      });
+            that.loading = false;
+          });
+          break;
+
+        case 'reservation':
+          empty_info_service.checkIsExist(that.empty_info_id).then(function (response) {
+            if (!response.success) {
+              that.loading = false;
+              alert(response.msg);
+              that.backHistory();
+              return false;
+            } else {
+              empty_info_service.reservation(that.empty_info_id).then(function (response) {
+                that.loading = false;
+                window.location.href = listRoute;
+              });
+            }
+          });
+          break;
+      }
     },
     showError: function showError(errors) {
       return errors.join("<br/>");
@@ -20919,7 +20941,7 @@ var ctrEmptyInfoVl = new Vue({
     loadFormEdit: function loadFormEdit() {
       var that = this;
 
-      if ($("#hd_empty_info_edit").val() == 1) {
+      if (this.field.mode != 'register') {
         this.loading = true;
         that.empty_info_edit = 1;
         that.empty_info_id = $("#hd_id").val();
@@ -20954,17 +20976,17 @@ var ctrEmptyInfoVl = new Vue({
     searchVehicle: function searchVehicle() {
       var that = this;
 
-      if (that.registration_numbers == '') {
-        alert(messages['MSG10009']);
-        return;
-      } else {
-        if (isNaN(that.registration_numbers)) {
+      if (that.field.vehicle_kb == 1) {
+        if (that.registration_numbers == '') {
           alert(messages['MSG10009']);
           return;
+        } else {
+          if (isNaN(that.registration_numbers)) {
+            alert(messages['MSG10009']);
+            return;
+          }
         }
-      }
 
-      if (that.field.vehicle_kb == 1) {
         empty_info_service.searchVehicle({
           registration_numbers: that.registration_numbers,
           mst_business_office_id: that.field.regist_office_id
@@ -20980,6 +21002,8 @@ var ctrEmptyInfoVl = new Vue({
             that.field.max_load_capacity = result.max_loading_capacity;
           }
         });
+      } else {
+        alert(messages['MSG10012']);
       }
     },
     check: function check(e) {
@@ -21139,7 +21163,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })
