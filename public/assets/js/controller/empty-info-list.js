@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -3208,10 +3208,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/controller/vehicles-list-vl.js":
-/*!************************************************************!*\
-  !*** ./resources/assets/js/controller/vehicles-list-vl.js ***!
-  \************************************************************/
+/***/ "./resources/assets/js/controller/empty-info-list-vl.js":
+/*!**************************************************************!*\
+  !*** ./resources/assets/js/controller/empty-info-list-vl.js ***!
+  \**************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3222,137 +3222,115 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1__);
 
 
-var ctrVehiclesListVl = new Vue({
-  el: '#ctrVehiclesListVl',
+var ctrEmptyInfoListVl = new Vue({
+  el: '#ctrEmptyInfoListVl',
   data: {
     lang: lang_date_picker,
     format_date: format_date_picker,
     loading: false,
     items: [],
-    fieldSearch: {
-      vehicles_cd: "",
-      door_number: "",
-      vehicles_kb: "",
-      registration_numbers: "",
-      mst_business_office_id: "",
-      radio_reference_date: "1",
-      reference_date: date_now
+    fileSearch: {
+      regist_office_id: "",
+      vehicle_size: "",
+      vehicle_body_shape: "",
+      asking_baggage: "",
+      equipment: "",
+      start_pref_cd: "",
+      start_address: "",
+      arrive_pref_cd: "",
+      arrive_address: "",
+      status: false,
+      arrive_date: false
     },
     message: '',
     pagination: {
       total: 0,
-      per_page: 0,
+      per_page: 2,
       from: 1,
       to: 0,
       current_page: 1,
       last_page: 0
     },
-    order: {
-      col: '',
-      descFlg: true,
-      divId: ''
-    },
+    order: "",
+    errors: [],
+    auth_offfice_id: auth_offfice_id,
     getItems: function getItems(page, show_msg) {
-      var _this = this;
-
       if (show_msg !== true) {
         $('.alert').hide();
-      }
-
-      if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
-        alert(messages["MSG02001"].replace(':attribute', '基準日'));
-        $('#reference_date').focus();
-        return;
       }
 
       var data = {
         pageSize: this.pageSize,
         page: page,
-        fieldSearch: this.fieldSearch,
+        fieldSearch: this.fileSearch,
         order: this.order
       };
       var that = this;
       this.loading = true;
-      vehicles_service.loadList(data).then(function (response) {
+      empty_info_service.loadList(data).then(function (response) {
         if (response.data.data.length === 0) {
-          _this.message = messages["MSG05001"];
+          that.message = messages["MSG05001"];
         } else {
-          _this.message = '';
+          that.message = '';
         }
 
         that.items = response.data.data;
         that.pagination = response.pagination;
-        that.fieldSearch = response.fieldSearch;
-        that.order = response.order;
-        $.each(that.fieldSearch, function (key, value) {
-          if (value === null) that.fieldSearch[key] = '';
+        that.fileSearch = response.fieldSearch;
+        $.each(that.fileSearch, function (key, value) {
+          if (value === null) that.fileSearch[key] = '';
         });
         that.loading = false;
-        if (that.order.col !== null) $('#' + that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
       });
     },
     changePage: function changePage(page) {
       this.pagination.current_page = page;
       this.getItems(page);
-    },
-    sortList: function sortList(event, order_by) {
-      $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
-
-      if (this.order.col === order_by && this.order.descFlg) {
-        this.order.descFlg = false;
-        event.target.classList.toggle('sort-asc');
-      } else {
-        this.order.descFlg = true;
-        event.target.classList.toggle('sort-desc');
-      }
-
-      this.order.col = order_by;
-      this.order.divId = event.currentTarget.id;
-      this.getItems(this.pagination.current_page);
     }
   },
   methods: {
-    clearCondition: function clearCondition() {
-      this.fieldSearch.vehicles_cd = '';
-      this.fieldSearch.door_number = '';
-      this.fieldSearch.vehicles_kb = '';
-      this.fieldSearch.registration_numbers = '';
-      this.fieldSearch.mst_business_office_id = '';
-      this.fieldSearch.radio_reference_date = '1';
-      this.fieldSearch.reference_date = date_now;
-    },
-    setDefault: function setDefault() {
-      if (this.fieldSearch.reference_date === '') {
-        this.fieldSearch.reference_date = date_now;
-      }
-    },
-    deleteVehicle: function deleteVehicle(id) {
-      var _this2 = this;
+    setBgColor: function setBgColor(status) {
+      var bgColor = "";
 
-      vehicles_service.checkIsExist(id).then(function (response) {
+      if (status == 2) {
+        bgColor = "#FFFED8";
+      } else if (status == 8 || status == 9) {
+        bgColor = "#DDDDDD";
+      } else {
+        bgColor = "rgb(255, 255, 255)";
+      }
+
+      return bgColor;
+    },
+    clearCondition: function clearCondition() {},
+    setDefault: function setDefault() {},
+    deleteSupplier: function deleteSupplier(id) {
+      var _this = this;
+
+      customers_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
 
-          _this2.getItems(1);
+          _this.getItems(1);
 
           return false;
         } else {
           if (confirm(messages["MSG06001"])) {
-            vehicles_service.delete(id).then(function (response) {
-              _this2.getItems(1);
+            customers_service.deleteCustomer(id).then(function (response) {
+              _this.getItems(1);
             });
           }
         }
       });
     },
     checkIsExist: function checkIsExist(id) {
-      var _this3 = this;
+      var _this2 = this;
 
-      vehicles_service.checkIsExist(id).then(function (response) {
+      customers_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
 
-          _this3.getItems(1);
+          _this2.getItems(1);
         } else {
           window.location.href = 'edit/' + id;
         }
@@ -3370,14 +3348,14 @@ var ctrVehiclesListVl = new Vue({
 
 /***/ }),
 
-/***/ 9:
-/*!******************************************************************!*\
-  !*** multi ./resources/assets/js/controller/vehicles-list-vl.js ***!
-  \******************************************************************/
+/***/ 12:
+/*!********************************************************************!*\
+  !*** multi ./resources/assets/js/controller/empty-info-list-vl.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\empty-info-list-vl.js */"./resources/assets/js/controller/empty-info-list-vl.js");
 
 
 /***/ })

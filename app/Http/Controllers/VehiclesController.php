@@ -105,8 +105,16 @@ class VehiclesController extends Controller
             $this->query->where('mst_vehicles.adhibition_end_dt', ">=", $where['reference_date']);
         }
 
-        $this->query->orderby('mst_vehicles.vehicles_cd');
-        $this->query->orderby('mst_vehicles.adhibition_start_dt');
+        if ($data["order"]["col"] != '') {
+            $orderCol = $data["order"]["col"];
+            if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
+                $orderCol .= " DESC";
+            }
+            $this->query->orderbyRaw($orderCol);
+        } else {
+            $this->query->orderby('mst_vehicles.vehicles_cd');
+            $this->query->orderby('mst_vehicles.adhibition_start_dt');
+        }
     }
 
     public function delete(Request $request,$id)

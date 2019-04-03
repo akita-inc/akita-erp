@@ -5,16 +5,18 @@
     @foreach($array as $key => $value)
     <div class="row">
         <div class="col-md-5 col-sm-12">
-            <input {!! isset($attr_input) ? $attr_input:"" !!} v-model="field.{!! $filed !!}" type="checkbox" class="form-control" id="{!! $filed.$key !!}">
-            <span for="{!! $filed !!}">{!! $value->date_nm !!}</span>
+            <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="form-control" id="{!! $filed.$value->date_id  !!}" value="{!! $value->date_id !!}" name="{!! $filed !!}" @change="check($event)" index="{!! $value->date_id !!}">
+            <span for="{!! $filed.$value->date_id !!}">{!! $value->date_nm !!}</span>
         </div>
         <div class="d-flex col-md-7 col-sm-9">
             <div class="wd-100">
-                <input {!! isset($attr_input) ? $attr_input:"" !!} v-model="field.{!! $filed !!}"
+                <input {!! isset($attr_input) ? $attr_input:"" !!}
+                       @input="input($event)"
                        type="text"
-                       v-bind:class="errors.{!! $filed !!} != undefined ? 'form-control is-invalid':'' "
+                       v-bind:class="errors.{!! $filed !!}_value != undefined && errors.{!! $filed !!}_value[0][{!! $value->date_id !!}] ? 'form-control is-invalid':'' "
                        class="form-control"
-                       id="{!! $filed !!}">
+                       id="{!! $filed !!}_value{!! $value->date_id !!}"
+                       index="{!! $value->date_id !!}">
             </div>
             <div class="d-flex align-items-center pl-3">
                 <span>{!! $value->contents1 !!}</span>
@@ -22,16 +24,22 @@
         </div>
         <div class="break-row-form"></div>
     </div>
+    <span v-cloak v-if="errors.{!! $filed !!}_value != undefined" class="message-error">@{{errors.{!! $filed !!}_value[0][{!! $value->date_id !!}]!=undefined ? errors.{!! $filed !!}_value[0][{!! $value->date_id !!}]: ''}}</span>
     @endforeach
     <div class="row">
         <div class="col-md-5 col-sm-12">
-            <input {!! isset($attr_input) ? $attr_input:"" !!} v-model="field.{!! $filed !!}" type="checkbox" class="form-control" id="{!! $filed.$key !!}">
+            <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="form-control" id="{!! $filed.'0' !!}" @change="check($event)" index="0" value="0" :checked="checkOther">
             <span for="{!! $filed !!}">その他</span>
         </div>
         <div class="col-md-7 col-sm-12">
-            <textarea {!! isset($attr_input) ? $attr_input:"" !!} v-model="field.{!! $filed !!}" type="text"
-                      v-bind:class="errors.{!! $filed !!} != undefined ? 'form-control is-invalid':'form-control' "
-                      class="h-100" id="{!! $filed !!}" rows="3"></textarea>
+            <textarea {!! isset($attr_input) ? $attr_input:"" !!}
+                      id="{!! $filed !!}_value0" index="0"
+                      v-bind:class="errors.{!! $filed !!}_value != undefined && errors.{!! $filed !!}_value[0][0] ? 'form-control is-invalid':'' "
+                      class="h-100" id="{!! $filed !!}" rows="3"
+                      @input="input($event)"
+            ></textarea>
         </div>
     </div>
+    <span v-cloak v-if="errors.{!! $filed !!}_value != undefined" class="message-error">@{{errors.{!! $filed !!}_value[0][0]!=undefined ? errors.{!! $filed !!}_value[0][0]: ''}}</span>
 </div>
+<span v-cloak v-if="errors.{!! $filed !!} != undefined" class="message-error">@{{errors.{!! $filed !!}[0]}}</span>

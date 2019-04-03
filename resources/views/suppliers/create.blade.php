@@ -546,7 +546,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-form mb-5">
+            <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_bank_cd">支払銀行コード</label>
@@ -640,9 +640,39 @@
                     </div>
                 </div>
             </div>
-            @endif
+
             @if($role==2)
             </fieldset>
+            @endif
+            <div class="sub-header mt-3 mb-5">
+                    <div class="sub-header-line-one d-flex">
+                        <div class="d-flex">
+                            <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
+                        </div>
+                        @if($mSupplier->id && $role==1)
+                            <div class="d-flex ml-auto">
+                                <button class="btn btn-danger text-white" v-on:click='deleteSupplier("{{$mSupplier->id}}")' type="button">{{ trans("common.button.delete") }}</button>
+                            </div>
+                        @endif
+                    </div>
+                    @if($mSupplier->id && $role==1)
+                        <div class="grid-form border-0">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                                <div class="col-md-7 col-sm-12 row grid-col h-100">
+                                    <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.edit") }}</button>
+                                    @if($flagLasted)
+                                        <button class="btn btn-primary btn-submit m-auto" type="button" onclick="registerHistoryLeft()" >{{ trans("common.button.register_history_left") }}</button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @elseif($role==1)
+                        <div class="sub-header-line-two">
+                            <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.register") }}</button>
+                        </div>
+                    @endif
+                </div>
             @endif
         </form>
     </div>

@@ -16,7 +16,7 @@ class CreateEmptyInfoTable extends Migration
         Schema::create('empty_info', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('status')->nullable();
-            $table->integer('regist_staff')->nullable();
+            $table->string('regist_staff',5)->nullable();
             $table->integer('regist_office_id')->nullable();
             $table->string('email_address',300)->nullable();
             $table->integer('vehicle_kb')->nullable();
@@ -29,7 +29,7 @@ class CreateEmptyInfoTable extends Migration
             $table->time('start_time')->nullable();
             $table->char('start_pref_cd',2)->nullable();
             $table->string('start_address',200)->nullable();
-            $table->decimal('asking_price')->nullable();
+            $table->decimal('asking_price', 10, 0)->nullable();
             $table->integer('asking_baggage')->nullable();
             $table->char('arrive_pref_cd',2)->nullable();
             $table->string('arrive_address',50)->nullable();
