@@ -21,7 +21,8 @@ return [
         'edit' => '更新',
         'delete' => '削除',
         'register_history_left' =>'新規登録(履歴残し)',
-        'reset' =>'リセット'
+        'reset' =>'リセット',
+        'reservation' =>'予約',
     ],
     'btn_kara'=>[
         'add'=>'新規登録'

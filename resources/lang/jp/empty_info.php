@@ -78,6 +78,12 @@ return [
             "apr_date" => "承認日時",
             "search_vehicle" => "ナンバー検索",
         ]
+    ],
+    'modal' => [
+        'reservation'=>[
+            'title' => '仮押さえ',
+            'content' => "必ず電話確認を行ってください。<br>仮押さえを行いますか？"
+        ]
     ]
 
 ];
