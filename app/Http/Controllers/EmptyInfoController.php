@@ -149,8 +149,10 @@ class EmptyInfoController extends Controller {
             if ($data["order"]["col"] != '') {
                 if ($data["order"]["col"] == 'arrive_location')
                     $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm, empty_info.arrive_address)';
-                else if($data["order"]["col"] == 'regist_office')
-                    $orderCol = "empty_info.regist_office_id";
+                else if($data["order"]["col"]=='schedule_date')
+                    $orderCol="CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i'))";
+                else if($data["order"]["col"]=='start_pref_cd')
+                    $orderCol="CONCAT_WS(' ',empty_car_location.date_nm, empty_info.start_address)";
                 else
                     $orderCol = $data["order"]["col"];
                 if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
@@ -158,10 +160,89 @@ class EmptyInfoController extends Controller {
                 }
                 $this->query->orderbyRaw($orderCol);
             } else {
-                $this->query->orderby('empty_info.id')
-                    ->orderby('empty_info.arrive_date');
+                $this->query->orderBy('empty_info.arrive_date','asc')
+                    ->orderBy('empty_info.id','desc');
             }
     }
+
+    public function index(Request $request){
+        $fieldShowTable = [
+            'regist_office' => [
+                "classTH" => "wd-100",
+                "sortBy"=>"regist_office"
+            ],
+            'vehicle_classification'=> [
+                "classTH" => "wd-60",
+                "sortBy"=>"vehicle_classification"
+            ],
+            'registration_numbers'=> [
+                "classTH" => "wd-120",
+                "sortBy"=>"registration_numbers"
+            ],
+            'vehicle_size'=> [
+                "classTH" => "wd-60",
+                "classTD" => "td-nl2br",
+                "sortBy"=>"vehicle_size"
+            ],
+            'vehicle_body_shape'=> [
+                "classTH" => "wd-120",
+                "classTD" => "text-center",
+                "sortBy"=>"vehicle_body_shape"
+            ],
+            'max_load_capacity'=> [
+                "classTH" => "wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"max_load_capacity"
+            ],
+            'equipment'=> [
+                "classTH" => "wd-120",
+                "classTD" => "text-center",
+                "sortBy"=>"equipment"
+            ],
+            'schedule_date'=> [
+                "classTH" => "wd-120",
+                "classTD" => "text-center",
+                "sortBy"=>"schedule_date"
+            ],
+            'start_pref_cd'=> [
+                "classTH" => "wd-120",
+                "classTD" => "text-center",
+                "sortBy"=>"start_pref_cd"
+            ],
+            'asking_price'=> [
+                "classTH" => "wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"asking_price"
+            ],
+            'asking_baggage'=> [
+                "classTH" => "wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"asking_baggage"
+            ],
+            'arrive_location'=> [
+                "classTH" => "wd-120",
+                "classTD" => "text-center",
+                "sortBy"=>"arrive_location",
+            ],
+            'arrive_date'=> [
+                "classTH" => "wd-120",
+                "classTD" => "text-center",
+                "sortBy"=>"arrive_date",
+            ],
+
+        ];
+        $mBussinessOffice = new MBusinessOffices();
+        $mGeneralPurpose = new MGeneralPurposes();
+        $askingBaggages = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['preferred_package']);
+        $startPrefCds = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['prefecture_cd']);
+        $businessOffices = $mBussinessOffice->getAllData();
+        return view('empty_info.index',[
+            'fieldShowTable'=>$fieldShowTable,
+            'businessOffices'=> $businessOffices,
+            'askingBaggages'=>$askingBaggages,
+            'startPrefCds'=>$startPrefCds]);
+    }
+
 
     public function store(Request $request, $id=null){
         $mEmptyInfo = null;
@@ -247,84 +328,6 @@ class EmptyInfoController extends Controller {
                 'msg'=> Lang::get('messages.MSG10010'),
             ]);
         }
-    }
-
-    public function index(Request $request){
-        $fieldShowTable = [
-            'regist_office' => [
-                "classTH" => "wd-100",
-                "sortBy"=>"regist_office"
-            ],
-            'vehicle_classification'=> [
-                "classTH" => "wd-60",
-                "sortBy"=>"vehicle_classification"
-            ],
-            'registration_numbers'=> [
-                "classTH" => "wd-120",
-                "sortBy"=>"registration_numbers"
-            ],
-            'vehicle_size'=> [
-                "classTH" => "wd-60",
-                "classTD" => "td-nl2br",
-                "sortBy"=>"vehicle_size"
-            ],
-            'vehicle_body_shape'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-                "sortBy"=>"vehicle_body_shape"
-            ],
-            'max_load_capacity'=> [
-                "classTH" => "wd-100",
-                "classTD" => "text-center",
-                "sortBy"=>"max_load_capacity"
-            ],
-            'equipment'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-                "sortBy"=>"equipment"
-            ],
-            'schedule_date'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-                "sortBy"=>"schedule_date"
-            ],
-            'start_pref_cd'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-                "sortBy"=>"start_pref_cd"
-            ],
-            'asking_price'=> [
-                "classTH" => "wd-100",
-                "classTD" => "text-center",
-                "sortBy"=>"asking_price"
-            ],
-            'asking_baggage'=> [
-                "classTH" => "wd-100",
-                "classTD" => "text-center",
-                "sortBy"=>"asking_baggage"
-            ],
-            'arrive_location'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-                "sortBy"=>"arrive_location",
-            ],
-            'arrive_date'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-               "sortBy"=>"arrive_date",
-            ],
-
-        ];
-        $mBussinessOffice = new MBusinessOffices();
-        $mGeneralPurpose = new MGeneralPurposes();
-        $askingBaggages = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['preferred_package']);
-        $startPrefCds = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['prefecture_cd']);
-        $businessOffices = $mBussinessOffice->getAllData();
-        return view('empty_info.index',[
-                                    'fieldShowTable'=>$fieldShowTable,
-                                    'businessOffices'=> $businessOffices,
-                                    'askingBaggages'=>$askingBaggages,
-                                    'startPrefCds'=>$startPrefCds]);
     }
 
     protected function validAfter( &$validator,$data ){
