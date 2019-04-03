@@ -76,6 +76,7 @@ class EmptyInfoController extends Controller {
         $currentDate = date("Y-m-d",time());
         $dataSearch=$data['fieldSearch'];
         $this->query->select('mst_business_offices.business_office_nm as regist_office',
+               'empty_info.id',
                'empty_info.regist_office_id',
                'vehicle_classification.date_nm as vehicle_classification',
                'empty_info.registration_numbers',
@@ -145,9 +146,26 @@ class EmptyInfoController extends Controller {
                 $this->query->where('empty_info.arrive_date','>',$currentDate);
             }
             $this->query->where('empty_info.deleted_at',null);
+            if ($data["order"]["col"] != '') {
+                if ($data["order"]["col"] == 'arrive_location')
+                    $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm, empty_info.arrive_address)';
+                else if($data["order"]["col"] == 'regist_office')
+                    $orderCol = "empty_info.regist_office_id";
+                else
+                    $orderCol = $data["order"]["col"];
+                if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
+                    $orderCol .= " DESC";
+                }
+                $this->query->orderbyRaw($orderCol);
+            } else {
+                $this->query->orderby('empty_info.id')
+                    ->orderby('empty_info.arrive_date');
+            }
     }
+
     public function store(Request $request, $id=null){
         $mEmptyInfo = null;
+        $mode = "register";
         if($id != null){
             $mEmptyInfo = MEmptyInfo::find( $id );
             if(empty($mEmptyInfo)){
@@ -155,6 +173,11 @@ class EmptyInfoController extends Controller {
             }else{
                 $mEmptyInfo->start_time = TimeFunction::convertTime24To12($mEmptyInfo->start_time);
                 $mEmptyInfo = $mEmptyInfo->toArray();
+                $routeName = $request->route()->getName();
+                switch ($routeName){
+                    case 'empty_info.reservation':  $mode = 'reservation'; break;
+                    default: $mode ='edit';
+                }
             }
         }
         $mBusinessOffices = new MBusinessOffices();
@@ -172,6 +195,7 @@ class EmptyInfoController extends Controller {
             'listPreferredPackage' =>$listPreferredPackage,
             'listPrefecture' => $listPrefecture,
             'role' => 1,
+            'mode' => $mode
         ]);
     }
 
@@ -218,56 +242,70 @@ class EmptyInfoController extends Controller {
             ]);
         }
     }
+
     public function index(Request $request){
         $fieldShowTable = [
             'regist_office' => [
-                "classTH" => "wd-100"
+                "classTH" => "wd-100",
+                "sortBy"=>"regist_office"
             ],
             'vehicle_classification'=> [
-                "classTH" => "wd-60"
+                "classTH" => "wd-60",
+                "sortBy"=>"vehicle_classification"
             ],
             'registration_numbers'=> [
-                "classTH" => "wd-120"
+                "classTH" => "wd-120",
+                "sortBy"=>"registration_numbers"
             ],
             'vehicle_size'=> [
                 "classTH" => "wd-60",
                 "classTD" => "td-nl2br",
+                "sortBy"=>"vehicle_size"
             ],
             'vehicle_body_shape'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"vehicle_body_shape"
             ],
             'max_load_capacity'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"max_load_capacity"
             ],
             'equipment'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"equipment"
             ],
             'schedule_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"schedule_date"
             ],
             'start_pref_cd'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"start_pref_cd"
             ],
             'asking_price'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"asking_price"
             ],
             'asking_baggage'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"asking_baggage"
             ],
             'arrive_location'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+                "sortBy"=>"arrive_location",
             ],
             'arrive_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center"
+                "classTD" => "text-center",
+               "sortBy"=>"arrive_date",
             ],
 
         ];
@@ -355,6 +393,7 @@ class EmptyInfoController extends Controller {
         $arrayInsert['email_address'] = $empty_mail_add ?$empty_mail_add->email_address : null;
         $arrayInsert['start_time'] = TimeFunction::parseStringToTime($arrayInsert['start_time']);
         unset($arrayInsert["id"]);
+        unset($arrayInsert["mode"]);
         DB::beginTransaction();
         if(isset( $data["id"]) && $data["id"]){
             $id = $data["id"];
@@ -395,5 +434,26 @@ class EmptyInfoController extends Controller {
         } else {
             return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
         }
+    }
+
+    public function reservation($id){
+        $mEmptyInfo = MEmptyInfo::find( $id );
+        DB::beginTransaction();
+        try {
+            $mEmptyInfo->status = 2;
+            $mEmptyInfo->ask_date = TimeFunction::getTimestamp();
+            $mEmptyInfo->ask_office = Auth::user()->mst_business_office_id ;
+            $mEmptyInfo->ask_staff = Auth::user()->id;
+            $mEmptyInfo->save();
+            DB::commit();
+            $this->backHistory();
+        }catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+        }
+        return response()->json([
+            'success'=>true,
+            'message'=> [],
+        ]);
     }
 }

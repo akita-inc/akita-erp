@@ -8,7 +8,7 @@
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
                 <button class="btn btn-primary" onclick="window.location.href= '{{route('empty_info.create')}}'">
-                    {{trans('common.button.add')}}
+                    {{trans('common.btn_kara.add')}}
                 </button>
             </div>
             <div class="sub-header-line-two frm-search-list">
@@ -134,28 +134,24 @@
             </div>
         </div>
         <div class="wrapper-table">
-            <table class="table table-striped table-bordered table-green">
+            <table class="table table-striped table-bordered search-content table-green">
                 <thead>
                 <tr>
                     <th class="wd-60"></th>
                     @foreach($fieldShowTable as $key => $field)
-                        <th class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("empty_info.list.table.".$key)}}</th>
+                        <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("empty_info.list.table.".$key)}}</th>
                     @endforeach
                 </tr>
                 </thead>
                 <tbody>
                 <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.status) }">
-                    <td class="no-padding wd-100"  v-if="item.status==8 || item.status==9">
-                        <button type="button" class="btn btn-dark w-100">照会</button>
-                    </td>
-                    <td class="no-padding wd-100"  v-else-if="auth_offfice_id!=item.regist_office_id">
-                        <button type="button" class="btn btn-dark w-100">選択</button>
-                    </td>
-                    <td  class="no-padding wd-100" v-else-if="auth_offfice_id==item.regist_office_id && item.status==1">
-                        <button type="button" class="btn btn-dark w-100">編集</button>
-                    </td>
-                    <td  class="no-padding wd-100" v-else-if="auth_offfice_id==item.regist_office_id && item.status==2">
-                        <button type="button" class="btn btn-dark w-100">承認</button>
+                    <td class="no-padding wd-100">
+                        <button type="button" class="btn btn-secondary w-100" v-on:click="handleLinkEmptyInfo(item.id,item.status,item.regist_office_id)">
+                            <span v-if="item.status==8 || item.status==9"> {{trans("empty_info.list.search.button.inquiry")}} </span>
+                            <span v-else-if="auth_offfice_id!=item.regist_office_id">{{trans("empty_info.list.search.button.select")}}</span>
+                            <span v-else-if="auth_offfice_id==item.regist_office_id && item.status==1">{{trans("empty_info.list.search.button.edit")}}</span>
+                            <span v-else-if="auth_offfice_id==item.regist_office_id && item.status==2">{{trans("empty_info.list.search.button.approve")}}</span>
+                        </button>
                     </td>
                      @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>

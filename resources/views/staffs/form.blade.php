@@ -25,7 +25,7 @@
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
-                        @if($role==1)
+                        @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
                         <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
@@ -266,6 +266,118 @@
                 </div>
             </div>
             @endif
+            <!--Block 11-->
+                 @if(in_array(5,$rolesStaffScreen))
+                        <div class="grid-form ">
+                            <p class="header-collapse" >
+                                <a data-toggle="collapse" href="#b_mst_staff_dependents" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    {{trans($prefix."mst_staff_dependents_title")}}
+                                </a>
+                            </p>
+                            <div class="collapse" id="b_mst_staff_dependents">
+                                <div class="wrapper-collapse">
+                                    <div class="grid-form items-collapse" v-for="(items,index) in field.mst_staff_dependents">
+                                        <div v-cloak class="row">
+                                            <div class="col-md-5 col-sm-12">
+                                                @include('Component.form.select-vue',[
+                                                    'filed'=>'dept_dependent_kb',
+                                                     'class'=>'wd-350',
+                                                    'filedId'=>"'mst_staff_dependents_dependent_kb'+index",
+                                                    'filedMode'=>"items.dept_dependent_kb",
+                                                    'array'=>$listDependentKBs,
+                                                    'filedErrors'=>"mst_staff_dependents"
+
+                                                ])
+                                            </div>
+                                            <div class="col-md-7 col-sm-12 pd-l-20">
+                                            </div>
+                                            <div class="break-row-form"></div>
+
+                                            <div class="col-md-5 col-sm-12">
+                                                @include('Component.form.input-vue',[
+                                                    'filed'=>'dept_last_nm',
+                                                    'filedId'=>"'mst_staff_dependents_last_nm'+index",
+                                                    'filedMode'=>"items.dept_last_nm",
+                                                    'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_last_nm\', \'dept_last_nm_kana\')"',
+                                                    'filedErrors'=>"mst_staff_dependents",
+
+                                                ])
+                                            </div>
+                                            <div class="col-md-7 col-sm-12 pd-l-20">
+                                                @include('Component.form.input-vue',[
+                                                    'filed'=>'dept_last_nm_kana',
+                                                    'filedId'=>"'mst_staff_dependents_last_nm_kana'+index",
+                                                    'filedMode'=>"items.dept_last_nm_kana",
+                                                    'attr_input'=>"maxlength='50'",
+                                                    'filedErrors'=>"mst_staff_dependents"
+                                                ])
+                                            </div>
+
+                                            <div class="break-row-form"></div>
+
+                                            <div class="col-md-5 col-sm-12">
+                                                @include('Component.form.input-vue',[
+                                                    'filed'=>'dept_first_nm',
+                                                    'filedId'=>"'mst_staff_dependents_first_nm'+index",
+                                                    'filedMode'=>"items.dept_first_nm",
+                                                    'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_first_nm\',\'dept_first_nm_kana\')"',
+                                                    'filedErrors'=>"mst_staff_dependents"
+                                                ])
+                                            </div>
+                                            <div class="col-md-7 col-sm-12 pd-l-20">
+                                                @include('Component.form.input-vue',[
+                                                    'filed'=>'dept_first_nm_kana',
+                                                    'filedId'=>"'mst_staff_dependents_first_nm_kana'+index",
+                                                    'filedMode'=>"items.dept_first_nm_kana",
+                                                     'attr_input'=>"maxlength=50",
+                                                    'filedErrors'=>"mst_staff_dependents"
+                                                ])
+                                            </div>
+
+                                            <div class="break-row-form"></div>
+
+                                            <div class="col-md-5 col-sm-12">
+                                                @include('Component.form.date-picker-vue',[
+                                                    'filed'=>'dept_birthday',
+                                                    'class'=>'wd-350',
+                                                    'filedId'=>"'mst_staff_dependents_birthday'+index",
+                                                    'filedMode'=>"items.dept_birthday",
+                                                    'filedErrors'=>"mst_staff_dependents",
+                                                    'role' => $role
+                                                ])
+                                            </div>
+                                            <div class="col-md-7 col-sm-12 pd-l-20">
+                                                @include('Component.form.select-vue',[
+                                                    'filed'=>'dept_sex_id',
+                                                    'class'=>'wd-300',
+                                                    'filedId'=>"'mst_staff_dependents_sex_id'+index",
+                                                    'filedMode'=>"items.dept_sex_id",
+                                                    'array'=>$listSex,
+                                                    'filedErrors'=>"mst_staff_dependents"
+                                                ])
+                                            </div>
+                                            <div class="break-row-form"></div>
+
+                                            <div class="col-md-5 col-sm-12">
+                                                @include('Component.form.input-vue',[
+                                                    'filed'=>'dept_social_security_number',
+                                                    'class'=>'wd-350',
+                                                    'attr_input' => "maxlength='10'",
+                                                    'filedId'=>"'mst_staff_dependents_social_security_number'+index",
+                                                    'filedMode'=>"items.dept_social_security_number",
+                                                    'filedErrors'=>"mst_staff_dependents"
+                                                ])
+                                            </div>
+                                            <!--address2 address3-->
+
+                                        </div>
+                                        <button @click="removeRows('mst_staff_dependents',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                                    </div>
+                                    <button @click="addRows('mst_staff_dependents')" type="button" class="btn btn-primary btn-rows-add">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
             <!--Block 8-->
             @if(in_array(2,$rolesStaffScreen))
             <div class="grid-form">
@@ -439,118 +551,6 @@
                             <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_qualifications')" type="button" class="btn btn-primary btn-rows-add">+</button>
-                    </div>
-                </div>
-            </div>
-            @endif
-            <!--Block 11-->
-            @if(in_array(5,$rolesStaffScreen))
-            <div class="grid-form ">
-                <p class="header-collapse" >
-                    <a data-toggle="collapse" href="#b_mst_staff_dependents" role="button" aria-expanded="false" aria-controls="collapseExample">
-                         {{trans($prefix."mst_staff_dependents_title")}}
-                    </a>
-                </p>
-                <div class="collapse" id="b_mst_staff_dependents">
-                    <div class="wrapper-collapse">
-                        <div class="grid-form items-collapse" v-for="(items,index) in field.mst_staff_dependents">
-                            <div v-cloak class="row">
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select-vue',[
-                                        'filed'=>'dept_dependent_kb',
-                                         'class'=>'wd-350',
-                                        'filedId'=>"'mst_staff_dependents_dependent_kb'+index",
-                                        'filedMode'=>"items.dept_dependent_kb",
-                                        'array'=>$listDependentKBs,
-                                        'filedErrors'=>"mst_staff_dependents"
-
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                </div>
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.input-vue',[
-                                        'filed'=>'dept_last_nm',
-                                        'filedId'=>"'mst_staff_dependents_last_nm'+index",
-                                        'filedMode'=>"items.dept_last_nm",
-                                        'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_last_nm\', \'dept_last_nm_kana\')"',
-                                        'filedErrors'=>"mst_staff_dependents",
-
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.input-vue',[
-                                        'filed'=>'dept_last_nm_kana',
-                                        'filedId'=>"'mst_staff_dependents_last_nm_kana'+index",
-                                        'filedMode'=>"items.dept_last_nm_kana",
-                                        'attr_input'=>"maxlength='50'",
-                                        'filedErrors'=>"mst_staff_dependents"
-                                    ])
-                                </div>
-
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.input-vue',[
-                                        'filed'=>'dept_first_nm',
-                                        'filedId'=>"'mst_staff_dependents_first_nm'+index",
-                                        'filedMode'=>"items.dept_first_nm",
-                                        'attr_input'=>'maxlength="25" v-on:input="convertKanaBlock($event, \'dept_first_nm\',\'dept_first_nm_kana\')"',
-                                        'filedErrors'=>"mst_staff_dependents"
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.input-vue',[
-                                        'filed'=>'dept_first_nm_kana',
-                                        'filedId'=>"'mst_staff_dependents_first_nm_kana'+index",
-                                        'filedMode'=>"items.dept_first_nm_kana",
-                                         'attr_input'=>"maxlength=50",
-                                        'filedErrors'=>"mst_staff_dependents"
-                                    ])
-                                </div>
-
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker-vue',[
-                                        'filed'=>'dept_birthday',
-                                        'class'=>'wd-350',
-                                        'filedId'=>"'mst_staff_dependents_birthday'+index",
-                                        'filedMode'=>"items.dept_birthday",
-                                        'filedErrors'=>"mst_staff_dependents",
-                                        'role' => $role
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select-vue',[
-                                        'filed'=>'dept_sex_id',
-                                        'class'=>'wd-300',
-                                        'filedId'=>"'mst_staff_dependents_sex_id'+index",
-                                        'filedMode'=>"items.dept_sex_id",
-                                        'array'=>$listSex,
-                                        'filedErrors'=>"mst_staff_dependents"
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.input-vue',[
-                                        'filed'=>'dept_social_security_number',
-                                        'class'=>'wd-350',
-                                        'attr_input' => "maxlength='10'",
-                                        'filedId'=>"'mst_staff_dependents_social_security_number'+index",
-                                        'filedMode'=>"items.dept_social_security_number",
-                                        'filedErrors'=>"mst_staff_dependents"
-                                    ])
-                                </div>
-                                <!--address2 address3-->
-
-                            </div>
-                            <button @click="removeRows('mst_staff_dependents',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
-                        </div>
-                        <button @click="addRows('mst_staff_dependents')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
                 </div>
             </div>
@@ -758,6 +758,44 @@
                         <div class="grid-form items-collapse">
                             <div class="row">
                                 <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.select',[
+                                        'filed'=>'belong_company_id',
+                                        'filedId'=>"mst_others_belong_company_id",
+                                        'filedMode'=>"items.belong_company_id",
+                                        'array'=>$listBelongCompanies,
+                                    ])
+                                </div>
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.select',[
+                                        'filed'=>'occupation_id',
+                                        'class'=>'w-75',
+                                        'filedId'=>"mst_others_occupation_id",
+                                        'filedMode'=>"items.occupation_id",
+                                        'array'=>$listOccupation,
+                                    ])
+                                </div>
+                                <div class="break-row-form"></div>
+
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.select',[
+                                        'filed'=>'mst_business_office_id',
+                                        'filedId'=>"mst_others_mst_business_office_id",
+                                        'filedMode'=>"items.mst_business_office_id",
+                                        'array'=>$mBusinessOffices
+                                    ])
+                                </div>
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.select',[
+                                        'filed'=>'depertment_id',
+                                        'class'=>'w-75',
+                                        'filedId'=>"mst_others_depertment_id",
+                                        'filedMode'=>"items.depertment_id",
+                                        'array'=>$listDepartments
+                                    ])
+                                </div>
+                                <div class="break-row-form"></div>
+
+                                <div class="col-md-5 col-sm-12">
                                     @include('Component.form.input',[
                                         'filed'=>'retire_reasons',
                                         'filedId'=>"mst_others_retire_reasons",
@@ -792,44 +830,6 @@
                                         'filedId'=>"mst_others_death_dt",
                                         'filedMode'=>"items.death_dt",
                                         'role' => $role
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                        'filed'=>'belong_company_id',
-                                        'filedId'=>"mst_others_belong_company_id",
-                                        'filedMode'=>"items.belong_company_id",
-                                        'array'=>$listBelongCompanies,
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                        'filed'=>'occupation_id',
-                                        'class'=>'w-75',
-                                        'filedId'=>"mst_others_occupation_id",
-                                        'filedMode'=>"items.occupation_id",
-                                        'array'=>$listOccupation,
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                        'filed'=>'mst_business_office_id',
-                                        'filedId'=>"mst_others_mst_business_office_id",
-                                        'filedMode'=>"items.mst_business_office_id",
-                                        'array'=>$mBusinessOffices
-                                    ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                        'filed'=>'depertment_id',
-                                        'class'=>'w-75',
-                                        'filedId'=>"mst_others_depertment_id",
-                                        'filedMode'=>"items.depertment_id",
-                                        'array'=>$listDepartments
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>

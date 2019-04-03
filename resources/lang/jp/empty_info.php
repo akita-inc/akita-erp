@@ -26,7 +26,13 @@ return [
             'status'=>'マッチング済も表示',
             'arrive_date'=>'過去データも表示',
             'edit'=>'編集',
-            'choose'=>'選択'
+            'choose'=>'選択',
+            'button'=>[
+                'inquiry'=>'照会',//「照会・仮押さえ」
+                'select'=>'選択',//「照会・仮押さえ」
+                'edit'=>'編集',//空車登録（編集）
+                'approve'=>'承認' //「予約承認」
+            ]
         ],
         'table' => [
             'regist_office' => '営業所',
@@ -71,6 +77,12 @@ return [
             "ask_staff_email_address" => "予約担当者メールアドレス",
             "apr_date" => "承認日時",
             "search_vehicle" => "ナンバー検索",
+        ]
+    ],
+    'modal' => [
+        'reservation'=>[
+            'title' => '仮押さえ',
+            'content' => "必ず電話確認を行ってください。<br>仮押さえを行いますか？"
         ]
     ]
 
