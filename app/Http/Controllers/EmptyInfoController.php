@@ -150,7 +150,7 @@ class EmptyInfoController extends Controller {
                 if ($data["order"]["col"] == 'arrive_location')
                     $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm, empty_info.arrive_address)';
                 else if($data["order"]["col"] == 'regist_office')
-                    $orderCol='';
+                    $orderCol = "empty_info.regist_office_id";
                 else
                     $orderCol = $data["order"]["col"];
                 if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
