@@ -1,6 +1,6 @@
 @extends('Layouts.app')
-@section('title',trans("empty_info.title"))
-@section('title_header',trans("empty_info.title"))
+@section('title',trans("empty_info.list.title"))
+@section('title_header',trans("empty_info.list.title"))
 @section('content')
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrEmptyInfoListVl">
@@ -145,8 +145,8 @@
                 </thead>
                 <tbody>
                 <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.status) }">
-                    <td class="no-padding wd-100">
-                        <button type="button" class="btn btn-yellow w-100" v-on:click="handleLinkEmptyInfo(item.id,item.status,item.regist_office_id)">
+                    <td class="no-padding wd-100 text-center">
+                        <button type="button" class="btn  btn-handle-empty-info  w-75" v-on:click="handleLinkEmptyInfo(item.id,item.status,item.regist_office_id)">
                             <span v-if="item.status==8 || item.status==9"> {{trans("empty_info.list.search.button.inquiry")}} </span>
                             <span v-else-if="auth_offfice_id!=item.regist_office_id">{{trans("empty_info.list.search.button.select")}}</span>
                             <span v-else-if="auth_offfice_id==item.regist_office_id && item.status==1">{{trans("empty_info.list.search.button.edit")}}</span>
