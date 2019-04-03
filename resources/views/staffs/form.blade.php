@@ -68,25 +68,32 @@
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
-                        <div class="break-row-form"></div>
-                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
                             @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true,'role' => $role])
-                            <div class="break-row-form"></div>
-                            @if(empty($staff))
-                                @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
-                            @endif
                         </div>
                         <div class="col-md-6 col-sm-12 pd-l-20">
                             @if($flagRegisterHistory)
                                 @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'required'=>true ,'role' => $role])
                             @else
                                 @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
-                            @endif                        </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="break-row-form"></div>
+                <div class="row">
+                    <div class="col-md-5 col-sm-12">
+                        @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col">
+                        @if(empty($staff))
+                        <div class="col-md-6 col-sm-12 no-padding">
+                                @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
+                        </div>
+                        @endif
                         @if($flagRegisterHistory)
-                            <div class="break-row-form"></div>
                             <div class="col-md-6 col-sm-12 no-padding">
                                 @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true,'role' => $role])
                             </div>
