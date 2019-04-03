@@ -3300,11 +3300,6 @@ var ctrStaffsListVl = new Vue({
     deleteStaffs: function deleteStaffs(id) {
       var _this = this;
 
-      if (id == auth_staff_id) {
-        alert(messages["MSG06005"]);
-        return false;
-      }
-
       staffs_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);

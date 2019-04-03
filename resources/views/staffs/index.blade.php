@@ -158,7 +158,7 @@
                     @endforeach
                     @if ($accessible_kb == 1)
                         <td class="no-padding">
-                            <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
+                            <button class="btn btn-delete w-100" v-on:click="deleteStaffs(item.id)" v-if="item['staff_cd'] != auth_staff_cd && item['adhibition_end_dt'] === item['max_adhibition_end_dt']">削除</button>
                         </td>
                     @endif
                 </tr>

@@ -115,16 +115,6 @@
         }
     };
     format_date_picker = "YYYY/MM/DD";
-    $.ajax({
-        statusCode: {
-            400: function() {
-                alert('400 status code! user error');
-            },
-            500: function() {
-                alert('500 status code! server error');
-            }
-        }
-    });
 </script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
@@ -134,5 +124,16 @@
 <script type="text/javascript" src="{{ mix('/assets/js/service/service.js') }}" charset="utf-8"></script>
 <script type="text/javascript" src="{{ mix('/assets/js/directive/directive.js') }}" charset="utf-8"></script>
 @yield('scripts')
+<script>
+    axios.interceptors.response.use((response) => {
+        return response;
+    }, function (error) {
+        // Do something with response error
+        if (error.response.status === 401) {
+            window.location = "{{route("logoutError")}}";
+        }
+        return Promise.reject(error.response);
+    });
+</script>
 </body>
 </html>

@@ -76,11 +76,6 @@ var ctrStaffsListVl = new Vue({
             this.getItems(page);
         },
         deleteStaffs: function (id){
-            if (id == auth_staff_id) {
-                alert(messages["MSG06005"]);
-                return false;
-            }
-
             staffs_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
