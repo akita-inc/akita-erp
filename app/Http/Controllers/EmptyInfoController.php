@@ -30,7 +30,7 @@ class EmptyInfoController extends Controller {
         'registration_numbers' => 'nullable|length:50',
         'vehicle_size' => 'required|length:50',
         'vehicle_body_shape' => 'required|length:50',
-        'max_load_capacity' => 'nullable|one_byte_number|length:5',
+        'max_load_capacity' => 'required|one_byte_number|length:5',
         'equipment' => 'required',
         'start_date' => 'required',
         'start_time' => 'required',
@@ -286,6 +286,7 @@ class EmptyInfoController extends Controller {
         $listPreferredPackage= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['preferred_package'],'');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
         $listStatus= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['empty_car_info_status'],'');
+//        dd($mEmptyInfo);
         return view('empty_info.form', [
             'mEmptyInfo' => $mEmptyInfo,
             'listBusinessOffices' =>$listBusinessOffices,

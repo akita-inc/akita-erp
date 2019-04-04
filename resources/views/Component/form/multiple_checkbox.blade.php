@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-5 col-sm-12">
             <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="form-control" id="{!! $filed.$value->date_id  !!}" value="{!! $value->date_id !!}" name="{!! $filed !!}" @change="check($event)" index="{!! $value->date_id !!}">
-            <span for="{!! $filed.$value->date_id !!}">{!! $value->date_nm !!}</span>
+            <label class="custom-label" for="{!! $filed.$value->date_id !!}">{!! $value->date_nm !!}</label>
         </div>
         <div class="d-flex col-md-7 col-sm-9">
             <div class="wd-100">
@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-md-5 col-sm-12">
             <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="form-control" id="{!! $filed.'0' !!}" @change="check($event)" index="0" value="0" :checked="checkOther">
-            <span for="{!! $filed !!}">その他</span>
+            <label class="custom-label" for="{!! $filed.'0' !!}">その他</label>
         </div>
         <div class="col-md-7 col-sm-12">
             <textarea {!! isset($attr_input) ? $attr_input:"" !!}
