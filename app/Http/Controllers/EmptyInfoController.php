@@ -450,9 +450,10 @@ class EmptyInfoController extends Controller {
         }
     }
 
-    public function reservation($id){
-        MEmptyInfo::updateStatus($id, 2);
+    public function updateStatus(Request $request, $id){
+        MEmptyInfo::updateStatus($id, $request->get('status'));
         $this->backHistory();
+        \Session::flash('message',Lang::get('messages.MSG04002'));
         return response()->json([
             'success'=>true,
             'message'=> [],
