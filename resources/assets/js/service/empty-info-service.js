@@ -41,8 +41,8 @@ empty_info_service = {
             return error;
         });
     },
-    reservation: function (id) {
-        return axios.post('/empty_info/api-v1/reservation/'+id).then(function (response) {
+    updateStatus: function (id,data) {
+        return axios.post('/empty_info/api-v1/updateStatus/'+id,data).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

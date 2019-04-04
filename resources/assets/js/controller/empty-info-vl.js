@@ -69,7 +69,7 @@ var ctrEmptyInfoVl = new Vue({
                             that.backHistory();
                             return false;
                         } else {
-                            empty_info_service.reservation(that.empty_info_id).then((response) => {
+                            empty_info_service.updateStatus(that.empty_info_id,{status:2}).then((response) => {
                                 that.loading = false;
                                 window.location.href = listRoute;
                             });

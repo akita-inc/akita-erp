@@ -14,6 +14,6 @@ Route::group(['name' => 'empty-info', 'prefix' => 'empty_info', 'middleware' => 
         Route::any('/submit','EmptyInfoController@submit')->name("empty_info.save");
         Route::get('/delete/{id}', 'EmptyInfoController@delete')->name('empty_info.delete');
         Route::any('/search-vehicle', 'EmptyInfoController@searchVehicle');
-        Route::any('/reservation/{id}', 'EmptyInfoController@reservation');
+        Route::any('/updateStatus/{id}', 'EmptyInfoController@updateStatus');
     });
 });
