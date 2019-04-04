@@ -39,6 +39,7 @@ class CreateEmptyInfoTable extends Migration
             $table->string('ask_staff',5)->nullable();
             $table->string('ask_staff_email_address',300)->nullable();
             $table->dateTime('apr_date')->nullable();
+            $table->string('apr_staff',5)->nullable();
             $table->timestamp('deleted_at')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
