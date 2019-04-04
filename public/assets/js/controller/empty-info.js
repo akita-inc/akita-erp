@@ -20855,6 +20855,7 @@ var ctrEmptyInfoVl = new Vue({
     empty_info_edit: 0,
     empty_info_id: null,
     field: {
+      status: 1,
       regist_office_id: user_login_mst_business_office_id,
       vehicle_kb: 1,
       registration_numbers: "",
@@ -20917,7 +20918,9 @@ var ctrEmptyInfoVl = new Vue({
               that.backHistory();
               return false;
             } else {
-              empty_info_service.reservation(that.empty_info_id).then(function (response) {
+              empty_info_service.updateStatus(that.empty_info_id, {
+                status: 2
+              }).then(function (response) {
                 that.loading = false;
                 window.location.href = listRoute;
               });
@@ -21061,8 +21064,7 @@ var ctrEmptyInfoVl = new Vue({
         this.loadFormEdit();
       } else {
         this.field = {
-          id: "",
-          status: "",
+          status: 1,
           regist_staff: "",
           regist_office_id: user_login_mst_business_office_id,
           email_address: "",
@@ -21163,7 +21165,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })
