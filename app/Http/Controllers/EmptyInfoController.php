@@ -193,6 +193,7 @@ class EmptyInfoController extends Controller {
         $listEquipment= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb')['loaded_item']);
         $listPreferredPackage= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['preferred_package'],'');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
+        $listStatus= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['empty_car_info_status'],'');
         return view('empty_info.form', [
             'mEmptyInfo' => $mEmptyInfo,
             'listBusinessOffices' =>$listBusinessOffices,
@@ -200,6 +201,7 @@ class EmptyInfoController extends Controller {
             'listEquipment' =>$listEquipment,
             'listPreferredPackage' =>$listPreferredPackage,
             'listPrefecture' => $listPrefecture,
+            'listStatus' => $listStatus,
             'role' => $role,
             'mode' => $mode
         ]);
@@ -393,7 +395,6 @@ class EmptyInfoController extends Controller {
             $arrayInsert['equipment'] = $equipmentStr;
 
         }
-        $arrayInsert['status'] = 1;
         $arrayInsert['regist_staff'] = Auth::user()->id;
         $empty_mail_add = MEmptyMailTo::where('office_id',Auth::user()->mst_business_office_id)->first();
         $arrayInsert['email_address'] = $empty_mail_add ?$empty_mail_add->email_address : null;
@@ -405,7 +406,9 @@ class EmptyInfoController extends Controller {
             $id = $data["id"];
             $arrayInsert["modified_at"] = $currentTime;
             MEmptyInfo::query()->where("id","=",$id)->update( $arrayInsert );
+            MEmptyInfo::updateStatus($id, $arrayInsert['status']);
         }else {
+            $arrayInsert['status'] = 1;
             $arrayInsert["created_at"] = $currentTime;
             $arrayInsert["modified_at"] = $currentTime;
             $id =  MEmptyInfo::query()->insertGetId( $arrayInsert );
@@ -413,8 +416,10 @@ class EmptyInfoController extends Controller {
         DB::commit();
         if(isset( $data["id"])){
             $this->backHistory();
+            \Session::flash('message',Lang::get('messages.MSG04002'));
+        }else{
+            \Session::flash('message',Lang::get('messages.MSG03002'));
         }
-        \Session::flash('message',Lang::get('messages.MSG03002'));
         return $id;
     }
 
@@ -443,20 +448,8 @@ class EmptyInfoController extends Controller {
     }
 
     public function reservation($id){
-        $mEmptyInfo = MEmptyInfo::find( $id );
-        DB::beginTransaction();
-        try {
-            $mEmptyInfo->status = 2;
-            $mEmptyInfo->ask_date = TimeFunction::getTimestamp();
-            $mEmptyInfo->ask_office = Auth::user()->mst_business_office_id ;
-            $mEmptyInfo->ask_staff = Auth::user()->id;
-            $mEmptyInfo->save();
-            DB::commit();
-            $this->backHistory();
-        }catch (\Exception $e) {
-            DB::rollback();
-            dd($e);
-        }
+        MEmptyInfo::updateStatus($id, 2);
+        $this->backHistory();
         return response()->json([
             'success'=>true,
             'message'=> [],
