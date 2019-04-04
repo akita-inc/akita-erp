@@ -295,7 +295,7 @@ class StaffsController extends Controller
                     $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
                 }
                 $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
-                if(!Hash::check($data['confirm_password'], $passwordStaff->password) && (!empty($data['confirm_password']) || $data['confirm_password']))
+                if(Hash::check($data['confirm_password'], $passwordStaff->password)==false && (!isset($data["is_change_password"]) || $data["is_change_password"] == false) && (!empty($data['confirm_password']) || $data['confirm_password']))
                 {
                     $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
                 }
