@@ -3330,15 +3330,15 @@ var ctrEmptyInfoListVl = new Vue({
     clearCondition: function clearCondition() {},
     setDefault: function setDefault() {},
     handleLinkEmptyInfo: function handleLinkEmptyInfo(id, status, regist_office_id) {
-      console.log(" status" + status + " office" + regist_office_id);
-
       if (status == 8 || status == 9) {
         window.location.href = 'reservation/' + id;
       } else if (this.auth_offfice_id != regist_office_id) {
         window.location.href = 'reservation/' + id;
       } else if (this.auth_offfice_id == regist_office_id && status == 1) {
         this.checkIsExist(id);
-      } else if (this.auth_offfice_id == regist_office_id && status == 2) {}
+      } else if (this.auth_offfice_id == regist_office_id && status == 2) {
+        window.location.href = 'reservation-approval/' + id;
+      }
     },
     deleteSupplier: function deleteSupplier(id) {
       var _this = this;
@@ -3391,7 +3391,7 @@ var ctrEmptyInfoListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-list-vl.js */"./resources/assets/js/controller/empty-info-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\empty-info-list-vl.js */"./resources/assets/js/controller/empty-info-list-vl.js");
 
 
 /***/ })
