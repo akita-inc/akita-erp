@@ -88,7 +88,7 @@
                         @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        @if(empty($staff))
+                        @if($role!=2 && !$flagRegisterHistory)
                         <div class="col-md-6 col-sm-12 no-padding">
                                 @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                         </div>
@@ -103,6 +103,14 @@
                         @endif
                     </div>
                 </div>
+                @if($role!=2 && (!empty($flagRegisterHistory)|| $flagRegisterHistory))
+                 <div class="break-row-form"></div>
+                 <div class="row">
+                    <div class="col-md-5 col-sm-12">
+                          @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
+                    </div>
+                </div>
+                @endif
             </div>
             <!--Block 2-->
             <div class="grid-form">

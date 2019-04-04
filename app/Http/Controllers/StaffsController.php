@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\MStaffs;
 use App\Models\MGeneralPurposes;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -293,20 +294,25 @@ class StaffsController extends Controller
                 if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mStaff->adhibition_start_dt)){
                     $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
                 }
+                $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
+                if(Hash::check($data['confirm_password'], $passwordStaff->password)==false && (!isset($data["is_change_password"]) || $data["is_change_password"] == false) && (!empty($data['confirm_password']) || $data['confirm_password']))
+                {
+                    $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
+                }
             }
             $countExist = $countExist->where("id", "<>", $data["id"]);
         }
-        else
-        {
-            if ($data['password']!= $data['confirm_password'] && (isset($data['confirm_password']) || $data['confirm_password'])){
-                $validator->errors()->add('confirm_password',Lang::get('messages.MSG02022'));
-            }
-        }
+
 
         if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )){
             $countExist = $countExist->count();
             if( $countExist > 0 ){
                 $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
+            }
+        }
+        if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
+            if ($data['password'] != $data['confirm_password'] && (isset($data['confirm_password']) || $data['confirm_password'])) {
+                $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
             }
         }
     }
@@ -413,6 +419,7 @@ class StaffsController extends Controller
     protected function beforeSubmit($data){
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])){
             $this->ruleValid["password"]='required|length:50';
+            $this->ruleValid["confirm_password"]='required|length:50';
         }
         if(isset($data["id"]) && $data["id"]) {
             if (!isset($data["clone"])) {
@@ -422,10 +429,6 @@ class StaffsController extends Controller
                 $this->ruleValid['adhibition_start_dt_history'] = 'required';
                 $this->ruleValid['adhibition_end_dt_history'] = 'required';
             }
-        }
-        else
-        {
-            $this->ruleValid["confirm_password"]='required|length:50';
         }
     }
     public function store(Request $request,$id=null)
