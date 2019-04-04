@@ -20955,7 +20955,8 @@ var ctrEmptyInfoVl = new Vue({
         });
 
         if (this.field.mode == 'reservation_approval') {
-          this.field.application_office_id = this.field.regist_office_id;
+          this.field.application_office_id = $("#hd_ask_office").val();
+          ;
           this.field.reservation_person = $("#hd_reservation_person").val();
         }
 
@@ -21090,6 +21091,8 @@ var ctrEmptyInfoVl = new Vue({
           arrive_date: ""
         };
         $('input:checkbox').prop('checked', false);
+        $('input:text').val('');
+        $('textarea').val('');
       }
     }
   },
@@ -21170,7 +21173,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })

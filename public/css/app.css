@@ -626,3 +626,18 @@ input[type=text]::-ms-clear {
 div.mx-calendar-panel-time div.mx-calendar-header{
     display: none !important;
 }
+.custom-label{
+    width: 100% !important;
+    background-color: white !important;
+    position: relative !important;
+    color: black !important;
+    line-height: normal !important;
+    left: auto !important;
+    display: inline !important;
+    padding-right: 20px !important;
+    padding-left: 0px !important;
+}
+input[type="checkbox"]:focus , input[type="radio"]:focus{
+    outline:0;
+    box-shadow: none;
+}

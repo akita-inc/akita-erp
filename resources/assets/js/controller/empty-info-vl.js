@@ -103,7 +103,7 @@ var ctrEmptyInfoVl = new Vue({
                     }
                 });
                 if(this.field.mode=='reservation_approval'){
-                    this.field.application_office_id = this.field.regist_office_id;
+                    this.field.application_office_id = $("#hd_ask_office").val();;
                     this.field.reservation_person =$("#hd_reservation_person").val();
                 }
                 this.loading = false;
@@ -228,6 +228,8 @@ var ctrEmptyInfoVl = new Vue({
                     arrive_date:"",
                 };
                 $('input:checkbox').prop('checked',false);
+                $('input:text').val('');
+                $('textarea').val('');
             }
         },
     },
