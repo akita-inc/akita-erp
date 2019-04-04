@@ -51,9 +51,12 @@
         @endif
         @if($role==1)
             <form class="form-inline" role="form">
-                @if($mode=='reservation')
+                @if($mode=='reservation' || $mode=='reservation_approval')
                 <fieldset disabled="disabled">
                 @endif
+                    @if($mode=='reservation_approval')
+                        @include("empty_info._reservation_approval")
+                    @endif
                     <div class="text-danger">
                         {{ trans("common.description-form.indicates_required_items") }}
                     </div>
@@ -150,7 +153,7 @@
                         </div>
 
                     </div>
-                @if($mode=='reservation')
+                @if($mode=='reservation' || $mode=='reservation_approval')
                 </fieldset>
                 @endif
             </form>

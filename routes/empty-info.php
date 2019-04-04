@@ -4,6 +4,7 @@ Route::group(['name' => 'empty-info', 'prefix' => 'empty_info', 'middleware' => 
     Route::get('/create', 'EmptyInfoController@store')->name('empty_info.create');
     Route::get('/edit/{id}', 'EmptyInfoController@store')->name('empty_info.edit');
     Route::get('/reservation/{id}', 'EmptyInfoController@store')->name('empty_info.reservation');
+    Route::get('/reservation-approval/{id}', 'EmptyInfoController@store')->name('empty_info.reservation_approval');
 
 
     /*Api using Vue*/

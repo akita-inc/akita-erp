@@ -258,6 +258,7 @@ class EmptyInfoController extends Controller {
                 $routeName = $request->route()->getName();
                 switch ($routeName){
                     case 'empty_info.reservation':  $mode = 'reservation'; break;
+                    case 'empty_info.reservation_approval':  $mode = 'reservation_approval'; break;
                     default:
                         $mode ='edit';
                         if($mEmptyInfo['status']!=1 || $mEmptyInfo['regist_office_id']!= Auth::user()->mst_business_office_id ){
