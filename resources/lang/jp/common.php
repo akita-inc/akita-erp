@@ -23,6 +23,8 @@ return [
         'register_history_left' =>'新規登録(履歴残し)',
         'reset' =>'リセット',
         'reservation' =>'予約',
+        'reservation_approval' =>'承認',
+        'reservation_reject' =>'却下',
     ],
     'btn_kara'=>[
         'add'=>'新規登録'
