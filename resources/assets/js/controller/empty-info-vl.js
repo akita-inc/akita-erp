@@ -12,6 +12,7 @@ var ctrEmptyInfoVl = new Vue({
         empty_info_edit:0,
         empty_info_id:null,
         field:{
+            status:1,
             regist_office_id:user_login_mst_business_office_id,
             vehicle_kb:1,
             registration_numbers:"",
@@ -203,8 +204,7 @@ var ctrEmptyInfoVl = new Vue({
                 this.loadFormEdit();
             }else{
                 this.field = {
-                    id:"",
-                    status:"",
+                    status:1,
                     regist_staff:"",
                     regist_office_id:user_login_mst_business_office_id,
                     email_address:"",

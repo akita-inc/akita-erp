@@ -55,6 +55,7 @@ return [
         'title' => '空車　新規追加',
         'title_edit' => '空車　修正',
         'field' => [
+            "status" => "ステータス",
             "regist_office_id" => "営業所",
             "email_address" => "ナンバー検索",
             "vehicle_kb" => "車両区分",

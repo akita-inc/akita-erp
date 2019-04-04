@@ -60,6 +60,12 @@
                     <!--Block 1-->
                     <div class="grid-form">
                         <div class="row">
+                            @if($mode=='edit')
+                            <div class="col-md-4 col-sm-12">
+                                @include('Component.form.select',['filed'=>'status','array'=>$listStatus])
+                            </div>
+                            <div class="break-row-form"></div>
+                            @endif
                             <div class="col-md-4 col-sm-12">
                                 @include('Component.form.select',['filed'=>'regist_office_id','array'=>$listBusinessOffices,'required'=>true])
                             </div>
@@ -161,7 +167,7 @@
                     </div>
                     @if(!empty($mEmptyInfo))
                         <div class="d-flex ml-auto">
-                            @if($role==1 && ($mode=='register' || $mode=='edit'))
+                            @if($role==1 && $mode=='edit' && $mEmptyInfo['regist_office_id']== \Illuminate\Support\Facades\Auth::user()->mst_business_office_id)
                                 <button class="btn btn-danger text-white" v-on:click="deleteInfo('{{$mEmptyInfo['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
