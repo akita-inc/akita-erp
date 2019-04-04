@@ -46,12 +46,11 @@ class MEmptyInfo extends Model
                     $mEmptyInfo->apr_staff = Auth::user()->staff_cd;
                     break;
             }
-
             $mEmptyInfo->save();
             DB::commit();
         }catch (\Exception $e) {
             DB::rollback();
-            dd($e);
+            return false;
         }
         return true;
     }

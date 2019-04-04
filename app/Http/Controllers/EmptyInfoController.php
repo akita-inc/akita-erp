@@ -462,9 +462,19 @@ class EmptyInfoController extends Controller {
     }
 
     public function updateStatus(Request $request, $id){
-        MEmptyInfo::updateStatus($id, $request->get('status'));
+        $result = MEmptyInfo::updateStatus($id, $request->get('status'));
         $this->backHistory();
-        \Session::flash('message',Lang::get('messages.MSG04002'));
+        switch ($request->get('status')){
+            case 1:
+                \Session::flash('message',Lang::get('messages.'.($result ? 'MSG10020' : 'MSG10021')));
+                break;
+            case 2:
+                \Session::flash('message',Lang::get('messages.'.($result ? 'MSG10014' : 'MSG10015')));
+                break;
+            case 8:
+                \Session::flash('message',Lang::get('messages.'.($result ? 'MSG10017' : 'MSG10018')));
+                break;
+        }
         return response()->json([
             'success'=>true,
             'message'=> [],
