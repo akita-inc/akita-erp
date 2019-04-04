@@ -10,6 +10,7 @@ use App\Models\MBusinessOffices;
 use App\Models\MEmptyInfo;
 use App\Models\MEmptyMailTo;
 use App\Models\MGeneralPurposes;
+use App\Models\MStaffs;
 use App\Models\MVehicles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -258,7 +259,16 @@ class EmptyInfoController extends Controller {
                 $routeName = $request->route()->getName();
                 switch ($routeName){
                     case 'empty_info.reservation':  $mode = 'reservation'; break;
-                    case 'empty_info.reservation_approval':  $mode = 'reservation_approval'; break;
+                    case 'empty_info.reservation_approval':
+                        $ask_staff= MStaffs::query()->select(DB::raw("concat(last_nm,'　',first_nm) as ask_staff"))->where('staff_cd' ,$mEmptyInfo['ask_staff'])->first();
+                        if($ask_staff){
+                            $mEmptyInfo['reservation_person'] = $ask_staff->ask_staff;
+                        }
+                        $mode = 'reservation_approval';
+                        if($mEmptyInfo['status']!=2 || $mEmptyInfo['regist_office_id']!= Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
                     default:
                         $mode ='edit';
                         if($mEmptyInfo['status']!=1 || $mEmptyInfo['regist_office_id']!= Auth::user()->mst_business_office_id ){

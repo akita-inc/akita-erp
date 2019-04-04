@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog" id="confirmModal">
+<div class="modal" tabindex="-1" role="dialog" id="{{$id}}">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
