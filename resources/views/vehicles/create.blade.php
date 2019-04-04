@@ -272,7 +272,9 @@
                                         :header="'{{$mVehicle["vehicle_inspection_sticker_pdf"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"vehicle_inspection_sticker_pdf")}}'"
                                     >
-                                        プレビュー
+                                        <button type="button" class="btn btn-primary" >
+                                            プレビュー
+                                        </button>
                                     </modal-viewer-file>
                                 @endif
                                 <div class="ml-auto">
@@ -856,7 +858,9 @@
                                         :header="'{{$mVehicle["picture_fronts"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_fronts")}}'"
                                     >
-                                        プレビュー
+                                        <button type="button" class="btn btn-primary" >
+                                            プレビュー
+                                        </button>
                                     </modal-viewer-file>
                                 @endif
                                 <div class="ml-auto">
@@ -884,7 +888,9 @@
                                         :header="'{{$mVehicle["picture_rights"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_rights")}}'"
                                     >
-                                        プレビュー
+                                        <button type="button" class="btn btn-primary" >
+                                            プレビュー
+                                        </button>
                                     </modal-viewer-file>
                                 @endif
                                 <div class="ml-auto">
@@ -912,7 +918,9 @@
                                         :header="'{{$mVehicle["picture_lefts"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_lefts")}}'"
                                     >
-                                        プレビュー
+                                        <button type="button" class="btn btn-primary" >
+                                            プレビュー
+                                        </button>
                                     </modal-viewer-file>
                                 @endif
                                 <div class="ml-auto">
@@ -940,7 +948,9 @@
                                         :header="'{{$mVehicle["picture_rears"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_rears")}}'"
                                     >
-                                        プレビュー
+                                        <button type="button" class="btn btn-primary" >
+                                            プレビュー
+                                        </button>
                                     </modal-viewer-file>
                                 @endif
                                 <div class="ml-auto">

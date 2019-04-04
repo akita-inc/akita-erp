@@ -19049,15 +19049,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticStyle: { "margin-left": "5px" } }, [
     _c(
-      "button",
+      "a",
       {
-        staticClass: "btn btn-primary",
         attrs: {
-          type: "button",
           "data-toggle": "modal",
-          "data-target": "#ModalViewerFile" + _vm.id
+          "data-target": "#ModalViewerFile" + _vm.id,
+          href: "javascript:void(0);"
         }
       },
       [_vm._t("default")],

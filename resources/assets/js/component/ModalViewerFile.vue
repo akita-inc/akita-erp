@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div style="margin-left: 5px;">
         <!-- Button to Open the Modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" v-bind:data-target="'#ModalViewerFile'+id">
+        <a data-toggle="modal" v-bind:data-target="'#ModalViewerFile'+id" href="javascript:void(0);">
             <slot></slot>
-        </button>
+        </a>
 
         <!-- The Modal -->
         <div class="modal" v-bind:id="'ModalViewerFile'+id">
