@@ -13,6 +13,11 @@
     background-color: #FF0000;
     color: #ffffff;
 }
+.btn-handle-empty-info{
+    color: #212529;
+    background-color: rgb(230, 230, 230);
+    border-color: rgb(187, 187, 187);
+}
 .no-padding {
     padding: 0!important;
 }
@@ -80,4 +85,7 @@
     position: absolute;
     right: 65px;
     top: 7px;
+}
+.pdfobject-container {
+    margin-top: 0px !important;
 }

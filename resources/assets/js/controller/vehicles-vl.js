@@ -1,6 +1,7 @@
 import { Core } from '../package/yubinbango-core';
 import DatePicker from '../component/vue2-datepicker-master'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+import ModalViewerFile from '../component/ModalViewerFile'
 
 var ctrVehiclesVl = new Vue({
     el: '#ctrVehiclesVl',
@@ -241,6 +242,7 @@ var ctrVehiclesVl = new Vue({
     },
     components: {
         DatePicker,
-        PulseLoader
+        PulseLoader,
+        'modal-viewer-file':ModalViewerFile
     }
 });

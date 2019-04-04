@@ -14,6 +14,7 @@ return [
 
     'title' => '得意先　検索リスト',
     'list' => [
+        'title'=>'空車照会',
         'search' => [
             'regist_office_id' => '営業所 :',
             'vehicle_size' => '車格 :',
