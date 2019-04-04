@@ -86,15 +86,15 @@ return [
     'modal' => [
         'reservation'=>[
             'title' => '仮押さえ',
-            'content' => "必ず電話確認を行ってください。<br>仮押さえを行いますか？"
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10013')
         ],
         'reservation_approval'=>[
             'title' => '承認',
-            'content' => "承認します、よろしいですか？"
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10016')
         ],
         'reservation_reject'=>[
             'title' => '却下',
-            'content' => "却下します、よろしいですか？"
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10019')
         ],
     ]
 
