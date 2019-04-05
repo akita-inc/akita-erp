@@ -415,7 +415,7 @@ class EmptyInfoController extends Controller {
             $arrayInsert['equipment'] = $equipmentStr;
 
         }
-        $arrayInsert['regist_staff'] = Auth::user()->id;
+        $arrayInsert['regist_staff'] = Auth::user()->staff_cd;
         $empty_mail_add = MEmptyMailTo::where('office_id',Auth::user()->mst_business_office_id)->first();
         $arrayInsert['email_address'] = $empty_mail_add ?$empty_mail_add->email_address : null;
         $arrayInsert['start_time'] = TimeFunction::parseStringToTime($arrayInsert['start_time']);
