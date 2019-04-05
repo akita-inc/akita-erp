@@ -21,8 +21,10 @@ class MBusinessOffices  extends Model
     ];
     public function getAllData()
     {
-        return $this->where('deleted_at','=',null)
-                    ->get();
+        return $this->select('id', 'business_office_nm')
+            ->where('deleted_at','=',null)
+            ->orderBy('disp_number', 'asc')
+            ->get();
     }
 
     public function getListBusinessOffices()
