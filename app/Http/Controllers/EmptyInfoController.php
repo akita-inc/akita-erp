@@ -369,7 +369,6 @@ class EmptyInfoController extends Controller {
                     ->add("equipment_value", $errorsEx);
             } else {
                 $equipmentStr = '';
-
                 foreach ($equipment as $index => $items) {
                     if ($items['id'] == 0) {
                         $equipmentStr .= 'その他 ' . $items['value'] . "\n";
@@ -394,6 +393,12 @@ class EmptyInfoController extends Controller {
         $equipment =  $data["equipment"];
         $equipmentStr = '';
         if(!isset( $data["id"])) {
+            usort($equipment, function($a, $b) {
+                if ($a['id'] == $b['id']) return 0;
+                if ($a['id'] == 0) return 1;
+                if ($b['id'] == 0) return -1;
+                return $a['id'] > $b['id'] ? 1 : -1;
+            });
             $mGeneralPurposes = new MGeneralPurposes();
             $listEquipment = $mGeneralPurposes->getInfoByDataKB(config('params.data_kb')['loaded_item']);
             $listEquipment = $listEquipment->groupBy('date_id')->toArray();
