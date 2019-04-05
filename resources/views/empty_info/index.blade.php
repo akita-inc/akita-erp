@@ -154,7 +154,7 @@
                         </button>
                     </td>
                      @foreach($fieldShowTable as $key => $field)
-                        <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
+                        <td class="text-left {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('max_load_capacity')
                                     <p v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</p>
