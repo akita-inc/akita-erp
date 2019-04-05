@@ -197,7 +197,7 @@ class EmptyInfoController extends Controller {
             ],
             'equipment'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
+                "classTD" => "td-nl2br text-center",
                 "sortBy"=>"equipment"
             ],
             'schedule_date'=> [
