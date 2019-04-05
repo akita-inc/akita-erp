@@ -138,8 +138,8 @@ class EmptyInfoController extends Controller {
             if(!$dataSearch['status'] || $dataSearch['status']==false)
             {
                 $this->query->where(function ($query) {
-                        $query->where('empty_info.status', 0)
-                            ->orWhere('empty_info.status', 1);
+                        $query->where('empty_info.status', 1)
+                            ->orWhere('empty_info.status', 2);
                 });
             }
             if(!$dataSearch['arrive_date'] || $dataSearch['arrive_date']==false)
