@@ -144,7 +144,7 @@ class EmptyInfoController extends Controller {
             }
             if(!$dataSearch['arrive_date'] || $dataSearch['arrive_date']==false)
             {
-                $this->query->where('empty_info.arrive_date','>',$currentDate);
+                $this->query->where('empty_info.arrive_date','>=',$currentDate);
             }
             $this->query->where('empty_info.deleted_at',null);
             if ($data["order"]["col"] != '') {
@@ -187,47 +187,39 @@ class EmptyInfoController extends Controller {
             ],
             'vehicle_body_shape'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"vehicle_body_shape"
             ],
             'max_load_capacity'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center",
                 "sortBy"=>"max_load_capacity"
             ],
             'equipment'=> [
                 "classTH" => "wd-120",
-                "classTD" => "td-nl2br text-center",
+                "classTD" => "td-nl2br ",
                 "sortBy"=>"equipment"
             ],
             'schedule_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"schedule_date"
             ],
             'start_pref_cd'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"start_pref_cd"
             ],
             'asking_price'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center",
                 "sortBy"=>"asking_price"
             ],
             'asking_baggage'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center",
                 "sortBy"=>"asking_baggage"
             ],
             'arrive_location'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"arrive_location",
             ],
             'arrive_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"arrive_date",
             ],
 
