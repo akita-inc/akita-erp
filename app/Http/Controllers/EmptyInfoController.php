@@ -45,8 +45,8 @@ class EmptyInfoController extends Controller {
 
     public $labels = [
         "regist_office_id" => "営業所",
-        "vehicle_kb" => "車区分",
-        "registration_numbers" => "自動車登録番号",
+        "vehicle_kb" => "車両区分",
+        "registration_numbers" => "車番",
         "vehicle_size" => "車格",
         "vehicle_body_shape" => "形状",
         "max_load_capacity" => "最大積載量",
