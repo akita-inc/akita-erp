@@ -10,6 +10,7 @@ use App\Models\MBusinessOffices;
 use App\Models\MEmptyInfo;
 use App\Models\MEmptyMailTo;
 use App\Models\MGeneralPurposes;
+use App\Models\MStaffs;
 use App\Models\MVehicles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,13 +30,13 @@ class EmptyInfoController extends Controller {
         'registration_numbers' => 'nullable|length:50',
         'vehicle_size' => 'required|length:50',
         'vehicle_body_shape' => 'required|length:50',
-        'max_load_capacity' => 'nullable|one_byte_number|length:5',
+        'max_load_capacity' => 'required|one_byte_number|length:5',
         'equipment' => 'required',
         'start_date' => 'required',
         'start_time' => 'required',
         'start_pref_cd' => 'required',
         'start_address' => 'required|length:200',
-        'asking_price' => 'required|decimal_custom|length:11',
+        'asking_price' => 'required|decimal_custom|length:8',
         'asking_baggage' => 'required',
         'arrive_pref_cd' => 'required',
         'arrive_address' => 'required|length:50',
@@ -44,8 +45,8 @@ class EmptyInfoController extends Controller {
 
     public $labels = [
         "regist_office_id" => "営業所",
-        "vehicle_kb" => "車区分",
-        "registration_numbers" => "自動車登録番号",
+        "vehicle_kb" => "車両区分",
+        "registration_numbers" => "車番",
         "vehicle_size" => "車格",
         "vehicle_body_shape" => "形状",
         "max_load_capacity" => "最大積載量",
@@ -137,13 +138,13 @@ class EmptyInfoController extends Controller {
             if(!$dataSearch['status'] || $dataSearch['status']==false)
             {
                 $this->query->where(function ($query) {
-                        $query->where('empty_info.status', 0)
-                            ->orWhere('empty_info.status', 1);
+                        $query->where('empty_info.status', 1)
+                            ->orWhere('empty_info.status', 2);
                 });
             }
             if(!$dataSearch['arrive_date'] || $dataSearch['arrive_date']==false)
             {
-                $this->query->where('empty_info.arrive_date','>',$currentDate);
+                $this->query->where('empty_info.arrive_date','>=',$currentDate);
             }
             $this->query->where('empty_info.deleted_at',null);
             if ($data["order"]["col"] != '') {
@@ -186,47 +187,39 @@ class EmptyInfoController extends Controller {
             ],
             'vehicle_body_shape'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"vehicle_body_shape"
             ],
             'max_load_capacity'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center",
                 "sortBy"=>"max_load_capacity"
             ],
             'equipment'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
+                "classTD" => "td-nl2br ",
                 "sortBy"=>"equipment"
             ],
             'schedule_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"schedule_date"
             ],
             'start_pref_cd'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"start_pref_cd"
             ],
             'asking_price'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center",
                 "sortBy"=>"asking_price"
             ],
             'asking_baggage'=> [
                 "classTH" => "wd-100",
-                "classTD" => "text-center",
                 "sortBy"=>"asking_baggage"
             ],
             'arrive_location'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"arrive_location",
             ],
             'arrive_date'=> [
                 "classTH" => "wd-120",
-                "classTD" => "text-center",
                 "sortBy"=>"arrive_date",
             ],
 
@@ -257,8 +250,22 @@ class EmptyInfoController extends Controller {
                 $mEmptyInfo = $mEmptyInfo->toArray();
                 $routeName = $request->route()->getName();
                 switch ($routeName){
-                    case 'empty_info.reservation':  $mode = 'reservation'; break;
-                    case 'empty_info.reservation_approval':  $mode = 'reservation_approval'; break;
+                    case 'empty_info.reservation':
+                        $mode = 'reservation';
+                        if(($mEmptyInfo['status']==1 || $mEmptyInfo['status']==2 ) && $mEmptyInfo['regist_office_id']== Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
+                    case 'empty_info.reservation_approval':
+                        $ask_staff= MStaffs::query()->select(DB::raw("concat(last_nm,'　',first_nm) as ask_staff"))->where('staff_cd' ,$mEmptyInfo['ask_staff'])->first();
+                        if($ask_staff){
+                            $mEmptyInfo['reservation_person'] = $ask_staff->ask_staff;
+                        }
+                        $mode = 'reservation_approval';
+                        if($mEmptyInfo['status']!=2 || $mEmptyInfo['regist_office_id']!= Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
                     default:
                         $mode ='edit';
                         if($mEmptyInfo['status']!=1 || $mEmptyInfo['regist_office_id']!= Auth::user()->mst_business_office_id ){
@@ -276,6 +283,7 @@ class EmptyInfoController extends Controller {
         $listPreferredPackage= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['preferred_package'],'');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
         $listStatus= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['empty_car_info_status'],'');
+//        dd($mEmptyInfo);
         return view('empty_info.form', [
             'mEmptyInfo' => $mEmptyInfo,
             'listBusinessOffices' =>$listBusinessOffices,
@@ -361,7 +369,6 @@ class EmptyInfoController extends Controller {
                     ->add("equipment_value", $errorsEx);
             } else {
                 $equipmentStr = '';
-
                 foreach ($equipment as $index => $items) {
                     if ($items['id'] == 0) {
                         $equipmentStr .= 'その他 ' . $items['value'] . "\n";
@@ -386,6 +393,12 @@ class EmptyInfoController extends Controller {
         $equipment =  $data["equipment"];
         $equipmentStr = '';
         if(!isset( $data["id"])) {
+            usort($equipment, function($a, $b) {
+                if ($a['id'] == $b['id']) return 0;
+                if ($a['id'] == 0) return 1;
+                if ($b['id'] == 0) return -1;
+                return $a['id'] > $b['id'] ? 1 : -1;
+            });
             $mGeneralPurposes = new MGeneralPurposes();
             $listEquipment = $mGeneralPurposes->getInfoByDataKB(config('params.data_kb')['loaded_item']);
             $listEquipment = $listEquipment->groupBy('date_id')->toArray();
@@ -399,7 +412,7 @@ class EmptyInfoController extends Controller {
             $arrayInsert['equipment'] = $equipmentStr;
 
         }
-        $arrayInsert['regist_staff'] = Auth::user()->id;
+        $arrayInsert['regist_staff'] = Auth::user()->staff_cd;
         $empty_mail_add = MEmptyMailTo::where('office_id',Auth::user()->mst_business_office_id)->first();
         $arrayInsert['email_address'] = $empty_mail_add ?$empty_mail_add->email_address : null;
         $arrayInsert['start_time'] = TimeFunction::parseStringToTime($arrayInsert['start_time']);
@@ -452,9 +465,19 @@ class EmptyInfoController extends Controller {
     }
 
     public function updateStatus(Request $request, $id){
-        MEmptyInfo::updateStatus($id, $request->get('status'));
+        $result = MEmptyInfo::updateStatus($id, $request->get('status'));
         $this->backHistory();
-        \Session::flash('message',Lang::get('messages.MSG04002'));
+        switch ($request->get('status')){
+            case 1:
+                \Session::flash('message',Lang::get('messages.'.($result ? 'MSG10020' : 'MSG10021')));
+                break;
+            case 2:
+                \Session::flash('message',Lang::get('messages.'.($result ? 'MSG10014' : 'MSG10015')));
+                break;
+            case 8:
+                \Session::flash('message',Lang::get('messages.'.($result ? 'MSG10017' : 'MSG10018')));
+                break;
+        }
         return response()->json([
             'success'=>true,
             'message'=> [],

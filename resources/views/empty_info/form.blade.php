@@ -1,6 +1,15 @@
 @extends('Layouts.app')
 @section('title',trans("empty_info.create.title".(!empty($mEmptyInfo) ? "_edit":"")))
 @section('title_header',trans("empty_info.create.title".(!empty($mEmptyInfo) ? "_edit":"")))
+@section('css')
+    @if($role==1 && ($mode=='register' || $mode=='edit'))
+        <style>
+            .form-control[readonly]{
+                background-color: white;
+            }
+        </style>
+    @endif
+@endsection
 @section('content')
     @php $prefix='empty_info.create.field.' @endphp
     <div class="wrapper-container" id="ctrEmptyInfoVl">
@@ -36,7 +45,10 @@
                                     {{ trans("common.button.reset") }}
                                 </button>
                                 @else
-                                    <button data-toggle="modal" data-target="#confirmModal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                    <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                    @if($mode=='reservation_approval')
+                                    <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -54,12 +66,22 @@
                 @if($mode=='reservation' || $mode=='reservation_approval')
                 <fieldset disabled="disabled">
                 @endif
-                    @if($mode=='reservation_approval')
-                        @include("empty_info._reservation_approval")
-                    @endif
                     <div class="text-danger">
                         {{ trans("common.description-form.indicates_required_items") }}
                     </div>
+                    @if($role==1 && $mode=='reservation_approval')
+                        <div class="grid-form">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-12">
+                                    @include('Component.form.select',['filed'=>'application_office_id','array'=>$listBusinessOffices])
+                                </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-12 col-sm-12">
+                                    @include('Component.form.input',['filed'=>'reservation_person','attr_input' => "maxlength='50'"])
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     <!--Block 1-->
                     <div class="grid-form">
                         <div class="row">
@@ -124,11 +146,11 @@
                     <div class="grid-form">
                         <div class="row">
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2])
+                                @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false'"])
 
                             </div>
                             <div class="col-md-8 col-sm-12">
-                                @include('Component.form.time-picker',['class' => 'pl-0 wd-150','filed'=>'start_time','role' => $mode=='register' || $mode=='edit' ? 1 :2])
+                                @include('Component.form.time-picker',['class' => 'pl-0 wd-150','filed'=>'start_time','role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false'"])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-4 col-sm-12">
@@ -139,7 +161,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
-                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='5' @blur='addComma'"])
+                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='8' @blur='addComma' @focus='removeComma'"])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
@@ -154,7 +176,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.date-picker',['filed'=>'arrive_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2])
+                                @include('Component.form.date-picker',['filed'=>'arrive_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false'"])
                             </div>
                         </div>
 
@@ -188,7 +210,10 @@
                                             {{ trans("common.button.reset") }}
                                         </button>
                                     @else
-                                        <button data-toggle="modal" data-target="#confirmModal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                        <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                        @if($mode=='reservation_approval')
+                                        <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -197,8 +222,11 @@
                 @endif
             </div>
         @endif
-        @if($role==1 && $mode=='reservation')
-            @include('Layouts.modal',['title'=> trans("empty_info.modal.reservation.title"),'content'=> trans("empty_info.modal.reservation.content"),'attr_input' => "@click='submit'"])
+        @if($role==1 && $mode=='reservation' || $mode=='reservation_approval')
+            @include('Layouts.modal',['id'=> $mode.'Modal','title'=> trans("empty_info.modal.".$mode.".title"),'content'=> trans("empty_info.modal.".$mode.".content"),'attr_input' => "@click='submit(".($mode=='reservation' ? 2 : 8).")'"])
+        @endif
+        @if($role==1 && $mode=='reservation_approval')
+            @include('Layouts.modal',['id'=> 'reservation_rejectModal','title'=> trans("empty_info.modal.reservation_reject.title"),'content'=> trans("empty_info.modal.reservation_reject.content"),'attr_input' => "@click='submit(1)'"])
         @endif
     </div>
 @endsection

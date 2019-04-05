@@ -29,7 +29,7 @@ class CreateEmptyInfoTable extends Migration
             $table->time('start_time')->nullable();
             $table->char('start_pref_cd',2)->nullable();
             $table->string('start_address',200)->nullable();
-            $table->decimal('asking_price', 10, 0)->nullable();
+            $table->decimal('asking_price', 8, 0)->nullable();
             $table->integer('asking_baggage')->nullable();
             $table->char('arrive_pref_cd',2)->nullable();
             $table->string('arrive_address',50)->nullable();
@@ -39,6 +39,7 @@ class CreateEmptyInfoTable extends Migration
             $table->string('ask_staff',5)->nullable();
             $table->string('ask_staff_email_address',300)->nullable();
             $table->dateTime('apr_date')->nullable();
+            $table->string('apr_staff',5)->nullable();
             $table->timestamp('deleted_at')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));

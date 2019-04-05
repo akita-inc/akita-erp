@@ -154,16 +154,21 @@
                         </button>
                     </td>
                      @foreach($fieldShowTable as $key => $field)
-                        <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
-                            @if($key=='max_load_capacity')
-                                <span v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</span>
-                            @elseif($key=='asking_price')
-                                <span v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</span>
-                            @elseif($key=='equipment')
-                                <pre>{!! "@{{ item['$key'] }}" !!}</pre>
-                            @else
-                                <span>{!! "@{{ item['$key'] }}" !!}</span>
-                            @endif
+                        <td class="text-left {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
+                            @switch($key)
+                                @case('max_load_capacity')
+                                    <p v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</p>
+                                    <p v-else>---</p>
+                                    @break
+                                @case('asking_price')
+                                    <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                    <p v-else>---</p>
+                                    @break
+                                @default
+                                    <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
+                                    <p v-else>---</p>
+                                    @break
+                            @endswitch
                         </td>
                     @endforeach
                 </tr>

@@ -113,7 +113,6 @@ var ctrEmptyInfoListVl = new Vue({
 
         },
         handleLinkEmptyInfo:function (id,status,regist_office_id){
-            console.log(" status" + status + " office" + regist_office_id);
             if (status == 8 || status == 9) {
                 window.location.href = 'reservation/' + id;
             }
@@ -124,6 +123,7 @@ var ctrEmptyInfoListVl = new Vue({
                 this.checkIsExist(id);
             }
             else if (this.auth_offfice_id == regist_office_id && status == 2) {
+                window.location.href='reservation-approval/'+id;
             }
         },
         deleteSupplier: function (id){

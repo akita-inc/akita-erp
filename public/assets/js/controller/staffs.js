@@ -43677,6 +43677,7 @@ var ctrStaffsVl = new Vue({
       adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
       password: "",
       confirm_password: "",
+      is_change_password_confirm: null,
       employment_pattern_id: "",
       position_id: "",
       last_nm: "",
@@ -43947,6 +43948,10 @@ var ctrStaffsVl = new Vue({
           this.field["is_change_password"] = true;
         }
 
+        if (this.field["confirm_password"] != "********") {
+          this.field["is_change_password_confirm"] = true;
+        }
+
         this.field["id"] = this.staff_id;
 
         if (this.field["clone"] == true) {
@@ -43971,6 +43976,7 @@ var ctrStaffsVl = new Vue({
 
         _this.field["clone"] = null;
         _this.field["is_change_password"] = null;
+        _this.field["is_change_password_confirm"] = null;
         that.loading = false;
       });
     },
@@ -43986,7 +43992,7 @@ var ctrStaffsVl = new Vue({
                 that = this;
 
                 if (!($("#hd_staff_edit").val() == 1)) {
-                  _context.next = 9;
+                  _context.next = 10;
                   break;
                 }
 
@@ -44006,10 +44012,11 @@ var ctrStaffsVl = new Vue({
                   }
                 });
                 this.field["password"] = "********";
-                _context.next = 9;
+                this.field["confirm_password"] = "********";
+                _context.next = 10;
                 return that.getMstCollapses();
 
-              case 9:
+              case 10:
               case "end":
                 return _context.stop();
             }

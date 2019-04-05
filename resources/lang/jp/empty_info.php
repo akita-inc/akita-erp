@@ -79,13 +79,23 @@ return [
             "ask_staff_email_address" => "予約担当者メールアドレス",
             "apr_date" => "承認日時",
             "search_vehicle" => "ナンバー検索",
+            "application_office_id" => "申請営業所",
+            "reservation_person" => "予約担当者",
         ]
     ],
     'modal' => [
         'reservation'=>[
             'title' => '仮押さえ',
-            'content' => "必ず電話確認を行ってください。<br>仮押さえを行いますか？"
-        ]
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10013')
+        ],
+        'reservation_approval'=>[
+            'title' => '承認',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10016')
+        ],
+        'reservation_reject'=>[
+            'title' => '却下',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10019')
+        ],
     ]
 
 ];

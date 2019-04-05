@@ -20879,7 +20879,7 @@ var ctrEmptyInfoVl = new Vue({
     checkOther: false
   },
   methods: {
-    submit: function submit() {
+    submit: function submit(status) {
       var that = this;
       that.loading = true;
 
@@ -20887,12 +20887,7 @@ var ctrEmptyInfoVl = new Vue({
         this.field["id"] = this.empty_info_id;
       }
 
-      var data = this.field;
-      var asking_price = data.asking_price;
-
-      if (asking_price != "") {
-        data.asking_price = asking_price.replace(/,/g, '');
-      }
+      this.field.asking_price = this.field.asking_price.replace(/,/g, '');
 
       switch (this.field.mode) {
         case 'register':
@@ -20911,6 +20906,7 @@ var ctrEmptyInfoVl = new Vue({
           break;
 
         case 'reservation':
+        case 'reservation_approval':
           empty_info_service.checkIsExist(that.empty_info_id).then(function (response) {
             if (!response.success) {
               that.loading = false;
@@ -20919,7 +20915,7 @@ var ctrEmptyInfoVl = new Vue({
               return false;
             } else {
               empty_info_service.updateStatus(that.empty_info_id, {
-                status: 2
+                status: status
               }).then(function (response) {
                 that.loading = false;
                 window.location.href = listRoute;
@@ -20957,6 +20953,13 @@ var ctrEmptyInfoVl = new Vue({
             }
           }
         });
+
+        if (this.field.mode == 'reservation_approval') {
+          this.field.application_office_id = $("#hd_ask_office").val();
+          ;
+          this.field.reservation_person = $("#hd_reservation_person").val();
+        }
+
         this.loading = false;
       }
     },
@@ -21055,6 +21058,9 @@ var ctrEmptyInfoVl = new Vue({
     addComma: function addComma() {
       this.field.asking_price = this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
+    removeComma: function removeComma() {
+      this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '');
+    },
     resetForm: function resetForm() {
       this.registration_numbers = "";
       this.errors = {};
@@ -21085,6 +21091,8 @@ var ctrEmptyInfoVl = new Vue({
           arrive_date: ""
         };
         $('input:checkbox').prop('checked', false);
+        $('input:text').val('');
+        $('textarea').val('');
       }
     }
   },

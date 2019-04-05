@@ -37,18 +37,20 @@ class MEmptyInfo extends Model
                     $mEmptyInfo->ask_staff = null;
                     break;
                 case 2:
-                case 8:
                     $mEmptyInfo->ask_date = TimeFunction::getTimestamp();
                     $mEmptyInfo->ask_office = Auth::user()->mst_business_office_id ;
-                    $mEmptyInfo->ask_staff = Auth::user()->id;
+                    $mEmptyInfo->ask_staff = Auth::user()->staff_cd;
+                    break;
+                case 8:
+                    $mEmptyInfo->apr_date = TimeFunction::getTimestamp();
+                    $mEmptyInfo->apr_staff = Auth::user()->staff_cd;
                     break;
             }
-
             $mEmptyInfo->save();
             DB::commit();
         }catch (\Exception $e) {
             DB::rollback();
-            dd($e);
+            return false;
         }
         return true;
     }
