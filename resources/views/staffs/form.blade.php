@@ -627,7 +627,9 @@
                                         'filedId'=>"mst_staff_drivers_license_picture",
                                         'filedMode'=>"items.drivers_license_picture",
                                         'ref'=>"'drivers_license_picture'",
-                                        'role' => $role
+                                        'role' => $role,
+                                        "item" => $staff,
+                                        "pathPreview" => \App\Helpers\Common::getPathVehicles($staff,"drivers_license_picture")
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>

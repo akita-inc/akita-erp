@@ -221,4 +221,13 @@ class Common {
             return Storage::url($des."/image/".$mVehicle["$filed"]);
         }
     }
+    public static function getPathStaff( $mStaff,$filed ){
+        $des = 'staffs/' . $mStaff["id"];
+        $ext = explode(".",$mStaff["$filed"]);
+        if($ext[count($ext)-1] == "pdf"){
+            return Storage::url($des."/pdf/".$mStaff["$filed"]);
+        }else{
+            return Storage::url($des."/image/".$mStaff["$filed"]);
+        }
+    }
 }

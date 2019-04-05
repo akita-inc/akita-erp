@@ -269,6 +269,7 @@
                                 </label>
                                 @if(!empty($mVehicle["vehicle_inspection_sticker_pdf"]))
                                     <modal-viewer-file
+                                        :class-element="'btnPreviewvehicle_inspection_sticker_pdf'"
                                         :header="'{{$mVehicle["vehicle_inspection_sticker_pdf"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"vehicle_inspection_sticker_pdf")}}'"
                                     >
@@ -855,6 +856,7 @@
                                 </label>
                                 @if(!empty($mVehicle["picture_fronts"]))
                                     <modal-viewer-file
+                                        :class-element="'btnPreviewpicture_fronts'"
                                         :header="'{{$mVehicle["picture_fronts"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_fronts")}}'"
                                     >
@@ -885,6 +887,7 @@
                                 </label>
                                 @if(!empty($mVehicle["picture_rights"]))
                                     <modal-viewer-file
+                                        :class-element="'btnPreviewpicture_rights'"
                                         :header="'{{$mVehicle["picture_rights"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_rights")}}'"
                                     >
@@ -915,6 +918,7 @@
                                 </label>
                                 @if(!empty($mVehicle["picture_lefts"]))
                                     <modal-viewer-file
+                                        :class-element="'btnPreviewpicture_lefts'"
                                         :header="'{{$mVehicle["picture_lefts"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_lefts")}}'"
                                     >
@@ -945,6 +949,7 @@
                                 </label>
                                 @if(!empty($mVehicle["picture_rears"]))
                                     <modal-viewer-file
+                                        :class-element="'btnPreviewpicture_rears'"
                                         :header="'{{$mVehicle["picture_rears"]}}'"
                                         :path="'{{\App\Helpers\Common::getPathVehicles($mVehicle,"picture_rears")}}'"
                                     >

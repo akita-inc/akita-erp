@@ -6,6 +6,8 @@ import historykana from "historykana";
 import Dropdown from 'vue-simple-search-dropdown';
 import * as AutoKana from "vanilla-autokana";
 import { VueAutosuggest }  from "vue-autosuggest";
+import ModalViewerFile from '../component/ModalViewerFile'
+
 var ctrStaffsVl = new Vue({
     el: '#ctrStaffsVl',
     data: {
@@ -268,6 +270,7 @@ var ctrStaffsVl = new Vue({
         onFileChange:function(e) {
             this.field.drivers_license_picture = e.target.files[0];
             this.image_drivers_license_picture=e.target.files[0].name;
+            $(".btnPreviewdrivers_license_picture").hide();
 
         },
         deleteFileUpload:function()
@@ -276,6 +279,7 @@ var ctrStaffsVl = new Vue({
             this.image_drivers_license_picture="";
             this.field.drivers_license_picture="";
             this.field.deleteFile = 'drivers_license_picture';
+            $(".btnPreviewdrivers_license_picture").hide();
         },
         submit:function()
         {
@@ -610,7 +614,8 @@ var ctrStaffsVl = new Vue({
         DatePicker,
         PulseLoader,
         Dropdown,
-        VueAutosuggest
+        VueAutosuggest,
+        'modal-viewer-file':ModalViewerFile
     }
 });
 

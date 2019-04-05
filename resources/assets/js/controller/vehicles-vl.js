@@ -221,9 +221,10 @@ var ctrVehiclesVl = new Vue({
         onFileChange:function(e,target) {
             this.field[target] = e.target.files[0].name;
             this.file[target]= e.target.files[0];
-
+            $(".btnPreview"+target).hide();
         },
-        deleteFileUpload: function (e,destination) {
+        deleteFileUpload: function (e,destination){
+            $(".btnPreview"+destination).hide();
             this.file[destination]= '';
             this.$refs[destination].value = '';
             this.field[destination]="";

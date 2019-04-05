@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-left: 5px;">
+    <div v-bind:class="classElement" v-bind:style="style != undefined && style ? style:'margin-left: 5px;'">
         <!-- Button to Open the Modal -->
         <a data-toggle="modal" v-bind:data-target="'#ModalViewerFile'+id" href="javascript:void(0);">
             <slot></slot>
@@ -34,6 +34,8 @@
         name: 'ModalViewerFile',
         props: {
             header:String,
+            classElement:String,
+            style:String,
             path:String
         },
         components: {

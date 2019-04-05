@@ -143,6 +143,8 @@ __webpack_require__.r(__webpack_exports__);
   name: 'ModalViewerFile',
   props: {
     header: String,
+    classElement: String,
+    style: String,
     path: String
   },
   components: {
@@ -19049,72 +19051,85 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticStyle: { "margin-left": "5px" } }, [
-    _c(
-      "a",
-      {
-        attrs: {
-          "data-toggle": "modal",
-          "data-target": "#ModalViewerFile" + _vm.id,
-          href: "javascript:void(0);"
-        }
-      },
-      [_vm._t("default")],
-      2
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "modal", attrs: { id: "ModalViewerFile" + _vm.id } },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "modal-dialog",
-            staticStyle: { "max-width": "960px" }
-          },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c("h4", { staticClass: "modal-title" }, [
-                  _vm._v(_vm._s(_vm.header))
+  return _c(
+    "div",
+    {
+      class: _vm.classElement,
+      style:
+        _vm.style != undefined && _vm.style ? _vm.style : "margin-left: 5px;"
+    },
+    [
+      _c(
+        "a",
+        {
+          attrs: {
+            "data-toggle": "modal",
+            "data-target": "#ModalViewerFile" + _vm.id,
+            href: "javascript:void(0);"
+          }
+        },
+        [_vm._t("default")],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "modal", attrs: { id: "ModalViewerFile" + _vm.id } },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "modal-dialog",
+              staticStyle: { "max-width": "960px" }
+            },
+            [
+              _c("div", { staticClass: "modal-content" }, [
+                _c("div", { staticClass: "modal-header" }, [
+                  _c("h4", { staticClass: "modal-title" }, [
+                    _vm._v(_vm._s(_vm.header))
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "close",
+                      attrs: { type: "button", "data-dismiss": "modal" }
+                    },
+                    [_vm._v("×")]
+                  )
                 ]),
                 _vm._v(" "),
                 _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("×")]
+                  "div",
+                  { staticClass: "modal-body" },
+                  [
+                    _vm.typeFile == "pdf"
+                      ? _c("vue-pdf-viewer", {
+                          attrs: {
+                            height: "calc(100vh - 170px)",
+                            url: _vm.path
+                          }
+                        })
+                      : _vm.typeFile == "image"
+                      ? _c("img", {
+                          staticStyle: { width: "100%" },
+                          attrs: { src: _vm.path }
+                        })
+                      : _c(
+                          "a",
+                          { attrs: { target: "_blank", href: _vm.path } },
+                          [_vm._v(_vm._s(_vm.path))]
+                        )
+                  ],
+                  1
                 )
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "modal-body" },
-                [
-                  _vm.typeFile == "pdf"
-                    ? _c("vue-pdf-viewer", {
-                        attrs: { height: "calc(100vh - 170px)", url: _vm.path }
-                      })
-                    : _vm.typeFile == "image"
-                    ? _c("img", {
-                        staticStyle: { width: "100%" },
-                        attrs: { src: _vm.path }
-                      })
-                    : _c("a", { attrs: { target: "_blank", href: _vm.path } }, [
-                        _vm._v(_vm._s(_vm.path))
-                      ])
-                ],
-                1
-              )
-            ])
-          ]
-        )
-      ]
-    )
-  ])
+              ])
+            ]
+          )
+        ]
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -21835,8 +21850,10 @@ var ctrVehiclesVl = new Vue({
     onFileChange: function onFileChange(e, target) {
       this.field[target] = e.target.files[0].name;
       this.file[target] = e.target.files[0];
+      $(".btnPreview" + target).hide();
     },
     deleteFileUpload: function deleteFileUpload(e, destination) {
+      $(".btnPreview" + destination).hide();
       this.file[destination] = '';
       this.$refs[destination].value = '';
       this.field[destination] = "";
@@ -21929,7 +21946,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })
