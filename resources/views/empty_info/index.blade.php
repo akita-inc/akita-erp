@@ -157,20 +157,20 @@
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('max_load_capacity')
-                                    <span v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</span>
+                                    <p v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</p>
                                     @break
                                 @case('asking_price')
-                                    <span v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</span>
+                                    <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
                                     @break
                                 @case('schedule_date')
-                                    <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
-                                    <span v-else>---</span>
+                                    <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
+                                    <p v-else>---</p>
                                     @break
                                 @case('equipment')
-                                    <pre class="font-size-unset">{!! "@{{ item['$key'] }}" !!}</pre>
+                                    <p>{!! "@{{ item['$key'] }}" !!}</p>
                                     @break
                                 @default
-                                    <span>{!! "@{{ item['$key'] }}" !!}</span>
+                                    <p>{!! "@{{ item['$key'] }}" !!}</p>
                                     @break
                             @endswitch
                         </td>
