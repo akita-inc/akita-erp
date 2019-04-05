@@ -47,6 +47,9 @@
 .w-69{
     width:69%!important;
 }
+.font-size-unset{
+    font-size:unset!important;
+}
 .label-file-image{
     margin-left: 180px;
     background-color:rgb(217,217,217)!important;
