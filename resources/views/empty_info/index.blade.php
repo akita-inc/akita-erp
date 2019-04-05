@@ -158,19 +158,15 @@
                             @switch($key)
                                 @case('max_load_capacity')
                                     <p v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</p>
+                                    <p v-else>---</p>
                                     @break
                                 @case('asking_price')
                                     <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
-                                    @break
-                                @case('schedule_date')
-                                    <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
                                     <p v-else>---</p>
                                     @break
-                                @case('equipment')
-                                    <p>{!! "@{{ item['$key'] }}" !!}</p>
-                                    @break
                                 @default
-                                    <p>{!! "@{{ item['$key'] }}" !!}</p>
+                                    <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
+                                    <p v-else>---</p>
                                     @break
                             @endswitch
                         </td>
