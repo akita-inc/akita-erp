@@ -294,13 +294,13 @@ class StaffsController extends Controller
                 if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mStaff->adhibition_start_dt)){
                     $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
                 }
-                $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
-                if(Hash::check($data['confirm_password'], $passwordStaff->password)==false && (!isset($data["is_change_password"]) || $data["is_change_password"] == false) && (!empty($data['confirm_password']) || $data['confirm_password']))
-                {
-                    $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
-                }
             }
             $countExist = $countExist->where("id", "<>", $data["id"]);
+            $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
+            if(Hash::check($data['confirm_password'], $passwordStaff->password)==false && (!isset($data["is_change_password"]) || $data["is_change_password"] == false) && (!empty($data['is_change_password_confirm']) || $data['is_change_password_confirm']==true))
+            {
+                $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
+            }
         }
 
 
@@ -345,6 +345,7 @@ class StaffsController extends Controller
         unset($arrayInsert["drivers_license_picture"]);
         unset($arrayInsert["deleteFile"]);
         unset($arrayInsert["is_change_password"]);
+        unset($arrayInsert["is_change_password_confirm"]);
         unset($arrayInsert["confirm_password"]);
         DB::beginTransaction();
         try{

@@ -26,6 +26,7 @@ var ctrStaffsVl = new Vue({
             adhibition_end_dt_history:$("#hd_adhibition_end_dt_default").val(),
             password:"",
             confirm_password:"",
+            is_change_password_confirm:null,
             employment_pattern_id:"",
             position_id:"",
             last_nm:"",
@@ -285,6 +286,10 @@ var ctrStaffsVl = new Vue({
                 if(this.field["password"] != "********"){
                     this.field["is_change_password"] = true;
                 }
+                if(this.field["confirm_password"]!="********")
+                {
+                    this.field["is_change_password_confirm"]=true;
+                }
                 this.field["id"] = this.staff_id;
                 if(this.field["clone"] == true){
                     this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
@@ -309,6 +314,7 @@ var ctrStaffsVl = new Vue({
                 }
                 this.field["clone"] = null;
                 this.field["is_change_password"] = null;
+                this.field["is_change_password_confirm"] = null;
                 that.loading = false;
             });
         },
@@ -330,6 +336,7 @@ var ctrStaffsVl = new Vue({
                     }
                 });
                 this.field["password"] = "********";
+                this.field["confirm_password"] = "********";
                 await that.getMstCollapses();
             }
         },
