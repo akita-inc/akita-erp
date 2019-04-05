@@ -155,15 +155,24 @@
                     </td>
                      @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
-                            @if($key=='max_load_capacity')
-                                <span v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</span>
-                            @elseif($key=='asking_price')
-                                <span v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</span>
-                            @elseif($key=='equipment')
-                                <pre>{!! "@{{ item['$key'] }}" !!}</pre>
-                            @else
-                                <span>{!! "@{{ item['$key'] }}" !!}</span>
-                            @endif
+                            @switch($key)
+                                @case('max_load_capacity')
+                                    <span v-if="item['{{$key}}']">{!!"@{{ item['$key'] }}kg" !!}</span>
+                                    @break
+                                @case('asking_price')
+                                    <span v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</span>
+                                    @break
+                                @case('schedule_date')
+                                    <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
+                                    <span v-else>---</span>
+                                    @break
+                                @case('equipment')
+                                    <pre class="font-size-unset">{!! "@{{ item['$key'] }}" !!}</pre>
+                                    @break
+                                @default
+                                    <span>{!! "@{{ item['$key'] }}" !!}</span>
+                                    @break
+                            @endswitch
                         </td>
                     @endforeach
                 </tr>
