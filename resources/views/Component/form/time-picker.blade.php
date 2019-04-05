@@ -8,7 +8,7 @@
                 :lang='lang'
                 id="{!! $filed !!}"
                 placeholder=""
-                format="hh:mm A"
+                format="HH:mm"
                 v-model="field.{!! $filed !!}"
                 :input-class="errors.{!! $filed !!} != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
                 :time-picker-options="{ start: '00:00', step: '00:30', end: '23:30' }"

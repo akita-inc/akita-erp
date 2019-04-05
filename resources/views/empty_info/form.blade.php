@@ -1,6 +1,15 @@
 @extends('Layouts.app')
 @section('title',trans("empty_info.create.title".(!empty($mEmptyInfo) ? "_edit":"")))
 @section('title_header',trans("empty_info.create.title".(!empty($mEmptyInfo) ? "_edit":"")))
+@section('css')
+    @if($role==1 && ($mode=='register' || $mode=='edit'))
+        <style>
+            .form-control[readonly]{
+                background-color: white;
+            }
+        </style>
+    @endif
+@endsection
 @section('content')
     @php $prefix='empty_info.create.field.' @endphp
     <div class="wrapper-container" id="ctrEmptyInfoVl">
@@ -137,11 +146,11 @@
                     <div class="grid-form">
                         <div class="row">
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2])
+                                @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false'"])
 
                             </div>
                             <div class="col-md-8 col-sm-12">
-                                @include('Component.form.time-picker',['class' => 'pl-0 wd-150','filed'=>'start_time','role' => $mode=='register' || $mode=='edit' ? 1 :2])
+                                @include('Component.form.time-picker',['class' => 'pl-0 wd-150','filed'=>'start_time','role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false'"])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-4 col-sm-12">
@@ -167,7 +176,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.date-picker',['filed'=>'arrive_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2])
+                                @include('Component.form.date-picker',['filed'=>'arrive_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false'"])
                             </div>
                         </div>
 
