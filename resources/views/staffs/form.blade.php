@@ -637,7 +637,7 @@
                                         'ref'=>"'drivers_license_picture'",
                                         'role' => $role,
                                         "item" => $staff,
-                                        "pathPreview" => \App\Helpers\Common::getPathVehicles($staff,"drivers_license_picture")
+                                        "pathPreview" => \App\Helpers\Common::getPathStaff($staff,"drivers_license_picture")
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
