@@ -126,6 +126,12 @@
                         </div>
                     </div>
                     <div class="col-md-1 lh-38 text-right no-padding">
+                        <button class="btn btn-black w-100" v-on:click="clearCondition()">
+                            {{trans('common.button.condition-clear')}}
+                        </button>
+                    </div>
+                    <div class="mr-3"></div>
+                    <div class="col-md-1 lh-38 text-right no-padding">
                         <button class="btn btn-primary m-auto w-100" v-on:click="getItems(1)">
                             {{trans('common.button.search')}}
                         </button>
