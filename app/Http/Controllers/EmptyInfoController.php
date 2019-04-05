@@ -258,7 +258,12 @@ class EmptyInfoController extends Controller {
                 $mEmptyInfo = $mEmptyInfo->toArray();
                 $routeName = $request->route()->getName();
                 switch ($routeName){
-                    case 'empty_info.reservation':  $mode = 'reservation'; break;
+                    case 'empty_info.reservation':
+                        $mode = 'reservation';
+                        if(($mEmptyInfo['status']==1 || $mEmptyInfo['status']==2 ) && $mEmptyInfo['regist_office_id']== Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
                     case 'empty_info.reservation_approval':
                         $ask_staff= MStaffs::query()->select(DB::raw("concat(last_nm,'　',first_nm) as ask_staff"))->where('staff_cd' ,$mEmptyInfo['ask_staff'])->first();
                         if($ask_staff){
