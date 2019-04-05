@@ -152,7 +152,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
-                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='5' @blur='addComma' @focus='removeComma'"])
+                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='8' @blur='addComma' @focus='removeComma'"])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">

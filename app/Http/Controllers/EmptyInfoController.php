@@ -36,7 +36,7 @@ class EmptyInfoController extends Controller {
         'start_time' => 'required',
         'start_pref_cd' => 'required',
         'start_address' => 'required|length:200',
-        'asking_price' => 'required|decimal_custom|length:11',
+        'asking_price' => 'required|decimal_custom|length:8',
         'asking_baggage' => 'required',
         'arrive_pref_cd' => 'required',
         'arrive_address' => 'required|length:50',
