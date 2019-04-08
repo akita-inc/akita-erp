@@ -31,12 +31,10 @@ class CustomersController extends Controller
 
     public $ruleValid = [
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
-        'adhibition_start_dt'  => 'required',
         'discount_rate'  => 'nullable|one_byte_number|length:3',
         'customer_nm'  => 'required|nullable|length:200',
         'customer_nm_kana'  => 'kana|nullable|length:200',
         'customer_nm_formal'  => 'length:200|nullable',
-        'customer_nm_kana_formal'  => 'kana|nullable|length:200',
         'customer_nm_kana_formal'  => 'kana|nullable|length:200',
         'person_in_charge_last_nm'  => 'length:25|nullable',
         'person_in_charge_first_nm'  => 'length:25|nullable',
@@ -167,24 +165,17 @@ class CustomersController extends Controller
         $mStaffAuth =  new MStaffAuths();
         $role = $mStaffAuth->getRoleBySCreen(3);
         $customer = null;
-        $flagRegisterHistory = false;
         //load form by update
         if($id != null){
             $customer = MCustomers::find( $id );
             if(empty($customer)){
                 abort('404');
             }else{
-                $customerLast = MCustomers::where('mst_customers_cd', '=', $customer->mst_customers_cd)
-                    ->orderByDesc("adhibition_start_dt")->first();
-                if($customerLast->id == $id){
-                    $flagRegisterHistory = true;
-                }
                 $customer = $customer->toArray();
             }
         }
         return view('customers.form', [
             'customer' => $customer,
-            'flagRegisterHistory' => $flagRegisterHistory,
             'listPrefecture' => $listPrefecture,
             'customer_categories'=>$customer_categories,
             'business_offices'=>$mBusinessOffices,
@@ -195,18 +186,6 @@ class CustomersController extends Controller
             'listAccountTitles'=>$listAccountTitles,
             'role' => $role,
         ]);
-    }
-
-    protected function beforeSubmit($data){
-        if(isset($data["id"]) && $data["id"]) {
-            if (!isset($data["clone"])) {
-                $this->ruleValid['adhibition_start_dt_edit'] = 'required';
-                $this->ruleValid['adhibition_end_dt_edit'] = 'required';
-            }else{
-                $this->ruleValid['adhibition_start_dt_history'] = 'required';
-                $this->ruleValid['adhibition_end_dt_history'] = 'required';
-            }
-        }
     }
 
     protected function validAfter( &$validator,$data ){
@@ -237,53 +216,14 @@ class CustomersController extends Controller
             $validator->errors()
                 ->add("mst_bill_issue_destinations",$errorsEx);
         }
-        if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
-            $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
-        }
 
-        if (isset($data['mst_customers_cd']) && !empty($data['mst_customers_cd'])){
-            $strWhereStartDate = 'DATE_FORMAT("'.$data['adhibition_start_dt'].'", "%Y%m%d")';
-            $strWhereEndDate = 'DATE_FORMAT("'.$data['adhibition_end_dt'].'", "%Y%m%d")';
-            $strWhereStartDateDB = 'DATE_FORMAT(adhibition_start_dt, "%Y%m%d")';
-            $strWhereEndDateDB = 'DATE_FORMAT(adhibition_end_dt, "%Y%m%d")';
-            $strWhere = $strWhereStartDate." > ".$strWhereEndDateDB." or ".$strWhereEndDate." < ".$strWhereStartDateDB;
+        if (!isset($data["id"]) && isset($data['mst_customers_cd']) && !empty($data['mst_customers_cd'])){
             $countExist = MCustomers::query()
                 ->where('mst_customers_cd','=',$data['mst_customers_cd'])
-                ->whereNull("deleted_at")
-                ->whereRaw("!(".$strWhere.")");
-
-            if(isset($data["id"]) && $data["id"]){
-                if(!isset($data["clone"])){
-                    if (Carbon::parse($data['adhibition_start_dt_edit']) > Carbon::parse($data['adhibition_end_dt_edit'])) {
-                        $validator->errors()->add('adhibition_start_dt_edit',str_replace(' :attribute',$this->labels['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
-                    }
-                    $beforeItem = MCustomers::query()
-                        ->whereRaw($strWhereStartDateDB." < ".$strWhereStartDate)
-                        ->whereNull("deleted_at")
-                        ->where('mst_customers_cd','=',$data['mst_customers_cd'])
-                        ->where("id","<>",$data["id"])
-                        ->orderByDesc("adhibition_start_dt")
-                        ->first();
-                    if($beforeItem){
-                        $this->beforeItem = $beforeItem;
-                        $countExist = $countExist->where("id","<>",$beforeItem->id);
-                    }
-                }else{
-                    if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
-                        $validator->errors()->add('adhibition_start_dt_history',str_replace(' :attribute',$this->labels['adhibition_start_dt_history'],Lang::get('messages.MSG02014')));
-                    }
-                    $mCustomer = MCustomers::find($data['id']);
-                    if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mCustomer->adhibition_start_dt)){
-                        $validator->errors()->add('mst_customers_cd', str_replace(':screen', '得意先', Lang::get('messages.MSG10003')));
-                    }
-                }
-                $countExist = $countExist->where("id","<>",$data["id"]);
-            }
-            if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )) {
-                $countExist = $countExist->count();
-                if ($countExist > 0) {
-                    $validator->errors()->add('mst_customers_cd', str_replace(':screen', '得意先', Lang::get('messages.MSG10003')));
-                }
+                ->whereNull("deleted_at");
+            $countExist = $countExist->count();
+            if ($countExist > 0) {
+                $validator->errors()->add('mst_customers_cd', str_replace(':screen', '得意先', Lang::get('messages.MSG10003')));
             }
         }
     }
@@ -293,38 +233,21 @@ class CustomersController extends Controller
         $currentTime = date("Y-m-d H:i:s",time());
         $mst_bill_issue_destinations =  $data["mst_bill_issue_destinations"];
         unset($arrayInsert["mst_bill_issue_destinations"]);
-        unset($arrayInsert["adhibition_start_dt_edit"]);
-        unset($arrayInsert["adhibition_end_dt_edit"]);
-        unset($arrayInsert["adhibition_start_dt_history"]);
-        unset($arrayInsert["adhibition_end_dt_history"]);
         unset($arrayInsert["id"]);
-        unset($arrayInsert["clone"]);
         DB::beginTransaction();
         if(isset($arrayInsert["except_g_drive_bill_fg"]) && $arrayInsert["except_g_drive_bill_fg"] == true){
             $arrayInsert["except_g_drive_bill_fg"] = 1;
         }else{
             $arrayInsert["except_g_drive_bill_fg"] = 0;
         }
-        if(isset( $data["id"]) && $data["id"] && !isset($data["clone"]) ){
+        if(isset( $data["id"]) && $data["id"]){
             $id = $data["id"];
             $arrayInsert["modified_at"] = $currentTime;
             MCustomers::query()->where("id","=",$id)->update( $arrayInsert );
-            if($this->beforeItem){
-                MCustomers::query()->where("id","=",$this->beforeItem["id"])->update([
-                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                    "modified_at" => $currentTime
-                ]);
-            }
         }else {
             $arrayInsert["created_at"] = $currentTime;
             $arrayInsert["modified_at"] = $currentTime;
             $id =  MCustomers::query()->insertGetId( $arrayInsert );
-            if(isset($data["clone"])){
-                MCustomers::query()->where("id","=",$data["id"])->update([
-                    "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                    "modified_at" => $currentTime
-                ]);
-            }
         }
         $arrayIDInsert = [];
         if( count($mst_bill_issue_destinations) > 0 && !$this->allNullAble ){
@@ -341,7 +264,7 @@ class CustomersController extends Controller
                     'bill_fax_number' => $bill_issue_destination['fax_number'],
                     'disp_number' => $disp_number,
                 ];
-                if(isset($bill_issue_destination["id"]) && $bill_issue_destination["id"] && !isset($data["clone"])){
+                if(isset($bill_issue_destination["id"]) && $bill_issue_destination["id"]){
                     $arrayInsertBill["modified_at"] = $currentTime;
                     MMstBillIssueDestinations::query()
                         ->where("id","=",$bill_issue_destination["id"])->update($arrayInsertBill);
@@ -365,10 +288,10 @@ class CustomersController extends Controller
             if (!empty($arrayIDInsert)) {
                 $deleteBill = $deleteBill->whereNotIn("id", $arrayIDInsert);
             }
-            $deleteBill->delete();
+            $deleteBill->update(['deleted_at' => $currentTime]);
         }
         DB::commit();
-        if(isset( $data["id"]) || isset($data["clone"])){
+        if(isset( $data["id"])){
             $this->backHistory();
         }
         \Session::flash('message',Lang::get('messages.MSG03002'));
@@ -389,6 +312,7 @@ class CustomersController extends Controller
                 "bill_fax_number as fax_number"
             )
             ->where("mst_customer_id","=",$id)
+            ->whereNULL('deleted_at')
             ->orderBy(DB::raw("disp_number*1"))
             ->get();
         if($listBills){
