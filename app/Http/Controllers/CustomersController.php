@@ -213,7 +213,7 @@ class CustomersController extends Controller
             'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
             'listRoundingMethod'=>$listRoundingMethod,
             'listAccountTitles'=>$listAccountTitles,
-            'role' => count($role)<=0 ? 9 : $role[0]->accessible_kb,
+            'role' => 1,
         ]);
     }
 
