@@ -3327,7 +3327,19 @@ var ctrEmptyInfoListVl = new Vue({
 
       return bgColor;
     },
-    clearCondition: function clearCondition() {},
+    clearCondition: function clearCondition() {
+      this.fileSearch.regist_office_id = "";
+      this.fileSearch.vehicle_size = "";
+      this.fileSearch.vehicle_body_shape = "";
+      this.fileSearch.asking_baggage = "";
+      this.fileSearch.equipment = "";
+      this.fileSearch.start_pref_cd = "";
+      this.fileSearch.start_address = "";
+      this.fileSearch.arrive_pref_cd = "";
+      this.fileSearch.arrive_address = "";
+      this.fileSearch.status = false;
+      this.fileSearch.arrive_date = false;
+    },
     setDefault: function setDefault() {},
     handleLinkEmptyInfo: function handleLinkEmptyInfo(id, status, regist_office_id) {
       if (status == 8 || status == 9) {
@@ -3391,7 +3403,7 @@ var ctrEmptyInfoListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\empty-info-list-vl.js */"./resources/assets/js/controller/empty-info-list-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-list-vl.js */"./resources/assets/js/controller/empty-info-list-vl.js");
 
 
 /***/ })

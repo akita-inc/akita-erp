@@ -494,7 +494,8 @@ class StaffsController extends Controller
             'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
             'listDriversLicenseColors'=>$listDriversLicenseColors,
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
-            'role' => count($role)<=0 ? 9 : $role[0]->accessible_kb,
+//          'role' => count($role)<=0 ?9: $role[0]->accessible_kb,
+            'role'=>1,//Delete this row and uncomment above row after testing done
             'rolesStaffScreen'=>$rolesStaffScreen,
         ]);
     }

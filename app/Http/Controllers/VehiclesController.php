@@ -192,7 +192,8 @@ class VehiclesController extends Controller
             'listSuspensionsCd' => $listSuspensionsCd,
             'listPowerGate' => $listPowerGate,
             'flagLasted' => $flagLasted,
-            'role' => $role,
+//            'role' => $role,
+            'role'=>1,//Delete this row and uncomment above row after testing done
         ]);
     }
 

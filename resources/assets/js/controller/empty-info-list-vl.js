@@ -107,7 +107,17 @@ var ctrEmptyInfoListVl = new Vue({
             return bgColor;
         },
         clearCondition: function clearCondition() {
-
+            this.fileSearch.regist_office_id="";
+            this.fileSearch.vehicle_size="";
+            this.fileSearch.vehicle_body_shape="";
+            this.fileSearch.asking_baggage="";
+            this.fileSearch.equipment="";
+            this.fileSearch.start_pref_cd="";
+            this.fileSearch.start_address="";
+            this.fileSearch.arrive_pref_cd="";
+            this.fileSearch.arrive_address="";
+            this.fileSearch.status=false;
+            this.fileSearch.arrive_date=false;
         },
         setDefault: function (){
 

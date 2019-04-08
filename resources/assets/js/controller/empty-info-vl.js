@@ -42,7 +42,7 @@ var ctrEmptyInfoVl = new Vue({
             if(this.field.mode != 'register'){
                 this.field["id"] = this.empty_info_id;
             }
-            this.field.asking_price = this.field.asking_price.replace(/,/g, '');
+            this.removeComma();
             switch (this.field.mode) {
                 case 'register':
                 case 'edit':
@@ -97,7 +97,7 @@ var ctrEmptyInfoVl = new Vue({
                     if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
                         that.field[key] = $("#hd_"+key).val();
                         if(key == "asking_price"){
-                            that.field[key] = $("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            that.field[key] = '¥ '+$("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                         }
                     }
@@ -194,10 +194,11 @@ var ctrEmptyInfoVl = new Vue({
             }
         },
         addComma: function () {
-            this.field.asking_price = this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            this.field.asking_price = '¥ '+this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            console.log(this.field.asking_price);
         },
         removeComma: function () {
-            this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '');
+            this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '').replace('¥ ','');
         },
         resetForm: function () {
             this.registration_numbers = "";
@@ -232,9 +233,27 @@ var ctrEmptyInfoVl = new Vue({
                 $('textarea').val('');
             }
         },
+        setInputFilter: function (textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                });
+            });
+        },
     },
     mounted () {
         this.loadFormEdit();
+        if(document.getElementById("search_vehicle")!=null){
+            this.setInputFilter(document.getElementById("search_vehicle"), function(value) {
+                return /^-?\d*$/.test(value); });
+        }
     },
     components: {
         DatePicker,
