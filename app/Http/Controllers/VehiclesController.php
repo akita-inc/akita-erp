@@ -160,7 +160,7 @@ class VehiclesController extends Controller
         $listSuspensionsCd= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['suspensions_cd'],'');
         $listPowerGate= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['power_gate_cd'],'');
         $mStaffAuth =  new MStaffAuths();
-        $role = $mStaffAuth->getDataByCondition(4);
+        $role = $mStaffAuth->getRoleBySCreen(4);
 
         $flagLasted = false;
         if(!is_null($id)){
@@ -192,7 +192,7 @@ class VehiclesController extends Controller
             'listSuspensionsCd' => $listSuspensionsCd,
             'listPowerGate' => $listPowerGate,
             'flagLasted' => $flagLasted,
-            'role' => count($role)<=0 ?9: $role[0]->accessible_kb,
+            'role' => $role,
         ]);
     }
 
