@@ -3231,9 +3231,7 @@ var ctrSuppliersListVl = new Vue({
     items: [],
     fieldSearch: {
       mst_suppliers_cd: "",
-      supplier_nm: "",
-      radio_reference_date: "1",
-      reference_date: date_now
+      supplier_nm: ""
     },
     message: '',
     pagination: {
@@ -3254,12 +3252,6 @@ var ctrSuppliersListVl = new Vue({
 
       if (show_msg !== true) {
         $('.alert').hide();
-      }
-
-      if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
-        alert(messages["MSG02001"].replace(':attribute', '基準日'));
-        $('#reference_date').focus();
-        return;
       }
 
       var data = {
@@ -3309,13 +3301,6 @@ var ctrSuppliersListVl = new Vue({
     clearCondition: function clearCondition() {
       this.fieldSearch.mst_suppliers_cd = '';
       this.fieldSearch.supplier_nm = '';
-      this.fieldSearch.radio_reference_date = '1';
-      this.fieldSearch.reference_date = date_now;
-    },
-    setDefault: function setDefault() {
-      if (this.fieldSearch.reference_date === '') {
-        this.fieldSearch.reference_date = date_now;
-      }
     },
     deleteSupplier: function deleteSupplier(id) {
       var _this2 = this;
@@ -3368,7 +3353,7 @@ var ctrSuppliersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
 
 
 /***/ })

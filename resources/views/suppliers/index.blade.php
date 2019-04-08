@@ -24,7 +24,7 @@
             @endif
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
-                    <div class="col-md-4 col-sm-12 row">
+                    <div class="col-md-5 col-sm-12 row">
                         <div class="col-md-3 padding-row-5 col-list-search-f">
                             {{trans("suppliers.list.search.customer")}}
                         </div>
@@ -41,9 +41,7 @@
                             <input type="text" v-model="fieldSearch.supplier_nm" name="supplier_nm" id="supplier_nm" class="form-control">
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-12 row">
-                        @include('Component.search.search-reference-date',['field_radio'=>'fieldSearch.radio_reference_date','field_date'=>'fieldSearch.reference_date'])
-                    </div>
+                    <div class="col-md-4 col-sm-12 row"></div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
                             <button class="btn btn-black w-100" type="button" v-on:click="clearCondition()" >
@@ -67,8 +65,6 @@
                     <th v-on:click="sortList($event, 'supplier_nm_kana')" id="th_supplier_nm">{{trans('suppliers.list.table.supplier_nm')}}</th>
                     <th v-on:click="sortList($event, 'street_address')" id="th_street_address">{{trans('suppliers.list.table.street_address')}}</th>
                     <th v-on:click="sortList($event, 'explanations_bill')" id="th_explanations_bill">{{trans('suppliers.list.table.explanations_bill')}}</th>
-                    <th v-on:click="sortList($event, 'adhibition_start_dt')" id="th_adhibition_start_dt" class="wd-120">{{trans('suppliers.list.table.adhibition_start_dt')}}</th>
-                    <th v-on:click="sortList($event, 'adhibition_end_dt')" id="th_adhibition_end_dt" class="wd-120">{{trans('suppliers.list.table.adhibition_end_dt')}}</th>
                     <th v-on:click="sortList($event, 'modified_at')" id="th_modified_at" class="wd-120">{{trans('suppliers.list.table.modified_at')}}</th>
                     @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
@@ -85,12 +81,10 @@
                         </td>
                         <td>{!! "@{{ item['street_address'] }}" !!}</td>
                         <td class="td-nl2br">{!! "@{{ item['explanations_bill'] }}" !!}</td>
-                        <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
-                        <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
                         @if ($accessible_kb == 1)
                         <td class="no-padding">
-                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
+                            <button type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                         @endif
                     </tr>

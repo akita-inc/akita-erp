@@ -28,8 +28,6 @@ class SuppliersController extends Controller
         $where = array(
             'suppliers_cd' => $data['fieldSearch']['mst_suppliers_cd'],
             'supplier_nm' => $data['fieldSearch']['supplier_nm'],
-            'radio_reference_date' => $data['fieldSearch']['radio_reference_date'],
-            'reference_date' => date('Y-m-d', strtotime($data['fieldSearch']['reference_date'])),
         );
 
         $this->query->select('mst_suppliers.id',
@@ -38,18 +36,12 @@ class SuppliersController extends Controller
             'mst_suppliers.supplier_nm_kana',
             DB::raw("CONCAT_WS('',mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3) as street_address"),
             'mst_suppliers.explanations_bill',
-            DB::raw("DATE_FORMAT(mst_suppliers.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
-            DB::raw("DATE_FORMAT(mst_suppliers.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
-            DB::raw("DATE_FORMAT(mst_suppliers.modified_at, '%Y/%m/%d') as modified_at"),
-            DB::raw("DATE_FORMAT(sub.max_adhibition_end_dt, '%Y/%m/%d') as max_adhibition_end_dt"));
+            DB::raw("DATE_FORMAT(mst_suppliers.modified_at, '%Y/%m/%d') as modified_at"));
 
         $this->query
             ->leftjoin('mst_general_purposes', function ($join) {
                 $join->on('mst_general_purposes.date_id', '=', 'mst_suppliers.prefectures_cd')
                     ->where('mst_general_purposes.data_kb', config('params.data_kb.prefecture_cd'));
-            })
-            ->leftjoin(DB::raw('(select mst_suppliers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_suppliers where deleted_at IS NULL group by mst_suppliers_cd) sub'), function ($join) {
-                $join->on('sub.mst_suppliers_cd', '=', 'mst_suppliers.mst_suppliers_cd');
             })
             ->whereRaw('mst_suppliers.deleted_at IS NULL');
 
@@ -59,11 +51,6 @@ class SuppliersController extends Controller
         if ($where['supplier_nm'] != '') {
             $this->query->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
         }
-        if ($where['radio_reference_date'] == '1' && $where['reference_date'] != '') {
-            $this->query->where('mst_suppliers.adhibition_start_dt', "<=", $where['reference_date']);
-            $this->query->where('mst_suppliers.adhibition_end_dt', ">=", $where['reference_date']);
-        }
-
         if ($data["order"]["col"] != '') {
             if ($data["order"]["col"] == 'street_address')
                 $orderCol = "CONCAT_WS('',mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3)";
@@ -75,7 +62,6 @@ class SuppliersController extends Controller
             $this->query->orderbyRaw($orderCol);
         } else {
             $this->query->orderby('mst_suppliers.mst_suppliers_cd');
-            $this->query->orderby('mst_suppliers.adhibition_start_dt');
         }
     }
 
