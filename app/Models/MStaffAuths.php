@@ -46,6 +46,11 @@ class MStaffAuths  extends Model
             ->get();
         return $data;
     }
+    public function getRoleBySCreen($screen_category_id){
+        $role = $this->getDataByCondition( $screen_category_id );
+        return 1;//Delete this row and uncomment above row after testing done
+        //return count($role)<=0 ?9: $role[0]->accessible_kb;
+    }
     public function getDataScreenStaffAuth(){
         $result = [];
         $data =  $this

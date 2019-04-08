@@ -15,8 +15,6 @@ class StaffUpdateMiddleware
         if(Auth::check())
         {
             $staff = DB::table("mst_staffs")
-//                ->where('adhibition_start_dt', '<=', date('Y-m-d'))
-//                ->where('adhibition_end_dt', '>=', date('Y-m-d'))
                 ->where("id","=",Auth::user()->id)
                 ->whereNull("deleted_at")
                 ->first();
