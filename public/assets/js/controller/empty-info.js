@@ -20887,7 +20887,7 @@ var ctrEmptyInfoVl = new Vue({
         this.field["id"] = this.empty_info_id;
       }
 
-      this.field.asking_price = this.field.asking_price.replace(/,/g, '');
+      this.removeComma();
 
       switch (this.field.mode) {
         case 'register':
@@ -20949,7 +20949,7 @@ var ctrEmptyInfoVl = new Vue({
             that.field[key] = $("#hd_" + key).val();
 
             if (key == "asking_price") {
-              that.field[key] = $("#hd_" + key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              that.field[key] = '¥ ' + $("#hd_" + key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
           }
         });
@@ -21056,10 +21056,11 @@ var ctrEmptyInfoVl = new Vue({
       }
     },
     addComma: function addComma() {
-      this.field.asking_price = this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.field.asking_price = '¥ ' + this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      console.log(this.field.asking_price);
     },
     removeComma: function removeComma() {
-      this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '');
+      this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '').replace('¥ ', '');
     },
     resetForm: function resetForm() {
       this.registration_numbers = "";
