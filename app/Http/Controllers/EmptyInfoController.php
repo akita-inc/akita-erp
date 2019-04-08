@@ -287,7 +287,6 @@ class EmptyInfoController extends Controller {
         $listPreferredPackage= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['preferred_package'],'');
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
         $listStatus= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['empty_car_info_status'],'');
-//        dd($mEmptyInfo);
         return view('empty_info.form', [
             'mEmptyInfo' => $mEmptyInfo,
             'listBusinessOffices' =>$listBusinessOffices,
@@ -346,6 +345,10 @@ class EmptyInfoController extends Controller {
     }
 
     protected function validAfter( &$validator,$data ){
+        if($data['asking_price'] < 1){
+            $validator->errors()
+                ->add("asking_price", str_replace(':attribute',$this->labels['asking_price'],Lang::get('messages.MSG02023')));
+        }
         if(!isset( $data["id"])) {
             $equipment = $data["equipment"];
             $errorsEx = [];
