@@ -190,8 +190,8 @@ INSERT INTO `mst_general_purposes` VALUES (191, '02001', '扶養区分', 4, '老
 INSERT INTO `mst_general_purposes` VALUES (192, '01010', '運転免許証の区分1', 2, '中型', '', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (193, '01010', '運転免許証の区分1', 3, '二種', '', NULL, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (194, '01010', '運転免許証の区分1', 4, '自二', '', NULL, 1, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (195, '11001', '空車情報用 自車区分', 1, '自車', '', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-29 10:01:05', '2019-3-29 10:01:05', NULL);
-INSERT INTO `mst_general_purposes` VALUES (196, '11001', '空車情報用 自車区分', 2, '傭車', '', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-29 10:01:05', '2019-3-29 10:01:05', NULL);
+INSERT INTO `mst_general_purposes` VALUES (195, '11001', '空車情報用 自車区分', 0, '自車', '', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-29 10:01:05', '2019-3-29 10:01:05', NULL);
+INSERT INTO `mst_general_purposes` VALUES (196, '11001', '空車情報用 自車区分', 1, '傭車', '', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-29 10:01:05', '2019-3-29 10:01:05', NULL);
 INSERT INTO `mst_general_purposes` VALUES (197, '11002', '空車情報ステータス', 1, '受付中', '', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-29 10:01:05', '2019-3-29 10:01:05', NULL);
 INSERT INTO `mst_general_purposes` VALUES (198, '11002', '空車情報ステータス', 2, '仮押さえ', '', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-29 10:01:05', '2019-3-29 10:01:05', NULL);
 INSERT INTO `mst_general_purposes` VALUES (199, '11002', '空車情報ステータス', 8, 'マッチング', '', NULL, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-29 10:01:05', '2019-3-29 10:01:05', NULL);

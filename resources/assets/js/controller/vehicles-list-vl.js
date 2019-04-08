@@ -14,8 +14,6 @@ var ctrVehiclesListVl = new Vue({
             vehicles_kb: "",
             registration_numbers: "",
             mst_business_office_id: "",
-            radio_reference_date : "1",
-            reference_date: date_now,
         },
         message: '',
         pagination:{
@@ -34,12 +32,6 @@ var ctrVehiclesListVl = new Vue({
         getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
-            }
-
-            if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
-                alert(messages["MSG02001"].replace(':attribute', '基準日'));
-                $('#reference_date').focus();
-                return;
             }
 
             var data = {
@@ -96,13 +88,6 @@ var ctrVehiclesListVl = new Vue({
             this.fieldSearch.vehicles_kb = '';
             this.fieldSearch.registration_numbers = '';
             this.fieldSearch.mst_business_office_id = '';
-            this.fieldSearch.radio_reference_date = '1';
-            this.fieldSearch.reference_date = date_now;
-        },
-        setDefault: function (){
-            if (this.fieldSearch.reference_date === '') {
-                this.fieldSearch.reference_date = date_now;
-            }
         },
         deleteVehicle: function (id){
             vehicles_service.checkIsExist(id).then((response) => {

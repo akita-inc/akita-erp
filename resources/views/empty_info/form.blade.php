@@ -45,7 +45,7 @@
                                     {{ trans("common.button.reset") }}
                                 </button>
                                 @else
-                                    @if(($mode=='reservation' && $mEmptyInfo['status']!=1) || $mode=='reservation_approval')
+                                    @if(($mode=='reservation' && $mEmptyInfo['status']==1) || $mode=='reservation_approval')
                                     <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
                                     @endif
                                     @if($mode=='reservation_approval')
@@ -215,7 +215,9 @@
                                             {{ trans("common.button.reset") }}
                                         </button>
                                     @else
+                                        @if(($mode=='reservation' && $mEmptyInfo['status']==1) || $mode=='reservation_approval')
                                         <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                        @endif
                                         @if($mode=='reservation_approval')
                                         <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
                                         @endif

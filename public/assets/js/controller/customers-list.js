@@ -3231,9 +3231,7 @@ var ctrCustomersListVl = new Vue({
     items: [],
     fileSearch: {
       mst_customers_cd: "",
-      customer_nm: "",
-      status: 1,
-      reference_date: date_now
+      customer_nm: ""
     },
     message: '',
     pagination: {
@@ -3254,12 +3252,6 @@ var ctrCustomersListVl = new Vue({
 
       if (show_msg !== true) {
         $('.alert').hide();
-      }
-
-      if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
-        alert(messages["MSG02001"].replace(':attribute', '基準日'));
-        $('#reference_date').focus();
-        return;
       }
 
       var data = {
@@ -3309,13 +3301,6 @@ var ctrCustomersListVl = new Vue({
     clearCondition: function clearCondition() {
       this.fileSearch.mst_customers_cd = '';
       this.fileSearch.customer_nm = '';
-      this.fileSearch.status = 1;
-      this.fileSearch.reference_date = date_now;
-    },
-    setDefault: function setDefault() {
-      if (this.fileSearch.reference_date === '') {
-        this.fileSearch.reference_date = date_now;
-      }
     },
     deleteSupplier: function deleteSupplier(id) {
       var _this2 = this;
@@ -3368,7 +3353,7 @@ var ctrCustomersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\customers-list-vl.js */"./resources/assets/js/controller/customers-list-vl.js");
 
 
 /***/ })

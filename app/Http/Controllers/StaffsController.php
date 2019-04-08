@@ -66,8 +66,6 @@ class StaffsController extends Controller
         $where = array(
             'staff_cd' => $data['fieldSearch']['staff_cd'],
             'staff_nm' => $data['fieldSearch']['staff_nm'],
-            'reference_date' => date('Y-m-d', strtotime($data['fieldSearch']['reference_date'])),
-            'status' => $data['fieldSearch']['status'],
             'employment_pattern_id'=>$data['fieldSearch']['employment_pattern_id'],
             'position_id'=>$data['fieldSearch']['position_id'],
             'belong_company_id'=>$data['fieldSearch']['belong_company_id'],
@@ -83,10 +81,7 @@ class StaffsController extends Controller
             'position.date_nm as position_nm',
             'belong_company.date_nm as belong_company_nm',
             'mst_business_offices.business_office_nm',
-            DB::raw("DATE_FORMAT(mst_staffs.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
-            DB::raw("DATE_FORMAT(mst_staffs.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
-            DB::raw("DATE_FORMAT(mst_staffs.modified_at, '%Y/%m/%d') as modified_at"),
-            DB::raw("DATE_FORMAT(sub.max_adhibition_end_dt, '%Y/%m/%d') as max_adhibition_end_dt")
+            DB::raw("DATE_FORMAT(mst_staffs.modified_at, '%Y/%m/%d') as modified_at")
         );
         $this->query->leftJoin('mst_general_purposes as employment_pattern', function ($join) {
             $join->on('employment_pattern.date_id', '=', 'mst_staffs.employment_pattern_id')
@@ -99,8 +94,6 @@ class StaffsController extends Controller
                 ->where('belong_company.data_kb', config('params.data_kb')['belong_company']);;
         })->leftJoin('mst_business_offices', function ($join) {
             $join->on('mst_business_offices.id', '=', 'mst_staffs.mst_business_office_id');
-        })->leftjoin(DB::raw('(select staff_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_staffs where deleted_at IS NULL group by staff_cd) sub'), function ($join) {
-            $join->on('sub.staff_cd', '=', 'mst_staffs.staff_cd');
         });
         $this->query->whereRaw('mst_staffs.deleted_at IS NULL');
 
@@ -115,11 +108,6 @@ class StaffsController extends Controller
             $this->query->where( DB::raw('CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%');
         }
 
-        if ($where['status'] == '1' && $where['reference_date'] != null) {
-            $this->query->where('mst_staffs.adhibition_start_dt','<=',$where['reference_date'])
-                ->where('mst_staffs.adhibition_end_dt','>=',$where['reference_date']);
-        }
-
         if ($data["order"]["col"] != '') {
             if ($data["order"]["col"] == 'staff_nm_kana')
                 $orderCol = 'CONCAT_WS("    ",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)';
@@ -130,8 +118,7 @@ class StaffsController extends Controller
             }
             $this->query->orderbyRaw($orderCol);
         } else {
-            $this->query->orderby('mst_staffs.staff_cd')
-                ->orderby('mst_staffs.adhibition_start_dt');
+            $this->query->orderby('mst_staffs.staff_cd');
         }
     }
 
@@ -161,16 +148,6 @@ class StaffsController extends Controller
             'business_office_nm' => [
                 "classTH" => "min-wd-100",
                 "sortBy" => "business_office_nm"
-            ],
-            'adhibition_start_dt' => [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-                "sortBy" => "adhibition_start_dt"
-            ],
-            'adhibition_end_dt' => [
-                "classTH" => "wd-120",
-                "classTD" => "text-center",
-                "sortBy" => "adhibition_end_dt"
             ],
             'modified_at' => [
                 "classTH" => "wd-120",

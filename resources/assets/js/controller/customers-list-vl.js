@@ -11,8 +11,6 @@ var ctrCustomersListVl = new Vue({
         fileSearch:{
             mst_customers_cd:"",
             customer_nm:"",
-            status:1,
-            reference_date: date_now,
         },
         message: '',
         pagination:{
@@ -31,12 +29,6 @@ var ctrCustomersListVl = new Vue({
         getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
-            }
-
-            if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
-                alert(messages["MSG02001"].replace(':attribute', '基準日'));
-                $('#reference_date').focus();
-                return;
             }
 
             var data = {
@@ -85,13 +77,6 @@ var ctrCustomersListVl = new Vue({
         clearCondition: function clearCondition() {
             this.fileSearch.mst_customers_cd = '';
             this.fileSearch.customer_nm = '';
-            this.fileSearch.status = 1;
-            this.fileSearch.reference_date = date_now;
-        },
-        setDefault: function (){
-            if (this.fileSearch.reference_date === '') {
-                this.fileSearch.reference_date = date_now;
-            }
         },
         deleteSupplier: function (id){
             customers_service.checkIsExist(id).then((response) => {

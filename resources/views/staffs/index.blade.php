@@ -95,24 +95,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12 row">
-                        <div class="col-md-6 col-sm-12 lh-38 text-left">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="status" value="0" v-model="fileSearch.status">{{trans("staffs.list.search.radio-all")}}
-                                </label>
-                            </div>
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="status" value="1" v-model="fileSearch.status" v-on:click="setDefault()" >{{trans("staffs.list.search.radio-reference-date")}}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-sm-12">
-                            <date-picker :lang='lang' id="reference_date" :format="format_date" value-type="format" v-model="fileSearch.reference_date"></date-picker>
-                        </div>
-                    </div>
+                    <div class="col-md-4 col-sm-12 row"></div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
                             <button class="btn btn-black w-100" v-on:click="clearCondition()">
