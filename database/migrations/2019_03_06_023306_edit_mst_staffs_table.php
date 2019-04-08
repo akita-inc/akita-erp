@@ -83,6 +83,7 @@ class EditMstStaffsTable extends Migration
             $table->string('health_insurance_numbers',20)->nullable();
             $table->string('employees_pension_insurance_numbers',10)->nullable();
             $table->integer('mst_role_id')->nullable();
+            $table->tinyInteger('sysadmin_flg')->nullable()->default(0);
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();
