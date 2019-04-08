@@ -87,7 +87,7 @@
                     <!--Block 1-->
                     <div class="grid-form">
                         <div class="row">
-                            @if($mode=='edit' && \Illuminate\Support\Facades\Auth::user()->sysadmin_flg ==1)
+                            @if($mode=='edit' && \Illuminate\Support\Facades\Session::get('sysadmin_flg'))
                             <div class="col-md-4 col-sm-12">
                                 @include('Component.form.select',['filed'=>'status','array'=>$listStatus,'required'=>true])
                             </div>

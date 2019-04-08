@@ -87,18 +87,13 @@ class SuppliersController extends Controller
         return response()->json($response);
     }
 
-    public function create(Request $request,  $id=null,$mode=null){
+    public function create(Request $request, $id=null){
 
         $mSupplier = new MSupplier();
-        $flagLasted = false;
         if(!is_null($id)){
             $mSupplier = $mSupplier->find($id);
             if(is_null($mSupplier)){
                 return abort(404);
-            }
-            $lastedId = $mSupplier->getLastedSupplier($mSupplier->mst_suppliers_cd);
-            if($lastedId->id==$id){
-                $flagLasted =true;
             }
         }
         $mGeneralPurposes = new MGeneralPurposes();
@@ -113,8 +108,7 @@ class SuppliersController extends Controller
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
-                'mst_suppliers_cd'  => 'required|one_bytes_string|length:5',
-                'adhibition_start_dt'  => 'required',
+                'mst_suppliers_cd'  => 'required|one_bytes_string|length:5|unique:mst_suppliers,mst_suppliers_cd,NULL,id,deleted_at,NULL',
                 'supplier_nm'  => 'required|length:200',
                 'supplier_nm_kana'  => 'kana|nullable|length:200',
                 'supplier_nm_formal'  => 'length:200|nullable',
@@ -146,55 +140,10 @@ class SuppliersController extends Controller
                 'payment_account_holder'  => 'nullable|length:30',
                 'notes'  => 'nullable|length:50',
             ];
-            if($mode=='registerHistoryLeft'){
-                unset($rules['adhibition_start_dt']);
-                $rules['adhibition_start_dt_new'] ='required';
+            if($id!= null){
+                $rules['mst_suppliers_cd'] = "required|one_bytes_string|length:5|unique:mst_suppliers,mst_suppliers_cd,{$id},id,deleted_at,NULL";
             }
-            if($mode=='edit'){
-                $mSupplier->label['adhibition_start_dt'] = $mSupplier->label['adhibition_start_dt_edit'];
-                $mSupplier->label['adhibition_end_dt'] = $mSupplier->label['adhibition_end_dt_edit'];
-                $rules['adhibition_end_dt'] ='required';
-            }
-            $validator = Validator::make($data, $rules,array(),$mSupplier->label);
-            if($mode=='registerHistoryLeft'){
-                $validator->after(function ($validator) use ($data,$mSupplier){
-                    if (Carbon::parse($data['adhibition_start_dt_new']) <= Carbon::parse($mSupplier->adhibition_start_dt)){
-                        $validator->errors()->add('mst_suppliers_cd',str_replace(':screen','仕入先',Lang::get('messages.MSG10003')));
-                    }
-                    if (Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
-                        $validator->errors()->add('adhibition_start_dt_new',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_new'],Lang::get('messages.MSG02014')));
-                    }
-                });
-            }elseif ($mode=='edit'){
-                $validator->after(function ($validator) use ($data,$mSupplier){
-                    if($data['adhibition_end_dt']!=""){
-                        if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
-                            $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
-                        }
-                    }
-                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"],'id' => $mSupplier->id,'adhibition_start_dt' => $mSupplier->adhibition_start_dt]);
-                    foreach ($listSuppliersExist as $item) {
-                        if (Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_start_dt) ) {
-                            $validator->errors()->add('mst_suppliers_cd',str_replace(':screen','仕入先',Lang::get('messages.MSG10003')));
-                            break;
-                        }
-                    }
-                });
-            }else{
-                $validator->after(function ($validator) use ($data,$mSupplier){
-                    if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
-                        $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mSupplier->label['adhibition_start_dt'],Lang::get('messages.MSG02014')));
-                    }
-
-                    $listSuppliersExist = $mSupplier->getSuppliersByCondition(['suppliers_cd' => $data["mst_suppliers_cd"]]);
-                    foreach ($listSuppliersExist as $item) {
-                        if ((Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                            $validator->errors()->add('mst_suppliers_cd',str_replace(':screen','仕入先',Lang::get('messages.MSG10003')));
-                            break;
-                        }
-                    }
-                });
-            }
+            $validator = Validator::make($data, $rules,array('mst_suppliers_cd.unique' => str_replace(':screen','仕入先',Lang::get('messages.MSG10003'))),$mSupplier->label);
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator->errors())
@@ -203,24 +152,7 @@ class SuppliersController extends Controller
                 DB::beginTransaction();
                 try
                 {
-                    if($mode=='registerHistoryLeft'){
-
-                        $mSupplier->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
-                        $mSupplier->save();
-                        $mSupplier = new MSupplier();
-                    }elseif ($mode=='edit'){
-                        if(Carbon::parse($data["adhibition_start_dt"])!= Carbon::parse($mSupplier->adhibition_start_dt)){
-                            $mSupplier->editSupplier($mSupplier->id, $data["adhibition_start_dt"]);
-                        }
-                    }
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
-                    if($mode=='registerHistoryLeft'){
-                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt_new"],'Y-m-d');
-                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat(config('params.adhibition_end_dt_default'),'Y-m-d');
-                    }else{
-                        $mSupplier->adhibition_start_dt= TimeFunction::dateFormat($data["adhibition_start_dt"],'Y-m-d');
-                        $mSupplier->adhibition_end_dt= TimeFunction::dateFormat($mode=='edit' ? $data["adhibition_end_dt"]:config('params.adhibition_end_dt_default'),'Y-m-d');
-                    }
                     $mSupplier->supplier_nm= $data["supplier_nm"];
                     $mSupplier->supplier_nm_kana= $data["supplier_nm_kana"];
                     $mSupplier->supplier_nm_formal= $data["supplier_nm_formal"];
@@ -260,10 +192,8 @@ class SuppliersController extends Controller
                     $mSupplier->notes= $data["notes"];
                     $mSupplier->save();
                     DB::commit();
-                    if($mode=='edit' || $mode=='registerHistoryLeft'){
+                    if($id!= null){
                         $this->backHistory();
-                    }
-                    if($mode=='edit'){
                         \Session::flash('message',Lang::get('messages.MSG04002'));
                     }else{
                         \Session::flash('message',Lang::get('messages.MSG03002'));
@@ -283,7 +213,6 @@ class SuppliersController extends Controller
             'listConsumptionTaxCalcUnit' => $listConsumptionTaxCalcUnit,
             'listRoundingMethod' => $listRoundingMethod,
             'listPaymentAccountType' => $listPaymentAccountType,
-            'flagLasted' => $flagLasted,
             'role' => $role,
         ]);
     }

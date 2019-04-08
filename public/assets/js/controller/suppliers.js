@@ -2273,10 +2273,7 @@ __webpack_require__.r(__webpack_exports__);
 var ctrSupplierrsVl = new Vue({
   el: '#ctrSupplierrsVl',
   data: {
-    adhibition_start_dt: $('#adhibition_start_dt').val(),
-    adhibition_end_dt: $('#adhibition_end_dt').val(),
     business_start_dt: $('#business_start_dt').val(),
-    adhibition_start_dt_new: $('#adhibition_start_dt_new').val(),
     lang: lang_date_picker
   },
   methods: {
