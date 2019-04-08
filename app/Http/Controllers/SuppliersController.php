@@ -109,7 +109,7 @@ class SuppliersController extends Controller
         $listRoundingMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
         $listPaymentAccountType= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['payment_account_type'],'');
         $mStaffAuth =  new MStaffAuths();
-        $role = $mStaffAuth->getDataByCondition(2);
+        $role = $mStaffAuth->getRoleBySCreen(2);
         if ($request->getMethod() == 'POST') {
             $data = $request->all();
             $rules = [
@@ -284,7 +284,7 @@ class SuppliersController extends Controller
             'listRoundingMethod' => $listRoundingMethod,
             'listPaymentAccountType' => $listPaymentAccountType,
             'flagLasted' => $flagLasted,
-            'role' => 1,
+            'role' => $role,
         ]);
     }
 

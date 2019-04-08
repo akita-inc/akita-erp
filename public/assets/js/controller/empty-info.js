@@ -21056,8 +21056,7 @@ var ctrEmptyInfoVl = new Vue({
       }
     },
     addComma: function addComma() {
-      this.field.asking_price = '¥ ' + this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      console.log(this.field.asking_price);
+      this.field.asking_price = (this.field.asking_price != '' ? '¥ ' : '') + this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     removeComma: function removeComma() {
       this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '').replace('¥ ', '');
