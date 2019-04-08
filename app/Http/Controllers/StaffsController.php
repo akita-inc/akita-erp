@@ -25,7 +25,6 @@ class StaffsController extends Controller
 
     public $ruleValid = [
         'staff_cd'  => 'required|one_bytes_string|length:5',
-        'adhibition_start_dt'  => 'required',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
@@ -251,51 +250,20 @@ class StaffsController extends Controller
             $validator->errors()->add('staffScreen',str_replace(' :attribute',"基本情報",Lang::get('messages.MSG10007'))
 );
         }
-        if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
-            $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$this->labels['adhibition_start_dt'],Lang::get('messages.MSG02014')));
-        }
-        if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
-            $validator->errors()->add('adhibition_start_dt_history',str_replace(' :attribute',$this->labels['adhibition_start_dt_history'],Lang::get('messages.MSG02014')));
-        }
         $this->validateExistBeforeItem($validator,$data);
     }
     protected function validateExistBeforeItem(&$validator,$data)
     {
-        $strWhereStartDate = 'DATE_FORMAT("'.$data['adhibition_start_dt'].'", "%Y%m%d")';
-        $strWhereEndDate = 'DATE_FORMAT("'.$data['adhibition_end_dt'].'", "%Y%m%d")';
-        $strWhereStartDateDB = 'DATE_FORMAT(adhibition_start_dt, "%Y%m%d")';
-        $strWhereEndDateDB = 'DATE_FORMAT(adhibition_end_dt, "%Y%m%d")';
-        $strWhere = $strWhereStartDate." > ".$strWhereEndDateDB." or ".$strWhereEndDate." < ".$strWhereStartDateDB;
-        $countExist = MStaffs::query()
-            ->where('staff_cd','=',$data['staff_cd'])
-            ->whereNull("deleted_at")
-            ->whereRaw("!(".$strWhere.")");
-        if (isset($data["id"]) && $data["id"]) {
-            if (!isset($data["clone"])) {
-                if (Carbon::parse($data['adhibition_start_dt_edit']) > Carbon::parse($data['adhibition_end_dt_edit'])) {
-                    $validator->errors()->add('adhibition_start_dt_edit', str_replace(' :attribute', $this->labels['adhibition_start_dt_edit'], Lang::get('messages.MSG02014')));
-                }
-                $beforeItem = MStaffs::query()
-                    ->whereRaw($strWhereStartDateDB . " < " . $strWhereStartDate)
-                    ->whereNull("deleted_at")
-                    ->where('staff_cd', '=', $data['staff_cd'])
-                    ->where("id", "<>", $data["id"])
-                    ->orderByDesc("adhibition_start_dt")
-                    ->first();
-                if ($beforeItem) {
-                    $this->beforeItem = $beforeItem;
-                    $countExist = $countExist->where("id", "<>", $beforeItem->id);
-                }
-            } else {
-                if (Carbon::parse($data['adhibition_start_dt_history']) > Carbon::parse($data['adhibition_end_dt_history'])) {
-                    $validator->errors()->add('adhibition_start_dt_history', str_replace(' :attribute', $this->labels['adhibition_start_dt_history'], Lang::get('messages.MSG02014')));
-                }
-                $mStaff = MStaffs::find($data['id']);
-                if (Carbon::parse($data['adhibition_start_dt_history']) <= Carbon::parse($mStaff->adhibition_start_dt)){
-                    $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
-                }
+        if(!isset($data["id"])){
+            $staffExits =MStaffs::query()
+                ->whereNull("deleted_at")
+                ->where('staff_cd', '=', $data['staff_cd'])
+                ->first();
+            if($staffExits){
+                $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
             }
-            $countExist = $countExist->where("id", "<>", $data["id"]);
+        }
+        if (isset($data["id"]) && $data["id"]) {
             $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
             if(Hash::check($data['confirm_password'], $passwordStaff->password)==false && (!isset($data["is_change_password"]) || $data["is_change_password"] == false) && (!empty($data['is_change_password_confirm']) || $data['is_change_password_confirm']==true))
             {
@@ -303,13 +271,6 @@ class StaffsController extends Controller
             }
         }
 
-
-        if(!isset($data["id"]) || (isset($data['id']) && !isset($data["clone"]) )){
-            $countExist = $countExist->count();
-            if( $countExist > 0 ){
-                $validator->errors()->add('staff_cd',str_replace(':screen','社員',Lang::get('messages.MSG10003')));
-            }
-        }
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
             if ($data['password'] != $data['confirm_password'] && (isset($data['confirm_password']) || $data['confirm_password'])) {
                 $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
@@ -331,12 +292,7 @@ class StaffsController extends Controller
         $mst_staff_auths=$data["mst_staff_auths"];
         $drivers_license_picture=$data["drivers_license_picture"];
         $deleteFile=$data["deleteFile"];
-        unset($arrayInsert["adhibition_start_dt_edit"]);
-        unset($arrayInsert["adhibition_end_dt_edit"]);
-        unset($arrayInsert["adhibition_start_dt_history"]);
-        unset($arrayInsert["adhibition_end_dt_history"]);
         unset($arrayInsert["id"]);
-        unset($arrayInsert["clone"]);
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
         unset($arrayInsert["mst_staff_qualifications"]);
@@ -349,47 +305,14 @@ class StaffsController extends Controller
         unset($arrayInsert["confirm_password"]);
         DB::beginTransaction();
         try{
-            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+            if(isset( $data["id"]) && $data["id"]){
                 $id = $data["id"];
-
-                $mStaff = MStaffs::find($id);
-                if (Carbon::parse($arrayInsert["adhibition_start_dt"]) != Carbon::parse($mStaff->adhibition_start_dt)) {
-                    if ($this->beforeItem) { //
-                        MStaffs::query()->where("id", "=", $this->beforeItem["id"])->update([
-                            "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                            "modified_at" => $currentTime,
-                        ]);
-                    }
-                }
-
                 $arrayInsert["modified_at"] = $currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
             }else {
                 $arrayInsert["modified_at"] = $currentTime;
                 $arrayInsert["created_at"]=$currentTime;
                 $id = DB::table($this->table)->insertGetId( $arrayInsert );
-                if(isset($data["clone"])){ //MODE REGISTER HISTORY
-                    MStaffs::query()->where("id","=",$data["id"])->update([
-                        "adhibition_end_dt" => date_create($arrayInsert["adhibition_start_dt"])->modify('-1 days')->format('Y-m-d'),
-                        "modified_at" => $currentTime,
-                    ]);
-
-                    //upload file
-                    $oldStaff = MStaffs::find($data["id"]);
-                    $src = config('params.staff_path') . $data["id"];
-                    $des = config('params.staff_path') . $id;
-                    if(is_null($drivers_license_picture) && !empty($oldStaff->drivers_license_picture ) && in_array(6,$rolesStaffScreen) && file_exists($src.'/image/'.$oldStaff->drivers_license_picture)  ){
-                        if ( is_null($deleteFile) || (!is_null($deleteFile) && $deleteFile!='drivers_license_picture' && $deleteFile!='unset_roles_clone')) {
-                            mkdir($des, 0777, true);
-                            mkdir($des.'/image', 0777, true);
-                            MStaffs::query()->where("id","=",$id)->update([
-                                "drivers_license_picture" => $oldStaff->drivers_license_picture
-                            ]);
-                            copy($src.'/image/'.$oldStaff->drivers_license_picture, $des.'/image/'.$oldStaff->drivers_license_picture);
-
-                        }
-                    }
-                }
             }
             $this->deleteFile($id,$deleteFile);
             $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
@@ -398,10 +321,10 @@ class StaffsController extends Controller
             $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_", [], $currentTime);
             $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"], $currentTime);
             DB::commit();
-            if(isset( $data["id"]) || isset($data["clone"])){
+            if(isset( $data["id"])){
                 $this->backHistory();
             }
-            if(isset( $data["id"]) && $data["id"] && !isset($data["clone"])){
+            if(isset( $data["id"]) && $data["id"]){
                 \Session::flash('message',Lang::get('messages.MSG04002'));
             }else{
                 \Session::flash('message',Lang::get('messages.MSG03002'));
@@ -422,15 +345,6 @@ class StaffsController extends Controller
             $this->ruleValid["password"]='required|length:50';
             $this->ruleValid["confirm_password"]='required|length:50';
         }
-        if(isset($data["id"]) && $data["id"]) {
-            if (!isset($data["clone"])) {
-                $this->ruleValid['adhibition_start_dt_edit'] = 'required';
-                $this->ruleValid['adhibition_end_dt_edit'] = 'required';
-            }else{
-                $this->ruleValid['adhibition_start_dt_history'] = 'required';
-                $this->ruleValid['adhibition_end_dt_history'] = 'required';
-            }
-        }
     }
     public function store(Request $request,$id=null)
     {
@@ -439,7 +353,7 @@ class StaffsController extends Controller
         $mRoles = new MRoles();
         $mScreen = new MScreens();
         $mStaffAuth =  new MStaffAuths();
-        $role = $mStaffAuth->getDataByCondition(1);
+        $role = $mStaffAuth->getRoleBySCreen(1);
         $rolesStaffScreen=$mStaffAuth->getDataScreenStaffAuth();
         $listEmployPattern = $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['employment_pattern'], '');
         $listPosition=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['position'], '');
@@ -459,24 +373,17 @@ class StaffsController extends Controller
         $listStaffScreens = $mScreen->getListScreensByCondition(['screen_category_id' => 1]);
         $listAccessiblePermission=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['accessible_kb'],'Empty');
         $staff=null;
-        $flagRegisterHistory = false;
         //load form by update
         if($id != null){
             $staff = MStaffs::find( $id );
             if(empty($staff)){
                 abort('404');
             }else{
-                $staffLast = MStaffs::where('staff_cd', '=', $staff->staff_cd)
-                    ->orderByDesc("adhibition_start_dt")->first();
-                if($staffLast->id == $id){
-                    $flagRegisterHistory = true;
-                }
                 $staff = $staff->toArray();
             }
         }
         return view('staffs.form', [
             'staff'=>$staff,
-            'flagRegisterHistory'=>$flagRegisterHistory,
             'listEmployPattern' => $listEmployPattern,
             'listPosition'=>$listPosition,
             'listPrefecture'=>$listPrefecture,
@@ -494,8 +401,7 @@ class StaffsController extends Controller
             'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
             'listDriversLicenseColors'=>$listDriversLicenseColors,
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
-//          'role' => count($role)<=0 ?9: $role[0]->accessible_kb,
-            'role'=>1,//Delete this row and uncomment above row after testing done
+            'role'=>$role,
             'rolesStaffScreen'=>$rolesStaffScreen,
         ]);
     }
