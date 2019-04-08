@@ -81,7 +81,6 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12 row">
-                        @include('Component.search.search-reference-date',['field_radio'=>'fieldSearch.radio_reference_date','field_date'=>'fieldSearch.reference_date'])
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
@@ -109,8 +108,6 @@
                     <th v-on:click="sortList($event, 'business_office_nm')" id="th_business_office_nm">{{trans("vehicles.list.search.mst_business_office")}}</th>
                     <th v-on:click="sortList($event, 'size.date_nm')" id="th_vehicle_size">{{trans("vehicles.list.table.vehicle_size")}}</th>
                     <th v-on:click="sortList($event, 'purpose.date_nm')" id="th_vehicle_purpose">{{trans("vehicles.list.table.vehicle_purpose")}}</th>
-                    <th v-on:click="sortList($event, 'adhibition_start_dt')" id="th_adhibition_start_dt" class="wd-120">{{trans("vehicles.list.table.adhibition_start_dt")}}</th>
-                    <th v-on:click="sortList($event, 'adhibition_end_dt')" id="th_adhibition_end_dt" class="wd-120">{{trans("vehicles.list.table.adhibition_end_dt")}}</th>
                     <th v-on:click="sortList($event, 'modified_at')" id="th_modified_at" class="wd-120">{{trans("vehicles.list.table.modified_at")}}</th>
                     @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
@@ -126,12 +123,10 @@
                         <td>{!! "@{{ item['business_office_nm'] }}" !!}</td>
                         <td>{!! "@{{ item['vehicle_size_kb_nm'] }}" !!}</td>
                         <td>{!! "@{{ item['vehicle_purpose_nm'] }}" !!}</td>
-                        <td>{!! "@{{ item['adhibition_start_dt'] }}" !!}</td>
-                        <td>{!! "@{{ item['adhibition_end_dt'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
                         @if ($accessible_kb == 1)
                         <td class="no-padding">
-                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteVehicle(item['id'])">削除</button>
+                            <button type="button" class="btn btn-delete w-100" v-on:click="deleteVehicle(item['id'])">削除</button>
                         </td>
                         @endif
                     </tr>
