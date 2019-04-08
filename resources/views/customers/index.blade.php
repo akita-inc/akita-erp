@@ -21,7 +21,7 @@
             @endif
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
-                    <div class="col-md-4 col-sm-12 row">
+                    <div class="col-md-5 col-sm-12 row">
                         <div class="col-md-3 padding-row-5 col-list-search-f">
                             {{trans("customers.list.search.customer")}}
                         </div>
@@ -38,8 +38,7 @@
                             <input id="input_mst_customers_name" class="form-control"  name="customer_nm" v-model="fileSearch.customer_nm">
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-12 row">
-                        @include('Component.search.search-reference-date',['field_radio'=>'fileSearch.status','field_date'=>'fileSearch.reference_date'])
+                    <div class="col-md-4 col-sm-12 row">
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
@@ -82,7 +81,7 @@
                         @endforeach
                         @if ($accessible_kb == 1)
                         <td class="no-padding">
-                            <button v-if="item['adhibition_end_dt'] === item['max_adhibition_end_dt']" type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
+                            <button type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
                         </td>
                         @endif
                     </tr>

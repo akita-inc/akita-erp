@@ -55,15 +55,10 @@ class MStaffs extends Authenticatable
         DB::beginTransaction();
         try
         {
-            $historyStaffs = $this->getHistoryNearest($mMStaffs->staff_cd, $mMStaffs->adhibition_end_dt);
-            if (isset($historyStaffs)) {
-                $historyStaffs->adhibition_end_dt = $mMStaffs->adhibition_end_dt;
-                $historyStaffs->save();
-            }
             $this->deleteAccordions($id,"mst_staff_job_experiences",$currentTime);
             $this->deleteAccordions($id,"mst_staff_qualifications",$currentTime);
             $this->deleteAccordions($id,"mst_staff_dependents",$currentTime);
-            $this->deleteStaffAuth($id);
+            $this->deleteStaffAuth($id,$currentTime);
             $mMStaffs->delete();
             DB::commit();
             return true;
@@ -86,12 +81,12 @@ class MStaffs extends Authenticatable
             return false;
         }
     }
-    protected function deleteStaffAuth($id)
+    protected function deleteStaffAuth($id, $currentTime)
     {
         try {
             DB::table("mst_staff_auths")
                 ->where("mst_staff_id", $id)
-                ->delete();
+                ->update(['deleted_at' => $currentTime]);
             return true;
         }
         catch(\Exception $e)

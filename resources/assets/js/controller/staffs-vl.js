@@ -20,12 +20,6 @@ var ctrStaffsVl = new Vue({
         roles_staff_screen:$("#roles_staff_screen").val(),
         field:{
             staff_cd:"",
-            adhibition_start_dt:"",
-            adhibition_end_dt:$("#hd_adhibition_end_dt_default").val(),
-            adhibition_start_dt_edit:"",
-            adhibition_end_dt_edit:$("#hd_adhibition_end_dt_default").val(),
-            adhibition_start_dt_history:"",
-            adhibition_end_dt_history:$("#hd_adhibition_end_dt_default").val(),
             password:"",
             confirm_password:"",
             is_change_password_confirm:null,
@@ -295,13 +289,6 @@ var ctrStaffsVl = new Vue({
                     this.field["is_change_password_confirm"]=true;
                 }
                 this.field["id"] = this.staff_id;
-                if(this.field["clone"] == true){
-                    this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
-                    this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
-                }else{
-                    this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
-                    this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
-                }
             }
             let formData = new FormData();
 
@@ -316,7 +303,6 @@ var ctrStaffsVl = new Vue({
                     that.errors = {};
                     window.location.href = listRoute;
                 }
-                this.field["clone"] = null;
                 this.field["is_change_password"] = null;
                 this.field["is_change_password_confirm"] = null;
                 that.loading = false;
@@ -328,11 +314,9 @@ var ctrStaffsVl = new Vue({
                 this.loading = true;
                 that.staff_edit = 1;
                 that.staff_id = $("#hd_id").val();
+                console.log(this.staff_id);
                 $.each(this.field,function (key,value) {
                     if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_staff_job_experiences' && key != 'mst_staff_dependents'){
-                        if(key == "adhibition_start_dt" || key == "adhibition_end_dt"){
-                            that.field[key + "_edit"] = $("#hd_"+key).val();
-                        }
                         that.field.workmens_compensation_insurance_fg=that.field.workmens_compensation_insurance_fg==0?"":1;
                         that.image_drivers_license_picture = $("#hd_drivers_license_picture").val();
                         that.field[key] = $("#hd_"+key).val();

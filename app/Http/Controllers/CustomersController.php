@@ -68,24 +68,17 @@ class CustomersController extends Controller
 
     protected function search($data){
         $dataSearch=$data['fieldSearch'];
-        $reference_date=date('Y-m-d', strtotime($dataSearch['reference_date']) );
         $this->query->select('mst_customers.id',
             'mst_customers.mst_customers_cd',
             'mst_customers.customer_nm',
             'mst_customers.customer_nm_kana',
             DB::raw("CONCAT_WS('',mst_general_purposes.date_nm,mst_customers.address1,mst_customers.address2,mst_customers.address3) as street_address"),
             'mst_customers.explanations_bill',
-            DB::raw("DATE_FORMAT(mst_customers.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
-            DB::raw("DATE_FORMAT(mst_customers.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
-            DB::raw("DATE_FORMAT(mst_customers.modified_at, '%Y/%m/%d') as modified_at"),
-            DB::raw("DATE_FORMAT(sub.max_adhibition_end_dt, '%Y/%m/%d') as max_adhibition_end_dt")
+            DB::raw("DATE_FORMAT(mst_customers.modified_at, '%Y/%m/%d') as modified_at")
         );
         $this->query->leftJoin('mst_general_purposes', function ($join) {
             $join->on("data_kb", "=", DB::raw(config("params.data_kb.prefecture_cd")));
             $join->on("date_id", "=", "mst_customers.prefectures_cd");
-        })
-        ->leftjoin(DB::raw('(select mst_customers_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_customers where deleted_at IS NULL group by mst_customers_cd) sub'), function ($join) {
-            $join->on('sub.mst_customers_cd', '=', 'mst_customers.mst_customers_cd');
         })
         ->whereRaw('mst_customers.deleted_at IS NULL');
 
@@ -94,10 +87,6 @@ class CustomersController extends Controller
         }
         if ($dataSearch['customer_nm'] != '') {
             $this->query->where('mst_customers.customer_nm', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
-        }
-        if ($dataSearch['status'] == '1' && $reference_date!=null) {
-            $this->query->where('mst_customers.adhibition_start_dt','<=',$reference_date)
-                        ->where('mst_customers.adhibition_end_dt','>=',$reference_date);
         }
 
         if ($data["order"]["col"] != '') {
@@ -111,7 +100,6 @@ class CustomersController extends Controller
             $this->query->orderbyRaw($orderCol);
         } else {
             $this->query->orderby('mst_customers.mst_customers_cd');
-            $this->query->orderby('mst_customers.adhibition_start_dt');
         }
     }
 
@@ -130,14 +118,6 @@ class CustomersController extends Controller
             'explanations_bill'=> [
                 "classTH" => "",
                 "classTD" => "td-nl2br",
-            ],
-            'adhibition_start_dt'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center"
-            ],
-            'adhibition_end_dt'=> [
-                "classTH" => "wd-120",
-                "classTD" => "text-center"
             ],
             'modified_at'=> [
                 "classTH" => "wd-120",

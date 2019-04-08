@@ -37,11 +37,6 @@ class MCustomers extends Model
         DB::beginTransaction();
         try
         {
-            $historyCustomer = $this->getHistoryNearest($mCustomer->mst_customers_cd, $mCustomer->adhibition_end_dt);
-            if (isset($historyCustomer)) {
-                $historyCustomer->adhibition_end_dt = $mCustomer->adhibition_end_dt;
-                $historyCustomer->save();
-            }
             $mCustomer->delete();
             DB::commit();
             return true;

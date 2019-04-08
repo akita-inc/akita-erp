@@ -3236,11 +3236,9 @@ var ctrStaffsListVl = new Vue({
       position_id: "",
       staff_nm: "",
       date_nm: "",
-      status: 1,
       belong_company_id: "",
       mst_business_office_id: "",
-      employment_pattern_id: "",
-      reference_date: date_now
+      employment_pattern_id: ""
     },
     pagination: {
       total: 0,
@@ -3258,12 +3256,6 @@ var ctrStaffsListVl = new Vue({
     getItems: function getItems(page, show_msg) {
       if (show_msg !== true) {
         $('.alert').hide();
-      }
-
-      if (this.fileSearch.status === 1 && this.fileSearch.reference_date === '') {
-        alert(messages["MSG02001"].replace(':attribute', '基準日'));
-        $('#reference_date').focus();
-        return;
       }
 
       var data = {
@@ -3347,19 +3339,11 @@ var ctrStaffsListVl = new Vue({
     clearCondition: function clearCondition() {
       this.fileSearch.staff_cd = "";
       this.fileSearch.staff_nm = "";
-      this.fileSearch.status = 1;
-      this.fileSearch.reference_date = date_now;
       this.fileSearch.position_id = "";
       this.fileSearch.date_nm = "";
       this.fileSearch.belong_company_id = "";
       this.fileSearch.mst_business_office_id = "";
       this.fileSearch.employment_pattern_id = "";
-      this.fileSearch.reference_date = date_now;
-    },
-    setDefault: function setDefault() {
-      if (this.fileSearch.reference_date === '') {
-        this.fileSearch.reference_date = date_now;
-      }
     } //end action list
 
   },
