@@ -154,6 +154,12 @@ class EmptyInfoController extends Controller {
             if ($data["order"]["col"] != '') {
                 if ($data["order"]["col"] == 'arrive_location')
                     $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm, empty_info.arrive_address)';
+                else if($data["order"]["col"]=='regist_office')
+                    $orderCol='regist_office_id';
+                else if($data["order"]["col"]=='vehicle_classification')
+                    $orderCol='vehicle_kb';
+                else if($data["order"]["col"]=='asking_baggage')
+                    $orderCol='empty_info.asking_baggage';
                 else if($data["order"]["col"]=='schedule_date')
                     $orderCol="CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i'))";
                 else if($data["order"]["col"]=='start_pref_cd')
