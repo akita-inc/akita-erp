@@ -143,7 +143,7 @@
                             </div>
                             @else
                                 <div class="col-md-12 col-sm-12">
-                                    @include('Component.form.textarea',['filed'=>'equipment','attr_input' => "maxlength='200' rows='6' class='h-100'" ,'required'=>true])
+                                    @include('Component.form.textarea',['filed'=>'equipment','attr_input' => "maxlength='200' rows='6' class='h-100'" ,'required'=>true, 'label_class' => 'h-100'])
                                 </div>
                             @endif
                         </div>
