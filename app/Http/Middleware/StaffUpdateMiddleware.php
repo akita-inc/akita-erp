@@ -21,12 +21,12 @@ class StaffUpdateMiddleware
                 ->whereNull("deleted_at")
                 ->first();
 
-            if( empty($staff) || $staff->password != $request->session()->get("password_old") ){
-                if($request->ajax()){
-                    abort(403);
-                }
-                return redirect('/logoutError');
-            }
+//            if( empty($staff) || $staff->password != $request->session()->get("password_old") ){
+//                if($request->ajax()){
+//                    abort(403);
+//                }
+//                return redirect('/logoutError');
+//            }
             return $next($request);
         }
     }
