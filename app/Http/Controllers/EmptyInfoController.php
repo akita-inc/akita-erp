@@ -70,7 +70,7 @@ class EmptyInfoController extends Controller {
         parent::__construct();
     }
     public function beforeSubmit($data){
-        if($data['mode']){
+        if($data['mode']=='edit'){
             $this->ruleValid['status'] = 'required';
         }
         if(isset( $data["id"])) {
