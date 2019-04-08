@@ -15,18 +15,16 @@ class StaffUpdateMiddleware
         if(Auth::check())
         {
             $staff = DB::table("mst_staffs")
-//                ->where('adhibition_start_dt', '<=', date('Y-m-d'))
-//                ->where('adhibition_end_dt', '>=', date('Y-m-d'))
                 ->where("id","=",Auth::user()->id)
                 ->whereNull("deleted_at")
                 ->first();
 
-//            if( empty($staff) || $staff->password != $request->session()->get("password_old") ){
-//                if($request->ajax()){
-//                    abort(403);
-//                }
-//                return redirect('/logoutError');
-//            }
+            if( empty($staff) || $staff->password != $request->session()->get("password_old") ){
+                if($request->ajax()){
+                    abort(403);
+                }
+                return redirect('/logoutError');
+            }
             return $next($request);
         }
     }
