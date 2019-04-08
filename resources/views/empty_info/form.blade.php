@@ -1,6 +1,6 @@
 @extends('Layouts.app')
-@section('title',trans("empty_info.create.title".(!empty($mEmptyInfo) ? "_edit":"")))
-@section('title_header',trans("empty_info.create.title".(!empty($mEmptyInfo) ? "_edit":"")))
+@section('title',trans("empty_info.create.title_".$mode))
+@section('title_header',trans("empty_info.create.title_".$mode))
 @section('css')
     @if($role==1 && ($mode=='register' || $mode=='edit'))
         <style>
@@ -45,7 +45,9 @@
                                     {{ trans("common.button.reset") }}
                                 </button>
                                 @else
+                                    @if(($mode=='reservation' && $mEmptyInfo['status']!=1) || $mode=='reservation_approval')
                                     <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                    @endif
                                     @if($mode=='reservation_approval')
                                     <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
                                     @endif
@@ -85,9 +87,9 @@
                     <!--Block 1-->
                     <div class="grid-form">
                         <div class="row">
-                            @if($mode=='edit')
+                            @if($mode=='edit' && \Illuminate\Support\Facades\Auth::user()->sysadmin_flg ==1)
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.select',['filed'=>'status','array'=>$listStatus])
+                                @include('Component.form.select',['filed'=>'status','array'=>$listStatus,'required'=>true])
                             </div>
                             <div class="break-row-form"></div>
                             @endif
@@ -99,6 +101,7 @@
                                 @include('Component.form.radio',['class'=>'w-100','filed'=>'vehicle_kb','array' => $listVehicleClassification,'required'=>true])
                             </div>
                             <div class="break-row-form"></div>
+                            @if($mode=='register' || $mode=='edit')
                             <div class="col-md-5 col-sm-12">
                                 <div class="wrap-control-group">
                                     <label for="search_vehicle">ナンバー検索</label>
@@ -106,7 +109,8 @@
                                            type="text"
                                            class="form-control w-50"
                                            id="search_vehicle"
-                                           maxlength="4">
+                                           maxlength="4"
+                                    >
                                     <span>※ナンバー4桁を入力してください。</span>
                                 </div>
 
@@ -115,6 +119,7 @@
                                     <button class="btn btn-outline-secondary" type="button" @click="searchVehicle">{{ trans("common.button.search") }}</button>
                             </div>
                             <div class="break-row-form"></div>
+                            @endif
                             <div class="col-md-12 col-sm-12">
                                 @include('Component.form.input',['filed'=>'registration_numbers','attr_input' => "maxlength='50'"])
                             </div>
@@ -138,7 +143,7 @@
                             </div>
                             @else
                                 <div class="col-md-12 col-sm-12">
-                                    @include('Component.form.textarea',['filed'=>'equipment','attr_input' => "maxlength='200'" ,'required'=>true])
+                                    @include('Component.form.textarea',['filed'=>'equipment','attr_input' => "maxlength='200' rows='6' class='h-100'" ,'required'=>true])
                                 </div>
                             @endif
                         </div>

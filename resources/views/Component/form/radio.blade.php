@@ -9,4 +9,5 @@
     @endforeach
     </div>
 </div>
+<span v-cloak v-if="errors.{!! $filed !!} != undefined" class="message-error" v-html="errors.{!! $filed !!}.join('<br />')"></span>
 

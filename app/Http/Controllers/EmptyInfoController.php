@@ -36,7 +36,7 @@ class EmptyInfoController extends Controller {
         'start_time' => 'required',
         'start_pref_cd' => 'required',
         'start_address' => 'required|length:200',
-        'asking_price' => 'required|decimal_custom|length:8',
+        'asking_price' => 'required|one_byte_number|length:8',
         'asking_baggage' => 'required',
         'arrive_pref_cd' => 'required',
         'arrive_address' => 'required|length:50',
@@ -44,6 +44,7 @@ class EmptyInfoController extends Controller {
     ];
 
     public $labels = [
+        "status" => "ステータス",
         "regist_office_id" => "営業所",
         "vehicle_kb" => "車両区分",
         "registration_numbers" => "車番",
@@ -69,6 +70,9 @@ class EmptyInfoController extends Controller {
         parent::__construct();
     }
     public function beforeSubmit($data){
+        if($data['mode']){
+            $this->ruleValid['status'] = 'required';
+        }
         if(isset( $data["id"])) {
             $this->ruleValid['equipment'] = 'required|length:200';
         }

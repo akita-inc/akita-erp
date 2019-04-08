@@ -52,8 +52,10 @@ return [
         ]
     ],
     'create' => [
-        'title' => '空車　新規追加',
-        'title_edit' => '空車　修正',
+        'title_register' => '空車登録',
+        'title_edit' => '空車登録（編集）',
+        'title_reservation' => '空車登録（照会）',
+        'title_reservation_approval' => '空車登録（照会）',
         'field' => [
             "status" => "ステータス",
             "regist_office_id" => "営業所",
