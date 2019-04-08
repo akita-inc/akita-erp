@@ -3234,9 +3234,7 @@ var ctrVehiclesListVl = new Vue({
       door_number: "",
       vehicles_kb: "",
       registration_numbers: "",
-      mst_business_office_id: "",
-      radio_reference_date: "1",
-      reference_date: date_now
+      mst_business_office_id: ""
     },
     message: '',
     pagination: {
@@ -3257,12 +3255,6 @@ var ctrVehiclesListVl = new Vue({
 
       if (show_msg !== true) {
         $('.alert').hide();
-      }
-
-      if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
-        alert(messages["MSG02001"].replace(':attribute', '基準日'));
-        $('#reference_date').focus();
-        return;
       }
 
       var data = {
@@ -3318,13 +3310,6 @@ var ctrVehiclesListVl = new Vue({
       this.fieldSearch.vehicles_kb = '';
       this.fieldSearch.registration_numbers = '';
       this.fieldSearch.mst_business_office_id = '';
-      this.fieldSearch.radio_reference_date = '1';
-      this.fieldSearch.reference_date = date_now;
-    },
-    setDefault: function setDefault() {
-      if (this.fieldSearch.reference_date === '') {
-        this.fieldSearch.reference_date = date_now;
-      }
     },
     deleteVehicle: function deleteVehicle(id) {
       var _this2 = this;
@@ -3377,7 +3362,7 @@ var ctrVehiclesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\vehicles-list-vl.js */"./resources/assets/js/controller/vehicles-list-vl.js");
 
 
 /***/ })
