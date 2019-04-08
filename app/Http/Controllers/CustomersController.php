@@ -185,7 +185,7 @@ class CustomersController extends Controller
         $listConsumptionTaxCalcUnit=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['consumption_tax_calc_unit'],'');
         $listRoundingMethod=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['rounding_method'],'');
         $mStaffAuth =  new MStaffAuths();
-        $role = $mStaffAuth->getDataByCondition(3);
+        $role = $mStaffAuth->getRoleBySCreen(3);
         $customer = null;
         $flagRegisterHistory = false;
         //load form by update
@@ -213,7 +213,7 @@ class CustomersController extends Controller
             'listConsumptionTaxCalcUnit'=>$listConsumptionTaxCalcUnit,
             'listRoundingMethod'=>$listRoundingMethod,
             'listAccountTitles'=>$listAccountTitles,
-            'role' => 1,
+            'role' => $role,
         ]);
     }
 

@@ -81,11 +81,6 @@ class MSupplier extends Model
         DB::beginTransaction();
         try
         {
-            $historySupplier = $this->getHistoryNearest($mSupplier->mst_suppliers_cd, $mSupplier->adhibition_end_dt);
-            if (isset($historySupplier)) {
-                $historySupplier->adhibition_end_dt = $mSupplier->adhibition_end_dt;
-                $historySupplier->save();
-            }
             $mSupplier->delete();
             DB::commit();
             return true;

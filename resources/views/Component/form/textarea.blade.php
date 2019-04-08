@@ -1,6 +1,6 @@
 <div v-bind:class="errors.{!! $filed !!} != undefined ? 'error-form':'' ">
     <div class="wrap-control-group textarea {!! isset($class) ? $class:"" !!}">
-        <label class="{!! isset($required) && $required ? "required":"" !!}" for="{!! $filed !!}">
+        <label class="{!! isset($required) && $required ? "required":"" !!} {!! isset($label_class) ? ' '.$label_class:"" !!} " for="{!! $filed !!}">
             {{ trans(@$prefix.$filed) }}
         </label>
         <textarea {!! isset($attr_input) ? $attr_input:"" !!} v-model="field.{!! $filed !!}" type="text"

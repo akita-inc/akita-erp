@@ -11,8 +11,6 @@ var ctrSuppliersListVl = new Vue({
         fieldSearch: {
             mst_suppliers_cd: "",
             supplier_nm: "",
-            radio_reference_date: "1",
-            reference_date: date_now,
         },
         message: '',
         pagination: {
@@ -31,12 +29,6 @@ var ctrSuppliersListVl = new Vue({
         getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
-            }
-
-            if (this.fieldSearch.radio_reference_date === '1' && this.fieldSearch.reference_date === '') {
-                alert(messages["MSG02001"].replace(':attribute', '基準日'));
-                $('#reference_date').focus();
-                return;
             }
 
             var data = {
@@ -86,13 +78,6 @@ var ctrSuppliersListVl = new Vue({
         clearCondition: function clearCondition() {
             this.fieldSearch.mst_suppliers_cd = '';
             this.fieldSearch.supplier_nm = '';
-            this.fieldSearch.radio_reference_date = '1';
-            this.fieldSearch.reference_date = date_now;
-        },
-        setDefault: function (){
-            if (this.fieldSearch.reference_date === '') {
-                this.fieldSearch.reference_date = date_now;
-            }
         },
         deleteSupplier: function (id){
             suppliers_service.checkIsExist(id).then((response) => {
