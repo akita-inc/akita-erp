@@ -122,11 +122,6 @@ class MVehicles extends Model
         DB::beginTransaction();
         try
         {
-            $historyVihicle = $this->getHistoryNearest($mVehicle->vehicles_cd, $mVehicle->adhibition_end_dt);
-            if (isset($historyVihicle)) {
-                $historyVihicle->adhibition_end_dt = $mVehicle->adhibition_end_dt;
-                $historyVihicle->save();
-            }
             $mVehicle->delete();
             DB::commit();
             return true;

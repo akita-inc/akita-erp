@@ -46,8 +46,6 @@ class VehiclesController extends Controller
             'vehicles_kb' => $data['fieldSearch']['vehicles_kb'],
             'registration_numbers' => $data['fieldSearch']['registration_numbers'],
             'mst_business_office_id' => $data['fieldSearch']['mst_business_office_id'],
-            'radio_reference_date' => $data['fieldSearch']['radio_reference_date'],
-            'reference_date' => date('Y-m-d', strtotime($data['fieldSearch']['reference_date'])),
         );
 
         $this->query->select('mst_vehicles.id',
@@ -58,10 +56,7 @@ class VehiclesController extends Controller
             'mst_business_offices.business_office_nm',
             'size.date_nm AS vehicle_size_kb_nm',
             'purpose.date_nm AS vehicle_purpose_nm',
-            DB::raw("DATE_FORMAT(mst_vehicles.adhibition_start_dt, '%Y/%m/%d') as adhibition_start_dt"),
-            DB::raw("DATE_FORMAT(mst_vehicles.adhibition_end_dt, '%Y/%m/%d') as adhibition_end_dt"),
-            DB::raw("DATE_FORMAT(mst_vehicles.modified_at, '%Y/%m/%d') as modified_at"),
-            DB::raw("DATE_FORMAT(sub.max_adhibition_end_dt, '%Y/%m/%d') as max_adhibition_end_dt")
+            DB::raw("DATE_FORMAT(mst_vehicles.modified_at, '%Y/%m/%d') as modified_at")
             );
 
         $this->query
@@ -80,9 +75,6 @@ class VehiclesController extends Controller
                 $join->on('purpose.date_id', '=', 'mst_vehicles.vehicle_purpose_id')
                     ->where('purpose.data_kb', config('params.data_kb.vehicle_purpose'));
             })
-            ->leftjoin(DB::raw('(select vehicles_cd, max(adhibition_end_dt) AS max_adhibition_end_dt from mst_vehicles where deleted_at IS NULL group by vehicles_cd) sub'), function ($join) {
-                $join->on('sub.vehicles_cd', '=', 'mst_vehicles.vehicles_cd');
-            })
             ->whereRaw('mst_vehicles.deleted_at IS NULL');
 
         if ($where['vehicles_cd'] != '') {
@@ -100,10 +92,6 @@ class VehiclesController extends Controller
         if ($where['mst_business_office_id'] != '') {
             $this->query->where('mst_vehicles.mst_business_office_id', "=", $where['mst_business_office_id']);
         }
-        if ($where['radio_reference_date'] == '1' && $where['reference_date'] != '') {
-            $this->query->where('mst_vehicles.adhibition_start_dt', "<=", $where['reference_date']);
-            $this->query->where('mst_vehicles.adhibition_end_dt', ">=", $where['reference_date']);
-        }
 
         if ($data["order"]["col"] != '') {
             $orderCol = $data["order"]["col"];
@@ -113,7 +101,6 @@ class VehiclesController extends Controller
             $this->query->orderbyRaw($orderCol);
         } else {
             $this->query->orderby('mst_vehicles.vehicles_cd');
-            $this->query->orderby('mst_vehicles.adhibition_start_dt');
         }
     }
 
