@@ -11,17 +11,10 @@
                 <div class="d-flex">
                 <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                 </div>
-                <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                 <input type="hidden" id="hd_staff_edit" value="{!! !empty($staff) ? 1:0 !!}">
                 <input type="hidden" id="roles_staff_screen" value="@php echo implode(",",$rolesStaffScreen) @endphp">
                 @if(!empty($staff))
                     @foreach($staff as $key=>$value)
-                        @if($key == 'adhibition_start_dt'
-                            || $key == 'adhibition_end_dt'
-                            || $key == 'business_start_dt'
-                        )
-                            @php($value = date("Y/m/d",strtotime($value)))
-                        @endif
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
@@ -38,11 +31,6 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
                             <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($staff) ? "edit":"register")) }}</button>
-                            @if($flagRegisterHistory)
-                                <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
-                                    {{ trans("common.button.register_history_left") }}
-                                </button>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -70,16 +58,6 @@
                         @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($staff) ? '_edit':''),'required'=>true,'role' => $role])
-                        </div>
-                        <div class="col-md-6 col-sm-12 pd-l-20">
-                            @if($flagRegisterHistory)
-                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'required'=>true ,'role' => $role])
-                            @else
-                                @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($staff) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
-                            @endif
-                        </div>
                     </div>
                 </div>
                 <div class="break-row-form"></div>
@@ -88,29 +66,13 @@
                         @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        @if($role!=2 && !$flagRegisterHistory)
                         <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
+                            @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                         </div>
-                        @endif
-                        @if($flagRegisterHistory)
-                            <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true,'role' => $role])
-                            </div>
-                            <div class="col-md-6 col-sm-12 pd-l-20">
-                                @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
-                            </div>
-                        @endif
+                        <div class="col-md-6 col-sm-12 pd-l-20">
+                        </div>
                     </div>
                 </div>
-                @if($role!=2 && (!empty($flagRegisterHistory)|| $flagRegisterHistory))
-                 <div class="break-row-form"></div>
-                 <div class="row">
-                    <div class="col-md-5 col-sm-12">
-                          @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
-                    </div>
-                </div>
-                @endif
             </div>
             <!--Block 2-->
             <div class="grid-form">
@@ -1055,11 +1017,6 @@
                                 <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                                 <div class="col-md-7 col-sm-12 row grid-col h-100">
                                     <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($staff) ? "edit":"register")) }}</button>
-                                    @if($flagRegisterHistory)
-                                        <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
-                                            {{ trans("common.button.register_history_left") }}
-                                        </button>
-                                    @endif
                                 </div>
                             </div>
                         </div>
