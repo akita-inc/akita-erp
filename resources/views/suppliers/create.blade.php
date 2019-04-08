@@ -6,7 +6,7 @@
 @endsection
 @section('content')
     <div class="row row-xs" id="ctrSupplierrsVl">
-        <form class="form-inline w-100" role="form" method="post" id="form1" action="{{$mSupplier->id ? route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'edit']): ''}}">
+        <form class="form-inline w-100" role="form" method="post" id="form1">
             @csrf
             <div class="sub-header">
                 <div class="sub-header-line-one d-flex">
@@ -25,9 +25,6 @@
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
                                 <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.edit") }}</button>
-                                @if($flagLasted)
-                                <button class="btn btn-primary btn-submit m-auto" type="button" onclick="registerHistoryLeft()" >{{ trans("common.button.register_history_left") }}</button>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -49,7 +46,6 @@
             <div class="text-danger w-100">*　は必須入力の項目です。</div>
             <div class="w-100">
                 @include('Layouts.alert')
-                <input type="hidden" id="adhibition_start_dt" value="{{ old("adhibition_start_dt",$mSupplier->adhibition_start_dt ? : '') }}">
             </div>
             @if($mSupplier->id)
             <div class="grid-form">
@@ -68,84 +64,7 @@
                                 </span>
                         @endif
                     </div>
-                    <div class="col-md-7 col-sm-12 row  h-100">
-                        <div class="col row grid-col h-100">
-                            <label class="col-7 required" for="adhibition_start_dt_old">適用開始日（更新用）</label>
-                            <div class="col-5 wrap-control">
-                                <date-picker format="YYYY/MM/DD"
-                                             placeholder=""
-                                             v-model="adhibition_start_dt" v-cloak=""
-                                             :lang="lang"
-                                             :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
-                                             :value-type="'format'"
-                                             :input-name="'adhibition_start_dt'"
-                                             @if($role!=1) :disabled="true" @endif
-                                >
-                                </date-picker>
-                            </div>
-                            @if ($errors->has('adhibition_start_dt'))
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                        <div class="col row grid-col h-100">
-                            <label class="col-7" for="adhibition_end_dt">適用終了日（更新用）</label>
-                            <div class="col-5 wrap-control">
-                                @if($flagLasted)
-                                    <date-picker format="YYYY/MM/DD"
-                                                 placeholder=""
-                                                 v-model="adhibition_end_dt" v-cloak=""
-                                                 :lang="lang"
-                                                 :input-class="{{ $errors->has('adhibition_end_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
-                                                 :value-type="'format'"
-                                                 :input-name="'adhibition_end_dt'"
-                                                 @if($role!=1) :disabled="true" @endif
-                                    >
-                                    </date-picker>
-                                    <input type="hidden" id="adhibition_end_dt" value="{{ old('adhibition_end_dt',$mSupplier->adhibition_end_dt ? :'') }}">
-                                @else
-                                    <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/',  $mSupplier->adhibition_end_dt ?? config('params.adhibition_end_dt_default'))}}">
-                                @endif
-                            </div>
-                            @if ($errors->has('adhibition_end_dt'))
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $errors->first('adhibition_end_dt') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        @if($flagLasted)
-                        <div class="break-row-form"></div>
-                        <div class="col row grid-col h-100">
-                            <label class="col-7 required" for="adhibition_start_dt">適用開始日（新規用）</label>
-                            <div class="col-5 wrap-control">
-                                <date-picker format="YYYY/MM/DD"
-                                             placeholder=""
-                                             v-model="adhibition_start_dt_new" v-cloak=""
-                                             :lang="lang"
-                                             :input-class="{{ $errors->has('adhibition_start_dt_new')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
-                                             :value-type="'format'"
-                                             :input-name="'adhibition_start_dt_new'"
-                                             @if($role!=1) :disabled="true" @endif
-                                >
-                                </date-picker>
-                                <input type="hidden" id="adhibition_start_dt_new" value="{{ old('adhibition_start_dt_new') }}" >
-                            </div>
-                        </div>
-                        <div class="col row grid-col h-100">
-                            <label class="col-7" for="adhibition_end_dt_new">適用終了日（新規用）</label>
-                            <div class="col-5 wrap-control">
-                                <input type="text" readonly class="form-control" id="adhibition_end_dt_new" name="adhibition_end_dt_new" value="{{ str_replace('-', '/', config('params.adhibition_end_dt_default') )}}">
-                            </div>
-                        </div>
-                        @endif
-                        @if ($errors->has('adhibition_start_dt_new'))
-                            <span class="invalid-feedback d-block grid-col" role="alert">
-                                    <strong>{{ $errors->first('adhibition_start_dt_new') }}</strong>
-                                </span>
-                        @endif
-                    </div>
+                    <div class="col-md-7 col-sm-12 row  h-100"></div>
                 </div>
             </div>
             @else
@@ -162,34 +81,7 @@
                             </span>
                             @endif
                         </div>
-                        <div class="col-md-7 col-sm-12 row  h-100">
-                            <div class="col row grid-col h-100">
-                                <label class="col-7 required" for="adhibition_start_dt">適用開始日</label>
-                                <div class="col-5 wrap-control">
-                                    <date-picker format="YYYY/MM/DD"
-                                                 placeholder=""
-                                                 v-model="adhibition_start_dt" v-cloak=""
-                                                 :lang="lang"
-                                                 :input-class="{{ $errors->has('adhibition_start_dt')? "'form-control w-100 is-invalid'": "'form-control w-100'"}}"
-                                                 :value-type="'format'"
-                                                 :input-name="'adhibition_start_dt'"
-                                                 @if($role!=1) :disabled="true" @endif
-                                    >
-                                    </date-picker>
-                                </div>
-                            </div>
-                            <div class="col row grid-col h-100">
-                                <label class="col-7" for="adhibition_end_dt">適用終了日</label>
-                                <div class="col-5 wrap-control">
-                                    <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ config('params.adhibition_end_dt_default') }}">
-                                </div>
-                            </div>
-                            @if ($errors->has('adhibition_start_dt'))
-                                <span class="invalid-feedback d-block grid-col" role="alert">
-                                    <strong>{{ $errors->first('adhibition_start_dt') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                        <div class="col-md-7 col-sm-12 row  h-100"></div>
                     </div>
                 </div>
             @endif
@@ -661,9 +553,6 @@
                                 <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                                 <div class="col-md-7 col-sm-12 row grid-col h-100">
                                     <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.edit") }}</button>
-                                    @if($flagLasted)
-                                        <button class="btn btn-primary btn-submit m-auto" type="button" onclick="registerHistoryLeft()" >{{ trans("common.button.register_history_left") }}</button>
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -687,10 +576,6 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
-        function registerHistoryLeft() {
-            $('#form1').attr('action','{{route('suppliers.edit.post',['id' => $mSupplier->id, 'mode'=>'registerHistoryLeft'])}}');
-            $('#form1').submit();
-        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/suppliers.js') }}" charset="utf-8"></script>
 @endsection
