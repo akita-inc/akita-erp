@@ -70,12 +70,12 @@ class LoginController extends Controller
             $errors = new MessageBag(['errorlogin' => trans('messages.MSG01001')]);
             return redirect()->back()->withInput($request->only('staff_cd', 'remember'))->withErrors($errors);
         } else {
-            $staff = MStaffs::where('staff_cd', $data['staff_cd'])
-                ->where('adhibition_start_dt', '<=', date('Y-m-d'))
-                ->where('adhibition_end_dt', '>=', date('Y-m-d'))
-                ->first();
-            if ( isset($staff) && Auth::attempt(['id' => $staff->id, 'password' => $data['password']], $remember)) {
-                Session::put('password_old', $staff->password);
+//            $staff = MStaffs::where('staff_cd', $data['staff_cd'])
+//                ->where('adhibition_start_dt', '<=', date('Y-m-d'))
+//                ->where('adhibition_end_dt', '>=', date('Y-m-d'))
+//                ->first();
+            if (Auth::attempt(['staff_cd' => $data['staff_cd'], 'password' => $data['password']], $remember)) {
+//                Session::put('password_old', $staff->password);
                 return redirect('/');
             } else {
                 $errors = new MessageBag(['errorlogin' => trans('messages.MSG01003')]);
