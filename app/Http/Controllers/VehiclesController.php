@@ -126,7 +126,7 @@ class VehiclesController extends Controller
         if (isset($mVehicle)) {
             return Response()->json(array('success'=>true));
         } else {
-            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG06003') : Lang::trans('messages.MSG04001')));
+            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04004') : Lang::trans('messages.MSG04001')));
         }
     }
 
@@ -194,6 +194,7 @@ class VehiclesController extends Controller
         $data['dispose_dt'] = TimeFunction::dateFormat($data["dispose_dt"],'Y-m-d');
         array_walk_recursive($data, function (& $item, $key) {if ($item=='') { $item = null; }});
         $mode = $data['mode'];
+        unset($data['mode']);
 
         $id = isset($data['id']) ?$data['id']  :null;
         if(!is_null($id)){
@@ -381,8 +382,12 @@ class VehiclesController extends Controller
                     $data['picture_rights'] = $mVehicle->picture_rights;
                     $data['picture_lefts'] = $mVehicle->picture_lefts;
                     $data['picture_rears'] = $mVehicle->picture_rears;
+                    $dataAfterUpdate = $mVehicle->toArray();
+                    unset($dataAfterUpdate['id']);
+                    unset($dataAfterUpdate['created_at']);
+                    unset($dataAfterUpdate['modified_at']);
                     $modifyLog = new MModifyLogs();
-                    $modifyLog->writeLogWithTable( $mVehicle->getTable(),$dataBeforeUpdate,$data,$id);
+                    $modifyLog->writeLogWithTable( $mVehicle->getTable(),$dataBeforeUpdate,$dataAfterUpdate,$id);
                 }
                 DB::commit();
                 if($mode=='edit'){

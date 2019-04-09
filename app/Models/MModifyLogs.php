@@ -27,13 +27,13 @@ class MModifyLogs extends Model
                 $log->table_name = $table;
                 $log->table_id = $table_id;
                 $log->column_name = $key;
-                if(empty($dataBeforeUpdate[$key])){
+                if(is_null($dataBeforeUpdate[$key])){
                     $log->before_data = DB::raw("Null");
                 }else{
                     $log->before_data = $dataBeforeUpdate[$key];
                 }
 
-                if(empty($value)){
+                if(is_null($value)){
                     $log->after_data = DB::raw("Null");
                 }else{
                     $log->after_data = $value;

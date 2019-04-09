@@ -147,7 +147,7 @@ class CustomersController extends Controller
         if (isset($mCustomers)) {
             return Response()->json(array('success'=>true));
         } else {
-            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG06003') : Lang::trans('messages.MSG04001')));
+            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04004') : Lang::trans('messages.MSG04001')));
         }
     }
 

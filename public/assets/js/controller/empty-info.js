@@ -20876,7 +20876,8 @@ var ctrEmptyInfoVl = new Vue({
     },
     registration_numbers: "",
     errors: {},
-    checkOther: false
+    checkOther: false,
+    modified_at: ""
   },
   methods: {
     submit: function submit(status) {
@@ -20907,7 +20908,8 @@ var ctrEmptyInfoVl = new Vue({
         case 'edit':
           empty_info_service.checkIsExist(that.empty_info_id, {
             'mode': this.field.mode,
-            'status': status
+            'status': status,
+            'modified_at': that.modified_at
           }).then(function (response) {
             if (!response.success) {
               that.loading = false;
@@ -20933,7 +20935,8 @@ var ctrEmptyInfoVl = new Vue({
         case 'reservation':
         case 'reservation_approval':
           empty_info_service.checkIsExist(that.empty_info_id, {
-            'status': status
+            'status': status,
+            'modified_at': that.modified_at
           }).then(function (response) {
             if (!response.success) {
               that.loading = false;
@@ -20987,6 +20990,7 @@ var ctrEmptyInfoVl = new Vue({
           this.field.reservation_person = $("#hd_reservation_person").val();
         }
 
+        this.modified_at = $('#hd_modified_at').val();
         this.loading = false;
       }
     },
