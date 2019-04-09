@@ -118,7 +118,7 @@ trait FormTrait
                 }
                 return Response()->json(array('success'=>false, 'msg'=> $message));
             }else{
-                return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04004') : Lang::trans('messages.MSG04001')));
+                return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04003') : Lang::trans('messages.MSG04004')));
             }
         }
     }
