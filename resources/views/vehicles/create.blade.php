@@ -63,9 +63,6 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <input type="text" class="form-control w-50" v-bind:class="errors.vehicles_cd != undefined ? 'is-invalid':'' " name="vehicles_cd" id="vehicles_cd" readonly maxlength="10" v-model="field.vehicles_cd">
                         </div>
-                        <span class="note">
-                            ※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。
-                        </span>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicles_cd!= undefined" v-html="errors.vehicles_cd[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row  h-100"></div>
