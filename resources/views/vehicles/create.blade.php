@@ -160,7 +160,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100"></div>
                     <div class="break-row-form"></div>
                     <div class="col-md-12 col-sm-12 row grid-col h-100">
-                        <label class="col-md-2 col-sm-5 label-input-file" v-bind:class="field.vehicle_inspection_sticker_pdf ? 'pr-0' : ''" for="vehicle_inspection_sticker_pdf">車検証PDF<span v-if="field.vehicle_inspection_sticker_pdf">（１ファイル）</span></label>
+                        <label class="col-md-2 col-sm-5 label-input-file" for="vehicle_inspection_sticker_pdf">車検証PDF</label>
                         <div class="col-md-10 col-sm-7 wrap-control">
                             <div class="inputfile-box">
                                 <input type="file" id="vehicle_inspection_sticker_pdf" name="vehicle_inspection_sticker_pdf" class="input-file" v-on:change="onFileChange($event,'vehicle_inspection_sticker_pdf')" accept="application/pdf" ref="vehicle_inspection_sticker_pdf">
