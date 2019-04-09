@@ -101,13 +101,11 @@ class MStaffs extends Authenticatable
         "password" => "ログインPW",
     );
 
-    public function getListOption($adhibition_start_dt){
+    public function getListOption(){
         $data =  $this
             ->select(DB::raw("staff_cd as value, concat(staff_cd,'：',COALESCE(last_nm,''),'　',COALESCE(first_nm,'')) as text"))
             ->where('deleted_at','=',null)
             ->where('mst_role_id','=',1)
-            ->where('adhibition_start_dt','<=',$adhibition_start_dt)
-            ->where('adhibition_end_dt','>=',$adhibition_start_dt)
             ->orderBy('last_nm_kana', 'ASC')
             ->orderBy('first_nm_kana', 'ASC')
             ->orderBy('staff_cd', 'ASC')

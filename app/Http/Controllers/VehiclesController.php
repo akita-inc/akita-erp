@@ -118,13 +118,14 @@ class VehiclesController extends Controller
         return response()->json($response);
     }
 
-    public function checkIsExist($id){
+    public function checkIsExist(Request $request,$id){
+        $mode = $request->get('mode');
         $mVehicle = new MVehicles();
         $mVehicle = $mVehicle->find($id);
         if (isset($mVehicle)) {
             return Response()->json(array('success'=>true));
         } else {
-            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG06003') : Lang::trans('messages.MSG04001')));
         }
     }
 
@@ -149,15 +150,10 @@ class VehiclesController extends Controller
         $mStaffAuth =  new MStaffAuths();
         $role = $mStaffAuth->getRoleBySCreen(4);
 
-        $flagLasted = false;
         if(!is_null($id)){
             $mVehicle = $mVehicle->find($id);
             if(is_null($mVehicle)){
                 return abort(404);
-            }
-            $lastedId = $mVehicle->getLastedVehicle($mVehicle->vehicles_cd);
-            if($lastedId->id==$id){
-                $flagLasted =true;
             }
         }
         
@@ -178,7 +174,6 @@ class VehiclesController extends Controller
             'listTransmissions' => $listTransmissions,
             'listSuspensionsCd' => $listSuspensionsCd,
             'listPowerGate' => $listPowerGate,
-            'flagLasted' => $flagLasted,
             'role' => $role
         ]);
     }
@@ -200,8 +195,7 @@ class VehiclesController extends Controller
             $mVehicle = $mVehicle->find($id);
         }
         $rules = [
-            'vehicles_cd'=>'required|one_byte_number|length:10|number_range',
-            'adhibition_start_dt'=>'required',
+            'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
             'door_number'=>'required|one_byte_number|length:10|number_range',
             'registration_numbers'=>'required|length:50',
             'mst_business_office_id'=>'required',
@@ -255,14 +249,8 @@ class VehiclesController extends Controller
             'battery_sizes'=>'nullable|length:10',
             'notes'=>'nullable|length:100',
         ];
-        if($mode=='registerHistoryLeft'){
-            unset($rules['adhibition_start_dt']);
-            $rules['adhibition_start_dt_new'] ='required';
-        }
-        if($mode=='edit'){
-            $mVehicle->label['adhibition_start_dt'] = $mVehicle->label['adhibition_start_dt_edit'];
-            $mVehicle->label['adhibition_end_dt'] = $mVehicle->label['adhibition_end_dt_edit'];
-            $rules['adhibition_end_dt'] ='required';
+        if($id!= null){
+            $rules['vehicles_cd'] = "required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,{$id},id,deleted_at,NULL";
         }
         $customMessages = [
             'vehicle_inspection_sticker_pdf.mimes' => Lang::get('messages.MSG02017'),
@@ -270,56 +258,11 @@ class VehiclesController extends Controller
             'picture_rights.mimes' => Lang::get('messages.MSG02018'),
             'picture_lefts.mimes' => Lang::get('messages.MSG02018'),
             'picture_rears.mimes' => Lang::get('messages.MSG02018'),
+            'vehicles_cd.unique' => str_replace(':screen','車両',Lang::get('messages.MSG10003'))
         ];
 
         $validator = Validator::make($data, $rules,$customMessages,$mVehicle->label);
 
-        if($mode=='registerHistoryLeft'){
-            $validator->after(function ($validator) use ($data,$mVehicle){
-                if ($data['adhibition_start_dt_new'] && Carbon::parse($data['adhibition_start_dt_new']) <= Carbon::parse($mVehicle->adhibition_start_dt)){
-                    $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
-                }
-                if ($data['adhibition_start_dt_new'] && Carbon::parse($data['adhibition_start_dt_new']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
-                    $validator->errors()->add('adhibition_start_dt_new',str_replace(' :attribute',$mVehicle->label['adhibition_start_dt_new'],Lang::get('messages.MSG02014')));
-                }
-
-                if($data['mst_staff_cd']!='' && $data['adhibition_start_dt_new']!=''){
-                    $mStaff = new MStaffs();
-                    $count = $mStaff->checkVaildStaffCd($data['adhibition_start_dt_new'],$data['mst_staff_cd']);
-                    if($count<=0){
-                        $validator->errors()->add('mst_staff_cd',str_replace(':attribute',$mVehicle->label['mst_staff_cd'],Lang::get('messages.MSG10005')));
-                    }
-                }
-            });
-        }elseif ($mode=='edit'){
-            $validator->after(function ($validator) use ($data,$mVehicle){
-                if ($data['adhibition_start_dt'] && Carbon::parse($data['adhibition_start_dt']) > Carbon::parse($data['adhibition_end_dt'])){
-                    $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mVehicle->label['adhibition_start_dt_edit'],Lang::get('messages.MSG02014')));
-                }
-
-                $listVehiclesExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"],'id' => $mVehicle->id,'adhibition_start_dt' => $mVehicle->adhibition_start_dt]);
-                foreach ($listVehiclesExist as $item) {
-                    if (Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_start_dt)) {
-                        $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
-                        break;
-                    }
-                }
-            });
-        }else{
-            $validator->after(function ($validator) use ($data,$mVehicle){
-                if (Carbon::parse($data['adhibition_start_dt']) > Carbon::parse(config('params.adhibition_end_dt_default'))) {
-                    $validator->errors()->add('adhibition_start_dt',str_replace(' :attribute',$mVehicle->label['adhibition_start_dt'],Lang::get('messages.MSG02014')));
-                }
-
-                $listVehiclesExist = $mVehicle->getVehiclesByCondition(['vehicles_cd' => $data["vehicles_cd"]]);
-                foreach ($listVehiclesExist as $item) {
-                    if (($data['adhibition_start_dt'] && Carbon::parse($data['adhibition_start_dt']) >= Carbon::parse($item->adhibition_start_dt) && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || ($data['adhibition_start_dt'] && Carbon::parse($data['adhibition_start_dt']) <= Carbon::parse($item->adhibition_end_dt)) || Carbon::parse($data['adhibition_end_dt']) <= Carbon::parse($item->adhibition_end_dt)) {
-                        $validator->errors()->add('vehicles_cd',str_replace(':screen','車両',Lang::get('messages.MSG10003')));
-                        break;
-                    }
-                }
-            });
-        }
         if ($validator->fails()) {
             return response()->json([
                 'success'=>FALSE,
@@ -328,26 +271,7 @@ class VehiclesController extends Controller
         }else{
             DB::beginTransaction();
             try {
-                if ($mode == 'registerHistoryLeft') {
-
-                    $mVehicle->adhibition_end_dt = TimeFunction::subOneDay($data["adhibition_start_dt_new"]);
-                    $mVehicle->save();
-                    $mVehicle = new MVehicles();
-                } elseif ($mode == 'edit') {
-                    if (Carbon::parse($data["adhibition_start_dt"]) != Carbon::parse($mVehicle->adhibition_start_dt)) {
-                        $mVehicle->editVehicle($mVehicle->id, $data["adhibition_start_dt"]);
-                    }
-                }
                 $mVehicle->vehicles_cd = $data["vehicles_cd"];
-                if ($mode == 'registerHistoryLeft') {
-                    $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt_new"], 'Y-m-d');
-                    $mVehicle->adhibition_end_dt = TimeFunction::dateFormat(config('params.adhibition_end_dt_default'), 'Y-m-d');
-                } else {
-                    $mVehicle->adhibition_start_dt = TimeFunction::dateFormat($data["adhibition_start_dt"], 'Y-m-d');
-                    $mVehicle->adhibition_end_dt = TimeFunction::dateFormat($mode == 'edit' ? $data["adhibition_end_dt"] : config('params.adhibition_end_dt_default'), 'Y-m-d');
-                }
-
-
                 $mVehicle->door_number = $data["door_number"];
                 $mVehicle->vehicles_kb = $data["vehicles_kb"];
                 $mVehicle->registration_numbers = $data["registration_numbers"];
@@ -488,12 +412,7 @@ class VehiclesController extends Controller
 
     public function loadListStaff(Request $request){
         $mStaff = new MStaffs();
-        $adhibition_start_dt = TimeFunction::dateFormat($request->get('adhibition_start_dt'), 'Y-m-d');
-        if(is_null($adhibition_start_dt)) {
-            return Response()->json(array('success'=>true, 'info'=> [array('value' => '','text' => '==選択==')]));
-        }
-        $list = $mStaff->getListOption($adhibition_start_dt);
+        $list = $mStaff->getListOption();
         return Response()->json(array('success'=>true, 'info'=> $list));
-
     }
 }

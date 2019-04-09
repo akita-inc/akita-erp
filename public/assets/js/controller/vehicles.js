@@ -21617,18 +21617,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var ctrVehiclesVl = new Vue({
   el: '#ctrVehiclesVl',
   data: {
-    adhibition_start_dt: $('#adhibition_start_dt').val(),
-    adhibition_end_dt: $('#adhibition_end_dt').val(),
-    adhibition_start_dt_new: $('#adhibition_start_dt_new').val(),
     lang: lang_date_picker,
     listStaffs: [],
     field: {
       mode: "",
       vehicles_cd: "",
-      adhibition_start_dt: "",
-      adhibition_end_dt: $("#hd_adhibition_end_dt_default").val(),
-      adhibition_start_dt_new: "",
-      adhibition_end_dt_new: $("#hd_adhibition_end_dt_default").val(),
       door_number: "",
       vehicles_kb: "",
       registration_numbers: "",
@@ -21765,16 +21758,14 @@ var ctrVehiclesVl = new Vue({
     },
     getListStaff: function getListStaff() {
       var that = this;
-      vehicles_service.getListStaff({
-        adhibition_start_dt: this.field.adhibition_start_dt
-      }).then(function (result) {
+      vehicles_service.getListStaff().then(function (result) {
         that.listStaffs = result.info;
       });
     },
     submit: function () {
       var _submit = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(mode) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var that, formData;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
@@ -21785,9 +21776,9 @@ var ctrVehiclesVl = new Vue({
 
                 if (this.vehicle_edit == 1) {
                   this.field["id"] = this.vehicle_id;
+                  this.field["mode"] = 'edit';
                 }
 
-                this.field["mode"] = mode;
                 formData = new FormData();
                 formData.append('data', JSON.stringify(this.field));
                 formData.append('vehicle_inspection_sticker_pdf', this.file.vehicle_inspection_sticker_pdf);
@@ -21795,19 +21786,44 @@ var ctrVehiclesVl = new Vue({
                 formData.append('picture_rights', this.file.picture_rights);
                 formData.append('picture_lefts', this.file.picture_lefts);
                 formData.append('picture_rears', this.file.picture_rears);
-                vehicles_service.submit(formData).then(function (response) {
-                  that.field["mode"] = null;
-                  that.loading = false;
 
-                  if (response.success == false) {
-                    that.errors = response.message;
-                  } else {
-                    that.errors = [];
-                    window.location.href = listRoute;
-                  }
-                });
+                if (this.vehicle_edit == 1) {
+                  vehicles_service.checkIsExist(this.vehicle_id, {
+                    'mode': 'edit'
+                  }).then(function (response) {
+                    if (!response.success) {
+                      alert(response.msg);
+                      that.backHistory();
+                      return false;
+                    } else {
+                      vehicles_service.submit(formData).then(function (response) {
+                        that.field["mode"] = null;
+                        that.loading = false;
 
-              case 12:
+                        if (response.success == false) {
+                          that.errors = response.message;
+                        } else {
+                          that.errors = [];
+                          window.location.href = listRoute;
+                        }
+                      });
+                    }
+                  });
+                } else {
+                  vehicles_service.submit(formData).then(function (response) {
+                    that.field["mode"] = null;
+                    that.loading = false;
+
+                    if (response.success == false) {
+                      that.errors = response.message;
+                    } else {
+                      that.errors = [];
+                      window.location.href = listRoute;
+                    }
+                  });
+                }
+
+              case 11:
               case "end":
                 return _context.stop();
             }
@@ -21815,7 +21831,7 @@ var ctrVehiclesVl = new Vue({
         }, _callee, this);
       }));
 
-      function submit(_x) {
+      function submit() {
         return _submit.apply(this, arguments);
       }
 
@@ -21830,10 +21846,6 @@ var ctrVehiclesVl = new Vue({
         that.vehicle_id = $("#hd_id").val();
         $.each(this.field, function (key, value) {
           if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined) {
-            if (key == "adhibition_start_dt" || key == "adhibition_end_dt") {
-              that.field[key] = $("#hd_" + key).val();
-            }
-
             if (that.checkbox.indexOf(key) != -1) {
               if ($("#hd_" + key).val() == 1) {
                 that.field[key] = true;
