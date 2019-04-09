@@ -43966,7 +43966,8 @@ var ctrStaffsVl = new Vue({
               if (response.success == false) {
                 that.errors = response.message;
               } else {
-                that.errors = {}; // window.location.href = listRoute;
+                that.errors = {};
+                window.location.href = listRoute;
               }
 
               that.field["is_change_password"] = null;
