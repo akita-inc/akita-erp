@@ -117,7 +117,7 @@ trait StaffTrait
                             $dataBeforeUpdate=DB::table($name)->where("id", $item["id"])->first();
                             $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
                             array_push($arrayIDInsert,$idAccordionUpdate);
-                            $this->addLogModifyAccordion($name,$dataBeforeUpdate,$arrayInsert,$item['id']);
+//                            $this->addLogModifyAccordion($name,$dataBeforeUpdate,$arrayInsert,$item['id']);
                         }
                         else
                         {
@@ -144,10 +144,6 @@ trait StaffTrait
     protected function addLogModifyAccordion( $name,$dataBeforeUpdate,$data ,$id){
         if(isset($id)){
             $modifyLog = new MModifyLogs();
-//            $data["modified_at"]="";
-//            $data["disp_number"]="";
-//            $data["created_at"]="";
-//            $dataBefore=(Array)json_decode(json_encode($dataBeforeUpdate), true);
             $modifyLog->writeLogWithTable( $name,$dataBeforeUpdate,$data,$id );
         }
     }
