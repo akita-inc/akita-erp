@@ -14,6 +14,7 @@ use App\Models\MBusinessOffices;
 use App\Models\MCustomers;
 use App\Models\MCustomersCategories;
 use App\Models\MGeneralPurposes;
+use App\Models\MModifyLogs;
 use App\Models\MMstBillIssueDestinations;
 use App\Models\MStaffAuths;
 use Carbon\Carbon;
@@ -267,9 +268,12 @@ class CustomersController extends Controller
                 ];
                 if(isset($bill_issue_destination["id"]) && $bill_issue_destination["id"]){
                     $arrayInsertBill["modified_at"] = $currentTime;
+                    $dataBeforeUpdate = DB::table("mst_bill_issue_destinations")->where("id","=",$bill_issue_destination["id"])->first();
                     MMstBillIssueDestinations::query()
                         ->where("id","=",$bill_issue_destination["id"])->update($arrayInsertBill);
                     $arrayIDInsert[] = $flagUpdate = $bill_issue_destination["id"];
+                    $modifyLog = new MModifyLogs();
+                    $modifyLog->writeLogWithTable( "mst_bill_issue_destinations",$dataBeforeUpdate,$arrayInsertBill,$bill_issue_destination["id"] );
                 }else{
                     $arrayInsertBill["created_at"] = $currentTime;
                     $arrayInsertBill["modified_at"] = $currentTime;

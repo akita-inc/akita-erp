@@ -21,13 +21,18 @@ class MModifyLogs extends Model
 
     public function writeLogWithTable( $table,$dataBeforeUpdate,$dataAfterUpdate,$table_id ){
         foreach ($dataBeforeUpdate as $key=>$value){
-            if( isset($dataAfterUpdate[$key]) && $dataAfterUpdate[$key] != $value ){
+            if( (!isset($dataAfterUpdate[$key]) && !empty($value)) || (isset($dataAfterUpdate[$key]) && $dataAfterUpdate[$key] != $value) ){
                 $log = new MModifyLogs();
                 $log->table_name = $table;
                 $log->table_id = $table_id;
                 $log->column_name = $key;
                 $log->before_data = $value;
-                $log->after_data = $dataAfterUpdate[$key];
+                if(!isset($dataAfterUpdate[$key])){
+                    $log->after_data = DB::raw("Null");
+                }else{
+                    $log->after_data = $dataAfterUpdate[$key];
+                }
+
                 $log->mst_staff_id = Auth::user()->id;
                 $log->save();
             }
