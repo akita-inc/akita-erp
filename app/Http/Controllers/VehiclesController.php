@@ -7,6 +7,7 @@ use App\Helpers\TimeFunction;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
+use App\Models\MModifyLogs;
 use App\Models\MStaffs;
 use App\Models\MVehicles;
 use App\Models\MStaffAuths;
@@ -187,12 +188,17 @@ class VehiclesController extends Controller
         $data['picture_rights'] = $input['picture_rights'];
         $data['picture_lefts'] = $input['picture_lefts'];
         $data['picture_rears'] = $input['picture_rears'];
+        $data['registration_dt'] = TimeFunction::dateFormat($data["registration_dt"],'Y-m-d');
+        $data['expiry_dt'] = TimeFunction::dateFormat($data["expiry_dt"],'Y-m-d');
+        $data['vehicle_delivery_dt'] = TimeFunction::dateFormat($data["vehicle_delivery_dt"],'Y-m-d');
+        $data['dispose_dt'] = TimeFunction::dateFormat($data["dispose_dt"],'Y-m-d');
         array_walk_recursive($data, function (& $item, $key) {if ($item=='') { $item = null; }});
         $mode = $data['mode'];
 
         $id = isset($data['id']) ?$data['id']  :null;
         if(!is_null($id)){
             $mVehicle = $mVehicle->find($id);
+            $dataBeforeUpdate = $mVehicle->toArray();
         }
         $rules = [
             'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
@@ -279,7 +285,7 @@ class VehiclesController extends Controller
                 $mVehicle->vehicle_size_kb = $data["vehicle_size_kb"];
                 $mVehicle->vehicle_purpose_id = $data["vehicle_purpose_id"];
                 $mVehicle->land_transport_office_cd = $data["land_transport_office_cd"];
-                $mVehicle->registration_dt = TimeFunction::dateFormat($data["registration_dt"], 'Y-m-d');
+                $mVehicle->registration_dt = $data["registration_dt"];
                 $mVehicle->first_year_registration_dt = $data["first_year_registration_dt"];
                 $mVehicle->vehicle_classification_id = $data["vehicle_classification_id"];
                 $mVehicle->private_commercial_id = $data["private_commercial_id"];
@@ -310,7 +316,7 @@ class VehiclesController extends Controller
                 $mVehicle->user_nm = $data["user_nm"];
                 $mVehicle->user_address = $data["user_address"];
                 $mVehicle->user_base_locations = $data["user_base_locations"];
-                $mVehicle->expiry_dt = TimeFunction::dateFormat($data["expiry_dt"], 'Y-m-d');
+                $mVehicle->expiry_dt = $data["expiry_dt"];
                 $mVehicle->car_inspections_notes = $data["car_inspections_notes"];
                 $mVehicle->digital_tachograph_numbers = $data["digital_tachograph_numbers"];
                 $mVehicle->etc_numbers = $data["etc_numbers"];
@@ -333,7 +339,7 @@ class VehiclesController extends Controller
                 $mVehicle->floor_roller_fg = isset($data["floor_roller_fg"]) ? 1 : 0;
                 $mVehicle->floor_joloda_conveyor_fg = isset($data["floor_joloda_conveyor_fg"]) ? 1 : 0;
                 $mVehicle->power_gate_cd = $data["power_gate_cd"];
-                $mVehicle->vehicle_delivery_dt = TimeFunction::dateFormat($data["vehicle_delivery_dt"], 'Y-m-d');
+                $mVehicle->vehicle_delivery_dt = $data["vehicle_delivery_dt"];
                 $mVehicle->specification_notes = $data["specification_notes"];
                 $mVehicle->mst_staff_cd = $data["mst_staff_cd"];
                 $mVehicle->personal_insurance_prices = $data["personal_insurance_prices"];
@@ -344,32 +350,10 @@ class VehiclesController extends Controller
                 $mVehicle->durable_years = $data["durable_years"];
                 $mVehicle->tire_sizes = $data["tire_sizes"];
                 $mVehicle->battery_sizes = $data["battery_sizes"];
-                $mVehicle->dispose_dt = TimeFunction::dateFormat($data["dispose_dt"], 'Y-m-d');
+                $mVehicle->dispose_dt = $data["dispose_dt"];
                 $mVehicle->notes = $data["notes"];
 
                 $mVehicle->save();
-                if ($mode == 'registerHistoryLeft'){
-                    $oldVehicle = MVehicles::find($id);
-                    $uploadFile =  array('vehicle_inspection_sticker_pdf','picture_fronts','picture_rights','picture_lefts','picture_rears');
-                    $src = config('params.vehicles_path') . $id;
-                    $des = config('params.vehicles_path') . $mVehicle->id;
-                    mkdir($des, 0777, true);
-                    mkdir($des.'/pdf', 0777, true);
-                    mkdir($des.'/image', 0777, true);
-                    foreach ($uploadFile as $item){
-                        if(!$request->hasFile($item) && !empty($oldVehicle->{$item} )){
-                            if ((isset($data['deleteFile']) && !in_array($item,$data['deleteFile'])) ||  !isset($data['deleteFile'])) {
-                                $mVehicle->{$item} = $oldVehicle->{$item};
-                                if($item=='vehicle_inspection_sticker_pdf'){
-                                    copy($src.'/pdf/'.$oldVehicle->{$item}, $des.'/pdf/'.$oldVehicle->{$item});
-                                }else{
-                                    copy($src.'/image/'.$oldVehicle->{$item}, $des.'/image/'.$oldVehicle->{$item});
-                                }
-                            }
-                        }
-                    }
-                    $mVehicle->save();
-                }
 
                 //deleteFile
                 if (isset($data['deleteFile']) && count($data['deleteFile']) > 0) {
@@ -390,11 +374,19 @@ class VehiclesController extends Controller
                 }
 
                 $mVehicle->save();
-                DB::commit();
-                if($mode=='edit' || $mode=='registerHistoryLeft'){
-                    $this->backHistory();
+
+                if($id!= null){
+                    $data['vehicle_inspection_sticker_pdf'] = $mVehicle->vehicle_inspection_sticker_pdf;
+                    $data['picture_fronts'] = $mVehicle->picture_fronts;
+                    $data['picture_rights'] = $mVehicle->picture_rights;
+                    $data['picture_lefts'] = $mVehicle->picture_lefts;
+                    $data['picture_rears'] = $mVehicle->picture_rears;
+                    $modifyLog = new MModifyLogs();
+                    $modifyLog->writeLogWithTable( $mVehicle->getTable(),$dataBeforeUpdate,$data,$id);
                 }
+                DB::commit();
                 if($mode=='edit'){
+                    $this->backHistory();
                     \Session::flash('message',Lang::get('messages.MSG04002'));
                 }else{
                     \Session::flash('message',Lang::get('messages.MSG03002'));

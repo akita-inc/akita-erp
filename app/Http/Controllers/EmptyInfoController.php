@@ -351,7 +351,7 @@ class EmptyInfoController extends Controller {
     }
 
     protected function validAfter( &$validator,$data ){
-        if($data['asking_price']!= ""  && $data['asking_price'] < 1){
+        if($data['asking_price']!= ""  && is_numeric($data['asking_price']) && $data['asking_price'] < 1 && $data['asking_price'] >= 0){
             $validator->errors()
                 ->add("asking_price", str_replace(':attribute',$this->labels['asking_price'],Lang::get('messages.MSG02023')));
         }

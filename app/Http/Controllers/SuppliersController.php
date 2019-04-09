@@ -6,6 +6,7 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Helpers\TimeFunction;
 use App\Models\MGeneralPurposes;
+use App\Models\MModifyLogs;
 use App\Models\MStaffAuths;
 use App\Models\MSupplier;
 use Carbon\Carbon;
@@ -92,6 +93,7 @@ class SuppliersController extends Controller
         $mSupplier = new MSupplier();
         if(!is_null($id)){
             $mSupplier = $mSupplier->find($id);
+            $dataBeforeUpdate = $mSupplier->toArray();
             if(is_null($mSupplier)){
                 return abort(404);
             }
@@ -191,6 +193,12 @@ class SuppliersController extends Controller
                     $mSupplier->payment_account_holder= $data["payment_account_holder"];
                     $mSupplier->notes= $data["notes"];
                     $mSupplier->save();
+
+                    if($id!= null){
+                        $modifyLog = new MModifyLogs();
+                        $data['business_start_dt'] = TimeFunction::dateFormat($data["business_start_dt"],'Y-m-d');
+                        $modifyLog->writeLogWithTable( $mSupplier->getTable(),$dataBeforeUpdate,$data,$id);
+                    }
                     DB::commit();
                     if($id!= null){
                         $this->backHistory();
