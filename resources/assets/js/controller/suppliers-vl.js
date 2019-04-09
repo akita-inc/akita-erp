@@ -5,13 +5,26 @@ import * as AutoKana from 'vanilla-autokana';
 var ctrSupplierrsVl = new Vue({
     el: '#ctrSupplierrsVl',
     data: {
-        adhibition_start_dt:$('#adhibition_start_dt').val(),
-        adhibition_end_dt:$('#adhibition_end_dt').val(),
         business_start_dt:$('#business_start_dt').val(),
-        adhibition_start_dt_new:$('#adhibition_start_dt_new').val(),
         lang:lang_date_picker,
     },
     methods : {
+        submit: function(){
+            if(supplier_id==""){
+                $('#form1').submit();
+            }else{
+                var that = this;
+                suppliers_service.checkIsExist(supplier_id,{'mode':'edit'}).then((response) => {
+                    if (!response.success) {
+                        alert(response.msg);
+                        that.backHistory();
+                        return false;
+                    } else {
+                        $('#form1').submit();
+                    }
+                });
+            }
+        },
         getAddrFromZipCode: function() {
             var zip = $('#zip_cd').val();
             if(zip==''){

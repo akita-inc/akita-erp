@@ -20857,7 +20857,7 @@ var ctrEmptyInfoVl = new Vue({
     field: {
       status: 1,
       regist_office_id: user_login_mst_business_office_id,
-      vehicle_kb: 1,
+      vehicle_kb: 0,
       registration_numbers: "",
       vehicle_size: "",
       vehicle_body_shape: "",
@@ -20892,22 +20892,36 @@ var ctrEmptyInfoVl = new Vue({
       switch (this.field.mode) {
         case 'register':
         case 'edit':
-          empty_info_service.submit(this.field).then(function (response) {
-            if (response.success == false) {
-              that.addComma();
-              that.errors = response.message;
+          empty_info_service.checkIsExist(that.empty_info_id, {
+            'mode': this.field.mode,
+            'status': status
+          }).then(function (response) {
+            if (!response.success) {
+              that.loading = false;
+              alert(response.msg);
+              that.backHistory();
+              return false;
             } else {
-              that.errors = [];
-              window.location.href = listRoute;
-            }
+              empty_info_service.submit(that.field).then(function (response) {
+                if (response.success == false) {
+                  that.addComma();
+                  that.errors = response.message;
+                } else {
+                  that.errors = [];
+                  window.location.href = listRoute;
+                }
 
-            that.loading = false;
+                that.loading = false;
+              });
+            }
           });
           break;
 
         case 'reservation':
         case 'reservation_approval':
-          empty_info_service.checkIsExist(that.empty_info_id).then(function (response) {
+          empty_info_service.checkIsExist(that.empty_info_id, {
+            'status': status
+          }).then(function (response) {
             if (!response.success) {
               that.loading = false;
               alert(response.msg);
@@ -20982,7 +20996,7 @@ var ctrEmptyInfoVl = new Vue({
     searchVehicle: function searchVehicle() {
       var that = this;
 
-      if (that.field.vehicle_kb == 1) {
+      if (that.field.vehicle_kb == 0) {
         if (that.registration_numbers == '') {
           alert(messages['MSG10009']);
           return;
@@ -21074,7 +21088,7 @@ var ctrEmptyInfoVl = new Vue({
           regist_staff: "",
           regist_office_id: user_login_mst_business_office_id,
           email_address: "",
-          vehicle_kb: 1,
+          vehicle_kb: 0,
           registration_numbers: "",
           vehicle_size: "",
           vehicle_body_shape: "",
@@ -21193,7 +21207,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })

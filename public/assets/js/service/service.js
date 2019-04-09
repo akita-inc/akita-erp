@@ -169,8 +169,8 @@ empty_info_service = {
       return error;
     });
   },
-  checkIsExist: function checkIsExist(id) {
-    return axios.get('/empty_info/api-v1/checkIsExist/' + id).then(function (response) {
+  checkIsExist: function checkIsExist(id, data) {
+    return axios.post('/empty_info/api-v1/checkIsExist/' + id, data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
@@ -342,8 +342,8 @@ suppliers_service = {
       return error;
     });
   },
-  checkIsExist: function checkIsExist(id) {
-    return axios.get('/api/supplier/checkIsExist/' + id).then(function (response) {
+  checkIsExist: function checkIsExist(id, data) {
+    return axios.post('/api/supplier/checkIsExist/' + id, data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;

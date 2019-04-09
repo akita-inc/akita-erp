@@ -14,7 +14,7 @@ var ctrEmptyInfoVl = new Vue({
         field:{
             status:1,
             regist_office_id:user_login_mst_business_office_id,
-            vehicle_kb:1,
+            vehicle_kb:0,
             registration_numbers:"",
             vehicle_size:"",
             vehicle_body_shape:"",
@@ -46,20 +46,29 @@ var ctrEmptyInfoVl = new Vue({
             switch (this.field.mode) {
                 case 'register':
                 case 'edit':
-                    empty_info_service.submit(this.field).then((response) => {
-                        if(response.success == false){
-                            that.addComma();
-                            that.errors = response.message;
-                        }else{
-                            that.errors = [];
-                            window.location.href = listRoute;
+                    empty_info_service.checkIsExist(that.empty_info_id, {'mode' : this.field.mode,'status': status}).then((response) => {
+                        if (!response.success) {
+                            that.loading = false;
+                            alert(response.msg);
+                            that.backHistory();
+                            return false;
+                        } else {
+                            empty_info_service.submit(that.field).then((response) => {
+                                if(response.success == false){
+                                    that.addComma();
+                                    that.errors = response.message;
+                                }else{
+                                    that.errors = [];
+                                    window.location.href = listRoute;
+                                }
+                                that.loading = false;
+                            });
                         }
-                        that.loading = false;
                     });
                     break;
                 case 'reservation':
                 case 'reservation_approval':
-                    empty_info_service.checkIsExist(that.empty_info_id).then((response) => {
+                    empty_info_service.checkIsExist(that.empty_info_id, {'status': status}).then((response) => {
                         if (!response.success) {
                             that.loading = false;
                             alert(response.msg);
@@ -127,7 +136,7 @@ var ctrEmptyInfoVl = new Vue({
         },
         searchVehicle: function () {
             var that = this;
-            if(that.field.vehicle_kb==1){
+            if(that.field.vehicle_kb==0){
                 if(that.registration_numbers==''){
                     alert(messages['MSG10009']);
                     return;
@@ -211,7 +220,7 @@ var ctrEmptyInfoVl = new Vue({
                     regist_staff:"",
                     regist_office_id:user_login_mst_business_office_id,
                     email_address:"",
-                    vehicle_kb:1,
+                    vehicle_kb:0,
                     registration_numbers:"",
                     vehicle_size:"",
                     vehicle_body_shape:"",

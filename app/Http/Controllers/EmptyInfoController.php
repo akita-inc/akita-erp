@@ -256,7 +256,6 @@ class EmptyInfoController extends Controller {
             if(empty($mEmptyInfo)){
                 abort('404');
             }else{
-                $mEmptyInfo->start_time = TimeFunction::convertTime24To12($mEmptyInfo->start_time);
                 $mEmptyInfo = $mEmptyInfo->toArray();
                 $routeName = $request->route()->getName();
                 switch ($routeName){
@@ -467,13 +466,30 @@ class EmptyInfoController extends Controller {
         return response()->json($response);
     }
 
-    public function checkIsExist($id){
+    public function checkIsExist(Request $request, $id){
+        $status= $request->get('status');
+        $mode = $request->get('mode');
         $mEmptyInfo = new MEmptyInfo();
         $mEmptyInfo = $mEmptyInfo->find($id);
         if (isset($mEmptyInfo)) {
             return Response()->json(array('success'=>true));
         } else {
-            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+            if($mode=='edit'){
+                $message = Lang::get('messages.MSG04001');
+            }else{
+                switch ($status){
+                    case 1:
+                        $message = Lang::get('messages.MSG10021');
+                        break;
+                    case 2:
+                        $message = Lang::get('messages.MSG10015');
+                        break;
+                    case 8:
+                        $message = Lang::get('messages.MSG10018');
+                        break;
+                }
+            }
+            return Response()->json(array('success'=>false, 'msg'=> $message));
         }
     }
 

@@ -20,8 +20,8 @@ empty_info_service = {
             return error;
         });
     },
-    checkIsExist: function (id) {
-        return axios.get('/empty_info/api-v1/checkIsExist/' + id).then(function (response) {
+    checkIsExist: function (id,data) {
+        return axios.post('/empty_info/api-v1/checkIsExist/' + id, data).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

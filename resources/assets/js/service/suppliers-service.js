@@ -21,8 +21,8 @@ suppliers_service = {
             return error;
         });
     },
-    checkIsExist: function (id) {
-        return axios.get('/api/supplier/checkIsExist/' + id).then(function (response) {
+    checkIsExist: function (id,data) {
+        return axios.post('/api/supplier/checkIsExist/' + id,data).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;
