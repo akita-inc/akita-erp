@@ -2277,6 +2277,24 @@ var ctrSupplierrsVl = new Vue({
     lang: lang_date_picker
   },
   methods: {
+    submit: function submit() {
+      if (supplier_id == "") {
+        $('#form1').submit();
+      } else {
+        var that = this;
+        suppliers_service.checkIsExist(supplier_id, {
+          'mode': 'edit'
+        }).then(function (response) {
+          if (!response.success) {
+            alert(response.msg);
+            that.backHistory();
+            return false;
+          } else {
+            $('#form1').submit();
+          }
+        });
+      }
+    },
     getAddrFromZipCode: function getAddrFromZipCode() {
       var zip = $('#zip_cd').val();
 
