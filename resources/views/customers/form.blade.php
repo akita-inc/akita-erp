@@ -11,16 +11,9 @@
                     <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                 </div>
 
-                <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                 <input type="hidden" id="hd_customer_edit" value="{!! !empty($customer) ? 1:0 !!}">
                 @if(!empty($customer))
                     @foreach($customer as $key=>$value)
-                        @if($key == 'adhibition_start_dt'
-                            || $key == 'adhibition_end_dt'
-                            || $key == 'business_start_dt'
-                        )
-                            @php($value = date("Y/m/d",strtotime($value)))
-                            @endif
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
                     <div class="d-flex ml-auto">
@@ -37,11 +30,6 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
                             <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($customer) ? "edit":"register")) }}</button>
-                            @if($flagRegisterHistory)
-                                <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
-                                    {{ trans("common.button.register_history_left") }}
-                                </button>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -66,33 +54,8 @@
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
                             @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($customer) ? 'readonly=""':'')])
-                            @if($flagRegisterHistory)
-                                <span>
-                                    {{trans("customers.create.mst_customers_cd_description")}}
-                                </span>
-                            @endif
                     </div>
-                    <div class="col-md-7 col-sm-12 row grid-col">
-                        <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.date-picker',['filed'=>'adhibition_start_dt'.(!empty($customer) ? '_edit':''),'required'=>true,'role' => $role])
-                        </div>
-                        <div class="col-md-6 col-sm-12 pd-l-20">
-                            @if($flagRegisterHistory)
-                                @include('Component.form.date-picker',['filed'=>'adhibition_end_dt'.(!empty($customer) ? '_edit':''),'required'=>true,'role' => $role ])
-                            @else
-                                @include('Component.form.input',['filed'=>'adhibition_end_dt'.(!empty($customer) ? '_edit':''),'attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
-                            @endif
-                        </div>
-                        @if($flagRegisterHistory)
-                            <div class="break-row-form"></div>
-                            <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.date-picker',['filed'=>'adhibition_start_dt_history','required'=>true,'role' => $role])
-                            </div>
-                            <div class="col-md-6 col-sm-12 pd-l-20">
-                                @include('Component.form.input',['filed'=>'adhibition_end_dt_history','attr_input' => 'readonly="" value="'.config('params.adhibition_end_dt_default').'"' ])
-                            </div>
-                        @endif
-                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col"></div>
                 </div>
             </div>
             <!--Block 2-->
@@ -405,16 +368,9 @@
                         <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
 
-                    <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                     <input type="hidden" id="hd_customer_edit" value="{!! !empty($customer) ? 1:0 !!}">
                     @if(!empty($customer))
                         @foreach($customer as $key=>$value)
-                            @if($key == 'adhibition_start_dt'
-                                || $key == 'adhibition_end_dt'
-                                || $key == 'business_start_dt'
-                            )
-                                @php($value = date("Y/m/d",strtotime($value)))
-                            @endif
                             <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                         @endforeach
                         <div class="d-flex ml-auto">
@@ -431,11 +387,6 @@
                                 <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                                 <div class="col-md-7 col-sm-12 row grid-col h-100">
                                     <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".(!empty($customer) ? "edit":"register")) }}</button>
-                                    @if($flagRegisterHistory)
-                                        <button class="btn btn-primary btn-submit m-auto" type="button" @click="clone()" >
-                                            {{ trans("common.button.register_history_left") }}
-                                        </button>
-                                    @endif
                                 </div>
                             </div>
                         </div>

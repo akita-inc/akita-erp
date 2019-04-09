@@ -20855,12 +20855,6 @@ var ctrCustomersVl = new Vue({
     customer_edit: 0,
     customer_id: null,
     field: {
-      adhibition_start_dt: "",
-      adhibition_end_dt: $("#hd_adhibition_end_dt_default").val(),
-      adhibition_start_dt_edit: "",
-      adhibition_end_dt_edit: $("#hd_adhibition_end_dt_default").val(),
-      adhibition_start_dt_history: "",
-      adhibition_end_dt_history: $("#hd_adhibition_end_dt_default").val(),
       mst_customers_cd: "",
       customer_nm: "",
       customer_nm_kana: "",
@@ -20926,26 +20920,12 @@ var ctrCustomersVl = new Vue({
         event.stopPropagation();
       }
     },
-    clone: function clone() {
-      this.field["clone"] = true;
-      this.submit();
-    },
     submit: function submit() {
-      var _this = this;
-
       var that = this;
       that.loading = true;
 
       if (this.customer_edit == 1) {
         this.field["id"] = this.customer_id;
-
-        if (this.field["clone"] == true) {
-          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_history"];
-          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_history"];
-        } else {
-          this.field["adhibition_start_dt"] = this.field["adhibition_start_dt_edit"];
-          this.field["adhibition_end_dt"] = this.field["adhibition_end_dt_edit"];
-        }
       }
 
       customers_service.submit(this.field).then(function (response) {
@@ -20956,7 +20936,6 @@ var ctrCustomersVl = new Vue({
           window.location.href = listRoute;
         }
 
-        _this.field["clone"] = null;
         that.loading = false;
       });
     },
@@ -21056,10 +21035,6 @@ var ctrCustomersVl = new Vue({
         that.customer_id = $("#hd_id").val();
         $.each(this.field, function (key, value) {
           if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
-            if (key == "adhibition_start_dt" || key == "adhibition_end_dt") {
-              that.field[key + "_edit"] = $("#hd_" + key).val();
-            }
-
             if (key == "except_g_drive_bill_fg") {
               if ($("#hd_" + key).val() == 1) {
                 that.field[key] = true;
@@ -21187,7 +21162,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
