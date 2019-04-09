@@ -294,19 +294,43 @@ var ctrStaffsVl = new Vue({
 
             formData.append('data', JSON.stringify(this.field));
             formData.append('image', this.field.drivers_license_picture);
-            staffs_service.submit(formData).then((response) => {
-                if(response.success == false){
-                    that.errors = response.message;
-                }
-                else
-                {
-                    that.errors = {};
-                    window.location.href = listRoute;
-                }
-                this.field["is_change_password"] = null;
-                this.field["is_change_password_confirm"] = null;
-                that.loading = false;
-            });
+            if(this.staff_edit == 1){
+                staffs_service.checkIsExist(this.staff_id,{'mode':'edit'}).then((response) => {
+                    if (!response.success) {
+                        alert(response.msg);
+                        that.backHistory();
+                        return false;
+                    } else {
+                        staffs_service.submit(formData).then((response) => {
+                            if(response.success == false){
+                                that.errors = response.message;
+                            }
+                            else {
+                                that.errors = {};
+                                window.location.href = listRoute;
+                            }
+                            that.field["is_change_password"] = null;
+                            that.field["is_change_password_confirm"] = null;
+                            that.loading = false;
+                        });
+                    }
+                });
+            }else{
+                staffs_service.submit(formData).then((response) => {
+                    if(response.success == false){
+                        that.errors = response.message;
+                    }
+                    else
+                    {
+                        that.errors = {};
+                        window.location.href = listRoute;
+                    }
+                    this.field["is_change_password"] = null;
+                    this.field["is_change_password_confirm"] = null;
+                    that.loading = false;
+                });
+            }
+
         },
          loadFormEdit: async function () {
             let that = this;

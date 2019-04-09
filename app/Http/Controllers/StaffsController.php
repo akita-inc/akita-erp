@@ -197,13 +197,14 @@ class StaffsController extends Controller
         return response()->json($response);
     }
 
-    public function checkIsExist($id){
+    public function checkIsExist(Request $request,$id){
+        $mode = $request->get('mode');
         $mStaffs = new MStaffs();
         $mStaffs = $mStaffs->find($id);
         if (isset($mStaffs)) {
             return Response()->json(array('success'=>true));
         } else {
-            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG06003') : Lang::trans('messages.MSG04001')));
         }
     }
     protected function validAfter( &$validator,$data ){

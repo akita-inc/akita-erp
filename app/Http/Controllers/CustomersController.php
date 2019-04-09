@@ -139,13 +139,14 @@ class CustomersController extends Controller
         return response()->json($response);
     }
 
-    public function checkIsExist($id){
+    public function checkIsExist(Request $request,$id){
+        $mode = $request->get('mode');
         $mCustomers = new MCustomers();
         $mCustomers = $mCustomers->find($id);
         if (isset($mCustomers)) {
             return Response()->json(array('success'=>true));
         } else {
-            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG06003') : Lang::trans('messages.MSG04001')));
         }
     }
 

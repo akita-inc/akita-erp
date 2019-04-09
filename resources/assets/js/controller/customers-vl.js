@@ -82,16 +82,35 @@ var ctrCustomersVl = new Vue({
             that.loading = true;
             if(this.customer_edit == 1){
                 this.field["id"] = this.customer_id;
+                customers_service.checkIsExist(this.customer_id,{'mode':'edit'}).then((response) => {
+                    if (!response.success) {
+                        alert(response.msg);
+                        that.backHistory();
+                        return false;
+                    } else {
+                        customers_service.submit(that.field).then((response) => {
+                            if(response.success == false){
+                                that.errors = response.message;
+                            }else{
+                                that.errors = [];
+                                window.location.href = listRoute;
+                            }
+                            that.loading = false;
+                        });
+                    }
+                });
+            }else{
+                customers_service.submit(this.field).then((response) => {
+                    if(response.success == false){
+                        that.errors = response.message;
+                    }else{
+                        that.errors = [];
+                        window.location.href = listRoute;
+                    }
+                    that.loading = false;
+                });
             }
-            customers_service.submit(this.field).then((response) => {
-                if(response.success == false){
-                    that.errors = response.message;
-                }else{
-                    that.errors = [];
-                    window.location.href = listRoute;
-                }
-                that.loading = false;
-            });
+
         },
         showError: function ( errors ){
             return errors.join("<br/>");

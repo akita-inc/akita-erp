@@ -20926,18 +20926,38 @@ var ctrCustomersVl = new Vue({
 
       if (this.customer_edit == 1) {
         this.field["id"] = this.customer_id;
+        customers_service.checkIsExist(this.customer_id, {
+          'mode': 'edit'
+        }).then(function (response) {
+          if (!response.success) {
+            alert(response.msg);
+            that.backHistory();
+            return false;
+          } else {
+            customers_service.submit(that.field).then(function (response) {
+              if (response.success == false) {
+                that.errors = response.message;
+              } else {
+                that.errors = [];
+                window.location.href = listRoute;
+              }
+
+              that.loading = false;
+            });
+          }
+        });
+      } else {
+        customers_service.submit(this.field).then(function (response) {
+          if (response.success == false) {
+            that.errors = response.message;
+          } else {
+            that.errors = [];
+            window.location.href = listRoute;
+          }
+
+          that.loading = false;
+        });
       }
-
-      customers_service.submit(this.field).then(function (response) {
-        if (response.success == false) {
-          that.errors = response.message;
-        } else {
-          that.errors = [];
-          window.location.href = listRoute;
-        }
-
-        that.loading = false;
-      });
     },
     showError: function showError(errors) {
       return errors.join("<br/>");
@@ -21162,7 +21182,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\Project\AKITA\source\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
