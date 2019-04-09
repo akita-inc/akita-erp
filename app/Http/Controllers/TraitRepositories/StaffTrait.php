@@ -10,6 +10,7 @@ namespace App\Http\Controllers\TraitRepositories;
 
 
 use App\Helpers\Common;
+use App\Models\MModifyLogs;
 use App\Models\MScreens;
 use App\Models\MStaffAuths;
 use Illuminate\Support\Facades\Validator;
@@ -113,8 +114,13 @@ trait StaffTrait
                         if(isset($item["id"]) && $item["id"])
                         {
                             unset($arrayInsert['created_at']);
+                            $dataBeforeUpdate=DB::table($name)->where("id", $item["id"])->first();
                             $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
                             array_push($arrayIDInsert,$idAccordionUpdate);
+                            $modifyLog = new MModifyLogs();
+                            unset($arrayInsert["modified_at"]);
+                            unset($arrayInsert["disp_number"]);
+                            $modifyLog->writeLogWithTable( $name,$dataBeforeUpdate,$arrayInsert,$item["id"] );
                         }
                         else
                         {
@@ -245,9 +251,12 @@ trait StaffTrait
         if(!is_null($file)) {
             try {
                 $fileName = Common::uploadFile($file, $directoryPath);
+                $dataBeforeUpdate= DB::table('mst_staffs')->where('id', $id)->first();
                 DB::table('mst_staffs')
                     ->where('id', $id)
                     ->update(['drivers_license_picture' => $fileName]);
+                $modifyLog = new MModifyLogs();
+                $modifyLog->writeLogWithTable( 'mst_staffs',$dataBeforeUpdate,['drivers_license_picture' => $fileName],$id );
             } catch (\Exception $e) {
                 dd($e);
                 return false;
@@ -261,9 +270,12 @@ trait StaffTrait
         if (isset($deleteFile) && $deleteFile!='') {
             try
             {
+                $dataBeforeUpdate= DB::table('mst_staffs')->where('id', $id)->first();
                 DB::table('mst_staffs')
                     ->where('id', $id)
                     ->update(['drivers_license_picture' => null]);
+                $modifyLog = new MModifyLogs();
+                $modifyLog->writeLogWithTable( 'mst_staffs',$dataBeforeUpdate,['drivers_license_picture' => null],$id );
             }catch (\Exception $e) {
                 dd($e);
                 return false;
