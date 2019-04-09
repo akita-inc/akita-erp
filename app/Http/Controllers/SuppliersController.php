@@ -196,6 +196,7 @@ class SuppliersController extends Controller
 
                     if($id!= null){
                         $modifyLog = new MModifyLogs();
+                        $data['business_start_dt'] = TimeFunction::dateFormat($data["business_start_dt"],'Y-m-d');
                         $modifyLog->writeLogWithTable( $mSupplier->getTable(),$dataBeforeUpdate,$data,$id);
                     }
                     DB::commit();
