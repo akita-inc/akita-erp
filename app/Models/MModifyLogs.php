@@ -8,8 +8,29 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Null_;
 
 class MModifyLogs extends Model
 {
+    protected $table = "modify_logs";
+
     const CREATED_AT = 'created_at';
+    const UPDATED_AT = Null;
+
+    public function writeLogWithTable( $table,$dataBeforeUpdate,$dataAfterUpdate,$table_id ){
+        foreach ($dataBeforeUpdate as $key=>$value){
+            if( isset($dataAfterUpdate[$key]) && $dataAfterUpdate[$key] != $value ){
+                $log = new MModifyLogs();
+                $log->table_name = $table;
+                $log->table_id = $table_id;
+                $log->column_name = $key;
+                $log->before_data = $value;
+                $log->after_data = $dataAfterUpdate[$key];
+                $log->mst_staff_id = Auth::user()->id;
+                $log->save();
+            }
+        }
+    }
 }
