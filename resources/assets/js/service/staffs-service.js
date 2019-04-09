@@ -20,8 +20,8 @@ staffs_service = {
             return error;
         });
     },
-    checkIsExist: function (id) {
-        return axios.get('/staffs/api-v1/checkIsExist/' + id).then(function (response) {
+    checkIsExist: function (id,data) {
+        return axios.post('/staffs/api-v1/checkIsExist/' + id,data).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

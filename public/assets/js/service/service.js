@@ -115,8 +115,8 @@ customers_service = {
       return error;
     });
   },
-  checkIsExist: function checkIsExist(id) {
-    return axios.get('/customers/api-v1/checkIsExist/' + id).then(function (response) {
+  checkIsExist: function checkIsExist(id, data) {
+    return axios.post('/customers/api-v1/checkIsExist/' + id, data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
@@ -251,8 +251,8 @@ staffs_service = {
       return error;
     });
   },
-  checkIsExist: function checkIsExist(id) {
-    return axios.get('/staffs/api-v1/checkIsExist/' + id).then(function (response) {
+  checkIsExist: function checkIsExist(id, data) {
+    return axios.post('/staffs/api-v1/checkIsExist/' + id, data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
