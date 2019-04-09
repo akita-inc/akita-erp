@@ -82,7 +82,7 @@ var ctrCustomersVl = new Vue({
             that.loading = true;
             if(this.customer_edit == 1){
                 this.field["id"] = this.customer_id;
-                customers_service.checkIsExist(this.customer_id,{'mode':'edit'}).then((response) => {
+                customers_service.checkIsExist(this.customer_id,{'mode':'edit', 'modified_at': $('#hd_modified_at').val()}).then((response) => {
                     if (!response.success) {
                         alert(response.msg);
                         that.backHistory();

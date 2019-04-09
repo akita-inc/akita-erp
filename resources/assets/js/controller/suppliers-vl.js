@@ -14,7 +14,7 @@ var ctrSupplierrsVl = new Vue({
                 $('#form1').submit();
             }else{
                 var that = this;
-                suppliers_service.checkIsExist(supplier_id,{'mode':'edit'}).then((response) => {
+                suppliers_service.checkIsExist(supplier_id,{'mode':'edit', 'modified_at': $('#modified_at').val()}).then((response) => {
                     if (!response.success) {
                         alert(response.msg);
                         that.backHistory();

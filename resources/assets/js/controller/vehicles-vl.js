@@ -176,7 +176,7 @@ var ctrVehiclesVl = new Vue({
             formData.append('picture_lefts', this.file.picture_lefts);
             formData.append('picture_rears', this.file.picture_rears);
             if(this.vehicle_edit == 1) {
-                vehicles_service.checkIsExist(this.vehicle_id,{'mode':'edit'}).then((response) => {
+                vehicles_service.checkIsExist(this.vehicle_id,{'mode':'edit', 'modified_at': $('#hd_modified_at').val()}).then((response) => {
                     if (!response.success) {
                         alert(response.msg);
                         that.backHistory();

@@ -21789,7 +21789,8 @@ var ctrVehiclesVl = new Vue({
 
                 if (this.vehicle_edit == 1) {
                   vehicles_service.checkIsExist(this.vehicle_id, {
-                    'mode': 'edit'
+                    'mode': 'edit',
+                    'modified_at': $('#hd_modified_at').val()
                   }).then(function (response) {
                     if (!response.success) {
                       alert(response.msg);

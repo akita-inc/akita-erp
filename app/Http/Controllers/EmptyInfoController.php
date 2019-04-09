@@ -468,40 +468,6 @@ class EmptyInfoController extends Controller {
         return response()->json($response);
     }
 
-    public function checkIsExist(Request $request, $id){
-        $status= $request->get('status');
-        $mode = $request->get('mode');
-        $modified_at = $request->get('modified_at');
-        $mEmptyInfo = new MEmptyInfo();
-        $mEmptyInfo = $mEmptyInfo->find($id);
-        if (isset($mEmptyInfo)) {
-            if(!is_null($modified_at)){
-                if(Carbon::parse($modified_at) != $mEmptyInfo->modified_at){
-                    $message = Lang::get('messages.MSG04001');
-                    return Response()->json(array('success'=>false, 'msg'=> $message));
-                }
-            }
-            return Response()->json(array('success'=>true));
-        } else {
-            if($mode=='edit'){
-                $message = Lang::get('messages.MSG04001');
-            }else{
-                switch ($status){
-                    case 1:
-                        $message = Lang::get('messages.MSG10021');
-                        break;
-                    case 2:
-                        $message = Lang::get('messages.MSG10015');
-                        break;
-                    case 8:
-                        $message = Lang::get('messages.MSG10018');
-                        break;
-                }
-            }
-            return Response()->json(array('success'=>false, 'msg'=> $message));
-        }
-    }
-
     public function updateStatus(Request $request, $id){
         $result = MEmptyInfo::updateStatus($id, $request->get('status'));
         $this->backHistory();

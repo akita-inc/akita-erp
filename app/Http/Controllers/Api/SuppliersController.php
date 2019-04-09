@@ -20,15 +20,4 @@ class SuppliersController
         $string = Common::convertToKana($data,'katakana');
         return Response()->json(array('success'=>true,'info'=>$string));
     }
-
-    public function checkIsExist(Request $request, $id){
-        $mode = $request->get('mode');
-        $mSupplier = new MSupplier();
-        $mSupplier = $mSupplier->find($id);
-        if (isset($mSupplier)) {
-            return Response()->json(array('success'=>true));
-        } else {
-            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04004') : Lang::trans('messages.MSG04001')));
-        }
-    }
 }

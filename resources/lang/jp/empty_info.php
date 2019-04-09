@@ -55,7 +55,7 @@ return [
         'title_register' => '空車登録',
         'title_edit' => '空車登録（編集）',
         'title_reservation' => '空車登録（照会）',
-        'title_reservation_approval' => '空車登録（ 承認・却下）',
+        'title_reservation_approval' => '承認・却下',
         'field' => [
             "status" => "ステータス",
             "regist_office_id" => "営業所",
