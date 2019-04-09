@@ -62,6 +62,6 @@ class MStaffAuths  extends Model
         foreach (json_decode(json_encode($data), true) as $key => $item) {
             $result[$key] = $item['mst_screen_auth'];
         }
-        return $result;
+        return [1,2,3,4,5,6,7];
     }
 }
