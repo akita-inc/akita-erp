@@ -6,18 +6,11 @@ import ModalViewerFile from '../component/ModalViewerFile'
 var ctrVehiclesVl = new Vue({
     el: '#ctrVehiclesVl',
     data: {
-        adhibition_start_dt:$('#adhibition_start_dt').val(),
-        adhibition_end_dt:$('#adhibition_end_dt').val(),
-        adhibition_start_dt_new:$('#adhibition_start_dt_new').val(),
         lang:lang_date_picker,
         listStaffs: [],
         field:{
             mode:"",
             vehicles_cd:"",
-            adhibition_start_dt:"",
-            adhibition_end_dt:$("#hd_adhibition_end_dt_default").val(),
-            adhibition_start_dt_new:"",
-            adhibition_end_dt_new:$("#hd_adhibition_end_dt_default").val(),
             door_number:"",
             vehicles_kb:"",
             registration_numbers:"",
@@ -163,17 +156,17 @@ var ctrVehiclesVl = new Vue({
         },
         getListStaff: function(){
             var that = this;
-            vehicles_service.getListStaff({adhibition_start_dt:this.field.adhibition_start_dt}).then(function (result) {
+            vehicles_service.getListStaff().then(function (result) {
                 that.listStaffs = result.info;
             });
         },
-        submit: async function(mode){
+        submit: async function(){
             let that = this;
             that.loading = true;
             if(this.vehicle_edit == 1){
                 this.field["id"] = this.vehicle_id;
+                this.field["mode"] =  'edit';
             }
-            this.field["mode"] = mode;
             let formData = new FormData();
 
             formData.append('data', JSON.stringify(this.field));
@@ -182,17 +175,37 @@ var ctrVehiclesVl = new Vue({
             formData.append('picture_rights', this.file.picture_rights);
             formData.append('picture_lefts', this.file.picture_lefts);
             formData.append('picture_rears', this.file.picture_rears);
-            vehicles_service.submit(formData).then((response) =>  {
-                that.field["mode"] = null;
-                that.loading = false;
-                if(response.success == false){
-                    that.errors = response.message;
-                }else{
-                    that.errors = [];
-                    window.location.href = listRoute;
-                }
-            });
-
+            if(this.vehicle_edit == 1) {
+                vehicles_service.checkIsExist(this.vehicle_id,{'mode':'edit'}).then((response) => {
+                    if (!response.success) {
+                        alert(response.msg);
+                        that.backHistory();
+                        return false;
+                    } else {
+                        vehicles_service.submit(formData).then((response) =>  {
+                            that.field["mode"] = null;
+                            that.loading = false;
+                            if(response.success == false){
+                                that.errors = response.message;
+                            }else{
+                                that.errors = [];
+                                window.location.href = listRoute;
+                            }
+                        });
+                    }
+                });
+            }else{
+                vehicles_service.submit(formData).then((response) =>  {
+                    that.field["mode"] = null;
+                    that.loading = false;
+                    if(response.success == false){
+                        that.errors = response.message;
+                    }else{
+                        that.errors = [];
+                        window.location.href = listRoute;
+                    }
+                });
+            }
         },
         loadFormEdit: function () {
             let that = this;
@@ -202,9 +215,6 @@ var ctrVehiclesVl = new Vue({
                 that.vehicle_id = $("#hd_id").val();
                 $.each(this.field,function (key,value) {
                     if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined ){
-                        if(key == "adhibition_start_dt" || key == "adhibition_end_dt"){
-                            that.field[key] = $("#hd_"+key).val();
-                        }
                         if(that.checkbox.indexOf(key) != -1){
                             if($("#hd_"+key).val() == 1){
                                 that.field[key] = true;

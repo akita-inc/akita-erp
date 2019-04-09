@@ -15,7 +15,6 @@
                     <div class="d-flex">
                         <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
-                    <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                     <input type="hidden" id="hd_vehicle_edit" value="{!! !empty($mVehicle) ? 1:0 !!}">
                     @if(!empty($mVehicle))
                         @foreach($mVehicle as $key=>$value)
@@ -33,16 +32,13 @@
                         <div class="row">
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                <button class="btn btn-primary btn-submit" type="button" @click="submit('edit')">{{ trans("common.button.edit") }}</button>
-                                @if($flagLasted)
-                                    <button class="btn btn-primary btn-submit m-auto" type="button" @click="submit('registerHistoryLeft')" >{{ trans("common.button.register_history_left") }}</button>
-                                @endif
+                                <button class="btn btn-primary btn-submit" type="button" @click="submit">{{ trans("common.button.edit") }}</button>
                             </div>
                         </div>
                     </div>
                 @elseif($role==1)
                     <div class="sub-header-line-two">
-                        <button class="btn btn-primary btn-submit" type="button" @click="submit(null)">{{ trans("common.button.register") }}</button>
+                        <button class="btn btn-primary btn-submit" type="button" @click="submit">{{ trans("common.button.register") }}</button>
                     </div>
                 @endif
             </div>
@@ -72,72 +68,7 @@
                         </span>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicles_cd!= undefined" v-html="errors.vehicles_cd[0]"></span>
                     </div>
-                    <div class="col-md-7 col-sm-12 row  h-100">
-                        <div class="col row grid-col h-100">
-                            <label class="col-7 required" for="adhibition_start_dt_old">適用開始日（更新用）</label>
-                            <div class="col-5 wrap-control">
-                                <date-picker format="YYYY/MM/DD"
-                                             placeholder=""
-                                             v-model="field.adhibition_start_dt" v-cloak=""
-                                             :lang="lang"
-                                             :input-class="errors.adhibition_start_dt != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
-                                             :value-type="'format'"
-                                             :input-name="'adhibition_start_dt'"
-                                             v-on:change="getListStaff"
-                                             @if($role!=1) :disabled="true" @endif
-                                >
-                                </date-picker>
-                            </div>
-                            <span class="message-error w-100 grid-col" role="alert" v-cloak v-if="errors.adhibition_start_dt!= undefined" v-html="errors.adhibition_start_dt[0]"></span>
-                        </div>
-                        <div class="col row grid-col h-100">
-                            <label class="col-7" for="adhibition_end_dt">適用終了日（更新用）</label>
-                            <div class="col-5 wrap-control">
-                                @if($flagLasted)
-                                    <date-picker format="YYYY/MM/DD"
-                                                 placeholder=""
-                                                 v-model="field.adhibition_end_dt" v-cloak=""
-                                                 :lang="lang"
-                                                 :input-class="errors.adhibition_end_dt != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
-                                                 :value-type="'format'"
-                                                 :input-name="'adhibition_end_dt'"
-                                                 @if($role!=1) :disabled="true" @endif
-                                    >
-                                    </date-picker>
-                                    <input type="hidden" id="adhibition_end_dt" >
-                                @else
-                                    <input type="text" readonly class="form-control" id="adhibition_end_dt" name="adhibition_end_dt" value="{{ str_replace('-', '/',  $mVehicle['adhibition_end_dt'] ?? config('params.adhibition_end_dt_default'))}}" >
-                                @endif
-                            </div>
-                            <span class="message-error w-100" role="alert" v-cloak v-if="errors.adhibition_end_dt!= undefined" v-html="errors.adhibition_end_dt[0]"></span>
-                        </div>
-                        @if($flagLasted)
-                            <div class="break-row-form"></div>
-                            <div class="col row grid-col h-100">
-                                <label class="col-7 required" for="adhibition_start_dt">適用開始日（新規用）</label>
-                                <div class="col-5 wrap-control">
-                                    <date-picker format="YYYY/MM/DD"
-                                                 placeholder=""
-                                                 v-model="field.adhibition_start_dt_new" v-cloak=""
-                                                 :lang="lang"
-                                                 :input-class="errors.adhibition_start_dt_new != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
-                                                 :value-type="'format'"
-                                                 :input-name="'adhibition_start_dt_new'"
-                                                 @if($role!=1) :disabled="true" @endif
-                                    >
-                                    </date-picker>
-                                    <input type="hidden" id="adhibition_start_dt_new" value="{{ old('adhibition_start_dt_new') }}" >
-                                </div>
-                            </div>
-                            <div class="col row grid-col h-100">
-                                <label class="col-7" for="adhibition_end_dt_new">適用終了日（新規用）</label>
-                                <div class="col-5 wrap-control">
-                                    <input type="text" readonly class="form-control" id="adhibition_end_dt_new" name="adhibition_end_dt_new" v-model="field.adhibition_end_dt_new">
-                                </div>
-                            </div>
-                        @endif
-                        <span class="message-error w-100 grid-col" role="alert" v-cloak v-if="errors.adhibition_start_dt_new!= undefined" v-html="errors.adhibition_start_dt_new[0]"></span>
-                    </div>
+                    <div class="col-md-7 col-sm-12 row  h-100"></div>
                 </div>
             </div>
             @else
@@ -151,31 +82,7 @@
                             <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicles_cd!= undefined" v-html="errors.vehicles_cd[0]"></span>
                             </span>
                         </div>
-                        <div class="col-md-7 col-sm-12 row  h-100">
-                            <div class="col row grid-col h-100">
-                                <label class="col-7 required" for="adhibition_start_dt">適用開始日</label>
-                                <div class="col-5 wrap-control">
-                                    <date-picker format="YYYY/MM/DD"
-                                                 placeholder=""
-                                                 v-model="field.adhibition_start_dt" v-cloak=""
-                                                 :lang="lang"
-                                                 :input-class="errors.adhibition_start_dt!= undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
-                                                 :value-type="'format'"
-                                                 :input-name="'adhibition_start_dt'"
-                                                 v-on:change="getListStaff"
-                                                 @if($role!=1) :disabled="true" @endif
-                                    >
-                                    </date-picker>
-                                </div>
-                            </div>
-                            <div class="col row grid-col h-100">
-                                <label class="col-7" for="adhibition_end_dt">適用終了日</label>
-                                <div class="col-5 wrap-control">
-                                    <input type="text" readonly class="form-control" id="adhibition_end_dt" name="" v-model="field.adhibition_end_dt">
-                                </div>
-                            </div>
-                            <span class="message-error w-100 grid-col" role="alert" v-cloak v-if="errors.adhibition_start_dt!= undefined" v-html="errors.adhibition_start_dt[0]"></span>
-                        </div>
+                        <div class="col-md-7 col-sm-12 row  h-100"></div>
                     </div>
                 </div>
             @endif
@@ -1037,7 +944,6 @@
                             <div class="d-flex">
                                 <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                             </div>
-                            <input type="hidden" id="hd_adhibition_end_dt_default" value="{!! config('params.adhibition_end_dt_default') !!}">
                             <input type="hidden" id="hd_vehicle_edit" value="{!! !empty($mVehicle) ? 1:0 !!}">
                             @if(!empty($mVehicle))
                                 @foreach($mVehicle as $key=>$value)
@@ -1055,16 +961,13 @@
                                 <div class="row">
                                     <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                                     <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                        <button class="btn btn-primary btn-submit" type="button" @click="submit('edit')">{{ trans("common.button.edit") }}</button>
-                                        @if($flagLasted)
-                                            <button class="btn btn-primary btn-submit m-auto" type="button" @click="submit('registerHistoryLeft')" >{{ trans("common.button.register_history_left") }}</button>
-                                        @endif
+                                        <button class="btn btn-primary btn-submit" type="button" @click="submit">{{ trans("common.button.edit") }}</button>
                                     </div>
                                 </div>
                             </div>
                         @elseif($role==1)
                             <div class="sub-header-line-two">
-                                <button class="btn btn-primary btn-submit" type="button" @click="submit(null)">{{ trans("common.button.register") }}</button>
+                                <button class="btn btn-primary btn-submit" type="button" @click="submit">{{ trans("common.button.register") }}</button>
                             </div>
                         @endif
           </div>

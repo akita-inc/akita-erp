@@ -382,8 +382,8 @@ vehicles_service = {
       return error;
     });
   },
-  checkIsExist: function checkIsExist(id) {
-    return axios.get('/vehicles/api-v1/checkIsExist/' + id).then(function (response) {
+  checkIsExist: function checkIsExist(id, data) {
+    return axios.post('/vehicles/api-v1/checkIsExist/' + id, data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
@@ -396,8 +396,8 @@ vehicles_service = {
       return error;
     });
   },
-  getListStaff: function getListStaff(data) {
-    return axios.post('/vehicles/api-v1/load-list-staff', data).then(function (response) {
+  getListStaff: function getListStaff() {
+    return axios.post('/vehicles/api-v1/load-list-staff').then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
