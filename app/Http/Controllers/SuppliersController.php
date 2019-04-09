@@ -34,7 +34,7 @@ class SuppliersController extends Controller
             'mst_suppliers.mst_suppliers_cd',
             'mst_suppliers.supplier_nm',
             'mst_suppliers.supplier_nm_kana',
-            DB::raw("CONCAT_WS('',mst_general_purposes.date_nm_kana,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3) as street_address"),
+            DB::raw("CONCAT_WS('',mst_general_purposes.date_nm,mst_suppliers.address1,mst_suppliers.address2,mst_suppliers.address3) as street_address"),
             'mst_suppliers.explanations_bill',
             DB::raw("DATE_FORMAT(mst_suppliers.modified_at, '%Y/%m/%d') as modified_at"));
 

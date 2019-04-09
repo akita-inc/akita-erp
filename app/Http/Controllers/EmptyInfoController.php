@@ -93,8 +93,8 @@ class EmptyInfoController extends Controller {
                 'empty_info.status',
                 DB::raw('format(empty_info.asking_price, "#,##0") as asking_price'),
                 DB::raw("CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i')) as schedule_date"),
-                DB::raw("CONCAT_WS(' ',empty_car_location.date_nm_kana, empty_info.start_address) as start_pref_cd"),
-                DB::raw("CONCAT_WS(' ',arrive_location.date_nm_kana, empty_info.arrive_address) as arrive_location"),
+                DB::raw("CONCAT_WS(' ',empty_car_location.date_nm, empty_info.start_address) as start_pref_cd"),
+                DB::raw("CONCAT_WS(' ',arrive_location.date_nm, empty_info.arrive_address) as arrive_location"),
                 DB::raw("DATE_FORMAT(empty_info.arrive_date, '%Y/%m/%d') as arrive_date")
             );
             $this->query->leftJoin('mst_business_offices', function ($join) {
