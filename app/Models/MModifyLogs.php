@@ -20,17 +20,23 @@ class MModifyLogs extends Model
     const UPDATED_AT = Null;
 
     public function writeLogWithTable( $table,$dataBeforeUpdate,$dataAfterUpdate,$table_id ){
-        foreach ($dataBeforeUpdate as $key=>$value){
-            if( (!isset($dataAfterUpdate[$key]) && !empty($value)) || (isset($dataAfterUpdate[$key]) && $dataAfterUpdate[$key] != $value) ){
+        $dataBeforeUpdate = (Array) $dataBeforeUpdate;
+        foreach ($dataAfterUpdate as $key=>$value){
+            if( ( (!isset($dataBeforeUpdate[$key]) && $value != null) || isset($dataBeforeUpdate[$key]) && $dataBeforeUpdate[$key] != $value) ){
                 $log = new MModifyLogs();
                 $log->table_name = $table;
                 $log->table_id = $table_id;
                 $log->column_name = $key;
-                $log->before_data = $value;
-                if(!isset($dataAfterUpdate[$key])){
+                if(empty($dataBeforeUpdate[$key])){
+                    $log->before_data = DB::raw("Null");
+                }else{
+                    $log->before_data = $dataBeforeUpdate[$key];
+                }
+
+                if(empty($value)){
                     $log->after_data = DB::raw("Null");
                 }else{
-                    $log->after_data = $dataAfterUpdate[$key];
+                    $log->after_data = $value;
                 }
 
                 $log->mst_staff_id = Auth::user()->id;
