@@ -12,6 +12,7 @@ use App\Models\MEmptyMailTo;
 use App\Models\MGeneralPurposes;
 use App\Models\MStaffs;
 use App\Models\MVehicles;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -470,9 +471,16 @@ class EmptyInfoController extends Controller {
     public function checkIsExist(Request $request, $id){
         $status= $request->get('status');
         $mode = $request->get('mode');
+        $modified_at = $request->get('modified_at');
         $mEmptyInfo = new MEmptyInfo();
         $mEmptyInfo = $mEmptyInfo->find($id);
         if (isset($mEmptyInfo)) {
+            if(!is_null($modified_at)){
+                if(Carbon::parse($modified_at) != $mEmptyInfo->modified_at){
+                    $message = Lang::get('messages.MSG04001');
+                    return Response()->json(array('success'=>false, 'msg'=> $message));
+                }
+            }
             return Response()->json(array('success'=>true));
         } else {
             if($mode=='edit'){

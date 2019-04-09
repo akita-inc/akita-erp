@@ -33,7 +33,8 @@ var ctrEmptyInfoVl = new Vue({
         },
         registration_numbers:"",
         errors:{},
-        checkOther:false
+        checkOther:false,
+        modified_at: "",
     },
     methods : {
         submit: function(status){
@@ -57,7 +58,7 @@ var ctrEmptyInfoVl = new Vue({
                     });
                 break;
                 case 'edit':
-                    empty_info_service.checkIsExist(that.empty_info_id, {'mode' : this.field.mode,'status': status}).then((response) => {
+                    empty_info_service.checkIsExist(that.empty_info_id, {'mode' : this.field.mode,'status': status,'modified_at': that.modified_at }).then((response) => {
                         if (!response.success) {
                             that.loading = false;
                             alert(response.msg);
@@ -79,7 +80,7 @@ var ctrEmptyInfoVl = new Vue({
                     break;
                 case 'reservation':
                 case 'reservation_approval':
-                    empty_info_service.checkIsExist(that.empty_info_id, {'status': status}).then((response) => {
+                    empty_info_service.checkIsExist(that.empty_info_id, {'status': status,'modified_at': that.modified_at}).then((response) => {
                         if (!response.success) {
                             that.loading = false;
                             alert(response.msg);
@@ -126,6 +127,7 @@ var ctrEmptyInfoVl = new Vue({
                     this.field.application_office_id = $("#hd_ask_office").val();;
                     this.field.reservation_person =$("#hd_reservation_person").val();
                 }
+                this.modified_at = $('#hd_modified_at').val();
                 this.loading = false;
             }
         },
