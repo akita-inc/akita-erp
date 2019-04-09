@@ -153,7 +153,7 @@ class EmptyInfoController extends Controller {
             $this->query->where('empty_info.deleted_at',null);
             if ($data["order"]["col"] != '') {
                 if ($data["order"]["col"] == 'arrive_location')
-                    $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm, empty_info.arrive_address)';
+                    $orderCol = 'CONCAT_WS("    ",arrive_location.date_nm_kana, empty_info.arrive_address)';
                 else if($data["order"]["col"]=='regist_office')
                     $orderCol='regist_office_id';
                 else if($data["order"]["col"]=='vehicle_classification')
@@ -163,7 +163,7 @@ class EmptyInfoController extends Controller {
                 else if($data["order"]["col"]=='schedule_date')
                     $orderCol="CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i'))";
                 else if($data["order"]["col"]=='start_pref_cd')
-                    $orderCol="CONCAT_WS(' ',empty_car_location.date_nm, empty_info.start_address)";
+                    $orderCol="CONCAT_WS(' ',empty_car_location.date_nm_kana, empty_info.start_address)";
                 else
                     $orderCol = $data["order"]["col"];
                 if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {

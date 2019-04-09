@@ -45,6 +45,17 @@ var ctrEmptyInfoVl = new Vue({
             this.removeComma();
             switch (this.field.mode) {
                 case 'register':
+                    empty_info_service.submit(that.field).then((response) => {
+                        if(response.success == false){
+                            that.addComma();
+                            that.errors = response.message;
+                        }else{
+                            that.errors = [];
+                            window.location.href = listRoute;
+                        }
+                        that.loading = false;
+                    });
+                break;
                 case 'edit':
                     empty_info_service.checkIsExist(that.empty_info_id, {'mode' : this.field.mode,'status': status}).then((response) => {
                         if (!response.success) {
