@@ -23,6 +23,7 @@ class EmptyInfoController extends Controller {
     public $table = "empty_info";
     public $allNullAble = false;
     public $beforeItem = null;
+    public $add_log = false;
 
     public $ruleValid = [
         'regist_office_id' => 'required',
