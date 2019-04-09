@@ -21,13 +21,14 @@ class SuppliersController
         return Response()->json(array('success'=>true,'info'=>$string));
     }
 
-    public function checkIsExist($id){
+    public function checkIsExist(Request $request, $id){
+        $mode = $request->get('mode');
         $mSupplier = new MSupplier();
         $mSupplier = $mSupplier->find($id);
         if (isset($mSupplier)) {
             return Response()->json(array('success'=>true));
         } else {
-            return Response()->json(array('success'=>false, 'msg'=> Lang::trans('messages.MSG06003')));
+            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG06003') : Lang::trans('messages.MSG04001')));
         }
     }
 }

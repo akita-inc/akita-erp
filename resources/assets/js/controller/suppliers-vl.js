@@ -9,6 +9,22 @@ var ctrSupplierrsVl = new Vue({
         lang:lang_date_picker,
     },
     methods : {
+        submit: function(){
+            if(supplier_id==""){
+                $('#form1').submit();
+            }else{
+                var that = this;
+                suppliers_service.checkIsExist(supplier_id,{'mode':'edit'}).then((response) => {
+                    if (!response.success) {
+                        alert(response.msg);
+                        that.backHistory();
+                        return false;
+                    } else {
+                        $('#form1').submit();
+                    }
+                });
+            }
+        },
         getAddrFromZipCode: function() {
             var zip = $('#zip_cd').val();
             if(zip==''){

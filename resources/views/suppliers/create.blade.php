@@ -24,13 +24,13 @@
                         <div class="row">
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.edit") }}</button>
+                                <button class="btn btn-primary btn-submit" type="button" @click="submit">{{ trans("common.button.edit") }}</button>
                             </div>
                         </div>
                     </div>
                 @elseif($role==1)
                     <div class="sub-header-line-two">
-                        <button class="btn btn-primary btn-submit" type="submit">{{ trans("common.button.register") }}</button>
+                        <button class="btn btn-primary btn-submit" type="button" @click="submit">{{ trans("common.button.register") }}</button>
                     </div>
                 @endif
             </div>
