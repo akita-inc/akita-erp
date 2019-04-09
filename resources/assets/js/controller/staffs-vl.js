@@ -295,7 +295,7 @@ var ctrStaffsVl = new Vue({
             formData.append('data', JSON.stringify(this.field));
             formData.append('image', this.field.drivers_license_picture);
             if(this.staff_edit == 1){
-                staffs_service.checkIsExist(this.staff_id,{'mode':'edit'}).then((response) => {
+                staffs_service.checkIsExist(this.staff_id,{'mode':'edit', 'modified_at': $('#hd_modified_at').val()}).then((response) => {
                     if (!response.success) {
                         alert(response.msg);
                         that.backHistory();

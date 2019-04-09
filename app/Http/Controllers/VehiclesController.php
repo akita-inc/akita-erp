@@ -119,17 +119,6 @@ class VehiclesController extends Controller
         return response()->json($response);
     }
 
-    public function checkIsExist(Request $request,$id){
-        $mode = $request->get('mode');
-        $mVehicle = new MVehicles();
-        $mVehicle = $mVehicle->find($id);
-        if (isset($mVehicle)) {
-            return Response()->json(array('success'=>true));
-        } else {
-            return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04004') : Lang::trans('messages.MSG04001')));
-        }
-    }
-
     public function create(Request $request, $id=null){
         $mVehicle = new MVehicles();
         $mGeneralPurposes = new MGeneralPurposes();
@@ -180,6 +169,7 @@ class VehiclesController extends Controller
     }
 
     public function save(Request $request){
+        $currentTime = date("Y-m-d H:i:s",time());
         $mVehicle = new MVehicles();
         $input = $request->all();
         $data = json_decode($input['data'], true);
@@ -353,7 +343,7 @@ class VehiclesController extends Controller
                 $mVehicle->battery_sizes = $data["battery_sizes"];
                 $mVehicle->dispose_dt = $data["dispose_dt"];
                 $mVehicle->notes = $data["notes"];
-
+                $mVehicle->modified_at= $currentTime;
                 $mVehicle->save();
 
                 //deleteFile

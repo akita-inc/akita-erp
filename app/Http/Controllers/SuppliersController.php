@@ -93,10 +93,10 @@ class SuppliersController extends Controller
         $mSupplier = new MSupplier();
         if(!is_null($id)){
             $mSupplier = $mSupplier->find($id);
-            $dataBeforeUpdate = $mSupplier->toArray();
             if(is_null($mSupplier)){
                 return abort(404);
             }
+            $dataBeforeUpdate = $mSupplier->toArray();
         }
         $mGeneralPurposes = new MGeneralPurposes();
         $listPrefecture= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['prefecture_cd'],'');
@@ -108,6 +108,7 @@ class SuppliersController extends Controller
         $mStaffAuth =  new MStaffAuths();
         $role = $mStaffAuth->getRoleBySCreen(2);
         if ($request->getMethod() == 'POST') {
+            $currentTime = date("Y-m-d H:i:s",time());
             $data = $request->all();
             $rules = [
                 'mst_suppliers_cd'  => 'required|one_bytes_string|length:5|unique:mst_suppliers,mst_suppliers_cd,NULL,id,deleted_at,NULL',
@@ -192,6 +193,7 @@ class SuppliersController extends Controller
                     $mSupplier->payment_account_number= $data["payment_account_number"];
                     $mSupplier->payment_account_holder= $data["payment_account_holder"];
                     $mSupplier->notes= $data["notes"];
+                    $mSupplier->modified_at= $currentTime;
                     $mSupplier->save();
 
                     if($id!= null){

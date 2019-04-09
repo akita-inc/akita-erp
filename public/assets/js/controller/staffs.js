@@ -43955,7 +43955,8 @@ var ctrStaffsVl = new Vue({
 
       if (this.staff_edit == 1) {
         staffs_service.checkIsExist(this.staff_id, {
-          'mode': 'edit'
+          'mode': 'edit',
+          'modified_at': $('#hd_modified_at').val()
         }).then(function (response) {
           if (!response.success) {
             alert(response.msg);

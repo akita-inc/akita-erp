@@ -10,8 +10,10 @@ namespace App\Http\Controllers\TraitRepositories;
 
 
 use App\Models\MModifyLogs;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -79,5 +81,45 @@ trait FormTrait
 
     public function backHistory(){
         Session::put('backQueryFlag', true);
+    }
+
+
+    public function checkIsExist(Request $request, $id){
+        $status= $request->get('status');
+        $mode = $request->get('mode');
+        $modified_at = $request->get('modified_at');
+        $data = DB::table($this->table)->where('id',$id)->whereNull('deleted_at')->first();
+        if (isset($data)) {
+            if($this->table!='empty_info' || ($mode!='edit' && $this->table=='empty_info') || ($mode=='edit' && $this->table=='empty_info' && Session::get('sysadmin_flg')==1)){
+                if(!is_null($modified_at)){
+                    if(Carbon::parse($modified_at) != Carbon::parse($data->modified_at)){
+                        $message = Lang::get('messages.MSG04003');
+                        return Response()->json(array('success'=>false, 'msg'=> $message));
+                    }
+                }
+            }
+            return Response()->json(array('success'=>true));
+        } else {
+            if($this->table=='empty_info'){
+                if($mode=='edit'){
+                    $message = Lang::get('messages.MSG04001');
+                }else{
+                    switch ($status){
+                        case 1:
+                            $message = Lang::get('messages.MSG10021');
+                            break;
+                        case 2:
+                            $message = Lang::get('messages.MSG10015');
+                            break;
+                        case 8:
+                            $message = Lang::get('messages.MSG10018');
+                            break;
+                    }
+                }
+                return Response()->json(array('success'=>false, 'msg'=> $message));
+            }else{
+                return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04004') : Lang::trans('messages.MSG04001')));
+            }
+        }
     }
 }

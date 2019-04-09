@@ -2283,7 +2283,8 @@ var ctrSupplierrsVl = new Vue({
       } else {
         var that = this;
         suppliers_service.checkIsExist(supplier_id, {
-          'mode': 'edit'
+          'mode': 'edit',
+          'modified_at': $('#modified_at').val()
         }).then(function (response) {
           if (!response.success) {
             alert(response.msg);

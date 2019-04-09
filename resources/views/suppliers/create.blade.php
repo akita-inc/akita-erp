@@ -46,6 +46,7 @@
             <div class="text-danger w-100">*　は必須入力の項目です。</div>
             <div class="w-100">
                 @include('Layouts.alert')
+                <input type="hidden" id="modified_at" value="{{ $mSupplier->modified_at}}" >
             </div>
             @if($mSupplier->id)
             <div class="grid-form">

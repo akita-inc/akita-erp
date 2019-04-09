@@ -16,5 +16,5 @@ use Illuminate\Http\Request;
 Route::group(array('prefix' => 'api/supplier'), function() {
     Route::any('convert-to-kana', ['uses' => 'Api\SuppliersController@convertToKana']);
     Route::any('back-history', ['uses' => 'Api\SuppliersController@backHistory']);
-    Route::any('checkIsExist/{id}', ['uses' => 'Api\SuppliersController@checkIsExist']);
+    Route::any('checkIsExist/{id}', ['uses' => 'SuppliersController@checkIsExist']);
 });
