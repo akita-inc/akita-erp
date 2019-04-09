@@ -55,9 +55,6 @@
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" readonly maxlength="5" value="{{ old('mst_suppliers_cd',!is_null($mSupplier->mst_suppliers_cd) ? $mSupplier->mst_suppliers_cd :'') }}">
                         </div>
-                        <span class="note">
-                            ※編集中データをもとに、新しい適用期間のデータを作成したい場合は、適用開始日（新規用）を入力し、新規登録（履歴残し）ボタンを押してください。
-                        </span>
                         @if ($errors->has('mst_suppliers_cd'))
                             <span class="invalid-feedback d-block" role="alert">
                                     <strong>{{ $errors->first('mst_suppliers_cd') }}</strong>
