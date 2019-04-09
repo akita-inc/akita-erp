@@ -294,7 +294,7 @@ class StaffsController extends Controller
             }
             $this->deleteFile($id,$deleteFile);
             $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
-            $this->saveStaffAuth($id,$mst_staff_auths, $currentTime);
+//            $this->saveStaffAuth($id,$mst_staff_auths, $currentTime);
             $this->saveAccordion($id,$data,"mst_staff_job_experiences", null, [], $currentTime);
             $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_", [], $currentTime);
             $this->saveAccordion($id,$data,"mst_staff_dependents","dept_",["disp_number"], $currentTime);
