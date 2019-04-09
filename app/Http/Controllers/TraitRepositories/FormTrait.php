@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\TraitRepositories;
 
 
+use App\Models\MModifyLogs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -47,11 +48,18 @@ trait FormTrait
                     'message'=> $validator->errors()
                 ]);
             }else{
+                $dataBeforeUpdate = [];
+                if( isset($data["id"]) && (!isset($this->add_log) || $this->add_log == true) ){
+                    $dataBeforeUpdate = DB::table($this->table)->where("id","=",$data["id"])->first();
+                }
                 if( !( $idInsert = $this->save( $data ) ) ){
                     return response()->json([
                         'success'=>FALSE,
                         'message'=> ["SaveFail"=>trans('common.save_fail')]
                     ]);
+                }
+                if( isset($data["id"]) && (!isset($this->add_log) || $this->add_log == true)) {
+                    $this->addLogModify($dataBeforeUpdate,$data);
                 }
             }
         }
@@ -60,6 +68,13 @@ trait FormTrait
             'message'=> [],
             'idInsert' => $idInsert
         ]);
+    }
+
+    protected function addLogModify( $dataBeforeUpdate,$data ){
+        if(isset($data["id"])){
+            $modifyLog = new MModifyLogs();
+            $modifyLog->writeLogWithTable( $this->table,$dataBeforeUpdate,$data,$data["id"] );
+        }
     }
 
     public function backHistory(){
