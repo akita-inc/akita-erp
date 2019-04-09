@@ -22,17 +22,6 @@ class MModifyLogs extends Model
     public function writeLogWithTable( $table,$dataBeforeUpdate,$dataAfterUpdate,$table_id ){
         $dataBeforeUpdate = (Array) $dataBeforeUpdate;
         foreach ($dataAfterUpdate as $key=>$value){
-//            if($key=='password' && isset($dataAfterUpdate[$key]) )
-//            {
-//                if($dataAfterUpdate[$key]=="********")
-//                {
-//                    $dataAfterUpdate[$key]=$value;
-//                }
-//                else
-//                {
-//                    $dataAfterUpdate[$key]=bcrypt($dataAfterUpdate[$key]);
-//                }
-//            }
             if( ( (!isset($dataBeforeUpdate[$key]) && $value != null) || isset($dataBeforeUpdate[$key]) && $dataBeforeUpdate[$key] != $value) ){
                 $log = new MModifyLogs();
                 $log->table_name = $table;
