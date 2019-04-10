@@ -22,34 +22,38 @@ class MModifyLogs extends Model
     public function writeLogWithTable( $table,$dataBeforeUpdate,$dataAfterUpdate,$table_id ){
         $dataBeforeUpdate = (Array) $dataBeforeUpdate;
         foreach ($dataAfterUpdate as $key=>$value){
-            if ( ( ( isset($dataBeforeUpdate[$key]) && ( $dataBeforeUpdate[$key] != $value ) )
+            if ( (
+                ( (array_key_exists($key,$dataBeforeUpdate))
+                        && ( $dataBeforeUpdate[$key] != $value ))
                     ||
                     (
                         ( $key == "consumption_tax_calc_unit_id" )
                         &&
-                        (( $dataBeforeUpdate[$key] === $value ))
+                        (( $dataBeforeUpdate[$key] !== $value ))
                     )
                 )
                 && $key !="modified_at"
             ) {
-                $log = new MModifyLogs();
-                $log->table_name = $table;
-                $log->table_id = $table_id;
-                $log->column_name = $key;
-                if(is_null($dataBeforeUpdate[$key])){
-                    $log->before_data = DB::raw("Null");
-                }else{
-                    $log->before_data = $dataBeforeUpdate[$key];
-                }
+                try{
+                    $log = new MModifyLogs();
+                    $log->table_name = $table;
+                    $log->table_id = $table_id;
+                    $log->column_name = $key;
+                    if(is_null($dataBeforeUpdate[$key])){
+                        $log->before_data = DB::raw("Null");
+                    }else{
+                        $log->before_data = $dataBeforeUpdate[$key];
+                    }
 
-                if(is_null($value)){
-                    $log->after_data = DB::raw("Null");
-                }else{
-                    $log->after_data = $value;
-                }
+                    if(is_null($value)){
+                        $log->after_data = DB::raw("Null");
+                    }else{
+                        $log->after_data = $value;
+                    }
 
-                $log->mst_staff_id = Auth::user()->id;
-                $log->save();
+                    $log->mst_staff_id = Auth::user()->id;
+                    $log->save();
+                }catch (\Exception $ex){}
             }
         }
     }
