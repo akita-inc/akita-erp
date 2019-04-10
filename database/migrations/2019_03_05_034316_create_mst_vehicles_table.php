@@ -102,6 +102,7 @@ class CreateMstVehiclesTable extends Migration
             $table->tinyInteger('wireless_installation_fg')->nullable();
             $table->tinyInteger('enable_fg')->nullable()->default(1);
             $table->tinyInteger('fork_flg')->nullable();
+            $table->integer('floor_type_id')->nullable();
             $table->index('door_number');
         });
     }
