@@ -102,7 +102,7 @@ trait FormTrait
         } else {
             if($this->table=='empty_info'){
                 if($mode=='edit'){
-                    $message = Lang::get('messages.MSG04001');
+                    $message = Lang::get('messages.MSG04004');
                 }else{
                     switch ($status){
                         case 1:

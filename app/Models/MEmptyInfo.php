@@ -35,15 +35,26 @@ class MEmptyInfo extends Model
                     $mEmptyInfo->ask_date = null;
                     $mEmptyInfo->ask_office = null;
                     $mEmptyInfo->ask_staff = null;
+                    $mEmptyInfo->ask_staff_email_address = null;
                     break;
                 case 2:
+                    $empty_mail_add = MEmptyMailTo::where('office_id',Auth::user()->mst_business_office_id)->whereNull('deleted_at')->first();
                     $mEmptyInfo->ask_date = TimeFunction::getTimestamp();
                     $mEmptyInfo->ask_office = Auth::user()->mst_business_office_id ;
                     $mEmptyInfo->ask_staff = Auth::user()->staff_cd;
+                    $mEmptyInfo->ask_staff_email_address = $empty_mail_add ?$empty_mail_add->email_address : null;
                     break;
                 case 8:
                     $mEmptyInfo->apr_date = TimeFunction::getTimestamp();
                     $mEmptyInfo->apr_staff = Auth::user()->staff_cd;
+                    break;
+                case 9:
+                    $mEmptyInfo->ask_date = null;
+                    $mEmptyInfo->ask_office = null;
+                    $mEmptyInfo->ask_staff = null;
+                    $mEmptyInfo->ask_staff_email_address = null;
+                    $mEmptyInfo->apr_date = null;
+                    $mEmptyInfo->apr_staff = null;
                     break;
             }
             $mEmptyInfo->save();
