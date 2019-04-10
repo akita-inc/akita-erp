@@ -117,7 +117,7 @@ trait StaffTrait
                             $dataBeforeUpdate=DB::table($name)->where("id", $item["id"])->first();
                             $idAccordionUpdate=$this->updateRowsAccordion($arrayInsert,$name);
                             array_push($arrayIDInsert,$idAccordionUpdate);
-//                            $this->addLogModifyAccordion($name,$dataBeforeUpdate,$arrayInsert,$item['id']);
+                            $this->addLogModifyAccordion($name,$dataBeforeUpdate,$arrayInsert,$item['id']);
                         }
                         else
                         {
@@ -133,6 +133,7 @@ trait StaffTrait
                     {
                         DB::table($name)->where("id", $item["id"])
                             ->update(['deleted_at' => $currentTime]);
+
                     }
                 }
 
@@ -143,6 +144,9 @@ trait StaffTrait
     }
     protected function addLogModifyAccordion( $name,$dataBeforeUpdate,$data ,$id){
         if(isset($id)){
+            unset($data["disp_number"]);
+            unset($data["modified_at"]);
+            unset($data["created_at"]);
             $modifyLog = new MModifyLogs();
             $modifyLog->writeLogWithTable( $name,$dataBeforeUpdate,$data,$id );
         }

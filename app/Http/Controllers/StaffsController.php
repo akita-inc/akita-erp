@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MStaffAuths;
+use App\Models\MModifyLogs;
 class StaffsController extends Controller
 {
     use ListTrait, FormTrait,StaffTrait;
@@ -196,7 +197,28 @@ class StaffsController extends Controller
         }
         return response()->json($response);
     }
-
+    protected function addLogModify( $dataBeforeUpdate,$data ){
+        unset($data["mst_staff_job_experiences"]);
+        unset($data["dropdown_relocate_municipal_office_nm"]);//
+        unset($data["mst_staff_qualifications"]);
+        unset($data["mst_staff_dependents"]);
+        unset($data["mst_staff_auths"]);
+        unset($data["drivers_license_picture"]);
+        unset($data["deleteFile"]);
+        unset($data["is_change_password"]);
+        unset($data["is_change_password_confirm"]);
+        unset($data["confirm_password"]);
+        if(isset($data["password"]) && $data["password"]=="********" )
+        {
+            unset($data["password"]);
+        }
+        else
+        {
+            $data["password"]=bcrypt($data["password"]);
+        }
+        $modifyLog = new MModifyLogs();
+        $modifyLog->writeLogWithTable( $this->table,$dataBeforeUpdate,$data,$data["id"] );
+    }
     protected function validAfter( &$validator,$data ){
         $this->validateBlockCollapse($validator,"mst_staff_job_experiences",$data,[
             'job_duties' => 'nullable|length:50'
