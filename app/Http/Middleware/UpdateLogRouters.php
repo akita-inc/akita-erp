@@ -29,28 +29,34 @@ class UpdateLogRouters extends Middleware
             $acceplog->url = $link;
             $acceplog->mst_staff_id = Auth::user()->id;
             $acceplog->http_user_agent = $_SERVER["HTTP_USER_AGENT"];
-            $acceplog->ip_address = $_SERVER["REMOTE_ADDR"];
-            //$acceplog->ip_address = $this->getClientIp();
+            $acceplog->ip_address = $this->getClientIp();
             $acceplog->save();
         }
         return $next($request);
     }
-    protected  function getClientIp() {
 
-        $result = null;
+    // 指定されたサーバー環境変数を取得する
+    protected function getServer($key, $default = null)
+    {
+        return (isset($_SERVER[$key])) ? $_SERVER[$key] : $default;
+    }
 
-        $ipSourceList = array(
-            'HTTP_CLIENT_IP','HTTP_X_FORWARDED_FOR',
-            'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR',
-            'HTTP_FORWARDED', 'REMOTE_ADDR'
-        );
-
-        foreach($ipSourceList as $ipSource){
-            if ( isset($_SERVER[$ipSource]) ){
-                $result = $_SERVER[$ipSource];
-                break;
-            }
+    // クライアントのIPアドレスを取得する
+    protected function getClientIp($checkProxy = true)
+    {
+        /*
+         *  プロキシサーバ経由の場合は、プロキシサーバではなく
+         *  接続もとのIPアドレスを取得するために、サーバ変数
+         *  HTTP_CLIENT_IP および HTTP_X_FORWARDED_FOR を取得する。
+         */
+        if ($checkProxy && $this->getServer('HTTP_CLIENT_IP') != null) {
+            $ip = $this->getServer('HTTP_CLIENT_IP');
+        } else if ($checkProxy && $this->getServer('HTTP_X_FORWARDED_FOR') != null) {
+            $ip = $this->getServer('HTTP_X_FORWARDED_FOR');
+        } else {
+            // プロキシサーバ経由でない場合は、REMOTE_ADDR から取得する
+            $ip = $this->getServer('REMOTE_ADDR');
         }
-        return $result;
+        return $ip;
     }
 }
