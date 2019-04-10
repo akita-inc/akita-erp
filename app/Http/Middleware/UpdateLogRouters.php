@@ -29,8 +29,8 @@ class UpdateLogRouters extends Middleware
             $acceplog->url = $link;
             $acceplog->mst_staff_id = Auth::user()->id;
             $acceplog->http_user_agent = $_SERVER["HTTP_USER_AGENT"];
-            //$acceplog->ip_address = $_SERVER["REMOTE_ADDR"];
-            $acceplog->ip_address = $this->getClientIp();
+            $acceplog->ip_address = $_SERVER["REMOTE_ADDR"];
+            //$acceplog->ip_address = $this->getClientIp();
             $acceplog->save();
         }
         return $next($request);
