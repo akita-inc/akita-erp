@@ -29,10 +29,28 @@ class UpdateLogRouters extends Middleware
             $acceplog->url = $link;
             $acceplog->mst_staff_id = Auth::user()->id;
             $acceplog->http_user_agent = $_SERVER["HTTP_USER_AGENT"];
-            $acceplog->ip_address = $_SERVER["REMOTE_ADDR"];
+            //$acceplog->ip_address = $_SERVER["REMOTE_ADDR"];
+            $acceplog->ip_address = $this->getClientIp();
             $acceplog->save();
         }
         return $next($request);
     }
+    protected  function getClientIp() {
 
+        $result = null;
+
+        $ipSourceList = array(
+            'HTTP_CLIENT_IP','HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED', 'REMOTE_ADDR'
+        );
+
+        foreach($ipSourceList as $ipSource){
+            if ( isset($_SERVER[$ipSource]) ){
+                $result = $_SERVER[$ipSource];
+                break;
+            }
+        }
+        return $result;
+    }
 }
