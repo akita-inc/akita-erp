@@ -198,6 +198,7 @@ class StaffsController extends Controller
         return response()->json($response);
     }
     protected function addLogModify( $dataBeforeUpdate,$data ){
+        $data['workmens_compensation_insurance_fg']=$data['workmens_compensation_insurance_fg']==null?0:1;
         unset($data["mst_staff_job_experiences"]);
         unset($data["dropdown_relocate_municipal_office_nm"]);//
         unset($data["mst_staff_qualifications"]);
