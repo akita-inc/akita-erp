@@ -23,9 +23,11 @@ Route::get('/logout','Auth\LoginController@logout')->name('logout');
 Route::get('/logoutError','Auth\LoginController@logoutError')->name('logoutError');
 Route::group(['middleware' => 'StaffUpdateMiddleware'], function () {
     include "home.php";
-    include "supplier.php";
-    include "customer.php";
-    include "staff.php";
-    include "vehicle.php";
+    Route::group(['middleware' => 'UpdateLogRouters'], function () {
+        include "supplier.php";
+        include "customer.php";
+        include "staff.php";
+        include "vehicle.php";
+    });
     include "empty-info.php";
 });
