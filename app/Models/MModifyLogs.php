@@ -22,7 +22,7 @@ class MModifyLogs extends Model
     public function writeLogWithTable( $table,$dataBeforeUpdate,$dataAfterUpdate,$table_id ){
         $dataBeforeUpdate = (Array) $dataBeforeUpdate;
         foreach ($dataAfterUpdate as $key=>$value){
-            if( ( (!isset($dataBeforeUpdate[$key]) && $value != null) || isset($dataBeforeUpdate[$key]) && $dataBeforeUpdate[$key] != $value) ){
+            if( ( isset($dataBeforeUpdate[$key]) && $dataBeforeUpdate[$key] != $value) && $key !="modified_at" ){
                 $log = new MModifyLogs();
                 $log->table_name = $table;
                 $log->table_id = $table_id;
