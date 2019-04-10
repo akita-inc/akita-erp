@@ -27,7 +27,7 @@ class MModifyLogs extends Model
                     (
                         ( $key == "consumption_tax_calc_unit_id" )
                         &&
-                        ( ( $dataBeforeUpdate[$key] == 0 && $value == null ) || ( $dataBeforeUpdate[$key] == null && $value == 0 ))
+                        (( $dataBeforeUpdate[$key] === $value ))
                     )
                 )
                 && $key !="modified_at"
