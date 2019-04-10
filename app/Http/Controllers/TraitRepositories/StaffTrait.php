@@ -144,7 +144,6 @@ trait StaffTrait
     }
     protected function addLogModifyAccordion( $name,$dataBeforeUpdate,$data ,$id){
         if(isset($id)){
-            unset($data["disp_number"]);
             unset($data["modified_at"]);
             unset($data["created_at"]);
             $modifyLog = new MModifyLogs();
