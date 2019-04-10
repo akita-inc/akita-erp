@@ -30,6 +30,6 @@ class CreateAccesslogs extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_accesslogs');
+        Schema::dropIfExists('accesslogs');
     }
 }
