@@ -145,6 +145,10 @@ class VehiclesController extends Controller
             if(is_null($mVehicle)){
                 return abort(404);
             }
+            $mVehicle->personal_insurance_prices = $mVehicle->personal_insurance_prices ? (int)$mVehicle->personal_insurance_prices : '';
+            $mVehicle->property_damage_insurance_prices = $mVehicle->property_damage_insurance_prices ? (int)$mVehicle->property_damage_insurance_prices: '';
+            $mVehicle->vehicle_insurance_prices  = $mVehicle->vehicle_insurance_prices ? (int)$mVehicle->vehicle_insurance_prices : '';
+            $mVehicle->acquisition_amounts = $mVehicle->acquisition_amounts ? (int)$mVehicle->acquisition_amounts: '';
         }
         
 
@@ -232,14 +236,14 @@ class VehiclesController extends Controller
             'loading_inside_dimension_capacity_width'=>'nullable|one_byte_number|length:5',
             'loading_inside_dimension_capacity_height'=>'nullable|one_byte_number|length:5',
             'specification_notes'=>'nullable|length:200',
-            'personal_insurance_prices'=>'nullable|decimal_custom|length:11',
-            'property_damage_insurance_prices'=>'nullable|decimal_custom|length:11',
-            'vehicle_insurance_prices'=>'nullable|decimal_custom|length:11',
+            'personal_insurance_prices'=>'nullable|one_byte_number|length:11',
+            'property_damage_insurance_prices'=>'nullable|one_byte_number|length:11',
+            'vehicle_insurance_prices'=>'nullable|one_byte_number|length:11',
             'picture_fronts'=>'nullable|mimes:jpeg,jpg,png|max_mb:'.config('params.max_file_size'),
             'picture_rights'=>'nullable|mimes:jpeg,jpg,png|max_mb:'.config('params.max_file_size'),
             'picture_lefts'=>'nullable|mimes:jpeg,jpg,png|max_mb:'.config('params.max_file_size'),
             'picture_rears'=>'nullable|mimes:jpeg,jpg,png|max_mb:'.config('params.max_file_size'),
-            'acquisition_amounts'=>'nullable|decimal_custom|length:11',
+            'acquisition_amounts'=>'nullable|one_byte_number|length:11',
             'acquisition_amortization'=>'nullable|one_byte_number|length:3',
             'durable_years'=>'nullable|one_byte_number|length:3',
             'tire_sizes'=>'nullable|length:10',
@@ -372,7 +376,7 @@ class VehiclesController extends Controller
                     $data['picture_rights'] = $mVehicle->picture_rights;
                     $data['picture_lefts'] = $mVehicle->picture_lefts;
                     $data['picture_rears'] = $mVehicle->picture_rears;
-                    $dataAfterUpdate = $mVehicle->toArray();
+                    $dataAfterUpdate = $mVehicle->find($id)->toArray();
                     unset($dataAfterUpdate['id']);
                     unset($dataAfterUpdate['created_at']);
                     unset($dataAfterUpdate['modified_at']);
