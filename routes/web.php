@@ -28,6 +28,6 @@ Route::group(['middleware' => 'StaffUpdateMiddleware'], function () {
         include "customer.php";
         include "staff.php";
         include "vehicle.php";
+        include "empty-info.php";
     });
-    include "empty-info.php";
 });
