@@ -641,3 +641,6 @@ input[type="checkbox"]:focus , input[type="radio"]:focus{
     outline:0;
     box-shadow: none;
 }
+.disabled-bg{
+    background-color: #D9D9D9 !important;
+}

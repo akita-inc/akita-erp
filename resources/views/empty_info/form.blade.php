@@ -98,7 +98,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
-                                @include('Component.form.radio',['class'=>'w-100','filed'=>'vehicle_kb','array' => $listVehicleClassification,'required'=>true])
+                                @include('Component.form.radio',['class'=>'w-100','filed'=>'vehicle_kb','array' => $listVehicleClassification,'required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2 ])
                             </div>
                             <div class="break-row-form"></div>
                             @if($mode=='register' || $mode=='edit')
