@@ -23,6 +23,7 @@ class StaffsController extends Controller
     use ListTrait, FormTrait,StaffTrait;
     public $table = "mst_staffs";
     public $beforeItem = null;
+    public $password=null;
 
     public $ruleValid = [
         'staff_cd'  => 'required|one_bytes_string|length:5',
@@ -215,7 +216,7 @@ class StaffsController extends Controller
         }
         else
         {
-            $data["password"]=bcrypt($data["password"]);
+            $data["password"]=$this->password;
         }
         $modifyLog = new MModifyLogs();
         $modifyLog->writeLogWithTable( $this->table,$dataBeforeUpdate,$data,$data["id"] );
@@ -272,7 +273,8 @@ class StaffsController extends Controller
         $mStaffAuth =  new MStaffAuths();
         $rolesStaffScreen=$mStaffAuth->getDataScreenStaffAuth();
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
-            $data['password'] = bcrypt($data['password']);
+            $this->password= bcrypt($data['password']);
+            $data['password'] = $this->password;
         }else{
             $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
             $data['password'] = $passwordStaff->password;
