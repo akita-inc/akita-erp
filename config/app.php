@@ -174,7 +174,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -228,7 +228,7 @@ return [
         'Common' => App\Helpers\Common::class,
         'TimeFunction' => App\Helpers\TimeFunction::class,
         'UserFunction' => App\Helpers\UserFunction::class,
-
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
