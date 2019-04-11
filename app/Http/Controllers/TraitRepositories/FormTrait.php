@@ -101,7 +101,7 @@ trait FormTrait
             return Response()->json(array('success'=>true));
         } else {
             if($this->table=='empty_info'){
-                if($mode=='edit'){
+                if($mode=='edit' || $mode=='delete'){
                     $message = Lang::get('messages.MSG04004');
                 }else{
                     switch ($status){
