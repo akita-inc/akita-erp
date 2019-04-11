@@ -133,7 +133,7 @@ var ctrEmptyInfoVl = new Vue({
         },
         deleteInfo: function(id){
             var that = this;
-            empty_info_service.checkIsExist(id).then((response) => {
+            empty_info_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
                     that.backHistory();
