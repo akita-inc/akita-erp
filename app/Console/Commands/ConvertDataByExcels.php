@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\MEmptyInfo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class ConvertDataByExcels extends Command
 {
@@ -43,5 +45,17 @@ class ConvertDataByExcels extends Command
      */
     public function handle(){
         $type = $this->option("type");
+        $path = public_path('dbo_M_車両.xlsx');
+        $this->getDataFromExcel($path);
+    }
+
+    protected function getDataFromExcel($path){
+        $data = Excel::load($path)->get();
+        if($data->count()){
+            foreach ($data as $key => $value) {
+                print_r($value->No);
+            }
+
+        }
     }
 }
