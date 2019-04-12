@@ -248,7 +248,7 @@ trait StaffTrait
         }
         return true;
     }
-    protected function uploadFile($id,$file,$path)
+    protected function uploadFile($id,$file,$path,$modeEdit)
     {
         $directoryPath = $path. $id;
         if (!file_exists($directoryPath)) {
@@ -261,8 +261,11 @@ trait StaffTrait
                 DB::table('mst_staffs')
                     ->where('id', $id)
                     ->update(['drivers_license_picture' => $fileName]);
-                $modifyLog = new MModifyLogs();
-                $modifyLog->writeLogWithTable( 'mst_staffs',$dataBeforeUpdate,['drivers_license_picture' => $fileName],$id );
+                if(isset($modeEdit) && $modeEdit==true)
+                {
+                    $modifyLog = new MModifyLogs();
+                    $modifyLog->writeLogWithTable( 'mst_staffs',$dataBeforeUpdate,['drivers_license_picture' => $fileName],$id );
+                }
             } catch (\Exception $e) {
                 dd($e);
                 return false;
