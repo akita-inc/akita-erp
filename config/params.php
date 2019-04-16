@@ -57,5 +57,7 @@ return [
     'max_file_size' => 1,
     'import_file_path'=>[
         'mst_vehicles' => storage_path('import/dbo_M_車両.xlsx'),
+        'mst_staffs'=>storage_path('import/dbo_M_社員.xlsx'),
+        'data_convert'=>storage_path('logs/DataConvert.log'),
     ]
 ];
