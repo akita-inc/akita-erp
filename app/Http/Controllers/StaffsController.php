@@ -298,7 +298,9 @@ class StaffsController extends Controller
         unset($arrayInsert["confirm_password"]);
         DB::beginTransaction();
         try{
+            $modeEdit=false;
             if(isset( $data["id"]) && $data["id"]){
+                $modeEdit=true;
                 $id = $data["id"];
                 $arrayInsert["modified_at"] = $currentTime;
                 MStaffs::query()->where("id","=",$id)->update( $arrayInsert );//MODE UPDATE SUBMIT
@@ -308,7 +310,7 @@ class StaffsController extends Controller
                 $id = DB::table($this->table)->insertGetId( $arrayInsert );
             }
             $this->deleteFile($id,$deleteFile);
-            $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'));
+            $this->uploadFile($id,$drivers_license_picture,config('params.staff_path'),$modeEdit);
 //            $this->saveStaffAuth($id,$mst_staff_auths, $currentTime);
             $this->saveAccordion($id,$data,"mst_staff_job_experiences", null, [], $currentTime);
             $this->saveAccordion($id,$data,"mst_staff_qualifications","qualifications_", [], $currentTime);
