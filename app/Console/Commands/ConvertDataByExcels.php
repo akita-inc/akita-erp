@@ -64,7 +64,7 @@ class ConvertDataByExcels extends Command
                 $path = "";
                 break;
             case 'mst_vehicles':
-                $path = config('params.import_file_path.mst_vehicles');
+                $path = config('params.import_file_path.mst_vehicles.main');
                 break;
             case 'mst_customers':
                 $path = "";
@@ -140,6 +140,7 @@ class ConvertDataByExcels extends Command
         $model =  new MVehicles();
         $excel_column = $model->excel_column;
         $record = array();
+        $data = [];
         $mGeneralPurposes = new MGeneralPurposes();
         foreach($rowData[$row] as $pos=>$value){
             if(isset($excel_column[$pos])) {
@@ -147,16 +148,60 @@ class ConvertDataByExcels extends Command
                     case 'created_at':
                     case 'modified_at':
                         $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value,'mm/dd/yyyy hh:mm:ss');
-                    break;
+                        break;
+                    case 'vehicles_kb':
+                    case 'vehicle_size_kb':
+                    case 'vehicle_purpose_id':
+                    case 'land_transport_office_cd':
+                    case 'vehicle_classification_id':
+                    case 'private_commercial_id':
+                    case 'car_body_shape_id':
+                    case 'vehicle_id':
+                    case 'kinds_of_fuel_id':
+                        switch ($excel_column[$pos]){
+                            case 'vehicles_kb':
+                                $data_kb = config('params.data_kb')['vehicles_kb'];
+                                break;
+                            case 'vehicle_size_kb':
+                                $data_kb = config('params.data_kb')['vehicle_size_kb'];
+                                break;
+                            case 'vehicle_purpose_id':
+                                $data_kb = config('params.data_kb')['vehicle_purpose'];
+                                break;
+                            case 'land_transport_office_cd':
+                                $data_kb = config('params.data_kb')['land_transport_office_cd'];
+                                break;
+                            case 'vehicle_classification_id':
+                                $data_kb = config('params.data_kb')['vehicle_classification'];
+                                break;
+                            case 'private_commercial_id':
+                                $data_kb = config('params.data_kb')['private_commercial'];
+                                break;
+                            case 'car_body_shape_id':
+                                $data_kb = config('params.data_kb')['car_body_shape'];
+                                break;
+                            case 'vehicle_id':
+                                $data_kb = config('params.data_kb')['vehicle'];
+                                break;
+                            case 'kinds_of_fuel_id':
+                                $data_kb = config('params.data_kb')['kinds_of_fuel'];
+                                break;
+                        }
+                        $result = $mGeneralPurposes->checkExistDataAndInsert($data_kb,$value);
+                        if($result){
+                            $record[$excel_column[$pos]] = $result;
+                        }else{
+                            break 2;
+                        }
+                        break;
                     default:
                         $record[$excel_column[$pos]] = $value;
                 }
             }
-
+          if(!empty($record)){
+            DB::table('mst_vehicles_copy1')->insert($record);
+          }
         }
-        dd($record);
-//              if(!empty($rows)){
-//                DB::table($type)->insert($rows);
-//              }
+
     }
 }

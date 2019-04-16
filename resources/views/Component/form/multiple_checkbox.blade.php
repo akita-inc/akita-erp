@@ -12,7 +12,7 @@
             <div class="wd-100">
                 <input {!! isset($attr_input) ? $attr_input:"" !!}
                        @input="input($event)"
-                       type="text"
+                       type="tel"
                        v-bind:class="errors.{!! $filed !!}_value != undefined && errors.{!! $filed !!}_value[0][{!! $value->date_id !!}] ? 'form-control is-invalid':'' "
                        class="form-control"
                        id="{!! $filed !!}_value{!! $value->date_id !!}"

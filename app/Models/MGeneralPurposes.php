@@ -177,4 +177,35 @@ class MGeneralPurposes extends Model
             ->first();
         return $result->toArray()['max(date_id)'] + 1;
     }
+
+    public function checkExistDataAndInsert($data_kb,$string){
+        $query = $this->where('data_kb',$data_kb)
+            ->where('deleted_at','=',null);
+        if(is_numeric($string)){
+            $result = $query->where('date_id',$string)->first();
+        }else{
+            $result = $query->where('date_nm',$string)->first();
+        }
+        if(!$result){
+            if(is_numeric($string)){
+                return false;
+            }
+            $data = $this->where('data_kb',$data_kb)
+                ->where('deleted_at','=',null)
+                ->orderBy('disp_number','desc')
+                ->get();
+            $this->data_kb = $data_kb;
+            $this->date_id = $data[0]->date_id+1;
+            $this->data_kb_nm = $data[0]->data_kb_nm;
+            $this->date_nm_kana = 'フメイ';
+            $this->date_nm = $string;
+            $this->disp_fg = 1;
+            $this->disp_number = $data[0]->disp_number+1;
+            $this->save();
+            return $this->date_id;
+        }else{
+            return $result->date_id;
+        }
+
+    }
 }
