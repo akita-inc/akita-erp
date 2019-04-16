@@ -14,7 +14,7 @@ use App\Models\MVehicles;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Helpers\WriteLogs;
 
 class ConvertDataByExcels extends Command
 {
@@ -55,7 +55,7 @@ class ConvertDataByExcels extends Command
         $type = $this->option("type");
         switch ($type){
             case 'mst_staffs':
-                $path = "";
+                $path = config('params.import_file_path.mst_staffs');
                 break;
             case 'mst_staff_dependents':
                 $path = "";
@@ -96,6 +96,7 @@ class ConvertDataByExcels extends Command
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,null,false,false, true);
             switch ($type){
                 case 'mst_staffs':
+                    $this->importStaffs($rowData,$row);
                     break;
                 case 'mst_staff_dependents':
                     break;
@@ -114,6 +115,27 @@ class ConvertDataByExcels extends Command
         }
     }
 
+    public function importStaffs($rowData,$row){
+        $model= new MStaffs();
+        $excel_column = $model->excel_column;
+        $record = array();
+        $mGeneralPurposes = new MGeneralPurposes();
+        foreach($rowData[$row] as $pos=>$value){
+            if(isset($excel_column[$pos])) {
+                switch ($excel_column[$pos]){
+                    case 'created_at':
+                    case 'modified_at':
+                        $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value,'mm/dd/yyyy hh:mm:ss');
+                        break;
+                    default:
+                        $record[$excel_column[$pos]] = $value;
+                }
+            }
+
+        }
+        WriteLogs::initLog();
+        dd($record);
+    }
     public function importVehicle($rowData, $row){
         $model =  new MVehicles();
         $excel_column = $model->excel_column;

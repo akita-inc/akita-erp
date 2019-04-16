@@ -64,5 +64,7 @@ return [
                     storage_path('import/車両償却 ５ （青白）.xls'),
                 ]
         ],
+        'mst_staffs'=>storage_path('import/dbo_M_社員.xlsx'),
+        'data_convert'=>storage_path('logs/DataConvert.log'),
     ]
 ];
