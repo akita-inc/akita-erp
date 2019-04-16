@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\MBusinessOffices;
 use App\Models\MCustomers;
 use App\Models\MEmptyInfo;
+use App\Models\MGeneralPurposes;
 use App\Models\MStaffDependents;
 use App\Models\MStaffQualifications;
 use App\Models\MStaffs;
@@ -63,7 +64,7 @@ class ConvertDataByExcels extends Command
                 $path = "";
                 break;
             case 'mst_vehicles':
-                $path = public_path('dbo_M_車両.xlsx');
+                $path = config('params.import_file_path.mst_vehicles');
                 break;
             case 'mst_customers':
                 $path = "";
@@ -79,7 +80,6 @@ class ConvertDataByExcels extends Command
     }
 
     protected function getDataFromExcel($path, $type){
-        $currentTime = date("Y-m-d H:i:s",time());
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($path);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
@@ -91,7 +91,7 @@ class ConvertDataByExcels extends Command
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
         $keys = array();
-        $start_row = 1;
+        $start_row = 2;
         for ($row = $start_row; $row <= $highestRow; $row++){
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,null,false,false, true);
             switch ($type){
@@ -118,19 +118,23 @@ class ConvertDataByExcels extends Command
         $model =  new MVehicles();
         $excel_column = $model->excel_column;
         $record = array();
+        $mGeneralPurposes = new MGeneralPurposes();
         foreach($rowData[$row] as $pos=>$value){
-            print_r($rowData[$row]);
             if(isset($excel_column[$pos])) {
-                if($excel_column[$pos]=='created_at' || $excel_column[$pos]=='modified_at'){
-                    $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value,'mm/dd/yyyy hh:mm:ss');
-                }else{
-                    $record[$excel_column[$pos]] = $value;
+                switch ($excel_column[$pos]){
+                    case 'created_at':
+                    case 'modified_at':
+                        $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value,'mm/dd/yyyy hh:mm:ss');
+                    break;
+                    default:
+                        $record[$excel_column[$pos]] = $value;
                 }
             }
-            dd($record);
+
+        }
+        dd($record);
 //              if(!empty($rows)){
 //                DB::table($type)->insert($rows);
 //              }
-        }
     }
 }
