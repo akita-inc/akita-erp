@@ -56,6 +56,13 @@ return [
     'staff_path'=>storage_path('staffs/'),
     'max_file_size' => 1,
     'import_file_path'=>[
-        'mst_vehicles' => storage_path('import/dbo_M_車両.xlsx'),
+        'mst_vehicles' => [
+                'main' => storage_path('import/dbo_M_車両.xlsx'),
+                'extra' => [
+                    storage_path('import/償却 新 ６ (カラフル) 新.xlsx'),
+                    storage_path('import/仕様別車両一覧~300620.xls'),
+                    storage_path('import/車両償却 ５ （青白）.xls'),
+                ]
+        ],
     ]
 ];

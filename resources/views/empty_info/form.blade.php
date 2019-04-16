@@ -94,7 +94,7 @@
                             <div class="break-row-form"></div>
                             @endif
                             <div class="col-md-4 col-sm-12">
-                                @include('Component.form.select',['filed'=>'regist_office_id','array'=>$listBusinessOffices,'required'=>true])
+                                @include('Component.form.select',['filed'=>'regist_office_id','array'=>$listBusinessOffices,'required'=>true,'attr_input' => "disabled"])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
@@ -133,7 +133,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-5 col-sm-10">
-                                @include('Component.form.input',['filed'=>'max_load_capacity','required'=>true,'attr_input' => "maxlength='5'"])
+                                @include('Component.form.input',['filed'=>'max_load_capacity','required'=>true,'attr_input' => "maxlength='5'", 'type' => 'tel'])
                             </div>
                             <div class="col-md-7 col-sm-2 pl-0 d-flex align-items-center">kg</div>
                             <div class="break-row-form"></div>
@@ -166,7 +166,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
-                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='8' @blur='addComma' @focus='removeComma'"])
+                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='8' @blur='addComma' @focus='removeComma'", 'type' => 'tel'])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
@@ -246,6 +246,29 @@
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG10009"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10009'); ?>";
         messages["MSG10012"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10012'); ?>";
+
+        $(function() {
+            var tabindex = 1;
+            $('input[type="text"],select, textarea, button').each(function() {
+                if (this.type != "hidden") {
+                    var $input = $(this);
+                    $input.attr("tabindex", tabindex);
+                    tabindex++;
+                }
+                if(this.type == "button"){
+                    if($(this).text()=='戻る'){
+                        let index = parseInt($(this).attr("tabindex"));
+                        $(this).attr("tabindex", index+1);
+                    }
+                }
+                if(this.type == "submit"){
+                    if($(this).text()=='登録'){
+                        var index1 = parseInt($(this).attr("tabindex"));
+                        $(this).attr("tabindex", index1-1);
+                    }
+                }
+            });
+        });
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/empty-info.js') }}" charset="utf-8"></script>
 @endsection
