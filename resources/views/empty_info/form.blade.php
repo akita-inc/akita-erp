@@ -249,7 +249,7 @@
 
         $(function() {
             var tabindex = 1;
-            $('input[type="text"],select, textarea, button').each(function() {
+            $('input[type="text"],input[type="tel"], select, textarea, button').each(function() {
                 if (this.type != "hidden") {
                     var $input = $(this);
                     $input.attr("tabindex", tabindex);
