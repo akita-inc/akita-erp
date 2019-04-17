@@ -102,47 +102,6 @@ class MVehicles extends Model
 
     ];
 
-    public $excel_column = [
-        'A'=>'vehicles_cd',
-        'B'=>'vehicles_kb',
-        'C'=>'registration_numbers',
-        'D'=>'mst_business_office_id',
-        'I'=>'vehicle_size_kb',
-        'J'=>'vehicle_purpose_id',
-        'AF'=>'land_transport_office_cd',
-        'F' => 'registration_dt',
-        'G' => 'first_year_registration_dt',
-        'H' => 'vehicle_classification_id',
-        'K' => 'private_commercial_id',
-        'L' => 'car_body_shape_id',
-        'M' => 'vehicle_id',
-        'O' => 'seating_capacity',
-        'P' => 'max_loading_capacity',
-        'Q' => 'vehicle_body_weights',
-        'R' => 'vehicle_total_weights',
-        'S' => 'frame_numbers',
-        'U' => 'vehicle_lengths',
-        'V' => 'vehicle_widths',
-        'W' => 'vehicle_heights',
-        'Z' => 'axle_loads_ff',
-        'AA' => 'axle_loads_fr',
-        'AB' => 'axle_loads_rf',
-        'AC' => 'axle_loads_rr',
-        'N' => 'vehicle_types',
-        'T' => 'engine_typese',
-        'X' => 'total_displacements',
-        'Y' => 'kinds_of_fuel_id',
-        'AE' => 'user_base_locations',
-        'AD' => 'expiry_dt',
-        'AL' => 'mst_staff_cd',
-        'AH' => 'personal_insurance_prices',
-        'AI' => 'property_damage_insurance_prices',
-        'AJ' => 'vehicle_insurance_prices',
-        'AW' => 'dispose_dt',
-        'AX' => 'created_at',
-        'BA' => 'modified_at',
-    ];
-
     public function getHistoryNearest($vehicles_cd, $adhibition_end_dt) {
         $vehicles = new MVehicles();
         $vehicles = $vehicles->where('vehicles_cd', '=', $vehicles_cd)
