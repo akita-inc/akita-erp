@@ -106,7 +106,7 @@
                                 <div class="wrap-control-group">
                                     <label for="search_vehicle">ナンバー検索</label>
                                     <input v-model="registration_numbers"
-                                           type="text"
+                                           type="tel"
                                            class="form-control w-50"
                                            id="search_vehicle"
                                            maxlength="4"

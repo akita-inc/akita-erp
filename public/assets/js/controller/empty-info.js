@@ -21145,12 +21145,6 @@ var ctrEmptyInfoVl = new Vue({
   },
   mounted: function mounted() {
     this.loadFormEdit();
-
-    if (document.getElementById("search_vehicle") != null) {
-      this.setInputFilter(document.getElementById("search_vehicle"), function (value) {
-        return /^-?\d*$/.test(value);
-      });
-    }
   },
   components: {
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a,
