@@ -40,43 +40,6 @@ class MStaffs extends Authenticatable
 
     ];
 
-    public $excel_column = [
-        'A'=>'staff_cd',
-        'B'=>'staff_nm',
-        'C'=>'staff_nm_kana',
-        'D'=>'employment_pattern_id',
-        'E'=>'mst_business_office_id',
-        'G' => 'sex_id',
-        'I'=>'birthday',
-        'J'=>'entire_date',
-        'K'=>'retire_date',
-        'L' => 'zip_cd',
-        'M'=>'address1',
-        'N'=>'address2',
-        'O'=>'landline_phone_number',
-        'AA'=>'notes',
-        'AB' => 'created_at',
-        'AE' => 'modified_at',
-    ];
-    public $excel_column_insurer=[
-        'staff_cd'=>'社員番号',
-        'insurer_number'=>'保険番号',
-        'basic_pension_number'=>'基礎年金番号',
-        'person_insured_number'=>'被保険者番号',
-        'health_insurance_class'=>'健康保険等級',
-        'welfare_annuity_class'=>'厚生年金等級',
-        'relocation_municipal_office_cd'=>'市町村役場コード',
-    ];
-    public $excel_column_edu_bg=[
-        'staff_cd'=>'社員CD',
-        'educational_background'=>'最終学歴',
-        'educational_background_dt'=>'最終学歴日付',
-        'retire_reasons'=>'退職理由',
-        'death_reasons'=>'死亡理由',
-        'death_dt'=>'死亡年月日'
-
-    ];
-
     public function getHistoryNearest($staff_cd, $adhibition_end_dt) {
         $mMstaffs = new MStaffs();
         $mMstaffs = $mMstaffs->where('staff_cd', '=', $staff_cd)

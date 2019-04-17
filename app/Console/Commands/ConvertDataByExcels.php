@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\ImportExcel\MstStaffDependents;
+use App\Console\Commands\ImportExcel\MstStaffs;
 use App\Models\MBusinessOffices;
 use App\Models\MCustomers;
 use App\Models\MEmptyInfo;
