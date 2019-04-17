@@ -260,11 +260,19 @@
                         let index = parseInt($(this).attr("tabindex"));
                         $(this).attr("tabindex", index+1);
                     }
+                    if($(this).text()=='削除'){
+                        let index = parseInt($(this).attr("tabindex"));
+                        $(this).attr("tabindex", index+3);
+                    }
                 }
                 if(this.type == "submit"){
                     if($(this).text()=='登録'){
                         var index1 = parseInt($(this).attr("tabindex"));
                         $(this).attr("tabindex", index1-1);
+                    }
+                    if($(this).text()=='更新'){
+                        var index1 = parseInt($(this).attr("tabindex"));
+                        $(this).attr("tabindex", index1-2);
                     }
                 }
             });
