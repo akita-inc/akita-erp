@@ -15,6 +15,7 @@ class CreateMstBusinessOfficesTable extends Migration
     {
         Schema::create('mst_business_offices', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('mst_business_office_cd');
             $table->string('business_office_nm',50);
             $table->string('business_office_nm_kana',100)->nullable();
             $table->integer('branch_office_cd')->nullable();

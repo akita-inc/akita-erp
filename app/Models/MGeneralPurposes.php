@@ -184,11 +184,11 @@ class MGeneralPurposes extends Model
         if(is_numeric($string)){
             $result = $query->where('date_id',$string)->first();
         }else{
-            $result = $query->where('date_nm',$string)->first();
+            $result = $query->where('date_nm','=',$string)->first();
         }
         if(!$result){
             if(is_numeric($string)){
-                return false;
+                return null;
             }
             $data = $this->where('data_kb',$data_kb)
                 ->where('deleted_at','=',null)
@@ -201,7 +201,7 @@ class MGeneralPurposes extends Model
             $this->date_nm = $string;
             $this->disp_fg = 1;
             $this->disp_number = $data[0]->disp_number+1;
-            $this->save();
+//            $this->save();
             return $this->date_id;
         }else{
             return $result->date_id;

@@ -65,6 +65,10 @@ return [
                 ]
         ],
         'mst_staffs'=>storage_path('import/dbo_M_社員.xlsx'),
+        'mst_staff_dependents' => storage_path('import/扶養者名_生年月日.xlsx'),
         'data_convert'=>storage_path('logs/DataConvert.log'),
+    ],
+    "log_import_path" => [
+        'data_convert'=>storage_path('logs/DataConvert.log')
     ]
 ];

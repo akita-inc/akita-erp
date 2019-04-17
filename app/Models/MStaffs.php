@@ -59,13 +59,22 @@ class MStaffs extends Authenticatable
         'AE' => 'modified_at',
     ];
     public $excel_column_insurer=[
-        '社員番号'=>'staff_cd',
-        '保険番号'=>'insurer_number',
-        '基礎年金番号'=>'basic_pension_number',
-        '被保険者番号'=>'person_insured_number',
-        '健康保険等級'=>'health_insurance_class',
-        '厚生年金等級'=>'welfare_annuity_class',
-        '市町村役場コード'=>'relocation_municipal_office_cd'
+        'staff_cd'=>'社員番号',
+        'insurer_number'=>'保険番号',
+        'basic_pension_number'=>'基礎年金番号',
+        'person_insured_number'=>'被保険者番号',
+        'health_insurance_class'=>'健康保険等級',
+        'welfare_annuity_class'=>'厚生年金等級',
+        'relocation_municipal_office_cd'=>'市町村役場コード',
+    ];
+    public $excel_column_edu_bg=[
+        'staff_cd'=>'社員CD',
+        'educational_background'=>'最終学歴',
+        'educational_background_dt'=>'最終学歴日付',
+        'retire_reasons'=>'退職理由',
+        'death_reasons'=>'死亡理由',
+        'death_dt'=>'死亡年月日'
+
     ];
 
     public function getHistoryNearest($staff_cd, $adhibition_end_dt) {
