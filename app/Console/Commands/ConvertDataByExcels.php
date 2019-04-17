@@ -118,8 +118,11 @@ class ConvertDataByExcels extends Command
     public function importStaffs($rowData,$row){
         $model= new MStaffs();
         $excel_column = $model->excel_column;
+        //
+        $this->getDataFromChildFile(config('params.import_file_path.health_insurance_card_information'));
         $record = array();
         $mGeneralPurposes = new MGeneralPurposes();
+        WriteLogs::initLog("社員");
         foreach($rowData[$row] as $pos=>$value){
             if(isset($excel_column[$pos])) {
                 switch ($excel_column[$pos]){
@@ -131,9 +134,8 @@ class ConvertDataByExcels extends Command
                         $record[$excel_column[$pos]] = $value;
                 }
             }
-
         }
-        WriteLogs::initLog();
+
         dd($record);
     }
     public function importVehicle($rowData, $row){
@@ -152,7 +154,6 @@ class ConvertDataByExcels extends Command
                         $record[$excel_column[$pos]] = $value;
                 }
             }
-
         }
         dd($record);
 //              if(!empty($rows)){
