@@ -21321,7 +21321,8 @@ __webpack_require__.r(__webpack_exports__);
           this.popupVisible || (this.popupVisible = !0), this.$emit("focus", e);
         },
         handleKeydown: function handleKeydown(e) {
-          13 === e.keyCode && (this.handleChange(), this.userInput = null, this.popupVisible = !1, e.stopPropagation());
+          var t = e.keyCode;
+          13 !== t && 9 !== t || (this.handleChange(), this.userInput = null, this.popupVisible = !1, e.stopPropagation());
         },
         handleInput: function handleInput(e) {
           this.userInput = e.target.value;
@@ -21959,7 +21960,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
+module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })
