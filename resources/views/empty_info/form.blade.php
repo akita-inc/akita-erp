@@ -245,6 +245,7 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG10009"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10009'); ?>";
+        messages["MSG10010"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10010'); ?>";
         messages["MSG10012"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10012'); ?>";
 
         $(function() {
