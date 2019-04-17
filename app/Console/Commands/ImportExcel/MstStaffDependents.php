@@ -9,6 +9,8 @@ namespace App\Console\Commands\ImportExcel;
 class MstStaffDependents extends BaseImport
 {
     public $path = "";
+    public $configDataImport = [];
+
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staff_dependents');
@@ -16,7 +18,5 @@ class MstStaffDependents extends BaseImport
 
     public function import()
     {
-        $this->log();
-        dd($this->rowCurrent);
     }
 }
