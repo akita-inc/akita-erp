@@ -155,7 +155,7 @@ var ctrEmptyInfoVl = new Vue({
                     return;
                 }else{
                     if(isNaN(that.registration_numbers)){
-                        alert(messages['MSG10009']);
+                        alert(messages['MSG10010']);
                         return;
                     }
                 }
