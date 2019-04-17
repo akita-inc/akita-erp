@@ -78,9 +78,9 @@ INSERT INTO `mst_general_purposes` VALUES (79, '04001', '車両区分', 1, '一�
 INSERT INTO `mst_general_purposes` VALUES (80, '04001', '車両区分', 2, '運行車', 'ウンコウシャ', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (81, '04002', '自動車種別ID', 1, '普通', 'フツウ', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (82, '04002', '自動車種別ID', 2, '特殊', 'トクシュ', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (83, '04003', '小中大区分', 1, '小型', 'コガタ', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (84, '04003', '小中大区分', 2, '中型', 'チュウガタ', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (85, '04003', '小中大区分', 3, '大型', 'オオガタ', NULL, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
+INSERT INTO `mst_general_purposes` VALUES (83, '04003', '小中大区分', 3, '小型', 'コガタ', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
+INSERT INTO `mst_general_purposes` VALUES (84, '04003', '小中大区分', 5, '中型', 'チュウガタ', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
+INSERT INTO `mst_general_purposes` VALUES (85, '04003', '小中大区分', 8, '大型', 'オオガタ', NULL, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (86, '04004', '用途ID', 1, '貨物', 'カモツ', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (87, '04004', '用途ID', 2, 'トレーラー', 'トレーラー', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (88, '04005', '陸運支局CD', 1, 'テスト', '', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
