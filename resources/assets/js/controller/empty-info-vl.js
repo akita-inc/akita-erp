@@ -271,10 +271,6 @@ var ctrEmptyInfoVl = new Vue({
     },
     mounted () {
         this.loadFormEdit();
-        if(document.getElementById("search_vehicle")!=null){
-            this.setInputFilter(document.getElementById("search_vehicle"), function(value) {
-                return /^-?\d*$/.test(value); });
-        }
     },
     components: {
         DatePicker,

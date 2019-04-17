@@ -58,6 +58,15 @@ class MStaffs extends Authenticatable
         'AB' => 'created_at',
         'AE' => 'modified_at',
     ];
+    public $excel_column_insurer=[
+        '社員番号'=>'staff_cd',
+        '保険番号'=>'insurer_number',
+        '基礎年金番号'=>'basic_pension_number',
+        '被保険者番号'=>'person_insured_number',
+        '健康保険等級'=>'health_insurance_class',
+        '厚生年金等級'=>'welfare_annuity_class',
+        '市町村役場コード'=>'relocation_municipal_office_cd'
+    ];
 
     public function getHistoryNearest($staff_cd, $adhibition_end_dt) {
         $mMstaffs = new MStaffs();

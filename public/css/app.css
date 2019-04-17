@@ -299,7 +299,7 @@ input,select{
     font-weight: bolder;
     font-size: 15px;
 }
-.wrap-control-group input[type="text"],.wrap-control-group select,.wrap-control-group textarea{
+.wrap-control-group input[type="text"],.wrap-control-group input[type="tel"], .wrap-control-group select,.wrap-control-group textarea{
     width: 100% !important;
     height: 38px;
     line-height: 38px;
