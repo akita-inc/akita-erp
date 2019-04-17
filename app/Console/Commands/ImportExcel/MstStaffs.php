@@ -58,6 +58,19 @@ class MstStaffs extends BaseImport
         echo "mst_staffs";
         $this->mainReading($this->rowCurrentData,$this->rowIndex);
     }
+    public function formatDateString($date)
+    {
+        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'mm/dd/yyyy hh:mm:ss');
+    }
+    public  function generateRandomString($length = 8) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
         $record = array();
@@ -69,18 +82,23 @@ class MstStaffs extends BaseImport
                 switch ($excel_column[$pos]){
                     case 'created_at':
                     case 'modified_at':
-                        $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value,'mm/dd/yyyy hh:mm:ss');
+                        $record[$excel_column[$pos]] = $this->formatDateString($value);
                         break;
                     case 'staff_cd':
+                        $record[$excel_column[$pos]] = $value;
                         if(!empty($insuranceArr[$value]))
                         {
-                            $record["insurance"]=$insuranceArr[$value];
+                            $insurance=$insuranceArr[$value];
+                            $record+=$insurance;
                         }
                         if(!empty($backgroundArr[$value]))
                         {
-                            $record["staff_background"]=$backgroundArr[$value];
+                            $staff_background=$backgroundArr[$value];
+                            $record+=$staff_background;
                         }
-                        $record[$excel_column[$pos]] = $value;
+                        break;
+                    case 'address1':
+
                         break;
                     default:
                         $record[$excel_column[$pos]] = $value;
@@ -91,15 +109,7 @@ class MstStaffs extends BaseImport
 
         dd($record);
     }
-    public  function generateRandomString($length = 8) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
-    }
+
     public  function getDataFromChildFile($path,$type)
     {
         try {
@@ -125,10 +135,10 @@ class MstStaffs extends BaseImport
                     foreach ($data as  $value) {
                         $arr[$value->{$excel_column_edu_bg['staff_cd']}] = [
                             'educational_background'=>$value->{$excel_column_edu_bg['educational_background']},
-                            'educational_background_dt'=>$value->{$excel_column_edu_bg['educational_background_dt']},
+                            'educational_background_dt'=> $this->formatDateString($value->{$excel_column_edu_bg['educational_background_dt']}),
                             'retire_reasons'=>$value->{$excel_column_edu_bg['retire_reasons']},
                             'death_reasons'=>$value->{$excel_column_edu_bg['death_reasons']},
-                            'death_dt'=>$value->{$excel_column_edu_bg['death_dt']},
+                            'death_dt'=>$this->formatDateString($value->{$excel_column_edu_bg['death_dt']}),
                         ];
                     }
                 }
