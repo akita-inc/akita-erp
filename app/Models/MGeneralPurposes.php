@@ -52,6 +52,22 @@ class MGeneralPurposes extends Model
         }
     }
 
+    public function getPrefCdByPrefName($pref_name)
+    {
+        $pref_nms = DB::table('mst_general_purposes')
+            ->select('date_nm','date_id')
+            ->where('data_kb','=',config('params.data_kb.prefecture_cd'))
+            ->get();
+        foreach ($pref_nms as $key=>$value)
+        {
+            $val=json_decode( json_encode($value), true);
+            if (strpos($pref_name, (string)$val['date_nm']) !== false) {
+                return (string)$val['date_id'];
+            }
+        }
+        return null;
+
+    }
     public function getInfoByDataKB($data_kb){
         $data = $this->getMConfigByConditions(
             array(

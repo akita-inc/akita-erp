@@ -6,9 +6,13 @@ namespace App\Console\Commands\ImportExcel;
  * Date: 4/17/2019
  * Time: 3:06 PM
  */
+
+use App\Helpers\Common;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\MStaffs;
 use App\Models\MGeneralPurposes;
+use Illuminate\Support\Facades\DB;
+use App\Models\MBusinessOffices;
 class MstStaffs extends BaseImport
 {
     public $path = "";
@@ -20,12 +24,12 @@ class MstStaffs extends BaseImport
         'E'=>'mst_business_office_id',
         'G' => 'sex_id',
         'I'=>'birthday',
-        'J'=>'entire_date',
+        'J'=>'enter_date',
         'K'=>'retire_date',
         'L' => 'zip_cd',
         'M'=>'address1',
         'N'=>'address2',
-        'O'=>'landline_phone_number',
+        'O'=>'phone_number',
         'AA'=>'notes',
         'AB' => 'created_at',
         'AE' => 'modified_at',
@@ -60,7 +64,11 @@ class MstStaffs extends BaseImport
     }
     public function formatDateString($date)
     {
-        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'mm/dd/yyyy hh:mm:ss');
+        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy-mm-dd');
+    }
+    public function formatDateTimeString($date)
+    {
+        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy/mm/dd hh:mm:ss');
     }
     public  function generateRandomString($length = 8) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -71,6 +79,7 @@ class MstStaffs extends BaseImport
         }
         return $randomString;
     }
+
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
         $record = array();
@@ -82,10 +91,13 @@ class MstStaffs extends BaseImport
                 switch ($excel_column[$pos]){
                     case 'created_at':
                     case 'modified_at':
+                        $record[$excel_column[$pos]] = $this->formatDateTimeString($value);
+                        break;
+                    case 'birthday'||'enter_date'|| 'retire_date':
                         $record[$excel_column[$pos]] = $this->formatDateString($value);
                         break;
                     case 'staff_cd':
-                        $record[$excel_column[$pos]] = $value;
+                        $record[$excel_column[$pos]] = substr($value,0,5);
                         if(!empty($insuranceArr[$value]))
                         {
                             $insurance=$insuranceArr[$value];
@@ -97,19 +109,86 @@ class MstStaffs extends BaseImport
                             $record+=$staff_background;
                         }
                         break;
-                    case 'address1':
-
+                    case 'staff_nm':
+                        $record+=$this->explodeStaffName($value,null);
                         break;
+                    case 'staff_nm_kana':
+                        $record+=$this->explodeStaffName(mb_convert_kana($value),'kana');
+                        break;
+                    case 'zip_cd':
+                        $record[$excel_column[$pos]] = str_replace("-","",$value);
+                        break;
+                    case 'address1':
+                        $record[$excel_column[$pos]] = $mGeneralPurposes->getPrefCdByPrefName($value);
+                        break;
+                    case 'phone_number':
+                        if($value)
+                        {
+                            if($this->getCellularPhone($value))
+                            {
+                                $record['cellular_phone_number']=$this->getCellularPhone($value);
+                            }
+                            else
+                            {
+                                $record['landline_phone_number']=$value;
+                            }
+                        }
+                        break;
+                    case 'mst_business_office_id':
+                        $record[$excel_column[$pos]] = $this->getOfficeId($value);
+                       break;
                     default:
                         $record[$excel_column[$pos]] = $value;
+                        break;
                 }
             }
             $record["password"]=bcrypt($this->generateRandomString(8));
+            unset($record['staff_nm']);
+            unset($record['staff_nm_kana']);
+            unset($record["phone_number"]);
         }
-
         dd($record);
+        if(!empty($record))
+        {
+            $this->insertDB($record);
+        }
     }
-
+    public function getOfficeId($office_cd)
+    {
+        $mBusinessOffice=new MBusinessOffices();
+        $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
+        if(!empty($result))
+        {
+            return $result;
+        }
+        return null;
+    }
+    public function getCellularPhone($phone)
+    {
+        $cellPhone=substr($phone,0,3);
+        if($cellPhone=="090" || $cellPhone=="080" || $cellPhone=="070")
+        {
+            return $phone;
+        }
+            return null;
+    }
+    public function explodeStaffName($value,$type)
+    {
+        $result=array();
+        if($type=="kana")
+        {
+                $staff_nm=explode(' ',$value);
+                $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
+                $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
+        }
+        else
+        {
+                $staff_nm=explode('　',$value);
+                $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
+                $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
+        }
+        return $result;
+    }
     public  function getDataFromChildFile($path,$type)
     {
         try {
@@ -121,9 +200,9 @@ class MstStaffs extends BaseImport
                 {
                     foreach ($data as  $value) {
                         $arr[$value->{$excel_column_insurer['staff_cd']}] = [
-                            'insurer_number'=>$value->{$excel_column_insurer['insurer_number']},
-                            'basic_pension_number'=>$value->{$excel_column_insurer['basic_pension_number']},
-                            'person_insured_number'=>$value->{$excel_column_insurer['person_insured_number']},
+                            'insurer_number'=>substr($value->{$excel_column_insurer['insurer_number']},0,3),
+                            'basic_pension_number'=>substr($value->{$excel_column_insurer['basic_pension_number']},0,11),
+                            'person_insured_number'=>substr($value->{$excel_column_insurer['person_insured_number']},0,11),
                             'health_insurance_class'=>$value->{$excel_column_insurer['health_insurance_class']},
                             'welfare_annuity_class'=>$value->{$excel_column_insurer['welfare_annuity_class']},
                             'relocation_municipal_office_cd'=>$value->{$excel_column_insurer['relocation_municipal_office_cd']},
