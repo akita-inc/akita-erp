@@ -74,7 +74,11 @@ return [
                     'fileName' => '車両償却 ５ （青白）.xls',
                 ]
         ],
-        'mst_staffs'=>storage_path('import/dbo_M_社員.xlsx'),
+        'mst_staffs'=>[
+            'main'=>storage_path('import/dbo_M_社員.xlsx'),
+            'health_insurance_card_information'=>storage_path('import/20190404_保険証情報.xlsx'),
+            'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx')
+        ],
         'mst_staff_dependents' => storage_path('import/扶養者名_生年月日.xlsx'),
         'data_convert'=>storage_path('logs/DataConvert.log'),
     ],
