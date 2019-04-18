@@ -57,7 +57,7 @@ class ConvertDataByExcels extends Command
         $type = $this->option("type");
         $class = "\\APP\\Console\\Commands\\ImportExcel\\".str_replace(" ","",(ucwords(str_replace("_"," ",$type))));
         $class = new $class();
-        $class->type = $type;
+        $class->table = $type;
         $class->run();
     }
 }

@@ -57,11 +57,21 @@ return [
     'max_file_size' => 1,
     'import_file_path'=>[
         'mst_vehicles' => [
-                'main' => storage_path('import/dbo_M_車両.xlsx'),
-                'extra' => [
-                    storage_path('import/償却 新 ６ (カラフル) 新.xlsx'),
-                    storage_path('import/仕様別車両一覧~300620.xls'),
-                    storage_path('import/車両償却 ５ （青白）.xls'),
+                'main' => [
+                    'path' => storage_path('import/dbo_M_車両.xlsx'),
+                    'fileName' => 'dbo_M_車両.xlsx',
+                ],
+                'extra1' => [
+                    'path' => storage_path('import/償却 新 ６ (カラフル) 新.xlsx'),
+                    'fileName' => '償却 新 ６ (カラフル) 新.xlsx',
+                ],
+                'extra2' => [
+                    'path' => storage_path('import/仕様別車両一覧~300620.xls'),
+                    'fileName' => '仕様別車両一覧~300620.xls',
+                ],
+                'extra3' => [
+                    'path' => storage_path('import/車両償却 ５ （青白）.xls'),
+                    'fileName' => '車両償却 ５ （青白）.xls',
                 ]
         ],
         'mst_staffs'=>[
