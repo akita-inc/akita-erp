@@ -15,6 +15,9 @@ return[
     'add_general_purposes_number' => "▼ 汎用マスタエラー：データ元" ." :fileName"."　"
         ." :fieldName"."　"
         ." :row行目"."　",
+    'unique_staff_cd'=>"▼ コード重複エラー："." :fileName"."　"
+        ." :fieldName"."　"
+        ." :row行目"."　",
     'add_general_purposes_string' => "▼ 汎用マスタエラー：データ元" ." :fileName"."　"
         ." :fieldName"."　"
         ." :row行目"."　"

@@ -13,6 +13,11 @@ use App\Models\MStaffs;
 use App\Models\MGeneralPurposes;
 use Illuminate\Support\Facades\DB;
 use App\Models\MBusinessOffices;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 class MstStaffs extends BaseImport
 {
     public $path = "";
@@ -34,6 +39,24 @@ class MstStaffs extends BaseImport
         'AB' => 'created_at',
         'AE' => 'modified_at',
     ];
+    public $column_main_name=[
+        'staff_cd'=>'社員CD',
+        'employment_pattern_id'=>'社員区分',
+        'staff_nm'=>'社員名',
+        'staff_nm_kana'=>'社員名かな',
+        'mst_business_office_id'=>'社員所属CD',
+        'sex_id' => '性別',
+        'birthday'=>'生年月日',
+        'enter_date'=>'入社年月日',
+        'retire_date'=>'退社年月日',
+        'zip_cd' => '郵便番号',
+        'address1'=>'住所１',
+        'address2'=>'住所２',
+        'phone_number'=>'電話番号',
+        'notes'=>'備考',
+        'created_at' => '登録日',
+        'modified_at' => '最終更新日',
+    ];
     public $excel_column_insurer=[
         'staff_cd'=>'社員番号',
         'insurer_number'=>'保険番号',
@@ -52,6 +75,31 @@ class MstStaffs extends BaseImport
         'death_dt'=>'死亡年月日'
 
     ];
+    public $labels=[];
+    public $messagesCustom=[];
+    public $ruleValid = [
+        'staff_cd'  => 'required|one_bytes_string|length:5|unique:mst_staffs,staff_cd,NULL,id,deleted_at,NULL',
+        'last_nm'  => 'nullable|length:25',
+        'last_nm_kana'  => 'kana|nullable|length:50',
+        'first_nm'  => 'length:25|nullable',
+        'first_nm_kana'=>'kana|nullable|length:50',
+        'zip_cd'=>'zip_code|nullable|length:7',
+        'address1'=>'length:20|nullable',
+        'address2'=>'length:20|nullable',
+        "landline_phone_number"=>"length:20|nullable|phone_number",
+        "cellular_phone_number"=>"length:20|nullable|phone_number",
+        "notes"=>"length:50|nullable",
+        "insurer_number"=>"length:3|nullable",
+        "health_insurance_class"=>"one_byte_number|length:10|number_range|nullable",
+        "welfare_annuity_class"=>"one_byte_number|length:10|number_range|nullable",
+        "relocation_municipal_office_cd"=>"nullable|length:6",
+        "basic_pension_number"=>"length:11|nullable",
+        "person_insured_number"=>"length:11|nullable",
+        "educational_background"=>"length:50|nullable",
+        "retire_reasons"=>"length:50|nullable",
+        "death_reasons"=>"length:50|nullable",
+    ];
+
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
@@ -59,7 +107,7 @@ class MstStaffs extends BaseImport
 
     public function import()
     {
-        echo "mst_staffs";
+        $this->numRead++;
         $this->mainReading($this->rowCurrentData,$this->rowIndex);
     }
     public function formatDateString($date)
@@ -79,78 +127,149 @@ class MstStaffs extends BaseImport
         }
         return $randomString;
     }
-
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
         $record = array();
         $mGeneralPurposes = new MGeneralPurposes();
         $insuranceArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
         $backgroundArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
-        foreach($rowData[$row] as $pos=>$value){
-            if(isset($excel_column[$pos])) {
-                switch ($excel_column[$pos]){
-                    case 'created_at':
-                    case 'modified_at':
-                        $record[$excel_column[$pos]] = $this->formatDateTimeString($value);
-                        break;
-                    case 'birthday'||'enter_date'|| 'retire_date':
-                        $record[$excel_column[$pos]] = $this->formatDateString($value);
-                        break;
-                    case 'staff_cd':
-                        $record[$excel_column[$pos]] = substr($value,0,5);
-                        if(!empty($insuranceArr[$value]))
-                        {
-                            $insurance=$insuranceArr[$value];
-                            $record+=$insurance;
-                        }
-                        if(!empty($backgroundArr[$value]))
-                        {
-                            $staff_background=$backgroundArr[$value];
-                            $record+=$staff_background;
-                        }
-                        break;
-                    case 'staff_nm':
-                        $record+=$this->explodeStaffName($value,null);
-                        break;
-                    case 'staff_nm_kana':
-                        $record+=$this->explodeStaffName(mb_convert_kana($value),'kana');
-                        break;
-                    case 'zip_cd':
-                        $record[$excel_column[$pos]] = str_replace("-","",$value);
-                        break;
-                    case 'address1':
-                        $record[$excel_column[$pos]] = $mGeneralPurposes->getPrefCdByPrefName($value);
-                        break;
-                    case 'phone_number':
-                        if($value)
-                        {
-                            if($this->getCellularPhone($value))
+        $employment_pattern_id=$rowData[$row]['D'];
+        if(!empty($rowData[$row]) && $employment_pattern_id<>3)
+        {
+            foreach($rowData[$row] as $pos=>$value){
+                if(isset($excel_column[$pos])) {
+                    switch ($excel_column[$pos]){
+                        case 'staff_cd':
+                            if(!empty($insuranceArr[$value]))
                             {
-                                $record['cellular_phone_number']=$this->getCellularPhone($value);
+                                $insurance=$insuranceArr[$value];
+                                $record+=$insurance;
+                            }
+                            if(!empty($backgroundArr[$value]))
+                            {
+                                $staff_background=$backgroundArr[$value];
+                                $record+=$staff_background;
+                            }
+                            $record[$excel_column[$pos]] = (string)$value;
+                            break;
+                        case 'modified_at':
+                            $record[$excel_column[$pos]] = $this->formatDateTimeString($value);
+                            break;
+                        case 'created_at':
+                            $record[$excel_column[$pos]] = $this->formatDateTimeString($value);
+                            break;
+                        case 'birthday':
+                            $record[$excel_column[$pos]] = $this->formatDateString($value);
+                            break;
+                        case 'enter_date':
+                            $record[$excel_column[$pos]] = $this->formatDateString($value);
+                            break;
+                        case 'retire_date':
+                            $record[$excel_column[$pos]] = $this->formatDateString($value);
+                            break;
+                        case 'staff_nm':
+                            $record+=$this->explodeStaffName($value,null);
+                            break;
+                        case 'staff_nm_kana':
+                            $record+=$this->explodeStaffName(mb_convert_kana($value),'kana');
+                            break;
+                        case 'zip_cd':
+                            $record[$excel_column[$pos]] = str_replace("-","",$value);
+                            break;
+                        case 'address1':
+                            $record['prefectures_cd'] = $mGeneralPurposes->getPrefCdByPrefName($value);
+                            if( $mGeneralPurposes->getPrefCdByPrefName($value))
+                            {
+                                $record[$excel_column[$pos]]=mb_substr($value,4,20);
                             }
                             else
                             {
-                                $record['landline_phone_number']=$value;
+                                $record[$excel_column[$pos]]=mb_substr($value,0,20);
                             }
-                        }
-                        break;
-                    case 'mst_business_office_id':
-                        $record[$excel_column[$pos]] = $this->getOfficeId($value);
-                       break;
-                    default:
-                        $record[$excel_column[$pos]] = $value;
-                        break;
+                            break;
+                        case 'phone_number':
+                            if($value)
+                            {
+                                if($this->getCellularPhone($value))
+                                {
+                                    $record['cellular_phone_number']=$this->getCellularPhone($value);
+                                }
+                                else
+                                {
+                                    $record['landline_phone_number']=$value;
+                                }
+                            }
+                            break;
+                        case 'mst_business_office_id':
+                            $record[$excel_column[$pos]] = $this->getOfficeId($value);
+                            break;
+                        case 'employment_pattern_id':
+                            $data_kb = config('params.data_kb')['employment_pattern'];
+                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
+                            if ($result) {
+                                $record[$excel_column[$pos]] = (string)$result;
+                            }
+                            break;
+                        default:
+                            $record[$excel_column[$pos]] = (string)$value;
+                            break;
+                    }
                 }
+                $record["password"]=bcrypt($this->generateRandomString(8));
+                unset($record['staff_nm']);
+                unset($record['staff_nm_kana']);
+                unset($record["phone_number"]);
             }
-            $record["password"]=bcrypt($this->generateRandomString(8));
-            unset($record['staff_nm']);
-            unset($record['staff_nm_kana']);
-            unset($record["phone_number"]);
         }
-        dd($record);
         if(!empty($record))
         {
-            $this->insertDB($record);
+            $this->validateRow($record);
+        }
+    }
+    protected function validateRow($record){
+        if( !empty($this->ruleValid) ){
+            $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
+                if ($validator->fails()) {
+                    $this->numErr++;
+                    $failedRules = $validator->failed();
+                    if (isset($failedRules['staff_cd']['Required'])) {
+                        $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
+                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                            "fieldName" => $this->column_main_name['staff_cd'],
+                            "row" => $this->rowIndex,
+                        ]));
+                    }
+                    if (isset($failedRules['staff_cd']['Unique'])) {
+                        $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_staff_cd",[
+                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                            "fieldName" => $this->column_main_name['staff_cd'],
+                            "row" => $this->rowIndex,
+                        ]));
+                    }
+                }
+                else
+                {
+                    $this->insertDB($record);
+                }
+
+        }
+    }
+    protected function validAfter($validator,$data){}
+    public  function insertDB($record)
+    {
+        DB::beginTransaction();
+        try{
+            if (!empty($record)) {
+                DB::table('mst_staffs')->insert($record);
+                DB::commit();
+            }
+        }catch (\Exception $e){
+            DB::rollback();
+            $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
+                "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                "row" => $this->rowIndex,
+                "errorDetail" => $e->getMessage(),
+            ]));
         }
     }
     public function getOfficeId($office_cd)
@@ -172,18 +291,47 @@ class MstStaffs extends BaseImport
         }
             return null;
     }
+    public function getSpaceBetweenName($name)
+    {
+        if(strpos($name, ' ') !== false)
+        {
+            $space=' ';
+        }
+        elseif(strpos($name, '　') !== false)
+        {
+            $space='　';
+        }
+        elseif (strpos($name, '  ') !== false)
+        {
+            $space='  ';
+        }
+        elseif(strpos($name, '　  ') !== false)
+        {
+            $space='　  ';
+
+        }
+        else
+        {
+            $space=' ';
+
+        }
+        return $space;
+    }
     public function explodeStaffName($value,$type)
     {
         $result=array();
+
+
         if($type=="kana")
         {
-                $staff_nm=explode(' ',$value);
+                $staff_nm=explode($this->getSpaceBetweenName($value),$value);
                 $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
                 $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
         }
         else
         {
-                $staff_nm=explode('　',$value);
+
+                $staff_nm=explode($this->getSpaceBetweenName($value),$value);
                 $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
                 $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
         }
@@ -221,29 +369,11 @@ class MstStaffs extends BaseImport
                         ];
                     }
                 }
+                return $arr;
             }
-            return $arr;
         } catch(\Exception $e) {
             return ('Error loading file "'.pathinfo($path,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
     }
-    public  function insertDB($data)
-    {
-        DB::beginTransaction();
-        try
-        {
-            $idInsert=DB::table('mst_staffs')->insert($data);
-            if($idInsert)
-            {
-                dd("insert success");
-            }
 
-        }
-        catch (\Exception $e)
-        {
-            dd($e);
-            DB::rollBack();
-        }
-        DB::commit();
-    }
 }
