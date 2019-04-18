@@ -89,7 +89,7 @@ class EmptyInfoController extends Controller {
                'empty_info.registration_numbers',
                'empty_info.vehicle_size',
                'empty_info.vehicle_body_shape',
-               'empty_info.max_load_capacity',
+                DB::raw('format(empty_info.max_load_capacity, "#,##0") as max_load_capacity'),
                'empty_info.equipment',
                'pref_asking_baggage.date_nm as asking_baggage',
                 'empty_info.status',

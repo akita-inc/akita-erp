@@ -3,6 +3,7 @@ namespace App\Console\Commands\ImportExcel;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Created by PhpStorm.
@@ -95,11 +96,68 @@ class MstVehicles extends BaseImport
     public $data_extra_file_2 = [];
     public $data_extra_file_3 = [];
 
+
+    public $numRead = 0;
+    public $numNormal = 0;
+    public $numErr = 0;
+    public $tableLabel = '車両';
+
+    public $rules = [
+        'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
+        'vehicles_kb'=>'required|length:11',
+        'registration_numbers'=>'required|length:50',
+        'mst_business_office_id'=>'required',
+        'vehicle_size_kb'=>'nullable',
+        'vehicle_purpose_id'=>'nullable',
+        'land_transport_office_cd'=>'nullable',
+        'registration_dt'=>'nullable',
+        'first_year_registration_dt'=>'nullable|date_format_custom:Ym',
+        'seating_capacity'=>'nullable|one_byte_number|length:2',
+        'max_loading_capacity'=>'nullable|one_byte_number|length:5',
+        'vehicle_body_weights'=>'nullable|one_byte_number|length:5',
+        'vehicle_total_weights'=>'nullable|one_byte_number|length:5',
+        'frame_numbers'=>'nullable|length:10',
+        'vehicle_lengths'=>'nullable|one_byte_number|length:4',
+        'vehicle_widths'=>'nullable|one_byte_number|length:3',
+        'vehicle_heights'=>'nullable|one_byte_number|length:3',
+        'axle_loads_ff'=>'nullable|one_byte_number|length:5',
+        'axle_loads_fr'=>'nullable|one_byte_number|length:5',
+        'axle_loads_rf'=>'nullable|one_byte_number|length:5',
+        'axle_loads_rr'=>'nullable|one_byte_number|length:5',
+        'vehicle_types'=>'nullable|length:50',
+        'engine_typese'=>'nullable|length:50',
+        'total_displacements'=>'nullable|one_byte_number|length:5',
+        'user_base_locations'=>'nullable|length:200',
+        'etc_numbers'=>'nullable|length:19',
+        'transmissions_notes'=>'nullable|length:50',
+        'tank_capacity_1'=>'nullable|one_byte_number|length:3',
+        'tank_capacity_2'=>'nullable|one_byte_number|length:3',
+        'floor_roller_fg'=>'nullable|one_byte_number|length:1',
+        'floor_joloda_conveyor_fg'=>'nullable|one_byte_number|length:5',
+        'power_gate_cd'=>'nullable|one_byte_number|length:5',
+        'personal_insurance_prices'=>'nullable|one_byte_number|length:11',
+        'property_damage_insurance_prices'=>'nullable|one_byte_number|length:11',
+        'vehicle_insurance_prices'=>'nullable|one_byte_number|length:11',
+        'acquisition_amounts'=>'nullable|one_byte_number|length:11',
+        'durable_years'=>'nullable|one_byte_number|length:3',
+    ];
+
     public function run(){
         $this->readingVehicleExtraFile1();
         $this->readingVehicleExtraFile2();
         $this->readingVehicleExtraFile3();
+        if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel]))){
+            $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel]));
+        }
         $this->readingMainFile();
+        if( !empty( Lang::trans("log_import.end_read") ) ){
+            $this->log("data_convert",Lang::trans("log_import.end_read",[
+                "numRead" => $this->numRead,
+                "numNormal"=> $this->numNormal,
+                "numErr" => $this->numErr,
+                "table" => $this->tableLabel,
+            ]));
+        }
     }
 
     public function getDataFromExcel( $path){
@@ -116,15 +174,18 @@ class MstVehicles extends BaseImport
 
     public function readingMainFile(){
         $excel_column = $this->excel_column_main;
-
         $data = [];
-        $mGeneralPurposes = new MGeneralPurposes();
+        $keys = [];
         $mBusinessOffices = new MBusinessOffices();
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main'));
-        $this->start_row = 2;
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main.path'));
+        $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
+            if($row==1){
+                $keys = $rowData[$row];
+                continue;
+            }
             foreach ($rowData[$row] as $pos => $value) {
                 if (isset($excel_column[$pos])) {
                     switch ($excel_column[$pos]) {
@@ -178,7 +239,7 @@ class MstVehicles extends BaseImport
                                     $data_kb = config('params.data_kb')['kinds_of_fuel'];
                                     break;
                             }
-                            $result = $mGeneralPurposes->checkExistDataAndInsert($data_kb, $value);
+                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
                             if ($result) {
                                 $record[$excel_column[$pos]] = (string)$result;
                             } else {
@@ -208,17 +269,17 @@ class MstVehicles extends BaseImport
                 $data = $data + $this->data_extra_file_3[$record['vehicles_cd']];
 
             }
-
+            dd($this->data_extra_file_3[$record['vehicles_cd']]);
             if (!empty($record)) {
                 DB::table('mst_vehicles_copy1')->insert($data);
-                dd('drtdr');
+
             }
         }
 
     }
 
     public function readingVehicleExtraFile1(){
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra')[0]);
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra1.path'));
         $this->start_row = 2;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
@@ -231,7 +292,7 @@ class MstVehicles extends BaseImport
 
     public function readingVehicleExtraFile2()
     {
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra')[1]);
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra2.path'));
         $this->start_row = 7;
         $keys_sheet_1 = [
             'N' => 1,
@@ -328,7 +389,7 @@ class MstVehicles extends BaseImport
     }
 
     public function readingVehicleExtraFile3(){
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra')[2]);
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra3.path'));
         $this->start_row = 3;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
