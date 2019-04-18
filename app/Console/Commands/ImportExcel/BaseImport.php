@@ -18,6 +18,7 @@ class BaseImport{
     public $numNormal = 0;
     public $numErr = 0;
     public $dateTimeRun = "";
+    public $startRow = 2;
 
     public function __construct()
     {
@@ -29,6 +30,9 @@ class BaseImport{
         switch ($type){
             case "DataConvert_Err_ID_Match":
                 $path = storage_path('logs/DataConvert_Err_SQL_社員扶養者_'.$this->dateTimeRun.".log");
+                break;
+            case "DataConvert_Err_required":
+                $path = storage_path('logs/DataConvert_Err_required_社員扶養者_'.$this->dateTimeRun.".log");
                 break;
             default:
                 $path = $arrayLogPath[$type];
@@ -63,10 +67,11 @@ class BaseImport{
             $sheet = $objPHPExcel->getSheet(0);
             $highestRow = $sheet->getHighestRow();
             $highestColumn = $sheet->getHighestColumn();
-            $start_row = 2;
+            $start_row = $this->startRow;
             for ($row = $start_row; $row <= $highestRow; $row++) {
                 $this->rowIndex = $row;
                 $this->rowCurrentData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, false, false, true);
+                $this->rowCurrentData = $this->rowCurrentData[$row];
                 $this->import();
                 $this->numRead++;
             }
