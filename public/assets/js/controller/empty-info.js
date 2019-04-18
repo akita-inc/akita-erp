@@ -21047,6 +21047,7 @@ var ctrEmptyInfoVl = new Vue({
             that.field.vehicle_size = result.vehicle_size_kb;
             that.field.vehicle_body_shape = result.car_body_shape;
             that.field.max_load_capacity = result.max_loading_capacity;
+            that.addComma('max_load_capacity');
           }
         });
       } else {
@@ -21103,7 +21104,7 @@ var ctrEmptyInfoVl = new Vue({
       }
     },
     addComma: function addComma(id) {
-      this.field[id] = (id == 'asking_price' && this.field[id] != '' ? '¥ ' : '') + this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // this.field.max_load_capacity = this.field.max_load_capacity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.field[id] = (id == 'asking_price' && this.field[id] != '' ? '¥ ' : '') + this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     removeComma: function removeComma(id) {
       this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
@@ -21160,7 +21161,7 @@ var ctrEmptyInfoVl = new Vue({
   mounted: function mounted() {
     this.loadFormEdit();
 
-    if (this.field.mode == 'register') {
+    if (this.field.mode == 'register' || this.field.mode == 'edit') {
       $("#search_vehicle").focus();
     }
   },
