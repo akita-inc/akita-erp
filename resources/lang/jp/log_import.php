@@ -24,5 +24,6 @@ return[
         ."データID： "."　" .":date_id"
         ."データ名称： "."　".":date_nm"
         ."データカナ名称：フメイ",
+    'check_length_and_trim' =>  "▼ 桁溢れ：データ元  :fileName　:excelFieldName　:row行目　:excelValue　\n"."▼ 登録先テーブル： :tableName　:DBFieldName　:DBvalue"
 
 ];
