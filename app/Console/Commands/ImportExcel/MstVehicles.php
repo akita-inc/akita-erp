@@ -99,10 +99,6 @@ class MstVehicles extends BaseImport
     public $data_extra_file_3 = [];
 
 
-    public $numRead = 0;
-    public $numNormal = 0;
-    public $numErr = 0;
-
     public $rules = [
         'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
         'vehicles_kb'=>'required|length:11',
@@ -165,7 +161,7 @@ class MstVehicles extends BaseImport
         'door_number'=> '',
         'vehicles_kb'=> '車両区分',
         'registration_numbers'=> '登録番号',
-        'mst_business_office_id'=> '車両所属CD',
+        'mst_business_office_id'=> '営業所ID',
         'vehicle_size_kb'=> '小中大区分',
         'vehicle_purpose_id'=> '用途',
         'land_transport_office_cd'=> '陸運支局CD',
@@ -243,10 +239,13 @@ class MstVehicles extends BaseImport
         $excel_column = $this->excel_column_main;
         $data = [];
         $keys = [];
+        $error_fg = false;
         $mBusinessOffices = new MBusinessOffices();
         $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main.path'));
         $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
+            $this->numRead++;
+            $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if($row==1){
@@ -327,6 +326,7 @@ class MstVehicles extends BaseImport
 
             $data = $record;
             if (DB::table('mst_vehicles_copy1')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
+                $error_fg = true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
                     "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
                     "fieldName" => $keys[$pos],
@@ -336,6 +336,7 @@ class MstVehicles extends BaseImport
             $validator = Validator::make($data, $this->rules);
 
             if ($validator->fails()) {
+                $error_fg = true;
                 $failedRules = $validator->failed();
                 foreach ($failedRules as $field => $errors){
                     foreach ($errors as $ruleName => $error){
@@ -367,6 +368,7 @@ class MstVehicles extends BaseImport
                     $data = $data + $this->{"data_extra_file_".$k}[$record['vehicles_cd']];
                     $validator = Validator::make($data, $this->{'rules_extra_'.$k});
                     if ($validator->fails()) {
+                        $error_fg = true;
                         $failedRules = $validator->failed();
                         foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
@@ -394,6 +396,7 @@ class MstVehicles extends BaseImport
                     unset($data['row']);
                     unset($data['sheet']);
                 }else{
+                    $error_fg = true;
                     $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                         "mainFileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
                         "fieldName" => $keys[$pos],
@@ -402,24 +405,25 @@ class MstVehicles extends BaseImport
                     ]));
                 }
             }
-
-//            dd($this->data_extra_file_3[$record['vehicles_cd']]);
-            DB::beginTransaction();
-            try{
-                if (!empty($record)) {
-                    DB::table('mst_vehicles_copy1')->insert($data);
-                    DB::commit();
-                    dd("sdfsdfds");
+            if(!$error_fg){
+                DB::beginTransaction();
+                try{
+                    if (!empty($record)) {
+                        DB::table('mst_vehicles_copy1')->insert($data);
+                        DB::commit();
+                        $this->numNormal++;
+                    }
+                }catch (\Exception $e){
+                    DB::rollback();
+                    $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
+                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                        "row" => $row,
+                        "errorDetail" => $e->getMessage(),
+                    ]));
                 }
-            }catch (\Exception $e){
-                DB::rollback();
-                $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
-                    "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
-                    "row" => $row,
-                    "errorDetail" => $e->getMessage(),
-                ]));
+            }else{
+                $this->numErr++;
             }
-
         }
 
     }
