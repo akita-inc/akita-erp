@@ -164,6 +164,8 @@ class EmptyInfoController extends Controller {
                     $orderCol='empty_info.asking_baggage';
                 else if($data["order"]["col"]=='asking_price')
                     $orderCol="empty_info.asking_price";
+                else if($data["order"]["col"]=='max_load_capacity')
+                    $orderCol="empty_info.max_load_capacity";
                 else if($data["order"]["col"]=='schedule_date')
                     $orderCol="CONCAT_WS(' ',DATE_FORMAT(empty_info.start_date, '%Y/%m/%d'),TIME_FORMAT(empty_info.start_time,'%H:%i'))";
                 else if($data["order"]["col"]=='start_pref_cd')
