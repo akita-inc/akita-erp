@@ -39,10 +39,16 @@ class BaseImport{
         $arrayLogPath = config("params.log_import_path");
         switch ($type){
             case "DataConvert_Err_ID_Match":
-                $path = storage_path('logs/DataConvert_Err_SQL_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
+                $path = storage_path('logs/DataConvert_Err_ID_Match_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
                 break;
             case "DataConvert_Add_general_purposes":
                 $path = storage_path('logs/DataConvert_Add_general_purposes_'.$this->dateTimeRun.".log");
+                break;
+            case "DataConvert_Err_SQL":
+                $path = storage_path('logs/DataConvert_Err_SQL_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
+                break;
+            case "DataConvert_Err_required":
+                $path = storage_path('logs/DataConvert_Err_required_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
                 break;
             default:
                 $path = $arrayLogPath[$type];
