@@ -50,6 +50,10 @@ class BaseImport{
             case "DataConvert_Err_required":
                 $path = storage_path('logs/DataConvert_Err_required_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
                 break;
+            case "DataConvert_Err_KANA":
+                $path = storage_path('logs/DataConvert_Err_KANA_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
+                break;
+
             default:
                 $path = $arrayLogPath[$type];
                 break;

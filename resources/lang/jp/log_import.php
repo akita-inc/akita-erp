@@ -18,6 +18,9 @@ return[
     'unique_staff_cd'=>"▼ コード重複エラー："." :fileName"."　"
         ." :fieldName"."　"
         ." :row行目"."　",
+    'check_kana'=>"▼ カナ変換エラー："." :fileName"."　"
+        ." :fieldName"."　"
+        ." :row行目"."　",
     'add_general_purposes_string' => "▼ 汎用マスタエラー：データ元" ." :fileName"."　"
         ." :fieldName"."　"
         ." :row行目"."　"

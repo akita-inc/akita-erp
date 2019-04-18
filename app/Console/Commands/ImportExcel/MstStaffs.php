@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 class MstStaffs extends BaseImport
 {
     public $path = "";
+    public $password_random="";
     public $excel_column = [
         'A'=>'staff_cd',
         'B'=>'staff_nm',
@@ -56,24 +57,20 @@ class MstStaffs extends BaseImport
         'notes'=>'備考',
         'created_at' => '登録日',
         'modified_at' => '最終更新日',
-    ];
-    public $excel_column_insurer=[
-        'staff_cd'=>'社員番号',
         'insurer_number'=>'保険番号',
         'basic_pension_number'=>'基礎年金番号',
         'person_insured_number'=>'被保険者番号',
         'health_insurance_class'=>'健康保険等級',
         'welfare_annuity_class'=>'厚生年金等級',
         'relocation_municipal_office_cd'=>'市町村役場コード',
-    ];
-    public $excel_column_edu_bg=[
-        'staff_cd'=>'社員CD',
         'educational_background'=>'最終学歴',
         'educational_background_dt'=>'最終学歴日付',
         'retire_reasons'=>'退職理由',
         'death_reasons'=>'死亡理由',
         'death_dt'=>'死亡年月日'
-
+    ];
+    public $excel_column_insurer=[
+        'staff_cd'=>'社員番号',
     ];
     public $labels=[];
     public $messagesCustom=[];
@@ -118,14 +115,118 @@ class MstStaffs extends BaseImport
     {
         return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy/mm/dd hh:mm:ss');
     }
-    public  function generateRandomString($length = 8) {
+    public function generateRandomString($length = 8) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
-        return $randomString;
+        $this->password_random=$randomString;
+            return $randomString;
+
+    }
+    public function getOfficeId($office_cd)
+    {
+        $mBusinessOffice=new MBusinessOffices();
+        $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
+        if(!empty($result))
+        {
+            return $result;
+        }
+        return null;
+    }
+    public function getCellularPhone($phone)
+    {
+        $cellPhone=substr($phone,0,3);
+        if($cellPhone=="090" || $cellPhone=="080" || $cellPhone=="070")
+        {
+            return $phone;
+        }
+        return null;
+    }
+    public function getSpaceBetweenName($name)
+    {
+        if(strpos($name, ' ') !== false)
+        {
+            $space=' ';
+        }
+        elseif(strpos($name, '　') !== false)
+        {
+            $space='　';
+        }
+        elseif (strpos($name, '  ') !== false)
+        {
+            $space='  ';
+        }
+        elseif(strpos($name, '　  ') !== false)
+        {
+            $space='　  ';
+
+        }
+        else
+        {
+            $space=' ';
+
+        }
+        return $space;
+    }
+    public function explodeStaffName($value,$type)
+    {
+        $result=array();
+
+
+        if($type=="kana")
+        {
+            $staff_nm=explode($this->getSpaceBetweenName($value),$value);
+            $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
+            $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
+        }
+        else
+        {
+
+            $staff_nm=explode($this->getSpaceBetweenName($value),$value);
+            $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
+            $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
+        }
+        return $result;
+    }
+    public function getDataFromChildFile($path,$type)
+    {
+        try {
+            $column=$this->column_main_name;
+            $data = Excel::load($path)->get();
+            if($data->count()){
+                if($type=="insurance")
+                {
+                    foreach ($data as  $value) {
+                        $arr[$value->{$this->excel_column_insurer['staff_cd']}] = [
+                            'insurer_number'=>$value->{$column['insurer_number']},
+                            'basic_pension_number'=>$value->{$column['basic_pension_number']},
+                            'person_insured_number'=>$value->{$column['person_insured_number']},
+                            'health_insurance_class'=>$value->{$column['health_insurance_class']},
+                            'welfare_annuity_class'=>$value->{$column['welfare_annuity_class']},
+                            'relocation_municipal_office_cd'=>$value->{$column['relocation_municipal_office_cd']},
+                        ];
+                    }
+                }
+                elseif($type=="staff_background")
+                {
+                    foreach ($data as  $value) {
+                        $arr[$value->{$column['staff_cd']}] = [
+                            'educational_background'=>$value->{$column['educational_background']},
+                            'educational_background_dt'=> $this->formatDateString($value->{$column['educational_background_dt']}),
+                            'retire_reasons'=>$value->{$column['retire_reasons']},
+                            'death_reasons'=>$value->{$column['death_reasons']},
+                            'death_dt'=>$this->formatDateString($value->{$column['death_dt']}),
+                        ];
+                    }
+                }
+                return $arr;
+            }
+        } catch(\Exception $e) {
+            return null;
+        }
     }
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
@@ -210,6 +311,13 @@ class MstStaffs extends BaseImport
                                 $record[$excel_column[$pos]] = (string)$result;
                             }
                             break;
+                        case 'sex_id':
+                            $data_kb = config('params.data_kb')['sex'];
+                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['sex_id'], $row );
+                            if ($result) {
+                                $record[$excel_column[$pos]] = (string)$result;
+                            }
+                            break;
                         default:
                             $record[$excel_column[$pos]] = (string)$value;
                             break;
@@ -226,6 +334,7 @@ class MstStaffs extends BaseImport
             $this->validateRow($record);
         }
     }
+
     protected function validateRow($record){
         if( !empty($this->ruleValid) ){
             $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
@@ -246,16 +355,52 @@ class MstStaffs extends BaseImport
                             "row" => $this->rowIndex,
                         ]));
                     }
+                    if (isset($failedRules['last_nm_kana']['Kana']) || isset($failedRules['first_nm_kana']['Kana'])) {
+                        $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
+                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                            "fieldName" => $this->column_main_name['staff_nm_kana'],
+                            "row" => $this->rowIndex,
+                        ]));
+                    }
+                    foreach ($failedRules as $field => $errors){
+                            foreach ($errors as $ruleName => $error){
+                                if($ruleName=='Length'){
+                                    $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
+                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                        "excelFieldName" => $this->column_main_name[$field],
+                                        "row" => $this->rowIndex,
+                                        "excelValue" => $record[$field],
+                                        "tableName" => $this->table,
+                                        "DBFieldName" => $field,
+                                        "DBvalue" => substr($record[$field],0,$error[0]),
+                                    ]));
+                                    $record[$field] = substr($record[$field],0,$error[0]);
+                                }
+                            }
+                    }
                 }
                 else
                 {
+                    $this->exportPassword($record);
                     $this->insertDB($record);
                 }
 
         }
     }
     protected function validAfter($validator,$data){}
-    public  function insertDB($record)
+    protected function exportPassword($record)
+    {
+        $password_random=$this->password_random;
+        if (!empty($record)) {
+            Excel::load($this->path, function($doc) use($password_random) {
+
+                $sheet = $doc->setActiveSheetIndex(0);
+                $sheet->setCellValue('AF', $password_random);
+
+            })->export('xlsx');
+        }
+    }
+    public function insertDB($record)
     {
         DB::beginTransaction();
         try{
@@ -270,109 +415,6 @@ class MstStaffs extends BaseImport
                 "row" => $this->rowIndex,
                 "errorDetail" => $e->getMessage(),
             ]));
-        }
-    }
-    public function getOfficeId($office_cd)
-    {
-        $mBusinessOffice=new MBusinessOffices();
-        $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
-        if(!empty($result))
-        {
-            return $result;
-        }
-        return null;
-    }
-    public function getCellularPhone($phone)
-    {
-        $cellPhone=substr($phone,0,3);
-        if($cellPhone=="090" || $cellPhone=="080" || $cellPhone=="070")
-        {
-            return $phone;
-        }
-            return null;
-    }
-    public function getSpaceBetweenName($name)
-    {
-        if(strpos($name, ' ') !== false)
-        {
-            $space=' ';
-        }
-        elseif(strpos($name, '　') !== false)
-        {
-            $space='　';
-        }
-        elseif (strpos($name, '  ') !== false)
-        {
-            $space='  ';
-        }
-        elseif(strpos($name, '　  ') !== false)
-        {
-            $space='　  ';
-
-        }
-        else
-        {
-            $space=' ';
-
-        }
-        return $space;
-    }
-    public function explodeStaffName($value,$type)
-    {
-        $result=array();
-
-
-        if($type=="kana")
-        {
-                $staff_nm=explode($this->getSpaceBetweenName($value),$value);
-                $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
-                $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
-        }
-        else
-        {
-
-                $staff_nm=explode($this->getSpaceBetweenName($value),$value);
-                $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
-                $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
-        }
-        return $result;
-    }
-    public  function getDataFromChildFile($path,$type)
-    {
-        try {
-            $excel_column_insurer=$this->excel_column_insurer;
-            $excel_column_edu_bg=$this->excel_column_edu_bg;
-            $data = Excel::load($path)->get();
-            if($data->count()){
-                if($type=="insurance")
-                {
-                    foreach ($data as  $value) {
-                        $arr[$value->{$excel_column_insurer['staff_cd']}] = [
-                            'insurer_number'=>substr($value->{$excel_column_insurer['insurer_number']},0,3),
-                            'basic_pension_number'=>substr($value->{$excel_column_insurer['basic_pension_number']},0,11),
-                            'person_insured_number'=>substr($value->{$excel_column_insurer['person_insured_number']},0,11),
-                            'health_insurance_class'=>$value->{$excel_column_insurer['health_insurance_class']},
-                            'welfare_annuity_class'=>$value->{$excel_column_insurer['welfare_annuity_class']},
-                            'relocation_municipal_office_cd'=>$value->{$excel_column_insurer['relocation_municipal_office_cd']},
-                        ];
-                    }
-                }
-                elseif($type=="staff_background")
-                {
-                    foreach ($data as  $value) {
-                        $arr[$value->{$excel_column_edu_bg['staff_cd']}] = [
-                            'educational_background'=>$value->{$excel_column_edu_bg['educational_background']},
-                            'educational_background_dt'=> $this->formatDateString($value->{$excel_column_edu_bg['educational_background_dt']}),
-                            'retire_reasons'=>$value->{$excel_column_edu_bg['retire_reasons']},
-                            'death_reasons'=>$value->{$excel_column_edu_bg['death_reasons']},
-                            'death_dt'=>$this->formatDateString($value->{$excel_column_edu_bg['death_dt']}),
-                        ];
-                    }
-                }
-                return $arr;
-            }
-        } catch(\Exception $e) {
-            return ('Error loading file "'.pathinfo($path,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
     }
 
