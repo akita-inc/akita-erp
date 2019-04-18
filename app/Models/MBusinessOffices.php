@@ -26,7 +26,13 @@ class MBusinessOffices  extends Model
             ->orderBy('disp_number', 'asc')
             ->get();
     }
-
+    public function getMstBusinessOfficeId($office_cd)
+    {
+        return $this->select('id')
+                    ->where('deleted_at','=',null)
+                    ->where('mst_business_office_cd','=',$office_cd)
+                    ->first()['id'];
+    }
     public function getListBusinessOffices()
     {
         $data = $this->select('id', 'business_office_nm')
