@@ -20905,6 +20905,7 @@ var ctrEmptyInfoVl = new Vue({
             }
 
             that.loading = false;
+            that.cursorWhenError();
           });
           break;
 
@@ -20931,6 +20932,7 @@ var ctrEmptyInfoVl = new Vue({
                 }
 
                 that.loading = false;
+                that.cursorWhenError();
               });
             }
           });
@@ -21140,6 +21142,7 @@ var ctrEmptyInfoVl = new Vue({
         };
         $('input:checkbox').prop('checked', false);
         $('input:text').val('');
+        $('input:tel').val('');
         $('textarea').val('');
       }
     },
@@ -21155,6 +21158,34 @@ var ctrEmptyInfoVl = new Vue({
             this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
           }
         });
+      });
+    },
+    cursorWhenError: function cursorWhenError() {
+      var that = this;
+      $.each(that.field, function (key, value) {
+        if (key == 'equipment') {
+          if (typeof that.errors['equipment'] != "undefined") {
+            $('#equipment_value1').focus();
+            return false;
+          }
+
+          if (typeof that.errors['equipment_value'] != "undefined") {
+            $.each(that.errors['equipment_value'][0], function (key1, value1) {
+              $('#equipment_value' + key1).focus();
+              return false;
+            });
+          }
+        } else if (key == 'start_date' || key == 'start_time' || key == 'arrive_date') {
+          if (typeof that.errors[key] != "undefined") {
+            $("#" + key + ' input').focus();
+            return false;
+          }
+        } else {
+          if (typeof that.errors[key] !== "undefined") {
+            $("#" + key).focus();
+            return false;
+          }
+        }
       });
     }
   },

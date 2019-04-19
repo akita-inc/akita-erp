@@ -117,9 +117,9 @@ class MstVehicles extends BaseImport
         'vehicle_body_weights'=>'nullable|length:11',
         'vehicle_total_weights'=>'nullable|length:11',
         'frame_numbers'=>'nullable|length:50',
-        'vehicle_lengths'=>'nullable|length:4',
-        'vehicle_widths'=>'nullable|length:3',
-        'vehicle_heights'=>'nullable|length:3',
+        'vehicle_lengths'=>'nullable|length:11',
+        'vehicle_widths'=>'nullable|length:11',
+        'vehicle_heights'=>'nullable|length:11',
         'axle_loads_ff'=>'nullable|length:11',
         'axle_loads_fr'=>'nullable|length:11',
         'axle_loads_rf'=>'nullable|length:11',
@@ -250,6 +250,7 @@ class MstVehicles extends BaseImport
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if($row==1){
                 $keys = $rowData[$row];
+                $this->numNormal++;
                 continue;
             }
             foreach ($rowData[$row] as $pos => $value) {
@@ -374,7 +375,7 @@ class MstVehicles extends BaseImport
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
                                     $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
-                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
+                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                         "excelFieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                         "excelValue" => $data[$field],
@@ -415,6 +416,7 @@ class MstVehicles extends BaseImport
                     }
                 }catch (\Exception $e){
                     DB::rollback();
+                    $this->numErr++;
                     $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
                         "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
                         "row" => $row,
@@ -536,7 +538,7 @@ class MstVehicles extends BaseImport
                         }
                     }
                     $record['row'] = $row;
-                    $record['sheet'] = $i;
+                    $record['sheet'] = $i==0 ? '大型' : '４ｔ_２ｔ';
                     $this->data_extra_file_2[$rowData[$row]['B']] = $record;
                 }
             }
