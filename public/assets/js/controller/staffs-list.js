@@ -2945,7 +2945,6 @@ module.exports = function(module) {
           var t = e.keyCode;
 
           if (13 === t && (this.handleChange(), this.userInput = null, this.popupVisible = !1, e.stopPropagation()), 9 === t) {
-            console.log(123);
             var n = !0,
                 a = !1,
                 i = void 0;

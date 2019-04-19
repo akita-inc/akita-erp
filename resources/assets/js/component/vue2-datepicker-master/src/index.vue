@@ -554,7 +554,6 @@ export default {
         event.stopPropagation()
       }
       if (keyCode === 9) {
-        console.log(123)
         for (let el of document.querySelectorAll('.mx-datepicker-popup')) {
           el.style.display = 'none'
         }
