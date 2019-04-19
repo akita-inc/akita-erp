@@ -47,11 +47,10 @@ INSERT INTO `mst_general_purposes` VALUES (47, '01002', '都道府県CD', 44, '�
 INSERT INTO `mst_general_purposes` VALUES (48, '01002', '都道府県CD', 45, '宮崎県', 'ミヤザキケン', NULL, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (49, '01002', '都道府県CD', 46, '鹿児島県', 'カゴシマケン', NULL, 1, 46, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (50, '01002', '都道府県CD', 47, '沖縄県', 'オキナワケン', NULL, 1, 47, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (51, '01003', '雇用形態ID', 1, '正社員', 'セイシャイン', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (52, '01003', '雇用形態ID', 2, 'パート', 'パート', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (53, '01003', '雇用形態ID', 3, '嘱託', 'ショクタク', NULL, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (54, '01003', '雇用形態ID', 4, '顧問', 'コモン', NULL, 1, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
-INSERT INTO `mst_general_purposes` VALUES (55, '01003', '雇用形態ID', 5, '役員', 'ヤクイン', NULL, 1, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
+INSERT INTO `mst_general_purposes` VALUES (51, '01003', '雇用形態ID', 1, '社員', 'シャイン', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
+INSERT INTO `mst_general_purposes` VALUES (52, '01003', '雇用形態ID', 2, '契約社員', 'ケイヤクシャイン', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
+INSERT INTO `mst_general_purposes` VALUES (53, '01003', '雇用形態ID', 3, '傭車', 'ヨウシャ', NULL, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
+INSERT INTO `mst_general_purposes` VALUES (54, '01003', '雇用形態ID', 4, 'パート・アルバイト', 'パート・アルバイト', NULL, 1, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (56, '01004', '所属会社ID', 1, 'アキタ', 'アキタ', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (57, '01004', '所属会社ID', 2, 'アキタロジ', 'アキタロジ', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
 INSERT INTO `mst_general_purposes` VALUES (58, '01004', '所属会社ID', 3, 'アキタコーポレート', 'アキタコーポレート', NULL, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-3-11 03:51:35', '2019-3-11 03:51:35', NULL);
