@@ -43,12 +43,14 @@ var ctrEmptyInfoVl = new Vue({
             if(this.field.mode != 'register'){
                 this.field["id"] = this.empty_info_id;
             }
-            this.removeComma();
+            this.removeComma('asking_price');
+            this.removeComma('max_load_capacity');
             switch (this.field.mode) {
                 case 'register':
                     empty_info_service.submit(that.field).then((response) => {
                         if(response.success == false){
-                            that.addComma();
+                            that.addComma('asking_price');
+                            that.addComma('max_load_capacity');
                             that.errors = response.message;
                         }else{
                             that.errors = [];
@@ -67,7 +69,8 @@ var ctrEmptyInfoVl = new Vue({
                         } else {
                             empty_info_service.submit(that.field).then((response) => {
                                 if(response.success == false){
-                                    that.addComma();
+                                    that.addComma('asking_price');
+                                    that.addComma('max_load_capacity');
                                     that.errors = response.message;
                                 }else{
                                     that.errors = [];
@@ -121,6 +124,10 @@ var ctrEmptyInfoVl = new Vue({
                             that.field[key] = '¥ '+$("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                         }
+                        if(key == "max_load_capacity"){
+                            that.field[key] = $("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+                        }
                     }
                 });
                 if(this.field.mode=='reservation_approval'){
@@ -169,6 +176,7 @@ var ctrEmptyInfoVl = new Vue({
                         that.field.vehicle_size = result.vehicle_size_kb;
                         that.field.vehicle_body_shape = result.car_body_shape;
                         that.field.max_load_capacity = result.max_loading_capacity;
+                        that.addComma('max_load_capacity');
                     }
                 });
             }else{
@@ -212,14 +220,20 @@ var ctrEmptyInfoVl = new Vue({
                             value: e.target.value,
                         });
                     }
+                }else{
+                    this.field.equipment.push( {
+                        id: id,
+                        value: e.target.value,
+                    });
+                    $('#equipment'+id).prop('checked', true);
                 }
             }
         },
-        addComma: function () {
-            this.field.asking_price = (this.field.asking_price!='' ? '¥ ' : '' )+this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        addComma: function (id) {
+            this.field[id] = (id=='asking_price' && this.field[id]!='' ? '¥ ' : '' )+this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
-        removeComma: function () {
-            this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '').replace('¥ ','');
+        removeComma: function (id) {
+            this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ','');
         },
         resetForm: function () {
             this.registration_numbers = "";
@@ -271,6 +285,9 @@ var ctrEmptyInfoVl = new Vue({
     },
     mounted () {
         this.loadFormEdit();
+        if(this.field.mode == 'register' || this.field.mode == 'edit' ){
+            $("#search_vehicle").focus();
+        }
     },
     components: {
         DatePicker,

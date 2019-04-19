@@ -133,7 +133,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-5 col-sm-10">
-                                @include('Component.form.input',['filed'=>'max_load_capacity','required'=>true,'attr_input' => "maxlength='5'", 'type' => 'tel'])
+                                @include('Component.form.input',['filed'=>'max_load_capacity','required'=>true,'attr_input' => "maxlength='5' @blur='addComma(\"max_load_capacity\")' @focus='removeComma(\"max_load_capacity\")'", 'type' => 'tel'])
                             </div>
                             <div class="col-md-7 col-sm-2 pl-0 d-flex align-items-center">kg</div>
                             <div class="break-row-form"></div>
@@ -166,7 +166,7 @@
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">
-                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='8' @blur='addComma' @focus='removeComma'", 'type' => 'tel'])
+                                @include('Component.form.input',['filed'=>'asking_price','required'=>true, 'attr_input' => "maxlength='8' @blur='addComma(\"asking_price\")' @focus='removeComma(\"asking_price\")'", 'type' => 'tel'])
                             </div>
                             <div class="break-row-form"></div>
                             <div class="col-md-12 col-sm-12">

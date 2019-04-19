@@ -1,5 +1,10 @@
 <?php
 namespace App\Console\Commands\ImportExcel;
+use App\Models\MBusinessOffices;
+use App\Models\MGeneralPurposes;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
+
 /**
  * Created by PhpStorm.
  * User: sonpt
@@ -21,7 +26,6 @@ class MstVehicles extends BaseImport
         'A'=>'vehicles_cd',
         'B'=>'vehicles_kb',
         'C'=>'registration_numbers',
-        'D'=>'mst_business_office_id',
         'I'=>'vehicle_size_kb',
         'J'=>'vehicle_purpose_id',
         'AF'=>'land_transport_office_cd',
@@ -58,7 +62,6 @@ class MstVehicles extends BaseImport
         'BA' => 'modified_at',
     ];
     public $excel_column_extra_1_sheet_1 = [
-        'B' => 'vehicles_cd',
         'N' => 'bed_fg',
         'O' => 'refrigerator_fg',
         'V' => 'drive_system_id',
@@ -76,10 +79,9 @@ class MstVehicles extends BaseImport
         'AK' => 'power_gate_cd',
     ];
     public $excel_column_extra_1_sheet_2 = [
-        'B' => 'vehicles_cd',
         'N' => 'bed_fg',
         'O' => 'refrigerator_fg',
-        'X' => 'transmissions_id',
+        'Z' => 'transmissions_id',
         'AA' => 'transmissions_id',
         'AB' => 'suspensions_cd',
         'AC' => 'suspensions_cd',
@@ -94,13 +96,68 @@ class MstVehicles extends BaseImport
     public $data_extra_file_2 = [];
     public $data_extra_file_3 = [];
 
+
+    public $numRead = 0;
+    public $numNormal = 0;
+    public $numErr = 0;
+    public $tableLabel = '車両';
+
+    public $rules = [
+        'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
+        'vehicles_kb'=>'required|length:11',
+        'registration_numbers'=>'required|length:50',
+        'mst_business_office_id'=>'required',
+        'vehicle_size_kb'=>'nullable',
+        'vehicle_purpose_id'=>'nullable',
+        'land_transport_office_cd'=>'nullable',
+        'registration_dt'=>'nullable',
+        'first_year_registration_dt'=>'nullable|date_format_custom:Ym',
+        'seating_capacity'=>'nullable|one_byte_number|length:2',
+        'max_loading_capacity'=>'nullable|one_byte_number|length:5',
+        'vehicle_body_weights'=>'nullable|one_byte_number|length:5',
+        'vehicle_total_weights'=>'nullable|one_byte_number|length:5',
+        'frame_numbers'=>'nullable|length:10',
+        'vehicle_lengths'=>'nullable|one_byte_number|length:4',
+        'vehicle_widths'=>'nullable|one_byte_number|length:3',
+        'vehicle_heights'=>'nullable|one_byte_number|length:3',
+        'axle_loads_ff'=>'nullable|one_byte_number|length:5',
+        'axle_loads_fr'=>'nullable|one_byte_number|length:5',
+        'axle_loads_rf'=>'nullable|one_byte_number|length:5',
+        'axle_loads_rr'=>'nullable|one_byte_number|length:5',
+        'vehicle_types'=>'nullable|length:50',
+        'engine_typese'=>'nullable|length:50',
+        'total_displacements'=>'nullable|one_byte_number|length:5',
+        'user_base_locations'=>'nullable|length:200',
+        'etc_numbers'=>'nullable|length:19',
+        'transmissions_notes'=>'nullable|length:50',
+        'tank_capacity_1'=>'nullable|one_byte_number|length:3',
+        'tank_capacity_2'=>'nullable|one_byte_number|length:3',
+        'floor_roller_fg'=>'nullable|one_byte_number|length:1',
+        'floor_joloda_conveyor_fg'=>'nullable|one_byte_number|length:5',
+        'power_gate_cd'=>'nullable|one_byte_number|length:5',
+        'personal_insurance_prices'=>'nullable|one_byte_number|length:11',
+        'property_damage_insurance_prices'=>'nullable|one_byte_number|length:11',
+        'vehicle_insurance_prices'=>'nullable|one_byte_number|length:11',
+        'acquisition_amounts'=>'nullable|one_byte_number|length:11',
+        'durable_years'=>'nullable|one_byte_number|length:3',
+    ];
+
     public function run(){
-        echo "mst_vehicles";
-        exit;
-//        $this->readingVehicleExtraFile1();
-//        $this->readingVehicleExtraFile2();
-//        $this->readingVehicleExtraFile3();
-//        $this->readingMainFile();
+        $this->readingVehicleExtraFile1();
+        $this->readingVehicleExtraFile2();
+        $this->readingVehicleExtraFile3();
+        if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel]))){
+            $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel]));
+        }
+        $this->readingMainFile();
+        if( !empty( Lang::trans("log_import.end_read") ) ){
+            $this->log("data_convert",Lang::trans("log_import.end_read",[
+                "numRead" => $this->numRead,
+                "numNormal"=> $this->numNormal,
+                "numErr" => $this->numErr,
+                "table" => $this->tableLabel,
+            ]));
+        }
     }
 
     public function getDataFromExcel( $path){
@@ -116,21 +173,33 @@ class MstVehicles extends BaseImport
     }
 
     public function readingMainFile(){
-        $model =  new MVehicles();
         $excel_column = $this->excel_column_main;
-        $record = array();
         $data = [];
-        $mGeneralPurposes = new MGeneralPurposes();
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main'));
-        $this->start_row = 2;
+        $keys = [];
+        $mBusinessOffices = new MBusinessOffices();
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main.path'));
+        $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
+            $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
+            if($row==1){
+                $keys = $rowData[$row];
+                continue;
+            }
             foreach ($rowData[$row] as $pos => $value) {
                 if (isset($excel_column[$pos])) {
                     switch ($excel_column[$pos]) {
                         case 'created_at':
                         case 'modified_at':
-                            $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'mm/dd/yyyy hh:mm:ss');
+                            $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd hh:mm:ss');
+                            break;
+                        case 'first_year_registration_dt':
+                            $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyymm');
+                            break;
+                        case 'registration_dt':
+                        case 'expiry_dt':
+                        case 'dispose_dt':
+                            $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd');
                             break;
                         case 'vehicles_kb':
                         case 'vehicle_size_kb':
@@ -170,41 +239,62 @@ class MstVehicles extends BaseImport
                                     $data_kb = config('params.data_kb')['kinds_of_fuel'];
                                     break;
                             }
-                            $result = $mGeneralPurposes->checkExistDataAndInsert($data_kb, $value);
+                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
                             if ($result) {
-                                $record[$excel_column[$pos]] = $result;
+                                $record[$excel_column[$pos]] = (string)$result;
                             } else {
-                                break 2;
+//                                break 2;
                             }
                             break;
                         default:
-                            $record[$excel_column[$pos]] = $value;
+                            $record[$excel_column[$pos]] = (string)$value;
                     }
+
                 }
-                if (!empty($record)) {
-                    DB::table('mst_vehicles_copy1')->insert($record);
-                }
+            }
+            $findOffice = $mBusinessOffices->where('mst_business_office_cd',(integer)$rowData[$row]['AG'])->whereNull('deleted_at')->first();
+            if($findOffice){
+                $record['mst_business_office_id'] = $findOffice->id;
+            }
+
+            $data = $record;
+            if(isset($this->data_extra_file_1[$record['vehicles_cd']])){
+                $data = $data + $this->data_extra_file_1[$record['vehicles_cd']];
+            }
+            if(isset($this->data_extra_file_2[$record['vehicles_cd']])){
+                $data = $data + $this->data_extra_file_2[$record['vehicles_cd']];
+
+            }
+            if(isset($this->data_extra_file_3[$record['vehicles_cd']])){
+                $data = $data + $this->data_extra_file_3[$record['vehicles_cd']];
+
+            }
+            dd($this->data_extra_file_3[$record['vehicles_cd']]);
+            if (!empty($record)) {
+                DB::table('mst_vehicles_copy1')->insert($data);
+
             }
         }
 
     }
 
     public function readingVehicleExtraFile1(){
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra')[0]);
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra1.path'));
         $this->start_row = 2;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if(!is_null($rowData[$row]['B']) && is_numeric($rowData[$row]['B']) && !is_null($rowData[$row]['R'])){
-                $this->data_extra_file_1[$rowData[$row]['B']] = (string)$rowData[$row]['R'];
+                $this->data_extra_file_1[$rowData[$row]['B']] = ['etc_numbers' => (string)$rowData[$row]['R']];
             }
         }
 
     }
 
-    public function readingVehicleExtraFile2(){
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra')[1]);
+    public function readingVehicleExtraFile2()
+    {
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra2.path'));
         $this->start_row = 7;
-        $keys =[
+        $keys_sheet_1 = [
             'N' => 1,
             'O' => 1,
             'V' => 1,
@@ -216,22 +306,33 @@ class MstVehicles extends BaseImport
             'AB' => 2,
             'AC' => 3,
         ];
+        $keys_sheet_2 = [
+            'N' => 1,
+            'O' => 1,
+            'Z' => 2,
+            'AA' => 1,
+            'AB' => 1,
+            'AC' => 2,
+            'AD' => 3,
+        ];
 
-        for ($i = 0; $i<2 ; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $this->sheet = $this->objPHPExcel->setActiveSheetIndex($i);
-            $this->highestRow =  $this->sheet->getHighestRow();
-            $this->highestColumn =  $this->sheet->getHighestColumn();
-            $excel_column = $this->{'excel_column_extra_1_sheet_'.($i+1)};
+            $this->highestRow = $this->sheet->getHighestRow();
+            $this->highestColumn = $this->sheet->getHighestColumn();
+            $excel_column = $this->{'excel_column_extra_1_sheet_' . ($i + 1)};
             for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
+                $record = [];
                 $rowData = $this->sheet->rangeToArray('A' . $row . ':' . $this->highestColumn . $row, null, false, false, true);
-                foreach ($rowData[$row] as $pos => $value) {
-                    if(!is_null($rowData[$row]['B'])){
-                        $this->data_extra_file_2[$rowData[$row]['B']] = [];
-                        if($i==0){
+                if (!is_null($rowData[$row]['B'])) {
+                    foreach ($rowData[$row] as $pos => $value) {
+                        if ($i == 0) {
                             switch ($pos) {
                                 case 'AD':
                                 case 'AE':
-                                    $this->data_extra_file_2[$rowData[$row]['B']][$excel_column[$pos]] = (string)$value;
+                                    if(!is_null($value)){
+                                        $record[$excel_column[$pos]] = (string)$value;
+                                    }
                                     break;
                                 case 'N':
                                 case 'O':
@@ -244,22 +345,23 @@ class MstVehicles extends BaseImport
                                 case 'AB':
                                 case 'AC':
                                     if ($value != '') {
+                                        $record[$excel_column[$pos]] = $keys_sheet_1[$pos];
 
-                                        $this->data_extra_file_2[$rowData[$row]['B']][$excel_column[$pos]] = $keys[$pos];
-                                        dd($this->data_extra_file_2);
                                         if ($pos == 'Y' || $pos == 'Z') {
                                             if ($value != '○' && $value != '〇') {
-                                                $this->data_extra_file_2[$rowData[$row]['B']]['transmissions_notes'] = $value;
+                                                $record['transmissions_notes'] = (string)$value;
                                             }
                                         }
                                     }
                                     break;
                             }
-                        }else{
+                        } else {
                             switch ($pos) {
                                 case 'AE':
                                 case 'AF':
-                                    $this->data_extra_file_2[$rowData[$row]['B']][$excel_column[$pos]] = $value;
+                                    if(!is_null($value)){
+                                        $record[$excel_column[$pos]] = (string)$value;
+                                    }
                                     break;
                                 case 'N':
                                 case 'O':
@@ -269,10 +371,10 @@ class MstVehicles extends BaseImport
                                 case 'AC':
                                 case 'AD':
                                     if ($value != '') {
-                                        $this->data_extra_file_2[$rowData[$row]['B']][$excel_column[$pos]] = $keys[$pos];
-                                        if ($pos == 'Y' || $pos == 'Z') {
+                                        $record[$excel_column[$pos]] = $keys_sheet_2[$pos];
+                                        if ($pos == 'Z' || $pos == 'AA') {
                                             if ($value != '○' && $value != '〇') {
-                                                $this->data_extra_file_2[$rowData[$row]['B']]['transmissions_notes'] = $value;
+                                                $record['transmissions_notes'] = (string)$value;
                                             }
                                         }
                                     }
@@ -280,15 +382,14 @@ class MstVehicles extends BaseImport
                             }
                         }
                     }
-
+                    $this->data_extra_file_2[$rowData[$row]['B']] = $record;
                 }
-                dd($this->data_extra_file_2[$rowData[$row]['B']]);
             }
         }
     }
 
     public function readingVehicleExtraFile3(){
-        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra')[2]);
+        $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.extra3.path'));
         $this->start_row = 3;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);

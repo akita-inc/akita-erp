@@ -20889,13 +20889,15 @@ var ctrEmptyInfoVl = new Vue({
         this.field["id"] = this.empty_info_id;
       }
 
-      this.removeComma();
+      this.removeComma('asking_price');
+      this.removeComma('max_load_capacity');
 
       switch (this.field.mode) {
         case 'register':
           empty_info_service.submit(that.field).then(function (response) {
             if (response.success == false) {
-              that.addComma();
+              that.addComma('asking_price');
+              that.addComma('max_load_capacity');
               that.errors = response.message;
             } else {
               that.errors = [];
@@ -20920,7 +20922,8 @@ var ctrEmptyInfoVl = new Vue({
             } else {
               empty_info_service.submit(that.field).then(function (response) {
                 if (response.success == false) {
-                  that.addComma();
+                  that.addComma('asking_price');
+                  that.addComma('max_load_capacity');
                   that.errors = response.message;
                 } else {
                   that.errors = [];
@@ -20982,6 +20985,10 @@ var ctrEmptyInfoVl = new Vue({
             if (key == "asking_price") {
               that.field[key] = '¥ ' + $("#hd_" + key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
+
+            if (key == "max_load_capacity") {
+              that.field[key] = $("#hd_" + key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
           }
         });
 
@@ -21040,6 +21047,7 @@ var ctrEmptyInfoVl = new Vue({
             that.field.vehicle_size = result.vehicle_size_kb;
             that.field.vehicle_body_shape = result.car_body_shape;
             that.field.max_load_capacity = result.max_loading_capacity;
+            that.addComma('max_load_capacity');
           }
         });
       } else {
@@ -21086,14 +21094,20 @@ var ctrEmptyInfoVl = new Vue({
               value: e.target.value
             });
           }
+        } else {
+          this.field.equipment.push({
+            id: id,
+            value: e.target.value
+          });
+          $('#equipment' + id).prop('checked', true);
         }
       }
     },
-    addComma: function addComma() {
-      this.field.asking_price = (this.field.asking_price != '' ? '¥ ' : '') + this.field.asking_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    addComma: function addComma(id) {
+      this.field[id] = (id == 'asking_price' && this.field[id] != '' ? '¥ ' : '') + this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
-    removeComma: function removeComma() {
-      this.field.asking_price = this.field.asking_price.toString().replace(/,/g, '').replace('¥ ', '');
+    removeComma: function removeComma(id) {
+      this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
     },
     resetForm: function resetForm() {
       this.registration_numbers = "";
@@ -21146,6 +21160,10 @@ var ctrEmptyInfoVl = new Vue({
   },
   mounted: function mounted() {
     this.loadFormEdit();
+
+    if (this.field.mode == 'register' || this.field.mode == 'edit') {
+      $("#search_vehicle").focus();
+    }
   },
   components: {
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a,
@@ -21221,7 +21239,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })

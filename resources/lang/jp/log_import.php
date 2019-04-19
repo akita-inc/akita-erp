@@ -1,18 +1,28 @@
 <?php
 return[
-    'begin_start' => [
-        "mst_staff_dependents"=>"データコンバート開始（社員扶養者）",
-    ],
-    "end_read" => "データコンバート終了（社員扶養者）"."　"
+    'begin_start' => "データコンバート開始（:table）",
+    "end_read" => "データコンバート終了（:table）"."　"
         ."データ件数："
-        ." :numRead件 （読み込んだデータ件数）"
+        ." :numRead件"
         ."　"."成功件数："
-        ." :numNormal件 （正常なデータ件数）"."　"
+        ." :numNormal件 "."　"
         ."失敗件数："
-        ." :numErr件 （エラー件数）",
-    "required" => "データコンバート終了（社員扶養者）"."　"
-        ."▼ 必須エラー"
-        ." :nameExcel（エクセル名）"
-        ." :fieldExcel（エクセル項目名）"."　"
-        ." :rowIndexExcel行目（エクセルの行数）",
+        ." :numErr件",
+    'required' =>  "▼ 必須エラー："
+        ." :fileName"."　"
+        ." :fieldName"."　"
+        ." :row行目"."　",
+    'add_general_purposes_number' => "▼ 汎用マスタエラー：データ元" ." :fileName"."　"
+        ." :fieldName"."　"
+        ." :row行目"."　\n",
+    'add_general_purposes_string' => "▼ 汎用マスタエラー：データ元" ." :fileName"."　"
+        ." :fieldName"."　"
+        ." :row行目"."　\n"
+        ."▼ 登録内容："
+        ."データ区分： "."　".":data_kb"
+        ."データ区分名： "."　".":data_kb_nm"
+        ."データID： "."　" .":date_id"
+        ."データ名称： "."　".":date_nm"
+        ."データカナ名称：フメイ",
+
 ];
