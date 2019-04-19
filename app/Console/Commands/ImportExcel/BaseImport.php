@@ -19,6 +19,7 @@ class BaseImport{
     public $numNormal = 0;
     public $numErr = 0;
     public $dateTimeRun = "";
+    public $objPHPExcel="";
     public $tableLabel = [
         'mst_staffs' => '社員',
         'mst_staff_dependents' => '社員扶養者',
@@ -131,6 +132,7 @@ class BaseImport{
                 $inputFileType = \PHPExcel_IOFactory::identify($this->path);
                 $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
                 $objPHPExcel = $objReader->load($this->path);
+                $this->objPHPExcel=$objPHPExcel;
             } catch(Exception $e) {
                 return ('Error loading file "'.pathinfo($this->path,PATHINFO_BASENAME).'": '.$e->getMessage());
             }
@@ -152,6 +154,19 @@ class BaseImport{
                     "table" => $this->tableLabel[$this->table],
                 ]));
             }
+            if($this->table=="mst_staffs")
+            {
+                $this->exportPassword();
+            }
         }
+    }
+    protected function exportPassword()
+    {
+        $objPHPExcel=$this->objPHPExcel;
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, 1,'ログインパスワード');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $file=storage_path('import/dbo_M_社員'.$this->dateTimeRun.'.xlsx');
+        $objWriter->save($file);
     }
 }
