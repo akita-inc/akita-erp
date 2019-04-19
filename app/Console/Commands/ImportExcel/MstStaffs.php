@@ -79,15 +79,15 @@ class MstStaffs extends BaseImport
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana|nullable|length:50',
-        'zip_cd'=>'zip_code|nullable|length:7',
+        'zip_cd'=>'nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
-        "landline_phone_number"=>"length:20|nullable|phone_number",
-        "cellular_phone_number"=>"length:20|nullable|phone_number",
+        "landline_phone_number"=>"length:20|nullable",
+        "cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:3|nullable",
-        "health_insurance_class"=>"one_byte_number|length:10|number_range|nullable",
-        "welfare_annuity_class"=>"one_byte_number|length:10|number_range|nullable",
+        "health_insurance_class"=>"length:10|number_range|nullable",
+        "welfare_annuity_class"=>"length:10|number_range|nullable",
         "relocation_municipal_office_cd"=>"nullable|length:6",
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
@@ -165,7 +165,6 @@ class MstStaffs extends BaseImport
         elseif(strpos($name, '　  ') !== false)
         {
             $space='　  ';
-
         }
         else
         {
@@ -177,18 +176,18 @@ class MstStaffs extends BaseImport
     public function explodeStaffName($value,$type)
     {
         $result=array();
-
-
+        $staff_nm=explode($this->getSpaceBetweenName($value),$value);
+        if(count($staff_nm)>2)
+        {
+            $staff_nm[1]=$staff_nm[2];
+        }
         if($type=="kana")
         {
-            $staff_nm=explode($this->getSpaceBetweenName($value),$value);
             $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
             $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
         }
         else
         {
-
-            $staff_nm=explode($this->getSpaceBetweenName($value),$value);
             $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
             $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
         }
@@ -327,6 +326,7 @@ class MstStaffs extends BaseImport
                     }
                 }
                 $record["password"]=bcrypt($this->generateRandomString(8));
+                $record["remember_token"]=$record["password"];
                 unset($record['staff_nm']);
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
