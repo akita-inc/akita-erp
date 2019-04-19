@@ -80,6 +80,9 @@ return [
             'health_insurance_card_information'=>storage_path('import/20190404_保険証情報.xlsx'),
             'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx')
         ],
+        'mst_bill_issue_destinations'=>[
+            'main'=>storage_path('import/dbo_M_得意先.xlsx')
+        ],
         'mst_staff_dependents' => storage_path('import/扶養者名_生年月日.xlsx'),
         'data_convert'=>storage_path('logs/DataConvert.log'),
     ],
