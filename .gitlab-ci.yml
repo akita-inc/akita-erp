@@ -2,6 +2,6 @@ build:
   tags:
     - sw/web200
   script: 
-    - rsync -avz $PWD/ /localsrc/php72/akita-erp --exclude ".git" --exclude "storage" --exclude "public/phpMyAdmin"
+    - rsync -avz $PWD/ /localsrc/php72/akita-erp --exclude ".git" --exclude "storage" --exclude "public/phpMyAdmin" --exclude "README.md"
   only:
     - develop

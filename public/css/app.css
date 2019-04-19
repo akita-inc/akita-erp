@@ -637,7 +637,7 @@ div.mx-calendar-panel-time div.mx-calendar-header{
     padding-right: 20px !important;
     padding-left: 0px !important;
 }
-input[type="checkbox"]:focus , input[type="radio"]:focus{
+input[type="checkbox"]:focus {
     outline:0;
     box-shadow: none;
 }

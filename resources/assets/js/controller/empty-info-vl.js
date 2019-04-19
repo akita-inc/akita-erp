@@ -35,6 +35,7 @@ var ctrEmptyInfoVl = new Vue({
         errors:{},
         checkOther:false,
         modified_at: "",
+
     },
     methods : {
         submit: function(status){
@@ -57,6 +58,7 @@ var ctrEmptyInfoVl = new Vue({
                             window.location.href = listRoute;
                         }
                         that.loading = false;
+                        that.cursorWhenError();
                     });
                 break;
                 case 'edit':
@@ -77,6 +79,7 @@ var ctrEmptyInfoVl = new Vue({
                                     window.location.href = listRoute;
                                 }
                                 that.loading = false;
+                                that.cursorWhenError();
                             });
                         }
                     });
@@ -262,11 +265,14 @@ var ctrEmptyInfoVl = new Vue({
                     arrive_pref_cd:"",
                     arrive_address:"",
                     arrive_date:"",
+                    mode:$('#mode').val(),
                 };
                 $('input:checkbox').prop('checked',false);
                 $('input:text').val('');
+                $('input[type="tel"]').val('');
                 $('textarea').val('');
             }
+            $("#search_vehicle").focus();
         },
         setInputFilter: function (textbox, inputFilter) {
             ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
@@ -282,6 +288,44 @@ var ctrEmptyInfoVl = new Vue({
                 });
             });
         },
+        cursorWhenError: function () {
+            var that = this;
+            $.each( that.field, function( key, value ) {
+                if(key=='equipment'){
+                    if(that.field.mode=='register'){
+                        if(typeof that.errors['equipment'] != "undefined"){
+                            $('#equipment_value1').focus();
+                            return false;
+                        }
+                        if(typeof that.errors['equipment_value'] != "undefined"){
+                            let firstKey = Object.keys(that.errors['equipment_value'][0])[0];
+                            if(typeof that.errors['equipment_value'][0][firstKey] != "undefined") {
+                                setTimeout(function(){
+                                    $('#equipment_value' + firstKey).focus();
+                                });
+                                return false;
+                            }
+                        }
+                    }else{
+                        if(typeof that.errors['equipment'] != "undefined"){
+                            $('#equipment').focus();
+                            return false;
+                        }
+                    }
+
+                }else if(key=='start_date' || key=='start_time' || key=='arrive_date'){
+                    if(typeof that.errors[key] != "undefined") {
+                        $("#" + key + ' input').focus();
+                        return false;
+                    }
+                }else{
+                    if(typeof that.errors[key] !== "undefined") {
+                        $("#" + key).focus();
+                        return false;
+                    }
+                }
+            });
+        }
     },
     mounted () {
         this.loadFormEdit();

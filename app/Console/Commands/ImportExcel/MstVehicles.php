@@ -2,8 +2,10 @@
 namespace App\Console\Commands\ImportExcel;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
+use App\Models\MVehicles;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Created by PhpStorm.
@@ -97,57 +99,118 @@ class MstVehicles extends BaseImport
     public $data_extra_file_3 = [];
 
 
-    public $numRead = 0;
-    public $numNormal = 0;
-    public $numErr = 0;
-    public $tableLabel = '車両';
-
     public $rules = [
         'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
         'vehicles_kb'=>'required|length:11',
         'registration_numbers'=>'required|length:50',
-        'mst_business_office_id'=>'required',
-        'vehicle_size_kb'=>'nullable',
-        'vehicle_purpose_id'=>'nullable',
-        'land_transport_office_cd'=>'nullable',
-        'registration_dt'=>'nullable',
+        'mst_business_office_id'=>'required|length:5',
+        'vehicle_size_kb'=>'nullable|length:11',
+        'vehicle_purpose_id'=>'nullable|length:11',
+        'land_transport_office_cd'=>'nullable|length:11',
         'first_year_registration_dt'=>'nullable|date_format_custom:Ym',
-        'seating_capacity'=>'nullable|one_byte_number|length:2',
-        'max_loading_capacity'=>'nullable|one_byte_number|length:5',
-        'vehicle_body_weights'=>'nullable|one_byte_number|length:5',
-        'vehicle_total_weights'=>'nullable|one_byte_number|length:5',
-        'frame_numbers'=>'nullable|length:10',
-        'vehicle_lengths'=>'nullable|one_byte_number|length:4',
-        'vehicle_widths'=>'nullable|one_byte_number|length:3',
-        'vehicle_heights'=>'nullable|one_byte_number|length:3',
-        'axle_loads_ff'=>'nullable|one_byte_number|length:5',
-        'axle_loads_fr'=>'nullable|one_byte_number|length:5',
-        'axle_loads_rf'=>'nullable|one_byte_number|length:5',
-        'axle_loads_rr'=>'nullable|one_byte_number|length:5',
+        'vehicle_classification_id'=>'nullable|length:11',
+        'private_commercial_id'=>'nullable|length:11',
+        'car_body_shape_id'=>'nullable|length:11',
+        'vehicle_id'=>'nullable|length:11',
+        'seating_capacity'=>'nullable|length:11',
+        'max_loading_capacity'=>'nullable|length:11',
+        'vehicle_body_weights'=>'nullable|length:11',
+        'vehicle_total_weights'=>'nullable|length:11',
+        'frame_numbers'=>'nullable|length:50',
+        'vehicle_lengths'=>'nullable|length:11',
+        'vehicle_widths'=>'nullable|length:11',
+        'vehicle_heights'=>'nullable|length:11',
+        'axle_loads_ff'=>'nullable|length:11',
+        'axle_loads_fr'=>'nullable|length:11',
+        'axle_loads_rf'=>'nullable|length:11',
+        'axle_loads_rr'=>'nullable|length:11',
         'vehicle_types'=>'nullable|length:50',
         'engine_typese'=>'nullable|length:50',
-        'total_displacements'=>'nullable|one_byte_number|length:5',
+        'total_displacements'=>'nullable|length:11',
+        'kinds_of_fuel_id'=>'nullable|length:11',
         'user_base_locations'=>'nullable|length:200',
+        'personal_insurance_prices'=>'nullable|length:11',
+        'property_damage_insurance_prices'=>'nullable|length:11',
+        'vehicle_insurance_prices'=>'nullable|length:11',
+        'created_at'=>'required',
+        'modified_at'=>'required',
+    ];
+    public $rules_extra_1 = [
         'etc_numbers'=>'nullable|length:19',
+    ];
+    public $rules_extra_2 = [
+        'bed_fg'=>'nullable|length:11',
+        'refrigerator_fg'=>'nullable|length:11',
+        'drive_system_id'=>'nullable|length:11',
+        'transmissions_id'=>'nullable|length:11',
         'transmissions_notes'=>'nullable|length:50',
-        'tank_capacity_1'=>'nullable|one_byte_number|length:3',
-        'tank_capacity_2'=>'nullable|one_byte_number|length:3',
-        'floor_roller_fg'=>'nullable|one_byte_number|length:1',
-        'floor_joloda_conveyor_fg'=>'nullable|one_byte_number|length:5',
-        'power_gate_cd'=>'nullable|one_byte_number|length:5',
-        'personal_insurance_prices'=>'nullable|one_byte_number|length:11',
-        'property_damage_insurance_prices'=>'nullable|one_byte_number|length:11',
-        'vehicle_insurance_prices'=>'nullable|one_byte_number|length:11',
-        'acquisition_amounts'=>'nullable|one_byte_number|length:11',
-        'durable_years'=>'nullable|one_byte_number|length:3',
+        'suspensions_cd'=>'nullable|length:11',
+        'tank_capacity_1'=>'nullable|length:11',
+        'tank_capacity_2'=>'nullable|length:11',
+        'floor_roller_fg'=>'nullable|length:1',
+        'floor_joloda_conveyor_fg'=>'nullable|length:1',
+        'power_gate_cd'=>'nullable|length:11',
+    ];
+    public $rules_extra_3 = [
+        'acquisition_amounts'=>'nullable|length:12',
+        'durable_years'=>'nullable|one_byte_number|length:11',
+    ];
+
+    public $column_name = [
+        'vehicles_cd'=> '車両CD',
+        'door_number'=> '',
+        'vehicles_kb'=> '車両区分',
+        'registration_numbers'=> '登録番号',
+        'mst_business_office_id'=> '営業所ID',
+        'vehicle_size_kb'=> '小中大区分',
+        'vehicle_purpose_id'=> '用途',
+        'land_transport_office_cd'=> '陸運支局CD',
+        'vehicle_inspection_sticker_pdf'=> '',
+        'registration_dt'=> '登録年月日',
+        'first_year_registration_dt'=> '初年度登録年月',
+        'vehicle_classification_id'=> '種別',
+        'private_commercial_id'=> '区分',
+        'car_body_shape_id'=> '車体形状',
+        'vehicle_id'=> '車名',
+        'seating_capacity'=> '定員',
+        'max_loading_capacity'=> '最大積載量',
+        'vehicle_body_weights'=> '車両重量',
+        'vehicle_total_weights'=> '車両総重量',
+        'frame_numbers'=> '車台番号',
+        'vehicle_lengths'=> '長さ',
+        'vehicle_widths'=> '幅',
+        'vehicle_heights'=> '高さ',
+        'axle_loads_ff'=> '前前車軸',
+        'axle_loads_fr'=> '前後車軸',
+        'axle_loads_rf'=> '後前車軸',
+        'axle_loads_rr'=> '後後車軸',
+        'vehicle_types'=> '形式',
+        'engine_typese'=> '原動機形式',
+        'total_displacements'=> '排気量',
+        'rated_outputs'=> '',
+        'kinds_of_fuel_id'=> '燃料種類',
+        'user_base_locations'=> '使用本拠地',
+        'expiry_dt'=> '車検日',
+        'mst_staff_cd'=> '社員CD',
+        'personal_insurance_prices'=> '対人保険',
+        'property_damage_insurance_prices'=> '対物保険',
+        'vehicle_insurance_prices'=> '車両保険',
+        'dispose_dt'=> '廃車日',
+        'created_at'=> '登録日',
+        'modified_at'=> '最終更新日',
+        'etc_numbers'=>'車載機器',
+        'tank_capacity_1' => 'タンク1',
+        'tank_capacity_2' => 'タンク2',
+        'acquisition_amounts'=>'取得金額',
+        'durable_years'=>'耐用年数',
     ];
 
     public function run(){
         $this->readingVehicleExtraFile1();
         $this->readingVehicleExtraFile2();
         $this->readingVehicleExtraFile3();
-        if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel]))){
-            $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel]));
+        if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))){
+            $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel[$this->table]]));
         }
         $this->readingMainFile();
         if( !empty( Lang::trans("log_import.end_read") ) ){
@@ -155,7 +218,7 @@ class MstVehicles extends BaseImport
                 "numRead" => $this->numRead,
                 "numNormal"=> $this->numNormal,
                 "numErr" => $this->numErr,
-                "table" => $this->tableLabel,
+                "table" => $this->tableLabel[$this->table],
             ]));
         }
     }
@@ -176,14 +239,18 @@ class MstVehicles extends BaseImport
         $excel_column = $this->excel_column_main;
         $data = [];
         $keys = [];
+        $error_fg = false;
         $mBusinessOffices = new MBusinessOffices();
         $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main.path'));
         $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
+            $this->numRead++;
+            $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if($row==1){
                 $keys = $rowData[$row];
+                $this->numNormal++;
                 continue;
             }
             foreach ($rowData[$row] as $pos => $value) {
@@ -252,27 +319,112 @@ class MstVehicles extends BaseImport
 
                 }
             }
+
             $findOffice = $mBusinessOffices->where('mst_business_office_cd',(integer)$rowData[$row]['AG'])->whereNull('deleted_at')->first();
             if($findOffice){
                 $record['mst_business_office_id'] = $findOffice->id;
             }
 
             $data = $record;
-            if(isset($this->data_extra_file_1[$record['vehicles_cd']])){
-                $data = $data + $this->data_extra_file_1[$record['vehicles_cd']];
+            if (DB::table('mst_vehicles_copy1')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
+                $error_fg = true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
+                    "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                    "fieldName" => $keys[$pos],
+                    "row" => $row,
+                ]));
             }
-            if(isset($this->data_extra_file_2[$record['vehicles_cd']])){
-                $data = $data + $this->data_extra_file_2[$record['vehicles_cd']];
+            $validator = Validator::make($data, $this->rules);
 
+            if ($validator->fails()) {
+                $error_fg = true;
+                $failedRules = $validator->failed();
+                foreach ($failedRules as $field => $errors){
+                    foreach ($errors as $ruleName => $error){
+                        if($ruleName=='Length'){
+                            $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
+                                "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                "excelFieldName" => $this->column_name[$field],
+                                "row" => $row,
+                                "excelValue" => $data[$field],
+                                "tableName" => $this->table,
+                                "DBFieldName" => $field,
+                                "DBvalue" => substr($data[$field],0,$error[0]),
+                            ]));
+                            $data[$field] = substr($data[$field],0,$error[0]);
+                        }else if($ruleName=='Required'){
+                            $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
+                                "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                "fieldName" => $this->column_name[$field],
+                                "row" => $row,
+                            ]));
+                        }
+                    }
+                }
             }
-            if(isset($this->data_extra_file_3[$record['vehicles_cd']])){
-                $data = $data + $this->data_extra_file_3[$record['vehicles_cd']];
 
+
+            for ($k = 1; $k <=3; $k++){
+                if(isset($this->{"data_extra_file_".$k}[$record['vehicles_cd']])){
+                    $data = $data + $this->{"data_extra_file_".$k}[$record['vehicles_cd']];
+                    $validator = Validator::make($data, $this->{'rules_extra_'.$k});
+                    if ($validator->fails()) {
+                        $error_fg = true;
+                        $failedRules = $validator->failed();
+                        foreach ($failedRules as $field => $errors){
+                            foreach ($errors as $ruleName => $error){
+                                if($ruleName=='Length'){
+                                    $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
+                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
+                                        "excelFieldName" => $this->column_name[$field],
+                                        "row" => $data['row'],
+                                        "excelValue" => $data[$field],
+                                        "tableName" => $this->table,
+                                        "DBFieldName" => $field,
+                                        "DBvalue" => substr($data[$field],0,$error[0]),
+                                    ]));
+                                    $data[$field] = substr($data[$field],0,$error[0]);
+                                }else if($ruleName=='Required'){
+                                    $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
+                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
+                                        "fieldName" => $this->column_name[$field],
+                                        "row" => $data['row'],
+                                    ]));
+                                }
+                            }
+                        }
+                    }
+                    unset($data['row']);
+                    unset($data['sheet']);
+                }else{
+                    $error_fg = true;
+                    $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                        "mainFileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                        "fieldName" => $keys[$pos],
+                        "row" => $row,
+                        "extraFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
+                    ]));
+                }
             }
-            dd($this->data_extra_file_3[$record['vehicles_cd']]);
-            if (!empty($record)) {
-                DB::table('mst_vehicles_copy1')->insert($data);
-
+            if(!$error_fg){
+                DB::beginTransaction();
+                try{
+                    if (!empty($record)) {
+                        DB::table('mst_vehicles_copy1')->insert($data);
+                        DB::commit();
+                        $this->numNormal++;
+                    }
+                }catch (\Exception $e){
+                    DB::rollback();
+                    $this->numErr++;
+                    $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
+                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                        "row" => $row,
+                        "errorDetail" => $e->getMessage(),
+                    ]));
+                }
+            }else{
+                $this->numErr++;
             }
         }
 
@@ -284,7 +436,10 @@ class MstVehicles extends BaseImport
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if(!is_null($rowData[$row]['B']) && is_numeric($rowData[$row]['B']) && !is_null($rowData[$row]['R'])){
-                $this->data_extra_file_1[$rowData[$row]['B']] = ['etc_numbers' => (string)$rowData[$row]['R']];
+                $this->data_extra_file_1[$rowData[$row]['B']] = [
+                    'etc_numbers' => $rowData[$row]['R'],
+                    'row' => $row,
+                ];
             }
         }
 
@@ -382,6 +537,8 @@ class MstVehicles extends BaseImport
                             }
                         }
                     }
+                    $record['row'] = $row;
+                    $record['sheet'] = $i==0 ? '大型' : '４ｔ_２ｔ';
                     $this->data_extra_file_2[$rowData[$row]['B']] = $record;
                 }
             }
@@ -396,7 +553,8 @@ class MstVehicles extends BaseImport
             if(!is_null($rowData[$row]['A']) && is_numeric($rowData[$row]['A'])){
                 $this->data_extra_file_3[$rowData[$row]['A']] = [
                     'acquisition_amounts' => is_null($rowData[$row]['G']) ? null :(string)$rowData[$row]['G'],
-                    'durable_years' => is_null($rowData[$row]['J']) ? null : (string)$rowData[$row]['J']
+                    'durable_years' => is_null($rowData[$row]['J']) ? null : (string)$rowData[$row]['J'],
+                    'row' => $row,
                 ];
             }
         }

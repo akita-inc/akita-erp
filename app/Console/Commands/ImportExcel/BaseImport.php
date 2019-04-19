@@ -20,6 +20,7 @@ class BaseImport{
     public $numErr = 0;
     public $dateTimeRun = "";
     public $startRow = 2;
+    public $objPHPExcel="";
     public $tableLabel = [
         'mst_staffs' => '社員',
         'mst_staff_dependents' => '社員扶養者',
@@ -40,14 +41,21 @@ class BaseImport{
         $arrayLogPath = config("params.log_import_path");
         switch ($type){
             case "DataConvert_Err_ID_Match":
-                $path = storage_path('logs/DataConvert_Err_SQL_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
+                $path = storage_path('logs/DataConvert_Err_ID_Match_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
                 break;
             case "DataConvert_Add_general_purposes":
                 $path = storage_path('logs/DataConvert_Add_general_purposes_'.$this->dateTimeRun.".log");
                 break;
-            case "DataConvert_Err_required":
-                $path = storage_path('logs/DataConvert_Err_required_社員扶養者_'.$this->dateTimeRun.".log");
+            case "DataConvert_Err_SQL":
+                $path = storage_path('logs/DataConvert_Err_SQL_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
                 break;
+            case "DataConvert_Err_required":
+                $path = storage_path('logs/DataConvert_Err_required_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
+                break;
+            case "DataConvert_Err_KANA":
+                $path = storage_path('logs/DataConvert_Err_KANA_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
+                break;
+
             default:
                 $path = $arrayLogPath[$type];
                 break;
@@ -125,6 +133,7 @@ class BaseImport{
                 $inputFileType = \PHPExcel_IOFactory::identify($this->path);
                 $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
                 $objPHPExcel = $objReader->load($this->path);
+                $this->objPHPExcel=$objPHPExcel;
             } catch(Exception $e) {
                 return ('Error loading file "'.pathinfo($this->path,PATHINFO_BASENAME).'": '.$e->getMessage());
             }
@@ -145,6 +154,19 @@ class BaseImport{
                     "numErr" => $this->numErr
                 ]));
             }
+            if($this->table=="mst_staffs")
+            {
+                $this->exportPassword();
+            }
         }
+    }
+    protected function exportPassword()
+    {
+        $objPHPExcel=$this->objPHPExcel;
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, 1,'ログインパスワード');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $file=storage_path('import/dbo_M_社員'.$this->dateTimeRun.'.xlsx');
+        $objWriter->save($file);
     }
 }
