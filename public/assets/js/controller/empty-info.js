@@ -21142,9 +21142,11 @@ var ctrEmptyInfoVl = new Vue({
         };
         $('input:checkbox').prop('checked', false);
         $('input:text').val('');
-        $('input:tel').val('');
+        $('input[type="tel"]').val('');
         $('textarea').val('');
       }
+
+      $("#search_vehicle").focus();
     },
     setInputFilter: function setInputFilter(textbox, inputFilter) {
       ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
