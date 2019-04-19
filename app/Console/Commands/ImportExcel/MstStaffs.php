@@ -390,15 +390,15 @@ class MstStaffs extends BaseImport
     protected function validAfter($validator,$data){}
     protected function exportPassword($record)
     {
-        $password_random=$this->password_random;
-        if (!empty($record)) {
-            Excel::load($this->path, function($doc) use($password_random) {
-
-                $sheet = $doc->setActiveSheetIndex(0);
-                $sheet->setCellValue('AF', $password_random);
-
-            })->export('xlsx');
-        }
+//        $password_random=$this->password_random;
+//        if (!empty($record)) {
+//            Excel::load($this->path, function($doc) use($password_random) {
+//
+//                $sheet = $doc->setActiveSheetIndex(0);
+//                $sheet->setCellValue('AF', $password_random);
+//
+//            })->export('xlsx');
+//        }
     }
     public function insertDB($record)
     {
