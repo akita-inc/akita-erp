@@ -265,6 +265,7 @@ var ctrEmptyInfoVl = new Vue({
                     arrive_pref_cd:"",
                     arrive_address:"",
                     arrive_date:"",
+                    mode:$('#mode').val(),
                 };
                 $('input:checkbox').prop('checked',false);
                 $('input:text').val('');
@@ -291,16 +292,27 @@ var ctrEmptyInfoVl = new Vue({
             var that = this;
             $.each( that.field, function( key, value ) {
                 if(key=='equipment'){
-                    if(typeof that.errors['equipment'] != "undefined"){
-                        $('#equipment_value1').focus();
-                        return false;
-                    }
-                    if(typeof that.errors['equipment_value'] != "undefined"){
-                        $.each( that.errors['equipment_value'][0], function( key1, value1 ) {
-                            $('#equipment_value'+key1).focus();
+                    if(that.field.mode=='register'){
+                        if(typeof that.errors['equipment'] != "undefined"){
+                            $('#equipment_value1').focus();
                             return false;
-                        });
+                        }
+                        if(typeof that.errors['equipment_value'] != "undefined"){
+                            let firstKey = Object.keys(that.errors['equipment_value'][0])[0];
+                            if(typeof that.errors['equipment_value'][0][firstKey] != "undefined") {
+                                setTimeout(function(){
+                                    $('#equipment_value' + firstKey).focus();
+                                });
+                                return false;
+                            }
+                        }
+                    }else{
+                        if(typeof that.errors['equipment'] != "undefined"){
+                            $('#equipment').focus();
+                            return false;
+                        }
                     }
+
                 }else if(key=='start_date' || key=='start_time' || key=='arrive_date'){
                     if(typeof that.errors[key] != "undefined") {
                         $("#" + key + ' input').focus();
