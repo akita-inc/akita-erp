@@ -94,6 +94,8 @@ class MstStaffs extends BaseImport
         "educational_background"=>"length:50|nullable",
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
+        "created_at"=>"required",
+        "modified_at"=>"required",
     ];
 
     public function __construct()
@@ -179,7 +181,7 @@ class MstStaffs extends BaseImport
         $staff_nm=explode($this->getSpaceBetweenName($value),$value);
         if(count($staff_nm)>2)
         {
-            $staff_nm[1]=$staff_nm[2];
+            $staff_nm[1]=$staff_nm[count($staff_nm)-1];
         }
         if($type=="kana")
         {
@@ -280,14 +282,15 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = str_replace("-","",$value);
                             break;
                         case 'address1':
-                            $record['prefectures_cd'] = $mGeneralPurposes->getPrefCdByPrefName($value);
-                            if( $mGeneralPurposes->getPrefCdByPrefName($value))
+                            $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
+                            $record['prefectures_cd']=$prefectures_cd;
+                            if($prefectures_cd)
                             {
-                                $record[$excel_column[$pos]]=mb_substr($value,4,20);
+                                $record[$excel_column[$pos]]=mb_substr($value,4);
                             }
                             else
                             {
-                                $record[$excel_column[$pos]]=mb_substr($value,0,20);
+                                $record[$excel_column[$pos]]=$value;
                             }
                             break;
                         case 'phone_number':
@@ -343,13 +346,6 @@ class MstStaffs extends BaseImport
                 if ($validator->fails()) {
                     $this->numErr++;
                     $failedRules = $validator->failed();
-                    if (isset($failedRules['staff_cd']['Required'])) {
-                        $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
-                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                            "fieldName" => $this->column_main_name['staff_cd'],
-                            "row" => $this->rowIndex,
-                        ]));
-                    }
                     if (isset($failedRules['staff_cd']['Unique'])) {
                         $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_staff_cd",[
                             "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
@@ -367,7 +363,7 @@ class MstStaffs extends BaseImport
                     foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
-                                    $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
+                                    $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
                                         "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                                         "excelFieldName" => $this->column_main_name[$field],
                                         "row" => $this->rowIndex,
@@ -377,6 +373,14 @@ class MstStaffs extends BaseImport
                                         "DBvalue" => substr($record[$field],0,$error[0]),
                                     ]));
                                     $record[$field] = substr($record[$field],0,$error[0]);
+                                }
+                                elseif($ruleName=='Required')
+                                {
+                                    $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
+                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                        "fieldName" => $this->column_main_name[$field],
+                                        "row" => $this->rowIndex,
+                                    ]));
                                 }
                             }
                     }
@@ -394,7 +398,7 @@ class MstStaffs extends BaseImport
         DB::beginTransaction();
         try{
             if (!empty($record)) {
-                DB::table('mst_staffs_copy1')->insert($record);
+                DB::table('mst_staffs')->insert($record);
                 DB::commit();
             }
         }catch (\Exception $e){
