@@ -94,6 +94,8 @@ class MstStaffs extends BaseImport
         "educational_background"=>"length:50|nullable",
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
+        "created_at"=>"required",
+        "modified_at"=>"required",
     ];
 
     public function __construct()
@@ -344,13 +346,6 @@ class MstStaffs extends BaseImport
                 if ($validator->fails()) {
                     $this->numErr++;
                     $failedRules = $validator->failed();
-                    if (isset($failedRules['staff_cd']['Required'])) {
-                        $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
-                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                            "fieldName" => $this->column_main_name['staff_cd'],
-                            "row" => $this->rowIndex,
-                        ]));
-                    }
                     if (isset($failedRules['staff_cd']['Unique'])) {
                         $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_staff_cd",[
                             "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
@@ -378,6 +373,14 @@ class MstStaffs extends BaseImport
                                         "DBvalue" => substr($record[$field],0,$error[0]),
                                     ]));
                                     $record[$field] = substr($record[$field],0,$error[0]);
+                                }
+                                elseif($ruleName=='Required')
+                                {
+                                    $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
+                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                        "fieldName" => $this->column_main_name[$field],
+                                        "row" => $this->rowIndex,
+                                    ]));
                                 }
                             }
                     }
