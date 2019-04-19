@@ -82,14 +82,14 @@ class CreateMstVehiclesTable extends Migration
             $table->date('vehicle_delivery_dt')->nullable();
             $table->text('specification_notes')->nullable();
             $table->string('mst_staff_cd', 5)->nullable();
-            $table->decimal('personal_insurance_prices',10,3)->nullable();
-            $table->decimal('property_damage_insurance_prices',10,3)->nullable();
-            $table->decimal('vehicle_insurance_prices',10,3)->nullable();
+            $table->decimal('personal_insurance_prices',12,3)->nullable();
+            $table->decimal('property_damage_insurance_prices',12,3)->nullable();
+            $table->decimal('vehicle_insurance_prices',12,3)->nullable();
             $table->text('picture_fronts')->nullable();
             $table->text('picture_rights')->nullable();
             $table->text('picture_lefts')->nullable();
             $table->text('picture_rears')->nullable();
-            $table->decimal('acquisition_amounts', 10, 3)->nullable();
+            $table->decimal('acquisition_amounts', 12, 3)->nullable();
             $table->integer('acquisition_amortization')->nullable();
             $table->integer('durable_years')->nullable();
             $table->string('tire_sizes',10)->nullable();
