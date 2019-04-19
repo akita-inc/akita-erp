@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\TimeFunction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,9 @@ class MEmptyInfo extends Model
         $mEmptyInfo = MEmptyInfo::find( $id );
         DB::beginTransaction();
         try {
+            if($mEmptyInfo->status==2 && $mEmptyInfo->regist_office_id == Auth::user()->mst_business_office_id && $status==1 && Carbon::parse($mEmptyInfo->arrive_date) <= Carbon::now()){
+                $status = 9;
+            }
             $mEmptyInfo->status = $status;
             switch ($status){
                 case 1:
