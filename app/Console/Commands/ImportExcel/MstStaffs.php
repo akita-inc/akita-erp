@@ -165,7 +165,6 @@ class MstStaffs extends BaseImport
         elseif(strpos($name, '　  ') !== false)
         {
             $space='　  ';
-
         }
         else
         {
@@ -177,18 +176,18 @@ class MstStaffs extends BaseImport
     public function explodeStaffName($value,$type)
     {
         $result=array();
-
-
+        $staff_nm=explode($this->getSpaceBetweenName($value),$value);
+        if(count($staff_nm)>2)
+        {
+            $staff_nm[1]=$staff_nm[2];
+        }
         if($type=="kana")
         {
-            $staff_nm=explode($this->getSpaceBetweenName($value),$value);
             $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
             $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
         }
         else
         {
-
-            $staff_nm=explode($this->getSpaceBetweenName($value),$value);
             $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
             $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
         }
@@ -327,6 +326,7 @@ class MstStaffs extends BaseImport
                     }
                 }
                 $record["password"]=bcrypt($this->generateRandomString(8));
+                $record["remember_token"]=$record["password"];
                 unset($record['staff_nm']);
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
