@@ -81,6 +81,16 @@ return [
             'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx')
         ],
         'mst_staff_dependents' => storage_path('import/扶養者名_生年月日.xlsx'),
+        'mst_suppliers' => [
+            'main' => [
+                'path' => storage_path('import/dbo_M_社員.xlsx'),
+                'fileName' => 'dbo_M_社員.xlsx',
+            ],
+            'extra1' => [
+                'path' => storage_path('import/経費_得意先_Ｔ.xlsx'),
+                'fileName' => '経費_得意先_Ｔ.xlsx',
+            ],
+        ],
         'data_convert'=>storage_path('logs/DataConvert.log'),
     ],
     "log_import_path" => [
