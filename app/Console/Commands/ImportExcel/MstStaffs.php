@@ -106,7 +106,6 @@ class MstStaffs extends BaseImport
 
     public function import()
     {
-        $this->numRead++;
         $this->mainReading($this->rowCurrentData,$this->rowIndex);
     }
     public function formatDateString($date)
@@ -203,14 +202,21 @@ class MstStaffs extends BaseImport
             if($data->count()){
                 if($type=="insurance")
                 {
+                    $data_kb = config('params.data_kb')['relocation_municipal_office_cd'];
                     foreach ($data as  $value) {
+                        $result = $this->checkExistDataAndInsert(
+                                                        $data_kb,
+                                                        $value->{$column['relocation_municipal_office_cd']},
+                                                        config('params.import_file_path.mst_staffs.main_file_name'),
+                                                        $this->column_main_name['relocation_municipal_office_cd'],
+                                                        $this->rowIndex );
                         $arr[$value->{$this->excel_column_insurer['staff_cd']}] = [
                             'insurer_number'=>$value->{$column['insurer_number']},
                             'basic_pension_number'=>$value->{$column['basic_pension_number']},
                             'person_insured_number'=>$value->{$column['person_insured_number']},
                             'health_insurance_class'=>$value->{$column['health_insurance_class']},
                             'welfare_annuity_class'=>$value->{$column['welfare_annuity_class']},
-                            'relocation_municipal_office_cd'=>$value->{$column['relocation_municipal_office_cd']},
+                            'relocation_municipal_office_cd'=>(string)$result,
                         ];
                     }
                 }
@@ -398,8 +404,11 @@ class MstStaffs extends BaseImport
         DB::beginTransaction();
         try{
             if (!empty($record)) {
-                DB::table('mst_staffs')->insert($record);
-                DB::commit();
+                if(DB::table('mst_staffs')->insert($record))
+                {
+                    $this->numNormal++;
+                    DB::commit();
+                };
             }
         }catch (\Exception $e){
             DB::rollback();

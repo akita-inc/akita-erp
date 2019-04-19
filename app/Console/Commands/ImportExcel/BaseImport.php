@@ -154,7 +154,8 @@ class BaseImport{
                 $this->log("data_convert",Lang::trans("log_import.end_read",[
                     "numRead" => $this->numRead,
                     "numNormal"=> $this->numNormal,
-                    "numErr" => $this->numErr
+                    "numErr" => $this->numErr,
+                    "table" => $this->tableLabel[$this->table],
                 ]));
             }
             if($this->table=="mst_staffs")
