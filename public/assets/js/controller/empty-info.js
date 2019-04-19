@@ -21196,6 +21196,10 @@ var ctrEmptyInfoVl = new Vue({
             if (typeof that.errors['equipment_value'] != "undefined") {
               var firstKey = Object.keys(that.errors['equipment_value'][0])[0];
 
+              if (firstKey == 0 && typeof Object.keys(that.errors['equipment_value'][0])[1] != "undefined") {
+                firstKey = Object.keys(that.errors['equipment_value'][0])[1];
+              }
+
               if (typeof that.errors['equipment_value'][0][firstKey] != "undefined") {
                 setTimeout(function () {
                   $('#equipment_value' + firstKey).focus();
