@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Validator;
 class MstStaffs extends BaseImport
 {
     public $path = "";
-    public $password_random="";
     public $excel_column = [
         'A'=>'staff_cd',
         'B'=>'staff_nm',
@@ -100,6 +99,7 @@ class MstStaffs extends BaseImport
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
+        $this->dateTimeRun = date("YmdHis");
     }
 
     public function import()
@@ -122,7 +122,10 @@ class MstStaffs extends BaseImport
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
-        $this->password_random=$randomString;
+        //add password cell
+        $objPHPExcel=$this->objPHPExcel;
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $randomString);
             return $randomString;
 
     }
@@ -334,7 +337,6 @@ class MstStaffs extends BaseImport
             $this->validateRow($record);
         }
     }
-
     protected function validateRow($record){
         if( !empty($this->ruleValid) ){
             $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
@@ -381,25 +383,12 @@ class MstStaffs extends BaseImport
                 }
                 else
                 {
-                    $this->exportPassword($record);
                     $this->insertDB($record);
                 }
 
         }
     }
     protected function validAfter($validator,$data){}
-    protected function exportPassword($record)
-    {
-//        $password_random=$this->password_random;
-//        if (!empty($record)) {
-//            Excel::load($this->path, function($doc) use($password_random) {
-//
-//                $sheet = $doc->setActiveSheetIndex(0);
-//                $sheet->setCellValue('AF', $password_random);
-//
-//            })->export('xlsx');
-//        }
-    }
     public function insertDB($record)
     {
         DB::beginTransaction();
