@@ -19,6 +19,7 @@ class BaseImport{
     public $numNormal = 0;
     public $numErr = 0;
     public $dateTimeRun = "";
+    public $startRow = 2;
     public $objPHPExcel="";
     public $tableLabel = [
         'mst_staffs' => '社員',
@@ -150,8 +151,7 @@ class BaseImport{
                 $this->log("data_convert",Lang::trans("log_import.end_read",[
                     "numRead" => $this->numRead,
                     "numNormal"=> $this->numNormal,
-                    "numErr" => $this->numErr,
-                    "table" => $this->tableLabel[$this->table],
+                    "numErr" => $this->numErr
                 ]));
             }
             if($this->table=="mst_staffs")
