@@ -100,7 +100,7 @@ class MstVehicles extends BaseImport
 
 
     public $rules = [
-        'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
+        'vehicles_cd'=>'required|length:10',
         'vehicles_kb'=>'required|length:11',
         'registration_numbers'=>'required|length:50',
         'mst_business_office_id'=>'required|length:5',
@@ -205,6 +205,30 @@ class MstVehicles extends BaseImport
         'durable_years'=>'耐用年数',
     ];
 
+    protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
+        if($string!= '' && $string > 0) {
+            $mGeneralPurposes = new MGeneralPurposes();
+            $query = $mGeneralPurposes->where('data_kb', $data_kb)
+                ->where('deleted_at', '=', null);
+            $result = $query->where('date_id', $string)->first();
+            if (!$result) {
+                if (is_numeric($string)) {
+                    $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                        "fileName" => $fileName,
+                        "fieldName" => $fieldName,
+                        "row" => $row,
+                    ]));
+                    return null;
+                }
+            } else {
+                return $result->date_id;
+            }
+        }else{
+            return null;
+        }
+
+    }
+
     public function run(){
         $this->readingVehicleExtraFile1();
         $this->readingVehicleExtraFile2();
@@ -306,12 +330,9 @@ class MstVehicles extends BaseImport
                                     $data_kb = config('params.data_kb')['kinds_of_fuel'];
                                     break;
                             }
-                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
-                            if ($result) {
-                                $record[$excel_column[$pos]] = (string)$result;
-                            } else {
-//                                break 2;
-                            }
+                            $result = $this->checkExistDataAndInsertCustom($data_kb, $value,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
+                            $record[$excel_column[$pos]] = (string)$result;
+
                             break;
                         default:
                             $record[$excel_column[$pos]] = (string)$value;
@@ -330,10 +351,11 @@ class MstVehicles extends BaseImport
                 $error_fg = true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
                     "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
-                    "fieldName" => $keys[$pos],
+                    "fieldName" => $this->column_name['vehicles_cd'],
                     "row" => $row,
                 ]));
             }
+
             $validator = Validator::make($data, $this->rules);
 
             if ($validator->fails()) {
@@ -342,7 +364,7 @@ class MstVehicles extends BaseImport
                 foreach ($failedRules as $field => $errors){
                     foreach ($errors as $ruleName => $error){
                         if($ruleName=='Length'){
-                            $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
+                            $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
                                 "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
                                 "excelFieldName" => $this->column_name[$field],
                                 "row" => $row,
@@ -374,7 +396,7 @@ class MstVehicles extends BaseImport
                         foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
-                                    $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
+                                    $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                         "excelFieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
@@ -400,7 +422,7 @@ class MstVehicles extends BaseImport
                     $error_fg = true;
                     $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                         "mainFileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
-                        "fieldName" => $keys[$pos],
+                        "fieldName" => $this->column_name[$field],
                         "row" => $row,
                         "extraFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
                     ]));
@@ -435,14 +457,13 @@ class MstVehicles extends BaseImport
         $this->start_row = 2;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
-            if(!is_null($rowData[$row]['B']) && is_numeric($rowData[$row]['B']) && !is_null($rowData[$row]['R'])){
+            if(!is_null($rowData[$row]['B']) && is_numeric($rowData[$row]['B'])){
                 $this->data_extra_file_1[$rowData[$row]['B']] = [
                     'etc_numbers' => $rowData[$row]['R'],
                     'row' => $row,
                 ];
             }
         }
-
     }
 
     public function readingVehicleExtraFile2()

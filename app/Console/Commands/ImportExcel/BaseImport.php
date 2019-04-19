@@ -34,6 +34,7 @@ class BaseImport{
 
     public function __construct()
     {
+        date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("YmdHis");
     }
 
@@ -101,7 +102,7 @@ class BaseImport{
             $mGeneralPurposes->date_nm = $string;
             $mGeneralPurposes->disp_fg = 1;
             $mGeneralPurposes->disp_number = $data[0]->disp_number+1;
-//            $mGeneralPurposes->save();
+            $mGeneralPurposes->save();
             $this->log("DataConvert_Add_general_purposes",Lang::trans("log_import.add_general_purposes_string",[
                 "fileName" => $fileName,
                 "fieldName" => $fieldName,
