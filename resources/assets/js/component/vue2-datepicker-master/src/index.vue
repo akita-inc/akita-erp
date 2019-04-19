@@ -546,12 +546,18 @@ export default {
     handleKeydown (event) {
       const keyCode = event.keyCode
       // Tab 9 or Enter 13
-      if (keyCode === 13 || keyCode === 9) {
+      if (keyCode === 13) {
         // ie emit the watch before the change event
         this.handleChange()
         this.userInput = null
         this.popupVisible = false
         event.stopPropagation()
+      }
+      if (keyCode === 9) {
+        console.log(123)
+        for (let el of document.querySelectorAll('.mx-datepicker-popup')) {
+          el.style.display = 'none'
+        }
       }
     },
     handleInput (event) {

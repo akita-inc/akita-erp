@@ -43351,7 +43351,27 @@ __webpack_require__.r(__webpack_exports__);
         },
         handleKeydown: function handleKeydown(e) {
           var t = e.keyCode;
-          13 !== t && 9 !== t || (this.handleChange(), this.userInput = null, this.popupVisible = !1, e.stopPropagation());
+
+          if (13 === t && (this.handleChange(), this.userInput = null, this.popupVisible = !1, e.stopPropagation()), 9 === t) {
+            console.log(123);
+            var n = !0,
+                a = !1,
+                i = void 0;
+
+            try {
+              for (var r, s = document.querySelectorAll(".mx-datepicker-popup")[Symbol.iterator](); !(n = (r = s.next()).done); n = !0) {
+                r.value.style.display = "none";
+              }
+            } catch (e) {
+              a = !0, i = e;
+            } finally {
+              try {
+                !n && s.return && s.return();
+              } finally {
+                if (a) throw i;
+              }
+            }
+          }
         },
         handleInput: function handleInput(e) {
           this.userInput = e.target.value;
