@@ -284,11 +284,11 @@ class MstStaffs extends BaseImport
                             $record['prefectures_cd']=$prefectures_cd;
                             if($prefectures_cd)
                             {
-                                $record[$excel_column[$pos]]=mb_substr($value,4,20);
+                                $record[$excel_column[$pos]]=mb_substr($value,4);
                             }
                             else
                             {
-                                $record[$excel_column[$pos]]=mb_substr($value,0,20);
+                                $record[$excel_column[$pos]]=$value;
                             }
                             break;
                         case 'phone_number':
@@ -368,7 +368,7 @@ class MstStaffs extends BaseImport
                     foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
-                                    $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
+                                    $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
                                         "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                                         "excelFieldName" => $this->column_main_name[$field],
                                         "row" => $this->rowIndex,
@@ -395,7 +395,7 @@ class MstStaffs extends BaseImport
         DB::beginTransaction();
         try{
             if (!empty($record)) {
-                DB::table('mst_staffs_copy1')->insert($record);
+                DB::table('mst_staffs')->insert($record);
                 DB::commit();
             }
         }catch (\Exception $e){
