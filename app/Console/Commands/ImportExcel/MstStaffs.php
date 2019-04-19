@@ -202,21 +202,14 @@ class MstStaffs extends BaseImport
             if($data->count()){
                 if($type=="insurance")
                 {
-                    $data_kb = config('params.data_kb')['relocation_municipal_office_cd'];
                     foreach ($data as  $value) {
-                        $result = $this->checkExistDataAndInsert(
-                                                        $data_kb,
-                                                        $value->{$column['relocation_municipal_office_cd']},
-                                                        config('params.import_file_path.mst_staffs.main_file_name'),
-                                                        $this->column_main_name['relocation_municipal_office_cd'],
-                                                        $this->rowIndex );
                         $arr[$value->{$this->excel_column_insurer['staff_cd']}] = [
                             'insurer_number'=>$value->{$column['insurer_number']},
                             'basic_pension_number'=>$value->{$column['basic_pension_number']},
                             'person_insured_number'=>$value->{$column['person_insured_number']},
                             'health_insurance_class'=>$value->{$column['health_insurance_class']},
                             'welfare_annuity_class'=>$value->{$column['welfare_annuity_class']},
-                            'relocation_municipal_office_cd'=>(string)$result,
+                            'relocation_municipal_office_cd'=>  $value->{$column['relocation_municipal_office_cd']},
                         ];
                     }
                 }
@@ -340,7 +333,22 @@ class MstStaffs extends BaseImport
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
             }
+            if(isset($record['relocation_municipal_office_cd']))
+            {
+                $data_kb_relocation = config('params.data_kb')['relocation_municipal_office_cd'];
+                $result_relocation = $this->checkExistDataAndInsert(
+                    $data_kb_relocation,
+                    $record['relocation_municipal_office_cd'],
+                    config('params.import_file_path.mst_staffs.main_file_name'),
+                    $this->column_main_name['relocation_municipal_office_cd'],
+                    $this->rowIndex );
+                if($result_relocation)
+                {
+                    $record['relocation_municipal_office_cd']=(string)$result_relocation;
+                }
+            }
         }
+
         if(!empty($record))
         {
             $this->validateRow($record);
