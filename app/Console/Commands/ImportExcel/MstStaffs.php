@@ -179,7 +179,7 @@ class MstStaffs extends BaseImport
         $staff_nm=explode($this->getSpaceBetweenName($value),$value);
         if(count($staff_nm)>2)
         {
-            $staff_nm[1]=$staff_nm[2];
+            $staff_nm[1]=$staff_nm[count($staff_nm)-1];
         }
         if($type=="kana")
         {
@@ -280,8 +280,9 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = str_replace("-","",$value);
                             break;
                         case 'address1':
-                            $record['prefectures_cd'] = $mGeneralPurposes->getPrefCdByPrefName($value);
-                            if( $mGeneralPurposes->getPrefCdByPrefName($value))
+                            $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
+                            $record['prefectures_cd']=$prefectures_cd;
+                            if($prefectures_cd)
                             {
                                 $record[$excel_column[$pos]]=mb_substr($value,4,20);
                             }
