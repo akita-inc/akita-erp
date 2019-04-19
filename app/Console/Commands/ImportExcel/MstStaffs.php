@@ -394,7 +394,7 @@ class MstStaffs extends BaseImport
         DB::beginTransaction();
         try{
             if (!empty($record)) {
-                DB::table('mst_staffs')->insert($record);
+                DB::table('mst_staffs_copy1')->insert($record);
                 DB::commit();
             }
         }catch (\Exception $e){
