@@ -84,21 +84,21 @@ class MstStaffs extends BaseImport
     public $ruleValid = [
         'staff_cd'  => 'required|length:5|unique:mst_staffs,staff_cd',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'kana|nullable|length:50',
+        'last_nm_kana'  => 'nullable|length:50',
         'first_nm'  => 'length:25|nullable',
-        'first_nm_kana'=>'kana|nullable|length:50',
+        'first_nm_kana'=>'nullable|length:50',
         'zip_cd'=>'nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         "landline_phone_number"=>"length:20|nullable",
         "cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
-        "insurer_number"=>"length:3|nullable",
+        "insurer_number"=>"length:20|nullable",
         "health_insurance_class"=>"length:10|nullable",
         "welfare_annuity_class"=>"length:10|nullable",
         "relocation_municipal_office_cd"=>"nullable|length:6",
-        "basic_pension_number"=>"length:11|nullable",
-        "person_insured_number"=>"length:11|nullable",
+        "basic_pension_number"=>"length:20|nullable",
+        "person_insured_number"=>"length:20|nullable",
         "educational_background"=>"length:50|nullable",
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
@@ -139,6 +139,22 @@ class MstStaffs extends BaseImport
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $randomString);
             return $randomString;
+
+    }
+    public function getBelongCompanyId()
+    {
+        $mGeneralPurposes =MGeneralPurposes::select('date_id')
+            ->where('data_kb','=','01004')
+            ->where('date_nm','=', "アキタ")
+            ->first();
+        if($mGeneralPurposes)
+        {
+            return $mGeneralPurposes['date_id'];
+        }
+        else
+        {
+            return null;
+        }
 
     }
     public function getOfficeId($office_cd)
@@ -258,22 +274,6 @@ class MstStaffs extends BaseImport
             return null;
         }
     }
-    public function getBelongCompanyId()
-    {
-        $mGeneralPurposes =MGeneralPurposes::select('date_id')
-                            ->where('data_kb','=','01004')
-                            ->where('date_nm','=', "アキタ")
-                            ->first();
-        if($mGeneralPurposes)
-        {
-            return $mGeneralPurposes['date_id'];
-        }
-        else
-        {
-            return null;
-        }
-
-    }
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
         $record = array();
@@ -321,13 +321,13 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = $this->formatDateString($value);
                             break;
                         case 'staff_nm':
-                            $record+=$this->explodeStaffName($value,null);
+                            $record+=is_null($value)?null:$this->explodeStaffName($value,null);
                             break;
                         case 'staff_nm_kana':
-                            $record+=$this->explodeStaffName(mb_convert_kana($value),'kana');
+                            $record+=is_null($value)?null:$this->explodeStaffName(mb_convert_kana($value,"KVC"),'kana');
                             break;
                         case 'zip_cd':
-                            $record[$excel_column[$pos]] = str_replace("-","",$value);
+                            $record[$excel_column[$pos]] = is_null($value)?null:str_replace("-","",$value);
                             break;
                         case 'address1':
                             $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
@@ -342,17 +342,14 @@ class MstStaffs extends BaseImport
                             }
                             break;
                         case 'phone_number':
-                            if($value)
-                            {
                                 if($this->getCellularPhone($value))
                                 {
                                     $record['cellular_phone_number']=$this->getCellularPhone($value);
                                 }
                                 else
                                 {
-                                    $record['landline_phone_number']=$value;
+                                    $record['landline_phone_number']=is_null($value)?null:$value;
                                 }
-                            }
                             break;
                         case 'mst_business_office_id':
                             $record[$excel_column[$pos]] = $this->getOfficeId($value);
@@ -427,10 +424,11 @@ class MstStaffs extends BaseImport
             if(is_null($record['mst_business_office_id']))
             {
                 $this->error_fg=true;
-                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_cd",[
-                    "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->column_main_name['mst_business_office_id'],
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name["mst_business_office_id"],
                     "row" => $this->rowIndex,
+                    "extraFileName" => 'mst_business_offices',
                 ]));
             }
             if ($validator->fails()) {
@@ -440,13 +438,6 @@ class MstStaffs extends BaseImport
                         $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_cd",[
                             "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
                             "fieldName" => $this->column_main_name['staff_cd'],
-                            "row" => $this->rowIndex,
-                        ]));
-                    }
-                    if (isset($failedRules['last_nm_kana']['Kana']) || isset($failedRules['first_nm_kana']['Kana'])) {
-                        $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
-                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                            "fieldName" => $this->column_main_name['staff_nm_kana'],
                             "row" => $this->rowIndex,
                         ]));
                     }
@@ -475,6 +466,15 @@ class MstStaffs extends BaseImport
                             }
                     }
                 }
+
+            if (!Common::isKatakana($record['last_nm_kana']) || !Common::isKatakana($record['first_nm_kana'])) {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
+                    "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name['staff_nm_kana'],
+                    "row" => $this->rowIndex,
+                ]));
+            }
             if(isset($record['insurance']))
             {
                 $this->validateChildFile($record['insurance'],'health_insurance_card_information_nm');
