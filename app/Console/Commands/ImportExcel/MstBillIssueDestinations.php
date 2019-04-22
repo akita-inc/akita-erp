@@ -45,5 +45,7 @@ class MstBillIssueDestinations extends BaseImport
 
     public function import()
     {
+        $this->numRead++;
+        $this->mainReading($this->rowCurrentData,$this->rowIndex);
     }
 }

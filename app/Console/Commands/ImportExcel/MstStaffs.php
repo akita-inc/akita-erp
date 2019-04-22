@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 class MstStaffs extends BaseImport
 {
     public $path = "";
+    public $error_fg=false;
     public $excel_column = [
         'A'=>'staff_cd',
         'B'=>'staff_nm',
@@ -74,7 +75,7 @@ class MstStaffs extends BaseImport
     public $labels=[];
     public $messagesCustom=[];
     public $ruleValid = [
-        'staff_cd'  => 'required|one_bytes_string|length:5|unique:mst_staffs,staff_cd,NULL,id,deleted_at,NULL',
+        'staff_cd'  => 'required|length:5|unique:mst_staffs,staff_cd',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
@@ -86,14 +87,16 @@ class MstStaffs extends BaseImport
         "cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:3|nullable",
-        "health_insurance_class"=>"length:10|number_range|nullable",
-        "welfare_annuity_class"=>"length:10|number_range|nullable",
+        "health_insurance_class"=>"length:10|nullable",
+        "welfare_annuity_class"=>"length:10|nullable",
         "relocation_municipal_office_cd"=>"nullable|length:6",
         "basic_pension_number"=>"length:11|nullable",
         "person_insured_number"=>"length:11|nullable",
         "educational_background"=>"length:50|nullable",
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
+        "created_at"=>"required",
+        "modified_at"=>"required",
     ];
 
     public function __construct()
@@ -104,7 +107,6 @@ class MstStaffs extends BaseImport
 
     public function import()
     {
-        $this->numRead++;
         $this->mainReading($this->rowCurrentData,$this->rowIndex);
     }
     public function formatDateString($date)
@@ -179,7 +181,7 @@ class MstStaffs extends BaseImport
         $staff_nm=explode($this->getSpaceBetweenName($value),$value);
         if(count($staff_nm)>2)
         {
-            $staff_nm[1]=$staff_nm[2];
+            $staff_nm[1]=$staff_nm[count($staff_nm)-1];
         }
         if($type=="kana")
         {
@@ -201,26 +203,28 @@ class MstStaffs extends BaseImport
             if($data->count()){
                 if($type=="insurance")
                 {
-                    foreach ($data as  $value) {
+                    foreach ($data as  $key=>$value) {
                         $arr[$value->{$this->excel_column_insurer['staff_cd']}] = [
                             'insurer_number'=>$value->{$column['insurer_number']},
                             'basic_pension_number'=>$value->{$column['basic_pension_number']},
                             'person_insured_number'=>$value->{$column['person_insured_number']},
                             'health_insurance_class'=>$value->{$column['health_insurance_class']},
                             'welfare_annuity_class'=>$value->{$column['welfare_annuity_class']},
-                            'relocation_municipal_office_cd'=>$value->{$column['relocation_municipal_office_cd']},
+                            'relocation_municipal_office_cd'=>  $value->{$column['relocation_municipal_office_cd']},
+                            'row_index'=>$key+2
                         ];
                     }
                 }
                 elseif($type=="staff_background")
                 {
-                    foreach ($data as  $value) {
+                    foreach ($data as  $key=>$value) {
                         $arr[$value->{$column['staff_cd']}] = [
                             'educational_background'=>$value->{$column['educational_background']},
                             'educational_background_dt'=> $this->formatDateString($value->{$column['educational_background_dt']}),
                             'retire_reasons'=>$value->{$column['retire_reasons']},
                             'death_reasons'=>$value->{$column['death_reasons']},
                             'death_dt'=>$this->formatDateString($value->{$column['death_dt']}),
+                            'row_index'=>$key+2
                         ];
                     }
                 }
@@ -229,6 +233,22 @@ class MstStaffs extends BaseImport
         } catch(\Exception $e) {
             return null;
         }
+    }
+    public function getBelongCompanyId()
+    {
+        $mGeneralPurposes =MGeneralPurposes::select('date_id')
+                            ->where('data_kb','=','01004')
+                            ->where('date_nm','=', "アキタ")
+                            ->first();
+        if($mGeneralPurposes)
+        {
+            return $mGeneralPurposes['date_id'];
+        }
+        else
+        {
+            return null;
+        }
+
     }
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
@@ -246,12 +266,12 @@ class MstStaffs extends BaseImport
                             if(!empty($insuranceArr[$value]))
                             {
                                 $insurance=$insuranceArr[$value];
-                                $record+=$insurance;
+                                $record['insurance']=$insurance;
                             }
                             if(!empty($backgroundArr[$value]))
                             {
                                 $staff_background=$backgroundArr[$value];
-                                $record+=$staff_background;
+                                $record['staff_background']=$staff_background;
                             }
                             $record[$excel_column[$pos]] = (string)$value;
                             break;
@@ -280,14 +300,15 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = str_replace("-","",$value);
                             break;
                         case 'address1':
-                            $record['prefectures_cd'] = $mGeneralPurposes->getPrefCdByPrefName($value);
-                            if( $mGeneralPurposes->getPrefCdByPrefName($value))
+                            $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
+                            if($prefectures_cd)
                             {
-                                $record[$excel_column[$pos]]=mb_substr($value,4,20);
+                                $record['prefectures_cd']=$prefectures_cd['date_id'];
+                                $record[$excel_column[$pos]]=mb_substr($value,mb_strlen($prefectures_cd['date_nm']));
                             }
                             else
                             {
-                                $record[$excel_column[$pos]]=mb_substr($value,0,20);
+                                $record[$excel_column[$pos]]=$value;
                             }
                             break;
                         case 'phone_number':
@@ -310,46 +331,70 @@ class MstStaffs extends BaseImport
                             $data_kb = config('params.data_kb')['employment_pattern'];
                             $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
                             if ($result) {
-                                $record[$excel_column[$pos]] = (string)$result;
+                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
                             }
                             break;
                         case 'sex_id':
                             $data_kb = config('params.data_kb')['sex'];
                             $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['sex_id'], $row );
                             if ($result) {
-                                $record[$excel_column[$pos]] = (string)$result;
+                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
                             }
                             break;
                         default:
-                            $record[$excel_column[$pos]] = (string)$value;
+                            $record[$excel_column[$pos]] = is_null($value)?null:(string)$value;
                             break;
                     }
                 }
                 $record["password"]=bcrypt($this->generateRandomString(8));
                 $record["remember_token"]=$record["password"];
+                $record['belong_company_id']=$this->getBelongCompanyId();
                 unset($record['staff_nm']);
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
             }
+            if(isset($record['relocation_municipal_office_cd']))
+            {
+                $data_kb_relocation = config('params.data_kb')['relocation_municipal_office_cd'];
+                $result_relocation = $this->checkExistDataAndInsert(
+                    $data_kb_relocation,
+                    $record['relocation_municipal_office_cd'],
+                    config('params.import_file_path.mst_staffs.main_file_name'),
+                    $this->column_main_name['relocation_municipal_office_cd'],
+                    $this->rowIndex );
+                if($result_relocation)
+                {
+                    $record['relocation_municipal_office_cd']=(string)$result_relocation;
+                }
+            }
+            if(!empty($record))
+            {
+                $this->validateRow($record);
+            }
+            if(!empty($record) && $this->error_fg==false)
+            {
+                $record+=$record['insurance'];
+                unset($record['insurance']);
+                $record+=$record['staff_background'];
+                unset($record['staff_background']);
+                unset($record['row_index']);
+                $this->insertDB($record);
+            }
+            else
+            {
+                $this->numErr++;
+            }
         }
-        if(!empty($record))
-        {
-            $this->validateRow($record);
-        }
+
+
     }
     protected function validateRow($record){
-        if( !empty($this->ruleValid) ){
+        $this->error_fg=false;
+        if( !empty($this->ruleValid)){
             $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
-                if ($validator->fails()) {
-                    $this->numErr++;
+            if ($validator->fails()) {
+                    $this->error_fg=true;
                     $failedRules = $validator->failed();
-                    if (isset($failedRules['staff_cd']['Required'])) {
-                        $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
-                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                            "fieldName" => $this->column_main_name['staff_cd'],
-                            "row" => $this->rowIndex,
-                        ]));
-                    }
                     if (isset($failedRules['staff_cd']['Unique'])) {
                         $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_staff_cd",[
                             "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
@@ -367,37 +412,94 @@ class MstStaffs extends BaseImport
                     foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
-                                    $this->log("data_convert",Lang::trans("log_import.check_length_and_trim",[
-                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                                        "excelFieldName" => $this->column_main_name[$field],
-                                        "row" => $this->rowIndex,
-                                        "excelValue" => $record[$field],
-                                        "tableName" => $this->table,
-                                        "DBFieldName" => $field,
-                                        "DBvalue" => substr($record[$field],0,$error[0]),
-                                    ]));
+                                        $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
+                                            "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                            "excelFieldName" => $this->column_main_name[$field],
+                                            "row" => $this->rowIndex,
+                                            "excelValue" => $record[$field],
+                                            "tableName" => $this->table,
+                                            "DBFieldName" => $field,
+                                            "DBvalue" => substr($record[$field],0,$error[0]),
+                                        ]));
                                     $record[$field] = substr($record[$field],0,$error[0]);
+                                }
+                                elseif($ruleName=='Required')
+                                {
+                                    $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
+                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                        "fieldName" => $this->column_main_name[$field],
+                                        "row" => $this->rowIndex,
+                                    ]));
                                 }
                             }
                     }
                 }
-                else
-                {
-                    $this->insertDB($record);
-                }
+            if(isset($record['insurance']))
+            {
+                $this->validateChildFile($record['insurance'],'health_insurance_card_information_nm');
+            }
+            else
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name["staff_cd"],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => config('params.import_file_path.mst_staffs.health_insurance_card_information_nm'),
+                ]));
+            }
+
+            if(isset($record['staff_background']))
+            {
+                $this->validateChildFile($record['staff_background'],'staff_background_nm');
+            }
+            else
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name['staff_cd'],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => config('params.import_file_path.mst_staffs.staff_background_nm'),
+                ]));
+            }
 
         }
     }
-    protected function validAfter($validator,$data){}
+    protected function validateChildFile($recordChildFile,$filename)
+    {
+        $validatorChild = Validator::make( $recordChildFile, $this->ruleValid ,$this->messagesCustom ,$this->labels );
+        if ($validatorChild->fails()) {
+            $failedRules = $validatorChild->failed();
+            foreach ($failedRules as $field => $errors) {
+                foreach ($errors as $ruleName => $error) {
+                    if ($ruleName == 'Length') {
+                        $this->error_fg=true;
+                        $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
+                            "fileName" => config('params.import_file_path.mst_staffs.'.$filename),
+                            "excelFieldName" => $this->column_main_name[$field],
+                            "row" => $recordChildFile['row_index'],
+                            "excelValue" => $recordChildFile[$field],
+                            "tableName" => $this->table,
+                            "DBFieldName" => $field,
+                            "DBvalue" => substr($recordChildFile[$field], 0, $error[0]),
+                        ]));
+                    }
+                }
+            }
+        }
+    }
     public function insertDB($record)
     {
         DB::beginTransaction();
         try{
-            if (!empty($record)) {
-                DB::table('mst_staffs_copy1')->insert($record);
-                DB::commit();
-            }
+            if(DB::table('mst_staffs')->insert($record))
+             {
+                 $this->numNormal++;
+                 DB::commit();
+             };
         }catch (\Exception $e){
+            $this->numErr++;
             DB::rollback();
             $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
                 "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
@@ -406,5 +508,13 @@ class MstStaffs extends BaseImport
             ]));
         }
     }
-
+    protected function exportPassword()
+    {
+        $objPHPExcel=$this->objPHPExcel;
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, 1,'ログインパスワード');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $file=storage_path('import/dbo_M_社員'.$this->dateTimeRun.'.xlsx');
+        $objWriter->save($file);
+    }
 }

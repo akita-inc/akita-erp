@@ -78,7 +78,9 @@ return [
             'main'=>storage_path('import/dbo_M_社員.xlsx'),
             'main_file_name'=>'dbo_M_社員.xlsx',
             'health_insurance_card_information'=>storage_path('import/20190404_保険証情報.xlsx'),
-            'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx')
+            'health_insurance_card_information_nm'=>'20190404_保険証情報.xlsx',
+            'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx'),
+            'staff_background_nm'=>'dbo_T_社員DETA.xlsx',
         ],
         'mst_bill_issue_destinations'=>[
             'main'=>storage_path('import/dbo_M_得意先.xlsx')
@@ -92,6 +94,12 @@ return [
             'extra1' => [
                 'path' => storage_path('import/経費_得意先_Ｔ.xlsx'),
                 'fileName' => '経費_得意先_Ｔ.xlsx',
+            ],
+        ],
+        'mst_staff_qualifications'=>[
+            'main' => [
+                'path' => storage_path('import/dbo_T_社員DETA.xlsx'),
+                'fileName' => 'dbo_T_社員DETA.xlsx',
             ],
         ],
         'data_convert'=>storage_path('logs/DataConvert.log'),

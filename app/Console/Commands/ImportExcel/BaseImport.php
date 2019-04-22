@@ -34,6 +34,7 @@ class BaseImport{
 
     public function __construct()
     {
+        date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("YmdHis");
     }
 
@@ -55,7 +56,9 @@ class BaseImport{
             case "DataConvert_Err_KANA":
                 $path = storage_path('logs/DataConvert_Err_KANA_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
                 break;
-
+            case "DataConvert_Trim":
+                $path = storage_path('logs/DataConvert_Trim_'.$this->tableLabel[$this->table].'_'.$this->dateTimeRun.".log");
+                break;
             default:
                 $path = $arrayLogPath[$type];
                 break;
@@ -99,7 +102,7 @@ class BaseImport{
             $mGeneralPurposes->date_nm = $string;
             $mGeneralPurposes->disp_fg = 1;
             $mGeneralPurposes->disp_number = $data[0]->disp_number+1;
-//            $mGeneralPurposes->save();
+            $mGeneralPurposes->save();
             $this->log("DataConvert_Add_general_purposes",Lang::trans("log_import.add_general_purposes_string",[
                 "fileName" => $fileName,
                 "fieldName" => $fieldName,
@@ -147,26 +150,19 @@ class BaseImport{
                 $this->import();
                 $this->numRead++;
             }
+            if($this->table=="mst_staffs")
+            {
+                $this->numRead=$this->numNormal+$this->numErr;
+                $this->exportPassword();
+            }
             if( !empty( Lang::trans("log_import.end_read") ) ){
                 $this->log("data_convert",Lang::trans("log_import.end_read",[
                     "numRead" => $this->numRead,
                     "numNormal"=> $this->numNormal,
-                    "numErr" => $this->numErr
+                    "numErr" => $this->numErr,
+                    "table" => $this->tableLabel[$this->table],
                 ]));
             }
-            if($this->table=="mst_staffs")
-            {
-                $this->exportPassword();
-            }
         }
-    }
-    protected function exportPassword()
-    {
-        $objPHPExcel=$this->objPHPExcel;
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, 1,'ログインパスワード');
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $file=storage_path('import/dbo_M_社員'.$this->dateTimeRun.'.xlsx');
-        $objWriter->save($file);
     }
 }

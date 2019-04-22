@@ -40,9 +40,9 @@ class EditMstStaffsTable extends Migration
             $table->date('birthday')->nullable();
             $table->date('enter_date')->nullable();
             $table->date('retire_date')->nullable();
-            $table->string('insurer_number',3)->nullable();
-            $table->string('basic_pension_number',11)->nullable();
-            $table->string('person_insured_number',11)->nullable();
+            $table->string('insurer_number',20)->nullable();
+            $table->string('basic_pension_number',20)->nullable();
+            $table->string('person_insured_number',20)->nullable();
             $table->integer('health_insurance_class')->nullable();
             $table->integer('welfare_annuity_class')->nullable();
             $table->string('relocation_municipal_office_cd',6)->nullable();
