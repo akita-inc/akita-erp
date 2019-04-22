@@ -214,13 +214,13 @@ class MstStaffs extends BaseImport
         }
         if($type=="kana")
         {
-            $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
-            $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
+            $result['last_nm_kana']=!empty($staff_nm[0])?$staff_nm[0]:null;
+            $result['first_nm_kana']=!empty($staff_nm[1])?$staff_nm[1]:null;
         }
         else
         {
-            $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
-            $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
+            $result['last_nm']=!empty($staff_nm[0])?$staff_nm[0]:null;
+            $result['first_nm']=!empty($staff_nm[1])?$staff_nm[1]:null;
         }
         return $result;
     }
@@ -303,7 +303,7 @@ class MstStaffs extends BaseImport
                                 $driverLicenseArr=$driverLicenseArr[$value];
                                 $record['driver_license']=$driverLicenseArr;
                             }
-                            $record[$excel_column[$pos]] = (string)$value;
+                            $record[$excel_column[$pos]] = empty($value)?null:(string)$value;
                             break;
                         case 'modified_at':
                             $record[$excel_column[$pos]] = $this->formatDateTimeString($value);
@@ -321,10 +321,10 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = $this->formatDateString($value);
                             break;
                         case 'staff_nm':
-                            $record+=is_null($value)?null:$this->explodeStaffName($value,null);
+                            $record+=$this->explodeStaffName($value,null);
                             break;
                         case 'staff_nm_kana':
-                            $record+=is_null($value)?null:$this->explodeStaffName(mb_convert_kana($value,"KVC"),'kana');
+                            $record+=$this->explodeStaffName(mb_convert_kana($value,"KVC"),'kana');
                             break;
                         case 'zip_cd':
                             $record[$excel_column[$pos]] = is_null($value)?null:str_replace("-","",$value);
