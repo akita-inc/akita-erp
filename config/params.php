@@ -78,7 +78,9 @@ return [
             'main'=>storage_path('import/dbo_M_社員.xlsx'),
             'main_file_name'=>'dbo_M_社員.xlsx',
             'health_insurance_card_information'=>storage_path('import/20190404_保険証情報.xlsx'),
-            'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx')
+            'health_insurance_card_information_nm'=>'20190404_保険証情報.xlsx',
+            'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx'),
+            'staff_background_nm'=>'dbo_T_社員DETA.xlsx',
         ],
         'mst_bill_issue_destinations'=>[
             'main'=>storage_path('import/dbo_M_得意先.xlsx')
