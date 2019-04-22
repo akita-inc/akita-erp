@@ -60,9 +60,9 @@ class MGeneralPurposes extends Model
             ->get();
         foreach ($pref_nms as $key=>$value)
         {
-            $val=json_decode( json_encode($value), true);
+            $val = json_decode( json_encode($value), true);
             if (strpos($pref_name, (string)$val['date_nm']) !== false) {
-                return (string)$val['date_id'];
+                return ['date_id' => (string)$val['date_id'], 'date_nm' => (string)$val['date_nm']];
             }
         }
         return null;

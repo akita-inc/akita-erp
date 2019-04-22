@@ -138,11 +138,11 @@ class MstSuppliers extends BaseImport{
                                 break;
                             case 'address1':
                                 $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
-                                $record['prefectures_cd'] = $prefectures_cd;
                                 if ($prefectures_cd) {
-                                    $record[$excel_column[$pos]] = mb_substr($value, 4, 20);
+                                    $record['prefectures_cd'] = $prefectures_cd['date_id'];
+                                    $record[$excel_column[$pos]] = mb_substr($value, mb_strlen($prefectures_cd['date_nm']));
                                 } else {
-                                    $record[$excel_column[$pos]] = mb_substr($value, 0, 20);
+                                    $record[$excel_column[$pos]] = $value;
                                 }
                                 break;
                             default:
