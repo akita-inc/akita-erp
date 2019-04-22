@@ -111,6 +111,8 @@ class MstStaffs extends BaseImport
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
+        date_default_timezone_set("Asia/Tokyo");
+        $this->dateTimeRun = date("YmdHis");
     }
 
     public function import()
@@ -143,11 +145,14 @@ class MstStaffs extends BaseImport
     {
         $mBusinessOffice=new MBusinessOffices();
         $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
-        if(!empty($result))
+        if(!empty($result['id']))
         {
-            return $result;
+            return $result['id'];
         }
-        return null;
+        else
+        {
+            return null;
+        }
     }
     public function getCellularPhone($phone)
     {
@@ -372,7 +377,6 @@ class MstStaffs extends BaseImport
                     }
                 }
                 $record["password"]=bcrypt($this->generateRandomString(8));
-                $record["remember_token"]=$record["password"];
                 $record['belong_company_id']=$this->getBelongCompanyId();
                 $record['enable_fg']=true;
                 unset($record['staff_nm']);
@@ -420,11 +424,20 @@ class MstStaffs extends BaseImport
         $this->error_fg=false;
         if( !empty($this->ruleValid)){
             $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
+            if(is_null($record['mst_business_office_id']))
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_cd",[
+                    "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name['mst_business_office_id'],
+                    "row" => $this->rowIndex,
+                ]));
+            }
             if ($validator->fails()) {
                     $this->error_fg=true;
                     $failedRules = $validator->failed();
                     if (isset($failedRules['staff_cd']['Unique'])) {
-                        $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_staff_cd",[
+                        $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_cd",[
                             "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
                             "fieldName" => $this->column_main_name['staff_cd'],
                             "row" => $this->rowIndex,
