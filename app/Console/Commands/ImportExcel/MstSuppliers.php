@@ -113,11 +113,11 @@ class MstSuppliers extends BaseImport{
                 $this->numNormal++;
                 continue;
             }
-            $this->numRead++;
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if($rowData[$row]['D'] ==3 && $row > 1) {
+                $this->numRead++;
                 foreach ($rowData[$row] as $pos => $value) {
                     if (isset($excel_column[$pos])) {
                         switch ($excel_column[$pos]) {
