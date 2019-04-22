@@ -422,7 +422,7 @@ class MstVehicles extends BaseImport
                     $error_fg = true;
                     $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                         "mainFileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
-                        "fieldName" => $this->column_name[$field],
+                        "fieldName" => $this->column_name['vehicles_cd'],
                         "row" => $row,
                         "extraFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
                     ]));
