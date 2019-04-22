@@ -205,7 +205,6 @@ class MstSuppliers extends BaseImport{
         $validator = Validator::make($record, $this->rules);
 
         if ($validator->fails()) {
-            $error_fg = true;
             $failedRules = $validator->failed();
             foreach ($failedRules as $field => $errors) {
                 foreach ($errors as $ruleName => $error) {
@@ -217,10 +216,11 @@ class MstSuppliers extends BaseImport{
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => substr($record[$field], 0, $error[0]),
+                            "DBvalue" => mb_substr($record[$field], 0, $error[0]),
                         ]));
-                        $record[$field] = substr($record[$field], 0, $error[0]);
+                        $record[$field] = mb_substr($record[$field], 0, $error[0]);
                     } else if ($ruleName == 'Required') {
+                        $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
