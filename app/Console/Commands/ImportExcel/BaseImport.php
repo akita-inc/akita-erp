@@ -140,7 +140,7 @@ class BaseImport{
             $sheet = $objPHPExcel->getSheet(0);
             $highestRow = $sheet->getHighestRow();
             $highestColumn = $sheet->getHighestColumn();
-            $start_row = 2;
+            $start_row = $this->startRow;
             for ($row = $start_row; $row <= $highestRow; $row++) {
                 $this->rowIndex = $row;
                 $this->rowCurrentData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, false, false, true);
