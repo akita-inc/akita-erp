@@ -573,11 +573,12 @@ class MstStaffs extends BaseImport
     }
     protected function exportPassword()
     {
+        $dateTimeRun=$this->dateTimeRun;
         $objPHPExcel=$this->objPHPExcel;
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, 1,'ログインパスワード');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $file=storage_path('import/dbo_M_社員'.$this->dateTimeRun.'.xlsx');
+        $file=str_replace("yyyymmddhh24miss",$dateTimeRun,config('params.import_file_path.mst_staffs.export_password_file_nm'));
         $objWriter->save($file);
     }
 }
