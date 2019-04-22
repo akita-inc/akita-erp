@@ -69,6 +69,9 @@ class MstStaffs extends BaseImport
         'death_reasons'=>'死亡理由',
         'death_dt'=>'死亡年月日'
     ];
+    public $excel_column_insurer=[
+        'staff_cd'=>'社員番号',
+    ];
     public $labels=[];
     public $messagesCustom=[];
     public $ruleValid = [
@@ -351,6 +354,7 @@ class MstStaffs extends BaseImport
             {
                 $this->validateRow($record);
             }
+            dd($record);
             if(!empty($record) && $this->error_fg==false)
             {
                 $record+=$record['insurance'];
