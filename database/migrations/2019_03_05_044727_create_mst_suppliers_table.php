@@ -59,7 +59,6 @@ class CreateMstSuppliersTable extends Migration
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('deleted_at')->nullable();
-            $table->integer('mst_account_titles_id')->nullable();
         });
     }
 
