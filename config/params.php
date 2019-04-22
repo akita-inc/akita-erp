@@ -81,6 +81,8 @@ return [
             'health_insurance_card_information_nm'=>'20190404_保険証情報.xlsx',
             'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx'),
             'staff_background_nm'=>'dbo_T_社員DETA.xlsx',
+            'drivers_license'=>storage_path('import/20190404_免許情報.xlsx'),
+            'drivers_license_nm'=>'20190404_免許情報.xlsx',
         ],
         'mst_bill_issue_destinations'=>[
             'main'=>storage_path('import/dbo_M_得意先.xlsx')

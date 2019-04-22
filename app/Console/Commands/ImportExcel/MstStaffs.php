@@ -65,12 +65,19 @@ class MstStaffs extends BaseImport
         'relocation_municipal_office_cd'=>'市町村役場コード',
         'educational_background'=>'最終学歴',
         'educational_background_dt'=>'最終学歴日付',
+        'drivers_license_number'=>'免許証番号',
+        'drivers_license_issued_dt'=>'書換年月日',
         'retire_reasons'=>'退職理由',
         'death_reasons'=>'死亡理由',
         'death_dt'=>'死亡年月日'
     ];
     public $excel_column_insurer=[
         'staff_cd'=>'社員番号',
+    ];
+    public $excel_column_driver_license=[
+        'staff_cd'=>'社員ＣＤ',
+        'drivers_license_number'=>'免許証番号',
+        'drivers_license_issued_dt'=>'書換年月日'
     ];
     public $labels=[];
     public $messagesCustom=[];
@@ -95,6 +102,8 @@ class MstStaffs extends BaseImport
         "educational_background"=>"length:50|nullable",
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
+        'drivers_license_number'=>'length:12|nullable',
+        'drivers_license_issued_dt'=>'nullable',
         "created_at"=>"required",
         "modified_at"=>"required",
     ];
@@ -102,7 +111,6 @@ class MstStaffs extends BaseImport
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
-        $this->dateTimeRun = date("YmdHis");
     }
 
     public function import()
@@ -199,6 +207,7 @@ class MstStaffs extends BaseImport
     {
         try {
             $column=$this->column_main_name;
+            $excel_column_driver_license=$this->excel_column_driver_license;
             $data = Excel::load($path)->get();
             if($data->count()){
                 if($type=="insurance")
@@ -224,6 +233,16 @@ class MstStaffs extends BaseImport
                             'retire_reasons'=>$value->{$column['retire_reasons']},
                             'death_reasons'=>$value->{$column['death_reasons']},
                             'death_dt'=>$this->formatDateString($value->{$column['death_dt']}),
+                            'row_index'=>$key+2
+                        ];
+                    }
+                }
+                elseif($type="driver_license")
+                {
+                    foreach ($data as  $key=>$value) {
+                        $arr[$value->{$excel_column_driver_license['staff_cd']}] = [
+                            'drivers_license_number'=>$value->{$excel_column_driver_license['drivers_license_number']},
+                            'drivers_license_issued_dt'=> $this->formatDateString($value->{$excel_column_driver_license['drivers_license_issued_dt']}),
                             'row_index'=>$key+2
                         ];
                     }
@@ -256,6 +275,7 @@ class MstStaffs extends BaseImport
         $mGeneralPurposes = new MGeneralPurposes();
         $insuranceArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
         $backgroundArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
+        $driverLicenseArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.drivers_license'),'driver_license');
         $employment_pattern_id=$rowData[$row]['D'];
         if(!empty($rowData[$row]) && $employment_pattern_id<>3)
         {
@@ -272,6 +292,11 @@ class MstStaffs extends BaseImport
                             {
                                 $staff_background=$backgroundArr[$value];
                                 $record['staff_background']=$staff_background;
+                            }
+                            if(!empty($driverLicenseArr[$value]))
+                            {
+                                $driverLicenseArr=$driverLicenseArr[$value];
+                                $record['driver_license']=$driverLicenseArr;
                             }
                             $record[$excel_column[$pos]] = (string)$value;
                             break;
@@ -349,6 +374,7 @@ class MstStaffs extends BaseImport
                 $record["password"]=bcrypt($this->generateRandomString(8));
                 $record["remember_token"]=$record["password"];
                 $record['belong_company_id']=$this->getBelongCompanyId();
+                $record['enable_fg']=true;
                 unset($record['staff_nm']);
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
@@ -377,6 +403,8 @@ class MstStaffs extends BaseImport
                 unset($record['insurance']);
                 $record+=$record['staff_background'];
                 unset($record['staff_background']);
+                $record+=$record['driver_license'];
+                unset($record['driver_license']);
                 unset($record['row_index']);
                 $this->insertDB($record);
             }
@@ -461,6 +489,20 @@ class MstStaffs extends BaseImport
                     "fieldName" => $this->column_main_name['staff_cd'],
                     "row" => $this->rowIndex,
                     "extraFileName" => config('params.import_file_path.mst_staffs.staff_background_nm'),
+                ]));
+            }
+            if(isset($record["driver_license"]))
+            {
+                $this->validateChildFile($record['driver_license'],'drivers_license_nm');
+            }
+            else
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name['staff_cd'],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => config('params.import_file_path.mst_staffs.drivers_license_nm'),
                 ]));
             }
 
