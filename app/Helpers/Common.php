@@ -20,6 +20,21 @@ class Common {
         $current_defaults = Input::old() ? old($name, '') : $default;
         return ((string)$value == (string)$current_defaults) ? 'selected="selected"' : '';
 	}
+	public static function isHiragana($str) {
+        return preg_match('/[\x{3040}-\x{309F}]/u', $str) > 0;
+    }
+    public static function isKatakana($str) {
+	    if(is_null($str))
+        {
+            return true;
+        }
+        else
+        {
+            $res=mb_convert_kana($str, 'KVC', 'UTF-8');
+            return preg_match('/[\x{30A0}-\x{30FF}]/u', $res) > 0;
+        }
+
+    }
 	public static function selectDefaultStatus($array = array(), $key = '', $value,$MNGFG) {
             if (!isset($array[$key]) && $MNGFG == "0") {
                 if ($value === "1" && !isset($array['entry']) && count($array) == 0) {
