@@ -234,6 +234,22 @@ class MstStaffs extends BaseImport
             return null;
         }
     }
+    public function getBelongCompanyId()
+    {
+        $mGeneralPurposes =MGeneralPurposes::select('date_id')
+                            ->where('data_kb','=','01004')
+                            ->where('date_nm','=', "アキタ")
+                            ->first();
+        if($mGeneralPurposes)
+        {
+            return $mGeneralPurposes['date_id'];
+        }
+        else
+        {
+            return null;
+        }
+
+    }
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
         $record = array();
@@ -332,6 +348,7 @@ class MstStaffs extends BaseImport
                 }
                 $record["password"]=bcrypt($this->generateRandomString(8));
                 $record["remember_token"]=$record["password"];
+                $record['belong_company_id']=$this->getBelongCompanyId();
                 unset($record['staff_nm']);
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
@@ -354,7 +371,6 @@ class MstStaffs extends BaseImport
             {
                 $this->validateRow($record);
             }
-            dd($record);
             if(!empty($record) && $this->error_fg==false)
             {
                 $record+=$record['insurance'];
