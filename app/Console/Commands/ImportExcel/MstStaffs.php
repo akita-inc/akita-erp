@@ -111,7 +111,6 @@ class MstStaffs extends BaseImport
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
-        $this->dateTimeRun = date("YmdHis");
     }
 
     public function import()
