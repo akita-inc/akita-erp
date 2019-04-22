@@ -278,7 +278,7 @@ class MstStaffs extends BaseImport
                             $record+=$this->explodeStaffName($value,null);
                             break;
                         case 'staff_nm_kana':
-                            $record+=$this->explodeStaffName(mb_convert_kana($value),'kana');
+                            $record+=$this->explodeStaffName($value,'kana');
                             break;
                         case 'zip_cd':
                             $record[$excel_column[$pos]] = str_replace("-","",$value);
@@ -315,14 +315,14 @@ class MstStaffs extends BaseImport
                             $data_kb = config('params.data_kb')['employment_pattern'];
                             $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
                             if ($result) {
-                                $record[$excel_column[$pos]] = (string)$result;
+                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
                             }
                             break;
                         case 'sex_id':
                             $data_kb = config('params.data_kb')['sex'];
                             $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['sex_id'], $row );
                             if ($result) {
-                                $record[$excel_column[$pos]] = (string)$result;
+                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
                             }
                             break;
                         default:
@@ -354,6 +354,7 @@ class MstStaffs extends BaseImport
             {
                 $this->validateRow($record);
             }
+
             if(!empty($record) && $this->error_fg==false)
             {
                 $record+=$record['insurance'];
@@ -372,6 +373,7 @@ class MstStaffs extends BaseImport
 
     }
     protected function validateRow($record){
+        $this->error_fg=false;
         if( !empty($this->ruleValid)){
             $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
             if ($validator->fails()) {
