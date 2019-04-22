@@ -69,13 +69,10 @@ class MstStaffs extends BaseImport
         'death_reasons'=>'死亡理由',
         'death_dt'=>'死亡年月日'
     ];
-    public $excel_column_insurer=[
-        'staff_cd'=>'社員番号',
-    ];
     public $labels=[];
     public $messagesCustom=[];
     public $ruleValid = [
-        'staff_cd'  => 'required|one_bytes_string|length:5|unique:mst_staffs,staff_cd',
+        'staff_cd'  => 'required|length:5|unique:mst_staffs,staff_cd',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
@@ -278,7 +275,7 @@ class MstStaffs extends BaseImport
                             $record+=$this->explodeStaffName($value,null);
                             break;
                         case 'staff_nm_kana':
-                            $record+=$this->explodeStaffName($value,'kana');
+                            $record+=$this->explodeStaffName(mb_convert_kana($value),'kana');
                             break;
                         case 'zip_cd':
                             $record[$excel_column[$pos]] = str_replace("-","",$value);
@@ -354,7 +351,6 @@ class MstStaffs extends BaseImport
             {
                 $this->validateRow($record);
             }
-
             if(!empty($record) && $this->error_fg==false)
             {
                 $record+=$record['insurance'];
@@ -427,7 +423,7 @@ class MstStaffs extends BaseImport
                 $this->error_fg=true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                     "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->excel_column_insurer["staff_cd"],
+                    "fieldName" => $this->column_main_name["staff_cd"],
                     "row" => $this->rowIndex,
                     "extraFileName" => config('params.import_file_path.mst_staffs.health_insurance_card_information_nm'),
                 ]));
