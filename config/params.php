@@ -96,6 +96,12 @@ return [
                 'fileName' => '経費_得意先_Ｔ.xlsx',
             ],
         ],
+        'mst_staff_qualifications'=>[
+            'main' => [
+                'path' => storage_path('import/dbo_T_社員DETA.xlsx'),
+                'fileName' => 'dbo_T_社員DETA.xlsx',
+            ],
+        ],
         'data_convert'=>storage_path('logs/DataConvert.log'),
     ],
     "log_import_path" => [

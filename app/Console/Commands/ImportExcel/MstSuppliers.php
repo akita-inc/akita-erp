@@ -110,6 +110,7 @@ class MstSuppliers extends BaseImport{
         $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             if($row==1){
+                $this->numRead++;
                 $this->numNormal++;
                 continue;
             }
@@ -163,17 +164,18 @@ class MstSuppliers extends BaseImport{
         $excel_column = $this->excel_column_main;
         $error_fg = false;
         $this->getDataFromExcel(config('params.import_file_path.mst_suppliers.extra1.path'));
-        $this->start_row = 2;
+        $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
             if($row==1){
+                $this->numRead++;
                 $this->numNormal++;
                 continue;
             }
-            $this->numRead++;
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if($rowData[$row]['D'] ==3 && !in_array($rowData[$row]['A'], $this->list_supplier_cd)) {
+                $this->numRead++;
                 foreach ($rowData[$row] as $pos => $value) {
                     if (isset($excel_column[$pos])) {
                         $record[$excel_column[$pos]] = (string)$value;
