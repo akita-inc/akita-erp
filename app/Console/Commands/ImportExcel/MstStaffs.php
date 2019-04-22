@@ -69,13 +69,10 @@ class MstStaffs extends BaseImport
         'death_reasons'=>'死亡理由',
         'death_dt'=>'死亡年月日'
     ];
-    public $excel_column_insurer=[
-        'staff_cd'=>'社員番号',
-    ];
     public $labels=[];
     public $messagesCustom=[];
     public $ruleValid = [
-        'staff_cd'  => 'required|one_bytes_string|length:5|unique:mst_staffs,staff_cd',
+        'staff_cd'  => 'required|length:5|unique:mst_staffs,staff_cd',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
@@ -315,14 +312,14 @@ class MstStaffs extends BaseImport
                             $data_kb = config('params.data_kb')['employment_pattern'];
                             $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
                             if ($result) {
-                                $record[$excel_column[$pos]] = (string)$result;
+                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
                             }
                             break;
                         case 'sex_id':
                             $data_kb = config('params.data_kb')['sex'];
                             $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['sex_id'], $row );
                             if ($result) {
-                                $record[$excel_column[$pos]] = (string)$result;
+                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
                             }
                             break;
                         default:
@@ -372,6 +369,7 @@ class MstStaffs extends BaseImport
 
     }
     protected function validateRow($record){
+        $this->error_fg=false;
         if( !empty($this->ruleValid)){
             $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
             if ($validator->fails()) {
@@ -425,7 +423,7 @@ class MstStaffs extends BaseImport
                 $this->error_fg=true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                     "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->excel_column_insurer["staff_cd"],
+                    "fieldName" => $this->column_main_name["staff_cd"],
                     "row" => $this->rowIndex,
                     "extraFileName" => config('params.import_file_path.mst_staffs.health_insurance_card_information_nm'),
                 ]));
