@@ -205,6 +205,11 @@ class MstVehicles extends BaseImport
         'durable_years'=>'耐用年数',
     ];
 
+    public $transmissions_label = [
+        '1'=> 'MT(速)',
+        '2'=> 'AT',
+    ];
+
     protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
         $mGeneralPurposes = new MGeneralPurposes();
         $query = $mGeneralPurposes->where('data_kb', $data_kb)
@@ -405,7 +410,7 @@ class MstVehicles extends BaseImport
                                 if($ruleName=='Length'){
                                     $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
-                                        "excelFieldName" => $this->column_name[$field],
+                                        "excelFieldName" => $field=='transmissions_notes' ? $this->transmissions_label[$data['transmissions_id']] : $this->column_name[$field],
                                         "row" => $data['row'],
                                         "excelValue" => $data[$field],
                                         "tableName" => $this->table,

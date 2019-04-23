@@ -177,30 +177,30 @@ return [
 
     'empty_info_reservation_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【KARAマッチ】No.[empty_info.id] に申請がありました。',
+        'subject' => '【KARAマッチ】No.[id] に申請がありました。',
         'template' => "【KARAマッチ】\n".
-                "No.[empty_info.id]\n".
-                "発地：[mst_general_purpose.data_nm][empty_info.start_address]\n".
-                "着地：[mst_general_purpose.data_nm][empty_info.arrive_address]\n".
-                "空車予定日時：[empty_info.start_date] [empty_info.start_time]\n".
-                "到着日：[empty_info.arrive_date]\n".
+                "No.[id]\n".
+                "発地：[start_address]\n".
+                "着地：[arrive_address]\n".
+                "空車予定日時：[start_date_time]\n".
+                "到着日：[arrive_date]\n".
                 "に、仮押さえ申請がありました。\n\n".
                 "【申請者】\n".
-                "[mst_business_office.business_office_nm]\n".
-                "[mst_staffs.last_nm] [mst_staffs.first_nm]\n\n".
+                "[business_office_nm]\n".
+                "[staffs_nm]\n\n".
                 "【車輌情報】\n".
                 "＜車両区分＞\n".
-                "[mst_general_purpose.data_nm]\n\n".
+                "[vehicle_kb]\n\n".
                 "＜車番＞\n".
-                "[empty_info.registration_numbers]\n\n".
+                "[registration_numbers]\n\n".
                 "＜車格＞\n".
-                "[empty_info.vehicle_size]\n\n".
+                "[vehicle_size]\n\n".
                 "＜形状＞\n".
-                "[empty_info.vehicle_body_shape]\n\n".
+                "[vehicle_body_shape]\n\n".
                 "＜希望運賃＞\n".
-                "[empty_info.asking_price]\n\n".
-                "＜希望荷物＞\n\n".
-                "[mst_general_purpose.data_nm]\n\n".
+                "[asking_price]\n\n".
+                "＜希望荷物＞\n".
+                "[asking_baggage]\n\n".
                 "確認の後、承認お願いいたします。\n\n".
                 "------------------------------------------------------\n".
                 "Akita ERP - KARAマッチ\n\n"
@@ -208,59 +208,59 @@ return [
     ),
     'empty_info_reservation_approval_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【KARAマッチ】No.[empty_info.id] の申請が承認されました。',
+        'subject' => '【KARAマッチ】No.[id] の申請が承認されました。',
         'template' => "【KARAマッチ】\n".
-            "No.[empty_info.id]\n".
-            "発地：[mst_general_purpose.data_nm][empty_info.start_address]\n".
-            "着地：[mst_general_purpose.data_nm][empty_info.arrive_address]\n".
-            "空車予定日時：[empty_info.start_date] [empty_info.start_time]\n".
-            "到着日：[empty_info.arrive_date]\n".
+            "No.[id]\n".
+            "発地：[start_address]\n".
+            "着地：[arrive_address]\n".
+            "空車予定日時：[start_date_time]\n".
+            "到着日：[arrive_date]\n".
             "の申請が承認されました。\n\n".
             "【承認者】\n".
-            "[mst_business_office.business_office_nm]\n".
-            "[mst_staffs.last_nm] [mst_staffs.first_nm]\n\n".
+            "[business_office_nm]\n".
+            "[staffs_nm]\n\n".
             "【車輌情報】\n".
             "＜車両区分＞\n".
-            "[mst_general_purpose.data_nm]\n\n".
+            "[vehicle_kb]\n\n".
             "＜車番＞\n".
-            "[empty_info.registration_numbers]\n\n".
+            "[registration_numbers]\n\n".
             "＜車格＞\n".
-            "[empty_info.vehicle_size]\n\n".
+            "[vehicle_size]\n\n".
             "＜形状＞\n".
-            "[empty_info.vehicle_body_shape]\n\n".
+            "[vehicle_body_shape]\n\n".
             "＜希望運賃＞\n".
-            "[empty_info.asking_price]\n\n".
-            "＜希望荷物＞\n\n".
-            "[mst_general_purpose.data_nm]\n\n".
+            "[asking_price]\n\n".
+            "＜希望荷物＞\n".
+            "[asking_baggage]\n\n".
             "------------------------------------------------------\n".
             "Akita ERP - KARAマッチ\n\n"
     ),
     'empty_info_reservation_reject_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【KARAマッチ】No.[empty_info.id] の申請が却下されました。',
+        'subject' => '【KARAマッチ】No.[id] の申請が却下されました。',
         'template' => "【KARAマッチ】\n".
-            "No.[empty_info.id]\n".
-            "発地：[mst_general_purpose.data_nm][empty_info.start_address]\n".
-            "着地：[mst_general_purpose.data_nm][empty_info.arrive_address]\n".
-            "空車予定日時：[empty_info.start_date] [empty_info.start_time]\n".
-            "到着日：[empty_info.arrive_date]\n".
-            "の申請が承認されました。\n\n".
+            "No.[id]\n".
+            "発地：[start_address]\n".
+            "着地：[arrive_address]\n".
+            "空車予定日時：[start_date_time]\n".
+            "到着日：[arrive_date]\n".
+            "の申請が却下されました。。\n\n".
             "【却下者】\n".
-            "[mst_business_office.business_office_nm]\n".
-            "[mst_staffs.last_nm] [mst_staffs.first_nm]\n\n".
+            "[business_office_nm]\n".
+            "[staffs_nm]\n\n".
             "【車輌情報】\n".
             "＜車両区分＞\n".
-            "[mst_general_purpose.data_nm]\n\n".
+            "[vehicle_kb]\n\n".
             "＜車番＞\n".
-            "[empty_info.registration_numbers]\n\n".
+            "[registration_numbers]\n\n".
             "＜車格＞\n".
-            "[empty_info.vehicle_size]\n\n".
+            "[vehicle_size]\n\n".
             "＜形状＞\n".
-            "[empty_info.vehicle_body_shape]\n\n".
+            "[vehicle_body_shape]\n\n".
             "＜希望運賃＞\n".
-            "[empty_info.asking_price]\n\n".
-            "＜希望荷物＞\n\n".
-            "[mst_general_purpose.data_nm]\n\n".
+            "[asking_price]\n\n".
+            "＜希望荷物＞\n".
+            "[asking_baggage]\n\n".
             "------------------------------------------------------\n".
             "Akita ERP - KARAマッチ\n\n"
     ),
