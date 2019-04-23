@@ -126,8 +126,8 @@ class MstSuppliers extends BaseImport{
                                 $record['supplier_nm_formal'] = (string)$value;
                                 break;
                             case 'supplier_nm_kana':
-                                $record[$excel_column[$pos]] = mb_convert_kana($value);
-                                $record['supplier_nm_kana_formal'] = mb_convert_kana($value);
+                                $record[$excel_column[$pos]] = $value;
+                                $record['supplier_nm_kana_formal'] = $value;
                                 break;
                             case 'zip_cd':
                                 $record[$excel_column[$pos]] = str_replace("-", "", $value);
@@ -222,7 +222,7 @@ class MstSuppliers extends BaseImport{
                         ]));
                     }else if ($ruleName == 'KanaCustom') {
                         $error_fg = true;
-                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.required", [
+                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
                             "row" => $row,
@@ -238,6 +238,10 @@ class MstSuppliers extends BaseImport{
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
+                    if(isset($record['supplier_nm_kana'])){
+                        $record['supplier_nm_kana'] = mb_convert_kana($record['supplier_nm_kana']);
+                        $record['supplier_nm_kana_formal'] = mb_convert_kana($record['supplier_nm_kana_formal']);
+                    }
                     DB::table('mst_suppliers_copy1')->insert($record);
                     DB::commit();
                     $this->numNormal++;
