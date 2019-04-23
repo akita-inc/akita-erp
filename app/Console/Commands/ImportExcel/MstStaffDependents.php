@@ -14,7 +14,7 @@ class MstStaffDependents extends BaseImport
     public $path = "";
     public $configDataImport = [];
     public $fileName = "扶養者名_生年月日.xlsx";
-    public $startRow = 5;
+    public $startRow = 3;
 
     public function __construct()
     {
@@ -184,6 +184,5 @@ class MstStaffDependents extends BaseImport
                 }
             }
         }
-        exit;
     }
 }
