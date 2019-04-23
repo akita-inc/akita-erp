@@ -106,6 +106,16 @@ return [
                 'fileName' => 'dbo_T_社員DETA.xlsx',
             ],
         ],
+        'mst_customers' => [
+            'main' => [
+                'path' => storage_path('import/dbo_M_得意先.xlsx'),
+                'fileName' => 'dbo_M_得意先.xlsx',
+            ],
+            'extra' => [
+                'path' => storage_path('import/得意先親子関係.xlsx'),
+                'fileName' => '得意先親子関係.xlsx',
+            ],
+        ],
         'data_convert'=>storage_path('logs/DataConvert.log'),
     ],
     "log_import_path" => [
