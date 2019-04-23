@@ -223,9 +223,9 @@ class MstVehicles extends BaseImport
     }
 
     public function run(){
-//        $this->readingVehicleExtraFile1();
-//        $this->readingVehicleExtraFile2();
-//        $this->readingVehicleExtraFile3();
+        $this->readingVehicleExtraFile1();
+        $this->readingVehicleExtraFile2();
+        $this->readingVehicleExtraFile3();
         if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))){
             $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel[$this->table]]));
         }
