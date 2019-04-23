@@ -355,10 +355,18 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = $this->getOfficeId($value);
                             break;
                         case 'employment_pattern_id':
-                            $data_kb = config('params.data_kb')['employment_pattern'];
-                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
-                            if ($result) {
-                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
+                            if($value)
+                            {
+                                $data_kb = config('params.data_kb')['employment_pattern'];
+                                $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
+                                if($result)
+                                {
+                                    $record[$excel_column[$pos]] =$result;
+                                }
+                            }
+                            else
+                            {
+                                $record[$excel_column[$pos]] =null;
                             }
                             break;
                         case 'sex_id':
@@ -565,11 +573,12 @@ class MstStaffs extends BaseImport
     }
     protected function exportPassword()
     {
+        $dateTimeRun=$this->dateTimeRun;
         $objPHPExcel=$this->objPHPExcel;
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, 1,'ログインパスワード');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $file=storage_path('import/dbo_M_社員'.$this->dateTimeRun.'.xlsx');
+        $file=str_replace("yyyymmddhh24miss",$dateTimeRun,config('params.import_file_path.mst_staffs.export_password_file_nm'));
         $objWriter->save($file);
     }
 }

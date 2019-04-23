@@ -83,6 +83,7 @@ return [
             'staff_background_nm'=>'dbo_T_社員DETA.xlsx',
             'drivers_license'=>storage_path('import/20190404_免許情報.xlsx'),
             'drivers_license_nm'=>'20190404_免許情報.xlsx',
+            'export_password_file_nm'=>storage_path("import/dbo_M_社員_yyyymmddhh24miss.xlsx"),
         ],
         'mst_bill_issue_destinations'=>[
             'main'=>storage_path('import/dbo_M_得意先.xlsx'),
