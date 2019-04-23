@@ -275,7 +275,7 @@ return [
             "着地：[arrive_address]\n".
             "空車予定日時：[start_date_time]\n".
             "到着日：[arrive_date]\n".
-            "の申請が却下されました。。\n\n".
+            "の申請が却下されました。\n\n".
             "【却下者】\n".
             "[business_office_nm]\n".
             "[staffs_nm]\n\n".
