@@ -206,32 +206,26 @@ class MstVehicles extends BaseImport
     ];
 
     protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
-
-        if($string!= '' && $string != '0') {
-            $mGeneralPurposes = new MGeneralPurposes();
-            $query = $mGeneralPurposes->where('data_kb', $data_kb)
-                ->where('deleted_at', '=', null);
-            $result = $query->where('date_id', $string)->first();
-            if (!$result) {
-                $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
-                    "fileName" => $fileName,
-                    "fieldName" => $fieldName,
-                    "row" => $row,
-                ]));
-                return null;
-            } else {
-                return $result->date_id;
-            }
-        }else{
+        $mGeneralPurposes = new MGeneralPurposes();
+        $query = $mGeneralPurposes->where('data_kb', $data_kb)
+            ->where('deleted_at', '=', null);
+        $result = $query->where('date_nm', $string)->first();
+        if (!$result) {
+            $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                "fileName" => $fileName,
+                "fieldName" => $fieldName,
+                "row" => $row,
+            ]));
             return null;
+        } else {
+            return $result->date_id;
         }
-
     }
 
     public function run(){
-        $this->readingVehicleExtraFile1();
-        $this->readingVehicleExtraFile2();
-        $this->readingVehicleExtraFile3();
+//        $this->readingVehicleExtraFile1();
+//        $this->readingVehicleExtraFile2();
+//        $this->readingVehicleExtraFile3();
         if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))){
             $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel[$this->table]]));
         }
@@ -267,7 +261,6 @@ class MstVehicles extends BaseImport
         $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main.path'));
         $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
-            $this->numRead++;
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
@@ -275,6 +268,7 @@ class MstVehicles extends BaseImport
                 $keys = $rowData[$row];
                 continue;
             }
+            $this->numRead++;
             foreach ($rowData[$row] as $pos => $value) {
                 if (isset($excel_column[$pos])) {
                     switch ($excel_column[$pos]) {
@@ -299,41 +293,57 @@ class MstVehicles extends BaseImport
                         case 'car_body_shape_id':
                         case 'vehicle_id':
                         case 'kinds_of_fuel_id':
-                            switch ($excel_column[$pos]) {
-                                case 'vehicles_kb':
-                                    $data_kb = config('params.data_kb')['vehicles_kb'];
-                                    break;
-                                case 'vehicle_size_kb':
-                                    $data_kb = config('params.data_kb')['vehicle_size_kb'];
-                                    break;
-                                case 'vehicle_purpose_id':
-                                    $data_kb = config('params.data_kb')['vehicle_purpose'];
-                                    break;
-                                case 'land_transport_office_cd':
-                                    $data_kb = config('params.data_kb')['land_transport_office_cd'];
-                                    break;
-                                case 'vehicle_classification_id':
-                                    $data_kb = config('params.data_kb')['vehicle_classification'];
-                                    break;
-                                case 'private_commercial_id':
-                                    $data_kb = config('params.data_kb')['private_commercial'];
-                                    break;
-                                case 'car_body_shape_id':
-                                    $data_kb = config('params.data_kb')['car_body_shape'];
-                                    break;
-                                case 'vehicle_id':
-                                    $data_kb = config('params.data_kb')['vehicle'];
-                                    break;
-                                case 'kinds_of_fuel_id':
-                                    $data_kb = config('params.data_kb')['kinds_of_fuel'];
-                                    break;
+                            if($value!= '' && (string)$value != '0'){
+                                switch ($excel_column[$pos]) {
+                                    case 'vehicles_kb':
+                                        $data_kb = config('params.data_kb')['vehicles_kb'];
+                                        break;
+                                    case 'vehicle_size_kb':
+                                        $data_kb = config('params.data_kb')['vehicle_size_kb'];
+                                        break;
+                                    case 'vehicle_purpose_id':
+                                        $data_kb = config('params.data_kb')['vehicle_purpose'];
+                                        break;
+                                    case 'land_transport_office_cd':
+                                        $data_kb = config('params.data_kb')['land_transport_office_cd'];
+                                        break;
+                                    case 'vehicle_classification_id':
+                                        $data_kb = config('params.data_kb')['vehicle_classification'];
+                                        break;
+                                    case 'private_commercial_id':
+                                        $data_kb = config('params.data_kb')['private_commercial'];
+                                        break;
+                                    case 'car_body_shape_id':
+                                        $data_kb = config('params.data_kb')['car_body_shape'];
+                                        break;
+                                    case 'vehicle_id':
+                                        $data_kb = config('params.data_kb')['vehicle'];
+                                        break;
+                                    case 'kinds_of_fuel_id':
+                                        $data_kb = config('params.data_kb')['kinds_of_fuel'];
+                                        break;
+                                }
+                                if(isset(config('params.import_mst_vehicles_data_kb')[$excel_column[$pos]][(string)$value])){
+                                    $date_nm = config('params.import_mst_vehicles_data_kb')[$excel_column[$pos]][$value];
+                                    $result = $this->checkExistDataAndInsertCustom($data_kb, $date_nm,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
+                                    if($result==null){
+                                        $error_fg = true;
+                                    }
+                                    $record[$excel_column[$pos]] = $result;
+                                }else{
+                                    $error_fg = true;
+                                    $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                        "fieldName" => $keys[$pos],
+                                        "row" => $row,
+                                    ]));
+                                }
+                            }else{
+                                $record[$excel_column[$pos]] = null;
                             }
-                            $result = $this->checkExistDataAndInsertCustom($data_kb, (string)$value,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
-                            $record[$excel_column[$pos]] = $result;
-
                             break;
                         default:
-                            $record[$excel_column[$pos]] = (string)$value;
+                            $record[$excel_column[$pos]] = is_null($value) ? null :(string)$value;
                     }
 
                 }
