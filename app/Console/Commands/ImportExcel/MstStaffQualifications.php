@@ -63,6 +63,8 @@ class MstStaffQualifications extends BaseImport{
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staff_qualifications.main.path');
+        date_default_timezone_set("Asia/Tokyo");
+        $this->dateTimeRun = date("YmdHis");
     }
 
     public function import()
@@ -84,15 +86,15 @@ class MstStaffQualifications extends BaseImport{
                         case 'mst_staff_id':
                             $findStaff = MStaffs::query()->where('staff_cd',(string)$value)->whereNull('deleted_at')->first();
                             if($findStaff){
-                                $mst_staff_id = (string)$value;
+                                $mst_staff_id = (string)$findStaff->id;
                             }else{
+                                $error_fg = true;
                                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                                     "mainFileName" => config('params.import_file_path.mst_staff_qualifications.main.fileName'),
                                     "fieldName" => $this->column_name[$pos],
                                     "row" => $row,
                                     "extraFileName" =>config('params.import_file_path.mst_staff_qualifications.main.fileName'),
                                 ]));
-                                continue 2;
                             }
                             break;
                         case 'amounts':
@@ -154,20 +156,25 @@ class MstStaffQualifications extends BaseImport{
 
             }
 //            dd($listQualifications);
-            foreach ($listQualifications as $key => $item){
-                if(!is_null($item['qualification_kind_id'])){
-                    $data_kb = config('params.data_kb')['qualification_kind'];
-                    $result = $this->checkExistDataAndInsert($data_kb, $item['qualification_kind_id'],config('params.import_file_path.mst_staff_qualifications.main.fileName'),$this->column_name[$pos], $row );
-                    $item["qualification_kind_id"] = $result;
-                    $item["mst_staff_id"] = $mst_staff_id;
-                    $item["created_at"] = $currentTime;
-                    $item["modified_at"] = $currentTime;
+            if(!is_null($mst_staff_id)){
+                foreach ($listQualifications as $key => $item){
+                    if(!is_null($item['qualification_kind_id'])){
+                        $data_kb = config('params.data_kb')['qualification_kind'];
+                        $result = $this->checkExistDataAndInsert($data_kb, $item['qualification_kind_id'],config('params.import_file_path.mst_staff_qualifications.main.fileName'),$this->column_name[$key], $row );
+                        $item["qualification_kind_id"] = $result;
+                        $item["mst_staff_id"] = $mst_staff_id;
+                        $item["created_at"] = $currentTime;
+                        $item["modified_at"] = $currentTime;
 //                    $this->validate($item,$row, $this->column_name, config('params.import_file_path.mst_staff_qualifications.main.fileName'),$error_fg);
 
-                    $this->insertDB($error_fg, $row, $item);
-                    dd($item);
+                        $this->insertDB($error_fg, $row, $item);
+//                    dd($item);
+                    }
                 }
+            }else{
+                $this->numErr++;
             }
+
         }
     }
 
@@ -208,7 +215,7 @@ class MstStaffQualifications extends BaseImport{
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
-                    DB::table('mst_suppliers_copy1')->insert($record);
+                    DB::table('mst_staff_qualifications_copy1')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }
