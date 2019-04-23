@@ -109,14 +109,14 @@ class MstCustomers extends BaseImport
         $error_fg = false;
         $this->getDataFromExcel(config('params.import_file_path.mst_customers.main.path'));
         $this->start_row = 1;
-        for($row = $this->start_row; $row <= $this->highestRow;$row++){
+        for($row = $this->start_row; $row <= 3/*$this->highestRow*/;$row++){
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if($row == 1){
                 $keys = $rowData[$row];
-                $this->numRead++;
-                $this->numNormal++;
+                /*$this->numRead++;
+                $this->numNormal++;*/
                 continue;
             }
             $this->numRead++;
@@ -158,7 +158,7 @@ class MstCustomers extends BaseImport
                             }
                             break;
                         case 'mst_customers_cd':
-                            $val = (int)$value;
+                            $val = (string)$value;
                             if(array_key_exists($val, $mst_customers_relate_cds)){
                                 $record['bill_mst_customers_cd'] = $mst_customers_relate_cds[$value];
                             }
