@@ -24,7 +24,7 @@
                 <input type="hidden" id="mode" value="{!! $mode !!}">
                 @if(!empty($mEmptyInfo))
                     @foreach($mEmptyInfo as $key=>$value)
-                        <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
+                        <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
