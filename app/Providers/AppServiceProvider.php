@@ -42,5 +42,6 @@ class AppServiceProvider extends ServiceProvider
         CustomValidation::validateDecimal();
         CustomValidation::validateNumberRange();
         CustomValidation::validateImage();
+        CustomValidation::validateKanaCustom();
     }
 }

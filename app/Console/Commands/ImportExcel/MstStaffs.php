@@ -39,6 +39,11 @@ class MstStaffs extends BaseImport
         'AA'=>'notes',
         'AB' => 'created_at',
         'AE' => 'modified_at',
+//        'S'=>'staff_dependents_nm_1',
+//        'T'=>'staff_dependents_nm_2',
+//        'U'=>'staff_dependents_nm_3',
+//        'V'=>'staff_dependents_nm_4',
+//        'W'=>'staff_dependents_nm_5'
     ];
     public $column_main_name=[
         'staff_cd'=>'社員CD',
@@ -84,9 +89,9 @@ class MstStaffs extends BaseImport
     public $ruleValid = [
         'staff_cd'  => 'required|length:5|unique:mst_staffs,staff_cd',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'nullable|length:50',
+        'last_nm_kana'  => 'kana_custom|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
-        'first_nm_kana'=>'nullable|length:50',
+        'first_nm_kana'=>'kana_custom|nullable|length:50',
         'zip_cd'=>'nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
@@ -324,7 +329,7 @@ class MstStaffs extends BaseImport
                             $record+=$this->explodeStaffName($value,null);
                             break;
                         case 'staff_nm_kana':
-                            $record+=$this->explodeStaffName(mb_convert_kana($value,"KVC"),'kana');
+                            $record+=$this->explodeStaffName($value,'kana');
                             break;
                         case 'zip_cd':
                             $record[$excel_column[$pos]] = is_null($value)?null:str_replace("-","",$value);
@@ -384,9 +389,6 @@ class MstStaffs extends BaseImport
                 $record["password"]=bcrypt($this->generateRandomString(8));
                 $record['belong_company_id']=$this->getBelongCompanyId();
                 $record['enable_fg']=true;
-                unset($record['staff_nm']);
-                unset($record['staff_nm_kana']);
-                unset($record["phone_number"]);
             }
             if(isset($record['relocation_municipal_office_cd']))
             {
@@ -408,6 +410,8 @@ class MstStaffs extends BaseImport
             }
             if(!empty($record) && $this->error_fg==false)
             {
+                $record['last_nm_kana']=!empty($record['last_nm_kana'])? mb_convert_kana($record['last_nm_kana'],'KVC'):null;
+                $record['first_nm_kana']=!empty($record['first_nm_kana'])? mb_convert_kana($record['first_nm_kana'],'KVC'):null;
                 $record+=$record['insurance'];
                 unset($record['insurance']);
                 $record+=$record['staff_background'];
@@ -415,6 +419,9 @@ class MstStaffs extends BaseImport
                 $record+=$record['driver_license'];
                 unset($record['driver_license']);
                 unset($record['row_index']);
+                unset($record['staff_nm']);
+                unset($record['staff_nm_kana']);
+                unset($record["phone_number"]);
                 $this->insertDB($record);
             }
             else
@@ -424,6 +431,29 @@ class MstStaffs extends BaseImport
         }
 
 
+    }
+    public function insertMstStaffDependents($mst_staff_id,$value)
+    {
+        DB::beginTransaction();
+        try{
+            if(!empty($value))
+            {
+//                $arrInsert=[
+//                    'mst_staff_id'=>$mst_staff_id,
+//                    ''=>
+//                ];
+                DB::commit();
+            }
+            else
+            {
+                return;
+            }
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return;
+        }
     }
     protected function validateRow($record){
         $this->error_fg=false;
@@ -442,6 +472,14 @@ class MstStaffs extends BaseImport
             if ($validator->fails()) {
                     $this->error_fg=true;
                     $failedRules = $validator->failed();
+                    if(isset($failedRules['last_nm_kana']['KanaCustom']) || isset($failedRules['first_nm_kana']['KanaCustom']) )
+                    {
+                        $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
+                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                            "fieldName" => $this->column_main_name['staff_nm_kana'],
+                            "row" => $this->rowIndex,
+                        ]));
+                    }
                     if (isset($failedRules['staff_cd']['Unique'])) {
                         $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_cd",[
                             "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
@@ -474,15 +512,6 @@ class MstStaffs extends BaseImport
                             }
                     }
                 }
-
-            if (!Common::isKatakana($record['last_nm_kana']) || !Common::isKatakana($record['first_nm_kana'])) {
-                $this->error_fg=true;
-                $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
-                    "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->column_main_name['staff_nm_kana'],
-                    "row" => $this->rowIndex,
-                ]));
-            }
             if(isset($record['insurance']))
             {
                 $this->validateChildFile($record['insurance'],'health_insurance_card_information_nm');
