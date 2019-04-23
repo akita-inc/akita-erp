@@ -31,7 +31,7 @@ class MBusinessOffices  extends Model
         return $this->select('id')
                     ->where('deleted_at','=',null)
                     ->where('mst_business_office_cd','=',$office_cd)
-                    ->first()['id'];
+                    ->first();
     }
     public function getListBusinessOffices()
     {
