@@ -111,6 +111,27 @@ return [
     "log_import_path" => [
         'data_convert'=>storage_path('logs/DataConvert.log')
     ],
+    'import_mst_staffs_data_kb' => [
+        'employment_pattern_kb'=>[
+            '1'=>'正社員',
+            '2'=>'契約社員',
+            '3'=>'パート・アルバイト',
+            '4'=>'顧問',
+            '5'=>'役員'
+        ],
+        'sex_kb'=>[
+            '1'=>'男性',
+            '2'=>'女性'
+        ],
+        'relocation_municipal_office_cd_kb'=>[
+            '131032'=>'港区',
+            '131041'=>'新宿区',
+            '131059'=>'文京区',
+            '131067'=>'台東区',
+            '131075'=>'墨田区',
+            '131083'=>'江東区'
+        ]
+    ],
     'import_mst_vehicles_data_kb' => [
         'vehicles_kb' => [
             '1' => '一般車',
