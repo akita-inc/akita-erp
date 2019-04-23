@@ -40,9 +40,9 @@ class MstSuppliers extends BaseImport{
     public $rules = [
         'mst_suppliers_cd'  => 'required|length:5',
         'supplier_nm'  => 'required|length:200',
-        'supplier_nm_kana'  => 'nullable|length:200',
+        'supplier_nm_kana'  => 'kana_custom|nullable|length:200',
         'supplier_nm_formal'  => 'length:200|nullable',
-        'supplier_nm_kana_formal'  => 'length:200|nullable',
+        'supplier_nm_kana_formal'  => 'kana_custom|length:200|nullable',
         'zip_cd'  => 'nullable|length:7',
         'prefectures_cd'=> 'nullable|length:2',
         'address1'  => 'nullable|length:20',
@@ -107,13 +107,8 @@ class MstSuppliers extends BaseImport{
         $excel_column = $this->excel_column_main;
         $error_fg = false;
         $this->getDataFromExcel(config('params.import_file_path.mst_suppliers.main.path'));
-        $this->start_row = 1;
+        $this->start_row = 2;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
-            if($row==1){
-                $this->numRead++;
-                $this->numNormal++;
-                continue;
-            }
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
@@ -147,11 +142,15 @@ class MstSuppliers extends BaseImport{
                                 }
                                 break;
                             default:
-                                $record[$excel_column[$pos]] = (string)$value;
+                                $record[$excel_column[$pos]] = $value!= "" ? (string)$value : null;
                         }
 
                     }
                 }
+                $consumption_tax_calc_unit_id  = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.consumption_tax_calc_unit'),'請求単位');
+                $rounding_method = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.rounding_method'),'四捨五入');
+                $record['consumption_tax_calc_unit_id'] = $consumption_tax_calc_unit_id ? $consumption_tax_calc_unit_id->date_id : null;
+                $record['rounding_method_id'] = $rounding_method ? $rounding_method->date_id : null;
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
                 $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_suppliers.main.fileName'),$error_fg);
                 $this->insertDB($error_fg, $row, $record);
@@ -164,21 +163,16 @@ class MstSuppliers extends BaseImport{
         $excel_column = $this->excel_column_main;
         $error_fg = false;
         $this->getDataFromExcel(config('params.import_file_path.mst_suppliers.extra1.path'));
-        $this->start_row = 1;
+        $this->start_row = 2;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
-            if($row==1){
-                $this->numRead++;
-                $this->numNormal++;
-                continue;
-            }
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
-            if($rowData[$row]['D'] ==3 && !in_array($rowData[$row]['A'], $this->list_supplier_cd)) {
+            if(!in_array($rowData[$row]['A'], $this->list_supplier_cd)) {
                 $this->numRead++;
                 foreach ($rowData[$row] as $pos => $value) {
                     if (isset($excel_column[$pos])) {
-                        $record[$excel_column[$pos]] = (string)$value;
+                        $record[$excel_column[$pos]] = $value!= "" ? (string)$value : null;
                     }
                 }
                 $record['supplier_nm_formal'] = $record['supplier_nm'];
@@ -192,8 +186,8 @@ class MstSuppliers extends BaseImport{
         }
     }
 
-    protected function validate($record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_suppliers')->where('mst_suppliers_cd', '=', $record['mst_suppliers_cd'])->whereNull('deleted_at')->exists()) {
+    protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
+        if (DB::table('mst_suppliers_copy1')->where('mst_suppliers_cd', '=', $record['mst_suppliers_cd'])->whereNull('deleted_at')->exists()) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,
@@ -226,6 +220,13 @@ class MstSuppliers extends BaseImport{
                             "fieldName" => $column_name[$field],
                             "row" => $row,
                         ]));
+                    }else if ($ruleName == 'KanaCustom') {
+                        $error_fg = true;
+                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.required", [
+                            "fileName" => $fileName,
+                            "fieldName" => $column_name[$field],
+                            "row" => $row,
+                        ]));
                     }
                 }
             }
@@ -237,7 +238,7 @@ class MstSuppliers extends BaseImport{
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
-                    DB::table('mst_suppliers')->insert($record);
+                    DB::table('mst_suppliers_copy1')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }

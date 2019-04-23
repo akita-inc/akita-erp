@@ -69,7 +69,7 @@ class BaseImport{
             $contentLog = file_get_contents( $path );
         }
         date_default_timezone_set("Asia/Tokyo");
-        $contentLog .= date("Y/m/d H:i:s ").$message."\n";
+        $contentLog .= date("Y/m/d H:i:s ").mb_convert_encoding($message, "SJIS")."\r\n";
         file_put_contents($path,$contentLog);
     }
 
