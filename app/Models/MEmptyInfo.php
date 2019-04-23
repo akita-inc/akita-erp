@@ -112,7 +112,7 @@ class MEmptyInfo extends Model
             'empty_info.registration_numbers',
             'empty_info.vehicle_size',
             'empty_info.vehicle_body_shape',
-            DB::raw('format(empty_info.asking_price, "#,##0") as asking_price'),
+            DB::raw('CONCAT("￥",format(empty_info.asking_price, "#,##0")) as asking_price'),
             'pref_asking_baggage.date_nm as asking_baggage'
         );
         $query = $query->leftjoin('mst_general_purposes as vehicle_classification', function ($join) {
