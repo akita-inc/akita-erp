@@ -87,7 +87,27 @@ class MGeneralPurposes extends Model
         );
         return $data;
     }
-
+    public function getDateIdByDateKbAndDateNm($data_kb,$date_nm){
+        $data = $this->getMConfigByConditions(
+            array(
+                [
+                    'field' => 'data_kb',
+                    'operator' => '=',
+                    'value' => $data_kb
+                ],
+                [
+                    'field' => 'date_nm',
+                    'operator' => '=',
+                    'value' => $date_nm
+                ]
+            ),
+            array('date_id')
+        );
+        if(count($data) > 0){
+            return $data[0]->date_id;
+        }
+        return null;
+    }
     public function getDateIDByDataKB($data_kb,$kDefault = "default"){
         $data = $this->getMConfigByConditions(
             array(
