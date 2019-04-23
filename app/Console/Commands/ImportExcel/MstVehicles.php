@@ -205,28 +205,26 @@ class MstVehicles extends BaseImport
         'durable_years'=>'耐用年数',
     ];
 
-    protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
-        if($string!= '' && $string > 0) {
-            $mGeneralPurposes = new MGeneralPurposes();
-            $query = $mGeneralPurposes->where('data_kb', $data_kb)
-                ->where('deleted_at', '=', null);
-            $result = $query->where('date_id', $string)->first();
-            if (!$result) {
-                if (is_numeric($string)) {
-                    $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
-                        "fileName" => $fileName,
-                        "fieldName" => $fieldName,
-                        "row" => $row,
-                    ]));
-                    return null;
-                }
-            } else {
-                return $result->date_id;
-            }
-        }else{
-            return null;
-        }
+    public $transmissions_label = [
+        '1'=> 'MT(速)',
+        '2'=> 'AT',
+    ];
 
+    protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
+        $mGeneralPurposes = new MGeneralPurposes();
+        $query = $mGeneralPurposes->where('data_kb', $data_kb)
+            ->where('deleted_at', '=', null);
+        $result = $query->where('date_nm', $string)->first();
+        if (!$result) {
+            $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                "fileName" => $fileName,
+                "fieldName" => $fieldName,
+                "row" => $row,
+            ]));
+            return null;
+        } else {
+            return $result->date_id;
+        }
     }
 
     public function run(){
@@ -268,15 +266,14 @@ class MstVehicles extends BaseImport
         $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main.path'));
         $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
-            $this->numRead++;
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             if($row==1){
                 $keys = $rowData[$row];
-                $this->numNormal++;
                 continue;
             }
+            $this->numRead++;
             foreach ($rowData[$row] as $pos => $value) {
                 if (isset($excel_column[$pos])) {
                     switch ($excel_column[$pos]) {
@@ -301,41 +298,57 @@ class MstVehicles extends BaseImport
                         case 'car_body_shape_id':
                         case 'vehicle_id':
                         case 'kinds_of_fuel_id':
-                            switch ($excel_column[$pos]) {
-                                case 'vehicles_kb':
-                                    $data_kb = config('params.data_kb')['vehicles_kb'];
-                                    break;
-                                case 'vehicle_size_kb':
-                                    $data_kb = config('params.data_kb')['vehicle_size_kb'];
-                                    break;
-                                case 'vehicle_purpose_id':
-                                    $data_kb = config('params.data_kb')['vehicle_purpose'];
-                                    break;
-                                case 'land_transport_office_cd':
-                                    $data_kb = config('params.data_kb')['land_transport_office_cd'];
-                                    break;
-                                case 'vehicle_classification_id':
-                                    $data_kb = config('params.data_kb')['vehicle_classification'];
-                                    break;
-                                case 'private_commercial_id':
-                                    $data_kb = config('params.data_kb')['private_commercial'];
-                                    break;
-                                case 'car_body_shape_id':
-                                    $data_kb = config('params.data_kb')['car_body_shape'];
-                                    break;
-                                case 'vehicle_id':
-                                    $data_kb = config('params.data_kb')['vehicle'];
-                                    break;
-                                case 'kinds_of_fuel_id':
-                                    $data_kb = config('params.data_kb')['kinds_of_fuel'];
-                                    break;
+                            if($value!= '' && (string)$value != '0'){
+                                switch ($excel_column[$pos]) {
+                                    case 'vehicles_kb':
+                                        $data_kb = config('params.data_kb')['vehicles_kb'];
+                                        break;
+                                    case 'vehicle_size_kb':
+                                        $data_kb = config('params.data_kb')['vehicle_size_kb'];
+                                        break;
+                                    case 'vehicle_purpose_id':
+                                        $data_kb = config('params.data_kb')['vehicle_purpose'];
+                                        break;
+                                    case 'land_transport_office_cd':
+                                        $data_kb = config('params.data_kb')['land_transport_office_cd'];
+                                        break;
+                                    case 'vehicle_classification_id':
+                                        $data_kb = config('params.data_kb')['vehicle_classification'];
+                                        break;
+                                    case 'private_commercial_id':
+                                        $data_kb = config('params.data_kb')['private_commercial'];
+                                        break;
+                                    case 'car_body_shape_id':
+                                        $data_kb = config('params.data_kb')['car_body_shape'];
+                                        break;
+                                    case 'vehicle_id':
+                                        $data_kb = config('params.data_kb')['vehicle'];
+                                        break;
+                                    case 'kinds_of_fuel_id':
+                                        $data_kb = config('params.data_kb')['kinds_of_fuel'];
+                                        break;
+                                }
+                                if(isset(config('params.import_mst_vehicles_data_kb')[$excel_column[$pos]][(string)$value])){
+                                    $date_nm = config('params.import_mst_vehicles_data_kb')[$excel_column[$pos]][$value];
+                                    $result = $this->checkExistDataAndInsertCustom($data_kb, $date_nm,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
+                                    if($result==null){
+                                        $error_fg = true;
+                                    }
+                                    $record[$excel_column[$pos]] = $result;
+                                }else{
+                                    $error_fg = true;
+                                    $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                        "fieldName" => $keys[$pos],
+                                        "row" => $row,
+                                    ]));
+                                }
+                            }else{
+                                $record[$excel_column[$pos]] = null;
                             }
-                            $result = $this->checkExistDataAndInsertCustom($data_kb, $value,config('params.import_file_path.mst_vehicles.main.fileName'),$keys[$pos], $row );
-                            $record[$excel_column[$pos]] = (string)$result;
-
                             break;
                         default:
-                            $record[$excel_column[$pos]] = (string)$value;
+                            $record[$excel_column[$pos]] = is_null($value) ? null :(string)$value;
                     }
 
                 }
@@ -359,7 +372,6 @@ class MstVehicles extends BaseImport
             $validator = Validator::make($data, $this->rules);
 
             if ($validator->fails()) {
-                $error_fg = true;
                 $failedRules = $validator->failed();
                 foreach ($failedRules as $field => $errors){
                     foreach ($errors as $ruleName => $error){
@@ -371,10 +383,11 @@ class MstVehicles extends BaseImport
                                 "excelValue" => $data[$field],
                                 "tableName" => $this->table,
                                 "DBFieldName" => $field,
-                                "DBvalue" => substr($data[$field],0,$error[0]),
+                                "DBvalue" => mb_substr($data[$field],0,$error[0]),
                             ]));
-                            $data[$field] = substr($data[$field],0,$error[0]);
+                            $data[$field] = mb_substr($data[$field],0,$error[0]);
                         }else if($ruleName=='Required'){
+                            $error_fg = true;
                             $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
                                 "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
                                 "fieldName" => $this->column_name[$field],
@@ -391,22 +404,22 @@ class MstVehicles extends BaseImport
                     $data = $data + $this->{"data_extra_file_".$k}[$record['vehicles_cd']];
                     $validator = Validator::make($data, $this->{'rules_extra_'.$k});
                     if ($validator->fails()) {
-                        $error_fg = true;
                         $failedRules = $validator->failed();
                         foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
                                     $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
-                                        "excelFieldName" => $this->column_name[$field],
+                                        "excelFieldName" => $field=='transmissions_notes' ? $this->transmissions_label[$data['transmissions_id']] : $this->column_name[$field],
                                         "row" => $data['row'],
                                         "excelValue" => $data[$field],
                                         "tableName" => $this->table,
                                         "DBFieldName" => $field,
-                                        "DBvalue" => substr($data[$field],0,$error[0]),
+                                        "DBvalue" => mb_substr($data[$field],0,$error[0]),
                                     ]));
-                                    $data[$field] = substr($data[$field],0,$error[0]);
+                                    $data[$field] = mb_substr($data[$field],0,$error[0]);
                                 }else if($ruleName=='Required'){
+                                    $error_fg = true;
                                     $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
                                         "fieldName" => $this->column_name[$field],

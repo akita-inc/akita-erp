@@ -81,9 +81,13 @@ return [
             'health_insurance_card_information_nm'=>'20190404_保険証情報.xlsx',
             'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx'),
             'staff_background_nm'=>'dbo_T_社員DETA.xlsx',
+            'drivers_license'=>storage_path('import/20190404_免許情報.xlsx'),
+            'drivers_license_nm'=>'20190404_免許情報.xlsx',
+            'export_password_file_nm'=>storage_path("import/dbo_M_社員_yyyymmddhh24miss.xlsx"),
         ],
         'mst_bill_issue_destinations'=>[
-            'main'=>storage_path('import/dbo_M_得意先.xlsx')
+            'main'=>storage_path('import/dbo_M_得意先.xlsx'),
+            'main_file_name'=>'dbo_M_得意先.xlsx',
         ],
         'mst_staff_dependents' => storage_path('import/扶養者名_生年月日.xlsx'),
         'mst_suppliers' => [
@@ -106,5 +110,158 @@ return [
     ],
     "log_import_path" => [
         'data_convert'=>storage_path('logs/DataConvert.log')
-    ]
+    ],
+    'import_mst_vehicles_data_kb' => [
+        'vehicles_kb' => [
+            '1' => '一般車',
+            '2' => '運行車',
+        ],
+        'vehicle_size_kb' => [
+            '3' => '小型',
+            '5' => '中型',
+            '8' => '大型',
+        ],
+        'vehicle_purpose_id' => [
+            '1' => '貨物',
+            '2' => 'トレーラー',
+        ],
+        'land_transport_office_cd' => [
+            '21' => '愛知県',
+            '22' => '岐阜県',
+            '23' => '三重県',
+            '24' => '静岡県',
+            '25' => '新潟県',
+            '26' => '長野県',
+            '27' => '滋賀県',
+            '28' => '富山県',
+            '29' => '奈良県',
+            '30' => '兵庫県',
+            '31' => '福島県',
+            '32' => '熊本県',
+            '33' => '石川県',
+            '34' => '香川県',
+            '35' => '埼玉県',
+            '36' => '佐賀県',
+            '37' => '京都府',
+            '38' => '福井県',
+            '39' => '宮城県',
+            '40' => '広島県',
+        ],
+        'vehicle_classification_id' => [
+            '1' => '普通',
+            '2' => '特殊',
+        ],
+        'private_commercial_id' => [
+            '1' => '事業用',
+            '2' => '自家用',
+        ],
+        'car_body_shape_id' => [
+            '1' => 'キャブオーバー',
+            '2' => 'バン',
+        ],
+        'vehicle_id' =>[
+            '1' => 'イスズ',
+            '2' => '日野',
+            '3' => 'トヨタ',
+            '4' => '日産',
+            '5' => '三菱',
+            '6' => 'マツダ',
+            '7' => 'ダイハツ',
+            '9' => 'その他',
+        ],
+        'kinds_of_fuel_id'=>[
+            '1' => '軽油',
+            '2' =>'ガソリン',
+        ]
+    ],
+
+    'empty_info_reservation_mail' => array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【KARAマッチ】No.[id] に申請がありました。',
+        'template' => "【KARAマッチ】\n".
+                "No.[id]\n".
+                "発地：[start_address]\n".
+                "着地：[arrive_address]\n".
+                "空車予定日時：[start_date_time]\n".
+                "到着日：[arrive_date]\n".
+                "に、仮押さえ申請がありました。\n\n".
+                "【申請者】\n".
+                "[business_office_nm]\n".
+                "[staffs_nm]\n\n".
+                "【車輌情報】\n".
+                "＜車両区分＞\n".
+                "[vehicle_kb]\n\n".
+                "＜車番＞\n".
+                "[registration_numbers]\n\n".
+                "＜車格＞\n".
+                "[vehicle_size]\n\n".
+                "＜形状＞\n".
+                "[vehicle_body_shape]\n\n".
+                "＜希望運賃＞\n".
+                "[asking_price]\n\n".
+                "＜希望荷物＞\n".
+                "[asking_baggage]\n\n".
+                "確認の後、承認お願いいたします。\n\n".
+                "------------------------------------------------------\n".
+                "Akita ERP - KARAマッチ\n\n"
+        ,
+    ),
+    'empty_info_reservation_approval_mail' => array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【KARAマッチ】No.[id] の申請が承認されました。',
+        'template' => "【KARAマッチ】\n".
+            "No.[id]\n".
+            "発地：[start_address]\n".
+            "着地：[arrive_address]\n".
+            "空車予定日時：[start_date_time]\n".
+            "到着日：[arrive_date]\n".
+            "の申請が承認されました。\n\n".
+            "【承認者】\n".
+            "[business_office_nm]\n".
+            "[staffs_nm]\n\n".
+            "【車輌情報】\n".
+            "＜車両区分＞\n".
+            "[vehicle_kb]\n\n".
+            "＜車番＞\n".
+            "[registration_numbers]\n\n".
+            "＜車格＞\n".
+            "[vehicle_size]\n\n".
+            "＜形状＞\n".
+            "[vehicle_body_shape]\n\n".
+            "＜希望運賃＞\n".
+            "[asking_price]\n\n".
+            "＜希望荷物＞\n".
+            "[asking_baggage]\n\n".
+            "------------------------------------------------------\n".
+            "Akita ERP - KARAマッチ\n\n"
+    ),
+    'empty_info_reservation_reject_mail' => array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【KARAマッチ】No.[id] の申請が却下されました。',
+        'template' => "【KARAマッチ】\n".
+            "No.[id]\n".
+            "発地：[start_address]\n".
+            "着地：[arrive_address]\n".
+            "空車予定日時：[start_date_time]\n".
+            "到着日：[arrive_date]\n".
+            "の申請が却下されました。。\n\n".
+            "【却下者】\n".
+            "[business_office_nm]\n".
+            "[staffs_nm]\n\n".
+            "【車輌情報】\n".
+            "＜車両区分＞\n".
+            "[vehicle_kb]\n\n".
+            "＜車番＞\n".
+            "[registration_numbers]\n\n".
+            "＜車格＞\n".
+            "[vehicle_size]\n\n".
+            "＜形状＞\n".
+            "[vehicle_body_shape]\n\n".
+            "＜希望運賃＞\n".
+            "[asking_price]\n\n".
+            "＜希望荷物＞\n".
+            "[asking_baggage]\n\n".
+            "------------------------------------------------------\n".
+            "Akita ERP - KARAマッチ\n\n"
+    ),
 ];

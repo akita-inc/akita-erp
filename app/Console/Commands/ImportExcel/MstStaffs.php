@@ -39,6 +39,11 @@ class MstStaffs extends BaseImport
         'AA'=>'notes',
         'AB' => 'created_at',
         'AE' => 'modified_at',
+//        'S'=>'staff_dependents_nm_1',
+//        'T'=>'staff_dependents_nm_2',
+//        'U'=>'staff_dependents_nm_3',
+//        'V'=>'staff_dependents_nm_4',
+//        'W'=>'staff_dependents_nm_5'
     ];
     public $column_main_name=[
         'staff_cd'=>'社員CD',
@@ -65,6 +70,8 @@ class MstStaffs extends BaseImport
         'relocation_municipal_office_cd'=>'市町村役場コード',
         'educational_background'=>'最終学歴',
         'educational_background_dt'=>'最終学歴日付',
+        'drivers_license_number'=>'免許証番号',
+        'drivers_license_issued_dt'=>'書換年月日',
         'retire_reasons'=>'退職理由',
         'death_reasons'=>'死亡理由',
         'death_dt'=>'死亡年月日'
@@ -72,29 +79,36 @@ class MstStaffs extends BaseImport
     public $excel_column_insurer=[
         'staff_cd'=>'社員番号',
     ];
+    public $excel_column_driver_license=[
+        'staff_cd'=>'社員ＣＤ',
+        'drivers_license_number'=>'免許証番号',
+        'drivers_license_issued_dt'=>'書換年月日'
+    ];
     public $labels=[];
     public $messagesCustom=[];
     public $ruleValid = [
         'staff_cd'  => 'required|length:5|unique:mst_staffs,staff_cd',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'kana|nullable|length:50',
+        'last_nm_kana'  => 'kana_custom|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
-        'first_nm_kana'=>'kana|nullable|length:50',
+        'first_nm_kana'=>'kana_custom|nullable|length:50',
         'zip_cd'=>'nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         "landline_phone_number"=>"length:20|nullable",
         "cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
-        "insurer_number"=>"length:3|nullable",
+        "insurer_number"=>"length:20|nullable",
         "health_insurance_class"=>"length:10|nullable",
         "welfare_annuity_class"=>"length:10|nullable",
         "relocation_municipal_office_cd"=>"nullable|length:6",
-        "basic_pension_number"=>"length:11|nullable",
-        "person_insured_number"=>"length:11|nullable",
+        "basic_pension_number"=>"length:20|nullable",
+        "person_insured_number"=>"length:20|nullable",
         "educational_background"=>"length:50|nullable",
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
+        'drivers_license_number'=>'length:12|nullable',
+        'drivers_license_issued_dt'=>'nullable',
         "created_at"=>"required",
         "modified_at"=>"required",
     ];
@@ -102,6 +116,7 @@ class MstStaffs extends BaseImport
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
+        date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("YmdHis");
     }
 
@@ -131,15 +146,34 @@ class MstStaffs extends BaseImport
             return $randomString;
 
     }
+    public function getBelongCompanyId()
+    {
+        $mGeneralPurposes =MGeneralPurposes::select('date_id')
+            ->where('data_kb','=','01004')
+            ->where('date_nm','=', "アキタ")
+            ->first();
+        if($mGeneralPurposes)
+        {
+            return $mGeneralPurposes['date_id'];
+        }
+        else
+        {
+            return null;
+        }
+
+    }
     public function getOfficeId($office_cd)
     {
         $mBusinessOffice=new MBusinessOffices();
         $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
-        if(!empty($result))
+        if(!empty($result['id']))
         {
-            return $result;
+            return $result['id'];
         }
-        return null;
+        else
+        {
+            return null;
+        }
     }
     public function getCellularPhone($phone)
     {
@@ -185,13 +219,13 @@ class MstStaffs extends BaseImport
         }
         if($type=="kana")
         {
-            $result['last_nm_kana']=isset($staff_nm[0])?$staff_nm[0]:null;
-            $result['first_nm_kana']=isset($staff_nm[1])?$staff_nm[1]:null;
+            $result['last_nm_kana']=!empty($staff_nm[0])?$staff_nm[0]:null;
+            $result['first_nm_kana']=!empty($staff_nm[1])?$staff_nm[1]:null;
         }
         else
         {
-            $result['last_nm']=isset($staff_nm[0])?$staff_nm[0]:null;
-            $result['first_nm']=isset($staff_nm[1])?$staff_nm[1]:null;
+            $result['last_nm']=!empty($staff_nm[0])?$staff_nm[0]:null;
+            $result['first_nm']=!empty($staff_nm[1])?$staff_nm[1]:null;
         }
         return $result;
     }
@@ -199,6 +233,7 @@ class MstStaffs extends BaseImport
     {
         try {
             $column=$this->column_main_name;
+            $excel_column_driver_license=$this->excel_column_driver_license;
             $data = Excel::load($path)->get();
             if($data->count()){
                 if($type=="insurance")
@@ -228,27 +263,21 @@ class MstStaffs extends BaseImport
                         ];
                     }
                 }
+                elseif($type="driver_license")
+                {
+                    foreach ($data as  $key=>$value) {
+                        $arr[$value->{$excel_column_driver_license['staff_cd']}] = [
+                            'drivers_license_number'=>$value->{$excel_column_driver_license['drivers_license_number']},
+                            'drivers_license_issued_dt'=> $this->formatDateString($value->{$excel_column_driver_license['drivers_license_issued_dt']}),
+                            'row_index'=>$key+2
+                        ];
+                    }
+                }
                 return $arr;
             }
         } catch(\Exception $e) {
             return null;
         }
-    }
-    public function getBelongCompanyId()
-    {
-        $mGeneralPurposes =MGeneralPurposes::select('date_id')
-                            ->where('data_kb','=','01004')
-                            ->where('date_nm','=', "アキタ")
-                            ->first();
-        if($mGeneralPurposes)
-        {
-            return $mGeneralPurposes['date_id'];
-        }
-        else
-        {
-            return null;
-        }
-
     }
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
@@ -256,6 +285,7 @@ class MstStaffs extends BaseImport
         $mGeneralPurposes = new MGeneralPurposes();
         $insuranceArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
         $backgroundArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
+        $driverLicenseArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.drivers_license'),'driver_license');
         $employment_pattern_id=$rowData[$row]['D'];
         if(!empty($rowData[$row]) && $employment_pattern_id<>3)
         {
@@ -273,7 +303,12 @@ class MstStaffs extends BaseImport
                                 $staff_background=$backgroundArr[$value];
                                 $record['staff_background']=$staff_background;
                             }
-                            $record[$excel_column[$pos]] = (string)$value;
+                            if(!empty($driverLicenseArr[$value]))
+                            {
+                                $driverLicenseArr=$driverLicenseArr[$value];
+                                $record['driver_license']=$driverLicenseArr;
+                            }
+                            $record[$excel_column[$pos]] = empty($value)?null:(string)$value;
                             break;
                         case 'modified_at':
                             $record[$excel_column[$pos]] = $this->formatDateTimeString($value);
@@ -294,10 +329,10 @@ class MstStaffs extends BaseImport
                             $record+=$this->explodeStaffName($value,null);
                             break;
                         case 'staff_nm_kana':
-                            $record+=$this->explodeStaffName(mb_convert_kana($value),'kana');
+                            $record+=$this->explodeStaffName($value,'kana');
                             break;
                         case 'zip_cd':
-                            $record[$excel_column[$pos]] = str_replace("-","",$value);
+                            $record[$excel_column[$pos]] = is_null($value)?null:str_replace("-","",$value);
                             break;
                         case 'address1':
                             $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
@@ -312,26 +347,31 @@ class MstStaffs extends BaseImport
                             }
                             break;
                         case 'phone_number':
-                            if($value)
-                            {
                                 if($this->getCellularPhone($value))
                                 {
                                     $record['cellular_phone_number']=$this->getCellularPhone($value);
                                 }
                                 else
                                 {
-                                    $record['landline_phone_number']=$value;
+                                    $record['landline_phone_number']=is_null($value)?null:$value;
                                 }
-                            }
                             break;
                         case 'mst_business_office_id':
                             $record[$excel_column[$pos]] = $this->getOfficeId($value);
                             break;
                         case 'employment_pattern_id':
-                            $data_kb = config('params.data_kb')['employment_pattern'];
-                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
-                            if ($result) {
-                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
+                            if($value)
+                            {
+                                $data_kb = config('params.data_kb')['employment_pattern'];
+                                $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
+                                if($result)
+                                {
+                                    $record[$excel_column[$pos]] =$result;
+                                }
+                            }
+                            else
+                            {
+                                $record[$excel_column[$pos]] =null;
                             }
                             break;
                         case 'sex_id':
@@ -347,11 +387,8 @@ class MstStaffs extends BaseImport
                     }
                 }
                 $record["password"]=bcrypt($this->generateRandomString(8));
-                $record["remember_token"]=$record["password"];
                 $record['belong_company_id']=$this->getBelongCompanyId();
-                unset($record['staff_nm']);
-                unset($record['staff_nm_kana']);
-                unset($record["phone_number"]);
+                $record['enable_fg']=true;
             }
             if(isset($record['relocation_municipal_office_cd']))
             {
@@ -373,11 +410,18 @@ class MstStaffs extends BaseImport
             }
             if(!empty($record) && $this->error_fg==false)
             {
+                $record['last_nm_kana']=!empty($record['last_nm_kana'])? mb_convert_kana($record['last_nm_kana'],'KVC'):null;
+                $record['first_nm_kana']=!empty($record['first_nm_kana'])? mb_convert_kana($record['first_nm_kana'],'KVC'):null;
                 $record+=$record['insurance'];
                 unset($record['insurance']);
                 $record+=$record['staff_background'];
                 unset($record['staff_background']);
+                $record+=$record['driver_license'];
+                unset($record['driver_license']);
                 unset($record['row_index']);
+                unset($record['staff_nm']);
+                unset($record['staff_nm_kana']);
+                unset($record["phone_number"]);
                 $this->insertDB($record);
             }
             else
@@ -388,24 +432,58 @@ class MstStaffs extends BaseImport
 
 
     }
+    public function insertMstStaffDependents($mst_staff_id,$value)
+    {
+        DB::beginTransaction();
+        try{
+            if(!empty($value))
+            {
+//                $arrInsert=[
+//                    'mst_staff_id'=>$mst_staff_id,
+//                    ''=>
+//                ];
+                DB::commit();
+            }
+            else
+            {
+                return;
+            }
+        }
+        catch (\Exception $e)
+        {
+            DB::rollBack();
+            return;
+        }
+    }
     protected function validateRow($record){
         $this->error_fg=false;
         if( !empty($this->ruleValid)){
             $validator = Validator::make( $record, $this->ruleValid ,$this->messagesCustom ,$this->labels );
+            if(is_null($record['mst_business_office_id']))
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name["mst_business_office_id"],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => 'mst_business_offices',
+                ]));
+            }
             if ($validator->fails()) {
                     $this->error_fg=true;
                     $failedRules = $validator->failed();
-                    if (isset($failedRules['staff_cd']['Unique'])) {
-                        $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_staff_cd",[
-                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                            "fieldName" => $this->column_main_name['staff_cd'],
-                            "row" => $this->rowIndex,
-                        ]));
-                    }
-                    if (isset($failedRules['last_nm_kana']['Kana']) || isset($failedRules['first_nm_kana']['Kana'])) {
+                    if(isset($failedRules['last_nm_kana']['KanaCustom']) || isset($failedRules['first_nm_kana']['KanaCustom']) )
+                    {
                         $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
                             "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
                             "fieldName" => $this->column_main_name['staff_nm_kana'],
+                            "row" => $this->rowIndex,
+                        ]));
+                    }
+                    if (isset($failedRules['staff_cd']['Unique'])) {
+                        $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.unique_cd",[
+                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                            "fieldName" => $this->column_main_name['staff_cd'],
                             "row" => $this->rowIndex,
                         ]));
                     }
@@ -463,6 +541,20 @@ class MstStaffs extends BaseImport
                     "extraFileName" => config('params.import_file_path.mst_staffs.staff_background_nm'),
                 ]));
             }
+            if(isset($record["driver_license"]))
+            {
+                $this->validateChildFile($record['driver_license'],'drivers_license_nm');
+            }
+            else
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name['staff_cd'],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => config('params.import_file_path.mst_staffs.drivers_license_nm'),
+                ]));
+            }
 
         }
     }
@@ -510,11 +602,12 @@ class MstStaffs extends BaseImport
     }
     protected function exportPassword()
     {
+        $dateTimeRun=$this->dateTimeRun;
         $objPHPExcel=$this->objPHPExcel;
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, 1,'ログインパスワード');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $file=storage_path('import/dbo_M_社員'.$this->dateTimeRun.'.xlsx');
+        $file=str_replace("yyyymmddhh24miss",$dateTimeRun,config('params.import_file_path.mst_staffs.export_password_file_nm'));
         $objWriter->save($file);
     }
 }

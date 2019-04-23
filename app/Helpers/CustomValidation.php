@@ -117,6 +117,18 @@ class CustomValidation {
             return false;
         });
     }
+    public static function validateKanaCustom() {
+        Validator::extend('kana_custom', function($attribute, $value, $parameters, $validator) {
+                if(empty($value))
+                {
+                    return true;
+                }
+                if (preg_match("/^[ぁ-んァ-ヶーｦ-ﾟ]+$/u",$value)) {
+                    return true;
+                }
+               return false;
+        });
+    }
 
     public static function validateBetween() {
         Validator::extend('between_custom', function($attribute, $value, $parameters, $validator) {

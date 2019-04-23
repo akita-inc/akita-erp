@@ -473,7 +473,7 @@ class EmptyInfoController extends Controller {
     }
 
     public function updateStatus(Request $request, $id){
-        $result = MEmptyInfo::updateStatus($id, $request->get('status'));
+        $result = MEmptyInfo::updateStatus($id, $request->get('status'), true);
         $this->backHistory();
         switch ($request->get('status')){
             case 1:
