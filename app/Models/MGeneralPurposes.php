@@ -142,11 +142,11 @@ class MGeneralPurposes extends Model
             ->orderBy('disp_number')
             ->get();
     }
-    public function getDataByInfo1AndMngDiv($info_1,$div){
-        return $this->where('data_kb',$div)
-            ->where('info_1', 'LIKE', $info_1.'%')
-            ->orderBy('disp_number','ASC')
-            ->get();
+    public function getDateIDByDateNmAndDataKB($data_kb,$date_nm){
+        return $this->where('data_kb',$data_kb)
+            ->where('date_nm', '=', $date_nm)
+            ->whereNull('deleted_at')
+            ->first();
     }
 
     public function getDataByDivAndCd($div, $date_id){

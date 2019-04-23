@@ -46,14 +46,14 @@ class MstStaffQualifications extends BaseImport{
         'R' => '資格５日付',
         'AD' => '会社取得日付１',
         'AG' => '会社取得日付２',
-        'AE' => '会社取得金額１',
-        'AH' => '会社取得金額２',
+        'amounts_6' => '会社取得金額１',
+        'amounts_7' => '会社取得金額２',
 
     ];
     public $labels=[];
     public $messagesCustom=[];
     public $rules = [
-        'staff_cd'  => 'required',
+        'mst_staff_id'  => 'required',
         'qualification_kind_id'  => 'nullable|length:5',
         'amounts'  => 'nullable|length:11',
         "created_at"=>"required",
@@ -70,7 +70,7 @@ class MstStaffQualifications extends BaseImport{
     public function import()
     {
         $error_fg=false;
-        $currentTime = date("Y/m/d H:i:s ");
+        $currentTime = date("Y/m/d H:i:s");
         $excel_column = $this->excel_column;
         $record = array();
         $row = $this->rowIndex;
@@ -107,7 +107,7 @@ class MstStaffQualifications extends BaseImport{
                             }
 
                             if(!is_null($value)){
-                                $listQualifications[$index][$excel_column[$pos]] = (int)$value;
+                                $listQualifications[$index][$excel_column[$pos]] = $value;
                             }
                             break;
                         case 'acquisition_dt':
@@ -155,20 +155,19 @@ class MstStaffQualifications extends BaseImport{
                 }
 
             }
-//            dd($listQualifications);
-            if(!is_null($mst_staff_id)){
+            if(!empty($mst_staff_id)){
                 foreach ($listQualifications as $key => $item){
-                    if(!is_null($item['qualification_kind_id'])){
+                    if(!empty($item['qualification_kind_id'])){
                         $data_kb = config('params.data_kb')['qualification_kind'];
                         $result = $this->checkExistDataAndInsert($data_kb, $item['qualification_kind_id'],config('params.import_file_path.mst_staff_qualifications.main.fileName'),$this->column_name[$key], $row );
                         $item["qualification_kind_id"] = $result;
                         $item["mst_staff_id"] = $mst_staff_id;
                         $item["created_at"] = $currentTime;
                         $item["modified_at"] = $currentTime;
-//                    $this->validate($item,$row, $this->column_name, config('params.import_file_path.mst_staff_qualifications.main.fileName'),$error_fg);
+                        $this->validate($item,$row, $this->column_name, config('params.import_file_path.mst_staff_qualifications.main.fileName'),$key,$error_fg);
 
                         $this->insertDB($error_fg, $row, $item);
-//                    dd($item);
+
                     }
                 }
             }else{
@@ -178,7 +177,7 @@ class MstStaffQualifications extends BaseImport{
         }
     }
 
-    protected function validate($record, $row, $column_name, $fileName, &$error_fg){
+    protected function validate(&$record, $row, $column_name, $fileName,$key, &$error_fg){
 
         $validator = Validator::make($record, $this->rules);
 
@@ -189,7 +188,7 @@ class MstStaffQualifications extends BaseImport{
                     if ($ruleName == 'Length') {
                         $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
                             "fileName" => $fileName,
-                            "excelFieldName" => $column_name[$field],
+                            "excelFieldName" => $column_name[$field.'_'.$key],
                             "row" => $row,
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
