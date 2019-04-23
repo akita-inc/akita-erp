@@ -444,16 +444,6 @@ class MstStaffs extends BaseImport
     public function validateRow($record){
         $this->error_fg=false;
         if( !empty($this->ruleValid)){
-            if(is_null($record['mst_business_office_id']))
-            {
-                $this->error_fg=true;
-                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->column_main_name["mst_business_office_id"],
-                    "row" => $this->rowIndex,
-                    "extraFileName" => 'mst_business_offices',
-                ]));
-            }
             if(isset($record["driver_license"]))
             {
                 $record["driver_license"]=$this->validateChildFile($record['driver_license'],'drivers_license_nm');
@@ -544,7 +534,17 @@ class MstStaffs extends BaseImport
                             "row" => $this->rowIndex,
                         ]));
                     }
-                    }
+            }
+            if(is_null($record['mst_business_office_id']))
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name["mst_business_office_id"],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => 'mst_business_offices',
+                ]));
+            }
 
         }
         return $record;
