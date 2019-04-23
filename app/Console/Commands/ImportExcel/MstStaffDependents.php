@@ -28,13 +28,14 @@ class MstStaffDependents extends BaseImport
         $mst_staff_cd = (int)$this->rowCurrentData["A"];
         $mstStaff = null;
         if( empty($mst_staff_cd) ){
-            $flagError = true;
             $this->log("DataConvert_Err_required",trans("log_import.required",[
                 "fileName" => $this->fileName,
                 "fieldName" => "社員CD",
                 "row" => $this->rowIndex
             ]));
-        }else{
+            $this->numErr++;
+        }
+        else{
             $mstStaff = MStaffs::where("staff_cd","=",$mst_staff_cd)->first();
 
             if(empty($mstStaff)){
@@ -44,7 +45,8 @@ class MstStaffDependents extends BaseImport
                     "fieldName" => "社員CD",
                     "row" => $this->rowIndex
                 ]));
-            }else{
+            }
+            else{
                 $dataInsert["mst_staff_id"] = $mstStaff->id;
                 $arrayInsert = [];
                 if(!empty($this->rowCurrentData["H"])){
@@ -54,17 +56,17 @@ class MstStaffDependents extends BaseImport
                         $strCheck = "配偶者";
                         $firstName = $value;
                         if(strpos($value,"(年少)")){
-                            $strCheck = "配偶者";
+                            $strCheck = "扶養者";
                             $firstName = str_replace("(年少)","",$firstName);
                         }
                         if(strpos($value,"(母)")){
-                            $strCheck = "配偶者";
+                            $strCheck = "扶養者";
                             $firstName = str_replace("(母)","",$firstName);
                         }
                         $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
                         $arrayInsert[count($arrayInsert) - 1]["dependent_kb"] =
                             $this->checkExistDataAndInsert(config("params.data_kb.dependent_kb"),$strCheck,
-                                $this->fileName,"扶養者",$this->rowIndex);
+                                $this->fileName,"配偶者",$this->rowIndex);
                     }
                     $strSlitBD = explode(",",$this->rowCurrentData["B"]);
                     foreach ($strSlitBD as $key=>$value){
@@ -76,92 +78,92 @@ class MstStaffDependents extends BaseImport
                 }
                 if(!empty($this->rowCurrentData["I"])){
                     $arrayInsert[]  = [];
-                    $strCheck = "配偶者";
+                    $strCheck = "扶養者";
                     $firstName = $this->rowCurrentData["I"];
                     if(strpos($this->rowCurrentData["I"],"(年少)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(年少)","",$firstName);
                     }
                     if(strpos($this->rowCurrentData["I"],"(母)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(母)","",$firstName);
                     }
                     $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
                     $arrayInsert[count($arrayInsert) - 1]["dependent_kb"] =
                         $this->checkExistDataAndInsert(config("params.data_kb.dependent_kb"),$strCheck,
-                        $this->fileName,"扶養者",$this->rowIndex);
+                        $this->fileName,"扶養者氏名１",$this->rowIndex);
                     $arrayInsert[count($arrayInsert) - 1]["birthday"] = $this->rowCurrentData["C"];
                 }
                 if(!empty($this->rowCurrentData["J"])){
                     $arrayInsert[]  = [];
-                    $strCheck = "配偶者";
+                    $strCheck = "扶養者";
                     $firstName = $this->rowCurrentData["J"];
                     if(strpos($this->rowCurrentData["J"],"(年少)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(年少)","",$firstName);
                     }
                     if(strpos($this->rowCurrentData["J"],"(母)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(母)","",$firstName);
                     }
                     $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
                     $arrayInsert[count($arrayInsert) - 1]["dependent_kb"] =
                         $this->checkExistDataAndInsert(config("params.data_kb.dependent_kb"),$strCheck,
-                            $this->fileName,"扶養者",$this->rowIndex);
+                            $this->fileName,"扶養者氏名２",$this->rowIndex);
                     $arrayInsert[count($arrayInsert) - 1]["birthday"] = $this->rowCurrentData["D"];
                 }
                 if(!empty($this->rowCurrentData["K"])){
                     $arrayInsert[]  = [];
-                    $strCheck = "配偶者";
+                    $strCheck = "扶養者";
                     $firstName = $this->rowCurrentData["K"];
                     if(strpos($this->rowCurrentData["K"],"(年少)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(年少)","",$firstName);
                     }
                     if(strpos($this->rowCurrentData["K"],"(母)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(母)","",$firstName);
                     }
                     $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
                     $arrayInsert[count($arrayInsert) - 1]["dependent_kb"] =
                         $this->checkExistDataAndInsert(config("params.data_kb.dependent_kb"),$strCheck,
-                            $this->fileName,"扶養者",$this->rowIndex);
+                            $this->fileName,"扶養者氏名３",$this->rowIndex);
                     $arrayInsert[count($arrayInsert) - 1]["birthday"] = $this->rowCurrentData["E"];
                 }
                 if(!empty($this->rowCurrentData["L"])){
                     $arrayInsert[]  = [];
-                    $strCheck = "配偶者";
+                    $strCheck = "扶養者";
                     $firstName = $this->rowCurrentData["L"];
                     if(strpos($this->rowCurrentData["L"],"(年少)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(年少)","",$firstName);
                     }
                     if(strpos($this->rowCurrentData["L"],"(母)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(母)","",$firstName);
                     }
                     $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
                     $arrayInsert[count($arrayInsert) - 1]["dependent_kb"] =
                         $this->checkExistDataAndInsert(config("params.data_kb.dependent_kb"),$strCheck,
-                            $this->fileName,"扶養者",$this->rowIndex);
+                            $this->fileName,"扶養者氏名４",$this->rowIndex);
                     $arrayInsert[count($arrayInsert) - 1]["birthday"] = $this->rowCurrentData["F"];
                 }
                 if(!empty($this->rowCurrentData["M"])){
                     $arrayInsert[]  = [];
-                    $strCheck = "配偶者";
+                    $strCheck = "扶養者";
                     $firstName = $this->rowCurrentData["M"];
                     if(strpos($this->rowCurrentData["M"],"(年少)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(年少)","",$firstName);
                     }
                     if(strpos($this->rowCurrentData["M"],"(母)")){
-                        $strCheck = "配偶者";
+                        $strCheck = "扶養者";
                         $firstName = str_replace("(母)","",$firstName);
                     }
                     $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
                     $arrayInsert[count($arrayInsert) - 1]["dependent_kb"] =
                         $this->checkExistDataAndInsert(config("params.data_kb.dependent_kb"),$strCheck,
-                            $this->fileName,"扶養者",$this->rowIndex);
+                            $this->fileName,"扶養者氏名５",$this->rowIndex);
                     $arrayInsert[count($arrayInsert) - 1]["birthday"] = $this->rowCurrentData["G"];
                 }
                 $dataInsert["rows"] = $arrayInsert;
@@ -178,10 +180,15 @@ class MstStaffDependents extends BaseImport
                     $mstStaffDependents->first_nm = $item["first_nm"];
                     try{
                         $mstStaffDependents->save();
+                        $this->numNormal++;
                     }catch (\Exception $e){
                         $this->log("DataConvert_Err_SQL",$e->getMessage());
+                        $this->numErr++;
                     }
                 }
+            }
+            else{
+                $this->numErr++;
             }
         }
     }
