@@ -109,7 +109,7 @@ class MstCustomers extends BaseImport
         $error_fg = false;
         $this->getDataFromExcel(config('params.import_file_path.mst_customers.main.path'));
         $this->start_row = 1;
-        for($row = $this->start_row; $row <= 3/*$this->highestRow*/;$row++){
+        for($row = $this->start_row; $row <= $this->highestRow;$row++){
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
