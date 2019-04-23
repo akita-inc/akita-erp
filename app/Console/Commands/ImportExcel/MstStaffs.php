@@ -283,6 +283,7 @@ class MstStaffs extends BaseImport
         $record = array();
         $recordStaffDepents=array();
         $mGeneralPurposes = new MGeneralPurposes();
+        $this->error_fg=false;
         $insuranceArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
         $backgroundArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
         $driverLicenseArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.drivers_license'),'driver_license');
@@ -360,25 +361,54 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = $this->getOfficeId($value);
                             break;
                         case 'employment_pattern_id':
-                            if($value)
-                            {
-                                $data_kb = config('params.data_kb')['employment_pattern'];
-                                $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['employment_pattern_id'], $row );
-                                if($result)
-                                {
-                                    $record[$excel_column[$pos]] =$result;
+                            if($value!= '' && (string)$value != '0') {
+                                $data_kb=config('params.data_kb')['employment_pattern'];
+                                $employment_pattern_kb = config('params.import_mst_staffs_data_kb')['employment_pattern_kb'];
+                                if (isset($employment_pattern_kb[$value])) {
+                                    $result = $this->checkExistDataAndInsertCustom($data_kb, $employment_pattern_kb[$value], config('params.import_file_path.mst_staffs.main_file_name'), $this->column_main_name['employment_pattern_id'], $row);
+                                    if ($result == null) {
+                                        $this->error_fg = true;
+                                    }
+                                    $record[$excel_column[$pos]] = $result;
+                                } else {
+                                    $this->error_fg = true;
+                                    $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                        "fieldName" => $this->column_main_name['employment_pattern_id'],
+                                        "row" => $row,
+                                    ]));
                                 }
                             }
                             else
                             {
-                                $record[$excel_column[$pos]] =null;
+                                $record[$excel_column[$pos]] = null;
                             }
                             break;
                         case 'sex_id':
-                            $data_kb = config('params.data_kb')['sex'];
-                            $result = $this->checkExistDataAndInsert($data_kb, $value,config('params.import_file_path.mst_staffs.main_file_name'),$this->column_main_name['sex_id'], $row );
-                            if ($result) {
-                                $record[$excel_column[$pos]] =is_null($value)?null:(string)$value;
+                            if($value!= '' && (string)$value != '0')
+                            {
+                                $data_kb=config('params.data_kb')['sex'];
+                                $sex_kb = config('params.import_mst_staffs_data_kb')['sex_kb'];
+                                if(isset($sex_kb[$value])) {
+                                    $result = $this->checkExistDataAndInsertCustom($data_kb, $sex_kb[$value], config('params.import_file_path.mst_staffs.main_file_name'), $this->column_main_name['sex_id'], $row);
+                                    if ($result == null) {
+                                        $this->error_fg = true;
+                                    }
+                                    $record[$excel_column[$pos]] = $result;
+                                }
+                                else
+                                {
+                                    $this->error_fg = true;
+                                    $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                        "fieldName" =>  $this->column_main_name['sex_id'],
+                                        "row" => $row,
+                                    ]));
+                                }
+                            }
+                            else
+                            {
+                                $record[$excel_column[$pos]] = null;
                             }
                             break;
                         default:
@@ -386,8 +416,7 @@ class MstStaffs extends BaseImport
                             break;
                     }
                 }
-                if(isset($excel_column[$pos])  && strpos($excel_column[$pos], 'staff_dependents_nm') !== false)
-                {
+                if(isset($excel_column[$pos])  && strpos($excel_column[$pos], 'staff_dependents_nm') !== false) {
                     if(!empty($value))
                     {
                         $recordStaffDepents[]=$record['staff_dependents_nm_'.$pos];
@@ -398,19 +427,35 @@ class MstStaffs extends BaseImport
                 $record['belong_company_id']=$this->getBelongCompanyId();
                 $record['enable_fg']=true;
             }
-            if(isset($record['relocation_municipal_office_cd']))
+            if(isset($record['insurance']['relocation_municipal_office_cd']))
             {
-                $data_kb_relocation = config('params.data_kb')['relocation_municipal_office_cd'];
-                $result_relocation = $this->checkExistDataAndInsert(
-                    $data_kb_relocation,
-                    $record['relocation_municipal_office_cd'],
-                    config('params.import_file_path.mst_staffs.main_file_name'),
-                    $this->column_main_name['relocation_municipal_office_cd'],
-                    $this->rowIndex );
-                if($result_relocation)
+                $relocate_value=$record['insurance']['relocation_municipal_office_cd'];
+                $data_kb = config('params.data_kb')['relocation_municipal_office_cd'];
+                $relocation_municipal_office_cd_kb = config('params.import_mst_staffs_data_kb')['relocation_municipal_office_cd_kb'];
+                if($relocate_value!=null)
                 {
-                    $record['relocation_municipal_office_cd']=(string)$result_relocation;
+                    if(isset($relocation_municipal_office_cd_kb[$relocate_value])) {
+                        $result = $this->checkExistDataAndInsertCustom($data_kb,
+                            $relocation_municipal_office_cd_kb[$relocate_value],
+                            config('params.import_file_path.mst_staffs.main_file_name'),
+                            $this->column_main_name['relocation_municipal_office_cd'],
+                            $this->rowIndex );
+                        if ($result == null) {
+                            $this->error_fg = true;
+                        }
+                        $record['insurance']['relocation_municipal_office_cd']=$result;
+                    }
+                    else
+                    {
+                        $this->error_fg = true;
+                        $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                            "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                            "fieldName" =>  $this->column_main_name['relocation_municipal_office_cd'],
+                            "row" => $row,
+                        ]));
+                    }
                 }
+
             }
             if(!empty($record))
             {
@@ -441,8 +486,23 @@ class MstStaffs extends BaseImport
 
 
     }
+    protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
+        $mGeneralPurposes = new MGeneralPurposes();
+        $query = $mGeneralPurposes->where('data_kb', $data_kb)
+            ->where('deleted_at', '=', null);
+        $result = $query->where('date_nm', $string)->first();
+        if (!$result) {
+            $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
+                "fileName" => $fileName,
+                "fieldName" => $fieldName,
+                "row" => $row,
+            ]));
+            return null;
+        } else {
+            return $result->date_id;
+        }
+    }
     public function validateRow($record){
-        $this->error_fg=false;
         if( !empty($this->ruleValid)){
             if(isset($record["driver_license"]))
             {
