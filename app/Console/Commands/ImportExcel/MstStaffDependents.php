@@ -99,7 +99,7 @@ class MstStaffDependents extends BaseImport
                     ];
                 foreach ($arrayColumn as $key => $column){
                     if(!empty($this->rowCurrentData[$column["firstName"]])){
-                        $strSlit = explode(",",str_replace("、",",",$column["firstName"]));
+                        $strSlit = explode(",",str_replace("、",",",$this->rowCurrentData[$column["firstName"]]));
                         foreach ($strSlit as $value) {
                             $arrayInsert[] = [];
                             $strCheck = "扶養者";
