@@ -20,6 +20,7 @@ class MstStaffDependents extends BaseImport
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staff_dependents');
+        parent::__construct();
     }
 
     public function import(){
