@@ -144,7 +144,7 @@ class MstCustomers extends BaseImport
                             break;
                         case 'person_in_charge_last_nm':
                             $value = str_replace(' ', '　', $value);
-                            $names = explode('　',$value);
+                            $names = explode('　',$value,2);
                             if(count($names) > 1){
                                 $record[$excel_column[$pos]] = $names[0];
                                 $record['person_in_charge_first_nm'] = $names[1];
