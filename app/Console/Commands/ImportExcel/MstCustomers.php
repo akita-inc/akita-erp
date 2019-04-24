@@ -40,7 +40,7 @@ class MstCustomers extends BaseImport
         'X' =>'modified_at',
     ];
     public $rules = [
-        'mst_customers_cd' =>'required|length:5',
+        'mst_customers_cd' =>'required',
         'customer_nm' =>'nullable|length:200',
         'customer_nm_kana' =>'kana_custom|nullable|length:200',
         'customer_nm_formal' =>'nullable|length:200',
