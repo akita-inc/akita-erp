@@ -29,6 +29,7 @@ class MEmptyInfo extends Model
 
     public static function updateStatus($id,$status, $mail_fg=null){
         $mEmptyInfo = MEmptyInfo::find( $id );
+        $mailTo = [];
         DB::beginTransaction();
         try {
             if($mEmptyInfo->status==2 && $mEmptyInfo->regist_office_id == Auth::user()->mst_business_office_id && $status==1 && Carbon::parse($mEmptyInfo->arrive_date) <= Carbon::now()){
@@ -38,7 +39,9 @@ class MEmptyInfo extends Model
 
             switch ($status){
                 case 1:
-                    $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
+                    if(!empty($mEmptyInfo->ask_staff_email_address)){
+                        $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
+                    }
                     $configMail = config('params.empty_info_reservation_reject_mail');
                     $mEmptyInfo->ask_date = null;
                     $mEmptyInfo->ask_office = null;
@@ -47,7 +50,9 @@ class MEmptyInfo extends Model
 
                     break;
                 case 2:
-                    $mailTo = explode(';',$mEmptyInfo->email_address);
+                    if(!empty($mEmptyInfo->email_address)){
+                        $mailTo = explode(';',$mEmptyInfo->email_address);
+                    }
                     $configMail = config('params.empty_info_reservation_mail');
                     $empty_mail_add = MEmptyMailTo::where('office_id',Auth::user()->mst_business_office_id)->whereNull('deleted_at')->first();
                     $mEmptyInfo->ask_date = TimeFunction::getTimestamp();
@@ -56,13 +61,17 @@ class MEmptyInfo extends Model
                     $mEmptyInfo->ask_staff_email_address = $empty_mail_add ?$empty_mail_add->email_address : null;
                     break;
                 case 8:
-                    $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
+                    if(!empty($mEmptyInfo->ask_staff_email_address)){
+                        $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
+                    }
                     $configMail = config('params.empty_info_reservation_approval_mail');
                     $mEmptyInfo->apr_date = TimeFunction::getTimestamp();
                     $mEmptyInfo->apr_staff = Auth::user()->staff_cd;
                     break;
                 case 9:
-                    $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
+                    if(!empty($mEmptyInfo->ask_staff_email_address)){
+                        $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
+                    }
                     $configMail = config('params.empty_info_reservation_reject_mail');
                     $mEmptyInfo->ask_date = null;
                     $mEmptyInfo->ask_office = null;
@@ -74,8 +83,8 @@ class MEmptyInfo extends Model
             }
             $mEmptyInfo->save();
             DB::commit();
-            if($mail_fg){
-                $mEmptyInfo->handleMail($id,$configMail,$mailTo);
+            if($mail_fg && count($mailTo) > 0){
+                $mEmptyInfo->handleMail($id,$configMail,$mailTo,$status);
             }
         }catch (\Exception $e) {
             DB::rollback();
@@ -84,8 +93,8 @@ class MEmptyInfo extends Model
         return true;
     }
 
-    public function handleMail($id,$configMail,$mailTo){
-        $emptyInfo = $this->getInfoForMail($id);
+    public function handleMail($id,$configMail,$mailTo,$status){
+        $emptyInfo = $this->getInfoForMail($id,$status);
         $text = str_replace(
             ['[id]', '[start_address]','[arrive_address]','[start_date_time]','[arrive_date]','[business_office_nm]','[staffs_nm]','[vehicle_kb]','[registration_numbers]','[vehicle_size]','[vehicle_body_shape]','[asking_price]','[asking_baggage]'],
             [$emptyInfo->id, $emptyInfo->start_address, $emptyInfo->arrive_address, $emptyInfo->start_date_time, $emptyInfo->arrive_date, $emptyInfo->regist_office, $emptyInfo->regist_staff, $emptyInfo->vehicle_classification, $emptyInfo->registration_numbers, $emptyInfo->vehicle_size, $emptyInfo->vehicle_body_shape, $emptyInfo->asking_price, $emptyInfo->asking_baggage],
@@ -98,7 +107,7 @@ class MEmptyInfo extends Model
                     ->subject($subject);
             });
     }
-    public function getInfoForMail($id){
+    public function getInfoForMail($id,$status){
         $query = DB::table($this->table);
         $query = $query->select(
             'empty_info.id',
@@ -112,7 +121,7 @@ class MEmptyInfo extends Model
             'empty_info.registration_numbers',
             'empty_info.vehicle_size',
             'empty_info.vehicle_body_shape',
-            DB::raw('format(empty_info.asking_price, "#,##0") as asking_price'),
+            DB::raw('CONCAT("￥",format(empty_info.asking_price, "#,##0")) as asking_price'),
             'pref_asking_baggage.date_nm as asking_baggage'
         );
         $query = $query->leftjoin('mst_general_purposes as vehicle_classification', function ($join) {
@@ -130,10 +139,18 @@ class MEmptyInfo extends Model
         })->leftjoin('mst_business_offices', function ($join) {
                 $join->on('mst_business_offices.id', '=', 'empty_info.regist_office_id')
                     ->whereNull('mst_business_offices.deleted_at');
-        })->leftjoin('mst_staffs', function ($join) {
+        });
+        if($status==2){
+            $query = $query->leftjoin('mst_staffs', function ($join) {
+                $join->on('mst_staffs.staff_cd', '=', 'empty_info.ask_staff')
+                    ->whereNull('mst_staffs.deleted_at');
+            });
+        }else{
+            $query = $query->leftjoin('mst_staffs', function ($join) {
                 $join->on('mst_staffs.staff_cd', '=', 'empty_info.regist_staff')
                     ->whereNull('mst_staffs.deleted_at');
-        });
+            });
+        }
         $query = $query->where('empty_info.id', '=', $id)
             ->whereNull('empty_info.deleted_at');
         return $query->first();
