@@ -50,7 +50,11 @@ class MstStaffs extends BaseImport
         'staff_cd'=>'社員CD',
         'employment_pattern_id'=>'社員区分',
         'staff_nm'=>'社員名',
+        'last_nm'=>'社員名',
+        'first_nm'=>'社員名',
         'staff_nm_kana'=>'社員名かな',
+        'last_nm_kana'=>'社員名かな',
+        'first_nm_kana'=>'社員名かな',
         'mst_business_office_id'=>'社員所属CD',
         'sex_id' => '性別',
         'birthday'=>'生年月日',
@@ -458,7 +462,9 @@ class MstStaffs extends BaseImport
                 $record['landline_phone_number']=is_null($record['phone_number'])?null:$record['phone_number'];
             }
             $record+=$this->explodeStaffName($record['staff_nm'],null);
+            unset($record['staff_nm']);
             $record+=$this->explodeStaffName($record['staff_nm_kana'],'kana');
+            unset($record['staff_nm_kana']);
             $record['mst_business_office_id'] = $this->getOfficeId($record['mst_business_office_id']);
             $record["password"]=bcrypt($this->generateRandomString(8));
             $record['belong_company_id']=$this->getBelongCompanyId();
