@@ -6,8 +6,10 @@
  * Time: 11:13 AM
  */
 namespace App\Console\Commands;
+use App\Models\MStaffs;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 class RunBatchImport extends Command
 {
@@ -16,7 +18,16 @@ class RunBatchImport extends Command
      *
      * @var string
      */
-    protected $arrayRunTime = ['mst_staff_dependents'];
+    protected $arrayRunTime = [
+        'mst_business_offices',
+        'mst_staffs',
+        'mst_staff_dependents',
+        'mst_staff_qualifications',
+        'mst_vehicles',
+        'mst_customers',
+        'mst_suppliers',
+        'mst_bill_issue_destinations',
+    ];
     protected $signature = 'RunBatchImport';
 
     /**
@@ -56,7 +67,20 @@ class RunBatchImport extends Command
      * @return mixed
      */
     public function handle(){
+
         foreach ($this->arrayRunTime as $run){
+            if($run == "mst_staffs"){
+                $staffAdmin = DB::table($run)->where("staff_cd","=","admin")->first();
+                if( $staffAdmin ){
+                    $staffAdmin = (array)$staffAdmin;
+                    unset($staffAdmin["id"]);
+                }
+            }
+            DB::table($run)->truncate();
+
+            if($run == "mst_staffs"){
+                DB::table($run)->insert($staffAdmin);
+            }
             echo Artisan::call("ConvertDataByExcels", ['--type' => $run]);
         }
 

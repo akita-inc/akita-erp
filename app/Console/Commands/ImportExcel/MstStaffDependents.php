@@ -53,6 +53,7 @@ class MstStaffDependents extends BaseImport
                 $strLenFirstName = 25;
                 if(!empty($this->rowCurrentData["H"])){
                     $strSlit = explode(",",str_replace("、",",",$this->rowCurrentData["H"]));
+                    $strBegin = count($arrayInsert);
                     foreach ($strSlit as $value){
                         $arrayInsert[]  = [];
                         $strCheck = "配偶者";
@@ -86,8 +87,8 @@ class MstStaffDependents extends BaseImport
                     }
                     $strSlitBD = explode(",",str_replace("、",",",$this->rowCurrentData["B"]));
                     foreach ($strSlitBD as $key=>$value){
-                        if(isset($arrayInsert[$key])){
-                            $arrayInsert[count($arrayInsert) - 1]["birthday"] = $value;
+                        if(isset($arrayInsert[$strBegin + $key])){
+                            $arrayInsert[$strBegin + $key]["birthday"] = $value;
                         }
                     }
 
