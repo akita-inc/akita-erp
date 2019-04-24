@@ -65,6 +65,7 @@ class MstCustomers extends BaseImport
         'customer_nm_formal' =>'得意先名',
         'customer_nm_kana_formal' =>'得意先名かな',
         'person_in_charge_last_nm' =>'担当者名',
+        'person_in_charge_first_nm' =>'担当者名',
         'zip_cd' =>'郵便番号',
         'prefectures_cd' =>'住所１',
         'address1' =>'住所１',
