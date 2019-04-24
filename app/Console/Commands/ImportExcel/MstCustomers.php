@@ -168,7 +168,8 @@ class MstCustomers extends BaseImport
                         case 'mst_customers_cd':
                             $val = (string)$value;
                             if(array_key_exists($val, $mst_customers_relate_cds)){
-                                $record['bill_mst_customers_cd'] = $mst_customers_relate_cds[$value];
+                                $record['bill_mst_customers_cd'] = $mst_customers_relate_cds[$val]['parent_code'];
+                                unset($mst_customers_relate_cds[$val]);
                             }
                             $record[$excel_column[$pos]] = (string)$value;
                             break;
@@ -186,20 +187,30 @@ class MstCustomers extends BaseImport
             $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_customers.main.fileName'),$error_fg);
             $this->insertDB($error_fg, $row, $record);
         }
+        foreach($mst_customers_relate_cds as $key=>$values){
+            $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                "mainFileName" => config('params.import_file_path.mst_customers.extra.fileName'),
+                "fieldName" => $this->column_name['mst_customers_cd'],
+                "row" => $values['numRow'],
+                "extraFileName" => config('params.import_file_path.mst_customers.main.fileName'),
+            ]));
+        }
     }
 
     public function readingExtraFile(){
+        $numRow = 0;
         $mst_customers_cds = [];
         $currentTime = date("Y/m/d H:i:s ");
         $this->getDataFromExcel(config('params.import_file_path.mst_customers.extra.path'));
         $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
+            $numRow++;
             if($row==1){
                 //$this->numRead++;
                 continue;
             }
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
-            $mst_customers_cds[$rowData[$row]['A']] = (string)$rowData[$row]['B'];
+            $mst_customers_cds[$rowData[$row]['A']] = ['numRow' => $numRow,'parent_code'=>(string)$rowData[$row]['B']];
         }
         return $mst_customers_cds;
     }
@@ -226,7 +237,7 @@ class MstCustomers extends BaseImport
             $this->numErr++;
         }
     }
-    protected function validate($record, $row, $column_name, $fileName, &$error_fg){
+    protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
         if (DB::table('mst_customers')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
@@ -235,7 +246,7 @@ class MstCustomers extends BaseImport
                 "row" => $row,
             ]));
         }
-        if(!isset($record['bill_mst_customers_cd'])){
+        /*if(!isset($record['bill_mst_customers_cd'])){
             $error_fg =true;
             $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                 "mainFileName" => config('params.import_file_path.mst_customers.main.fileName'),
@@ -243,7 +254,7 @@ class MstCustomers extends BaseImport
                 "row" => $row,
                 "extraFileName" => config('params.import_file_path.mst_customers.extra.fileName'),
             ]));
-        }
+        }*/
 
         $validator = Validator::make($record, $this->rules);
 
@@ -259,9 +270,9 @@ class MstCustomers extends BaseImport
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => substr($record[$field], 0, $error[0]),
+                            "DBvalue" => mb_substr($record[$field], 0, $error[0]),
                         ]));
-                        $record[$field] = substr($record[$field], 0, $error[0]);
+                        $record[$field] = mb_substr($record[$field], 0, $error[0]);
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
