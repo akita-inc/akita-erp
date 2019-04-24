@@ -36,6 +36,7 @@ class MstStaffs extends BaseImport
         'M'=>'address1',
         'N'=>'address2',
         'O'=>'phone_number',
+        'Q'=>'spouse_nm',
         'AA'=>'notes',
         'AB' => 'created_at',
         'AE' => 'modified_at',
@@ -455,6 +456,9 @@ class MstStaffs extends BaseImport
                                 $record[$excel_column[$pos]] = null;
                             }
                             break;
+                        case 'spouse_nm':
+                            $recordStaffDepents["spouse_nm"]=$value;
+                            break;
                         default:
                             $record[$excel_column[$pos]] = is_null($value)?null:(string)$value;
                             break;
@@ -489,6 +493,7 @@ class MstStaffs extends BaseImport
                 unset($record['staff_nm']);
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
+                unset($record["spouse_nm"]);
                 $record['staff_dependents']=$recordStaffDepents;
                 $this->insertDB($record);
             }
@@ -660,7 +665,7 @@ class MstStaffs extends BaseImport
                  DB::commit();
                  if(count($recordStaffDependents)>0)
                  {
-                     $this->insertMstStaffDependents($id,$recordStaffDependents);
+                     $this->insertMstStaffDependents($record['last_nm'],$id,$recordStaffDependents);
                  }
              };
         }catch (\Exception $e){
@@ -673,26 +678,76 @@ class MstStaffs extends BaseImport
             ]));
         }
     }
-    public function insertMstStaffDependents($mst_staff_id,$recordStaffDependents)
+    public function getDependentKB($type=null)
+    {
+        if($type=='spouse')
+        {
+            $result=MGeneralPurposes::select('date_id')
+                                    ->where('data_kb','=',config('params.data_kb.dependent_kb'))
+                                    ->where('date_nm','LIKE','%'.'配偶者'.'%')
+                                    ->first();
+        }
+        else
+        {
+            $result=MGeneralPurposes::select('date_id')
+                ->where('data_kb','=',config('params.data_kb.dependent_kb'))
+                ->where('date_nm','LIKE','%'.'扶養者'.'%')
+                ->first();
+        }
+        if($result)
+        {
+            return $result['date_id'];
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public function insertMstStaffDependents($last_nm,$mst_staff_id,$recordStaffDependents)
     {
 
         DB::beginTransaction();
         try{
             $staffDependents=$recordStaffDependents;
             $arrInsert=array();
-             foreach ($staffDependents as $key=>$value )
-             {
-                 $staff_nm=$this->explodeStaffName($value,null);
-                 $arrInsert[]=[
+            if(isset($recordStaffDependents['spouse_nm']) && !empty($recordStaffDependents['spouse_nm']))
+            {
+                $staff_nm=$this->explodeStaffName($recordStaffDependents['spouse_nm'],null);
+                $arrInsert[]=[
+                    'mst_staff_id'=>$mst_staff_id,
+                    'dependent_kb'=>$this->getDependentKB('spouse'),
+                    'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
+                    'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
+                ];
+            }
+            unset($staffDependents['spouse_nm']);
+            foreach ($staffDependents as $key=>$value )
+            {
+                if(mb_strripos($value,"(")>0)
+                {
+                    $value=mb_substr($value,0,mb_strripos($value,"("));
+                }
+                if(strpos($value,"（"))
+                {
+                    $value=mb_substr( $value,0,mb_strripos($value,"（"));
+                }
+                $staff_nm=$this->explodeStaffName($value,null);
+                if(empty($staff_nm["first_nm"]))
+                 {
+                    $staff_nm["first_nm"]= $staff_nm["last_nm"];
+                    $staff_nm["last_nm"]=$last_nm;
+                 }
+                $arrInsert[]=[
                         'mst_staff_id'=>$mst_staff_id,
+                        'dependent_kb'=>$this->getDependentKB(null),
                         'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                         'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
-                    ];
-             }
-             if(DB::table('mst_staff_dependents')->insert($arrInsert))
-             {
+                ];
+            }
+            if(DB::table('mst_staff_dependents')->insert($arrInsert))
+            {
                     DB::commit();
-             }
+            }
         }
         catch (\Exception $e)
         {
