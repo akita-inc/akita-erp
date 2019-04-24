@@ -42,14 +42,17 @@ class MstCustomers extends BaseImport
     public $rules = [
         'mst_customers_cd' =>'required|length:5',
         'customer_nm' =>'nullable|length:200',
-        'customer_nm_kana' =>'nullable|length:200',
+        'customer_nm_kana' =>'kana_custom|nullable|length:200',
+        'customer_nm_formal' =>'nullable|length:200',
+        'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
         'person_in_charge_last_nm' =>'nullable|length:25',
+        'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',
         'address2' =>'nullable|length:20',
         'phone_number' =>'nullable|length:20',
         'bundle_dt' =>'nullable|length:11',
-        'discount_rate' =>'nullable|length:3',
+        //'discount_rate' =>'nullable|length:3',
         'notes' =>'nullable|length:50',
         'mst_account_titles_id' =>'nullable|length:11',
         'created_at' =>'required',
@@ -59,6 +62,8 @@ class MstCustomers extends BaseImport
         'mst_customers_cd' =>'得意先CD',
         'customer_nm' =>'得意先名',
         'customer_nm_kana' =>'得意先名かな',
+        'customer_nm_formal' =>'得意先名',
+        'customer_nm_kana_formal' =>'得意先名かな',
         'person_in_charge_last_nm' =>'担当者名',
         'zip_cd' =>'郵便番号',
         'prefectures_cd' =>'住所１',
@@ -136,6 +141,7 @@ class MstCustomers extends BaseImport
                             $record['customer_nm_kana_formal'] = mb_convert_kana($value);
                             break;
                         case 'person_in_charge_last_nm':
+                            $value = str_replace(' ', '　', $value);
                             $names = explode('　',$value);
                             if(count($names) > 1){
                                 $record[$excel_column[$pos]] = $names[0];
@@ -201,7 +207,7 @@ class MstCustomers extends BaseImport
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
-                    DB::table('mst_customers_copy1')->insert($record);
+                    DB::table('mst_customers')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }
@@ -219,7 +225,7 @@ class MstCustomers extends BaseImport
         }
     }
     protected function validate($record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_customers_copy1')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
+        if (DB::table('mst_customers')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,
@@ -240,7 +246,6 @@ class MstCustomers extends BaseImport
         $validator = Validator::make($record, $this->rules);
 
         if ($validator->fails()) {
-            $error_fg = true;
             $failedRules = $validator->failed();
             foreach ($failedRules as $field => $errors) {
                 foreach ($errors as $ruleName => $error) {
@@ -256,7 +261,15 @@ class MstCustomers extends BaseImport
                         ]));
                         $record[$field] = substr($record[$field], 0, $error[0]);
                     } else if ($ruleName == 'Required') {
+                        $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
+                            "fileName" => $fileName,
+                            "fieldName" => $column_name[$field],
+                            "row" => $row,
+                        ]));
+                    }else if ($ruleName == 'KanaCustom') {
+                        $error_fg = true;
+                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
                             "row" => $row,

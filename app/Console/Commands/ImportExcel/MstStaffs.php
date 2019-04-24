@@ -110,12 +110,19 @@ class MstStaffs extends BaseImport
         "created_at"=>"required",
         "modified_at"=>"required",
     ];
+    public $childFile1=[];
+    public $childFile2=[];
+    public $childFile3=[];
 
     public function __construct()
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
         date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("YmdHis");
+        $this->childFile1=$this->readChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
+        $this->childFile2=$this->readChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
+        $this->childFile3=$this->readChildFile(config('params.import_file_path.mst_staffs.drivers_license'),'driver_license');
+
     }
 
     public function import()
@@ -329,9 +336,9 @@ class MstStaffs extends BaseImport
         $recordStaffDepents=array();
         $mGeneralPurposes = new MGeneralPurposes();
         $this->error_fg=false;
-        $insuranceArr=$this->readChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
-        $backgroundArr=$this->readChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
-        $driverLicenseArr=$this->readChildFile(config('params.import_file_path.mst_staffs.drivers_license'),'driver_license');
+        $insuranceArr=$this->childFile1;
+        $backgroundArr=$this->childFile2;
+        $driverLicenseArr=$this->childFile3;
         $employment_pattern_id=$rowData[$row]['D'];
         if(!empty($rowData[$row]) && $employment_pattern_id<>3)
         {
@@ -665,7 +672,7 @@ class MstStaffs extends BaseImport
                  DB::commit();
                  if(count($recordStaffDependents)>0)
                  {
-                     $this->insertMstStaffDependents($record['last_nm'],$id,$recordStaffDependents);
+                     $this->insertMstStaffDependents($record,$id,$recordStaffDependents);
                  }
              };
         }catch (\Exception $e){
@@ -703,7 +710,7 @@ class MstStaffs extends BaseImport
             return null;
         }
     }
-    public function insertMstStaffDependents($last_nm,$mst_staff_id,$recordStaffDependents)
+    public function insertMstStaffDependents($record,$mst_staff_id,$recordStaffDependents)
     {
 
         DB::beginTransaction();
@@ -713,11 +720,18 @@ class MstStaffs extends BaseImport
             if(isset($recordStaffDependents['spouse_nm']) && !empty($recordStaffDependents['spouse_nm']))
             {
                 $staff_nm=$this->explodeStaffName($recordStaffDependents['spouse_nm'],null);
+                if(empty($staff_nm["first_nm"]))
+                {
+                    $staff_nm["first_nm"]= $staff_nm["last_nm"];
+                    $staff_nm["last_nm"]=$record['last_nm'];
+                }
                 $arrInsert[]=[
                     'mst_staff_id'=>$mst_staff_id,
                     'dependent_kb'=>$this->getDependentKB('spouse'),
                     'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                     'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
+                    'created_at'=>$record['created_at'],
+                    'modified_at'=>$record['modified_at']
                 ];
             }
             unset($staffDependents['spouse_nm']);
@@ -735,13 +749,15 @@ class MstStaffs extends BaseImport
                 if(empty($staff_nm["first_nm"]))
                  {
                     $staff_nm["first_nm"]= $staff_nm["last_nm"];
-                    $staff_nm["last_nm"]=$last_nm;
+                    $staff_nm["last_nm"]=$record['last_nm'];
                  }
                 $arrInsert[]=[
                         'mst_staff_id'=>$mst_staff_id,
                         'dependent_kb'=>$this->getDependentKB(null),
                         'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                         'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
+                        'created_at'=>$record['created_at'],
+                        'modified_at'=>$record['modified_at']
                 ];
             }
             if(DB::table('mst_staff_dependents')->insert($arrInsert))
