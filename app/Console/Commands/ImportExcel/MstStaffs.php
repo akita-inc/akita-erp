@@ -36,6 +36,7 @@ class MstStaffs extends BaseImport
         'M'=>'address1',
         'N'=>'address2',
         'O'=>'phone_number',
+        'Q'=>'spouse_nm',
         'AA'=>'notes',
         'AB' => 'created_at',
         'AE' => 'modified_at',
@@ -68,7 +69,6 @@ class MstStaffs extends BaseImport
         'person_insured_number'=>'被保険者番号',
         'health_insurance_class'=>'健康保険等級',
         'welfare_annuity_class'=>'厚生年金等級',
-        'relocation_municipal_office_cd'=>'市町村役場コード',
         'educational_background'=>'最終学歴',
         'educational_background_dt'=>'最終学歴日付',
         'drivers_license_number'=>'免許証番号',
@@ -100,7 +100,6 @@ class MstStaffs extends BaseImport
         "insurer_number"=>"length:20|nullable",
         "health_insurance_class"=>"length:10|nullable",
         "welfare_annuity_class"=>"length:10|nullable",
-        "relocation_municipal_office_cd"=>"nullable|length:6",
         "basic_pension_number"=>"length:20|nullable",
         "person_insured_number"=>"length:20|nullable",
         "educational_background"=>"length:50|nullable",
@@ -123,6 +122,7 @@ class MstStaffs extends BaseImport
     {
         $this->mainReading($this->rowCurrentData,$this->rowIndex);
     }
+
     public function formatDateString($date)
     {
         return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy-mm-dd');
@@ -228,55 +228,100 @@ class MstStaffs extends BaseImport
         }
         return $result;
     }
-    public function getDataFromChildFile($path,$type)
-    {
+    public function readChildFile($path,$type){
+        $column_insurer=[
+            'A'=>'staff_cd',
+            'B'=>'insurer_number',
+            'C'=>'basic_pension_number',
+            'D'=>'person_insured_number',
+            'E'=>'health_insurance_class',
+            'F'=>'welfare_annuity_class',
+        ];
+        $column_background=[
+            'A'=>'staff_cd',
+            'B'=>'educational_background',
+            'C'=>'educational_background_dt',
+            'AK'=>'retire_reasons',
+            'AM'=>'death_reasons',
+            'AL'=>'death_dt'
+        ];
+        $column_driver_license=[
+            'B'=>'staff_cd',
+            'E'=>'drivers_license_number',
+            'H'=>'drivers_license_issued_dt',
+        ];
         try {
-            $column=$this->column_main_name;
-            $excel_column_driver_license=$this->excel_column_driver_license;
-            $data = Excel::load($path)->get();
-            if($data->count()){
-                if($type=="insurance")
-                {
-                    foreach ($data as  $key=>$value) {
-                        $arr[$value->{$this->excel_column_insurer['staff_cd']}] = [
-                            'insurer_number'=>$value->{$column['insurer_number']},
-                            'basic_pension_number'=>$value->{$column['basic_pension_number']},
-                            'person_insured_number'=>$value->{$column['person_insured_number']},
-                            'health_insurance_class'=>$value->{$column['health_insurance_class']},
-                            'welfare_annuity_class'=>$value->{$column['welfare_annuity_class']},
-                            'relocation_municipal_office_cd'=>  $value->{$column['relocation_municipal_office_cd']},
-                            'row_index'=>$key+2
-                        ];
-                    }
-                }
-                elseif($type=="staff_background")
-                {
-                    foreach ($data as  $key=>$value) {
-                        $arr[$value->{$column['staff_cd']}] = [
-                            'educational_background'=>$value->{$column['educational_background']},
-                            'educational_background_dt'=> $this->formatDateString($value->{$column['educational_background_dt']}),
-                            'retire_reasons'=>$value->{$column['retire_reasons']},
-                            'death_reasons'=>$value->{$column['death_reasons']},
-                            'death_dt'=>$this->formatDateString($value->{$column['death_dt']}),
-                            'row_index'=>$key+2
-                        ];
-                    }
-                }
-                elseif($type="driver_license")
-                {
-                    foreach ($data as  $key=>$value) {
-                        $arr[$value->{$excel_column_driver_license['staff_cd']}] = [
-                            'drivers_license_number'=>$value->{$excel_column_driver_license['drivers_license_number']},
-                            'drivers_license_issued_dt'=> $this->formatDateString($value->{$excel_column_driver_license['drivers_license_issued_dt']}),
-                            'row_index'=>$key+2
-                        ];
-                    }
-                }
-                return $arr;
-            }
-        } catch(\Exception $e) {
-            return null;
+            $inputFileType = \PHPExcel_IOFactory::identify($path);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($path);
+        } catch(Exception $e) {
+                return ('Error loading file "'.pathinfo($path,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        $start_row = $this->startRow;
+        $recordChild=array();
+        $record=array();
+        for ($row = $start_row; $row <= $highestRow; $row++) {
+            $rowCurrentData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, false, false, true);
+            if($type=="insurance")
+            {
+                foreach ($rowCurrentData[$row] as  $pos=>$value) {
+                    if(isset($column_insurer[$pos]))
+                    {
+                        $record[$column_insurer[$pos]] = is_null($value) ? null :(string)$value;
+                        $record['row_index']=$row;
+                    }
+                }
+                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                unset($record['staff_cd']);
+                $recordChild[$staff_cd]=$record;
+            }
+            elseif($type=="staff_background")
+            {
+                foreach ($rowCurrentData[$row] as  $pos=>$value) {
+                    if (isset($column_background[$pos])) {
+                        switch ($column_background[$pos]) {
+                            case 'educational_background_dt':
+                                $record[$column_background[$pos]] = $this->formatDateString($value);
+                                break;
+                            case 'death_dt':
+                                $record[$column_background[$pos]] = $this->formatDateString($value);
+                                break;
+                            default:
+                                $record[$column_background[$pos]] = is_null($value) ? null : (string)$value;
+                                break;
+                        }
+                        $record['row_index'] = $row;
+                    }
+                }
+                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                unset($record['staff_cd']);
+                $recordChild[$staff_cd]=$record;
+            }
+            elseif($type="driver_license")
+            {
+                foreach ($rowCurrentData[$row] as  $pos=>$value) {
+                    if(isset($column_driver_license[$pos]))
+                    {
+                        switch ($column_driver_license[$pos]) {
+                            case 'drivers_license_issued_dt':
+                                $record[$column_driver_license[$pos]] = $this->formatDateString($value);
+                                break;
+                            default:
+                                $record[$column_driver_license[$pos]] = is_null($value) ? null : (string)$value;
+                                break;
+                        }
+                        $record['row_index']=$row;
+                    }
+                }
+                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                unset($record['staff_cd']);
+                $recordChild[$staff_cd]=$record;
+            }
+        }
+        return $recordChild;
     }
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
@@ -284,9 +329,9 @@ class MstStaffs extends BaseImport
         $recordStaffDepents=array();
         $mGeneralPurposes = new MGeneralPurposes();
         $this->error_fg=false;
-        $insuranceArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
-        $backgroundArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
-        $driverLicenseArr=$this->getDataFromChildFile(config('params.import_file_path.mst_staffs.drivers_license'),'driver_license');
+        $insuranceArr=$this->readChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
+        $backgroundArr=$this->readChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
+        $driverLicenseArr=$this->readChildFile(config('params.import_file_path.mst_staffs.drivers_license'),'driver_license');
         $employment_pattern_id=$rowData[$row]['D'];
         if(!empty($rowData[$row]) && $employment_pattern_id<>3)
         {
@@ -411,6 +456,9 @@ class MstStaffs extends BaseImport
                                 $record[$excel_column[$pos]] = null;
                             }
                             break;
+                        case 'spouse_nm':
+                            $recordStaffDepents["spouse_nm"]=$value;
+                            break;
                         default:
                             $record[$excel_column[$pos]] = is_null($value)?null:(string)$value;
                             break;
@@ -426,36 +474,6 @@ class MstStaffs extends BaseImport
                 $record["password"]=bcrypt($this->generateRandomString(8));
                 $record['belong_company_id']=$this->getBelongCompanyId();
                 $record['enable_fg']=true;
-            }
-            if(isset($record['insurance']['relocation_municipal_office_cd']))
-            {
-                $relocate_value=$record['insurance']['relocation_municipal_office_cd'];
-                $data_kb = config('params.data_kb')['relocation_municipal_office_cd'];
-                $relocation_municipal_office_cd_kb = config('params.import_mst_staffs_data_kb')['relocation_municipal_office_cd_kb'];
-                if($relocate_value!=null)
-                {
-                    if(isset($relocation_municipal_office_cd_kb[$relocate_value])) {
-                        $result = $this->checkExistDataAndInsertCustom($data_kb,
-                            $relocation_municipal_office_cd_kb[$relocate_value],
-                            config('params.import_file_path.mst_staffs.main_file_name'),
-                            $this->column_main_name['relocation_municipal_office_cd'],
-                            $this->rowIndex );
-                        if ($result == null) {
-                            $this->error_fg = true;
-                        }
-                        $record['insurance']['relocation_municipal_office_cd']=$result;
-                    }
-                    else
-                    {
-                        $this->error_fg = true;
-                        $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
-                            "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
-                            "fieldName" =>  $this->column_main_name['relocation_municipal_office_cd'],
-                            "row" => $row,
-                        ]));
-                    }
-                }
-
             }
             if(!empty($record))
             {
@@ -475,6 +493,7 @@ class MstStaffs extends BaseImport
                 unset($record['staff_nm']);
                 unset($record['staff_nm_kana']);
                 unset($record["phone_number"]);
+                unset($record["spouse_nm"]);
                 $record['staff_dependents']=$recordStaffDepents;
                 $this->insertDB($record);
             }
@@ -646,7 +665,7 @@ class MstStaffs extends BaseImport
                  DB::commit();
                  if(count($recordStaffDependents)>0)
                  {
-                     $this->insertMstStaffDependents($id,$recordStaffDependents);
+                     $this->insertMstStaffDependents($record['last_nm'],$id,$recordStaffDependents);
                  }
              };
         }catch (\Exception $e){
@@ -659,26 +678,76 @@ class MstStaffs extends BaseImport
             ]));
         }
     }
-    public function insertMstStaffDependents($mst_staff_id,$recordStaffDependents)
+    public function getDependentKB($type=null)
+    {
+        if($type=='spouse')
+        {
+            $result=MGeneralPurposes::select('date_id')
+                                    ->where('data_kb','=',config('params.data_kb.dependent_kb'))
+                                    ->where('date_nm','LIKE','%'.'配偶者'.'%')
+                                    ->first();
+        }
+        else
+        {
+            $result=MGeneralPurposes::select('date_id')
+                ->where('data_kb','=',config('params.data_kb.dependent_kb'))
+                ->where('date_nm','LIKE','%'.'扶養者'.'%')
+                ->first();
+        }
+        if($result)
+        {
+            return $result['date_id'];
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public function insertMstStaffDependents($last_nm,$mst_staff_id,$recordStaffDependents)
     {
 
         DB::beginTransaction();
         try{
             $staffDependents=$recordStaffDependents;
             $arrInsert=array();
-             foreach ($staffDependents as $key=>$value )
-             {
-                 $staff_nm=$this->explodeStaffName($value,null);
-                 $arrInsert[]=[
+            if(isset($recordStaffDependents['spouse_nm']) && !empty($recordStaffDependents['spouse_nm']))
+            {
+                $staff_nm=$this->explodeStaffName($recordStaffDependents['spouse_nm'],null);
+                $arrInsert[]=[
+                    'mst_staff_id'=>$mst_staff_id,
+                    'dependent_kb'=>$this->getDependentKB('spouse'),
+                    'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
+                    'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
+                ];
+            }
+            unset($staffDependents['spouse_nm']);
+            foreach ($staffDependents as $key=>$value )
+            {
+                if(mb_strripos($value,"(")>0)
+                {
+                    $value=mb_substr($value,0,mb_strripos($value,"("));
+                }
+                if(strpos($value,"（"))
+                {
+                    $value=mb_substr( $value,0,mb_strripos($value,"（"));
+                }
+                $staff_nm=$this->explodeStaffName($value,null);
+                if(empty($staff_nm["first_nm"]))
+                 {
+                    $staff_nm["first_nm"]= $staff_nm["last_nm"];
+                    $staff_nm["last_nm"]=$last_nm;
+                 }
+                $arrInsert[]=[
                         'mst_staff_id'=>$mst_staff_id,
+                        'dependent_kb'=>$this->getDependentKB(null),
                         'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                         'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
-                    ];
-             }
-             if(DB::table('mst_staff_dependents')->insert($arrInsert))
-             {
+                ];
+            }
+            if(DB::table('mst_staff_dependents')->insert($arrInsert))
+            {
                     DB::commit();
-             }
+            }
         }
         catch (\Exception $e)
         {
