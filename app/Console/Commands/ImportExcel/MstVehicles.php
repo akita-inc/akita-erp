@@ -235,20 +235,24 @@ class MstVehicles extends BaseImport
     }
 
     public function run(){
-        $this->readingVehicleExtraFile1();
-        $this->readingVehicleExtraFile2();
-        $this->readingVehicleExtraFile3();
-        if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))){
-            $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel[$this->table]]));
-        }
-        $this->readingMainFile();
-        if( !empty( Lang::trans("log_import.end_read") ) ){
-            $this->log("data_convert",Lang::trans("log_import.end_read",[
-                "numRead" => $this->numRead,
-                "numNormal"=> $this->numNormal,
-                "numErr" => $this->numErr,
-                "table" => $this->tableLabel[$this->table],
-            ]));
+        if( !file_exists(config('params.import_file_path.mst_vehicles.main.path')) ){
+            echo "File don't exist";
+        }else {
+            $this->readingVehicleExtraFile1();
+            $this->readingVehicleExtraFile2();
+            $this->readingVehicleExtraFile3();
+            if (!empty(Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))) {
+                $this->log("data_convert", Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]));
+            }
+            $this->readingMainFile();
+            if (!empty(Lang::trans("log_import.end_read"))) {
+                $this->log("data_convert", Lang::trans("log_import.end_read", [
+                    "numRead" => $this->numRead,
+                    "numNormal" => $this->numNormal,
+                    "numErr" => $this->numErr,
+                    "table" => $this->tableLabel[$this->table],
+                ]));
+            }
         }
     }
 
