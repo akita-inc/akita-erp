@@ -672,7 +672,7 @@ class MstStaffs extends BaseImport
                  DB::commit();
                  if(count($recordStaffDependents)>0)
                  {
-                     $this->insertMstStaffDependents($record['last_nm'],$id,$recordStaffDependents);
+                     $this->insertMstStaffDependents($record,$id,$recordStaffDependents);
                  }
              };
         }catch (\Exception $e){
@@ -710,7 +710,7 @@ class MstStaffs extends BaseImport
             return null;
         }
     }
-    public function insertMstStaffDependents($last_nm,$mst_staff_id,$recordStaffDependents)
+    public function insertMstStaffDependents($record,$mst_staff_id,$recordStaffDependents)
     {
 
         DB::beginTransaction();
@@ -723,13 +723,15 @@ class MstStaffs extends BaseImport
                 if(empty($staff_nm["first_nm"]))
                 {
                     $staff_nm["first_nm"]= $staff_nm["last_nm"];
-                    $staff_nm["last_nm"]=$last_nm;
+                    $staff_nm["last_nm"]=$record['last_nm'];
                 }
                 $arrInsert[]=[
                     'mst_staff_id'=>$mst_staff_id,
                     'dependent_kb'=>$this->getDependentKB('spouse'),
                     'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                     'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
+                    'created_at'=>$record['created_at'],
+                    'modified_at'=>$record['modified_at']
                 ];
             }
             unset($staffDependents['spouse_nm']);
@@ -747,13 +749,15 @@ class MstStaffs extends BaseImport
                 if(empty($staff_nm["first_nm"]))
                  {
                     $staff_nm["first_nm"]= $staff_nm["last_nm"];
-                    $staff_nm["last_nm"]=$last_nm;
+                    $staff_nm["last_nm"]=$record['last_nm'];
                  }
                 $arrInsert[]=[
                         'mst_staff_id'=>$mst_staff_id,
                         'dependent_kb'=>$this->getDependentKB(null),
                         'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                         'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
+                        'created_at'=>$record['created_at'],
+                        'modified_at'=>$record['modified_at']
                 ];
             }
             if(DB::table('mst_staff_dependents')->insert($arrInsert))
