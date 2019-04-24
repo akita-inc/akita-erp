@@ -166,7 +166,7 @@ class MstBillIssueDestinations extends BaseImport
         if(!$this->error_fg) {
             DB::beginTransaction();
             try {
-                if (DB::table('mst_bill_issue_destinations_copy1')->insert($record))               {
+                if (DB::table('mst_bill_issue_destinations')->insert($record))               {
                     $this->numNormal++;
                     DB::commit();
                 };

@@ -96,12 +96,19 @@ class BaseImport{
                 ->orderBy('disp_number','desc')
                 ->get();
             $mGeneralPurposes->data_kb = $data_kb;
-            $mGeneralPurposes->date_id = $data[0]->date_id+1;
-            $mGeneralPurposes->data_kb_nm = $data[0]->data_kb_nm;
+            if(count($data) > 0) {
+                $mGeneralPurposes->date_id = $data[0]->date_id+1;
+                $mGeneralPurposes->data_kb_nm = $data[0]->data_kb_nm;
+                $mGeneralPurposes->disp_number = $data[0]->disp_number+1;
+            }else{
+                $mGeneralPurposes->date_id = 1;
+                $mGeneralPurposes->data_kb_nm = config('params.data_kb_nm')[$data_kb];
+                $mGeneralPurposes->disp_number = 1;
+            }
             $mGeneralPurposes->date_nm_kana = 'フメイ';
             $mGeneralPurposes->date_nm = $string;
             $mGeneralPurposes->disp_fg = 1;
-            $mGeneralPurposes->disp_number = $data[0]->disp_number+1;
+
             $mGeneralPurposes->save();
             $this->log("DataConvert_Add_general_purposes",Lang::trans("log_import.add_general_purposes_string",[
                 "fileName" => $fileName,
