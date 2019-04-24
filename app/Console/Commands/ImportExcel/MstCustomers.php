@@ -62,6 +62,8 @@ class MstCustomers extends BaseImport
         'mst_customers_cd' =>'得意先CD',
         'customer_nm' =>'得意先名',
         'customer_nm_kana' =>'得意先名かな',
+        'customer_nm_formal' =>'得意先名',
+        'customer_nm_kana_formal' =>'得意先名かな',
         'person_in_charge_last_nm' =>'担当者名',
         'zip_cd' =>'郵便番号',
         'prefectures_cd' =>'住所１',
@@ -205,7 +207,7 @@ class MstCustomers extends BaseImport
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
-                    DB::table('mst_customers_copy1')->insert($record);
+                    DB::table('mst_customers')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }
@@ -223,7 +225,7 @@ class MstCustomers extends BaseImport
         }
     }
     protected function validate($record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_customers_copy1')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
+        if (DB::table('mst_customers')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,
