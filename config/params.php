@@ -116,6 +116,12 @@ return [
                 'fileName' => '得意先親子関係.xlsx',
             ],
         ],
+        'mst_business_offices' => [
+            'main' => [
+                'path' => storage_path('import/New 営業所一覧(本社用）.xls'),
+                'fileName' => 'New 営業所一覧(本社用）.xls',
+            ],
+        ],
         'data_convert'=>storage_path('logs/DataConvert.log'),
     ],
     "log_import_path" => [
