@@ -65,6 +65,7 @@ class MstStaffDependents extends BaseImport
                         if($beginSub && $endSub){
                             $strReplace = substr($firstName,$beginSub,($endSub - $beginSub) + 1);
                             $firstName = str_replace($strReplace, "", $firstName);
+                            $strCheck = "扶養者";
                         }
 
                         if(strlen($firstName) > $strLenFirstName){
@@ -115,6 +116,7 @@ class MstStaffDependents extends BaseImport
                             if($beginSub && $endSub){
                                 $strReplace = substr($firstName,$beginSub,($endSub - $beginSub) + 1);
                                 $firstName = str_replace($strReplace, "", $firstName);
+                                $strCheck = "扶養者";
                             }
 
                             if(strlen($firstName) > $strLenFirstName){
