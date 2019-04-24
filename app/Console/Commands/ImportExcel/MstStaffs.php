@@ -587,9 +587,9 @@ class MstStaffs extends BaseImport
                                     "excelValue" => $record[$field],
                                     "tableName" => $this->table,
                                     "DBFieldName" => $field,
-                                    "DBvalue" => substr($record[$field], 0, $error[0]),
+                                    "DBvalue" => mb_substr($record[$field], 0, $error[0]),
                                 ]));
-                                $record[$field] = substr($record[$field], 0, $error[0]);
+                                $record[$field] = mb_substr($record[$field], 0, $error[0]);
                             };
                             if($ruleName == 'Required')
                             {
@@ -650,9 +650,9 @@ class MstStaffs extends BaseImport
                             "excelValue" => $recordChildFile[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => substr($recordChildFile[$field], 0, $error[0]),
+                            "DBvalue" => mb_substr($recordChildFile[$field], 0, $error[0]),
                         ]));
-                        $recordChildFile[$field] = substr($recordChildFile[$field],0,$error[0]);
+                        $recordChildFile[$field] = mb_substr($recordChildFile[$field],0,$error[0]);
                     }
                 }
             }
