@@ -2,6 +2,7 @@
 namespace App\Console\Commands\ImportExcel;
 use App\Models\MStaffDependents;
 use App\Models\MStaffs;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Created by PhpStorm.
@@ -55,13 +56,13 @@ class MstStaffDependents extends BaseImport
                         $arrayInsert[]  = [];
                         $strCheck = "配偶者";
                         $firstName = $value;
-                        if(strpos($value,"(年少)")){
-                            $strCheck = "扶養者";
-                            $firstName = str_replace("(年少)","",$firstName);
-                        }
-                        if(strpos($value,"(母)")){
-                            $strCheck = "扶養者";
-                            $firstName = str_replace("(母)","",$firstName);
+                        $firstName = str_replace("（","(",$firstName);
+                        $firstName = str_replace("）",")",$firstName);
+                        $beginSub = strpos($firstName,"(");
+                        $endSub = strpos($firstName,")");
+                        if($beginSub && $endSub){
+                            $strReplace = substr($firstName,$beginSub,($endSub - $beginSub) + 1);
+                            $firstName = str_replace($strReplace, "", $firstName);
                         }
 
                         if(strlen($firstName) > $strLenFirstName){
@@ -72,9 +73,9 @@ class MstStaffDependents extends BaseImport
                                 "excelValue" => $firstName,
                                 "tableName" => $this->table,
                                 "DBFieldName" => "first_nm",
-                                "DBvalue" => substr($firstName, 0, $strLenFirstName),
+                                "DBvalue" => mb_substr($firstName, 0, $strLenFirstName),
                             ]));
-                            $firstName = substr($firstName, 0, $strLenFirstName);
+                            $firstName = mb_substr($firstName, 0, $strLenFirstName);
                         }
 
                         $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
@@ -99,26 +100,19 @@ class MstStaffDependents extends BaseImport
                     ];
                 foreach ($arrayColumn as $key => $column){
                     if(!empty($this->rowCurrentData[$column["firstName"]])){
-                        $strSlit = explode(",",str_replace("、",",",$column["firstName"]));
+                        $strSlit = explode(",",str_replace("、",",",$this->rowCurrentData[$column["firstName"]]));
+                        $strBegin = count($arrayInsert);
                         foreach ($strSlit as $value) {
                             $arrayInsert[] = [];
                             $strCheck = "扶養者";
                             $firstName = $value;
-                            if (strpos($value, "(年少)")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("(年少)", "", $firstName);
-                            }
-                            if (strpos($value, "（年少）")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("（年少）", "", $firstName);
-                            }
-                            if (strpos($value, "(母)")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("(母)", "", $firstName);
-                            }
-                            if (strpos($value, "（母）")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("（母）", "", $firstName);
+                            $firstName = str_replace("（","(",$firstName);
+                            $firstName = str_replace("）",")",$firstName);
+                            $beginSub = strpos($firstName,"(");
+                            $endSub = strpos($firstName,")");
+                            if($beginSub && $endSub){
+                                $strReplace = substr($firstName,$beginSub,($endSub - $beginSub) + 1);
+                                $firstName = str_replace($strReplace, "", $firstName);
                             }
 
                             if(strlen($firstName) > $strLenFirstName){
@@ -129,9 +123,9 @@ class MstStaffDependents extends BaseImport
                                     "excelValue" => $firstName,
                                     "tableName" => $this->table,
                                     "DBFieldName" => "first_nm",
-                                    "DBvalue" => substr($firstName, 0, $strLenFirstName),
+                                    "DBvalue" => mb_substr($firstName, 0, $strLenFirstName),
                                 ]));
-                                $firstName = substr($firstName, 0, $strLenFirstName);
+                                $firstName = mb_substr($firstName, 0, $strLenFirstName);
                             }
 
                             $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
@@ -141,8 +135,8 @@ class MstStaffDependents extends BaseImport
                         }
                         $strSlitBD = explode(",",str_replace("、",",",$this->rowCurrentData[$column["birthday"]]));
                         foreach ($strSlitBD as $key=>$value){
-                            if(isset($arrayInsert[$key])){
-                                $arrayInsert[count($arrayInsert) - 1]["birthday"] = $value;
+                            if(isset($arrayInsert[$strBegin + $key])){
+                                $arrayInsert[$strBegin + $key]["birthday"] = $value;
                             }
                         }
                     }
