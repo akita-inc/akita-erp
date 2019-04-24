@@ -202,6 +202,16 @@ class MstVehicles extends BaseImport
         'durable_years'=>'耐用年数',
     ];
 
+    public $column_name_extra_file_1 = [
+        'vehicles_cd'=> 'CD',
+    ];
+    public $column_name_extra_file_2 = [
+        'vehicles_cd'=> 'CD',
+    ];
+    public $column_name_extra_file_3 = [
+        'vehicles_cd'=> '資産番号',
+    ];
+
     public $transmissions_label = [
         '1'=> 'MT(速)',
         '2'=> 'AT',
@@ -357,7 +367,7 @@ class MstVehicles extends BaseImport
             }
 
             $data = $record;
-            if (DB::table('mst_vehicles')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
+            if (DB::table('mst_vehicles_copy1')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
                 $error_fg = true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
                     "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
@@ -428,21 +438,14 @@ class MstVehicles extends BaseImport
                     }
                     unset($data['row']);
                     unset($data['sheet']);
-                }else{
-                    $error_fg = true;
-                    $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                        "mainFileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
-                        "fieldName" => $this->column_name['vehicles_cd'],
-                        "row" => $row,
-                        "extraFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
-                    ]));
+                    unset($this->{"data_extra_file_".$k}[$record['vehicles_cd']]);
                 }
             }
             if(!$error_fg){
                 DB::beginTransaction();
                 try{
                     if (!empty($record)) {
-                        DB::table('mst_vehicles')->insert($data);
+                        DB::table('mst_vehicles_copy1')->insert($data);
                         DB::commit();
                         $this->numNormal++;
                     }
@@ -457,6 +460,18 @@ class MstVehicles extends BaseImport
                 }
             }else{
                 $this->numErr++;
+            }
+        }
+        for ($k = 1; $k <=3; $k++){
+            if(count($this->{"data_extra_file_".$k}) > 0){
+                foreach ($this->{"data_extra_file_".$k} as $item){
+                    $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                        "mainFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$item['sheet'] : ''),
+                        "fieldName" => $this->{'column_name_extra_file_'.$k}['vehicles_cd'],
+                        "row" => $item['row'],
+                        "extraFileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                    ]));
+                }
             }
         }
 
