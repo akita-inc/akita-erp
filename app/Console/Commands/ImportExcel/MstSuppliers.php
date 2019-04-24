@@ -160,7 +160,7 @@ class MstSuppliers extends BaseImport{
                 $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_suppliers.main.fileName'),$error_fg);
                 $record['supplier_nm_formal'] = $record['supplier_nm'];
                 $record['supplier_nm_kana_formal'] = $record['supplier_nm_kana'];
-                $this->insertDB($error_fg, $row, $record);
+                $this->insertDB($error_fg, $row, $record,config('params.import_file_path.mst_suppliers.main.fileName'));
             }
         }
     }
@@ -188,7 +188,7 @@ class MstSuppliers extends BaseImport{
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 $this->validate($record,$row, $this->column_name_extra1, config('params.import_file_path.mst_suppliers.extra1.fileName'),$error_fg);
                 $record['supplier_nm_formal'] = $record['supplier_nm'];
-                $this->insertDB($error_fg, $row, $record);
+                $this->insertDB($error_fg, $row, $record, config('params.import_file_path.mst_suppliers.extra1.fileName'));
             }
         }
     }
@@ -240,7 +240,7 @@ class MstSuppliers extends BaseImport{
         }
     }
 
-    protected function insertDB($error_fg, $row, $record){
+    protected function insertDB($error_fg, $row, $record, $fileName){
         if (!$error_fg) {
             DB::beginTransaction();
             try {
@@ -257,7 +257,7 @@ class MstSuppliers extends BaseImport{
                 DB::rollback();
                 $this->numErr++;
                 $this->log("DataConvert_Err_SQL", Lang::trans("log_import.insert_error", [
-                    "fileName" => config('params.import_file_path.mst_suppliers.main.fileName'),
+                    "fileName" => $fileName,
                     "row" => $row,
                     "errorDetail" => $e->getMessage(),
                 ]));
