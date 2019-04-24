@@ -388,9 +388,6 @@ class MstStaffs extends BaseImport
                                     $record['landline_phone_number']=is_null($value)?null:$value;
                                 }
                             break;
-                        case 'mst_business_office_id':
-                            $record[$excel_column[$pos]] = $this->getOfficeId($value);
-                            break;
                         case 'employment_pattern_id':
                             if($value!= '' && (string)$value != '0') {
                                 $data_kb=config('params.data_kb')['employment_pattern'];
@@ -458,7 +455,7 @@ class MstStaffs extends BaseImport
                     }
                 }
             }
-
+            $record['mst_business_office_id'] = $this->getOfficeId($record['mst_business_office_id']);
             $record["password"]=bcrypt($this->generateRandomString(8));
             $record['belong_company_id']=$this->getBelongCompanyId();
             $record['enable_fg']=true;
