@@ -77,21 +77,25 @@ class MstSuppliers extends BaseImport{
 
 
     public function run(){
-        if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))){
-            $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel[$this->table]]));
-        }
-        $mGeneralPurposes = new MGeneralPurposes();
-        $this->consumption_tax_calc_unit_id  = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.consumption_tax_calc_unit'),'請求単位');
-        $this->rounding_method = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.rounding_method'),'四捨五入');
-        $this->readingMainFile();
-        $this->readingExtraFile();
-        if( !empty( Lang::trans("log_import.end_read") ) ){
-            $this->log("data_convert",Lang::trans("log_import.end_read",[
-                "numRead" => $this->numRead,
-                "numNormal"=> $this->numNormal,
-                "numErr" => $this->numErr,
-                "table" => $this->tableLabel[$this->table],
-            ]));
+        if( !file_exists(config('params.import_file_path.mst_suppliers.main.path')) ){
+            echo "File don't exist";
+        }else {
+            if (!empty(Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))) {
+                $this->log("data_convert", Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]));
+            }
+            $mGeneralPurposes = new MGeneralPurposes();
+            $this->consumption_tax_calc_unit_id = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.consumption_tax_calc_unit'), '請求単位');
+            $this->rounding_method = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.rounding_method'), '四捨五入');
+            $this->readingMainFile();
+            $this->readingExtraFile();
+            if (!empty(Lang::trans("log_import.end_read"))) {
+                $this->log("data_convert", Lang::trans("log_import.end_read", [
+                    "numRead" => $this->numRead,
+                    "numNormal" => $this->numNormal,
+                    "numErr" => $this->numErr,
+                    "table" => $this->tableLabel[$this->table],
+                ]));
+            }
         }
     }
 
