@@ -86,7 +86,7 @@ class MstStaffs extends BaseImport
         'drivers_license_issued_dt'=>'書換年月日'
     ];
     public $ruleValid = [
-        'staff_cd'  => 'required|length:5|unique:mst_staffs,staff_cd',
+        'staff_cd'  => 'required|unique:mst_staffs,staff_cd',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana_custom|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
@@ -336,33 +336,12 @@ class MstStaffs extends BaseImport
         $recordStaffDepents=array();
         $mGeneralPurposes = new MGeneralPurposes();
         $this->error_fg=false;
-        $insuranceArr=$this->childFile1;
-        $backgroundArr=$this->childFile2;
-        $driverLicenseArr=$this->childFile3;
         $employment_pattern_id=$rowData[$row]['D'];
         if(!empty($rowData[$row]) && $employment_pattern_id<>3)
         {
             foreach($rowData[$row] as $pos=>$value){
                 if(isset($excel_column[$pos])) {
                     switch ($excel_column[$pos]){
-                        case 'staff_cd':
-                            if(!empty($insuranceArr[$value]))
-                            {
-                                $insurance=$insuranceArr[$value];
-                                $record['insurance']=$insurance;
-                            }
-                            if(!empty($backgroundArr[$value]))
-                            {
-                                $staff_background=$backgroundArr[$value];
-                                $record['staff_background']=$staff_background;
-                            }
-                            if(!empty($driverLicenseArr[$value]))
-                            {
-                                $driverLicenseArr=$driverLicenseArr[$value];
-                                $record['driver_license']=$driverLicenseArr;
-                            }
-                            $record[$excel_column[$pos]] = empty($value)?null:(string)$value;
-                            break;
                         case 'modified_at':
                             $record[$excel_column[$pos]] = $this->formatDateTimeString($value);
                             break;
@@ -408,9 +387,6 @@ class MstStaffs extends BaseImport
                                 {
                                     $record['landline_phone_number']=is_null($value)?null:$value;
                                 }
-                            break;
-                        case 'mst_business_office_id':
-                            $record[$excel_column[$pos]] = $this->getOfficeId($value);
                             break;
                         case 'employment_pattern_id':
                             if($value!= '' && (string)$value != '0') {
@@ -470,39 +446,34 @@ class MstStaffs extends BaseImport
                             $record[$excel_column[$pos]] = is_null($value)?null:(string)$value;
                             break;
                     }
-                }
-                if(isset($excel_column[$pos])  && strpos($excel_column[$pos], 'staff_dependents_nm') !== false) {
-                    if(!empty($value))
-                    {
-                        $recordStaffDepents[]=$record['staff_dependents_nm_'.$pos];
+                    if(isset($excel_column[$pos])  && strpos($excel_column[$pos], 'staff_dependents_nm') !== false) {
+                        if(!empty($value))
+                        {
+                            $recordStaffDepents[]=$record['staff_dependents_nm_'.$pos];
+                        }
+                        unset($record['staff_dependents_nm_'.$pos]);
                     }
-                    unset($record['staff_dependents_nm_'.$pos]);
                 }
-                $record["password"]=bcrypt($this->generateRandomString(8));
-                $record['belong_company_id']=$this->getBelongCompanyId();
-                $record['enable_fg']=true;
             }
+            $record['mst_business_office_id'] = $this->getOfficeId($record['mst_business_office_id']);
+            $record["password"]=bcrypt($this->generateRandomString(8));
+            $record['belong_company_id']=$this->getBelongCompanyId();
+            $record['enable_fg']=true;
             if(!empty($record))
             {
-                $record=$this->validateRow($record);
+                $data=$this->validateRow($record);
             }
-            if(!empty($record) && $this->error_fg==false)
+            if(!empty($data) && $this->error_fg==false)
             {
-                $record['last_nm_kana']=!empty($record['last_nm_kana'])? mb_convert_kana($record['last_nm_kana'],'KVC'):null;
-                $record['first_nm_kana']=!empty($record['first_nm_kana'])? mb_convert_kana($record['first_nm_kana'],'KVC'):null;
-                $record+=$record['insurance'];
-                unset($record['insurance']);
-                $record+=$record['staff_background'];
-                unset($record['staff_background']);
-                $record+=$record['driver_license'];
-                unset($record['driver_license']);
-                unset($record['row_index']);
-                unset($record['staff_nm']);
-                unset($record['staff_nm_kana']);
-                unset($record["phone_number"]);
-                unset($record["spouse_nm"]);
-                $record['staff_dependents']=$recordStaffDepents;
-                $this->insertDB($record);
+                $data['last_nm_kana']=!empty($data['last_nm_kana'])? mb_convert_kana($data['last_nm_kana'],'KVC'):null;
+                $data['first_nm_kana']=!empty($data['first_nm_kana'])? mb_convert_kana($data['first_nm_kana'],'KVC'):null;
+                unset($data['staff_nm']);
+                unset($data['staff_nm_kana']);
+                unset($data["phone_number"]);
+                unset($data["spouse_nm"]);
+                unset($data["row_index"]);
+                $data['staff_dependents']=$recordStaffDepents;
+                $this->insertDB($data);
             }
             else
             {
@@ -530,27 +501,12 @@ class MstStaffs extends BaseImport
     }
     public function validateRow($record){
         if( !empty($this->ruleValid)){
-            if(isset($record["driver_license"]))
+            if(isset($this->childFile1[$record['staff_cd']]))
             {
-                $record["driver_license"]=$this->validateChildFile($record['driver_license'],'drivers_license_nm');
+                $insurance=$this->childFile1[$record['staff_cd']];
+                $record+=$this->trimFieldInChildFile($insurance,'health_insurance_card_information_nm');
             }
-            else
-            {
-                $this->error_fg=true;
-                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->column_main_name['staff_cd'],
-                    "row" => $this->rowIndex,
-                    "extraFileName" => config('params.import_file_path.mst_staffs.drivers_license_nm'),
-                ]));
-            }
-
-            if(isset($record['insurance']))
-            {
-                $record['insurance']=$this->validateChildFile($record['insurance'],'health_insurance_card_information_nm');
-            }
-            else
-            {
+            else {
                 $this->error_fg=true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                     "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
@@ -559,13 +515,12 @@ class MstStaffs extends BaseImport
                     "extraFileName" => config('params.import_file_path.mst_staffs.health_insurance_card_information_nm'),
                 ]));
             }
-
-            if(isset($record['staff_background']))
+            if(isset($this->childFile2[$record['staff_cd']]))
             {
-                $record['staff_background']=$this->validateChildFile($record['staff_background'],'staff_background_nm');
+                $staffBackground=$this->childFile2[$record['staff_cd']];
+                $record+=$this->trimFieldInChildFile($staffBackground,'staff_background_nm');
             }
-            else
-            {
+            else {
                 $this->error_fg=true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
                     "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
@@ -574,7 +529,21 @@ class MstStaffs extends BaseImport
                     "extraFileName" => config('params.import_file_path.mst_staffs.staff_background_nm'),
                 ]));
             }
-            $validator = Validator::make( $record, $this->ruleValid );
+            if(isset($this->childFile3[$record['staff_cd']]))
+            {
+                $driverLicense=$this->childFile3[$record['staff_cd']];
+                $record+=$this->trimFieldInChildFile($driverLicense,'drivers_license_nm');
+            }
+            else {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name['staff_cd'],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => config('params.import_file_path.mst_staffs.drivers_license_nm'),
+                ]));
+            }
+            $validator = Validator::make( $record,$this->ruleValid);
             if ($validator->fails()) {
                     $failedRules = $validator->failed();
                     foreach ($failedRules as $field => $errors){
@@ -635,7 +604,7 @@ class MstStaffs extends BaseImport
         }
         return $record;
     }
-    public function validateChildFile($recordChildFile,$filename)
+    public function trimFieldInChildFile($recordChildFile,$filename)
     {
         $validatorChild = Validator::make( $recordChildFile, $this->ruleValid);
         if ($validatorChild->fails()) {
@@ -659,20 +628,20 @@ class MstStaffs extends BaseImport
         }
         return $recordChildFile;
     }
-    public function insertDB($record)
+    public function insertDB($data)
     {
         DB::beginTransaction();
         try{
-            $recordStaffDependents=$record['staff_dependents'];
-            unset($record['staff_dependents']);
-            $id = DB::table($this->table)->insertGetId( $record );
+            $recordStaffDependents=$data['staff_dependents'];
+            unset($data['staff_dependents']);
+            $id = DB::table($this->table)->insertGetId( $data );
             if($id)
              {
                  $this->numNormal++;
                  DB::commit();
                  if(count($recordStaffDependents)>0)
                  {
-                     $this->insertMstStaffDependents($record,$id,$recordStaffDependents);
+                     $this->insertMstStaffDependents($data,$id,$recordStaffDependents);
                  }
              };
         }catch (\Exception $e){
@@ -710,7 +679,7 @@ class MstStaffs extends BaseImport
             return null;
         }
     }
-    public function insertMstStaffDependents($record,$mst_staff_id,$recordStaffDependents)
+    public function insertMstStaffDependents($data,$mst_staff_id,$recordStaffDependents)
     {
 
         DB::beginTransaction();
@@ -723,15 +692,15 @@ class MstStaffs extends BaseImport
                 if(empty($staff_nm["first_nm"]))
                 {
                     $staff_nm["first_nm"]= $staff_nm["last_nm"];
-                    $staff_nm["last_nm"]=$record['last_nm'];
+                    $staff_nm["last_nm"]=$data['last_nm'];
                 }
                 $arrInsert[]=[
                     'mst_staff_id'=>$mst_staff_id,
                     'dependent_kb'=>$this->getDependentKB('spouse'),
                     'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                     'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
-                    'created_at'=>$record['created_at'],
-                    'modified_at'=>$record['modified_at']
+                    'created_at'=>$data['created_at'],
+                    'modified_at'=>$data['modified_at']
                 ];
             }
             unset($staffDependents['spouse_nm']);
@@ -749,15 +718,15 @@ class MstStaffs extends BaseImport
                 if(empty($staff_nm["first_nm"]))
                  {
                     $staff_nm["first_nm"]= $staff_nm["last_nm"];
-                    $staff_nm["last_nm"]=$record['last_nm'];
+                    $staff_nm["last_nm"]=$data['last_nm'];
                  }
                 $arrInsert[]=[
                         'mst_staff_id'=>$mst_staff_id,
                         'dependent_kb'=>$this->getDependentKB(null),
                         'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
                         'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
-                        'created_at'=>$record['created_at'],
-                        'modified_at'=>$record['modified_at']
+                        'created_at'=>$data['created_at'],
+                        'modified_at'=>$data['modified_at']
                 ];
             }
             if(DB::table('mst_staff_dependents')->insert($arrInsert))
