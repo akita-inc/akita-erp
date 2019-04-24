@@ -53,8 +53,8 @@ class MstStaffDependents extends BaseImport
                 $strLenFirstName = 25;
                 if(!empty($this->rowCurrentData["H"])){
                     $strSlit = explode(",",str_replace("、",",",$this->rowCurrentData["H"]));
+                    $strBegin = count($arrayInsert);
                     foreach ($strSlit as $value){
-                        $strBegin = count($arrayInsert);
                         $arrayInsert[]  = [];
                         $strCheck = "配偶者";
                         $firstName = $value;
