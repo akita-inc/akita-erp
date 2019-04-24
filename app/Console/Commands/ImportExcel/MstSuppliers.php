@@ -41,8 +41,6 @@ class MstSuppliers extends BaseImport{
         'mst_suppliers_cd'  => 'required|length:5',
         'supplier_nm'  => 'required|length:200',
         'supplier_nm_kana'  => 'kana_custom|nullable|length:200',
-        'supplier_nm_formal'  => 'length:200|nullable',
-        'supplier_nm_kana_formal'  => 'kana_custom|length:200|nullable',
         'zip_cd'  => 'nullable|length:7',
         'prefectures_cd'=> 'nullable|length:2',
         'address1'  => 'nullable|length:20',
@@ -74,10 +72,17 @@ class MstSuppliers extends BaseImport{
         'supplier_nm_formal'=> '得意先名',
     ];
 
+    public $consumption_tax_calc_unit_id = null;
+    public $rounding_method = null;
+
+
     public function run(){
         if( !empty( Lang::trans("log_import.begin_start", ["table" => $this->tableLabel[$this->table]]))){
             $this->log("data_convert",Lang::trans("log_import.begin_start",["table" => $this->tableLabel[$this->table]]));
         }
+        $mGeneralPurposes = new MGeneralPurposes();
+        $this->consumption_tax_calc_unit_id  = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.consumption_tax_calc_unit'),'請求単位');
+        $this->rounding_method = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.rounding_method'),'四捨五入');
         $this->readingMainFile();
         $this->readingExtraFile();
         if( !empty( Lang::trans("log_import.end_read") ) ){
@@ -130,7 +135,7 @@ class MstSuppliers extends BaseImport{
                                 $record['supplier_nm_kana_formal'] = $value;
                                 break;
                             case 'zip_cd':
-                                $record[$excel_column[$pos]] = str_replace("-", "", $value);
+                                $record[$excel_column[$pos]] = $value!= "" ? str_replace("-", "", $value) : null;
                                 break;
                             case 'address1':
                                 $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
@@ -147,10 +152,8 @@ class MstSuppliers extends BaseImport{
 
                     }
                 }
-                $consumption_tax_calc_unit_id  = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.consumption_tax_calc_unit'),'請求単位');
-                $rounding_method = $mGeneralPurposes->getDateIDByDateNmAndDataKB(config('params.data_kb.rounding_method'),'四捨五入');
-                $record['consumption_tax_calc_unit_id'] = $consumption_tax_calc_unit_id ? $consumption_tax_calc_unit_id->date_id : null;
-                $record['rounding_method_id'] = $rounding_method ? $rounding_method->date_id : null;
+                $record['consumption_tax_calc_unit_id'] = $this->consumption_tax_calc_unit_id ? $this->consumption_tax_calc_unit_id->date_id : null;
+                $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
                 $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_suppliers.main.fileName'),$error_fg);
                 $this->insertDB($error_fg, $row, $record);
@@ -178,7 +181,8 @@ class MstSuppliers extends BaseImport{
                 $record['supplier_nm_formal'] = $record['supplier_nm'];
                 $record['created_at'] = $currentTime;
                 $record['modified_at'] = $currentTime;
-
+                $record['consumption_tax_calc_unit_id'] = $this->consumption_tax_calc_unit_id ? $this->consumption_tax_calc_unit_id->date_id : null;
+                $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 $this->validate($record,$row, $this->column_name_extra1, config('params.import_file_path.mst_suppliers.extra1.fileName'),$error_fg);
 
                 $this->insertDB($error_fg, $row, $record);

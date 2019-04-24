@@ -49,6 +49,7 @@ class MstCustomers extends BaseImport
         'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',
+        'address1'  => 'nullable|length:20',
         'address2' =>'nullable|length:20',
         'phone_number' =>'nullable|length:20',
         'bundle_dt' =>'nullable|length:11',
