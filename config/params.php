@@ -142,8 +142,8 @@ return [
         'mst_staff_dependents' => storage_path('import/扶養者名_生年月日.xlsx'),
         'mst_suppliers' => [
             'main' => [
-                'path' => storage_path('import/dbo_M_社員.xlsx'),
-                'fileName' => 'dbo_M_社員.xlsx',
+                'path' => storage_path('import/dbo_M_社員_仕入先テスト.xlsx'),
+                'fileName' => 'dbo_M_社員_仕入先テスト.xlsx',
             ],
             'extra1' => [
                 'path' => storage_path('import/経費_得意先_Ｔ.xlsx'),
