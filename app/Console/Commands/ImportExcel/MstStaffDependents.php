@@ -56,21 +56,13 @@ class MstStaffDependents extends BaseImport
                         $arrayInsert[]  = [];
                         $strCheck = "配偶者";
                         $firstName = $value;
-                        if(strpos($value,"(年少)")){
-                            $strCheck = "扶養者";
-                            $firstName = str_replace("(年少)","",$firstName);
-                        }
-                        if (strpos($value, "（年少）")) {
-                            $strCheck = "扶養者";
-                            $firstName = str_replace("（年少）", "", $firstName);
-                        }
-                        if(strpos($value,"(母)")){
-                            $strCheck = "扶養者";
-                            $firstName = str_replace("(母)","",$firstName);
-                        }
-                        if (strpos($value, "（母）")) {
-                            $strCheck = "扶養者";
-                            $firstName = str_replace("（母）", "", $firstName);
+                        $firstName = str_replace("（","(",$firstName);
+                        $firstName = str_replace("）",")",$firstName);
+                        $beginSub = strpos($firstName,"(");
+                        $endSub = strpos($firstName,")");
+                        if($beginSub && $endSub){
+                            $strReplace = substr($firstName,$beginSub,($endSub - $beginSub) + 1);
+                            $firstName = str_replace($strReplace, "", $firstName);
                         }
 
                         if(strlen($firstName) > $strLenFirstName){
@@ -114,21 +106,13 @@ class MstStaffDependents extends BaseImport
                             $arrayInsert[] = [];
                             $strCheck = "扶養者";
                             $firstName = $value;
-                            if (strpos($value, "(年少)")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("(年少)", "", $firstName);
-                            }
-                            if (strpos($value, "（年少）")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("（年少）", "", $firstName);
-                            }
-                            if (strpos($value, "(母)")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("(母)", "", $firstName);
-                            }
-                            if (strpos($value, "（母）")) {
-                                $strCheck = "扶養者";
-                                $firstName = str_replace("（母）", "", $firstName);
+                            $firstName = str_replace("（","(",$firstName);
+                            $firstName = str_replace("）",")",$firstName);
+                            $beginSub = strpos($firstName,"(");
+                            $endSub = strpos($firstName,")");
+                            if($beginSub && $endSub){
+                                $strReplace = substr($firstName,$beginSub,($endSub - $beginSub) + 1);
+                                $firstName = str_replace($strReplace, "", $firstName);
                             }
 
                             if(strlen($firstName) > $strLenFirstName){
@@ -159,7 +143,6 @@ class MstStaffDependents extends BaseImport
                 }
                 $dataInsert["rows"] = $arrayInsert;
             }
-            dd($dataInsert);
             if( !$flagError && count($dataInsert["rows"]) > 0 ){
                 foreach ( $dataInsert["rows"] as $item ){
                     $mstStaffDependents = MStaffDependents::where( "mst_staff_id","=",$dataInsert["mst_staff_id"] )
