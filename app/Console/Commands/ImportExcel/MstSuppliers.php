@@ -38,7 +38,7 @@ class MstSuppliers extends BaseImport{
     public $list_supplier_cd = [];
 
     public $rules = [
-        'mst_suppliers_cd'  => 'required|length:5',
+        'mst_suppliers_cd'  => 'required',
         'supplier_nm'  => 'required|length:200',
         'supplier_nm_kana'  => 'kana_custom|nullable|length:200',
         'zip_cd'  => 'nullable|length:7',
@@ -132,11 +132,9 @@ class MstSuppliers extends BaseImport{
                                 break;
                             case 'supplier_nm':
                                 $record[$excel_column[$pos]] = (string)$value;
-                                $record['supplier_nm_formal'] = (string)$value;
                                 break;
                             case 'supplier_nm_kana':
                                 $record[$excel_column[$pos]] = $value;
-                                $record['supplier_nm_kana_formal'] = $value;
                                 break;
                             case 'zip_cd':
                                 $record[$excel_column[$pos]] = $value!= "" ? str_replace("-", "", $value) : null;
@@ -160,6 +158,8 @@ class MstSuppliers extends BaseImport{
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
                 $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_suppliers.main.fileName'),$error_fg);
+                $record['supplier_nm_formal'] = $record['supplier_nm'];
+                $record['supplier_nm_kana_formal'] = $record['supplier_nm_kana'];
                 $this->insertDB($error_fg, $row, $record);
             }
         }
@@ -182,13 +182,12 @@ class MstSuppliers extends BaseImport{
                         $record[$excel_column[$pos]] = $value!= "" ? (string)$value : null;
                     }
                 }
-                $record['supplier_nm_formal'] = $record['supplier_nm'];
                 $record['created_at'] = $currentTime;
                 $record['modified_at'] = $currentTime;
                 $record['consumption_tax_calc_unit_id'] = $this->consumption_tax_calc_unit_id ? $this->consumption_tax_calc_unit_id->date_id : null;
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 $this->validate($record,$row, $this->column_name_extra1, config('params.import_file_path.mst_suppliers.extra1.fileName'),$error_fg);
-
+                $record['supplier_nm_formal'] = $record['supplier_nm'];
                 $this->insertDB($error_fg, $row, $record);
             }
         }
