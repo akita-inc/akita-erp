@@ -2,6 +2,7 @@
 namespace App\Console\Commands\ImportExcel;
 use App\Models\MStaffDependents;
 use App\Models\MStaffs;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Created by PhpStorm.
@@ -108,6 +109,7 @@ class MstStaffDependents extends BaseImport
                 foreach ($arrayColumn as $key => $column){
                     if(!empty($this->rowCurrentData[$column["firstName"]])){
                         $strSlit = explode(",",str_replace("、",",",$this->rowCurrentData[$column["firstName"]]));
+                        $strBegin = count($arrayInsert);
                         foreach ($strSlit as $value) {
                             $arrayInsert[] = [];
                             $strCheck = "扶養者";
@@ -149,14 +151,15 @@ class MstStaffDependents extends BaseImport
                         }
                         $strSlitBD = explode(",",str_replace("、",",",$this->rowCurrentData[$column["birthday"]]));
                         foreach ($strSlitBD as $key=>$value){
-                            if(isset($arrayInsert[$key])){
-                                $arrayInsert[count($arrayInsert) - 1]["birthday"] = $value;
+                            if(isset($arrayInsert[$strBegin + $key])){
+                                $arrayInsert[$strBegin + $key]["birthday"] = $value;
                             }
                         }
                     }
                 }
                 $dataInsert["rows"] = $arrayInsert;
             }
+            dd($dataInsert);
             if( !$flagError && count($dataInsert["rows"]) > 0 ){
                 foreach ( $dataInsert["rows"] as $item ){
                     $mstStaffDependents = MStaffDependents::where( "mst_staff_id","=",$dataInsert["mst_staff_id"] )
