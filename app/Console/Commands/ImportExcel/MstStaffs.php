@@ -399,7 +399,7 @@ class MstStaffs extends BaseImport
                                 } else {
                                     $this->error_fg = true;
                                     $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
-                                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                                         "fieldName" => $this->column_main_name['employment_pattern_id'],
                                         "row" => $row,
                                     ]));
@@ -426,7 +426,7 @@ class MstStaffs extends BaseImport
                                 {
                                     $this->error_fg = true;
                                     $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
-                                        "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
+                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                                         "fieldName" =>  $this->column_main_name['sex_id'],
                                         "row" => $row,
                                     ]));
