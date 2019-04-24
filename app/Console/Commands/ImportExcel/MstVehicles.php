@@ -158,14 +158,12 @@ class MstVehicles extends BaseImport
 
     public $column_name = [
         'vehicles_cd'=> '車両CD',
-        'door_number'=> '',
         'vehicles_kb'=> '車両区分',
         'registration_numbers'=> '登録番号',
-        'mst_business_office_id'=> '営業所ID',
+        'mst_business_office_id'=> '車両所属CD',
         'vehicle_size_kb'=> '小中大区分',
         'vehicle_purpose_id'=> '用途',
         'land_transport_office_cd'=> '陸運支局CD',
-        'vehicle_inspection_sticker_pdf'=> '',
         'registration_dt'=> '登録年月日',
         'first_year_registration_dt'=> '初年度登録年月',
         'vehicle_classification_id'=> '種別',
@@ -187,7 +185,6 @@ class MstVehicles extends BaseImport
         'vehicle_types'=> '形式',
         'engine_typese'=> '原動機形式',
         'total_displacements'=> '排気量',
-        'rated_outputs'=> '',
         'kinds_of_fuel_id'=> '燃料種類',
         'user_base_locations'=> '使用本拠地',
         'expiry_dt'=> '車検日',
