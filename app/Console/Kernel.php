@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\RunBatchImport;
 use App\Console\Commands\UpdateStatusEmptyInfo;
 use App\Console\Commands\ConvertDataByExcels;
 use Illuminate\Console\Scheduling\Schedule;
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         UpdateStatusEmptyInfo::class,
         ConvertDataByExcels::class,
+        RunBatchImport::class
         //
     ];
 

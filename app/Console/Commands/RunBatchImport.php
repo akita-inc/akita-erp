@@ -6,8 +6,7 @@
  * Time: 11:13 AM
  */
 namespace App\Console\Commands;
-
-
+use Illuminate\Console\Command;
 
 class RunBatchImport extends Command
 {
@@ -16,6 +15,7 @@ class RunBatchImport extends Command
      *
      * @var string
      */
+    protected $arrayRunTime = [];
     protected $signature = 'RunBatchImport';
 
     /**
@@ -55,10 +55,6 @@ class RunBatchImport extends Command
      * @return mixed
      */
     public function handle(){
-        $type = $this->option("type");
-        $class = "\\APP\\Console\\Commands\\ImportExcel\\".str_replace(" ","",(ucwords(str_replace("_"," ",$type))));
-        $class = new $class();
-        $class->table = $type;
-        $class->run();
+
     }
 }
