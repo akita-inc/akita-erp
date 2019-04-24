@@ -152,8 +152,8 @@ return [
         ],
         'mst_staff_qualifications'=>[
             'main' => [
-                'path' => storage_path('import/dbo_T_社員DETA.xlsx'),
-                'fileName' => 'dbo_T_社員DETA.xlsx',
+                'path' => storage_path('import/dbo_T_社員DETA_1.xlsx'),
+                'fileName' => 'dbo_T_社員DETA_1.xlsx',
             ],
         ],
         'mst_customers' => [
