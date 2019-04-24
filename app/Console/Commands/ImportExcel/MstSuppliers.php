@@ -246,8 +246,8 @@ class MstSuppliers extends BaseImport{
             try {
                 if (!empty($record)) {
                     if(isset($record['supplier_nm_kana'])){
-                        $record['supplier_nm_kana'] = mb_convert_kana($record['supplier_nm_kana']);
-                        $record['supplier_nm_kana_formal'] = mb_convert_kana($record['supplier_nm_kana_formal']);
+                        $record['supplier_nm_kana'] = mb_convert_kana($record['supplier_nm_kana'],'KVC');
+                        $record['supplier_nm_kana_formal'] = mb_convert_kana($record['supplier_nm_kana_formal'],'KVC');
                     }
                     DB::table('mst_suppliers')->insert($record);
                     DB::commit();

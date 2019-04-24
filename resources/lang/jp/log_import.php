@@ -21,7 +21,7 @@ return[
     'check_kana'=>"▼ カナ変換エラー："." :fileName"."　"
         ." :fieldName"."　"
         ." :row行目"."　",
-    'add_general_purposes_string' => "▼ 汎用マスタエラー：データ元" ." :fileName"."　"
+    'add_general_purposes_string' => "▼ 汎用マスタ追加：データ元" ." :fileName"."　"
         ." :fieldName"."　"
         ." :row行目"."　\r\n"
         ."▼ 登録内容："
