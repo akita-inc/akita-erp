@@ -7,6 +7,7 @@
  */
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 class RunBatchImport extends Command
 {
@@ -15,7 +16,7 @@ class RunBatchImport extends Command
      *
      * @var string
      */
-    protected $arrayRunTime = [];
+    protected $arrayRunTime = ['mst_staff_dependents'];
     protected $signature = 'RunBatchImport';
 
     /**
@@ -55,6 +56,9 @@ class RunBatchImport extends Command
      * @return mixed
      */
     public function handle(){
+        foreach ($this->arrayRunTime as $run){
+            echo Artisan::call("ConvertDataByExcels", ['--type' => $run]);
+        }
 
     }
 }

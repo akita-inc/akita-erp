@@ -59,9 +59,17 @@ class MstStaffDependents extends BaseImport
                             $strCheck = "扶養者";
                             $firstName = str_replace("(年少)","",$firstName);
                         }
+                        if (strpos($value, "（年少）")) {
+                            $strCheck = "扶養者";
+                            $firstName = str_replace("（年少）", "", $firstName);
+                        }
                         if(strpos($value,"(母)")){
                             $strCheck = "扶養者";
                             $firstName = str_replace("(母)","",$firstName);
+                        }
+                        if (strpos($value, "（母）")) {
+                            $strCheck = "扶養者";
+                            $firstName = str_replace("（母）", "", $firstName);
                         }
 
                         if(strlen($firstName) > $strLenFirstName){
