@@ -42,14 +42,17 @@ class MstCustomers extends BaseImport
     public $rules = [
         'mst_customers_cd' =>'required|length:5',
         'customer_nm' =>'nullable|length:200',
-        'customer_nm_kana' =>'nullable|length:200',
+        'customer_nm_kana' =>'kana_custom|nullable|length:200',
+        'customer_nm_formal' =>'nullable|length:200',
+        'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
         'person_in_charge_last_nm' =>'nullable|length:25',
+        'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',
         'address2' =>'nullable|length:20',
         'phone_number' =>'nullable|length:20',
         'bundle_dt' =>'nullable|length:11',
-        'discount_rate' =>'nullable|length:3',
+        //'discount_rate' =>'nullable|length:3',
         'notes' =>'nullable|length:50',
         'mst_account_titles_id' =>'nullable|length:11',
         'created_at' =>'required',
@@ -136,6 +139,7 @@ class MstCustomers extends BaseImport
                             $record['customer_nm_kana_formal'] = mb_convert_kana($value);
                             break;
                         case 'person_in_charge_last_nm':
+                            $value = str_replace(' ', '　', $value);
                             $names = explode('　',$value);
                             if(count($names) > 1){
                                 $record[$excel_column[$pos]] = $names[0];
@@ -240,7 +244,6 @@ class MstCustomers extends BaseImport
         $validator = Validator::make($record, $this->rules);
 
         if ($validator->fails()) {
-            $error_fg = true;
             $failedRules = $validator->failed();
             foreach ($failedRules as $field => $errors) {
                 foreach ($errors as $ruleName => $error) {
@@ -256,7 +259,15 @@ class MstCustomers extends BaseImport
                         ]));
                         $record[$field] = substr($record[$field], 0, $error[0]);
                     } else if ($ruleName == 'Required') {
+                        $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
+                            "fileName" => $fileName,
+                            "fieldName" => $column_name[$field],
+                            "row" => $row,
+                        ]));
+                    }else if ($ruleName == 'KanaCustom') {
+                        $error_fg = true;
+                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
                             "row" => $row,
