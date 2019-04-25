@@ -91,8 +91,7 @@ class RunBatchImport extends Command
                             "data_kb" => $data_kb,
                             "data_kb_nm" => mb_convert_encoding($data_kb_nm, "UTF-8", "SJIS"),
                             "date_id" => $data_id,
-                            "date_nm" => mb_convert_encoding($data_kb_nm, "UTF-8", "SJIS"),
-                            "date_nm_kana" => "フメイ"
+                              "date_nm_kana" => "フメイ"
                         ]);
                     }
 
@@ -115,6 +114,8 @@ class RunBatchImport extends Command
                     DB::table($run)->insert($staffAdmin);
                 }
             }
+        }
+        foreach ($this->arrayRunTime as $run){
             Artisan::call("ConvertDataByExcels", ['--type' => $run]);
         }
 
