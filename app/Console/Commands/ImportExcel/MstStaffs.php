@@ -433,23 +433,34 @@ class MstStaffs extends BaseImport
     }
     public function getPrefCdByPrefName($address1)
     {
-        $prefCdByPrefNameCustom=$this->prefCdByPrefNameCustom;
-        $arrPrefName=null;
-        if(mb_strripos($address1,'県')!==false)
+        if($address1)
         {
-            $pref_name=mb_substr($address1, 0, mb_strripos($address1,'県')+1);
-            if(isset($prefCdByPrefNameCustom[$pref_name]))
+            $prefCdByPrefNameCustom=$this->prefCdByPrefNameCustom;
+            $arrPrefName=null;
+            if(mb_strripos($address1,'県')!==false)
             {
-                $pref_cd=$prefCdByPrefNameCustom[$pref_name];
+                $pref_name=mb_substr($address1, 0, mb_strripos($address1,'県')+1);
+                if(isset($prefCdByPrefNameCustom[$pref_name]))
+                {
+                    $pref_cd=$prefCdByPrefNameCustom[$pref_name];
+                }
+                else
+                {
+                    return $arrPrefName;
+                }
+                $arrPrefName['prefectures_cd']=$pref_cd;
+                $arrPrefName['address1']=mb_substr($address1,mb_strlen($pref_cd)+1);
             }
             else
             {
                 return $arrPrefName;
             }
-            $arrPrefName['prefectures_cd']=$pref_cd;
-            $arrPrefName['address1']=mb_substr($address1,mb_strlen($pref_cd)+1);
         }
-        return $arrPrefName;
+        else
+        {
+            return null;
+        }
+
     }
     public function getOfficeId($office_cd)
     {
