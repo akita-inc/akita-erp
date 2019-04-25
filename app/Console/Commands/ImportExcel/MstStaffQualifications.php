@@ -84,16 +84,25 @@ class MstStaffQualifications extends BaseImport{
                 if(isset($excel_column[$pos])) {
                     switch ($excel_column[$pos]){
                         case 'mst_staff_id':
-                            $findStaff = MStaffs::query()->where('staff_cd',(string)$value)->whereNull('deleted_at')->first();
-                            if($findStaff){
-                                $mst_staff_id = (string)$findStaff->id;
+                            if(!is_null($value)){
+                                $findStaff = MStaffs::query()->where('staff_cd',(string)$value)->whereNull('deleted_at')->first();
+                                if($findStaff){
+                                    $mst_staff_id = (string)$findStaff->id;
+                                }else{
+                                    $error_fg = true;
+                                    $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                                        "mainFileName" => config('params.import_file_path.mst_staff_qualifications.main.fileName'),
+                                        "fieldName" => $this->column_name[$pos],
+                                        "row" => $row,
+                                        "extraFileName" =>'mst_staffs',
+                                    ]));
+                                }
                             }else{
                                 $error_fg = true;
-                                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                                    "mainFileName" => config('params.import_file_path.mst_staff_qualifications.main.fileName'),
+                                $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
+                                    "fileName" => config('params.import_file_path.mst_staff_qualifications.main.fileName'),
                                     "fieldName" => $this->column_name[$pos],
                                     "row" => $row,
-                                    "extraFileName" =>config('params.import_file_path.mst_staff_qualifications.main.fileName'),
                                 ]));
                             }
                             break;

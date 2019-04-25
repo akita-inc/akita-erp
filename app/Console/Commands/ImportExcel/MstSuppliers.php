@@ -38,7 +38,7 @@ class MstSuppliers extends BaseImport{
     public $list_supplier_cd = [];
 
     public $rules = [
-        'mst_suppliers_cd'  => 'required|length:5',
+        'mst_suppliers_cd'  => 'required',
         'supplier_nm'  => 'required|length:200',
         'supplier_nm_kana'  => 'kana_custom|nullable|length:200',
         'zip_cd'  => 'nullable|length:7',
@@ -132,11 +132,9 @@ class MstSuppliers extends BaseImport{
                                 break;
                             case 'supplier_nm':
                                 $record[$excel_column[$pos]] = (string)$value;
-                                $record['supplier_nm_formal'] = (string)$value;
                                 break;
                             case 'supplier_nm_kana':
                                 $record[$excel_column[$pos]] = $value;
-                                $record['supplier_nm_kana_formal'] = $value;
                                 break;
                             case 'zip_cd':
                                 $record[$excel_column[$pos]] = $value!= "" ? str_replace("-", "", $value) : null;
@@ -160,7 +158,9 @@ class MstSuppliers extends BaseImport{
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
                 $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_suppliers.main.fileName'),$error_fg);
-                $this->insertDB($error_fg, $row, $record);
+                $record['supplier_nm_formal'] = $record['supplier_nm'];
+                $record['supplier_nm_kana_formal'] = $record['supplier_nm_kana'];
+                $this->insertDB($error_fg, $row, $record,config('params.import_file_path.mst_suppliers.main.fileName'));
             }
         }
     }
@@ -182,14 +182,13 @@ class MstSuppliers extends BaseImport{
                         $record[$excel_column[$pos]] = $value!= "" ? (string)$value : null;
                     }
                 }
-                $record['supplier_nm_formal'] = $record['supplier_nm'];
                 $record['created_at'] = $currentTime;
                 $record['modified_at'] = $currentTime;
                 $record['consumption_tax_calc_unit_id'] = $this->consumption_tax_calc_unit_id ? $this->consumption_tax_calc_unit_id->date_id : null;
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 $this->validate($record,$row, $this->column_name_extra1, config('params.import_file_path.mst_suppliers.extra1.fileName'),$error_fg);
-
-                $this->insertDB($error_fg, $row, $record);
+                $record['supplier_nm_formal'] = $record['supplier_nm'];
+                $this->insertDB($error_fg, $row, $record, config('params.import_file_path.mst_suppliers.extra1.fileName'));
             }
         }
     }
@@ -241,14 +240,14 @@ class MstSuppliers extends BaseImport{
         }
     }
 
-    protected function insertDB($error_fg, $row, $record){
+    protected function insertDB($error_fg, $row, $record, $fileName){
         if (!$error_fg) {
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
                     if(isset($record['supplier_nm_kana'])){
-                        $record['supplier_nm_kana'] = mb_convert_kana($record['supplier_nm_kana']);
-                        $record['supplier_nm_kana_formal'] = mb_convert_kana($record['supplier_nm_kana_formal']);
+                        $record['supplier_nm_kana'] = mb_convert_kana($record['supplier_nm_kana'],'KVC');
+                        $record['supplier_nm_kana_formal'] = mb_convert_kana($record['supplier_nm_kana_formal'],'KVC');
                     }
                     DB::table('mst_suppliers')->insert($record);
                     DB::commit();
@@ -258,7 +257,7 @@ class MstSuppliers extends BaseImport{
                 DB::rollback();
                 $this->numErr++;
                 $this->log("DataConvert_Err_SQL", Lang::trans("log_import.insert_error", [
-                    "fileName" => config('params.import_file_path.mst_suppliers.main.fileName'),
+                    "fileName" => $fileName,
                     "row" => $row,
                     "errorDetail" => $e->getMessage(),
                 ]));

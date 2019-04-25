@@ -128,12 +128,15 @@ return [
             'main'=>storage_path('import/dbo_M_社員.xlsx'),
             'main_file_name'=>'dbo_M_社員.xlsx',
             'health_insurance_card_information'=>storage_path('import/20190404_保険証情報.xlsx'),
-            'health_insurance_card_information_nm'=>'20190404_保険証情報.xlsx',
             'staff_background'=>storage_path('import/dbo_T_社員DETA.xlsx'),
-            'staff_background_nm'=>'dbo_T_社員DETA.xlsx',
             'drivers_license'=>storage_path('import/20190404_免許情報.xlsx'),
-            'drivers_license_nm'=>'20190404_免許情報.xlsx',
             'export_password_file_nm'=>storage_path("import/dbo_M_社員_yyyymmddhh24miss.xlsx"),
+            'extra_file'=>[
+                'file_nm_1'=>'20190404_保険証情報.xlsx',
+                'file_nm_2'=>'dbo_T_社員DETA.xlsx',
+                'file_nm_3'=>'20190404_免許情報.xlsx'
+            ]
+
         ],
         'mst_bill_issue_destinations'=>[
             'main'=>storage_path('import/dbo_M_得意先.xlsx'),
@@ -142,8 +145,8 @@ return [
         'mst_staff_dependents' => storage_path('import/扶養者名_生年月日.xlsx'),
         'mst_suppliers' => [
             'main' => [
-                'path' => storage_path('import/dbo_M_社員_仕入先テスト.xlsx'),
-                'fileName' => 'dbo_M_社員_仕入先テスト.xlsx',
+                'path' => storage_path('import/dbo_M_社員.xlsx'),
+                'fileName' => 'dbo_M_社員.xlsx',
             ],
             'extra1' => [
                 'path' => storage_path('import/経費_得意先_Ｔ.xlsx'),
@@ -164,6 +167,12 @@ return [
             'extra' => [
                 'path' => storage_path('import/得意先親子関係.xlsx'),
                 'fileName' => '得意先親子関係.xlsx',
+            ],
+        ],
+        'mst_business_offices' => [
+            'main' => [
+                'path' => storage_path('import/New 営業所一覧(本社用）.xls'),
+                'fileName' => 'New 営業所一覧(本社用）.xls',
             ],
         ],
         'data_convert'=>storage_path('logs/DataConvert.log'),
