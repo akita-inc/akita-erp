@@ -41,10 +41,11 @@ class MstStaffDependents extends BaseImport
             $mstStaff = MStaffs::where("staff_cd","=",$mst_staff_cd)->first();
             if(empty($mstStaff)){
                 $flagError = true;
-                $this->log("DataConvert_Err_ID_Match",trans("log_import.required",[
-                    "fileName" => $this->fileName,
+                $this->log("DataConvert_Err_ID_Match",trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => $this->fileName,
                     "fieldName" => "社員CD",
-                    "row" => $this->rowIndex
+                    "row" => $this->rowIndex,
+                    "extraFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                 ]));
             }
             else{
