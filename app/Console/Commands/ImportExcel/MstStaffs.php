@@ -36,25 +36,26 @@ class MstStaffs extends BaseImport
         'M'=>'address1',
         'N'=>'address2',
         'O'=>'phone_number',
-        'Q'=>'spouse_nm',
+        'Q'=>'staff_dependents_nm_0',
         'AA'=>'notes',
         'AB' => 'created_at',
         'AE' => 'modified_at',
-        'S'=>'staff_dependents_nm_S',
-        'T'=>'staff_dependents_nm_T',
-        'U'=>'staff_dependents_nm_U',
-        'V'=>'staff_dependents_nm_V',
-        'W'=>'staff_dependents_nm_W'
+        'S'=>'staff_dependents_nm_1',
+        'T'=>'staff_dependents_nm_2',
+        'U'=>'staff_dependents_nm_3',
+        'V'=>'staff_dependents_nm_4',
+        'W'=>'staff_dependents_nm_5'
     ];
     public $column_main_name=[
         'staff_cd'=>'社員CD',
         'employment_pattern_id'=>'社員区分',
         'staff_nm'=>'社員名',
-        'last_nm'=>'社員名',
-        'first_nm'=>'社員名',
+        'last_nm'=>'社員名(姓）',
+        'first_nm'=>'社員名(名）',
         'staff_nm_kana'=>'社員名かな',
-        'last_nm_kana'=>'社員名かな',
-        'first_nm_kana'=>'社員名かな',
+        'last_nm_kana'=>'社員名かな(姓)',
+        'first_nm_kana'=>'社員名かな(名)',
+        'spouse_nm'=>'配偶者氏名',
         'mst_business_office_id'=>'社員所属CD',
         'sex_id' => '性別',
         'birthday'=>'生年月日',
@@ -99,6 +100,14 @@ class MstStaffs extends BaseImport
         'drivers_license_number'=>'免許証番号',
         'drivers_license_issued_dt'=>'書換年月日'
     ];
+    public $column_staff_dependents=[
+        'staff_dependents_nm_0'=>'配偶者氏名',
+        'staff_dependents_nm_1'=>'扶養者１',
+        'staff_dependents_nm_2'=>'扶養者２',
+        'staff_dependents_nm_3'=>'扶養者３',
+        'staff_dependents_nm_4'=>'扶養者４',
+        'staff_dependents_nm_5'=>'扶養者５'
+    ];
     public $ruleValid = [
         'staff_cd'  => 'required',
         'last_nm'  => 'nullable|length:25',
@@ -112,8 +121,8 @@ class MstStaffs extends BaseImport
         "cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:20|nullable",
-        "health_insurance_class"=>"length:10|nullable",
-        "welfare_annuity_class"=>"length:10|nullable",
+        "health_insurance_class"=>"length:11|nullable",
+        "welfare_annuity_class"=>"length:11|nullable",
         "basic_pension_number"=>"length:20|nullable",
         "person_insured_number"=>"length:20|nullable",
         "educational_background"=>"length:50|nullable",
@@ -437,19 +446,9 @@ class MstStaffs extends BaseImport
                                 $record[$excel_column[$pos]] = null;
                             }
                             break;
-                        case 'spouse_nm':
-                            $recordStaffDepents["spouse_nm"]=$value;
-                            break;
                         default:
                             $record[$excel_column[$pos]] = is_null($value)?null:(string)$value;
                             break;
-                    }
-                    if(isset($excel_column[$pos])  && strpos($excel_column[$pos], 'staff_dependents_nm') !== false) {
-                        if(!empty($value))
-                        {
-                            $recordStaffDepents[]=$record['staff_dependents_nm_'.$pos];
-                        }
-                        unset($record['staff_dependents_nm_'.$pos]);
                     }
                 }
             }
@@ -480,9 +479,7 @@ class MstStaffs extends BaseImport
                 unset($data['staff_nm']);
                 unset($data['staff_nm_kana']);
                 unset($data["phone_number"]);
-                unset($data["spouse_nm"]);
                 unset($data["row_index"]);
-                $data['staff_dependents']=$recordStaffDepents;
                 $this->insertDB($data);
             }
             else
@@ -510,6 +507,38 @@ class MstStaffs extends BaseImport
         }
     }
     public function validateRow($record){
+        $staff_dependents=array();
+        for( $k=0; $k<=5; $k++)
+        {
+            if(!is_null($record['staff_dependents_nm_'.$k])) {
+                $staff_dependents_nm=$this->explodeStaffName($record['staff_dependents_nm_'.$k],null);
+                $validator = Validator::make( $staff_dependents_nm,['last_nm'  => 'nullable|length:25',
+                                                                        'first_nm'  => 'length:25|nullable']);
+                if ($validator->fails()) {
+                    $failedRules = $validator->failed();
+                    foreach ($failedRules as $field => $errors) {
+                            foreach ($errors as $ruleName => $error) {
+                                if ($ruleName == 'Length') {
+                                    $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
+                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                        "excelFieldName" => $this->column_staff_dependents['staff_dependents_nm_'.$k],
+                                        "row" => $this->rowIndex,
+                                        "excelValue" => $staff_dependents_nm[$field],
+                                        "tableName" => 'mst_staff_dependents',
+                                        "DBFieldName" => $field,
+                                        "DBvalue" => mb_substr($staff_dependents_nm[$field], 0, $error[0]),
+                                    ]));
+                                    $staff_dependents_nm[$field] = mb_substr($staff_dependents_nm[$field],0,$error[0]);
+                                }
+                            }
+                        }
+                    }
+                    $record['staff_dependents_nm_'.$k]=$staff_dependents_nm;
+                $staff_dependents[$k]=$record["staff_dependents_nm_".$k];
+            }
+            unset($record['staff_dependents_nm_'.$k]);
+        }
+        $record["staff_dependents"]=$staff_dependents;
         if (DB::table('mst_staffs')->where('staff_cd', '=', $record['staff_cd'])->whereNull('deleted_at')->exists()) {
             $this->error_fg = true;
             $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
@@ -618,16 +647,21 @@ class MstStaffs extends BaseImport
     {
         DB::beginTransaction();
         try{
-            $recordStaffDependents=$data['staff_dependents'];
+            $staffDependents=$data['staff_dependents'];
             unset($data['staff_dependents']);
             $id = DB::table($this->table)->insertGetId( $data );
             if($id)
              {
                  $this->numNormal++;
                  DB::commit();
-                 if(count($recordStaffDependents)>0)
+                 if(count($staffDependents)>0)
                  {
-                     $this->insertMstStaffDependents($data,$id,$recordStaffDependents);
+                     $configArr=[
+                         'mst_staff_id'=>$id,
+                         'created_at'=>$data['created_at'],
+                         'modified_at'=>$data['modified_at']
+                     ];
+                     $this->insertMstStaffDependents($configArr,$staffDependents,$data['last_nm']);
                  }
              };
         }catch (\Exception $e){
@@ -640,20 +674,22 @@ class MstStaffs extends BaseImport
             ]));
         }
     }
-    public function getDependentKB($type=null)
+    public function getDependentKB($type)
     {
-        if($type=='spouse')
-        {
-            $result=MGeneralPurposes::select('date_id')
-                                    ->where('data_kb','=',config('params.data_kb.dependent_kb'))
-                                    ->where('date_nm','LIKE','%'.'配偶者'.'%')
-                                    ->first();
-        }
-        else
+        $result=null;
+        if($type)
         {
             $result=MGeneralPurposes::select('date_id')
                 ->where('data_kb','=',config('params.data_kb.dependent_kb'))
                 ->where('date_nm','LIKE','%'.'扶養者'.'%')
+                ->first();
+        }
+        else
+        {
+
+            $result=MGeneralPurposes::select('date_id')
+                ->where('data_kb','=',config('params.data_kb.dependent_kb'))
+                ->where('date_nm','LIKE','%'.'配偶者'.'%')
                 ->first();
         }
         if($result)
@@ -665,65 +701,52 @@ class MstStaffs extends BaseImport
             return null;
         }
     }
-    public function insertMstStaffDependents($data,$mst_staff_id,$recordStaffDependents)
+    public function trimStaffDependents($value)
     {
-
+        if(mb_strripos($value,"(")>0)
+        {
+            $value=mb_substr($value,0,mb_strripos($value,"("));
+        }
+        if(strpos($value,"（"))
+        {
+            $value=mb_substr( $value,0,mb_strripos($value,"（"));
+        }
+        return $value;
+    }
+    public function insertMstStaffDependents($configArr,$staffDependents,$last_nm)
+    {
         DB::beginTransaction();
         try{
-            $staffDependents=$recordStaffDependents;
             $arrInsert=array();
-            if(isset($recordStaffDependents['spouse_nm']) && !empty($recordStaffDependents['spouse_nm']))
+            $record=$configArr;
+            for($k=0;$k<=count($staffDependents);$k++)
             {
-                $staff_nm=$this->explodeStaffName($recordStaffDependents['spouse_nm'],null);
-                if(empty($staff_nm["first_nm"]))
+                if(isset($staffDependents[$k]))
                 {
-                    $staff_nm["first_nm"]= $staff_nm["last_nm"];
-                    $staff_nm["last_nm"]=$data['last_nm'];
+                    $record['dependent_kb']=$this->getDependentKB($k);
+                    if(is_null($staffDependents[$k]["first_nm"]))
+                    {
+                        $first_nm_dependent= $staffDependents[$k]["last_nm"];
+                        $last_nm_dependent=$last_nm;
+                    }
+                    else
+                    {
+                        $first_nm_dependent= $staffDependents[$k]["first_nm"];
+                        $last_nm_dependent=$staffDependents[$k]["last_nm"];
+                    }
+                    $record['last_nm']=$this->trimStaffDependents($last_nm_dependent);
+                    $record['first_nm']=$this->trimStaffDependents($first_nm_dependent);
+                    $arrInsert[]=$record;
+
                 }
-                $arrInsert[]=[
-                    'mst_staff_id'=>$mst_staff_id,
-                    'dependent_kb'=>$this->getDependentKB('spouse'),
-                    'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
-                    'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
-                    'created_at'=>$data['created_at'],
-                    'modified_at'=>$data['modified_at']
-                ];
             }
-            unset($staffDependents['spouse_nm']);
-            foreach ($staffDependents as $key=>$value )
-            {
-                if(mb_strripos($value,"(")>0)
-                {
-                    $value=mb_substr($value,0,mb_strripos($value,"("));
-                }
-                if(strpos($value,"（"))
-                {
-                    $value=mb_substr( $value,0,mb_strripos($value,"（"));
-                }
-                $staff_nm=$this->explodeStaffName($value,null);
-                if(empty($staff_nm["first_nm"]))
-                 {
-                    $staff_nm["first_nm"]= $staff_nm["last_nm"];
-                    $staff_nm["last_nm"]=$data['last_nm'];
-                 }
-                $arrInsert[]=[
-                        'mst_staff_id'=>$mst_staff_id,
-                        'dependent_kb'=>$this->getDependentKB(null),
-                        'last_nm'=>empty($staff_nm['last_nm'])?null:$staff_nm['last_nm'],
-                        'first_nm'=>empty($staff_nm["first_nm"])?null:$staff_nm["first_nm"],
-                        'created_at'=>$data['created_at'],
-                        'modified_at'=>$data['modified_at']
-                ];
-            }
-            if(DB::table('mst_staff_dependents')->insert($arrInsert))
-            {
-                    DB::commit();
-            }
+            DB::table('mst_staff_dependents')->insert($arrInsert);
+            DB::commit();
         }
         catch (\Exception $e)
         {
             $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
-                "fileName" => config('params.import_file_path.mst_staff_dependents'),
+                "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                 "row" => $this->rowIndex,
                 "errorDetail" => $e->getMessage(),
             ]));
