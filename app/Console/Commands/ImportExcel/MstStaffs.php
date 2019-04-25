@@ -114,7 +114,6 @@ class MstStaffs extends BaseImport
         'last_nm_kana'  => 'kana_custom|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana_custom|nullable|length:50',
-        'zip_cd'=>'nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         "landline_phone_number"=>"length:20|nullable",
@@ -503,6 +502,58 @@ class MstStaffs extends BaseImport
         }
     }
     public function validateRow($record){
+        if( !empty($this->ruleValid)){
+            $validator = Validator::make( $record,$this->ruleValid);
+            if ($validator->fails()) {
+                $failedRules = $validator->failed();
+                foreach ($failedRules as $field => $errors){
+                    foreach ($errors as $ruleName => $error) {
+                        if ($ruleName == 'Length') {
+                            $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
+                                "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                "excelFieldName" => $this->column_main_name[$field],
+                                "row" => $this->rowIndex,
+                                "excelValue" => $record[$field],
+                                "tableName" => $this->table,
+                                "DBFieldName" => $field,
+                                "DBvalue" => mb_substr($record[$field], 0, $error[0]),
+                            ]));
+                            $record[$field] = mb_substr($record[$field], 0, $error[0]);
+                        };
+                        if($ruleName == 'Required')
+                        {
+                            $this->error_fg = true;
+                            $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
+                                "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                "fieldName" => $this->column_main_name[$field],
+                                "row" => $this->rowIndex,
+                            ]));
+                        };
+
+                    }
+                }
+                if(isset($failedRules['last_nm_kana']['KanaCustom']) || isset($failedRules['first_nm_kana']['KanaCustom']) )
+                {
+                    $this->error_fg=true;
+                    $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
+                        "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
+                        "fieldName" => $this->column_main_name['staff_nm_kana'],
+                        "row" => $this->rowIndex,
+                    ]));
+                }
+            }
+            if(is_null($record['mst_business_office_id']))
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name["mst_business_office_id"],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => 'mst_business_offices',
+                ]));
+            }
+
+        }
         $staff_dependents=array();
         for( $k=0; $k<=5; $k++)
         {
@@ -560,58 +611,6 @@ class MstStaffs extends BaseImport
             $driverLicense=$this->childFile3[$record['staff_cd']];
             $record+=$this->trimFieldInChildFile($driverLicense,'file_nm_3');
             unset($this->childFile3[$record['staff_cd']]);
-        }
-        if( !empty($this->ruleValid)){
-            $validator = Validator::make( $record,$this->ruleValid);
-            if ($validator->fails()) {
-                    $failedRules = $validator->failed();
-                    foreach ($failedRules as $field => $errors){
-                        foreach ($errors as $ruleName => $error) {
-                            if ($ruleName == 'Length') {
-                                $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
-                                    "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                                    "excelFieldName" => $this->column_main_name[$field],
-                                    "row" => $this->rowIndex,
-                                    "excelValue" => $record[$field],
-                                    "tableName" => $this->table,
-                                    "DBFieldName" => $field,
-                                    "DBvalue" => mb_substr($record[$field], 0, $error[0]),
-                                ]));
-                                $record[$field] = mb_substr($record[$field], 0, $error[0]);
-                            };
-                            if($ruleName == 'Required')
-                            {
-                                $this->error_fg = true;
-                                    $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
-                                        "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                                        "fieldName" => $this->column_main_name[$field],
-                                        "row" => $this->rowIndex,
-                                    ]));
-                            };
-
-                        }
-                    }
-                    if(isset($failedRules['last_nm_kana']['KanaCustom']) || isset($failedRules['first_nm_kana']['KanaCustom']) )
-                    {
-                        $this->error_fg=true;
-                        $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
-                            "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                            "fieldName" => $this->column_main_name['staff_nm_kana'],
-                            "row" => $this->rowIndex,
-                        ]));
-                    }
-            }
-            if(is_null($record['mst_business_office_id']))
-            {
-                $this->error_fg=true;
-                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->column_main_name["mst_business_office_id"],
-                    "row" => $this->rowIndex,
-                    "extraFileName" => 'mst_business_offices',
-                ]));
-            }
-
         }
         return $record;
     }
