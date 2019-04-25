@@ -103,7 +103,7 @@ class MstBusinessOffices extends BaseImport
                             $record[$excel_column[$pos]] = str_replace("　", "", $val);
                             break;
                         case 'zip_cd':
-                            $record[$excel_column[$pos]] = str_replace("-", "", $value);
+                            $record[$excel_column[$pos]] = $value!= "" ? str_replace("-", "", $value) : null;
                             break;
                         case 'address1':
                             $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
@@ -115,7 +115,7 @@ class MstBusinessOffices extends BaseImport
                             }
                             break;
                         default:
-                            $record[$excel_column[$pos]] = (string)$value;
+                            $record[$excel_column[$pos]] = $value!= "" ? (string)$value : null;
                     }
                 }
             }
@@ -130,7 +130,7 @@ class MstBusinessOffices extends BaseImport
             try {
                 if (!empty($record)) {
                     $record['disp_number'] = $disp_number;
-                    DB::table('mst_business_offices_copy1')->insert($record);
+                    DB::table('mst_business_offices')->insert($record);
                     DB::commit();
                     $disp_number++;
                     $this->numNormal++;
@@ -149,7 +149,7 @@ class MstBusinessOffices extends BaseImport
         }
     }
     protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_business_offices_copy1')->where('mst_business_office_cd', '=', $record['mst_business_office_cd'])->whereNull('deleted_at')->exists() && !empty($record['mst_business_office_cd'])) {
+        if (DB::table('mst_business_offices')->where('mst_business_office_cd', '=', $record['mst_business_office_cd'])->whereNull('deleted_at')->exists() && !empty($record['mst_business_office_cd'])) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,
