@@ -54,8 +54,6 @@ class MstStaffQualifications extends BaseImport{
     public $messagesCustom=[];
     public $rules = [
         'mst_staff_id'  => 'required',
-        'qualification_kind_id'  => 'nullable|length:5',
-        'amounts'  => 'nullable|length:11',
         "created_at"=>"required",
         "modified_at"=>"required",
     ];

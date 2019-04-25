@@ -100,38 +100,14 @@ class MstVehicles extends BaseImport
 
 
     public $rules = [
-        'vehicles_cd'=>'required|length:10',
-        'vehicles_kb'=>'required|length:11',
+        'vehicles_cd'=>'required',
+        'vehicles_kb'=>'required',
         'registration_numbers'=>'required|length:50',
         'mst_business_office_id'=>'required|length:5',
-        'vehicle_size_kb'=>'nullable|length:11',
-        'vehicle_purpose_id'=>'nullable|length:11',
-        'land_transport_office_cd'=>'nullable|length:11',
-        'first_year_registration_dt'=>'nullable|date_format_custom:Ym',
-        'vehicle_classification_id'=>'nullable|length:11',
-        'private_commercial_id'=>'nullable|length:11',
-        'car_body_shape_id'=>'nullable|length:11',
-        'vehicle_id'=>'nullable|length:11',
-        'seating_capacity'=>'nullable|length:11',
-        'max_loading_capacity'=>'nullable|length:11',
-        'vehicle_body_weights'=>'nullable|length:11',
-        'vehicle_total_weights'=>'nullable|length:11',
         'frame_numbers'=>'nullable|length:50',
-        'vehicle_lengths'=>'nullable|length:11',
-        'vehicle_widths'=>'nullable|length:11',
-        'vehicle_heights'=>'nullable|length:11',
-        'axle_loads_ff'=>'nullable|length:11',
-        'axle_loads_fr'=>'nullable|length:11',
-        'axle_loads_rf'=>'nullable|length:11',
-        'axle_loads_rr'=>'nullable|length:11',
         'vehicle_types'=>'nullable|length:50',
         'engine_typese'=>'nullable|length:50',
-        'total_displacements'=>'nullable|length:11',
-        'kinds_of_fuel_id'=>'nullable|length:11',
         'user_base_locations'=>'nullable|length:200',
-        'personal_insurance_prices'=>'nullable|length:11',
-        'property_damage_insurance_prices'=>'nullable|length:11',
-        'vehicle_insurance_prices'=>'nullable|length:11',
         'created_at'=>'required',
         'modified_at'=>'required',
     ];
@@ -139,21 +115,10 @@ class MstVehicles extends BaseImport
         'etc_numbers'=>'nullable|length:19',
     ];
     public $rules_extra_2 = [
-        'bed_fg'=>'nullable|length:11',
-        'refrigerator_fg'=>'nullable|length:11',
-        'drive_system_id'=>'nullable|length:11',
-        'transmissions_id'=>'nullable|length:11',
         'transmissions_notes'=>'nullable|length:50',
-        'suspensions_cd'=>'nullable|length:11',
-        'tank_capacity_1'=>'nullable|length:11',
-        'tank_capacity_2'=>'nullable|length:11',
-        'floor_roller_fg'=>'nullable|length:1',
-        'floor_joloda_conveyor_fg'=>'nullable|length:1',
-        'power_gate_cd'=>'nullable|length:11',
     ];
     public $rules_extra_3 = [
-        'acquisition_amounts'=>'nullable|length:12',
-        'durable_years'=>'nullable|one_byte_number|length:11',
+
     ];
 
     public $column_name = [
