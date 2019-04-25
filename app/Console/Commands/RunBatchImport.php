@@ -111,7 +111,9 @@ class RunBatchImport extends Command
             DB::table($run)->truncate();
 
             if($run == "mst_staffs"){
-                DB::table($run)->insert($staffAdmin);
+                if( $staffAdmin ) {
+                    DB::table($run)->insert($staffAdmin);
+                }
             }
             Artisan::call("ConvertDataByExcels", ['--type' => $run]);
         }
