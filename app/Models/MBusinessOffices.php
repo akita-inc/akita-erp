@@ -33,8 +33,10 @@ class MBusinessOffices  extends Model
             ->where('deleted_at','=',null)
             ->orderBy('disp_number', 'asc')
             ->get();
-        foreach (json_decode(json_encode($data), true) as $key => $item) {
-            $result[$item['mst_business_office_cd']] = $item['id'];
+        foreach($data as $key=>$value)
+        {
+            $val = json_decode( json_encode($value), true);
+            $result[$val['mst_business_office_cd']]=$val['id'];
         }
         return $result;
     }
