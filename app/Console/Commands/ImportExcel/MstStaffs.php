@@ -332,7 +332,6 @@ class MstStaffs extends BaseImport
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
         $record = array();
-        $mGeneralPurposes = new MGeneralPurposes();
         $this->error_fg=false;
         $employment_pattern_id=$rowData[$row]['D'];
         if(!empty($rowData[$row]) && $employment_pattern_id<>3)
@@ -409,9 +408,9 @@ class MstStaffs extends BaseImport
             {
                 $data=$this->validateRow($record);
             }
+            $data['mst_business_office_id'] = $this->getOfficeId($record['mst_business_office_id']);
             if(!empty($data) && $this->error_fg==false)
             {
-                $data['mst_business_office_id'] = $this->getOfficeId($record['mst_business_office_id']);
                 $data["password"]=bcrypt($this->generateRandomString(8));
                 $data['belong_company_id']=$this->belongCompanyId;
                 $data['enable_fg']=true;
@@ -433,7 +432,7 @@ class MstStaffs extends BaseImport
     }
     public function getPrefCdByPrefName($address1)
     {
-        if($address1)
+        if($address1!=null)
         {
             $prefCdByPrefNameCustom=$this->prefCdByPrefNameCustom;
             $arrPrefName=null;
@@ -466,15 +465,29 @@ class MstStaffs extends BaseImport
     }
     public function getOfficeId($office_cd)
     {
-        $mBusinessOffice=new MBusinessOffices();
-        $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
-        if(!empty($result['id']))
+        if($office_cd)
         {
-            return $result['id'];
+            $mBusinessOffice=new MBusinessOffices();
+            $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
+            if(!empty($result['id']))
+            {
+                return $result['id'];
+            }
+            else
+            {
+                $this->error_fg=true;
+                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "fieldName" => $this->column_main_name["mst_business_office_id"],
+                    "row" => $this->rowIndex,
+                    "extraFileName" => 'mst_business_offices',
+                ]));
+                return null;
+            }
         }
         else
         {
-            return null;
+            return null ;
         }
     }
     protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
@@ -560,17 +573,6 @@ class MstStaffs extends BaseImport
                     ]));
                 }
             }
-            if(is_null($record['mst_business_office_id']))
-            {
-                $this->error_fg=true;
-                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->column_main_name["mst_business_office_id"],
-                    "row" => $this->rowIndex,
-                    "extraFileName" => 'mst_business_offices',
-                ]));
-            }
-
         }
         return $record;
     }
