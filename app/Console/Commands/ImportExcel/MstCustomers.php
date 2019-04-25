@@ -154,7 +154,7 @@ class MstCustomers extends BaseImport
                             }
                             break;
                         case 'zip_cd':
-                            $record[$excel_column[$pos]] = str_replace("-", "", $value);
+                            $record[$excel_column[$pos]] = $value!= "" ? str_replace("-", "", $value) : null;
                             break;
                         case 'address1':
                             $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
@@ -168,13 +168,13 @@ class MstCustomers extends BaseImport
                         case 'mst_customers_cd':
                             $val = (string)$value;
                             if(array_key_exists($val, $mst_customers_relate_cds)){
-                                $record['bill_mst_customers_cd'] = $mst_customers_relate_cds[$val]['parent_code'];
+                                $record['bill_mst_customers_cd'] = $mst_customers_relate_cds[$val]['parent_code']!=""?$mst_customers_relate_cds[$val]['parent_code']:null;
                                 unset($mst_customers_relate_cds[$val]);
                             }
                             $record[$excel_column[$pos]] = (string)$value;
                             break;
                         default:
-                            $record[$excel_column[$pos]] = (string)$value;
+                            $record[$excel_column[$pos]] = $value!= "" ? (string)$value : null;
                     }
                 }
             }
