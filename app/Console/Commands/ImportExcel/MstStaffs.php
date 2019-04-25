@@ -438,13 +438,13 @@ class MstStaffs extends BaseImport
         if(mb_strripos($address1,'県')!==false)
         {
             $pref_name=mb_substr($address1, 0, mb_strripos($address1,'県')+1);
-            if(!isset($prefCdByPrefNameCustom[$pref_name]))
+            if(isset($prefCdByPrefNameCustom[$pref_name]))
             {
-                return null;
+                $pref_cd=$prefCdByPrefNameCustom[$pref_name];
             }
             else
             {
-                $pref_cd=$prefCdByPrefNameCustom[$pref_name];
+                return $arrPrefName;
             }
             $arrPrefName['prefectures_cd']=$pref_cd;
             $arrPrefName['address1']=mb_substr($address1,mb_strlen($pref_cd)+1);
