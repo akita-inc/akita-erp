@@ -67,7 +67,39 @@ class RunBatchImport extends Command
      * @return mixed
      */
     public function handle(){
+        $files = glob(storage_path("logs")."/DataConvert_Add_general_purposes_*"); // Will find 2.txt, 2.php, 2.gif
+        DB::table("mst_general_purposes")->truncate();
+        if (count($files) > 0){
+            foreach ($files as $file)
+            {
+                $myfile = fopen($file, "r") or die("Unable to open file!");
+                while(!feof($myfile)) {
+                    $contentLine = fgets($myfile);
+                    $strSplit = explode(mb_convert_encoding("データ区分：", "SJIS"),$contentLine);
+                    if(count($strSplit) > 1){
+                        $strSplit = explode(mb_convert_encoding("データ区分名：", "SJIS"),$strSplit[1]);
+                        $data_kb = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
 
+                        $strSplit = explode(mb_convert_encoding("データID：", "SJIS"),$strSplit[1]);
+                        $data_kb_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
+
+                        $strSplit = explode(mb_convert_encoding("データ名称：", "SJIS"),$strSplit[1]);
+                        $data_id = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
+                        $strSplit = explode(mb_convert_encoding("データカナ名称：", "SJIS"),$strSplit[1]);
+                        $data_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
+                        DB::table("mst_general_purposes")->insert([
+                            "data_kb" => $data_kb,
+                            "data_kb_nm" => mb_convert_encoding($data_kb_nm, "UTF-8", "SJIS"),
+                            "date_id" => $data_id,
+                            "date_nm" => mb_convert_encoding($data_kb_nm, "UTF-8", "SJIS"),
+                            "date_nm_kana" => "フメイ"
+                        ]);
+                    }
+
+                }
+                fclose($myfile);
+            }
+        }
         foreach ($this->arrayRunTime as $run){
             if($run == "mst_staffs"){
                 $staffAdmin = DB::table($run)->where("staff_cd","=","admin")->first();
@@ -81,7 +113,7 @@ class RunBatchImport extends Command
             if($run == "mst_staffs"){
                 DB::table($run)->insert($staffAdmin);
             }
-            echo Artisan::call("ConvertDataByExcels", ['--type' => $run]);
+            Artisan::call("ConvertDataByExcels", ['--type' => $run]);
         }
 
     }
