@@ -223,7 +223,7 @@ class MstStaffQualifications extends BaseImport{
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
-                    DB::table('mst_staff_qualifications_copy1')->insert($record);
+                    DB::table('mst_staff_qualifications')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }
