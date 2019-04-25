@@ -471,9 +471,9 @@ class MstStaffs extends BaseImport
     {
         if($office_cd!=null)
         {
-            if(isset($this->businessOffice[$office_cd]))
+            if(isset($this->businessOffice[(int)$office_cd]))
             {
-                return $this->businessOffice[$office_cd];
+                return $this->businessOffice[(int)$office_cd];
             }
             else
             {
