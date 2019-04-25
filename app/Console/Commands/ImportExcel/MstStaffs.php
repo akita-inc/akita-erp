@@ -341,7 +341,7 @@ class MstStaffs extends BaseImport
         {
             foreach($rowData[$row] as $pos=>$value){
                 if(isset($excel_column[$pos])) {
-                    $record[$excel_column[$pos]] = empty($value)?null:(string)$value;
+                    $record[$excel_column[$pos]] = empty($value) && $value!=0?null:(string)$value;
                 }
             }
             $record['modified_at'] = \PHPExcel_Style_NumberFormat::toFormattedString($record['modified_at'],'yyyy/mm/dd hh:mm:ss');
