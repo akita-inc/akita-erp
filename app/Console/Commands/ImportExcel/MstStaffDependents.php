@@ -175,7 +175,11 @@ class MstStaffDependents extends BaseImport
                         $mstStaffDependents->save();
                         $this->numNormal++;
                     }catch (\Exception $e){
-                        $this->log("DataConvert_Err_SQL",$e->getMessage());
+                        $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
+                            "fileName" => $this->fileName,
+                            "row" => $this->rowIndex,
+                            "errorDetail" => $e->getMessage(),
+                        ]));
                         $this->numErr++;
                     }
                 }
