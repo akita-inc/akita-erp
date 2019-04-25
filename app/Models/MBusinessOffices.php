@@ -45,4 +45,7 @@ class MBusinessOffices  extends Model
         }
         return $result;
     }
+    public function getMaxDispNumber(){
+        return $this->max('disp_number');
+    }
 }
