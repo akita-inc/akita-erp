@@ -52,10 +52,10 @@ class MstCustomers extends BaseImport
         'address1'  => 'nullable|length:20',
         'address2' =>'nullable|length:20',
         'phone_number' =>'nullable|length:20',
-        'bundle_dt' =>'nullable|length:11',
+        'bundle_dt' =>'nullable',
         //'discount_rate' =>'nullable|length:3',
         'notes' =>'nullable|length:50',
-        'mst_account_titles_id' =>'nullable|length:11',
+        'mst_account_titles_id' =>'nullable',
         'created_at' =>'required',
         'modified_at' =>'required',
     ];
