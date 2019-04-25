@@ -45,7 +45,7 @@ class MstStaffDependents extends BaseImport
                     "mainFileName" => $this->fileName,
                     "fieldName" => "社員CD",
                     "row" => $this->rowIndex,
-                    "extraFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                    "extraFileName" => "mst_staffs",
                 ]));
             }
             else{
