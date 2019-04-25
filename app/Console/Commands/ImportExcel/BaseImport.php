@@ -81,6 +81,18 @@ class BaseImport{
         if(is_numeric($string)){
             $result = $query->where('date_id',$string)->first();
         }else{
+            if (mb_strlen($string, 'UTF-8')> $this->date_nm_length) {
+                $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
+                    "fileName" => $fileName,
+                    "excelFieldName" => $fieldName,
+                    "row" => $row,
+                    "excelValue" => $string,
+                    "tableName" => 'mst_general_purposes',
+                    "DBFieldName" => 'date_nm',
+                    "DBvalue" => mb_substr($string,0,$this->date_nm_length),
+                ]));
+                $string = mb_substr($string,0,$this->date_nm_length);
+            }
             $result = $query->where('date_nm','=',$string)->first();
         }
         if(!$result){
@@ -105,18 +117,6 @@ class BaseImport{
                 $mGeneralPurposes->date_id = 1;
                 $mGeneralPurposes->data_kb_nm = config('params.data_kb_nm')[$data_kb];
                 $mGeneralPurposes->disp_number = 1;
-            }
-            if (mb_strlen($string, 'UTF-8')> $this->date_nm_length) {
-                $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
-                    "fileName" => $fileName,
-                    "excelFieldName" => $fieldName,
-                    "row" => $row,
-                    "excelValue" => $string,
-                    "tableName" => 'mst_general_purposes',
-                    "DBFieldName" => 'date_nm',
-                    "DBvalue" => mb_substr($string,0,$this->date_nm_length),
-                ]));
-                $string = mb_substr($string,0,$this->date_nm_length);
             }
             $mGeneralPurposes->date_nm_kana = 'フメイ';
             $mGeneralPurposes->date_nm = $string;
