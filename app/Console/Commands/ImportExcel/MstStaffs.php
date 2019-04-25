@@ -24,6 +24,7 @@ class MstStaffs extends BaseImport
     public $error_fg=false;
     public $belongCompanyId=null;
     public $prefCdByPrefNameCustom=[];
+    public $businessOffice=[];
     public $excel_column = [
         'A'=>'staff_cd',
         'B'=>'staff_nm',
@@ -141,11 +142,13 @@ class MstStaffs extends BaseImport
         date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("YmdHis");
         $mGeneralPurposes=new MGeneralPurposes();
+        $mBusinessOffices=new MBusinessOffices();
         $findBelongCompany= $mGeneralPurposes->where('data_kb','=','01004')->where('date_nm','=', "アキタ")->first();
         if($findBelongCompany)
         {
             $this->belongCompanyId=$findBelongCompany->date_id;
         }
+        $this->businessOffice=$mBusinessOffices->getMstBusinessOffice();
         $this->prefCdByPrefNameCustom=$mGeneralPurposes->getPrefCdByPrefNameCustom();
         $this->childFile1=$this->readChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
         $this->childFile2=$this->readChildFile(config('params.import_file_path.mst_staffs.staff_background'),'staff_background');
@@ -276,7 +279,7 @@ class MstStaffs extends BaseImport
                 foreach ($rowCurrentData[$row] as  $pos=>$value) {
                     if(isset($column_insurer[$pos]))
                     {
-                        $record[$column_insurer[$pos]] = is_null($value) ? null :(string)$value;
+                        $record[$column_insurer[$pos]] = empty($value) ? null :(string)$value;
                         $record['row_index']=$row;
                     }
                 }
@@ -296,7 +299,7 @@ class MstStaffs extends BaseImport
                                 $record[$column_background[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_background[$pos]] = is_null($value) ? null : (string)$value;
+                                $record[$column_background[$pos]] = empty($value) ? null : (string)$value;
                                 break;
                         }
                         $record['row_index'] = $row;
@@ -316,7 +319,7 @@ class MstStaffs extends BaseImport
                                 $record[$column_driver_license[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_driver_license[$pos]] = is_null($value) ? null : (string)$value;
+                                $record[$column_driver_license[$pos]] = empty($value) ? null : (string)$value;
                                 break;
                         }
                         $record['row_index']=$row;
@@ -338,7 +341,7 @@ class MstStaffs extends BaseImport
         {
             foreach($rowData[$row] as $pos=>$value){
                 if(isset($excel_column[$pos])) {
-                    $record[$excel_column[$pos]] = is_null($value)?null:(string)$value;
+                    $record[$excel_column[$pos]] = empty($value)?null:(string)$value;
                 }
             }
             $record['modified_at'] = \PHPExcel_Style_NumberFormat::toFormattedString($record['modified_at'],'yyyy/mm/dd hh:mm:ss');
@@ -347,6 +350,7 @@ class MstStaffs extends BaseImport
             $record['enter_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['enter_date'],'yyyy-mm-dd');
             $record['retire_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['retire_date'],'yyyy-mm-dd');
             $record['zip_cd'] = is_null($record['zip_cd'])?null:str_replace("-","",$record['zip_cd']);
+            $record['mst_business_office_id']=$this->getOfficeId($record['mst_business_office_id']);
             if($this->getCellularPhone($record['phone_number']))
             {
                 $record['cellular_phone_number']=$this->getCellularPhone($record['phone_number']);
@@ -408,7 +412,7 @@ class MstStaffs extends BaseImport
             {
                 $data=$this->validateRow($record);
             }
-            $data['mst_business_office_id'] = $this->getOfficeId($record['mst_business_office_id']);
+
             if(!empty($data) && $this->error_fg==false)
             {
                 $data["password"]=bcrypt($this->generateRandomString(8));
@@ -465,13 +469,11 @@ class MstStaffs extends BaseImport
     }
     public function getOfficeId($office_cd)
     {
-        if($office_cd)
+        if($office_cd!=null)
         {
-            $mBusinessOffice=new MBusinessOffices();
-            $result=$mBusinessOffice->getMstBusinessOfficeId($office_cd);
-            if(!empty($result['id']))
+            if(isset($this->businessOffice[$office_cd]))
             {
-                return $result['id'];
+                return $this->businessOffice[$office_cd];
             }
             else
             {
@@ -578,7 +580,7 @@ class MstStaffs extends BaseImport
     }
     public function trimFieldInChildFile($recordChildFile,$filename)
     {
-        $validatorChild = Validator::make( $recordChildFile, $this->ruleValid);
+        $validatorChild = Validator::make($recordChildFile, $this->ruleValid);
         if ($validatorChild->fails()) {
             $failedRules = $validatorChild->failed();
             foreach ($failedRules as $field => $errors) {
@@ -593,7 +595,7 @@ class MstStaffs extends BaseImport
                             "DBFieldName" => $field,
                             "DBvalue" => mb_substr($recordChildFile[$field], 0, $error[0]),
                         ]));
-                        $recordChildFile[$field] = mb_substr($recordChildFile[$field],0,$error[0]);
+                        $recordChildFile[$field] = empty($recordChildFile[$field])?null:mb_substr($recordChildFile[$field],0,$error[0]);
                     }
                 }
             }
