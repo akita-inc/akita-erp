@@ -121,15 +121,12 @@ class MstStaffs extends BaseImport
         "cellular_phone_number"=>"length:20|nullable",
         "notes"=>"length:50|nullable",
         "insurer_number"=>"length:20|nullable",
-        "health_insurance_class"=>"length:11|nullable",
-        "welfare_annuity_class"=>"length:11|nullable",
         "basic_pension_number"=>"length:20|nullable",
         "person_insured_number"=>"length:20|nullable",
         "educational_background"=>"length:50|nullable",
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
         'drivers_license_number'=>'length:12|nullable',
-        'drivers_license_issued_dt'=>'nullable',
         "created_at"=>"required",
         "modified_at"=>"required",
     ];
@@ -356,7 +353,6 @@ class MstStaffs extends BaseImport
     public function mainReading($rowData,$row){
         $excel_column = $this->excel_column;
         $record = array();
-        $recordStaffDepents=array();
         $mGeneralPurposes = new MGeneralPurposes();
         $this->error_fg=false;
         $employment_pattern_id=$rowData[$row]['D'];

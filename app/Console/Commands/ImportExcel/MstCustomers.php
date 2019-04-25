@@ -43,8 +43,8 @@ class MstCustomers extends BaseImport
         'mst_customers_cd' =>'required',
         'customer_nm' =>'nullable|length:200',
         'customer_nm_kana' =>'kana_custom|nullable|length:200',
-        'customer_nm_formal' =>'nullable|length:200',
-        'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
+        //'customer_nm_formal' =>'nullable|length:200',
+        //'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
         'person_in_charge_last_nm' =>'nullable|length:25',
         'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
@@ -136,11 +136,11 @@ class MstCustomers extends BaseImport
                             break;
                         case 'customer_nm':
                             $record[$excel_column[$pos]] = (string)$value;
-                            $record['customer_nm_formal'] = (string)$value;
+                            //$record['customer_nm_formal'] = (string)$value;
                             break;
                         case 'customer_nm_kana':
-                            $record[$excel_column[$pos]] = mb_convert_kana($value);
-                            $record['customer_nm_kana_formal'] = mb_convert_kana($value);
+                            $record[$excel_column[$pos]] = mb_convert_kana($value,'KVC');
+                            //$record['customer_nm_kana_formal'] = mb_convert_kana($value);
                             break;
                         case 'person_in_charge_last_nm':
                             $value = str_replace(' ', '　', $value);
@@ -185,6 +185,8 @@ class MstCustomers extends BaseImport
             //$record['bill_mst_customers_cd'] = isset($mst_customers_relate_cds[$record['mst_customers_cd']])?$mst_customers_relate_cds[$record['mst_customers_cd']]:null;
 
             $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_customers.main.fileName'),$error_fg);
+            $record['customer_nm_formal'] = $record['customer_nm'];
+            $record['customer_nm_kana_formal'] = $record['customer_nm_kana'];
             $this->insertDB($error_fg, $row, $record);
         }
         foreach($mst_customers_relate_cds as $key=>$values){
@@ -220,6 +222,10 @@ class MstCustomers extends BaseImport
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
+                    /*if(isset($record['customer_nm_kana'])){
+                        $record['customer_nm_kana'] = mb_convert_kana($record['customer_nm_kana'],'KVC');
+                        $record['customer_nm_kana_formal'] = mb_convert_kana($record['customer_nm_kana_formal'],'KVC');
+                    }*/
                     DB::table('mst_customers')->insert($record);
                     DB::commit();
                     $this->numNormal++;
