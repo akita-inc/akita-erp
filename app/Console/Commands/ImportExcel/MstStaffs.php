@@ -114,7 +114,6 @@ class MstStaffs extends BaseImport
         'last_nm_kana'  => 'kana_custom|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana_custom|nullable|length:50',
-        'zip_cd'=>'nullable|length:7',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         "landline_phone_number"=>"length:20|nullable",
