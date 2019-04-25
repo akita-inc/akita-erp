@@ -68,7 +68,7 @@ class RunBatchImport extends Command
      */
     public function handle(){
         $files = glob(storage_path("logs")."/DataConvert_Add_general_purposes_*"); // Will find 2.txt, 2.php, 2.gif
-        DB::table("mst_general_purposes")->truncate();
+
         if (count($files) > 0){
             foreach ($files as $file)
             {
