@@ -723,9 +723,7 @@ class MstStaffs extends BaseImport
             {
                 if(isset($staffDependents[$k]))
                 {
-                    $first_nm_dependent=null;
-                    $last_nm_dependent=null;
-                    $record+=['dependent_kb'=>$this->getDependentKB($k)];
+                    $record['dependent_kb']=$this->getDependentKB($k);
                     if(is_null($staffDependents[$k]["first_nm"]))
                     {
                         $first_nm_dependent= $staffDependents[$k]["last_nm"];
@@ -736,12 +734,8 @@ class MstStaffs extends BaseImport
                         $first_nm_dependent= $staffDependents[$k]["first_nm"];
                         $last_nm_dependent=$staffDependents[$k]["last_nm"];
                     }
-                    $first_nm_dependent=$this->trimStaffDependents($first_nm_dependent);
-                    $last_nm_dependent=$this->trimStaffDependents($last_nm_dependent);
-                    $record+=[
-                        'last_nm'=>$first_nm_dependent,
-                        'first_nm'=>$last_nm_dependent,
-                    ];
+                    $record['last_nm']=$this->trimStaffDependents($last_nm_dependent);
+                    $record['first_nm']=$this->trimStaffDependents($first_nm_dependent);
                     $arrInsert[]=$record;
 
                 }
