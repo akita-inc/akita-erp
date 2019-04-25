@@ -28,9 +28,9 @@ class MstBusinessOffices extends BaseImport
         'J' => 'ip_phone_number'
     ];
     public $rules = [
-        'business_office_nm'=>'required|length:11',
-        'mst_business_office_cd'=>'required|length:50',
-        'branch_office_cd'=>'nullable|length:11',
+        'business_office_nm'=>'required|length:50',
+        'mst_business_office_cd'=>'required',
+        'branch_office_cd'=>'nullable',
         'zip_cd'=>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',
         'address1'  => 'nullable|length:20',
@@ -149,7 +149,7 @@ class MstBusinessOffices extends BaseImport
         }
     }
     protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_business_offices_copy1')->where('mst_business_office_cd', '=', $record['mst_business_office_cd'])->whereNull('deleted_at')->exists() && !empty($record['mst_business_office_cd'])) {
+        if (DB::table('mst_business_offices_copy1')->where('mst_business_office_cd', '=', $record['mst_business_office_cd'])->whereNull('deleted_at')->exists() && $record['mst_business_office_cd']!='' && is_numeric($record['mst_business_office_cd'])) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,
@@ -181,14 +181,7 @@ class MstBusinessOffices extends BaseImport
                             "fieldName" => $column_name[$field],
                             "row" => $row,
                         ]));
-                    }/*else if ($ruleName == 'KanaCustom') {
-                        $error_fg = true;
-                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
-                            "fileName" => $fileName,
-                            "fieldName" => $column_name[$field],
-                            "row" => $row,
-                        ]));
-                    }*/
+                    }
                 }
             }
         }
