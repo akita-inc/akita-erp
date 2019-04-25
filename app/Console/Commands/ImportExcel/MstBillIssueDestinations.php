@@ -93,15 +93,11 @@ class MstBillIssueDestinations extends BaseImport
                 $record['created_at']=date('Y-m-d H:i:s');
                 $record['modified_at']=date('Y-m-d H:i:s');
             }
-
             if(!$this->error_fg) {
                 $this->validateRow($record);
-                unset($record['mst_customer_cd']);
-                $this->insertDB($record);
             }
-            else {
-                $this->numErr++;
-            }
+            unset($record['mst_customer_cd']);
+            $this->insertDB($record);
 
         }
     }
@@ -182,6 +178,8 @@ class MstBillIssueDestinations extends BaseImport
                     "errorDetail" => $e->getMessage(),
                 ]));
             }
+        }else{
+            $this->numErr++;
         }
     }
 }
