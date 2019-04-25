@@ -43,8 +43,8 @@ class MstCustomers extends BaseImport
         'mst_customers_cd' =>'required',
         'customer_nm' =>'nullable|length:200',
         'customer_nm_kana' =>'kana_custom|nullable|length:200',
-        'customer_nm_formal' =>'nullable|length:200',
-        'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
+        //'customer_nm_formal' =>'nullable|length:200',
+        //'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
         'person_in_charge_last_nm' =>'nullable|length:25',
         'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
@@ -116,7 +116,7 @@ class MstCustomers extends BaseImport
         $error_fg = false;
         $this->getDataFromExcel(config('params.import_file_path.mst_customers.main.path'));
         $this->start_row = 1;
-        for($row = $this->start_row; $row <= $this->highestRow;$row++){
+        for($row = $this->start_row; $row <= 2/*$this->highestRow*/;$row++){
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
@@ -136,11 +136,11 @@ class MstCustomers extends BaseImport
                             break;
                         case 'customer_nm':
                             $record[$excel_column[$pos]] = (string)$value;
-                            $record['customer_nm_formal'] = (string)$value;
+                            //$record['customer_nm_formal'] = (string)$value;
                             break;
                         case 'customer_nm_kana':
-                            $record[$excel_column[$pos]] = mb_convert_kana($value);
-                            $record['customer_nm_kana_formal'] = mb_convert_kana($value);
+                            $record[$excel_column[$pos]] = mb_convert_kana($value,'KVC');
+                            //$record['customer_nm_kana_formal'] = mb_convert_kana($value);
                             break;
                         case 'person_in_charge_last_nm':
                             $value = str_replace(' ', '　', $value);
@@ -185,6 +185,8 @@ class MstCustomers extends BaseImport
             //$record['bill_mst_customers_cd'] = isset($mst_customers_relate_cds[$record['mst_customers_cd']])?$mst_customers_relate_cds[$record['mst_customers_cd']]:null;
 
             $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_customers.main.fileName'),$error_fg);
+            $record['customer_nm_formal'] = $record['customer_nm'];
+            $record['customer_nm_kana_formal'] = $record['customer_nm_kana'];
             $this->insertDB($error_fg, $row, $record);
         }
         foreach($mst_customers_relate_cds as $key=>$values){
@@ -220,7 +222,11 @@ class MstCustomers extends BaseImport
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
-                    DB::table('mst_customers')->insert($record);
+                    /*if(isset($record['customer_nm_kana'])){
+                        $record['customer_nm_kana'] = mb_convert_kana($record['customer_nm_kana'],'KVC');
+                        $record['customer_nm_kana_formal'] = mb_convert_kana($record['customer_nm_kana_formal'],'KVC');
+                    }*/
+                    DB::table('mst_customers_copy1')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }
@@ -238,7 +244,7 @@ class MstCustomers extends BaseImport
         }
     }
     protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_customers')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
+        if (DB::table('mst_customers_copy1')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,
