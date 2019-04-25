@@ -39,7 +39,7 @@ class MstBillIssueDestinations extends BaseImport
         'bill_zip_cd'  => 'required|zip_code|length:7',
         'bill_address1'  => 'nullable|length:2',
         'bill_address2'  => 'nullable|length:20',
-        'bill_address3'  => 'nullable|length:50',
+        'bill_address3'  => 'nullable|length:20',
         'bill_phone_number'  => 'nullable|length:20',
     ];
     public $configDataImport = [];
@@ -144,21 +144,24 @@ class MstBillIssueDestinations extends BaseImport
 
     public function checkCustomerId($customer_cd)
     {
-        $customer = MCustomers::where('deleted_at','=',null)
-                            ->where('mst_customers_cd','=',$customer_cd)
-                            ->first();
-        if($customer) {
-            return $customer->id;
+        if(!is_null($customer_cd)){
+            $customer = MCustomers::where('deleted_at','=',null)
+                ->where('mst_customers_cd','=',$customer_cd)
+                ->first();
+            if($customer) {
+                return $customer->id;
+            }
+            else{
+                $this->error_fg  = true;
+                $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
+                    "fileName" => config('params.import_file_path.mst_bill_issue_destinations.main_file_name'),
+                    "fieldName" => $this->column_main_name['mst_customer_cd'],
+                    "row" => $this->rowIndex,
+                ]));
+                return null;
+            }
         }
-        else{
-            $this->error_fg  = true;
-            $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
-                "fileName" => config('params.import_file_path.mst_bill_issue_destinations.main_file_name'),
-                "fieldName" => $this->column_main_name['mst_customer_cd'],
-                "row" => $this->rowIndex,
-            ]));
-            return null;
-        }
+        return null;
     }
 
     protected function insertDB($record)
