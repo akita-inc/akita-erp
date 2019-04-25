@@ -174,6 +174,7 @@ class BaseImport{
             {
                 $this->numRead=$this->numNormal+$this->numErr;
                 $this->exportPassword();
+                $this->checkIDErrorMatch();
             }
             if( !empty( Lang::trans("log_import.end_read") ) ){
                 $this->log("data_convert",Lang::trans("log_import.end_read",[
