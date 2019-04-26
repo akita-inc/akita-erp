@@ -440,8 +440,8 @@ class MstStaffs extends BaseImport
                 $data["password"]=bcrypt($this->generateRandomString(8));
                 $data['belong_company_id']=$this->belongCompanyId;
                 $data['enable_fg']=true;
-                $data['last_nm_kana']=!empty($data['last_nm_kana'])? mb_convert_kana($data['last_nm_kana'],'KVC'):null;
-                $data['first_nm_kana']=!empty($data['first_nm_kana'])? mb_convert_kana($data['first_nm_kana'],'KVC'):null;
+                $data['last_nm_kana']=!empty($data['last_nm_kana'])? Common::convertToKanaExcel($data['last_nm_kana']):null;
+                $data['first_nm_kana']=!empty($data['first_nm_kana'])? Common::convertToKanaExcel($data['first_nm_kana']):null;
                 unset($data['staff_nm']);
                 unset($data['staff_nm_kana']);
                 unset($data["phone_number"]);
