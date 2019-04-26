@@ -124,6 +124,8 @@ class MstBusinessOffices extends BaseImport
             $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_business_offices.main.fileName'),$error_fg);
             $this->insertDB($error_fg, $row, $record,$disp_number);
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 
     protected function insertDB($error_fg, $row, $record,&$disp_number){

@@ -197,6 +197,8 @@ class MstCustomers extends BaseImport
                 "extraFileName" => config('params.import_file_path.mst_customers.main.fileName'),
             ]));
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 
     public function readingExtraFile(){
@@ -214,6 +216,8 @@ class MstCustomers extends BaseImport
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
             $mst_customers_cds[$rowData[$row]['A']] = ['numRow' => $numRow,'parent_code'=>(string)$rowData[$row]['B']];
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
         return $mst_customers_cds;
     }
 
