@@ -173,11 +173,24 @@ class MstStaffs extends BaseImport
 
     public function formatDateString($date)
     {
-        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy-mm-dd');
+        if(empty($date))
+        {
+            return null;
+        }
+        else {
+            return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy-mm-dd');
+
+        }
     }
     public function formatDateTimeString($date)
     {
-        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy/mm/dd hh:mm:ss');
+        if(empty($date))
+        {
+            return null;
+        }
+        else {
+            return \PHPExcel_Style_NumberFormat::toFormattedString($date, 'yyyy/mm/dd hh:mm:ss');
+        }
     }
     public function generateRandomString($length = 8) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -187,11 +200,13 @@ class MstStaffs extends BaseImport
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         //add password cell
-        $objPHPExcel=$this->objPHPExcel;
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $randomString);
+        if($this->error_fg==false)
+        {
+            $objPHPExcel=$this->objPHPExcel;
+            $objPHPExcel->setActiveSheetIndex(0);
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $randomString);
+        }
             return $randomString;
-
     }
     public function getCellularPhone($phone)
     {
@@ -356,11 +371,11 @@ class MstStaffs extends BaseImport
                     $record[$excel_column[$pos]] = empty($value) && $value!=0?null:(string)$value;
                 }
             }
-            $record['modified_at'] = \PHPExcel_Style_NumberFormat::toFormattedString($record['modified_at'],'yyyy/mm/dd hh:mm:ss');
-            $record['created_at']=  \PHPExcel_Style_NumberFormat::toFormattedString($record['created_at'],'yyyy/mm/dd hh:mm:ss');
-            $record['birthday'] = \PHPExcel_Style_NumberFormat::toFormattedString($record['birthday'],'yyyy-mm-dd');
-            $record['enter_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['enter_date'],'yyyy-mm-dd');
-            $record['retire_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['retire_date'],'yyyy-mm-dd');
+            $record['modified_at'] = $this->formatDateTimeString($record['modified_at']);
+            $record['created_at']=  $this->formatDateTimeString($record['created_at']);
+            $record['birthday'] = $this->formatDateString($record['birthday']);
+            $record['enter_date']= $this->formatDateString($record['enter_date']);
+            $record['retire_date']=$this->formatDateString($record['retire_date']);
             $record['zip_cd'] = is_null($record['zip_cd'])?null:str_replace("-","",$record['zip_cd']);
             if($this->getCellularPhone($record['phone_number']))
             {
