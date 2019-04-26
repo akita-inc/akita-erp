@@ -26,12 +26,19 @@ class MBusinessOffices  extends Model
             ->orderBy('disp_number', 'asc')
             ->get();
     }
-    public function getMstBusinessOfficeId($office_cd)
+    public function getMstBusinessOffice()
     {
-        return $this->select('id')
-                    ->where('deleted_at','=',null)
-                    ->where('mst_business_office_cd','=',$office_cd)
-                    ->first();
+        $result=array();
+        $data=$this->select('id','mst_business_office_cd')
+            ->where('deleted_at','=',null)
+            ->orderBy('disp_number', 'asc')
+            ->get();
+        foreach($data as $key=>$value)
+        {
+            $val = json_decode( json_encode($value), true);
+            $result[$val['mst_business_office_cd']]=$val['id'];
+        }
+        return $result;
     }
     public function getListBusinessOffices()
     {
