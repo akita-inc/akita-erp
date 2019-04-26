@@ -25,6 +25,8 @@ class MstStaffs extends BaseImport
     public $belongCompanyId=null;
     public $prefCdByPrefNameCustom=[];
     public $businessOffice=[];
+    public $depend_kb_1=null;
+    public $depend_kb_2=null;
     public $excel_column = [
         'A'=>'staff_cd',
         'B'=>'staff_nm',
@@ -148,6 +150,14 @@ class MstStaffs extends BaseImport
         {
             $this->belongCompanyId=$findBelongCompany->date_id;
         }
+        $this->depend_kb_1=$mGeneralPurposes->select('date_id')
+            ->where('data_kb','=',config('params.data_kb.dependent_kb'))
+            ->where('date_nm','LIKE','%'.'配偶者'.'%')
+            ->first()['date_id'];
+        $this->depend_kb_2=$mGeneralPurposes->select('date_id')
+            ->where('data_kb','=',config('params.data_kb.dependent_kb'))
+            ->where('date_nm','LIKE','%'.'扶養者'.'%')
+            ->first()['date_id'];
         $this->businessOffice=$mBusinessOffices->getMstBusinessOffice();
         $this->prefCdByPrefNameCustom=$mGeneralPurposes->getPrefCdByPrefNameCustom();
         $this->childFile1=$this->readChildFile(config('params.import_file_path.mst_staffs.health_insurance_card_information'),'insurance');
@@ -279,11 +289,11 @@ class MstStaffs extends BaseImport
                 foreach ($rowCurrentData[$row] as  $pos=>$value) {
                     if(isset($column_insurer[$pos]))
                     {
-                        $record[$column_insurer[$pos]] = empty($value) ? null :(string)$value;
+                        $record[$column_insurer[$pos]] = empty($value) && $value!=0 ? null :(string)$value;
                         $record['row_index']=$row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                $staff_cd=isset($record['staff_cd']) || $record['staff_cd']==0?$record['staff_cd']:"";
                 unset($record['staff_cd']);
                 $recordChild[$staff_cd]=$record;
             }
@@ -299,13 +309,13 @@ class MstStaffs extends BaseImport
                                 $record[$column_background[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_background[$pos]] = empty($value) ? null : (string)$value;
+                                $record[$column_background[$pos]] = empty($value) && $value!=0 ? null : (string)$value;
                                 break;
                         }
                         $record['row_index'] = $row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                $staff_cd=isset($record['staff_cd']) || $record['staff_cd']==0?$record['staff_cd']:"";
                 unset($record['staff_cd']);
                 $recordChild[$staff_cd]=$record;
             }
@@ -319,17 +329,19 @@ class MstStaffs extends BaseImport
                                 $record[$column_driver_license[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_driver_license[$pos]] = empty($value) ? null : (string)$value;
+                                $record[$column_driver_license[$pos]] = empty($value) && $value!=0  ? null : (string)$value;
                                 break;
                         }
                         $record['row_index']=$row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                $staff_cd=isset($record['staff_cd']) || $record['staff_cd']==0?$record['staff_cd']:"";
                 unset($record['staff_cd']);
                 $recordChild[$staff_cd]=$record;
             }
         }
+        unset($objPHPExcel);
+        unset($objReader);
         return $recordChild;
     }
     public function mainReading($rowData,$row){
@@ -350,7 +362,6 @@ class MstStaffs extends BaseImport
             $record['enter_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['enter_date'],'yyyy-mm-dd');
             $record['retire_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['retire_date'],'yyyy-mm-dd');
             $record['zip_cd'] = is_null($record['zip_cd'])?null:str_replace("-","",$record['zip_cd']);
-            $record['mst_business_office_id']=$this->getOfficeId($record['mst_business_office_id']);
             if($this->getCellularPhone($record['phone_number']))
             {
                 $record['cellular_phone_number']=$this->getCellularPhone($record['phone_number']);
@@ -404,15 +415,26 @@ class MstStaffs extends BaseImport
                $record['prefectures_cd']=$prefectures['prefectures_cd'];
                $record['address1']=$prefectures['address1'];
             }
-            $record+=$this->explodeStaffName($record['staff_nm'],null);
-            unset($record['staff_nm']);
-            $record+=$this->explodeStaffName($record['staff_nm_kana'],'kana');
-            unset($record['staff_nm_kana']);
-            if(!empty($record))
+            $office=$this->getOfficeId($record['mst_business_office_id']);
+            if($office)
             {
-                $data=$this->validateRow($record);
+                $record['mst_business_office_id']=$office;
             }
-
+            $staffName=$this->explodeStaffName($record['staff_nm'],null);
+            if(!empty($staffName))
+            {
+                $record['first_nm']=$staffName['first_nm'];
+                $record['last_nm']=$staffName['last_nm'];
+            }
+            unset($record['staff_nm']);
+            $staffNameKana=$this->explodeStaffName($record['staff_nm_kana'],'kana');
+            if(!empty($staffNameKana))
+            {
+                $record['first_nm_kana']=$staffNameKana['first_nm_kana'];
+                $record['last_nm_kana']=$staffNameKana['last_nm_kana'];
+            }
+            unset($record['staff_nm_kana']);
+            $data=$this->validateRow($record);
             if(!empty($data) && $this->error_fg==false)
             {
                 $data["password"]=bcrypt($this->generateRandomString(8));
@@ -471,9 +493,12 @@ class MstStaffs extends BaseImport
     {
         if($office_cd!=null)
         {
-            if(isset($this->businessOffice[(int)$office_cd]))
+            $businessOffice=$this->businessOffice;
+            $office_cd=(int)$office_cd;
+            if(isset($businessOffice[$office_cd]))
             {
-                return $this->businessOffice[(int)$office_cd];
+                $office_id=$businessOffice[$office_cd];
+                return $office_id;
             }
             else
             {
@@ -604,7 +629,6 @@ class MstStaffs extends BaseImport
     }
     public function insertDB($data)
     {
-        DB::beginTransaction();
         try{
             $staffDependents=array();
             for( $k=0; $k<=5; $k++) {
@@ -613,7 +637,6 @@ class MstStaffs extends BaseImport
             }
             $id = DB::table($this->table)->insertGetId( $data);
             $this->numNormal++;
-            DB::commit();
             if($id)
              {
                  $configArr=[
@@ -625,7 +648,6 @@ class MstStaffs extends BaseImport
              };
         }catch (\Exception $e){
             $this->numErr++;
-            DB::rollback();
             $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
                 "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                 "row" => $this->rowIndex,
@@ -635,30 +657,8 @@ class MstStaffs extends BaseImport
     }
     public function getDependentKB($type)
     {
-        $result=null;
-        if($type)
-        {
-            $result=MGeneralPurposes::select('date_id')
-                ->where('data_kb','=',config('params.data_kb.dependent_kb'))
-                ->where('date_nm','LIKE','%'.'扶養者'.'%')
-                ->first();
-        }
-        else
-        {
-
-            $result=MGeneralPurposes::select('date_id')
-                ->where('data_kb','=',config('params.data_kb.dependent_kb'))
-                ->where('date_nm','LIKE','%'.'配偶者'.'%')
-                ->first();
-        }
-        if($result)
-        {
-            return $result['date_id'];
-        }
-        else
-        {
-            return null;
-        }
+        $result=$type==0?$this->depend_kb_1:$this->depend_kb_2;
+        return $result;
     }
     public function trimStaffDependents($value)
     {
@@ -674,36 +674,37 @@ class MstStaffs extends BaseImport
     }
     public function insertMstStaffDependents($configArr,$staffDependents,$last_nm)
     {
-
-        DB::beginTransaction();
         try{
             $arrInsert=array();
             $record=$configArr;
             for($k=0;$k<=count($staffDependents);$k++)
             {
-                if(isset($staffDependents[$k]) && !is_null($staffDependents[$k]))
+                if(isset($staffDependents[$k]) && !empty($staffDependents[$k]))
                 {
                         $staff_dependents_nm=$this->explodeStaffName($staffDependents[$k],null);
-                        $validator = Validator::make( $staff_dependents_nm,['last_nm'  => 'nullable|length:25',
-                            'first_nm'  => 'length:25|nullable']);
-                        if ($validator->fails()) {
-                            $failedRules = $validator->failed();
-                            foreach ($failedRules as $field => $errors) {
-                                foreach ($errors as $ruleName => $error) {
-                                    if ($ruleName == 'Length') {
-                                        $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
-                                            "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                                            "excelFieldName" => $this->column_staff_dependents['staff_dependents_nm_'.$k],
-                                            "row" => $this->rowIndex,
-                                            "excelValue" => $staff_dependents_nm[$field],
-                                            "tableName" => 'mst_staff_dependents',
-                                            "DBFieldName" => $field,
-                                            "DBvalue" => mb_substr($staff_dependents_nm[$field], 0, $error[0]),
-                                        ]));
-                                        $staff_dependents_nm[$field] = mb_substr($staff_dependents_nm[$field],0,$error[0]);
-                                    }
-                                }
-                            }
+                        if (mb_strlen($staff_dependents_nm['first_nm'], 'UTF-8')>25) {
+                                $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
+                                    "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                    "excelFieldName" => $this->column_staff_dependents['staff_dependents_nm_'.$k],
+                                    "row" => $this->rowIndex,
+                                    "excelValue" => $staff_dependents_nm['first_nm'],
+                                    "tableName" => 'mst_staff_dependents',
+                                    "DBFieldName" => 'first_nm',
+                                    "DBvalue" => mb_substr($staff_dependents_nm['first_nm'], 0,25),
+                                ]));
+                                $staff_dependents_nm['first_nm'] = mb_substr($staff_dependents_nm['first_nm'],0,25);
+                        }
+                        if (mb_strlen($staff_dependents_nm['last_nm'], 'UTF-8')>25) {
+                            $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
+                                "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                                "excelFieldName" => $this->column_staff_dependents['staff_dependents_nm_'.$k],
+                                "row" => $this->rowIndex,
+                                "excelValue" => $staff_dependents_nm['last_nm'],
+                                "tableName" => 'mst_staff_dependents',
+                                "DBFieldName" =>'last_nm',
+                                "DBvalue" => mb_substr($staff_dependents_nm['last_nm'], 0,25),
+                            ]));
+                            $staff_dependents_nm['last_nm'] = mb_substr($staff_dependents_nm['last_nm'],0,25);
                         }
                         $staffDependents[$k]=$staff_dependents_nm;
                         $record['dependent_kb']=$this->getDependentKB($k);
@@ -724,7 +725,6 @@ class MstStaffs extends BaseImport
                 }
             }
             DB::table('mst_staff_dependents')->insert($arrInsert);
-            DB::commit();
         }
         catch (\Exception $e)
         {
@@ -733,7 +733,6 @@ class MstStaffs extends BaseImport
                 "row" => $this->rowIndex,
                 "errorDetail" => $e->getMessage(),
             ]));
-            DB::rollBack();
             return;
         }
     }
