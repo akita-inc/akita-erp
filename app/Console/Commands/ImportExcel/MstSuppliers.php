@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Console\Commands\ImportExcel;
+use App\Helpers\Common;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MSupplier;
@@ -250,8 +251,8 @@ class MstSuppliers extends BaseImport{
             try {
                 if (!empty($record)) {
                     if(isset($record['supplier_nm_kana'])){
-                        $record['supplier_nm_kana'] = mb_convert_kana($record['supplier_nm_kana'],'KVC');
-                        $record['supplier_nm_kana_formal'] = mb_convert_kana($record['supplier_nm_kana_formal'],'KVC');
+                        $record['supplier_nm_kana'] = Common::convertToKanaExcel($record['supplier_nm_kana']);
+                        $record['supplier_nm_kana_formal'] = Common::convertToKanaExcel($record['supplier_nm_kana_formal']);
                     }
                     DB::table('mst_suppliers')->insert($record);
                     DB::commit();
