@@ -149,10 +149,11 @@ class MstBillIssueDestinations extends BaseImport
             }
             else{
                 $this->error_fg  = true;
-                $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
-                    "fileName" => config('params.import_file_path.mst_bill_issue_destinations.main_file_name'),
+                $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.no_record_in_extra_file", [
+                    "mainFileName" =>config('params.import_file_path.mst_bill_issue_destinations.main_file_name'),
                     "fieldName" => $this->column_main_name['mst_customer_cd'],
                     "row" => $this->rowIndex,
+                    "extraFileName" => 'mst_customers',
                 ]));
                 return null;
             }
