@@ -184,6 +184,8 @@ class BaseImport{
                     "table" => $this->tableLabel[$this->table],
                 ]));
             }
+            unset($this->objPHPExcel);
+            unset($objReader);
         }
     }
 }

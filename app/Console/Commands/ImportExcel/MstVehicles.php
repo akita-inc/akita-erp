@@ -443,7 +443,8 @@ class MstVehicles extends BaseImport
                 }
             }
         }
-
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 
     public function readingVehicleExtraFile1(){
@@ -458,6 +459,8 @@ class MstVehicles extends BaseImport
                 ];
             }
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 
     public function readingVehicleExtraFile2()
@@ -558,6 +561,8 @@ class MstVehicles extends BaseImport
                 }
             }
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 
     public function readingVehicleExtraFile3(){
@@ -573,5 +578,7 @@ class MstVehicles extends BaseImport
                 ];
             }
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 }
