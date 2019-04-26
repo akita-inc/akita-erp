@@ -200,13 +200,10 @@ class MstStaffs extends BaseImport
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         //add password cell
-        if($this->error_fg==false)
-        {
             $objPHPExcel=$this->objPHPExcel;
             $objPHPExcel->setActiveSheetIndex(0);
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $randomString);
-        }
-            return $randomString;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $this->error_fg==true?"":$randomString);
+        return bcrypt($randomString);
     }
     public function getCellularPhone($phone)
     {
@@ -304,7 +301,7 @@ class MstStaffs extends BaseImport
                 foreach ($rowCurrentData[$row] as  $pos=>$value) {
                     if(isset($column_insurer[$pos]))
                     {
-                        $record[$column_insurer[$pos]] = empty($value) && $value!=0 ? null :(string)$value;
+                        $record[$column_insurer[$pos]] = !isset($value) ? null :(string)$value;
                         $record['row_index']=$row;
                     }
                 }
@@ -324,7 +321,7 @@ class MstStaffs extends BaseImport
                                 $record[$column_background[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_background[$pos]] = !isset($value)? null : (string)$value;
+                                $record[$column_background[$pos]] =  !isset($value)? null : (string)$value;
                                 break;
                         }
                         $record['row_index'] = $row;
@@ -450,9 +447,9 @@ class MstStaffs extends BaseImport
             }
             unset($record['staff_nm_kana']);
             $data=$this->validateRow($record);
+            $data["password"]=$this->generateRandomString(8);
             if(!empty($data) && $this->error_fg==false)
             {
-                $data["password"]=bcrypt($this->generateRandomString(8));
                 $data['belong_company_id']=$this->belongCompanyId;
                 $data['enable_fg']=true;
                 $data['last_nm_kana']=!empty($data['last_nm_kana'])? Common::convertToKanaExcel($data['last_nm_kana']):null;
