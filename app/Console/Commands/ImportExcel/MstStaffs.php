@@ -765,13 +765,17 @@ class MstStaffs extends BaseImport
     {
         for ($k = 1; $k <=3; $k++){
             if(count($this->{"childFile".$k}) > 0){
-                foreach ($this->{"childFile".$k} as $item){
-                    $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                        "mainFileName" => config('params.import_file_path.mst_staffs.extra_file.file_nm_'.$k),
-                        "fieldName" => $this->{'column_name_extra_file_'.$k}['staff_cd'],
-                        "row" => $item['row_index'],
-                        "extraFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    ]));
+                foreach ($this->{"childFile".$k} as $key=>$item){
+                    if(!empty($key))
+                    {
+                        $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                            "mainFileName" => config('params.import_file_path.mst_staffs.extra_file.file_nm_'.$k),
+                            "fieldName" => $this->{'column_name_extra_file_'.$k}['staff_cd'],
+                            "row" => $item['row_index'],
+                            "extraFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                        ]));
+
+                    }
                 }
             }
         }
