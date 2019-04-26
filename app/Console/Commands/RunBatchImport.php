@@ -91,7 +91,7 @@ class RunBatchImport extends Command
                             $data_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
                             $mst_general_purposes = DB::table("mst_general_purposes")
                                 ->where("data_kb","=",$data_kb)
-                                ->where("date_nm","=",$data_nm)
+                                ->where("date_nm","=", mb_convert_encoding($data_nm, "UTF-8", "SJIS"))
                                 ->where("date_id","=",$data_id)
                                 ->first();
                             if(empty($mst_general_purposes)){
@@ -112,6 +112,7 @@ class RunBatchImport extends Command
                 }
             }
         }
+        exit;
         foreach ($this->arrayRunTime as $run){
             if($run == "mst_staffs"){
                 $staffAdmin = DB::table($run)->where("staff_cd","=","admin")->first();
