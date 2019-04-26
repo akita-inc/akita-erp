@@ -105,7 +105,9 @@ class MstBusinessOffices extends BaseImport
                             $record[$excel_column[$pos]] = str_replace("　", "", $val);
                             break;
                         case 'zip_cd':
-                            $record[$excel_column[$pos]] = $value!= "" ? str_replace("-", "", $value) : null;
+                            $val = str_replace(" ", "　", $value);
+                            $val = str_replace("　", "", $val);
+                            $record[$excel_column[$pos]] = $val!= "" ? str_replace("-", "", $val) : null;
                             break;
                         case 'address1':
                             $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
