@@ -200,10 +200,7 @@ class MstStaffs extends BaseImport
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         //add password cell
-            $objPHPExcel=$this->objPHPExcel;
-            $objPHPExcel->setActiveSheetIndex(0);
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $this->error_fg==true?"":$randomString);
-        return bcrypt($randomString);
+        return $randomString;
     }
     public function getCellularPhone($phone)
     {
@@ -447,7 +444,6 @@ class MstStaffs extends BaseImport
             }
             unset($record['staff_nm_kana']);
             $data=$this->validateRow($record);
-            $data["password"]=$this->generateRandomString(8);
             if(!empty($data) && $this->error_fg==false)
             {
                 $data['belong_company_id']=$this->belongCompanyId;
@@ -647,10 +643,15 @@ class MstStaffs extends BaseImport
                 array_push($staffDependents,$data['staff_dependents_nm_'.$k]);
                 unset($data['staff_dependents_nm_'.$k]);
             }
+            $password=$this->generateRandomString(8);
+            $data["password"]=bcrypt($password);
             $id = DB::table($this->table)->insertGetId( $data);
             $this->numNormal++;
             if($id)
              {
+                 $objPHPExcel=$this->objPHPExcel;
+                 $objPHPExcel->setActiveSheetIndex(0);
+                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $this->error_fg==true?"":$password);
                  $configArr=[
                          'mst_staff_id'=>$id,
                          'created_at'=>$data['created_at'],
@@ -660,6 +661,7 @@ class MstStaffs extends BaseImport
              };
         }catch (\Exception $e){
             $this->numErr++;
+            $this->error_fg=true;
             $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
                 "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                 "row" => $this->rowIndex,
@@ -740,6 +742,7 @@ class MstStaffs extends BaseImport
         }
         catch (\Exception $e)
         {
+            $this->error_fg=true;
             $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
                 "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                 "row" => $this->rowIndex,
