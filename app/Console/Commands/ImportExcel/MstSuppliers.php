@@ -252,8 +252,9 @@ class MstSuppliers extends BaseImport{
                 if (!empty($record)) {
                     if(isset($record['supplier_nm_kana'])){
                         $record['supplier_nm_kana'] = Common::convertToKanaExcel($record['supplier_nm_kana']);
-                        $record['supplier_nm_kana_formal'] = Common::convertToKanaExcel($record['supplier_nm_kana_formal']);
+                        $record['supplier_nm_kana_formal'] = Common::convertToKanaExcel($record['supplier_nm_kana']);
                     }
+                    dd($record);
                     DB::table('mst_suppliers')->insert($record);
                     DB::commit();
                     $this->numNormal++;
