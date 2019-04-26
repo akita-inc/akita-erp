@@ -163,6 +163,8 @@ class MstSuppliers extends BaseImport{
                 $this->insertDB($error_fg, $row, $record,config('params.import_file_path.mst_suppliers.main.fileName'));
             }
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 
     public function readingExtraFile(){
@@ -191,6 +193,8 @@ class MstSuppliers extends BaseImport{
                 $this->insertDB($error_fg, $row, $record, config('params.import_file_path.mst_suppliers.extra1.fileName'));
             }
         }
+        unset($this->objPHPExcel);
+        unset($this->objReader);
     }
 
     protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
