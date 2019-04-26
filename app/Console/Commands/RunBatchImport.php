@@ -73,39 +73,43 @@ class RunBatchImport extends Command
         if (count($files) > 0){
             foreach ($files as $file)
             {
-                $myfile = fopen($file, "r") or die("Unable to open file!");
-                while(!feof($myfile)) {
-                    $contentLine = fgets($myfile);
-                    $strSplit = explode(mb_convert_encoding("データ区分：", "SJIS"),$contentLine);
-                    if(count($strSplit) > 1){
-                        $strSplit = explode(mb_convert_encoding("データ区分名：", "SJIS"),$strSplit[1]);
-                        $data_kb = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
+                try{
+                    $myfile = fopen($file, "r") or die("Unable to open file!");
+                    while(!feof($myfile)) {
+                        $contentLine = fgets($myfile);
+                        $strSplit = explode(mb_convert_encoding("データ区分：", "SJIS"),$contentLine);
+                        if(count($strSplit) > 1){
+                            $strSplit = explode(mb_convert_encoding("データ区分名：", "SJIS"),$strSplit[1]);
+                            $data_kb = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
 
-                        $strSplit = explode(mb_convert_encoding("データID：", "SJIS"),$strSplit[1]);
-                        $data_kb_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
+                            $strSplit = explode(mb_convert_encoding("データID：", "SJIS"),$strSplit[1]);
+                            $data_kb_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
 
-                        $strSplit = explode(mb_convert_encoding("データ名称：", "SJIS"),$strSplit[1]);
-                        $data_id = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
-                        $strSplit = explode(mb_convert_encoding("データカナ名称：", "SJIS"),$strSplit[1]);
-                        $data_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
-                        $mst_general_purposes = DB::table("mst_general_purposes")
-                            ->where("data_kb","=",$data_kb)
-                            ->where("date_nm","=",$data_nm)
-                            ->where("date_id","=",$data_id)
-                            ->first();
-                        if(empty($mst_general_purposes)){
-                            DB::table("mst_general_purposes")->insert([
-                                "data_kb" => $data_kb,
-                                "data_kb_nm" => mb_convert_encoding($data_kb_nm, "UTF-8", "SJIS"),
-                                "date_id" => $data_id,
-                                "date_nm" => mb_convert_encoding($data_nm, "UTF-8", "SJIS"),
-                                "date_nm_kana" => "フメイ"
-                            ]);
+                            $strSplit = explode(mb_convert_encoding("データ名称：", "SJIS"),$strSplit[1]);
+                            $data_id = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
+                            $strSplit = explode(mb_convert_encoding("データカナ名称：", "SJIS"),$strSplit[1]);
+                            $data_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
+                            $mst_general_purposes = DB::table("mst_general_purposes")
+                                ->where("data_kb","=",$data_kb)
+                                ->where("date_nm","=",$data_nm)
+                                ->where("date_id","=",$data_id)
+                                ->first();
+                            if(empty($mst_general_purposes)){
+                                DB::table("mst_general_purposes")->insert([
+                                    "data_kb" => $data_kb,
+                                    "data_kb_nm" => mb_convert_encoding($data_kb_nm, "UTF-8", "SJIS"),
+                                    "date_id" => $data_id,
+                                    "date_nm" => mb_convert_encoding($data_nm, "UTF-8", "SJIS"),
+                                    "date_nm_kana" => "フメイ"
+                                ]);
+                            }
                         }
-                    }
 
+                    }
+                    fclose($myfile);
+                }catch (\Exception $ex){
+                    echo $ex->getMessage();
                 }
-                fclose($myfile);
             }
         }
         foreach ($this->arrayRunTime as $run){
