@@ -67,6 +67,7 @@ class RunBatchImport extends Command
      * @return mixed
      */
     public function handle(){
+        ini_set('memory_limit', -1);
         $files = glob(storage_path("logs")."/DataConvert_Add_general_purposes_*"); // Will find 2.txt, 2.php, 2.gif
 
         if (count($files) > 0){
