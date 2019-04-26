@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 class MBusinessOffices  extends Model
 {
     use SoftDeletes;
@@ -29,9 +30,9 @@ class MBusinessOffices  extends Model
     public function getMstBusinessOffice()
     {
         $result=array();
-        $data=$this->select('id','mst_business_office_cd')
+        $data= DB::table('mst_business_offices')
+            ->select('id','mst_business_office_cd')
             ->where('deleted_at','=',null)
-            ->orderBy('disp_number', 'asc')
             ->get();
         foreach($data as $key=>$value)
         {
