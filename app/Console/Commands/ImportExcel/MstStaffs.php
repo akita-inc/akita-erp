@@ -368,7 +368,7 @@ class MstStaffs extends BaseImport
         {
             foreach($rowData[$row] as $pos=>$value){
                 if(isset($excel_column[$pos])) {
-                    $record[$excel_column[$pos]] = empty($value) && $value!=0?null:(string)$value;
+                    $record[$excel_column[$pos]] = !isset($value)? null : (string)$value;
                 }
             }
             $record['modified_at'] = $this->formatDateTimeString($record['modified_at']);
@@ -434,11 +434,6 @@ class MstStaffs extends BaseImport
             if($office)
             {
                 $record['mst_business_office_id']=$office;
-            }
-            else
-            {
-                $record['mst_business_office_id']=null;
-
             }
             $staffName=$this->explodeStaffName($record['staff_nm'],null);
             if(!empty($staffName))
