@@ -289,11 +289,11 @@ class MstStaffs extends BaseImport
                 foreach ($rowCurrentData[$row] as  $pos=>$value) {
                     if(isset($column_insurer[$pos]))
                     {
-                        $record[$column_insurer[$pos]] = empty($value) ? null :(string)$value;
+                        $record[$column_insurer[$pos]] = empty($value) && $value!=0 ? null :(string)$value;
                         $record['row_index']=$row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                $staff_cd=isset($record['staff_cd']) || $record['staff_cd']==0?$record['staff_cd']:"";
                 unset($record['staff_cd']);
                 $recordChild[$staff_cd]=$record;
             }
@@ -309,13 +309,13 @@ class MstStaffs extends BaseImport
                                 $record[$column_background[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_background[$pos]] = empty($value) ? null : (string)$value;
+                                $record[$column_background[$pos]] = empty($value) && $value!=0 ? null : (string)$value;
                                 break;
                         }
                         $record['row_index'] = $row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                $staff_cd=isset($record['staff_cd']) || $record['staff_cd']==0?$record['staff_cd']:"";
                 unset($record['staff_cd']);
                 $recordChild[$staff_cd]=$record;
             }
@@ -329,13 +329,13 @@ class MstStaffs extends BaseImport
                                 $record[$column_driver_license[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_driver_license[$pos]] = empty($value) ? null : (string)$value;
+                                $record[$column_driver_license[$pos]] = empty($value) && $value!=0  ? null : (string)$value;
                                 break;
                         }
                         $record['row_index']=$row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
+                $staff_cd=isset($record['staff_cd']) || $record['staff_cd']==0?$record['staff_cd']:"";
                 unset($record['staff_cd']);
                 $recordChild[$staff_cd]=$record;
             }
@@ -674,7 +674,6 @@ class MstStaffs extends BaseImport
     }
     public function insertMstStaffDependents($configArr,$staffDependents,$last_nm)
     {
-
         try{
             $arrInsert=array();
             $record=$configArr;
