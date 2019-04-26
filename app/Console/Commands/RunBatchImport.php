@@ -67,6 +67,7 @@ class RunBatchImport extends Command
      * @return mixed
      */
     public function handle(){
+        ini_set('memory_limit', -1);
         $files = glob(storage_path("logs")."/DataConvert_Add_general_purposes_*"); // Will find 2.txt, 2.php, 2.gif
 
         if (count($files) > 0){
@@ -88,9 +89,9 @@ class RunBatchImport extends Command
                         $strSplit = explode(mb_convert_encoding("データカナ名称：", "SJIS"),$strSplit[1]);
                         $data_nm = trim(trim($strSplit[0]),mb_convert_encoding("　", "SJIS"));
                         $mst_general_purposes = DB::table("mst_general_purposes")
-                            ->where("data_kb","=","03001")
-                            ->where("date_nm","=","普通免許")
-                            ->where("date_id","=","28")
+                            ->where("data_kb","=",$data_kb)
+                            ->where("date_nm","=",$data_nm)
+                            ->where("date_id","=",$data_id)
                             ->first();
                         if(empty($mst_general_purposes)){
                             DB::table("mst_general_purposes")->insert([
