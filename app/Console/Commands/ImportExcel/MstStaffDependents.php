@@ -29,7 +29,7 @@ class MstStaffDependents extends BaseImport
         $dataInsert = [];
         $mst_staff_cd = $this->rowCurrentData["A"];
         $mstStaff = null;
-        if( empty($mst_staff_cd) ){
+        if( empty($mst_staff_cd) && $mst_staff_cd!= '0'){
             $this->log("DataConvert_Err_required",trans("log_import.required",[
                 "fileName" => $this->fileName,
                 "fieldName" => "社員CD",
