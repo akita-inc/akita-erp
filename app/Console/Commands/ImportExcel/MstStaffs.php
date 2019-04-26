@@ -324,7 +324,7 @@ class MstStaffs extends BaseImport
                                 $record[$column_background[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_background[$pos]] = empty($value) && $value!=0 ? null : (string)$value;
+                                $record[$column_background[$pos]] = !isset($value)? null : (string)$value;
                                 break;
                         }
                         $record['row_index'] = $row;
@@ -344,7 +344,7 @@ class MstStaffs extends BaseImport
                                 $record[$column_driver_license[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_driver_license[$pos]] = empty($value) && $value!=0  ? null : (string)$value;
+                                $record[$column_driver_license[$pos]] =!isset($value) ? null : (string)$value;
                                 break;
                         }
                         $record['row_index']=$row;
