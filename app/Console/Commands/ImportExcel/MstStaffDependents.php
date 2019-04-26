@@ -38,7 +38,7 @@ class MstStaffDependents extends BaseImport
             $this->numErr++;
         }
         else{
-            $mstStaff = MStaffs::where("staff_cd","=",$mst_staff_cd)->first();
+            $mstStaff = MStaffs::where("staff_cd","=",(string)$mst_staff_cd)->first();
             if(empty($mstStaff)){
                 $flagError = true;
                 $this->log("DataConvert_Err_ID_Match",trans("log_import.no_record_in_extra_file",[
