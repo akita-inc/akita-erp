@@ -175,7 +175,6 @@ return [
                 'fileName' => 'New 営業所一覧(本社用）.xls',
             ],
         ],
-        'data_convert'=>storage_path('logs/DataConvert.log'),
     ],
     "log_import_path" => [
         'data_convert'=>storage_path('logs/DataConvert.log')
