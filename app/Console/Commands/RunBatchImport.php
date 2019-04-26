@@ -107,7 +107,6 @@ class RunBatchImport extends Command
                 fclose($myfile);
             }
         }
-        exit;
         foreach ($this->arrayRunTime as $run){
             if($run == "mst_staffs"){
                 $staffAdmin = DB::table($run)->where("staff_cd","=","admin")->first();
