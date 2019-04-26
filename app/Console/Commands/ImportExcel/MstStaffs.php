@@ -435,6 +435,11 @@ class MstStaffs extends BaseImport
             {
                 $record['mst_business_office_id']=$office;
             }
+            else
+            {
+                $record['mst_business_office_id']=null;
+
+            }
             $staffName=$this->explodeStaffName($record['staff_nm'],null);
             if(!empty($staffName))
             {
