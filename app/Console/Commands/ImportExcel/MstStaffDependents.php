@@ -29,7 +29,7 @@ class MstStaffDependents extends BaseImport
         $dataInsert = [];
         $mst_staff_cd = $this->rowCurrentData["A"];
         $mstStaff = null;
-        if( empty($mst_staff_cd) && $mst_staff_cd!= '0'){
+        if( empty($mst_staff_cd) && (string)$mst_staff_cd!= '0'){
             $this->log("DataConvert_Err_required",trans("log_import.required",[
                 "fileName" => $this->fileName,
                 "fieldName" => "社員CD",
@@ -69,7 +69,7 @@ class MstStaffDependents extends BaseImport
                             $strCheck = "扶養者";
                         }
 
-                        if(strlen($firstName) > $strLenFirstName){
+                        if(mb_strlen($firstName) > $strLenFirstName){
                             $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
                                 "fileName" => $this->fileName,
                                 "excelFieldName" => "配偶者",
@@ -120,7 +120,7 @@ class MstStaffDependents extends BaseImport
                                 $strCheck = "扶養者";
                             }
 
-                            if(strlen($firstName) > $strLenFirstName){
+                            if(mb_strlen($firstName) > $strLenFirstName){
                                 $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
                                     "fileName" => $this->fileName,
                                     "excelFieldName" => $column["fieldExcel"],
@@ -148,39 +148,41 @@ class MstStaffDependents extends BaseImport
                 }
                 $dataInsert["rows"] = $arrayInsert;
             }
-            if( !$flagError && count($dataInsert["rows"]) > 0 ){
-                foreach ( $dataInsert["rows"] as $item ){
-                    $mstStaffDependents = MStaffDependents::where( "mst_staff_id","=",$dataInsert["mst_staff_id"] )
-                        ->where( "first_nm","=",$item["first_nm"] )
-                        ->first();
-                    if( empty($mstStaffDependents) ){
-                        $mstStaffDependents = new MStaffDependents();
-                        $mstStaffDependents->mst_staff_id = $dataInsert["mst_staff_id"];
-                        $mstStaffDependents->last_nm = $mstStaff["last_nm"];
-                        if(!empty($item["birthday"])){
-                            $mstStaffDependents->birthday = \PHPExcel_Style_NumberFormat::toFormattedString($item["birthday"], 'YYYY-MM-DD');
+            if( !$flagError ){
+                if(count($dataInsert["rows"]) > 0 ) {
+                    foreach ($dataInsert["rows"] as $item) {
+                        $mstStaffDependents = MStaffDependents::where("mst_staff_id", "=", $dataInsert["mst_staff_id"])
+                            ->where("first_nm", "=", $item["first_nm"])
+                            ->first();
+                        if (empty($mstStaffDependents)) {
+                            $mstStaffDependents = new MStaffDependents();
+                            $mstStaffDependents->mst_staff_id = $dataInsert["mst_staff_id"];
+                            $mstStaffDependents->last_nm = $mstStaff["last_nm"];
+                            if (!empty($item["birthday"])) {
+                                $mstStaffDependents->birthday = \PHPExcel_Style_NumberFormat::toFormattedString($item["birthday"], 'YYYY-MM-DD');
+                            }
+                            $mstStaffDependents->dependent_kb = $item["dependent_kb"];
+                            $mstStaffDependents->first_nm = $item["first_nm"];
+                        } else {
+                            if (!empty($item["birthday"])) {
+                                $mstStaffDependents->birthday = \PHPExcel_Style_NumberFormat::toFormattedString($item["birthday"], 'YYYY-MM-DD');
+                            } else {
+                                $mstStaffDependents->birthday = null;
+                            }
                         }
-                        $mstStaffDependents->dependent_kb = $item["dependent_kb"];
-                        $mstStaffDependents->first_nm = $item["first_nm"];
-                    }else{
-                        if(!empty($item["birthday"])){
-                            $mstStaffDependents->birthday = \PHPExcel_Style_NumberFormat::toFormattedString($item["birthday"], 'YYYY-MM-DD');
-                        }else{
-                            $mstStaffDependents->birthday = null;
-                        }
-                    }
 
 
-                    try{
-                        $mstStaffDependents->save();
-                        $this->numNormal++;
-                    }catch (\Exception $e){
-                        $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
-                            "fileName" => $this->fileName,
-                            "row" => $this->rowIndex,
-                            "errorDetail" => $e->getMessage(),
-                        ]));
-                        $this->numErr++;
+                        try {
+                            $mstStaffDependents->save();
+                            $this->numNormal++;
+                        } catch (\Exception $e) {
+                            $this->log("DataConvert_Err_SQL", Lang::trans("log_import.insert_error", [
+                                "fileName" => $this->fileName,
+                                "row" => $this->rowIndex,
+                                "errorDetail" => $e->getMessage(),
+                            ]));
+                            $this->numErr++;
+                        }
                     }
                 }
             }
