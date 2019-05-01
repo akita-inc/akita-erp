@@ -3423,7 +3423,7 @@ var ctrEmptyInfoListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\empty-info-list-vl.js */"./resources/assets/js/controller/empty-info-list-vl.js");
+module.exports = __webpack_require__(/*! E:\PROJECTS\sources\akita-erp\resources\assets\js\controller\empty-info-list-vl.js */"./resources/assets/js/controller/empty-info-list-vl.js");
 
 
 /***/ })

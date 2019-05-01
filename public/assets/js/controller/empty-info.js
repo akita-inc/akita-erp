@@ -21307,7 +21307,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\MyProject\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
+module.exports = __webpack_require__(/*! E:\PROJECTS\sources\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })
