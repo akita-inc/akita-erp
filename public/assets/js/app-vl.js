@@ -31492,7 +31492,7 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\PROJECTS\sources\akita-erp\resources\assets\js\app-vl.js */"./resources/assets/js/app-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\app-vl.js */"./resources/assets/js/app-vl.js");
 
 
 /***/ })

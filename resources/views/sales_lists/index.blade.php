@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-md-4  padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
-                                <option value="">{{trans('common.select_option')}}</option>
+                                <option value="">{{trans('sales_lists.list.search.business_default_value')}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
                                 @endforeach
@@ -24,7 +24,7 @@
                             {{trans("sales_lists.list.search.period_time")}}
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
-                            <date-picker :lang='lang' id="reference_date" :format="format_date" value-type="format" v-model="fileSearch.reference_date"></date-picker>
+                            <date-picker :lang='lang' id="from_date" :format="format_date" value-type="format" v-model="fileSearch.from_date"></date-picker>
                         </div>
                     </div>
                     <div  class="col-md-5 col-sm-12 row">
@@ -32,7 +32,7 @@
                             ～
                         </div>
                         <div class="col-md-5 grid-form-search padding-row-5">
-                            <date-picker :lang='lang' id="reference_date" :format="format_date" value-type="format" v-model="fileSearch.reference_date"></date-picker>
+                            <date-picker :lang='lang' id="to_date" :format="format_date" value-type="format" v-model="fileSearch.to_date"></date-picker>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,13 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("sales_lists.list.search.code")}}
                             </label>
-                            <input id="input_sales_lists_cd" class="form-control">
+                            <vue-autosuggest
+                                    :suggestions="filteredOptions"
+                                    :limit="10"
+                                    :input-props="inputProps"
+                                    :on-selected="onSelected"
+                            >
+                            </vue-autosuggest>
                         </div>
                         <div class="col-md-6 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
@@ -59,9 +65,12 @@
                     </div>
                     <div class="col-md-6 col-sm-12 row">
                         <div class="col-md-4 grid-form-search d-inline-flex no-padding">
-                            <label class="col-list-search-f w-50"> {{trans("sales_lists.list.search.status")}}</label>
-                            <select class="form-control dropdown-list" name="status"  id="status"  v-model="fileSearch.status">
-                                <option value="">{{trans('common.select_option')}}</option>
+                            <label class="col-list-search-f w-50"> {{trans("sales_lists.list.search.invoicing_flag")}}</label>
+                            <select class="form-control dropdown-list" name="invoicing_flag"  id="invoicing_flag"  v-model="fileSearch.invoicing_flag">
+                                <option value="">{{trans("sales_lists.list.search.invoicing_flag_default_value")}}</option>
+                                @foreach(config('params.invoicing_flag') as $key=>$invoice)
+                                    <option value="{{$key}}"> {{$invoice}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-3 lh-38 text-right padding-row-5">
@@ -75,7 +84,7 @@
                             </button>
                         </div>
                         <div class="col-md-2 lh-38 text-left padding-row-5">
-                            <button class="btn btn-primary w-100" v-on:click="getItems(1)">
+                            <button class="btn btn-primary w-100">
                                 {{trans('common.button.export_excel')}}
                             </button>
                         </div>
@@ -97,11 +106,21 @@
                     @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
-                                @case('staff_cd')
-                                <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
+                                @case('total_fee')
+                                <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                <p v-else>---</p>
+                                @break
+                                @case('consumption_tax')
+                                <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                <p v-else>---</p>
+                                @break
+                                @case('tax_included_amount')
+                                <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                <p v-else>---</p>
                                 @break
                                 @default
-                                <span>{!! "@{{ item['$key'] }}" !!}</span>
+                                <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
+                                <p v-else>---</p>
                                 @break
                             @endswitch
                         </td>

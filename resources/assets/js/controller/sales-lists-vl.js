@@ -1,5 +1,6 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import DatePicker from '../component/vue2-datepicker-master';
+import { VueAutosuggest }  from "vue-autosuggest";
 var ctrSalesListVl = new Vue({
     el: '#ctrSalesListVl',
     data: {
@@ -9,14 +10,13 @@ var ctrSalesListVl = new Vue({
         items:[],
         message:'',
         auth_staff_cd:'',
+        filteredOptions: [],
         fileSearch:{
             daily_report_date:"",
-            position_id:"",
-            staff_nm:"",
-            date_nm:"",
-            belong_company_id:"",
+            from_date:"",
+            to_date:"",
             mst_business_office_id:"",
-            employment_pattern_id:"",
+            invoicing_flag:"",
         },
         pagination:{
             total: 0,
@@ -27,6 +27,9 @@ var ctrSalesListVl = new Vue({
             last_page:0
         },
         order: null,
+        dropdown_mst_customer_cd: [{
+            data:[]
+        }],
         getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
@@ -38,11 +41,16 @@ var ctrSalesListVl = new Vue({
                 order:this.order,
             };
             var that = this;
-            this.loading = true;
+            that.loading = true;
             sales_lists_service.loadList(data).then((response) => {
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
+                that.order = response.order;
+                $.each(that.fileSearch, function (key, value) {
+                    if (value === null)
+                        that.fileSearch[key] = '';
+                });
                 that.loading = false;
             });
         },
@@ -75,22 +83,51 @@ var ctrSalesListVl = new Vue({
         }
     },
     methods : {
+        onInputChange(text) {
+            this.fileSearch.mst_customers_cd= text;
+            if (text === '' || text === undefined) {
+                return;
+            }
+            /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
+            const filteredData = this.fileSearch.mst_customers_cd[0].data.filter(item => {
+                return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+            }).slice(0, this.limit);
+
+            this.filteredOptions = [{
+                data: filteredData
+            }];
+        },
+        inputProps: function() {
+            var cls_error = this.fileSearch.mst_customers_cd != undefined ? 'form-control is-invalid':'';
+            return {id:'autosuggest__input', onInputChange: this.onInputChange ,initialValue:  this.fileSearch.mst_customers_cd,maxlength:6, class:cls_error}
+        },
+        onSelected(option) {
+            this.fileSearch.mst_customers_cd = option.item;
+        },
         clearCondition:function () {
-            this.fileSearch.staff_cd = "";
-            this.fileSearch.staff_nm = "";
-            this.fileSearch.position_id="";
-            this.fileSearch.date_nm="";
-            this.fileSearch.belong_company_id="";
-            this.fileSearch.mst_business_office_id="";
-            this.fileSearch.employment_pattern_id="";
-        }
+            this.fileSearch.daily_report_date = "";
+            this.fileSearch.mst_business_office_id = "";
+            this.fileSearch.from_date = "";
+            this.fileSearch.to_date="";
+            this.fileSearch.invoicing_flag="";
+        },
         //end action list
     },
     mounted () {
         this.getItems(1, true);
+        var from_date = new Date();
+        from_date.setDate(1);
+        this.fileSearch.from_date=from_date;
+        var to_date = new Date();
+        var lastDay = new Date(to_date.getFullYear(), to_date.getMonth()+1, 1);
+        this.fileSearch.to_date=lastDay;
+        sales_lists_service.loadCustomerList().then((response) => {
+            this.dropdown_mst_customer_cd[0].data =  response.data;
+        });
     },
     components: {
         PulseLoader,
-        DatePicker
+        DatePicker,
+        VueAutosuggest,
     }
 });

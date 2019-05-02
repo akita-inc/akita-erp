@@ -21,4 +21,11 @@ sales_lists_service = {
             return error;
         });
     },
+    loadCustomerList: function () {
+        return axios.post('/staffs/api-v1/mst-customer-list').then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }

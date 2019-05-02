@@ -22,7 +22,9 @@ return [
             'mst_business_office_id'=>'営業所',
             'period_time'=>'期間',
             'customer'=>'得意先',
-            'status'=>'請求書',
+            'invoicing_flag'=>'請求書',
+            'business_default_value'=>'全社',
+            'invoicing_flag_default_value'=>'全て',
 
         ],
         'table' => [
@@ -30,12 +32,11 @@ return [
             'mst_customers_cd'=>'得意先CD',
             'customer_nm'=>'得意先名',
             'departure_point_name'=>'発地',
-            'delivery_destination'=>'着地',
-            'payment'=>'請求金額',
-            'consumption_tax'=>'消費税',
-            'total_fee'=>'合計金額',
-            'last_updated'=>'請求書発行日'
-            //Waiting for confirming with Shohei
+            'landing_name'=>'着地',
+            'total_fee'=>'請求金額',
+            'consumption_tax'=>'消費税額',
+            'tax_included_amount'=>'合計金額',
+            'publication_date'=>'請求書発行日'
         ]
     ],
 

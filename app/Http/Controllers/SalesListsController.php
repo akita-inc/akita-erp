@@ -16,11 +16,25 @@ class SalesListsController extends Controller
         $currentDate = date("Y-m-d",time());
         $dataSearch=$data['fieldSearch'];
         $this->query->select(
-            't_saleses.daily_report_date'
+            DB::raw("DATE_FORMAT(t_saleses.daily_report_date, '%Y/%m/%d') as daily_report_date"),
+            't_saleses.mst_customers_cd',
+            'mst_customers.customer_nm_formal as customer_nm',
+            't_saleses.departure_point_name',
+            't_saleses.landing_name',
+            DB::raw('format(t_saleses.total_fee, "#,##0") as total_fee'),
+            DB::raw('format(t_saleses.consumption_tax, "#,##0") as consumption_tax'),
+            DB::raw('format(t_saleses.tax_included_amount, "#,##0") as tax_included_amount'),
+            DB::raw("DATE_FORMAT(t_billing_history_headers.publication_date, '%Y/%m/%d') as publication_date")
         );
-//        $this->query->leftJoin('mst_business_offices', function ($join) {
-//            $join->on('mst_business_offices.id', '=', 'sales_lists.regist_office_id');
-//        });
+        $this->query->leftJoin('mst_customers', function ($join) {
+            $join->on('mst_customers.mst_customers_cd', '=', 't_saleses.mst_customers_cd');
+        });
+        $this->query->leftJoin('t_billing_history_header_details', function ($join) {
+            $join->on('t_saleses.document_no', '=','t_billing_history_header_details.document_no' );
+        });
+        $this->query->leftJoin('t_billing_history_headers', function ($join) {
+            $join->on('t_billing_history_headers.invoice_number', '=','t_billing_history_header_details.invoice_number' );
+        });
         $this->query->where('t_saleses.deleted_at',null);
 
             $this->query->orderBy('t_saleses.created_at','desc');
@@ -30,31 +44,37 @@ class SalesListsController extends Controller
         $fieldShowTable = [
             'daily_report_date' => [
                 "classTH" => "wd-100",
+                "classTD" => "text-center",
             ],
             'mst_customers_cd' => [
-                "classTH" => "min-wd-100",
+                "classTH" => "wd-100",
+                "classTD" => "text-center",
             ],
             'customer_nm' => [
                 "classTH" => "min-wd-100",
+                "classTD" => "text-center",
             ],
             'departure_point_name' => [
-                "classTH" => "",
-            ],
-            'delivery_destination' => [
                 "classTH" => "min-wd-100",
+                "classTD" => "text-center",
             ],
-            'payment' => [
+            'landing_name' => [
                 "classTH" => "min-wd-100",
-            ],
-            'consumption_tax' => [
-                "classTH" => "wd-120",
                 "classTD" => "text-center",
             ],
             'total_fee' => [
-                "classTH" => "wd-120",
+                "classTH" => "min-wd-100",
                 "classTD" => "text-center",
             ],
-            'last_updated' => [
+            'consumption_tax' => [
+                "classTH" => "min-wd-100",
+                "classTD" => "text-center",
+            ],
+            'tax_included_amount' => [
+                "classTH" => "min-wd-100",
+                "classTD" => "text-center",
+            ],
+            'publication_date' => [
                 "classTH" => "wd-120",
                 "classTD" => "text-center",
             ],
