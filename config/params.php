@@ -1,6 +1,7 @@
 <?php
 return [
     'page_size' => 10,
+    'page_size_sale_lists'=>50,
     'data_kb' => [
         'sex'                           => '01001', // 性別ID
         'prefecture_cd'                 => '01002', // 都道府県CD
@@ -100,6 +101,10 @@ return [
         '11002'=> '空車情報ステータス',
         '11003'=> '希望荷物',
         '11004'=> '搭載物',
+    ],
+    'invoicing_flag'=>[
+        '0'=>'未発行',
+        '1'=>'発行済み'
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),

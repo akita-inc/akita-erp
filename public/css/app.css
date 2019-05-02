@@ -388,6 +388,17 @@ input,select{
 .table-green td{
     vertical-align: middle;
 }
+.table-blue th{
+    background-color: #0070c0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+    text-align: center;
+    border: #a6a6a6 1px solid;
+}
+.table-blue td{
+    vertical-align: middle;
+}
 .cursor-pointer {
     cursor: pointer;
 }
@@ -643,4 +654,7 @@ input[type="checkbox"]:focus {
 }
 .disabled-bg{
     background-color: #D9D9D9 !important;
+}
+.bg-sales-lists{
+    background: rgb(244,176,132);
 }

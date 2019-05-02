@@ -79,6 +79,7 @@
 #autosuggest input[type="text"] {
     padding: .375rem .75rem!important;
     border: 1px solid #ced4da!important;
+    width: 100%;
 }
 .mx-input:disabled, .mx-input.disabled {
     background-color:#ccc;
