@@ -7,6 +7,7 @@
  */
 
 namespace App\Console\Commands\ImportExcel;
+use App\Helpers\Common;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
@@ -139,7 +140,7 @@ class MstCustomers extends BaseImport
                             //$record['customer_nm_formal'] = (string)$value;
                             break;
                         case 'customer_nm_kana':
-                            $record[$excel_column[$pos]] = mb_convert_kana($value,'KVC');
+                            $record[$excel_column[$pos]] = $value;
                             //$record['customer_nm_kana_formal'] = mb_convert_kana($value);
                             break;
                         case 'person_in_charge_last_nm':
@@ -226,10 +227,10 @@ class MstCustomers extends BaseImport
             DB::beginTransaction();
             try {
                 if (!empty($record)) {
-                    /*if(isset($record['customer_nm_kana'])){
-                        $record['customer_nm_kana'] = mb_convert_kana($record['customer_nm_kana'],'KVC');
-                        $record['customer_nm_kana_formal'] = mb_convert_kana($record['customer_nm_kana_formal'],'KVC');
-                    }*/
+                    if(isset($record['customer_nm_kana'])){
+                        $record['customer_nm_kana'] = Common::convertToKanaExcel($record['customer_nm_kana']);
+                        $record['customer_nm_kana_formal'] = Common::convertToKanaExcel($record['customer_nm_kana_formal']);
+                    }
                     DB::table('mst_customers')->insert($record);
                     DB::commit();
                     $this->numNormal++;

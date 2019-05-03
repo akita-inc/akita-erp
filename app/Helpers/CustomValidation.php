@@ -123,7 +123,7 @@ class CustomValidation {
                 {
                     return true;
                 }
-                if (preg_match("/^[ぁ-んァ-ヶーｦ-ﾟ]+$/u",$value)) {
+                if (preg_match("/^[ぁ-んァ-ヶーｦ-ﾟ-]+$/u",$value)) {
                     return true;
                 }
                return false;
