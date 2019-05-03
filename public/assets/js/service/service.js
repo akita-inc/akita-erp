@@ -220,6 +220,88 @@ home_service = {
 
 /***/ }),
 
+/***/ "./resources/assets/js/service/invoice-service.js":
+/*!********************************************************!*\
+  !*** ./resources/assets/js/service/invoice-service.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+invoice_service = {
+  loadListCustomers: function loadListCustomers(data) {
+    return axios.get('/invoices/api-v1/getListCustomers', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  loadList: function loadList(data) {
+    return axios.post('/invoices/api-v1/getItems', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  checkIsExist: function checkIsExist(id, data) {
+    return axios.post('/invoices/api-v1/checkIsExist/' + id, data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/invoices/api-v1/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  loadListBundleDt: function loadListBundleDt(data) {
+    return axios.post('/invoices/api-v1/load-list-bundle-dt', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getDetailsInvoice: function getDetailsInvoice(data) {
+    return axios.post('/invoices/api-v1/get-details-invoice', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getListStaffJobEx: function getListStaffJobEx(id) {
+    return axios.get('/invoices/api-v1/list-staff-job-ex/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getListStaffQualifications: function getListStaffQualifications(id) {
+    return axios.get('/invoices/api-v1/list-staff-qualification/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getStaffDependents: function getStaffDependents(id) {
+    return axios.get('/invoices/api-v1/list-staff-dependents/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getStaffAuths: function getStaffAuths(id) {
+    return axios.get('/invoices/api-v1/list-staff-auths/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  }
+};
+
+/***/ }),
+
 /***/ "./resources/assets/js/service/staffs-service.js":
 /*!*******************************************************!*\
   !*** ./resources/assets/js/service/staffs-service.js ***!
@@ -417,9 +499,9 @@ vehicles_service = {
 /***/ }),
 
 /***/ 1:
-/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ./resources/assets/js/service/invoice-service.js ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -428,7 +510,8 @@ __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\customers-servi
 __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
 __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
 __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
 
 
 /***/ })
