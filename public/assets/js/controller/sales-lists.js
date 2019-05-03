@@ -3270,14 +3270,17 @@ var ctrSalesListVl = new Vue({
     message: '',
     auth_staff_cd: '',
     filteredOptions: [],
+    filteredOptionsName: [],
     fileSearch: {
       daily_report_date: "",
       from_date: "",
       to_date: "",
       mst_business_office_id: "",
       invoicing_flag: "",
+      mst_customers_cd: "",
       customer_nm: ""
     },
+    errors: [],
     pagination: {
       total: 0,
       per_page: 2,
@@ -3286,11 +3289,15 @@ var ctrSalesListVl = new Vue({
       current_page: 1,
       last_page: 0
     },
+    flagSearch: false,
     order: null,
     dropdown_mst_customer_cd: [{
       data: []
     }],
-    getItems: function getItems(page, show_msg) {
+    dropdown_mst_customer_nm: [{
+      data: []
+    }],
+    getItems: function getItems(page, show_msg, flag) {
       if (show_msg !== true) {
         $('.alert').hide();
       }
@@ -3303,6 +3310,26 @@ var ctrSalesListVl = new Vue({
       };
       var that = this;
       that.loading = true;
+
+      if (flag) {
+        this.flagSearch = true;
+
+        if (this.fileSearch.from_date == "") {
+          this.errors["from_date"] = messages["MSG02001"].split(':attribute').join('期間');
+        }
+
+        if (this.fileSearch.to_date == "") {
+          this.errors["to_date"] = messages["MSG02001"].split(':attribute').join('期間');
+        }
+
+        if (this.fileSearch.from_date == "" || this.fileSearch.to_date == "") {
+          console.log(this.errors);
+          that.loading = false;
+          that.flag = false;
+          return;
+        }
+      }
+
       sales_lists_service.loadList(data).then(function (response) {
         that.items = response.data.data;
         that.pagination = response.pagination;
@@ -3357,6 +3384,16 @@ var ctrSalesListVl = new Vue({
         maxlength: 6,
         class: ''
       };
+    },
+    inputPropsName: function inputPropsName() {
+      var cls_error = this.fileSearch.customer_nm != undefined ? 'form-control is-invalid' : '';
+      return {
+        id: 'autosuggest__input',
+        onInputChange: this.onInputChangeName,
+        initialValue: this.fileSearch.customer_nm,
+        maxlength: 50,
+        class: ''
+      };
     }
   },
   methods: {
@@ -3374,8 +3411,28 @@ var ctrSalesListVl = new Vue({
         data: filteredData
       }];
     },
+    onInputChangeName: function onInputChangeName(text) {
+      this.fileSearch.customer_nm = text;
+
+      if (text === '' || text === undefined) {
+        return;
+      }
+
+      console.log(text);
+      var filteredDataNm = this.dropdown_mst_customer_nm[0].data.filter(function (item) {
+        return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+      }).slice(0, this.limit);
+      this.filteredOptionsName = [{
+        data: filteredDataNm
+      }];
+    },
     onSelected: function onSelected(option) {
       this.fileSearch.mst_customers_cd = option.item;
+      this.fileSearch.customer_nm = option.item;
+      this.$refs.customerName.searchInput = option.item;
+    },
+    onSelectedName: function onSelectedName(option) {
+      this.fileSearch.customer_nm = option.item;
     },
     clearCondition: function clearCondition() {
       this.fileSearch.daily_report_date = "";
@@ -3383,8 +3440,9 @@ var ctrSalesListVl = new Vue({
       this.fileSearch.from_date = "";
       this.fileSearch.to_date = "";
       this.fileSearch.invoicing_flag = "";
-    } //end action list
-
+      this.fileSearch.mst_customers_cd = "";
+      this.fileSearch.customer_nm = "";
+    }
   },
   mounted: function mounted() {
     var _this2 = this;
@@ -3394,13 +3452,17 @@ var ctrSalesListVl = new Vue({
       _this2.dropdown_mst_customer_cd[0].data = response.data;
       console.log(response.data);
     });
+    sales_lists_service.loadCustomerList().then(function (response) {
+      _this2.dropdown_mst_customer_nm[0].data = response.data;
+      console.log(response.data);
+    });
     this.getItems(1, true);
     var from_date = new Date();
     from_date.setDate(1);
     this.fileSearch.from_date = from_date;
     var to_date = new Date();
-    var lastDay = new Date(to_date.getFullYear(), to_date.getMonth() + 1, 1);
-    this.fileSearch.to_date = lastDay;
+    var lastDay = new Date(to_date.getFullYear(), to_date.getMonth() + 1, 0);
+    this.fileSearch.to_date = lastDay.getFullYear() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getDate();
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],

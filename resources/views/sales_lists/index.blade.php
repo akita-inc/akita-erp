@@ -24,7 +24,15 @@
                             {{trans("sales_lists.list.search.period_time")}}
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search">
-                            <date-picker :lang='lang' id="from_date" :format="format_date" value-type="format" v-model="fileSearch.from_date"></date-picker>
+                            <date-picker
+                                    :lang='lang'
+                                    id="from_date"
+                                    :format="format_date"
+                                    value-type="format"
+                                    v-model="fileSearch.from_date"
+                                    :input-class="errors.from_date != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
+                            ></date-picker>
+                            <span v-cloak v-if="errors.from_date != undefined" class="message-error">@{{errors.from_date}}</span>
                         </div>
                     </div>
                     <div  class="col-md-5 col-sm-12 row">
@@ -32,7 +40,15 @@
                             ～
                         </div>
                         <div class="col-md-5 grid-form-search padding-row-5">
-                            <date-picker :lang='lang' id="to_date" :format="format_date" value-type="format" v-model="fileSearch.to_date"></date-picker>
+                            <date-picker
+                                    :lang='lang'
+                                    id="to_date"
+                                    :format="format_date"
+                                    value-type="format"
+                                    v-model="fileSearch.to_date"
+                                    :input-class="errors.to_date != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
+                            ></date-picker>
+                            <span v-cloak v-if="errors.to_date != undefined" class="message-error">@{{errors.to_date}}</span>
                         </div>
                     </div>
                 </div>
@@ -60,6 +76,13 @@
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("sales_lists.list.search.customer_nm")}}
                             </label>
+                            <vue-autosuggest ref="customerName"
+                                    :suggestions="filteredOptionsName"
+                                    :limit="10"
+                                    :input-props="inputPropsName"
+                                    :on-selected="onSelectedName"
+                            >
+                            </vue-autosuggest>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12 row">
@@ -78,7 +101,7 @@
                             </button>
                         </div>
                         <div class="col-md-2 lh-38 text-left padding-row-5">
-                            <button class="btn btn-primary w-100" v-on:click="getItems(1)">
+                            <button class="btn btn-primary w-100" v-on:click="getItems(1,true,true)">
                                 {{trans('common.button.search')}}
                             </button>
                         </div>
@@ -91,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table">
+        <div class="wrapper-table" v-if="flagSearch && items.length>0">
             <table class="table table-striped table-bordered table-blue table-green">
                 <thead>
                 <tr>
@@ -132,6 +155,17 @@
             </table>
             <div v-cloak class="mg-t-10">
                 @include("Layouts.pagination")
+            </div>
+        </div>
+        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-if="flagSearch && items.length==0">
+            <div class="sub-header-line-two">
+                <div class="grid-form border-0">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{trans("sales_lists.list.search.no_data")}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

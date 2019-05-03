@@ -76,6 +76,9 @@
 .pl-150{
     padding-left: 150px;
 }
+.bg-color-pink{
+    background-color: rgb(255,204,255) !important;
+}
 #autosuggest input[type="text"] {
     padding: .375rem .75rem!important;
     border: 1px solid #ced4da!important;
