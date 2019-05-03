@@ -16,5 +16,7 @@ Route::group(['name' => 'sales-lists', 'prefix' => 'sales_lists', 'middleware' =
         Route::get('/delete/{id}', 'SalesListsController@delete')->name('sales_lists.delete');
         Route::any('/search-sales-lists', 'SalesListsController@searchSalesLists');
         Route::any('/updateStatus/{id}', 'SalesListsController@updateStatus');
+        Route::any('/mst-customer-list', ['uses' => 'Api\SalesListsController@getCustomerList']);
+
     });
 });

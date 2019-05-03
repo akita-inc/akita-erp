@@ -21,8 +21,8 @@ sales_lists_service = {
             return error;
         });
     },
-    loadCustomerList: function () {
-        return axios.post('/staffs/api-v1/mst-customer-list').then(function (response) {
+    loadCustomerList: function (type) {
+        return axios.post('/sales_lists/api-v1/mst-customer-list',{type:type}).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

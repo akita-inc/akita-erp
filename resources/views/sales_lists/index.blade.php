@@ -60,7 +60,6 @@
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("sales_lists.list.search.customer_nm")}}
                             </label>
-                            <input id="input_mst_sales_lists_name" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12 row">

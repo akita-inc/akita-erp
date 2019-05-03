@@ -3275,7 +3275,8 @@ var ctrSalesListVl = new Vue({
       from_date: "",
       to_date: "",
       mst_business_office_id: "",
-      invoicing_flag: ""
+      invoicing_flag: "",
+      customer_nm: ""
     },
     pagination: {
       total: 0,
@@ -3346,23 +3347,7 @@ var ctrSalesListVl = new Vue({
       this.getItems(this.pagination.current_page);
     }
   },
-  methods: {
-    onInputChange: function onInputChange(text) {
-      this.fileSearch.mst_customers_cd = text;
-
-      if (text === '' || text === undefined) {
-        return;
-      }
-      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-
-
-      var filteredData = this.fileSearch.mst_customers_cd[0].data.filter(function (item) {
-        return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-      }).slice(0, this.limit);
-      this.filteredOptions = [{
-        data: filteredData
-      }];
-    },
+  computed: {
     inputProps: function inputProps() {
       var cls_error = this.fileSearch.mst_customers_cd != undefined ? 'form-control is-invalid' : '';
       return {
@@ -3370,8 +3355,24 @@ var ctrSalesListVl = new Vue({
         onInputChange: this.onInputChange,
         initialValue: this.fileSearch.mst_customers_cd,
         maxlength: 6,
-        class: cls_error
+        class: ''
       };
+    }
+  },
+  methods: {
+    onInputChange: function onInputChange(text) {
+      this.fileSearch.mst_customers_cd = text;
+
+      if (text === '' || text === undefined) {
+        return;
+      }
+
+      var filteredData = this.dropdown_mst_customer_cd[0].data.filter(function (item) {
+        return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+      }).slice(0, this.limit);
+      this.filteredOptions = [{
+        data: filteredData
+      }];
     },
     onSelected: function onSelected(option) {
       this.fileSearch.mst_customers_cd = option.item;
@@ -3388,6 +3389,11 @@ var ctrSalesListVl = new Vue({
   mounted: function mounted() {
     var _this2 = this;
 
+    var type = 'cd';
+    sales_lists_service.loadCustomerList(type).then(function (response) {
+      _this2.dropdown_mst_customer_cd[0].data = response.data;
+      console.log(response.data);
+    });
     this.getItems(1, true);
     var from_date = new Date();
     from_date.setDate(1);
@@ -3395,9 +3401,6 @@ var ctrSalesListVl = new Vue({
     var to_date = new Date();
     var lastDay = new Date(to_date.getFullYear(), to_date.getMonth() + 1, 1);
     this.fileSearch.to_date = lastDay;
-    sales_lists_service.loadCustomerList().then(function (response) {
-      _this2.dropdown_mst_customer_cd[0].data = response.data;
-    });
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],

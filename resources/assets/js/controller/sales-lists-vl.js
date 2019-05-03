@@ -17,6 +17,7 @@ var ctrSalesListVl = new Vue({
             to_date:"",
             mst_business_office_id:"",
             invoicing_flag:"",
+            customer_nm:"",
         },
         pagination:{
             total: 0,
@@ -82,24 +83,30 @@ var ctrSalesListVl = new Vue({
             this.getItems(this.pagination.current_page);
         }
     },
+    computed:{
+        inputProps: function() {
+            var cls_error = this.fileSearch.mst_customers_cd != undefined ? 'form-control is-invalid':'';
+            return {
+                id: 'autosuggest__input',
+                onInputChange: this.onInputChange,
+                initialValue: this.fileSearch.mst_customers_cd,
+                maxlength: 6,
+                class: ''
+            };
+        },
+    },
     methods : {
         onInputChange(text) {
             this.fileSearch.mst_customers_cd= text;
             if (text === '' || text === undefined) {
                 return;
             }
-            /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-            const filteredData = this.fileSearch.mst_customers_cd[0].data.filter(item => {
+            const filteredData = this.dropdown_mst_customer_cd[0].data.filter(item => {
                 return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
             }).slice(0, this.limit);
-
             this.filteredOptions = [{
                 data: filteredData
             }];
-        },
-        inputProps: function() {
-            var cls_error = this.fileSearch.mst_customers_cd != undefined ? 'form-control is-invalid':'';
-            return {id:'autosuggest__input', onInputChange: this.onInputChange ,initialValue:  this.fileSearch.mst_customers_cd,maxlength:6, class:cls_error}
         },
         onSelected(option) {
             this.fileSearch.mst_customers_cd = option.item;
@@ -114,6 +121,11 @@ var ctrSalesListVl = new Vue({
         //end action list
     },
     mounted () {
+        var type='cd';
+        sales_lists_service.loadCustomerList(type).then((response) => {
+            this.dropdown_mst_customer_cd[0].data =  response.data;
+            console.log(response.data);
+        });
         this.getItems(1, true);
         var from_date = new Date();
         from_date.setDate(1);
@@ -121,9 +133,6 @@ var ctrSalesListVl = new Vue({
         var to_date = new Date();
         var lastDay = new Date(to_date.getFullYear(), to_date.getMonth()+1, 1);
         this.fileSearch.to_date=lastDay;
-        sales_lists_service.loadCustomerList().then((response) => {
-            this.dropdown_mst_customer_cd[0].data =  response.data;
-        });
     },
     components: {
         PulseLoader,
