@@ -12,6 +12,14 @@ class SalesListsController extends Controller
 {
     use ListTrait;
     public $table = "t_saleses";
+
+    public function __construct(){
+        parent::__construct();
+
+    }
+    protected function getPaging(){
+        return config('params.page_size_sale_lists');
+    }
     protected function search($data){
         $currentDate = date("Y-m-d",time());
         $dataSearch=$data['fieldSearch'];
@@ -37,7 +45,8 @@ class SalesListsController extends Controller
         });
         $this->query->where('t_saleses.deleted_at',null);
 
-            $this->query->orderBy('t_saleses.created_at','desc');
+            $this->query->orderBy('t_saleses.document_no','asc')
+                ->orderBy('t_saleses.daily_report_date','asc');
     }
 
     public function index(Request $request){
