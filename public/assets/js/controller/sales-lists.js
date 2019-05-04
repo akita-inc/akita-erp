@@ -3257,6 +3257,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../component/vue2-datepicker-master */ "./resources/assets/js/component/vue2-datepicker-master/lib/index.js");
 /* harmony import */ var _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vue_autosuggest__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-autosuggest */ "./node_modules/vue-autosuggest/dist/vue-autosuggest.esm.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 
 
 
@@ -3268,6 +3276,32 @@ var ctrSalesListVl = new Vue({
     format_date: format_date_picker,
     items: [],
     message: '',
+    fields: {
+      "daily_report_date": "日報日付",
+      "branch_office_cd": "支店CD",
+      "document_no": "伝票NO",
+      "registration_numbers": "登録番号",
+      "staff_cd": "社員CD",
+      "staff_nm": "社員名",
+      "mst_customers_cd": "得意先CD",
+      "customer_nm": "得意先名",
+      "goods": "品物",
+      "departure_point_name": "発地名",
+      "landing_name": "着地名",
+      "delivery_destination": "納入先",
+      "quantity": "数量",
+      "unit_price": "単価",
+      "total_fee": "便請求金額",
+      "insurance_fee": "保険料",
+      "billing_fast_charge": "請求高速料",
+      "discount_amount": "値引金額",
+      "tax_included_amount": "請求金額",
+      "loading_fee": "積込料",
+      "wholesale_fee": "取卸料",
+      "waiting_fee": "待機料",
+      "incidental_fee": "附帯料",
+      "surcharge_fee": "サーチャージ料"
+    },
     auth_staff_cd: '',
     filteredCustomerCd: [],
     filteredCustomerNm: [],
@@ -3334,6 +3368,7 @@ var ctrSalesListVl = new Vue({
           that.fileSearch = response.fieldSearch;
           that.order = response.order;
           that.flagSearch = true;
+          console.log(that.items);
           $.each(that.fileSearch, function (key, value) {
             if (value === null) that.fileSearch[key] = '';
           });
@@ -3463,14 +3498,43 @@ var ctrSalesListVl = new Vue({
       var to_date = new Date();
       var lastDay = new Date(to_date.getFullYear(), to_date.getMonth() + 1, 0);
       this.fileSearch.to_date = lastDay.getFullYear() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getDate();
+    },
+    exportCSV: function exportCSV() {
+      var _this2 = this;
+
+      var arrData = null;
+      sales_lists_service.exportCSV().then(function (response) {
+        if (response.message !== false) {
+          var _arrData = _this2.items;
+        }
+      });
+      var arrKeys = Object.keys(arrData[0]);
+      var fields = this.fields;
+      var headerFields = [];
+
+      for (var i = 0; i < arrKeys.length; i++) {
+        if (arrKeys[i] !== undefined && fields[arrKeys[i]] !== undefined) {
+          headerFields.push(fields[arrKeys[i]]);
+        }
+      }
+
+      var csvContent = "data:text/csv;charset=shift-jis,";
+      csvContent += [headerFields.join(",")].concat(_toConsumableArray(arrData.map(function (item) {
+        return Object.values(item).join(',');
+      }))).join("\n").replace(/(^\[)|(\]$)/gm, "");
+      var data = encodeURI(csvContent);
+      var link = document.createElement("a");
+      link.setAttribute("href", data);
+      link.setAttribute("download", "export.csv");
+      link.click();
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
     sales_lists_service.loadCustomerList().then(function (response) {
-      _this2.dropdown_mst_customer_cd[0].data = response.data;
-      _this2.dropdown_mst_customer_nm[0].data = response.data;
+      _this3.dropdown_mst_customer_cd[0].data = response.data;
+      _this3.dropdown_mst_customer_nm[0].data = response.data;
     });
     this.setDefaultDate();
   },

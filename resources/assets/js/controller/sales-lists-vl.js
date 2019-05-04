@@ -9,6 +9,32 @@ var ctrSalesListVl = new Vue({
         format_date: format_date_picker,
         items:[],
         message:'',
+        fields: {
+            "daily_report_date": "日報日付",
+            "branch_office_cd":"支店CD",
+            "document_no":"伝票NO",
+            "registration_numbers":"登録番号",
+            "staff_cd":"社員CD",
+            "staff_nm":"社員名",
+            "mst_customers_cd":"得意先CD",
+            "customer_nm":"得意先名",
+            "goods":"品物",
+            "departure_point_name":"発地名",
+            "landing_name":"着地名",
+            "delivery_destination":"納入先",
+            "quantity":"数量",
+            "unit_price":"単価",
+            "total_fee":"便請求金額",
+            "insurance_fee":"保険料",
+            "billing_fast_charge":"請求高速料",
+            "discount_amount":"値引金額",
+            "tax_included_amount":"請求金額",
+            "loading_fee":"積込料",
+            "wholesale_fee":"取卸料",
+            "waiting_fee":"待機料",
+            "incidental_fee":"附帯料",
+            "surcharge_fee":"サーチャージ料",
+        },
         auth_staff_cd:'',
         filteredCustomerCd: [],
         filteredCustomerNm:[],
@@ -77,6 +103,7 @@ var ctrSalesListVl = new Vue({
                     that.fileSearch = response.fieldSearch;
                     that.order = response.order;
                     that.flagSearch=true;
+                    console.log(that.items);
                     $.each(that.fileSearch, function (key, value) {
                         if (value === null)
                             that.fileSearch[key] = '';
@@ -202,6 +229,37 @@ var ctrSalesListVl = new Vue({
             var to_date = new Date();
             var lastDay = new Date(to_date.getFullYear(), to_date.getMonth()+1,0);
             this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
+        },
+        exportCSV:function () {
+            const arrData=null;
+            sales_lists_service.exportCSV().then((response)=>{
+                if(response.message!==false)
+                {
+                   let  arrData=this.items;
+                }
+            });
+
+            let arrKeys=Object.keys(arrData[0]);
+            let fields=this.fields;
+            let headerFields=[];
+            for(var i=0;i<arrKeys.length;i++)
+            {
+                if(arrKeys[i]!==undefined && fields[arrKeys[i]]!==undefined)
+                {
+                    headerFields.push(fields[arrKeys[i]]);
+                }
+            }
+            let csvContent = "data:text/csv;charset=shift-jis,";
+            csvContent += [
+                headerFields.join(","),
+                ...arrData.map(item => Object.values(item).join(','))]
+                .join("\n")
+                .replace(/(^\[)|(\]$)/gm, "");
+            const data = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", "export.csv");
+            link.click();
         }
     },
     mounted () {

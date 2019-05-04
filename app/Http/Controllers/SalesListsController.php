@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
+use App\Models\MSaleses;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Maatwebsite\Excel\Facades\Excel;
 class SalesListsController extends Controller
 {
     use ListTrait;
@@ -20,6 +21,7 @@ class SalesListsController extends Controller
     ];
     public $messagesCustom =[];
     public $labels=[];
+    public $currentData=null;
     public function __construct(){
         parent::__construct();
 
@@ -39,6 +41,7 @@ class SalesListsController extends Controller
         $this->query->select(
                 DB::raw("DATE_FORMAT(t_saleses.daily_report_date, '%Y/%m/%d') as daily_report_date"),
                 't_saleses.mst_customers_cd',
+                't_saleses.document_no',
                 'mst_customers.customer_nm_formal as customer_nm',
                 't_saleses.departure_point_name',
                 't_saleses.landing_name',
@@ -73,6 +76,7 @@ class SalesListsController extends Controller
 
         $this->query->orderBy('t_saleses.document_no','asc')
                 ->orderBy('t_saleses.daily_report_date','asc');
+        $this->currentData=$this->query->get();
 
     }
 
@@ -122,6 +126,12 @@ class SalesListsController extends Controller
             'fieldShowTable'=>$fieldShowTable,
             'businessOffices'=> $businessOffices,
            ]);
+    }
+    public function exportCSV()
+    {
+       $data=$this->currentData->toArray();
+       dd($data);
+        return Response()->json(array('success'=>true,"data"=>$data));
     }
 
 

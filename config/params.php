@@ -196,6 +196,11 @@ return [
             '2'=>'女性'
         ]
     ],
+    'export_csv'=>[
+        'sales_lists'=>[
+            'name'=>'kakunin_mst_customer_cd_yyyymmddhhmmss'
+        ]
+    ],
     'import_mst_vehicles_data_kb' => [
         'vehicles_kb' => [
             '1' => '一般車',

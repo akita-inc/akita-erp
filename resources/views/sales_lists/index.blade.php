@@ -118,7 +118,7 @@
                             </button>
                         </div>
                         <div class="col-md-2 lh-38 text-left padding-row-5">
-                            <button class="btn btn-primary w-100">
+                            <button class="btn btn-primary w-100" v-if="items.length>0 && flagSearch" v-on:click="exportCSV">
                                 {{trans('common.button.export_excel')}}
                             </button>
                         </div>
