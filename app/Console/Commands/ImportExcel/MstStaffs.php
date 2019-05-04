@@ -394,6 +394,7 @@ class MstStaffs extends BaseImport
                     if ($result == null) {
                         $this->error_fg = true;
                     }
+                    $record['employment_pattern_id'] = $result;
                 } else {
                     $this->error_fg = true;
                     $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
