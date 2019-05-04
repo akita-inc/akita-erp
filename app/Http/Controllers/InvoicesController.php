@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Models\MBillingHistoryHeaderDetails;
+use App\Models\MBillingHistoryHeaders;
+use App\Models\MBillingHistoryHeadersDetails;
 use App\Models\MBusinessOffices;
 use App\Models\MCustomers;
 use App\Models\MGeneralPurposes;
+use App\Models\MNumberings;
+use App\Models\MSaleses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -29,9 +35,39 @@ class InvoicesController extends Controller {
         "closed_date_input" => "特例締め日",
     ];
 
+    public $csvColumn = [
+            'daily_report_date' => '日報日付',
+            'branch_office_cd' => '支店CD',
+            'document_no' => '伝票NO',
+            'registration_numbers' => '登録番号',
+            'staff_cd' => '社員CD',
+            'staff_nm' => '社員名',
+            'mst_customers_cd' => '得意先CD',
+            'customer_nm' => '得意先名',
+            'goods' => '品物',
+            'departure_point_name' => '発地名',
+            'landing_name' => '着地名',
+            'delivery_destination' => '納入先',
+            'quantity' => '数量',
+            'unit_price' => '単価',
+            'total_fee' => '便請求金額',
+            'insurance_fee' => '保険料',
+            'billing_fast_charge' => '請求高速料',
+            'discount_amount' => '値引金額',
+            'tax_included_amount' => '請求金額',
+            'loading_fee' => '積込料',
+            'wholesale_fee' => '取卸料',
+            'waiting_fee' => '待機料',
+            'incidental_fee' => '附帯料',
+            'surcharge_fee' => 'サーチャージ料',
+        ];
+
+    public $csvContent = [];
+
     public function __construct(){
         parent::__construct();
     }
+
     public function getItems(Request $request)
     {
 
@@ -77,7 +113,9 @@ class InvoicesController extends Controller {
             't_saleses.mst_customers_cd as customer_cd',
             'mst_business_offices.business_office_nm as regist_office',
             'mst_customers.customer_nm_formal as customer_nm',
-            DB::raw("sum(t_saleses.total_fee) as total_fee")
+            DB::raw("sum(t_saleses.total_fee) as total_fee"),
+            DB::raw("sum(t_saleses.total_fee) as consumption_tax"),
+            DB::raw("sum(t_saleses.total_fee) as tax_included_amount")
 
         );
         $this->query->leftJoin('mst_business_offices', function ($join) {
@@ -119,10 +157,10 @@ class InvoicesController extends Controller {
             'total_fee'=> [
                 "classTH" => "wd-100",
             ],
-            'sale_tax'=> [
+            'consumption_tax'=> [
                 "classTH" => "wd-100",
             ],
-            'total'=> [
+            'tax_included_amount'=> [
                 "classTH" => "wd-120",
             ],
 
@@ -195,18 +233,111 @@ class InvoicesController extends Controller {
 
     public function getDetailsInvoice(Request $request){
         $input = $request->all();
-        $listDetail =  DB::table('t_saleses')->select(
-            DB::raw("DATE_FORMAT(t_saleses.daily_report_date, '%Y/%m/%d') as daily_report_date"),
-            't_saleses.departure_point_name',
-            't_saleses.landing_name',
-            't_saleses.total_fee',
-            't_saleses.consumption_tax',
-            't_saleses.tax_included_amount'
-        )->where('mst_customers_cd',$input['mst_customers_cd'])
-        ->whereNull('deleted_at')->get();
+        $mSaleses = new MSaleses();
+        $listDetail =  $mSaleses->getListByCustomerCd($input['mst_customers_cd'],$input['mst_business_office_id']);
         return response()->json([
             'success'=>true,
             'info'=> $listDetail,
         ]);
+    }
+
+    public function createPDF(){
+        $file = storage_path() . "/pdf_template/請求書無地P1.pdf";
+
+        $headers = [
+            'Content-Type' => 'application/pdf',
+        ];
+        return response()->download($file, '請求書無地P1.pdf', $headers);
+    }
+
+    public function createCSV(Request $request){
+        $zip_name = 'csv.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zip_name, \ZipArchive::CREATE);
+        $headers = array(
+            "Content-type" => "application/zip",
+            "Content-Disposition" => "attachment; filename=$zip_name",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        );
+
+        $data = $request->all();
+        $data = $data['data'];
+        $key  = array_keys($this->csvColumn);
+        $temp_directory = public_path();
+        foreach ($data as $item){
+            $this->createHistory($item);
+            $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.date('YmdHis').'.csv';
+            $file = fopen($temp_directory.'/'.$fileName, 'w');
+            fputcsv($file,  array_values($this->csvColumn));
+            foreach($this->csvContent[$item['customer_cd']] as $content) {
+                if(isset($key))
+                    fputcsv($file, $content,config('params.csv.delimiter'), config('params.csv.enclosure'));
+            }
+            fclose($file);
+            $content = file_get_contents($temp_directory.'/'.$fileName);
+            $zip->addFromString($fileName, $content);
+            if(is_file($temp_directory.'/'.$fileName)) {
+                unlink($temp_directory.'/'.$fileName);
+            }
+        }
+        $zip->close();
+//        readfile($zip_name);
+//        unlink($zip_name);
+        return response()->download($zip_name, $zip_name,$headers);
+    }
+
+    public function handleCsv(){
+
+    }
+
+    public function createHistory($item){
+        $currentTime = date("Y-m-d H:i:s",time());
+        $mSaleses = new MSaleses();
+        $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
+        $mNumberings =  new MNumberings();
+        DB::beginTransaction();
+        try
+        {
+            $this->csvContent[$item['customer_cd']] = [];
+            $serial_number = $mNumberings->getSerialNumberByTargetID('2001');
+            $mBillingHistoryHeaders->invoice_number = $serial_number->serial_number;
+            $mBillingHistoryHeaders->mst_customers_cd = $item['customer_cd'];
+            $mBillingHistoryHeaders->mst_business_office_id = $item['mst_business_office_id'];
+            $mBillingHistoryHeaders->publication_date = date('Y-m-d');
+            $mBillingHistoryHeaders->total_fee = $item['total_fee'];
+            $mBillingHistoryHeaders->consumption_tax = $item['consumption_tax'];
+            $mBillingHistoryHeaders->tax_included_amount = $item['tax_included_amount'];
+            $mBillingHistoryHeaders->add_mst_staff_id =  Auth::user()->id;
+            $mBillingHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
+            if($mBillingHistoryHeaders->save()){
+                $history_details =  $mSaleses->getListByCustomerCd($item['customer_cd'],$item['mst_business_office_id']);
+                $branch_number = 0;
+                foreach ($history_details as $detail){
+                    $arrayInsert = json_decode(json_encode($detail),true);
+                    array_push( $this->csvContent[$item['customer_cd']], $arrayInsert);
+                    $arrayInsert['invoice_number'] = $mBillingHistoryHeaders->invoice_number;
+                    $arrayInsert['branch_number'] = $branch_number++;
+                    $arrayInsert['add_mst_staff_id'] = Auth::user()->id;
+                    $arrayInsert['upd_mst_staff_id'] = Auth::user()->id;
+                    $arrayInsert['created_at'] = $currentTime;
+                    $arrayInsert['modified_at'] = $currentTime;
+                    unset($arrayInsert['invoicing_flag']);
+                    unset($arrayInsert['customer_nm']);
+                    unset($arrayInsert['registration_numbers']);
+                    unset($arrayInsert['staff_nm']);
+                    unset($arrayInsert['id']);
+                    $id =  MBillingHistoryHeaderDetails::query()->insertGetId( $arrayInsert );
+                }
+
+            }
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+        }
+
     }
 }

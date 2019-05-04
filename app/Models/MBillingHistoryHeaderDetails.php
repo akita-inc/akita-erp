@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MBillingHistoryHeadersDetails extends Model {
+class MBillingHistoryHeaderDetails extends Model {
     use SoftDeletes;
 
     protected $table = "t_billing_history_header_details";

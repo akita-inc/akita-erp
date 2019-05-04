@@ -270,29 +270,19 @@ invoice_service = {
       return error;
     });
   },
-  getListStaffJobEx: function getListStaffJobEx(id) {
-    return axios.get('/invoices/api-v1/list-staff-job-ex/' + id).then(function (response) {
-      return response.data;
+  createPDF: function createPDF(data) {
+    return axios.post('/invoices/api-v1/create-pdf', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
     }).catch(function (error) {
       return error;
     });
   },
-  getListStaffQualifications: function getListStaffQualifications(id) {
-    return axios.get('/invoices/api-v1/list-staff-qualification/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  getStaffDependents: function getStaffDependents(id) {
-    return axios.get('/invoices/api-v1/list-staff-dependents/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  getStaffAuths: function getStaffAuths(id) {
-    return axios.get('/invoices/api-v1/list-staff-auths/' + id).then(function (response) {
+  createCSV: function createCSV(data) {
+    return axios.post('/invoices/api-v1/create-csv', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
