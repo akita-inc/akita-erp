@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -3269,8 +3269,8 @@ var ctrSalesListVl = new Vue({
     items: [],
     message: '',
     auth_staff_cd: '',
-    filteredOptions: [],
-    filteredOptionsName: [],
+    filteredCustomerCd: [],
+    filteredCustomerNm: [],
     fileSearch: {
       daily_report_date: "",
       from_date: "",
@@ -3278,7 +3278,7 @@ var ctrSalesListVl = new Vue({
       mst_business_office_id: "",
       invoicing_flag: "",
       mst_customers_cd: "",
-      customer_nm: ""
+      mst_customers_nm: ""
     },
     errors: [],
     pagination: {
@@ -3297,49 +3297,49 @@ var ctrSalesListVl = new Vue({
     dropdown_mst_customer_nm: [{
       data: []
     }],
-    getItems: function getItems(page, show_msg, flag) {
+    getItems: function getItems(page, show_msg) {
       if (show_msg !== true) {
         $('.alert').hide();
       }
 
-      var data = {
-        pageSize: this.pageSize,
-        page: page,
-        fieldSearch: this.fileSearch,
-        order: this.order
-      };
       var that = this;
       that.loading = true;
 
-      if (flag) {
-        this.flagSearch = true;
-
-        if (this.fileSearch.from_date == "") {
-          this.errors["from_date"] = messages["MSG02001"].split(':attribute').join('期間');
-        }
-
-        if (this.fileSearch.to_date == "") {
-          this.errors["to_date"] = messages["MSG02001"].split(':attribute').join('期間');
-        }
-
-        if (this.fileSearch.from_date == "" || this.fileSearch.to_date == "") {
-          console.log(this.errors);
-          that.loading = false;
-          that.flag = false;
-          return;
-        }
+      if (that.fileSearch.from_date == "") {
+        that.errors["from_date"] = messages["MSG02001"].split(':attribute').join('期間');
+        that.loading = false;
+      } else {
+        delete that.errors["from_date"];
       }
 
-      sales_lists_service.loadList(data).then(function (response) {
-        that.items = response.data.data;
-        that.pagination = response.pagination;
-        that.fileSearch = response.fieldSearch;
-        that.order = response.order;
-        $.each(that.fileSearch, function (key, value) {
-          if (value === null) that.fileSearch[key] = '';
-        });
+      if (that.fileSearch.to_date == "") {
+        that.errors["to_date"] = messages["MSG02001"].split(':attribute').join('期間');
         that.loading = false;
-      });
+      } else {
+        delete that.errors["to_date"];
+      }
+
+      var data = {
+        pageSize: that.pageSize,
+        page: page,
+        fieldSearch: that.fileSearch,
+        order: that.order
+      };
+
+      if (that.errors.from_date === undefined && that.errors.to_date === undefined) {
+        that.loading = true;
+        sales_lists_service.loadList(data).then(function (response) {
+          that.items = response.data.data;
+          that.pagination = response.pagination;
+          that.fileSearch = response.fieldSearch;
+          that.order = response.order;
+          that.flagSearch = true;
+          $.each(that.fileSearch, function (key, value) {
+            if (value === null) that.fileSearch[key] = '';
+          });
+          that.loading = false;
+        });
+      }
     },
     changePage: function changePage(page) {
       this.pagination.current_page = page;
@@ -3375,94 +3375,104 @@ var ctrSalesListVl = new Vue({
     }
   },
   computed: {
-    inputProps: function inputProps() {
+    inputPropsCd: function inputPropsCd() {
       var cls_error = this.fileSearch.mst_customers_cd != undefined ? 'form-control is-invalid' : '';
       return {
         id: 'autosuggest__input',
-        onInputChange: this.onInputChange,
+        onInputChange: this.onInputChangeCd,
         initialValue: this.fileSearch.mst_customers_cd,
         maxlength: 6,
-        class: ''
+        class: 'form-control',
+        ref: "mst_customers_cd"
       };
     },
     inputPropsName: function inputPropsName() {
-      var cls_error = this.fileSearch.customer_nm != undefined ? 'form-control is-invalid' : '';
+      var cls_error = this.fileSearch.mst_customers_nm != undefined ? 'form-control is-invalid' : '';
       return {
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeName,
-        initialValue: this.fileSearch.customer_nm,
+        initialValue: this.fileSearch.mst_customers_nm,
         maxlength: 50,
-        class: ''
+        class: 'form-control w-100',
+        ref: "mst_customers_nm"
       };
     }
   },
   methods: {
-    onInputChange: function onInputChange(text) {
+    renderSuggestion: function renderSuggestion(suggestion) {
+      var customer = suggestion.item;
+      return customer.mst_customers_cd + ': ' + customer.mst_customers_nm;
+    },
+    getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
+      this.$refs.mst_customers_nm.searchInput = suggestion.item.mst_customers_nm;
+      return suggestion.item.mst_customers_cd;
+    },
+    getSuggestionValueName: function getSuggestionValueName(suggestion) {
+      this.$refs.mst_customers_cd.searchInput = suggestion.item.mst_customers_cd;
+      return suggestion.item.mst_customers_nm;
+    },
+    onInputChangeCd: function onInputChangeCd(text) {
       this.fileSearch.mst_customers_cd = text;
 
       if (text === '' || text === undefined) {
         return;
       }
 
-      var filteredData = this.dropdown_mst_customer_cd[0].data.filter(function (item) {
-        return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+      var filteredDataCd = this.dropdown_mst_customer_cd[0].data.filter(function (item) {
+        return item.mst_customers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
       }).slice(0, this.limit);
-      this.filteredOptions = [{
-        data: filteredData
+      this.filteredCustomerCd = [{
+        data: filteredDataCd
       }];
     },
     onInputChangeName: function onInputChangeName(text) {
-      this.fileSearch.customer_nm = text;
+      this.fileSearch.mst_customers_nm = text;
 
       if (text === '' || text === undefined) {
         return;
       }
 
-      console.log(text);
       var filteredDataNm = this.dropdown_mst_customer_nm[0].data.filter(function (item) {
-        return item.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+        return item.mst_customers_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
       }).slice(0, this.limit);
-      this.filteredOptionsName = [{
+      this.filteredCustomerNm = [{
         data: filteredDataNm
       }];
     },
-    onSelected: function onSelected(option) {
-      this.fileSearch.mst_customers_cd = option.item;
-      this.fileSearch.customer_nm = option.item;
-      this.$refs.customerName.searchInput = option.item;
+    onSelectedCd: function onSelectedCd(option) {
+      this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
+      this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
     },
     onSelectedName: function onSelectedName(option) {
-      this.fileSearch.customer_nm = option.item;
+      this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
+      this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
     },
     clearCondition: function clearCondition() {
       this.fileSearch.daily_report_date = "";
       this.fileSearch.mst_business_office_id = "";
-      this.fileSearch.from_date = "";
-      this.fileSearch.to_date = "";
+      this.setDefaultDate();
       this.fileSearch.invoicing_flag = "";
       this.fileSearch.mst_customers_cd = "";
-      this.fileSearch.customer_nm = "";
+      this.$refs.mst_customers_cd.searchInput = "";
+      this.fileSearch.mst_customers_nm = "";
+      this.$refs.mst_customers_nm.searchInput = "";
+    },
+    setDefaultDate: function setDefaultDate() {
+      var from_date = new Date();
+      this.fileSearch.from_date = from_date.getFullYear() + "/" + (from_date.getMonth() + 1) + "/" + 1;
+      var to_date = new Date();
+      var lastDay = new Date(to_date.getFullYear(), to_date.getMonth() + 1, 0);
+      this.fileSearch.to_date = lastDay.getFullYear() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getDate();
     }
   },
   mounted: function mounted() {
     var _this2 = this;
 
-    var type = 'cd';
-    sales_lists_service.loadCustomerList(type).then(function (response) {
-      _this2.dropdown_mst_customer_cd[0].data = response.data;
-      console.log(response.data);
-    });
     sales_lists_service.loadCustomerList().then(function (response) {
+      _this2.dropdown_mst_customer_cd[0].data = response.data;
       _this2.dropdown_mst_customer_nm[0].data = response.data;
-      console.log(response.data);
     });
-    this.getItems(1, true);
-    var from_date = new Date();
-    from_date.setDate(1);
-    this.fileSearch.from_date = from_date;
-    var to_date = new Date();
-    var lastDay = new Date(to_date.getFullYear(), to_date.getMonth() + 1, 0);
-    this.fileSearch.to_date = lastDay.getFullYear() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getDate();
+    this.setDefaultDate();
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -3473,7 +3483,7 @@ var ctrSalesListVl = new Vue({
 
 /***/ }),
 
-/***/ 13:
+/***/ 14:
 /*!****************************************************************!*\
   !*** multi ./resources/assets/js/controller/sales-lists-vl.js ***!
   \****************************************************************/

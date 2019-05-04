@@ -9,10 +9,10 @@
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-2  padding-row-5 col-list-search-f text-left">
-                            {{trans("sales_lists.list.search.mst_business_office_id")}}
-                        </div>
-                        <div class="col-md-4  padding-row-5 grid-form-search">
+                        <div class="col-md-5  padding-row-5 grid-form-search d-inline-flex">
+                            <div class="wd-100 col-list-search-f text-left">
+                                {{trans("sales_lists.list.search.mst_business_office_id")}}
+                            </div>
                             <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans('sales_lists.list.search.business_default_value')}}</option>
                                 @foreach($businessOffices as $office)
@@ -20,10 +20,11 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2  padding-row-5 col-list-search-f text-left">
+                        <div class="col-md-7 padding-row-5 grid-form-search d-inline-flex">
+                            <div class="wd-60 col-list-search-f text-left">
                             {{trans("sales_lists.list.search.period_time")}}
-                        </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                            </div>
+                            <div class="w-100">
                             <date-picker
                                     :lang='lang'
                                     id="from_date"
@@ -32,14 +33,16 @@
                                     v-model="fileSearch.from_date"
                                     :input-class="errors.from_date != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
                             ></date-picker>
-                            <span v-cloak v-if="errors.from_date != undefined" class="message-error">@{{errors.from_date}}</span>
+                                <span v-cloak v-if="errors.from_date != undefined" class="message-error">@{{errors.from_date}}</span>
+                            </div>
                         </div>
                     </div>
-                    <div  class="col-md-5 col-sm-12 row">
-                        <div class="col-md-1 col-list-search-f text-left">
-                            ～
-                        </div>
-                        <div class="col-md-5 grid-form-search padding-row-5">
+                    <div class="col-md-5 col-sm-12 row">
+                        <div class="col-md-7 grid-form-search padding-row-5  d-inline-flex">
+                            <div class="wd-60 col-list-search-f text-left">
+                                ～
+                            </div>
+                            <div class="w-100">
                             <date-picker
                                     :lang='lang'
                                     id="to_date"
@@ -49,6 +52,7 @@
                                     :input-class="errors.to_date != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
                             ></date-picker>
                             <span v-cloak v-if="errors.to_date != undefined" class="message-error">@{{errors.to_date}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -57,30 +61,38 @@
                 <div class="break-row-form"></div>
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-2  padding-row-5 col-list-search-f text-left">
-                            {{trans("sales_lists.list.search.customer")}}
+                        <div class="col-md-5  padding-row-5 grid-form-search d-inline-flex">
+                            <div class="wd-100 col-list-search-f text-left">
+                                {{trans("sales_lists.list.search.customer")}}
+                            </div>
+                            <div class="w-100 text-left sales-list">
+                                <label class="grid-form-search-label" for="input_mst_customers_cd">
+                                    {{trans("sales_lists.list.search.code")}}
+                                </label>
+                                <vue-autosuggest
+                                        :suggestions="filteredCustomerCd"
+                                        :limit="10"
+                                        :input-props="inputPropsCd"
+                                        :on-selected="onSelectedCd"
+                                        :render-suggestion="renderSuggestion"
+                                        :get-suggestion-value="getSuggestionValueCd"
+                                        ref="mst_customers_cd"
+                                >
+                                </vue-autosuggest>
+                            </div>
                         </div>
-                        <div class="col-md-4  padding-row-5 grid-form-search">
-                            <label class="grid-form-search-label" for="input_mst_customers_cd">
-                                {{trans("sales_lists.list.search.code")}}
-                            </label>
-                            <vue-autosuggest
-                                    :suggestions="filteredOptions"
-                                    :limit="10"
-                                    :input-props="inputProps"
-                                    :on-selected="onSelected"
-                            >
-                            </vue-autosuggest>
-                        </div>
-                        <div class="col-md-6 padding-row-5 grid-form-search">
-                            <label class="grid-form-search-label" for="input_mst_customers_name">
+                        <div class="col-md-7 padding-row-5 grid-form-search">
+                            <label class="grid-form-search-label left-5px" for="input_mst_customers_name">
                                 {{trans("sales_lists.list.search.customer_nm")}}
                             </label>
-                            <vue-autosuggest ref="customerName"
-                                    :suggestions="filteredOptionsName"
+                            <vue-autosuggest
+                                    :suggestions="filteredCustomerNm"
                                     :limit="10"
                                     :input-props="inputPropsName"
                                     :on-selected="onSelectedName"
+                                    :render-suggestion="renderSuggestion"
+                                    :get-suggestion-value="getSuggestionValueName"
+                                    ref="mst_customers_nm"
                             >
                             </vue-autosuggest>
                         </div>
@@ -101,7 +113,7 @@
                             </button>
                         </div>
                         <div class="col-md-2 lh-38 text-left padding-row-5">
-                            <button class="btn btn-primary w-100" v-on:click="getItems(1,true,true)">
+                            <button class="btn btn-primary w-100" v-on:click="getItems(1)">
                                 {{trans('common.button.search')}}
                             </button>
                         </div>
@@ -114,7 +126,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table" v-if="flagSearch && items.length>0">
+        <div class="wrapper-table" v-if="items.length>0">
             <table class="table table-striped table-bordered table-blue table-green">
                 <thead>
                 <tr>
@@ -148,16 +160,13 @@
                         </td>
                     @endforeach
                 </tr>
-                <tr v-cloak v-if="message !== ''">
-                    <td colspan="10">@{{message}} </td>
-                </tr>
                 </tbody>
             </table>
             <div v-cloak class="mg-t-10">
                 @include("Layouts.pagination")
             </div>
         </div>
-        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-if="flagSearch && items.length==0">
+        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-else-if="items.length==0 && flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">

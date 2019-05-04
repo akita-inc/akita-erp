@@ -8,11 +8,10 @@ class SalesListsController
 {
     public function getCustomerList(Request $request)
     {
-        $mCustomers = new MCustomers();
-        $data = $mCustomers->getAllNm();
-        if ($data) {
-            $data = $data->toArray();
-        }
-        return Response()->json(array('success' => true, 'data' => array_column($data, $request->get('type')=='cd'?'mst_customers_cd':'customer_nm_formal')));
+        $mCustomer = new MCustomers();
+        $data = $mCustomer->select('mst_customers_cd','customer_nm_formal as mst_customers_nm')
+                            ->whereNull('deleted_at')
+                            ->get();
+        return Response()->json(array('success'=>true,'data'=>$data));
     }
 }
