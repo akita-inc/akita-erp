@@ -55,4 +55,9 @@ class MCustomers extends Model
         }
         return $mCustomer->get();
     }
+    public function getAllNm(){
+        return $this->select('mst_customers_cd','customer_nm_formal')
+            ->where('deleted_at','=',null)
+            ->get();
+    }
 }

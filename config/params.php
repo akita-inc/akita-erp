@@ -1,6 +1,7 @@
 <?php
 return [
     'page_size' => 10,
+    'page_size_sale_lists'=>50,
     'data_kb' => [
         'sex'                           => '01001', // 性別ID
         'prefecture_cd'                 => '01002', // 都道府県CD
@@ -101,6 +102,10 @@ return [
         '11003'=> '希望荷物',
         '11004'=> '搭載物',
     ],
+    'invoicing_flag'=>[
+        '0'=>'未発行',
+        '1'=>'発行済み'
+    ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),
     'staff_path'=>storage_path('staffs/'),
@@ -155,8 +160,8 @@ return [
         ],
         'mst_staff_qualifications'=>[
             'main' => [
-                'path' => storage_path('import/dbo_T_社員DETA_1.xlsx'),
-                'fileName' => 'dbo_T_社員DETA_1.xlsx',
+                'path' => storage_path('import/dbo_T_社員DETA.xlsx'),
+                'fileName' => 'dbo_T_社員DETA.xlsx',
             ],
         ],
         'mst_customers' => [
@@ -181,23 +186,14 @@ return [
     ],
     'import_mst_staffs_data_kb' => [
         'employment_pattern_kb'=>[
-            '1'=>'正社員',
+            '1'=>'社員',
             '2'=>'契約社員',
-            '3'=>'パート・アルバイト',
-            '4'=>'顧問',
-            '5'=>'役員'
+            '3'=>'傭車',
+            '4'=>'パート・アルバイト',
         ],
         'sex_kb'=>[
             '1'=>'男性',
             '2'=>'女性'
-        ],
-        'relocation_municipal_office_cd_kb'=>[
-            '131032'=>'港区',
-            '131041'=>'新宿区',
-            '131059'=>'文京区',
-            '131067'=>'台東区',
-            '131075'=>'墨田区',
-            '131083'=>'江東区'
         ]
     ],
     'import_mst_vehicles_data_kb' => [

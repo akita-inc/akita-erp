@@ -232,10 +232,10 @@
                                     {{ trans($prefix.'relocation_municipal_office_cd') }}
                                 </label>
                                 <vue-autosuggest
-                                    :suggestions="filteredOptions"
-                                    :limit="10"
-                                    :input-props="inputProps"
-                                    :on-selected="onSelected"
+                                        :suggestions="filteredOptions"
+                                        :limit="10"
+                                        :input-props="inputProps"
+                                        :on-selected="onSelected"
                                 >
                                 </vue-autosuggest>
                             </div>

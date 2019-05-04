@@ -17,6 +17,10 @@ trait ListTrait
 {
     public $query = null;
 
+    protected function getPaging(){
+        return config('params.page_size');
+    }
+
     protected function getQuery(){
         $this->query = DB::table($this->table);
     }
@@ -51,7 +55,7 @@ trait ListTrait
         $items = $this->query->paginate(config('params.page_size'), ['*'], 'page', $data['page']);
         if(count($items->items())==0){
             if($data['page'] > 1){
-                $items = $this->query->paginate(config('params.page_size'), ['*'], 'page', $data['page']-1);
+                $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']-1);
             }
         }
         $response = [

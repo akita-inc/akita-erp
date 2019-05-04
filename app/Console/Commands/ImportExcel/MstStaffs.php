@@ -173,11 +173,24 @@ class MstStaffs extends BaseImport
 
     public function formatDateString($date)
     {
-        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy-mm-dd');
+        if(empty($date))
+        {
+            return null;
+        }
+        else {
+            return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy-mm-dd');
+
+        }
     }
     public function formatDateTimeString($date)
     {
-        return \PHPExcel_Style_NumberFormat::toFormattedString($date,'yyyy/mm/dd hh:mm:ss');
+        if(empty($date))
+        {
+            return null;
+        }
+        else {
+            return \PHPExcel_Style_NumberFormat::toFormattedString($date, 'yyyy/mm/dd hh:mm:ss');
+        }
     }
     public function generateRandomString($length = 8) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -187,11 +200,7 @@ class MstStaffs extends BaseImport
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         //add password cell
-        $objPHPExcel=$this->objPHPExcel;
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $randomString);
-            return $randomString;
-
+        return $randomString;
     }
     public function getCellularPhone($phone)
     {
@@ -289,13 +298,16 @@ class MstStaffs extends BaseImport
                 foreach ($rowCurrentData[$row] as  $pos=>$value) {
                     if(isset($column_insurer[$pos]))
                     {
-                        $record[$column_insurer[$pos]] = empty($value) ? null :(string)$value;
+                        $record[$column_insurer[$pos]] = !isset($value) ? null :(string)$value;
                         $record['row_index']=$row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
-                unset($record['staff_cd']);
-                $recordChild[$staff_cd]=$record;
+                if(isset($record['staff_cd']))
+                {
+                    $recordChild[$record['staff_cd']]=$record;
+                    unset($record['staff_cd']);
+                }
+
             }
             elseif($type=="staff_background")
             {
@@ -309,15 +321,17 @@ class MstStaffs extends BaseImport
                                 $record[$column_background[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_background[$pos]] = empty($value) ? null : (string)$value;
+                                $record[$column_background[$pos]] =  !isset($value)? null : (string)$value;
                                 break;
                         }
                         $record['row_index'] = $row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
-                unset($record['staff_cd']);
-                $recordChild[$staff_cd]=$record;
+                if(isset($record['staff_cd']))
+                {
+                    $recordChild[$record['staff_cd']]=$record;
+                    unset($record['staff_cd']);
+                }
             }
             elseif($type="driver_license")
             {
@@ -329,15 +343,17 @@ class MstStaffs extends BaseImport
                                 $record[$column_driver_license[$pos]] = $this->formatDateString($value);
                                 break;
                             default:
-                                $record[$column_driver_license[$pos]] = empty($value) ? null : (string)$value;
+                                $record[$column_driver_license[$pos]] =!isset($value) ? null : (string)$value;
                                 break;
                         }
                         $record['row_index']=$row;
                     }
                 }
-                $staff_cd=isset($record['staff_cd'])?$record['staff_cd']:"";
-                unset($record['staff_cd']);
-                $recordChild[$staff_cd]=$record;
+                if(isset($record['staff_cd']))
+                {
+                    $recordChild[$record['staff_cd']]=$record;
+                    unset($record['staff_cd']);
+                }
             }
         }
         unset($objPHPExcel);
@@ -353,14 +369,14 @@ class MstStaffs extends BaseImport
         {
             foreach($rowData[$row] as $pos=>$value){
                 if(isset($excel_column[$pos])) {
-                    $record[$excel_column[$pos]] = empty($value) && $value!=0?null:(string)$value;
+                    $record[$excel_column[$pos]] = !isset($value)? null : (string)$value;
                 }
             }
-            $record['modified_at'] = \PHPExcel_Style_NumberFormat::toFormattedString($record['modified_at'],'yyyy/mm/dd hh:mm:ss');
-            $record['created_at']=  \PHPExcel_Style_NumberFormat::toFormattedString($record['created_at'],'yyyy/mm/dd hh:mm:ss');
-            $record['birthday'] = \PHPExcel_Style_NumberFormat::toFormattedString($record['birthday'],'yyyy-mm-dd');
-            $record['enter_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['enter_date'],'yyyy-mm-dd');
-            $record['retire_date']=\PHPExcel_Style_NumberFormat::toFormattedString($record['retire_date'],'yyyy-mm-dd');
+            $record['modified_at'] = $this->formatDateTimeString($record['modified_at']);
+            $record['created_at']=  $this->formatDateTimeString($record['created_at']);
+            $record['birthday'] = $this->formatDateString($record['birthday']);
+            $record['enter_date']= $this->formatDateString($record['enter_date']);
+            $record['retire_date']=$this->formatDateString($record['retire_date']);
             $record['zip_cd'] = is_null($record['zip_cd'])?null:str_replace("-","",$record['zip_cd']);
             if($this->getCellularPhone($record['phone_number']))
             {
@@ -378,6 +394,7 @@ class MstStaffs extends BaseImport
                     if ($result == null) {
                         $this->error_fg = true;
                     }
+                    $record['employment_pattern_id'] = $result;
                 } else {
                     $this->error_fg = true;
                     $this->log("DataConvert_Add_general_purposes", Lang::trans("log_import.add_general_purposes_number", [
@@ -437,11 +454,10 @@ class MstStaffs extends BaseImport
             $data=$this->validateRow($record);
             if(!empty($data) && $this->error_fg==false)
             {
-                $data["password"]=bcrypt($this->generateRandomString(8));
                 $data['belong_company_id']=$this->belongCompanyId;
                 $data['enable_fg']=true;
-                $data['last_nm_kana']=!empty($data['last_nm_kana'])? mb_convert_kana($data['last_nm_kana'],'KVC'):null;
-                $data['first_nm_kana']=!empty($data['first_nm_kana'])? mb_convert_kana($data['first_nm_kana'],'KVC'):null;
+                $data['last_nm_kana']=!empty($data['last_nm_kana'])? Common::convertToKanaExcel($data['last_nm_kana']):null;
+                $data['first_nm_kana']=!empty($data['first_nm_kana'])? Common::convertToKanaExcel($data['first_nm_kana']):null;
                 unset($data['staff_nm']);
                 unset($data['staff_nm_kana']);
                 unset($data["phone_number"]);
@@ -635,10 +651,15 @@ class MstStaffs extends BaseImport
                 array_push($staffDependents,$data['staff_dependents_nm_'.$k]);
                 unset($data['staff_dependents_nm_'.$k]);
             }
+            $password=$this->generateRandomString(8);
+            $data["password"]=bcrypt($password);
             $id = DB::table($this->table)->insertGetId( $data);
             $this->numNormal++;
             if($id)
              {
+                 $objPHPExcel=$this->objPHPExcel;
+                 $objPHPExcel->setActiveSheetIndex(0);
+                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(31, $this->rowIndex, $this->error_fg==true?"":$password);
                  $configArr=[
                          'mst_staff_id'=>$id,
                          'created_at'=>$data['created_at'],
@@ -648,6 +669,7 @@ class MstStaffs extends BaseImport
              };
         }catch (\Exception $e){
             $this->numErr++;
+            $this->error_fg=true;
             $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
                 "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                 "row" => $this->rowIndex,
@@ -674,7 +696,6 @@ class MstStaffs extends BaseImport
     }
     public function insertMstStaffDependents($configArr,$staffDependents,$last_nm)
     {
-
         try{
             $arrInsert=array();
             $record=$configArr;
@@ -729,6 +750,7 @@ class MstStaffs extends BaseImport
         }
         catch (\Exception $e)
         {
+            $this->error_fg=true;
             $this->log("DataConvert_Err_SQL",Lang::trans("log_import.insert_error",[
                 "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
                 "row" => $this->rowIndex,
@@ -751,13 +773,17 @@ class MstStaffs extends BaseImport
     {
         for ($k = 1; $k <=3; $k++){
             if(count($this->{"childFile".$k}) > 0){
-                foreach ($this->{"childFile".$k} as $item){
-                    $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                        "mainFileName" => config('params.import_file_path.mst_staffs.extra_file.file_nm_'.$k),
-                        "fieldName" => $this->{'column_name_extra_file_'.$k}['staff_cd'],
-                        "row" => $item['row_index'],
-                        "extraFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    ]));
+                foreach ($this->{"childFile".$k} as $key=>$item){
+                    if(isset($key))
+                    {
+                        $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
+                            "mainFileName" => config('params.import_file_path.mst_staffs.extra_file.file_nm_'.$k),
+                            "fieldName" => $this->{'column_name_extra_file_'.$k}['staff_cd'],
+                            "row" => $item['row_index'],
+                            "extraFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
+                        ]));
+
+                    }
                 }
             }
         }
