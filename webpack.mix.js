@@ -22,6 +22,7 @@ mix.js([
     'resources/assets/js/service/staffs-service.js',
     'resources/assets/js/service/vehicles-service.js',
     'resources/assets/js/service/empty-info-service.js',
+    'resources/assets/js/service/invoice-service.js',
     'resources/assets/js/service/sales-lists-service.js',
 ], 'public/assets/js/service/service.js');
 
@@ -70,6 +71,9 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/empty-info-list-vl.js'
 ], 'public/assets/js/controller/empty-info-list.js');
+mix.js([
+    'resources/assets/js/controller/invoice-list-vl.js'
+], 'public/assets/js/controller/invoice-list.js');
 
 mix.js([
    'resources/assets/js/controller/sales-lists-vl.js'
