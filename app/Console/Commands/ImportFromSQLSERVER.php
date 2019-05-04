@@ -43,7 +43,7 @@ class ImportFromSQLSERVER extends Command
      * @return mixed
      */
     public function handle(){
-        $serverName = "172.30.30.193\SQLSTANDARD";
+        $serverName = "172.30.30.193";
         $connectionInfo = [
             "Database" => "AKITA",
             "Uid" => "sa",
