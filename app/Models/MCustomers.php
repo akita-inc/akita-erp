@@ -45,6 +45,16 @@ class MCustomers extends Model
             return false;
         }
     }
+
+    public function getListBundleDt($customer_cd=""){
+        $mCustomer = new MCustomers();
+        if(!empty($customer_cd)){
+            $mCustomer = $mCustomer->select('bundle_dt')->where('mst_customers_cd','LIKE','%'.$customer_cd.'%')->whereNull('deleted_at')->groupBy('bundle_dt');
+        }else{
+            $mCustomer = $mCustomer->select('bundle_dt')->distinct('bundle_dt')->whereNull('deleted_at')->orderBy('bundle_dt');
+        }
+        return $mCustomer->get();
+    }
     public function getAllNm(){
         return $this->select('mst_customers_cd','customer_nm_formal')
             ->where('deleted_at','=',null)
