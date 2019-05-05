@@ -52,6 +52,7 @@ trait ListTrait
         }
         $this->getQuery();
         $this->search( $data );
+        $allItems=$this->query->get();
         $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']);
         if(count($items->items())==0){
             if($data['page'] > 1){
@@ -68,6 +69,7 @@ trait ListTrait
                 'to' => $items->lastItem()
             ],
             'data' => $items,
+            'allItems'=>$allItems,
             'fieldSearch' => $data['fieldSearch'],
             'order' => $data['order'],
         ];

@@ -76,7 +76,6 @@ class SalesListsController extends Controller
 
         $this->query->orderBy('t_saleses.document_no','asc')
                 ->orderBy('t_saleses.daily_report_date','asc');
-        $this->currentData=$this->query->get();
 
     }
 
@@ -130,7 +129,7 @@ class SalesListsController extends Controller
     public function exportCSV()
     {
        $data=$this->currentData->toArray();
-       dd($data);
+//       dd($data);
         return Response()->json(array('success'=>true,"data"=>$data));
     }
 
