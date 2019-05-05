@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ImportFromSQLSERVER;
 use App\Console\Commands\RunBatchImport;
 use App\Console\Commands\UpdateStatusEmptyInfo;
 use App\Console\Commands\ConvertDataByExcels;
@@ -18,7 +19,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         UpdateStatusEmptyInfo::class,
         ConvertDataByExcels::class,
-        RunBatchImport::class
+        RunBatchImport::class,
+        ImportFromSQLSERVER::class,
         //
     ];
 
