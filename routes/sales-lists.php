@@ -6,7 +6,6 @@ Route::group(['name' => 'sales-lists', 'prefix' => 'sales_lists', 'middleware' =
     Route::get('/reservation/{id}', 'SalesListsController@store')->name('sales_lists.reservation');
     Route::get('/reservation-approval/{id}', 'SalesListsController@store')->name('sales_lists.reservation_approval');
 
-
     /*Api using Vue*/
     Route::group(['prefix' => 'api-v1'], function () {
         Route::post('/getItems','SalesListsController@getItems')->name("sales_lists.getItems");
@@ -17,6 +16,7 @@ Route::group(['name' => 'sales-lists', 'prefix' => 'sales_lists', 'middleware' =
         Route::any('/search-sales-lists', 'SalesListsController@searchSalesLists');
         Route::any('/updateStatus/{id}', 'SalesListsController@updateStatus');
         Route::any('/mst-customer-list', ['uses' => 'Api\SalesListsController@getCustomerList']);
+        Route::any('/export-csv', ['uses' => 'Api\SalesListsController@exportCSV']);
 
     });
 });
