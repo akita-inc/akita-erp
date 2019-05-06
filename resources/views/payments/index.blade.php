@@ -15,7 +15,7 @@
                         <div class="col-md-2 padding-row-5 col-list-search-f">
                             {{trans("payments.list.search.sales-office")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-3 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans('payments.list.search.all-office')}}</option>
                                 @foreach($businessOffices as $office)
@@ -36,7 +36,9 @@
                                     @endif
                                 @endforeach
                             </select>
-                            {{--{{trans('payments.list.search.year')}}--}}
+                        </div>
+                        <div class="col-md-1 text-left no-padding lh-38">
+                            {{trans('payments.list.search.year')}}
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12 row">
@@ -65,7 +67,7 @@
                         <div class="col-md-2 padding-row-5 col-list-search-f text-left">
                             {{trans("payments.list.search.supplier")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-3 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_suppliers_cd">
                                 {{trans("payments.list.search.code")}}
                             </label>
@@ -98,7 +100,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12 row lh-38">
-                        <div class="col-md-2 col-sm-12 text-left pl-1">
+                        <div class="col-md-3 col-sm-12 text-left pl-1">
                             {{trans("payments.list.search.closing-date")}}
                         </div>
                         <div class="col-md-3 col-sm-12 no-padding row">
@@ -114,7 +116,7 @@
                                 {{trans('payments.list.search.day')}}
                             </div>
                         </div>
-                        <div class="col-md-7 col-sm-12 no-padding"></div>
+                        <div class="col-md-6 col-sm-12 no-padding"></div>
                         <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
@@ -132,11 +134,11 @@
                 </div>
             </div>
         </div>
-        <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0">
+        <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
             <div>
                 <div class="row justify-content-center">
                     <div class="col-md-2">
-                        <button class="btn btn-primary w-75">
+                        <button class="btn btn-primary w-75" v-on:click="execution()">
                             {{trans('payments.list.search.button.execution')}}
                         </button>
                     </div>
@@ -191,6 +193,7 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        messages["MSG10023"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
         var currentMonth = new Date().getMonth();
         var currentYear = new Date().getFullYear();
         if(currentMonth == 0){

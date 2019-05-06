@@ -22,8 +22,8 @@ class MNumberings extends Model {
 
     public function getSerialNumberByTargetID($target_id){
         $currentNumber =  $this->select('serial_number')->where('mst_numbering_target_id',$target_id)->first();
-        $nextNumber = $currentNumber->serial_number++;
-        $this->where('mst_numbering_target_id',$target_id)->update(['serial_number' => $nextNumber]);
+        $currentNumber->serial_number++;
+        $this->where('mst_numbering_target_id',$target_id)->update(['serial_number' => $currentNumber->serial_number]);
         return $currentNumber;
     }
 }

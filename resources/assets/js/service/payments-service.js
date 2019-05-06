@@ -27,4 +27,11 @@ payments_service = {
             return error;
         });
     },
+    execution: function (data) {
+        return axios.post('/payments/api-v1/execution',data, {responseType: 'arraybuffer'}).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }

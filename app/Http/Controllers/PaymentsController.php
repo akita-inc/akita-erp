@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\MBusinessOffices;
+use App\Models\MNumberings;
 use App\Models\MSupplier;
+use App\Models\TPaymentHistoryHeaderDetails;
+use App\Models\TPaymentHistoryHeaders;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use App\Models\TPurchases;
 
 class PaymentsController extends Controller
 {
@@ -226,18 +231,8 @@ class PaymentsController extends Controller
     }
     public function getDetailsPayment(Request $request){
         $input = $request->all();
-        $lstDetail = DB::table('t_purchases')
-            ->select(
-                DB::raw("DATE_FORMAT(t_purchases.daily_report_date, '%Y/%m/%d') AS daily_report_date"),
-                't_purchases.departure_point_name',
-                't_purchases.landing_name',
-                't_purchases.total_fee',
-                't_purchases.consumption_tax',
-                't_purchases.tax_included_amount'
-            )->where('mst_suppliers_cd',$input['mst_suppliers_cd'])
-            ->where('mst_business_office_id',$input['mst_business_office_id'])
-            ->whereNull('deleted_at')->get()
-            ;
+        $tPurchases = new TPurchases();
+        $lstDetail = $tPurchases->getListBySupplierCdAndBusinessOfficeId($input['mst_suppliers_cd'],$input['mst_business_office_id']);
         return response()->json([
             'success'=>true,
             'info' => $lstDetail
@@ -248,5 +243,61 @@ class PaymentsController extends Controller
         $query = $mSupplier->select('mst_suppliers_cd','supplier_nm');
         $data = $query->whereNull('deleted_at')->get();
         return Response()->json(array('success'=>true,'data'=>$data));
+    }
+    public function execution(Request $request){
+        $data = $request->all();
+        $data = $data['data'];
+        foreach($data as $item){
+            $this->createHistory($item);
+        }
+        return response()->json([
+            'success'=>true
+        ]);
+    }
+    private function createHistory($item){
+        $currentTime = date("Y-m-d H:i:s",time());
+        $tPurchases = new TPurchases();
+        $tPaymentHistoryHeaders = new TPaymentHistoryHeaders();
+        //$tPaymentHistoryHeaderDetails = new TPaymentHistoryHeaderDetails();
+        $mNumberings = new MNumberings();
+        DB::beginTransaction();
+        try{
+            $serial_number = $mNumberings->getSerialNumberByTargetID('3001');
+            $tPaymentHistoryHeaders->invoice_number = $serial_number->serial_number;
+            $tPaymentHistoryHeaders->mst_suppliers_cd =$item['mst_suppliers_cd'];
+            $tPaymentHistoryHeaders->mst_business_office_id =$item['mst_business_office_id'];
+            $tPaymentHistoryHeaders->publication_date =date('Y-m-d');
+            $tPaymentHistoryHeaders->total_fee =$item['billing_amount'];
+            $tPaymentHistoryHeaders->consumption_tax =$item['consumption_tax'];
+            $tPaymentHistoryHeaders->tax_included_amount =$item['billing_amount']+$item['consumption_tax'];
+            $tPaymentHistoryHeaders->add_mst_staff_id = Auth::user()->id;
+            $tPaymentHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
+            if($tPaymentHistoryHeaders->save()){
+                $historyDetails = $tPurchases->getListBySupplierCdAndBusinessOfficeId($item['mst_suppliers_cd'],$item['mst_business_office_id']);
+                $branch_number = 0;
+                foreach($historyDetails as $detail){
+                    $arrayInsert = json_decode(json_encode($detail),true);
+                    $arrayInsert['invoice_number'] = $tPaymentHistoryHeaders->invoice_number;
+                    $arrayInsert['branch_number'] = $branch_number++;
+                    $arrayInsert['add_mst_staff_id'] = Auth::user()->id;
+                    $arrayInsert['upd_mst_staff_id'] = Auth::user()->id;
+                    $arrayInsert['created_at'] = $currentTime;
+                    $arrayInsert['modified_at'] = $currentTime;
+                    unset($arrayInsert['invoicing_flag']);
+                    unset($arrayInsert['id']);
+                    $id = TPaymentHistoryHeaderDetails::query()->insertGetId($arrayInsert);
+                }
+                //仕入データを支払締処理済みにする
+                $tPurchases = new TPurchases();
+                $tPurchases->updateInvoicingFlag($item['mst_suppliers_cd'],$item['mst_business_office_id']);
+            }
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'success'=>false,
+                'message'=> $e->getMessage()
+            ]);
+        }
     }
 }

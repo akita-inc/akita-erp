@@ -178,6 +178,20 @@ var ctrPaymentsListVl = new Vue({
                 that.loading = false;
             });
         },
+        execution: function(){
+            var that = this;
+            this.loading = true;
+            payments_service.execution({data:that.items}).then((response) => {
+                if(response.success == false){
+                    that.errors = response.message;
+                    that.loading = false;
+                }else{
+                    that.errors = [];
+                    that.message = messages["MSG10023"];
+                    that.loading = false;
+                }
+            });
+        }
         //end action list
     },
     mounted (){
