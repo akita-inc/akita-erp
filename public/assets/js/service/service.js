@@ -270,70 +270,20 @@ invoice_service = {
       return error;
     });
   },
-  getListStaffJobEx: function getListStaffJobEx(id) {
-    return axios.get('/invoices/api-v1/list-staff-job-ex/' + id).then(function (response) {
-      return response.data;
+  createPDF: function createPDF(data) {
+    return axios.post('/invoices/api-v1/create-pdf', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
     }).catch(function (error) {
       return error;
     });
   },
-  getListStaffQualifications: function getListStaffQualifications(id) {
-    return axios.get('/invoices/api-v1/list-staff-qualification/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  getStaffDependents: function getStaffDependents(id) {
-    return axios.get('/invoices/api-v1/list-staff-dependents/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  getStaffAuths: function getStaffAuths(id) {
-    return axios.get('/invoices/api-v1/list-staff-auths/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  }
-};
-
-/***/ }),
-
-/***/ "./resources/assets/js/service/payments-service.js":
-/*!*********************************************************!*\
-  !*** ./resources/assets/js/service/payments-service.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-payments_service = {
-  loadList: function loadList(data) {
-    return axios.post('/payments/api-v1/getItems', data).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  getDetailsPayment: function getDetailsPayment(data) {
-    return axios.post('/payments/api-v1/get-details-payment', data).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  loadListBundleDt: function loadListBundleDt(data) {
-    return axios.post('/payments/api-v1/load-list-bundle-dt', data).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  loadListSuppliers: function loadListSuppliers(data) {
-    return axios.get('/payments/api-v1/get-list-suppliers', data).then(function (response) {
-      return response.data;
+  createCSV: function createCSV(data) {
+    return axios.post('/invoices/api-v1/create-csv', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
     }).catch(function (error) {
       return error;
     });
@@ -581,21 +531,20 @@ vehicles_service = {
 /***/ }),
 
 /***/ 1:
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ./resources/assets/js/service/invoice-service.js ./resources/assets/js/service/sales-lists-service.js ./resources/assets/js/service/payments-service.js ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ./resources/assets/js/service/invoice-service.js ./resources/assets/js/service/sales-lists-service.js ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\payments-service.js */"./resources/assets/js/service/payments-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
 
 
 /***/ })

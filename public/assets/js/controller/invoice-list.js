@@ -20945,25 +20945,6 @@ var ctrInvoiceListVl = new Vue({
           that.loading = false;
         }
       });
-    },
-    changePage: function changePage(page) {
-      this.pagination.current_page = page;
-      this.getItems(page);
-    },
-    sortList: function sortList(event, order_by) {
-      $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
-
-      if (this.order.col === order_by && this.order.descFlg) {
-        this.order.descFlg = false;
-        event.target.classList.toggle('sort-asc');
-      } else {
-        this.order.descFlg = true;
-        event.target.classList.toggle('sort-desc');
-      }
-
-      this.order.col = order_by;
-      this.order.divId = event.currentTarget.id;
-      this.getItems(this.pagination.current_page);
     }
   },
   computed: {
@@ -21084,7 +21065,8 @@ var ctrInvoiceListVl = new Vue({
       this.modal.invoice = item;
       var that = this;
       invoice_service.getDetailsInvoice({
-        'mst_customers_cd': item.customer_cd
+        'mst_customers_cd': item.customer_cd,
+        'mst_business_office_id': item.mst_business_office_id
       }).then(function (response) {
         if (response.info.length > 0) {
           that.modal.sale_info = response.info;
@@ -21093,6 +21075,49 @@ var ctrInvoiceListVl = new Vue({
         $('#detailsModal').modal('show');
         that.loading = false;
       });
+    },
+    createPDF: function createPDF() {
+      var _this2 = this;
+
+      var that = this;
+      invoice_service.createPDF({}).then(function (response) {
+        _this2.downloadFile(response, 'csv');
+      });
+    },
+    createCSV: function createCSV() {
+      var _this3 = this;
+
+      var that = this;
+      invoice_service.createCSV({
+        data: that.items
+      }).then(function (response) {
+        _this3.downloadFile(response, 'csv');
+      });
+    },
+    downloadFile: function downloadFile(response, filename) {
+      // It is necessary to create a new blob object with mime-type explicitly set
+      // otherwise only Chrome works like it should
+      var newBlob = new Blob([response.data], {
+        type: 'application/octet-stream'
+      }); // IE doesn't allow using a blob object directly as link href
+      // instead it is necessary to use msSaveOrOpenBlob
+
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(newBlob);
+        return;
+      } // For other browsers:
+      // Create a link pointing to the ObjectURL containing the blob.
+
+
+      var data = window.URL.createObjectURL(newBlob);
+      var link = document.createElement('a');
+      link.href = data;
+      link.download = filename + '.zip';
+      link.click();
+      setTimeout(function () {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(data);
+      }, 100);
     }
   },
   mounted: function mounted() {

@@ -5,7 +5,6 @@
     "/assets/js/controller/empty-info.js": "/assets/js/controller/empty-info.js",
     "/assets/js/controller/empty-info-list.js": "/assets/js/controller/empty-info-list.js",
     "/assets/js/controller/invoice-list.js": "/assets/js/controller/invoice-list.js",
-    "/assets/js/controller/payments-list.js": "/assets/js/controller/payments-list.js",
     "/assets/js/controller/sales-lists.js": "/assets/js/controller/sales-lists.js",
     "/assets/js/controller/staffs.js": "/assets/js/controller/staffs.js",
     "/assets/js/controller/staffs-list.js": "/assets/js/controller/staffs-list.js",
