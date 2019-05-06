@@ -28,7 +28,7 @@ class CreateTJiconaxSalesDatas extends Migration
             $table->string('goods',50)->nullable();
             $table->float('quantity');
             $table->decimal('unit_price',10,2);
-            $table->decimal('transport_billing amount',10,2);
+            $table->decimal('transport_billing_amount',10,2);
             $table->decimal('insurance_fee',10,2);
             $table->decimal('billing_fast_charge',10,2);
             $table->decimal('discount_amount',10,2);

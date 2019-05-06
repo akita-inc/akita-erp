@@ -11,8 +11,8 @@
                 <p>{!! $content !!}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{!! isset($btn_cancel_title) ? $btn_cancel_title:"Cancel" !!}</button>
+                <button type="button" class="btn btn-primary"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">{!! isset($btn_ok_title) ? $btn_ok_title:"OK" !!}</button>
             </div>
         </div>
     </div>

@@ -127,7 +127,7 @@
                 </div>
             </div>
         </div>
-        <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0">
+        <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row justify-content-center">
                     <div class="col-md-2 padding-row-5 col-list-search-f ">
@@ -152,12 +152,12 @@
                     <div class="col-md-2 padding-row-5 col-list-search-f "></div>
                     <div class="col-md-3 padding-row-5 grid-form-search row">
                         <div class="col-md-5 padding-row-5">
-                            <button class="btn btn-primary w-100" v-on:click="clearCondition()">
+                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmPDFModal">
                                 {{trans('invoices.list.search.button.issue')}}
                             </button>
                         </div>
                         <div class="col-md-5 padding-row-5">
-                            <button class="btn btn-primary w-100" v-on:click="getItems(1)">
+                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmCSVModal">
                                 {{trans('invoices.list.search.button.csv')}}
                             </button>
                         </div>
@@ -186,9 +186,9 @@
                     @foreach($fieldShowTable as $key => $field)
                         <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
-                                @case('total')
+                                @case('tax_included_amount')
                                 @case('total_fee')
-                                @case('sale_tax')
+                                @case('consumption_tax')
                                 <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
                                 <p v-else>---</p>
                                 @break
@@ -205,14 +205,27 @@
                 </tr>
                 </tbody>
             </table>
-            {{--<div v-cloak class="mg-t-10">--}}
-                {{--@include("Layouts.pagination")--}}
-            {{--</div>--}}
         </div>
         @include("invoices.modal",[
-        'fieldShowTable'=>$fieldShowTable,
-         'fieldShowTableDetails'=>$fieldShowTableDetails,
+            'fieldShowTable'=>$fieldShowTable,
+            'fieldShowTableDetails'=>$fieldShowTableDetails,
          ])
+        @include('Layouts.modal',[
+        'id'=> 'confirmPDFModal',
+        'title'=> '',
+        'content'=> trans('messages.MSG10022'),
+        'attr_input' => "@click='createPDF()'",
+        'btn_ok_title' => trans('common.button.yes'),
+        'btn_cancel_title' => trans('common.button.no'),
+        ])
+        @include('Layouts.modal',[
+        'id'=> 'confirmCSVModal',
+        'title'=> '',
+        'content'=> trans('messages.MSG10022'),
+        'attr_input' => "@click='createCSV()'",
+        'btn_ok_title' => trans('common.button.yes'),
+        'btn_cancel_title' => trans('common.button.no'),
+        ])
     </div>
 @endsection
 @section("scripts")

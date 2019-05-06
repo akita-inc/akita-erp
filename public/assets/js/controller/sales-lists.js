@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -3411,14 +3411,14 @@ var ctrSalesListVl = new Vue({
 
 /***/ }),
 
-/***/ 13:
+/***/ 14:
 /*!****************************************************************!*\
   !*** multi ./resources/assets/js/controller/sales-lists-vl.js ***!
   \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
 
 
 /***/ })

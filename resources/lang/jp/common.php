@@ -26,6 +26,8 @@ return [
         'reservation_approval' =>'承認',
         'reservation_reject' =>'却下',
         'export_excel'=>'確認書',
+        'yes' => 'はい',
+        'no' => 'いいえ',
     ],
     'btn_kara'=>[
         'add'=>'新規登録'
