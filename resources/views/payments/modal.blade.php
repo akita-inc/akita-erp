@@ -21,9 +21,13 @@
                         @foreach($fieldShowTable as $key => $field)
                             <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @switch($key)
+                                    @case('billing_amount')
+                                    @case('consumption_tax')
+                                    <span>￥{!! "@{{modal.payment['$key']}}" !!}</span>
+                                    @break
                                     @case('total_amount')
-                                    <span>
-                                            {!! "@{{parseInt(modal.payment.billing_amount) + parseInt(modal.payment.consumption_tax)}}" !!}
+                                        <span>
+                                            ￥{!! "@{{parseInt(modal.payment.billing_amount) + parseInt(modal.payment.consumption_tax)}}" !!}
                                         </span>
                                     @break
                                     @default
