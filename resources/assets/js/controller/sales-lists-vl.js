@@ -11,6 +11,7 @@ var ctrSalesListVl = new Vue({
         allItems:[],
         export_file_nm:"",
         message:'',
+        flagExport:false,
         fields: {
             "daily_report_date": "日報日付",
             "branch_office_cd":"支店CD",
@@ -238,6 +239,23 @@ var ctrSalesListVl = new Vue({
             let arrKeys=Object.keys(arrData[0]);
             let fields=this.fields;
             let headerFields=[];
+            if(!this.fileSearch.mst_business_office_id)
+            {
+                const distinctBranchCd=[...new Set(arrData.map(item=>item.branch_office_cd))];
+                for(var k=0;k<distinctBranchCd.length;k++)
+                {
+                    this.downloadFile(arrKeys,fields,headerFields,arrData,distinctBranchCd[k])
+                }
+                console.log(distinctBranchCd);
+            }
+            else
+            {
+                this.downloadFile(arrKeys,fields,headerFields,arrData,null)
+            }
+
+        },
+        downloadFile:function (arrKeys,fields,headerFields,arrData,branch_cd){
+            let export_file_nm=this.export_file_nm.split("branch_office_cd").join(branch_cd?branch_cd:arrData[0].branch_office_cd);
             for(var i=0;i<arrKeys.length;i++)
             {
                 if(arrKeys[i]!==undefined && fields[arrKeys[i]]!==undefined)
@@ -245,16 +263,33 @@ var ctrSalesListVl = new Vue({
                     headerFields.push(fields[arrKeys[i]]);
                 }
             }
-            let csvContent = "data:text/csv;charset=shift-jis,";
+            let csvContent = "data:text/csv;charset=shift_jis,";
             csvContent += [
                 headerFields.join(","),
-                ...arrData.map(item => Object.values(item).join('","'))]
-                .join('"\n')
+                ...arrData.map(item => {
+                    if(branch_cd)
+                    {
+                        if(branch_cd==item.branch_office_cd)
+                        {
+                            return '"'+Object.values(item).join('","')+'"';
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        return '"'+Object.values(item).join('","')+'"';
+                    }
+                })]
+                .join('\n')
                 .replace(/(^\[)|(\]$)/gm, "");
+            console.log(csvContent);
             const data = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", data);
-            link.setAttribute("download", this.export_file_nm);
+            link.setAttribute("download", export_file_nm);
             link.click();
         }
     },

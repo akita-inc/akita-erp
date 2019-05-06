@@ -53,17 +53,17 @@ class SalesListsController extends Controller
                 't_saleses.delivery_destination',
                 't_saleses.quantity',
                 't_saleses.unit_price',
-                DB::raw('format(t_saleses.total_fee, "#,##0") as total_fee'),
-                DB::raw('format(t_saleses.insurance_fee, "#,##0") as insurance_fee'),
-                DB::raw('format(t_saleses.billing_fast_charge, "#,##0") as billing_fast_charge'),
-                DB::raw('format(t_saleses.discount_amount, "#,##0") as discount_amount'),
-                DB::raw('format(t_saleses.tax_included_amount, "#,##0") as tax_included_amount'),
-                DB::raw('format(t_saleses.loading_fee, "#,##0") as loading_fee'),
-                DB::raw('format(t_saleses.wholesale_fee, "#,##0") as wholesale_fee'),
-                DB::raw('format(t_saleses.waiting_fee, "#,##0") as waiting_fee'),
-                DB::raw('format(t_saleses.incidental_fee, "#,##0") as incidental_fee'),
-                DB::raw('format(t_saleses.surcharge_fee, "#,##0") as surcharge_fee'),
-                DB::raw('format(t_saleses.consumption_tax, "#,##0") as consumption_tax')
+                't_saleses.total_fee',
+                't_saleses.insurance_fee',
+                't_saleses.billing_fast_charge',
+                't_saleses.discount_amount',
+                't_saleses.tax_included_amount',
+                't_saleses.loading_fee',
+                't_saleses.wholesale_fee',
+                't_saleses.waiting_fee',
+                't_saleses.incidental_fee',
+                't_saleses.surcharge_fee',
+                't_saleses.consumption_tax'
 //                DB::raw("DATE_FORMAT(t_billing_history_headers.publication_date, '%Y/%m/%d') as publication_date")
             );
         $this->query->leftJoin('mst_customers', function ($join) {
@@ -78,9 +78,9 @@ class SalesListsController extends Controller
             $join->on('mst_staffs.staff_cd', '=', 't_saleses.staff_cd')
                 ->whereNull('mst_staffs.deleted_at');
         });
-        $this->query->leftJoin('t_billing_history_header_details', function ($join) {
-                $join->on('t_billing_history_header_details.document_no','=','t_saleses.document_no');
-        });
+//        $this->query->leftJoin('t_billing_history_header_details', function ($join) {
+//                $join->on('t_billing_history_header_details.document_no','=','t_saleses.document_no');
+//        });
         if ($where['mst_business_office_id'] != '') {
                 $this->query->where('t_saleses.mst_business_office_id', '=',  $where['mst_business_office_id']);
         }
@@ -170,8 +170,8 @@ class SalesListsController extends Controller
             }
         }
         $dateTimeRun = date("YmdHis");
-        $filename=str_replace("branch_office_cd",$allItems[0]->branch_office_cd,config("params.export_csv.sales_lists.name"));
-        $filename=str_replace("yyyymmddhhmmss",$dateTimeRun,$filename);
+//        $filename=str_replace("branch_office_cd",$allItems[0]->branch_office_cd,config("params.export_csv.sales_lists.name"));
+        $filename=str_replace("yyyymmddhhmmss",$dateTimeRun,config("params.export_csv.sales_lists.name"));
         $response = [
             'pagination' => [
                 'total' => $items->total(),

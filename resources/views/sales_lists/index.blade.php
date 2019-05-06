@@ -141,19 +141,19 @@
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('total_fee')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
                                 <p v-else>---</p>
                                 @break
                                 @case('consumption_tax')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
                                 <p v-else>---</p>
                                 @break
                                 @case('tax_included_amount')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
                                 <p v-else>---</p>
                                 @break
                                 @default
-                                <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
+                                <p v-if="item['{{$key}}']">{!! "@{{item['$key']}}" !!}</p>
                                 <p v-else>---</p>
                                 @break
                             @endswitch
