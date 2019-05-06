@@ -142,7 +142,7 @@
         <div class="wrapper-table">
             <table class="table table-striped table-bordered search-content">
                 <thead>
-                    <tr>
+                    <tr v-if="items.length > 0" v-cloak>
                         <th class="wd-60"></th>
                         @foreach($fieldShowTable as $key => $field)
                             <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
