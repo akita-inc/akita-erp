@@ -270,30 +270,20 @@ invoice_service = {
       return error;
     });
   },
-  getListStaffJobEx: function getListStaffJobEx(id) {
-    return axios.get('/invoices/api-v1/list-staff-job-ex/' + id).then(function (response) {
-      return response.data;
+  createPDF: function createPDF(data) {
+    return axios.post('/invoices/api-v1/create-pdf', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
     }).catch(function (error) {
       return error;
     });
   },
-  getListStaffQualifications: function getListStaffQualifications(id) {
-    return axios.get('/invoices/api-v1/list-staff-qualification/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  getStaffDependents: function getStaffDependents(id) {
-    return axios.get('/invoices/api-v1/list-staff-dependents/' + id).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  getStaffAuths: function getStaffAuths(id) {
-    return axios.get('/invoices/api-v1/list-staff-auths/' + id).then(function (response) {
-      return response.data;
+  createCSV: function createCSV(data) {
+    return axios.post('/invoices/api-v1/create-csv', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
     }).catch(function (error) {
       return error;
     });
@@ -335,13 +325,6 @@ sales_lists_service = {
     return axios.post('/sales_lists/api-v1/mst-customer-list', {
       type: type
     }).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
-  },
-  exportCSV: function exportCSV(data) {
-    return axios.post('/sales_lists/api-v1/export-csv', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
@@ -554,14 +537,14 @@ vehicles_service = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
-__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
 
 
 /***/ })

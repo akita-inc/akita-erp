@@ -25,8 +25,8 @@ return[
             'customer_cd' => '得意先CD',
             'customer_nm' => '得意先名',
             'total_fee'=>'請求金額',
-            'sale_tax'=>'消費税',
-            'total'=>'合計金額',
+            'consumption_tax'=>'消費税',
+            'tax_included_amount'=>'合計金額',
         ],
     ],
     'modal' => [
