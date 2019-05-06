@@ -157,9 +157,13 @@
                         @foreach($fieldShowTable as $key => $field)
                             <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @switch($key)
+                                    @case('billing_amount')
+                                    @case('consumption_tax')
+                                    <span>{!! "￥@{{item['$key']}}" !!}</span>
+                                    @break
                                     @case('total_amount')
                                         <span>
-                                            {!! "@{{parseInt(item.billing_amount) + parseInt(item.consumption_tax)}}" !!}
+                                            {!! "￥@{{parseInt(item.billing_amount) + parseInt(item.consumption_tax)}}" !!}
                                         </span>
                                     @break
                                     @default
