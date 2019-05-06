@@ -134,16 +134,10 @@
                 </div>
             </div>
         </div>
-        <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
-            <div>
-                <div class="row justify-content-center">
-                    <div class="col-md-2">
-                        <button class="btn btn-primary w-75" v-on:click="execution()">
-                            {{trans('payments.list.search.button.execution')}}
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="mt-3 sub-header d-flex align-items-center justify-content-center" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
+            <button class="btn btn-primary" v-on:click="execution()">
+                {{trans('payments.list.search.button.execution')}}
+            </button>
         </div>
         <div class="wrapper-table">
             <table class="table table-striped table-bordered search-content">
