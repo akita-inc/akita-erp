@@ -198,7 +198,7 @@ return [
     ],
     'export_csv'=>[
         'sales_lists'=>[
-            'name'=>'kakunin_mst_customer_cd_yyyymmddhhmmss'
+            'name'=>'kakunin_branch_office_cd_yyyymmddhhmmss.csv'
         ]
     ],
     'import_mst_vehicles_data_kb' => [

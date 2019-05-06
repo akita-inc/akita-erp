@@ -3275,6 +3275,8 @@ var ctrSalesListVl = new Vue({
     lang: lang_date_picker,
     format_date: format_date_picker,
     items: [],
+    allItems: [],
+    export_file_nm: "",
     message: '',
     fields: {
       "daily_report_date": "日報日付",
@@ -3367,8 +3369,9 @@ var ctrSalesListVl = new Vue({
           that.pagination = response.pagination;
           that.fileSearch = response.fieldSearch;
           that.order = response.order;
+          that.allItems = response.allItems;
+          that.export_file_nm = response.export_file_nm;
           that.flagSearch = true;
-          console.log(that.items);
           $.each(that.fileSearch, function (key, value) {
             if (value === null) that.fileSearch[key] = '';
           });
@@ -3500,14 +3503,7 @@ var ctrSalesListVl = new Vue({
       this.fileSearch.to_date = lastDay.getFullYear() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getDate();
     },
     exportCSV: function exportCSV() {
-      var _this2 = this;
-
-      var arrData = null;
-      sales_lists_service.exportCSV().then(function (response) {
-        if (response.message !== false) {
-          var _arrData = _this2.items;
-        }
-      });
+      var arrData = this.allItems;
       var arrKeys = Object.keys(arrData[0]);
       var fields = this.fields;
       var headerFields = [];
@@ -3520,21 +3516,21 @@ var ctrSalesListVl = new Vue({
 
       var csvContent = "data:text/csv;charset=shift-jis,";
       csvContent += [headerFields.join(",")].concat(_toConsumableArray(arrData.map(function (item) {
-        return Object.values(item).join(',');
-      }))).join("\n").replace(/(^\[)|(\]$)/gm, "");
+        return Object.values(item).join('","');
+      }))).join('"\n').replace(/(^\[)|(\]$)/gm, "");
       var data = encodeURI(csvContent);
       var link = document.createElement("a");
       link.setAttribute("href", data);
-      link.setAttribute("download", "export.csv");
+      link.setAttribute("download", this.export_file_nm);
       link.click();
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this2 = this;
 
     sales_lists_service.loadCustomerList().then(function (response) {
-      _this3.dropdown_mst_customer_cd[0].data = response.data;
-      _this3.dropdown_mst_customer_nm[0].data = response.data;
+      _this2.dropdown_mst_customer_cd[0].data = response.data;
+      _this2.dropdown_mst_customer_nm[0].data = response.data;
     });
     this.setDefaultDate();
   },

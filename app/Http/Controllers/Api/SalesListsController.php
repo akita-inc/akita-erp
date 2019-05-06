@@ -17,9 +17,10 @@ class SalesListsController
     }
     public function exportCSV(Request $request)
     {
-        $dateTimeRun = date("YmdHis");
         $data=$request->all();
-        $filename=str_replace("123456",'mst_customer_cd',config("params.export_csv.sales_lists.name"));
+
+        $dateTimeRun = date("YmdHis");
+        $filename=str_replace("123456",'branch_office_cd',config("params.export_csv.sales_lists.name"));
         $filename=str_replace($dateTimeRun,'yyyymmddhhmmss',$filename);
         Excel::create($filename, function($excel) use ($data) {
             $excel->sheet('mySheet', function($sheet) use ($data)

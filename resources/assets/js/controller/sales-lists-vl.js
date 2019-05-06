@@ -8,6 +8,8 @@ var ctrSalesListVl = new Vue({
         lang:lang_date_picker,
         format_date: format_date_picker,
         items:[],
+        allItems:[],
+        export_file_nm:"",
         message:'',
         fields: {
             "daily_report_date": "日報日付",
@@ -102,8 +104,9 @@ var ctrSalesListVl = new Vue({
                     that.pagination = response.pagination;
                     that.fileSearch = response.fieldSearch;
                     that.order = response.order;
+                    that.allItems=response.allItems;
+                    that.export_file_nm=response.export_file_nm;
                     that.flagSearch=true;
-                    console.log(that.items);
                     $.each(that.fileSearch, function (key, value) {
                         if (value === null)
                             that.fileSearch[key] = '';
@@ -231,14 +234,7 @@ var ctrSalesListVl = new Vue({
             this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
         },
         exportCSV:function () {
-            const arrData=null;
-            sales_lists_service.exportCSV().then((response)=>{
-                if(response.message!==false)
-                {
-                   let  arrData=this.items;
-                }
-            });
-
+            let  arrData=this.allItems;
             let arrKeys=Object.keys(arrData[0]);
             let fields=this.fields;
             let headerFields=[];
@@ -252,13 +248,13 @@ var ctrSalesListVl = new Vue({
             let csvContent = "data:text/csv;charset=shift-jis,";
             csvContent += [
                 headerFields.join(","),
-                ...arrData.map(item => Object.values(item).join(','))]
-                .join("\n")
+                ...arrData.map(item => Object.values(item).join('","'))]
+                .join('"\n')
                 .replace(/(^\[)|(\]$)/gm, "");
             const data = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", data);
-            link.setAttribute("download", "export.csv");
+            link.setAttribute("download", this.export_file_nm);
             link.click();
         }
     },
@@ -268,7 +264,6 @@ var ctrSalesListVl = new Vue({
             this.dropdown_mst_customer_nm[0].data =  response.data;
         });
         this.setDefaultDate();
-
     },
     components: {
         PulseLoader,
