@@ -127,5 +127,13 @@ class MSupplier extends Model
             return false;
         }
     }
-
+    public function getListBundleDt($supplier_cd=""){
+        $mSupplier = new MSupplier();
+        if(!empty($supplier_cd)){
+            $mSupplier = $mSupplier->select('bundle_dt')->where('mst_suppliers_cd','LIKE','%'.$supplier_cd.'%')->whereNull('deleted_at')->groupBy('bundle_dt');
+        }else{
+            $mSupplier = $mSupplier->select('bundle_dt')->distinct('bundle_dt')->whereNull('deleted_at')->orderBy('bundle_dt');
+        }
+        return $mSupplier->get();
+    }
 }
