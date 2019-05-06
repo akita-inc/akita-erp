@@ -21098,7 +21098,7 @@ var ctrInvoiceListVl = new Vue({
       // It is necessary to create a new blob object with mime-type explicitly set
       // otherwise only Chrome works like it should
       var newBlob = new Blob([response.data], {
-        type: 'application/zip'
+        type: 'application/octet-stream'
       }); // IE doesn't allow using a blob object directly as link href
       // instead it is necessary to use msSaveOrOpenBlob
 

@@ -50,7 +50,7 @@ invoice_service = {
     },
     createCSV: function (data) {
         return axios.post('/invoices/api-v1/create-csv',data, {responseType: 'arraybuffer'}).then(function (response) {
-            return response.data;
+            return response;
         }).catch(function (error) {
             return error;
         });
