@@ -1169,7 +1169,6 @@ var ctrPaymentsListVl = new Vue({
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeCd,
         initialValue: this.fileSearch.supplier_cd,
-        maxlength: 5,
         class: 'form-control',
         ref: "supplier_cd"
       };
@@ -1179,7 +1178,6 @@ var ctrPaymentsListVl = new Vue({
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeNm,
         initialValue: this.fileSearch.supplier_nm,
-        maxlength: 5,
         class: 'form-control',
         ref: "supplier_nm"
       };
