@@ -21119,7 +21119,7 @@ var ctrInvoiceListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\invoice-list-vl.js */"./resources/assets/js/controller/invoice-list-vl.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\invoice-list-vl.js */"./resources/assets/js/controller/invoice-list-vl.js");
 
 
 /***/ })
