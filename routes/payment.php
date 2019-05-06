@@ -9,5 +9,6 @@ Route::group(['name' => 'payments', 'prefix'=>'/payments', 'middleware' => ['aut
         Route::any('/get-details-payment', 'PaymentsController@getDetailsPayment');
         Route::any('/load-list-bundle-dt', 'PaymentsController@loadListBundleDt');
         Route::any('/get-list-suppliers', 'PaymentsController@getListSuppliers');
+        Route::any('/execution', 'PaymentsController@execution');
     });
 });
