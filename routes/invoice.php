@@ -14,5 +14,7 @@ Route::group(['name' => 'invoices', 'prefix' => 'invoices', 'middleware' => ['au
         Route::get('/getListCustomers', 'InvoicesController@getListCustomers');
         Route::any('/load-list-bundle-dt', 'InvoicesController@loadListBundleDt');
         Route::any('/get-details-invoice', 'InvoicesController@getDetailsInvoice');
+        Route::any('/create-pdf', 'InvoicesController@createPDF');
+        Route::any('/create-csv', 'InvoicesController@createCSV');
     });
 });
