@@ -82,7 +82,7 @@ class ImportFromSQLSERVER extends Command
 
     protected function insertTJiconaxDataSales(){
 
-        $sql = "SELECT TOP 2 * FROM M_運転日報";
+        $sql = "SELECT * FROM M_運転日報";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
@@ -279,12 +279,9 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                     $mPurchases->upd_mst_staff_id = 9999;
 
                     if(!$mSaleses->save() || !$mPurchases->save()){
-
-                        echo "save 2 fails";
                         $this->countFails++;
                         DB::rollBack();
                     }else {
-                        echo "save 2 success";
                         $this->countSuccess++;
                         DB::commit();
                     }
