@@ -11,7 +11,6 @@ var ctrSalesListVl = new Vue({
         allItems:[],
         export_file_nm:"",
         message:'',
-        flagExport:false,
         fields: {
             "daily_report_date": "日報日付",
             "branch_office_cd":"支店CD",
@@ -235,27 +234,35 @@ var ctrSalesListVl = new Vue({
             this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
         },
         exportCSV:function () {
-            let  arrData=this.allItems;
-            let arrKeys=Object.keys(arrData[0]);
+            let  data=this.allItems;
+            let arrKeys=Object.keys(data[0]);
             let fields=this.fields;
             let headerFields=[];
             if(!this.fileSearch.mst_business_office_id)
             {
-                const distinctBranchCd=[...new Set(arrData.map(item=>item.branch_office_cd))];
+                const distinctBranchCd=[...new Set(data.map(item=>item.branch_office_cd))];
                 for(var k=0;k<distinctBranchCd.length;k++)
                 {
-                    this.downloadFile(arrKeys,fields,headerFields,arrData,distinctBranchCd[k])
+                    let arrMultiExport=[];
+                    for(var j=0;j<data.length;j++)
+                    {
+                        if(distinctBranchCd[k]!==undefined && distinctBranchCd[k]==data[j].branch_office_cd)
+                        {
+                            arrMultiExport.push(data[j]);
+                        }
+                    }
+                    this.downloadFile(arrKeys,fields,headerFields,arrMultiExport,distinctBranchCd[k])
                 }
                 console.log(distinctBranchCd);
             }
             else
             {
-                this.downloadFile(arrKeys,fields,headerFields,arrData,null)
+                this.downloadFile(arrKeys,fields,headerFields,data,null)
             }
 
         },
-        downloadFile:function (arrKeys,fields,headerFields,arrData,branch_cd){
-            let export_file_nm=this.export_file_nm.split("branch_office_cd").join(branch_cd?branch_cd:arrData[0].branch_office_cd);
+        downloadFile:function (arrKeys,fields,headerFields,data,branch_cd){
+            let export_file_nm=this.export_file_nm.split("branch_office_cd").join(branch_cd?branch_cd:data[0].branch_office_cd);
             for(var i=0;i<arrKeys.length;i++)
             {
                 if(arrKeys[i]!==undefined && fields[arrKeys[i]]!==undefined)
@@ -265,30 +272,12 @@ var ctrSalesListVl = new Vue({
             }
             let csvContent = "data:text/csv;charset=shift_jis,";
             csvContent += [
-                headerFields.join(","),
-                ...arrData.map(item => {
-                    if(branch_cd)
-                    {
-                        if(branch_cd==item.branch_office_cd)
-                        {
-                            return '"'+Object.values(item).join('","')+'"';
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        return '"'+Object.values(item).join('","')+'"';
-                    }
-                })]
-                .join('\n')
-                .replace(/(^\[)|(\]$)/gm, "");
-            console.log(csvContent);
-            const data = encodeURI(csvContent);
+                            headerFields.join(","),
+                            ...data.map(item => '"'+Object.values(item).join('","')+'"'
+                          )].join('\n').replace(/(^\[)|(\]$)/gm, "");
+            const dataExport = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", data);
+            link.setAttribute("href", dataExport);
             link.setAttribute("download", export_file_nm);
             link.click();
         }
