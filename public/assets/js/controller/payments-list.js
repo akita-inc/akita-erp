@@ -1169,7 +1169,7 @@ var ctrPaymentsListVl = new Vue({
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeCd,
         initialValue: this.fileSearch.supplier_cd,
-        class: 'form-control',
+        class: 'form-control input-cd',
         ref: "supplier_cd"
       };
     },
@@ -1187,7 +1187,7 @@ var ctrPaymentsListVl = new Vue({
     //suggestion
     renderSuggestion: function renderSuggestion(suggestion) {
       var supplier = suggestion.item;
-      return supplier.mst_suppliers_cd + ': ' + supplier.supplier_nm;
+      return supplier.mst_suppliers_cd + ': ' + supplier.supplier_nm; // return this.$createElement('div', { 'style': { color: 'red',width:"500px"} }, supplier.mst_suppliers_cd+ ': '+ supplier.supplier_nm);
     },
     getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
       this.$refs.supplier_nm.searchInput = suggestion.item.supplier_nm;
@@ -1208,7 +1208,7 @@ var ctrPaymentsListVl = new Vue({
 
       var filteredData = this.dropdown_supplier_cd[0].data.filter(function (item) {
         return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-      }).slice(0, this.limit);
+      });
       this.filteredSupplierCd = [{
         data: filteredData
       }];

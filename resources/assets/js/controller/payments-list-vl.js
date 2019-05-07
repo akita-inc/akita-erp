@@ -87,7 +87,7 @@ var ctrPaymentsListVl = new Vue({
     },
     computed: {
         inputPropsCd: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.supplier_cd,class:'form-control' ,ref:"supplier_cd"}
+            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.supplier_cd,class:'form-control input-cd' ,ref:"supplier_cd"}
         },
         inputPropsNm: function() {
             return {id:'autosuggest__input', onInputChange: this.onInputChangeNm ,initialValue: this.fileSearch.supplier_nm,class:'form-control',ref:"supplier_nm"}
@@ -98,7 +98,7 @@ var ctrPaymentsListVl = new Vue({
         renderSuggestion(suggestion) {
             const supplier = suggestion.item;
             return supplier.mst_suppliers_cd+ ': '+ supplier.supplier_nm;
-
+            // return this.$createElement('div', { 'style': { color: 'red',width:"500px"} }, supplier.mst_suppliers_cd+ ': '+ supplier.supplier_nm);
         },
         getSuggestionValueCd(suggestion) {
             this.$refs.supplier_nm.searchInput = suggestion.item.supplier_nm;
@@ -117,7 +117,7 @@ var ctrPaymentsListVl = new Vue({
             /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
             const filteredData = this.dropdown_supplier_cd[0].data.filter(item => {
                 return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-            }).slice(0, this.limit);
+            });
 
             this.filteredSupplierCd = [{
                 data: filteredData
