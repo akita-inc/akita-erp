@@ -272,7 +272,7 @@ var ctrSalesListVl = new Vue({
                     headerFields.push(fields[arrKeys[i]]);
                 }
             }
-            let csvContent = "data:text/csv;charset=shift_jis,";
+            let csvContent = "data:text/csv;charset=shift-jis,";
             csvContent += [
                             headerFields.join(","),
                             ...data.map(item => '"'+Object.values(item).join('","')+'"'

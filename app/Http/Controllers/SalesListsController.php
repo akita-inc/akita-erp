@@ -169,9 +169,6 @@ class SalesListsController extends Controller
                 $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']-1);
             }
         }
-        $dateTimeRun = date("YmdHis");
-//        $filename=str_replace("branch_office_cd",$allItems[0]->branch_office_cd,config("params.export_csv.sales_lists.name"));
-        $filename=str_replace("yyyymmddhhmmss",$dateTimeRun,config("params.export_csv.sales_lists.name"));
         $response = [
             'pagination' => [
                 'total' => $items->total(),
