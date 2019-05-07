@@ -19,8 +19,8 @@
         <div class="sub-header" style="background-color: #C6E0B4">
             <div class="p-t-30 frm-search-list">
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 row text-left">
-                        <div class="col-md-2 padding-row-5 col-list-search-f">
+                    <div class="col-md-9 col-sm-12 row text-left">
+                        <div class="col-md-1 padding-row-5 col-list-search-f">
                             {{trans("payments.list.search.sales-office")}}
                         </div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
@@ -31,10 +31,13 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2 padding-row-5 col-list-search-f">
+                        <div class="col-md-1">
+
+                        </div>
+                        <div class="col-md-1 padding-row-5 col-list-search-f">
                             {{trans("payments.list.search.billing-date")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year">
                                 @foreach($lstYear as $year)
                                     @if($initYear == $year)
@@ -45,37 +48,38 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-1 text-left no-padding lh-38">
-                            {{trans('payments.list.search.year')}}
+                        <div class="col-md-4 row">
+                            <div class="col-md-1 text-left no-padding lh-38">
+                                {{trans('payments.list.search.year')}}
+                            </div>
+                            <div class="col-md-4 no-padding">
+                                <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
+                                    @foreach($lstMonth as $month)
+                                        @if($initMonth == $month)
+                                            <option value="{{$month}}" selected> {{$month}}</option>
+                                        @else
+                                            <option value="{{$month}}"> {{$month}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3 no-padding row">
+                                <div class="col-md-1 no-padding"></div>
+                                <div class="col-md-4 text-left no-padding lh-38">
+                                    {{trans('payments.list.search.month')}}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12 row">
-                        <div class="col-md-2 padding-row-5 grid-form-search">
-                            <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
-                                @foreach($lstMonth as $month)
-                                    @if($initMonth == $month)
-                                        <option value="{{$month}}" selected> {{$month}}</option>
-                                    @else
-                                        <option value="{{$month}}"> {{$month}}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-4 text-left no-padding lh-38">
-                            {{trans('payments.list.search.month')}}
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-12 row">
-
-                    </div>
+                    <div class="col-md-3 col-sm-12 row"></div>
                 </div>
                 <div class="break-row-form" style="height: 25px;"></div>
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-2 padding-row-5 col-list-search-f text-left">
+                    <div class="col-md-9 col-sm-12 row">
+                        <div class="col-md-1 padding-row-5 col-list-search-f text-left">
                             {{trans("payments.list.search.supplier")}}
                         </div>
-                        <div class="col-md-3 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_suppliers_cd">
                                 {{trans("payments.list.search.code")}}
                             </label>
@@ -91,7 +95,7 @@
                             >
                             </vue-autosuggest>
                         </div>
-                        <div class="col-md-6 padding-row-5 grid-form-search">
+                        <div class="col-md-4 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_suppliers_nm">
                                 {{trans("payments.list.search.name")}}
                             </label>
@@ -106,26 +110,23 @@
                             >
                             </vue-autosuggest>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12 row lh-38">
-                        <div class="col-md-3 col-sm-12 text-left pl-1">
-                            {{trans("payments.list.search.closing-date")}}
-                        </div>
-                        <div class="col-md-3 col-sm-12 no-padding row">
-                            <div class="col-md-9 col-sm-9 no-padding">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4 row no-padding">
+                            <div class="col-md-2 no-padding lh-38">
+                                {{trans("payments.list.search.closing-date")}}
+                            </div>
+                            <div class="col-md-4 col-sm-9">
                                 <select  v-bind:class="errors.closed_date != undefined ? 'form-control dropdown-list is-invalid':'form-control dropdown-list' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" v-cloak>
                                     <option v-for="item in list_bundle_dt" :value="item.bundle_dt" v-cloak>
                                         @{{ item.bundle_dt }}
                                     </option>
-
                                 </select>
                             </div>
-                            <div class="col-md-3 col-sm-3 no-padding">
+                            <div class="col-md-1 col-md-1 text-left no-padding lh-38">
                                 {{trans('payments.list.search.day')}}
                             </div>
+                            <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
                         </div>
-                        <div class="col-md-6 col-sm-12 no-padding"></div>
-                        <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
