@@ -317,7 +317,7 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
             }catch (\Exception $ex){
                 $this->countFails++;
                 DB::rollBack();
-                $this->log("jiconax_error","伝票NO：.".$mTJiconaxSalesDatas->document_no."　エラー理由：".$ex->getMessage());
+                $this->log("jiconax_error","伝票NO：".$mTJiconaxSalesDatas->document_no."　エラー理由：".$ex->getMessage());
             }
         }
     }
