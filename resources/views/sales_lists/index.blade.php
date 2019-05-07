@@ -66,7 +66,7 @@
                                 {{trans("sales_lists.list.search.customer")}}
                             </div>
                             <div class="w-100 text-left sales-list">
-                                <label class="grid-form-search-label" for="input_mst_customers_cd">
+                                <label class="grid-form-search-label left-75px" for="input_mst_customers_cd">
                                     {{trans("sales_lists.list.search.code")}}
                                 </label>
                                 <vue-autosuggest
