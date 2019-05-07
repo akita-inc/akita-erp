@@ -245,14 +245,16 @@ class PaymentsController extends Controller
         return Response()->json(array('success'=>true,'data'=>$data));
     }
     public function execution(Request $request){
+        $return = ['success'=>true];
         $data = $request->all();
         $data = $data['data'];
         foreach($data as $item){
-            $this->createHistory($item);
+            $return = $this->createHistory($item);
+            if($return['success'] == false){
+                break;
+            }
         }
-        return response()->json([
-            'success'=>true
-        ]);
+        return response()->json($return);
     }
     private function createHistory($item){
         $currentTime = date("Y-m-d H:i:s",time());
@@ -292,12 +294,15 @@ class PaymentsController extends Controller
                 $tPurchases->updateInvoicingFlag($item['mst_suppliers_cd'],$item['mst_business_office_id']);
             }
             DB::commit();
+            return [
+                'success'=>true,
+            ];
         }catch (\Exception $e) {
             DB::rollback();
-            return response()->json([
+            return [
                 'success'=>false,
-                'message'=> $e->getMessage()
-            ]);
+                'message'=> ['execution' => $e->getMessage()]
+            ];
         }
     }
 }
