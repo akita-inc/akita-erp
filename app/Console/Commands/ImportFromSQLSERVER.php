@@ -81,8 +81,8 @@ class ImportFromSQLSERVER extends Command
     }
 
     protected function insertTJiconaxDataSales(){
-
-        $sql = "SELECT * FROM M_運転日報_copy";
+        $getDateMax = MTJiconaxSalesDatas::query()->select(DB::raw("MAX(last_updated) as date"))->first();
+        $sql = "SELECT * FROM M_運転日報_copy where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
@@ -260,6 +260,7 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                                 $mSaleses->consumption_tax = round( $mSaleses->consumption_tax);
                             }
 
+                            $mPurchases->consumption_tax = $mPurchases->total_fee * $getTax->rate;
                             if($mSuppliers){
                                 switch ($mSuppliers->rounding_method_id){
                                     case 1:
