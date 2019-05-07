@@ -278,6 +278,9 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                             }else{
                                 $mPurchases->consumption_tax = round( $mPurchases->consumption_tax);
                             }
+                        }else{
+                            $mSaleses->consumption_tax = 0;
+                            $mPurchases->consumption_tax = 0;
                         }
                     }
 
