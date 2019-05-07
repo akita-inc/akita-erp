@@ -87,10 +87,10 @@ var ctrPaymentsListVl = new Vue({
     },
     computed: {
         inputPropsCd: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.supplier_cd,maxlength:5,class:'form-control' ,ref:"supplier_cd"}
+            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.supplier_cd,class:'form-control' ,ref:"supplier_cd"}
         },
         inputPropsNm: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeNm ,initialValue: this.fileSearch.supplier_nm,maxlength:5,class:'form-control',ref:"supplier_nm"}
+            return {id:'autosuggest__input', onInputChange: this.onInputChangeNm ,initialValue: this.fileSearch.supplier_nm,class:'form-control',ref:"supplier_nm"}
         }
     },
     methods: {
@@ -151,7 +151,13 @@ var ctrPaymentsListVl = new Vue({
         clearCondition: function clearCondition() {
             this.$refs.supplier_nm.searchInput = "";
             this.$refs.supplier_cd.searchInput = "";
-            this.fileSearch.branch_office_cd = "";
+            this.fileSearch.mst_business_office_id = "";
+            this.fileSearch.billing_year=currentYear;
+            this.fileSearch.billing_month=currentMonth;
+            this.fileSearch.supplier_cd="";
+            this.fileSearch.supplier_nm="";
+            this.fileSearch.closed_date="";
+            this.errors = [];
         },
         getListBundleDt: function(){
             var that = this;
@@ -182,7 +188,7 @@ var ctrPaymentsListVl = new Vue({
             var that = this;
             this.loading = true;
             payments_service.execution({data:that.items}).then((response) => {
-                if(response.success == false){
+                if(response.success === false){
                     that.errors = response.message;
                     that.loading = false;
                 }else{

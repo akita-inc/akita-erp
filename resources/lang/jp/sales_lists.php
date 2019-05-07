@@ -21,10 +21,13 @@ return [
             'customer_nm'=>'名称',
             'mst_business_office_id'=>'営業所',
             'period_time'=>'期間',
+            'from_date'=>'期間',
+            'to_date'=>'期間',
             'customer'=>'得意先',
             'invoicing_flag'=>'請求書',
             'business_default_value'=>'全社',
             'invoicing_flag_default_value'=>'全て',
+            'no_data'=>'データがありません。',
 
         ],
         'table' => [

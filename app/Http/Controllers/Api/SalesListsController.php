@@ -4,15 +4,30 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\MCustomers;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 class SalesListsController
 {
     public function getCustomerList(Request $request)
     {
-        $mCustomers = new MCustomers();
-        $data = $mCustomers->getAllNm();
-        if ($data) {
-            $data = $data->toArray();
-        }
-        return Response()->json(array('success' => true, 'data' => array_column($data, $request->get('type')=='cd'?'mst_customers_cd':'customer_nm_formal')));
+        $mCustomer = new MCustomers();
+        $data = $mCustomer->select('mst_customers_cd','customer_nm_formal as mst_customers_nm')
+                            ->whereNull('deleted_at')
+                            ->get();
+        return Response()->json(array('success'=>true,'data'=>$data));
+    }
+    public function exportCSV(Request $request)
+    {
+        $data=$request->all();
+
+        $dateTimeRun = date("YmdHis");
+        $filename=str_replace("123456",'branch_office_cd',config("params.export_csv.sales_lists.name"));
+        $filename=str_replace($dateTimeRun,'yyyymmddhhmmss',$filename);
+        Excel::create($filename, function($excel) use ($data) {
+            $excel->sheet('mySheet', function($sheet) use ($data)
+            {
+                $sheet->fromArray($data);
+            });
+        })->download('csv');
+        return Response()->json(array('success'=>true));
     }
 }

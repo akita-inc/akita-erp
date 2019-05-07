@@ -344,10 +344,12 @@ input,select{
 .frm-search-list .grid-form-search-label{
     position: absolute;
     top: -20px;
-    left: 5px;
+    left: 75px;
     font-size: 0.7rem;
 }
-
+.frm-search-list .left-5px{
+    left:5px!important;
+}
 .frm-search-list .input-group-addon {
     display: flex;
     margin-left: -2px;
@@ -576,7 +578,9 @@ input[type=text]::-ms-clear {
     position: relative;
     width: 100%;
 }
-
+.sales-list .autosuggest__results-container{
+    position: unset!important;
+}
 .autosuggest__results {
     font-weight: 300;
     margin: 0;
@@ -591,6 +595,7 @@ input[type=text]::-ms-clear {
     overflow-y: auto;
     max-height: 200px;
 }
+
 
 .autosuggest__results ul {
     list-style: none;

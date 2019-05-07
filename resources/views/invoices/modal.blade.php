@@ -21,9 +21,11 @@
                         @foreach($fieldShowTable as $key => $field)
                             <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @switch($key)
-                                    @case('total')
+                                    @case('tax_included_amount')
+                                    <p>{!!"￥@{{ parseFloat( modal.invoice['total_fee']) + parseFloat( modal.invoice['consumption_tax']) }}" !!}</p>
+                                    @break
                                     @case('total_fee')
-                                    @case('sale_tax')
+                                    @case('consumption_tax')
                                     <p v-if="modal.invoice['{{$key}}']">{!!"￥@{{ modal.invoice['$key'] }}" !!}</p>
                                     <p v-else>---</p>
                                     @break

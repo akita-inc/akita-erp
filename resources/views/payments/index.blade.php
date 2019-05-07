@@ -135,14 +135,14 @@
             </div>
         </div>
         <div class="mt-3 sub-header d-flex align-items-center justify-content-center" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
-            <button class="btn btn-primary" v-on:click="execution()">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#confirmExecution">
                 {{trans('payments.list.search.button.execution')}}
             </button>
         </div>
         <div class="wrapper-table">
             <table class="table table-striped table-bordered search-content">
                 <thead>
-                    <tr>
+                    <tr v-if="items.length > 0" v-cloak>
                         <th class="wd-60"></th>
                         @foreach($fieldShowTable as $key => $field)
                             <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
@@ -175,6 +175,9 @@
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="14">@{{message}} </td>
                     </tr>
+                    <tr v-cloak v-if="errors.execution != undefined">
+                        <td colspan="14">@{{errors.execution}} </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -182,6 +185,14 @@
         'fieldShowTable'=>$fieldShowTable,
          'fieldShowTableDetails'=>$fieldShowTableDetails
          ])
+        @include('Layouts.modal',[
+        'id'=> 'confirmExecution',
+        'title'=> '',
+        'content'=> trans('messages.MSG10024'),
+        'attr_input' => "@click='execution()'",
+        'btn_ok_title' => trans('common.button.yes'),
+        'btn_cancel_title' => trans('common.button.no'),
+        ])
     </div>
 @endsection
 @section("scripts")
@@ -192,6 +203,7 @@
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         messages["MSG10023"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
+        messages["MSG10024"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
         var currentMonth = new Date().getMonth();
         var currentYear = new Date().getFullYear();
         if(currentMonth == 0){

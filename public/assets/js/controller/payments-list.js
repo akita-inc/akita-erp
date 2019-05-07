@@ -1169,7 +1169,6 @@ var ctrPaymentsListVl = new Vue({
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeCd,
         initialValue: this.fileSearch.supplier_cd,
-        maxlength: 5,
         class: 'form-control',
         ref: "supplier_cd"
       };
@@ -1179,7 +1178,6 @@ var ctrPaymentsListVl = new Vue({
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeNm,
         initialValue: this.fileSearch.supplier_nm,
-        maxlength: 5,
         class: 'form-control',
         ref: "supplier_nm"
       };
@@ -1245,7 +1243,13 @@ var ctrPaymentsListVl = new Vue({
     clearCondition: function clearCondition() {
       this.$refs.supplier_nm.searchInput = "";
       this.$refs.supplier_cd.searchInput = "";
-      this.fileSearch.branch_office_cd = "";
+      this.fileSearch.mst_business_office_id = "";
+      this.fileSearch.billing_year = currentYear;
+      this.fileSearch.billing_month = currentMonth;
+      this.fileSearch.supplier_cd = "";
+      this.fileSearch.supplier_nm = "";
+      this.fileSearch.closed_date = "";
+      this.errors = [];
     },
     getListBundleDt: function getListBundleDt() {
       var that = this;
@@ -1279,7 +1283,7 @@ var ctrPaymentsListVl = new Vue({
       payments_service.execution({
         data: that.items
       }).then(function (response) {
-        if (response.success == false) {
+        if (response.success === false) {
           that.errors = response.message;
           that.loading = false;
         } else {

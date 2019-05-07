@@ -72,7 +72,6 @@ class InvoicesController extends Controller {
     public function getItems(Request $request)
     {
 
-
         if(Session::exists('backQueryFlag') && Session::get('backQueryFlag')){
             if(Session::exists('backQueryFlag') ){
                 $data = Session::get('requestHistory');
@@ -95,10 +94,6 @@ class InvoicesController extends Controller {
                 'message'=> $validator->errors()
             ]);
         }else {
-//            $this->getQuery();
-//            $this->search($data);
-//            $items = $this->query->get();
-
             $items = $this->search($data);
             $response = [
                 'success'=>true,
@@ -111,130 +106,114 @@ class InvoicesController extends Controller {
 
     protected function search($data){
         $dataSearch=$data['fieldSearch'];
-//        $this->query->select(
-//            't_saleses.mst_business_office_id',
-//            't_saleses.mst_customers_cd as customer_cd',
-//            'mst_business_offices.business_office_nm as regist_office',
-//            'mst_customers.customer_nm_formal as customer_nm',
-//            DB::raw("sum(t_saleses.total_fee) as total_fee"),
-//            DB::raw("sum(t_saleses.total_fee) as consumption_tax"),
-//            DB::raw("sum(t_saleses.total_fee) as tax_included_amount")
-//
-//        );
-//        $this->query->leftJoin('mst_business_offices', function ($join) {
-//            $join->on('mst_business_offices.id', '=', 't_saleses.mst_business_office_id');
-//        })->leftjoin('mst_customers', function ($join) {
-//            $join->on('mst_customers.mst_customers_cd', '=', 't_saleses.mst_customers_cd')
-//                ->whereNull('mst_customers.deleted_at');
-//        });
-//        if ($dataSearch['mst_business_office_id'] != '') {
-//            $this->query->where('t_saleses.mst_business_office_id', '=', $dataSearch['mst_business_office_id'] );
-//        };
-//        if ($dataSearch['customer_cd'] != '') {
-//            $this->query->where('t_saleses.mst_customers_cd', '=',  $dataSearch['customer_cd']);
-//        }
-//        if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
-//            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['closed_date'] ? $dataSearch['closed_date'] : $dataSearch['closed_date_input'])));
-//            $this->query->where('t_saleses.daily_report_date', '<=', $date);
-//        }
-//        $this->query->where('t_saleses.invoicing_flag',0);
-//        $this->query->where('t_saleses.deleted_at',null);
-//
-//        $this->query->orderBy('t_saleses.mst_business_office_id','asc')
-//                ->orderBy('t_saleses.mst_customers_cd','asc');
-//
-//        $this->query->groupBy('t_saleses.mst_customers_cd','t_saleses.mst_business_office_id','mst_business_offices.business_office_nm','mst_customers.customer_nm_formal');
-
-
         $querySearch = "\n";
         $paramsSearch = [];
         if ($dataSearch['mst_business_office_id'] != '') {
-            $querySearch .= "AND ts.mst_business_office_id = mst_business_office_id "."\n";
+            $querySearch .= "AND ts.mst_business_office_id = :mst_business_office_id "."\n";
             $paramsSearch['mst_business_office_id'] = $dataSearch['mst_business_office_id'];
         };
         if ($dataSearch['customer_cd'] != '') {
-            $querySearch .= "AND c.bill_cus_cd = customer_cd "."\n";
+            $querySearch .= "AND c.bill_cus_cd = :customer_cd "."\n";
             $paramsSearch['customer_cd'] = $dataSearch['customer_cd'];
         }
         if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
             $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['closed_date'] ? $dataSearch['closed_date'] : $dataSearch['closed_date_input'])));
-            $querySearch .= "AND ts.daily_report_date <= date "."\n";
-            $paramsSearch['date'] = "'".$date."'";
+            $querySearch .= "AND ts.daily_report_date <= :date "."\n";
+            $paramsSearch['date'] = $date;
         }
         $this->query = "
-                    SELECT
-                ts.mst_business_office_id,
-                office.business_office_nm,
-                -- ts.mst_customers_cd \"sales_cus_cd売上.得意先CD\",
-                c.`bill_cus_cd`AS `customer_cd`,
-                -- c.sales_cus_nm, -- <== trong modal
-                c.bill_cus_nm AS `customer_nm`,
-                SUM(ts.total_fee)  AS billing_amount,
+            SELECT
+                invoices.mst_business_office_id,
+                invoices.regist_office,
+                invoices.customer_cd,
+                invoices.customer_nm,
+                CAST(invoices.total_fee AS DECIMAL(10,2)) as total_fee,
+            IF
+                (
+                    invoices.consumption_tax_calc_unit_id = 0,
                 CASE
-            WHEN c.consumption_tax_calc_unit_id = 1 THEN
-                SUM(ts.consumption_tax)
-            ELSE
-                SUM(
-            
-                    IF (
-                        ts.tax_classification_flg = 1,
-                        (
-                            IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)
-                        ) * (
-                            SELECT
-                                rate
-                            FROM
-                                consumption_taxs
-                            WHERE
-                                start_date <= ts.daily_report_date
-                            AND ts.daily_report_date <= end_date
-                            LIMIT 1
-                        ),
-                        0
-                    )
-                )
-            END AS consumption_tax_cal,
-            c.consumption_tax_calc_unit_id,
-            c.rounding_method_id
+                        
+                        WHEN invoices.rounding_method_id = 1 THEN
+                        FLOOR( invoices.consumption_tax_cal ) 
+                        WHEN invoices.rounding_method_id = 2 || invoices.rounding_method_id IS NULL THEN
+                        ROUND( invoices.consumption_tax_cal ) ELSE CEIL( invoices.consumption_tax_cal ) 
+                    END,
+                    invoices.consumption_tax_cal 
+                ) AS consumption_tax
             FROM
-                t_saleses ts
-            JOIN (
-                SELECT
-                    connect_sales.id,
-                    connect_sales.mst_customers_cd sales_cus_cd,
-                    connect_sales.customer_nm_formal sales_cus_nm,
-                    bill_info.mst_customers_cd bill_cus_cd,
-                    bill_info.customer_nm_formal bill_cus_nm, -- ↓
-                    bill_info.consumption_tax_calc_unit_id,
-                    bill_info.rounding_method_id
-                FROM
-                    mst_customers connect_sales
-                JOIN mst_customers bill_info ON IFNULL(
-                    connect_sales.bill_mst_customers_cd,
-                    connect_sales.mst_customers_cd
-                ) = bill_info.mst_customers_cd
-            WHERE
-                connect_sales.deleted_at IS NULL
-                AND bill_info.deleted_at IS NULL
-            ) c ON ts.mst_customers_cd = c.sales_cus_cd
-            LEFT JOIN mst_business_offices office ON ts.mst_business_office_id = office.id
-            AND office.deleted_at IS NULL
-            WHERE
-                ts.deleted_at IS NULL
-            -- AND ts.mst_business_office_id = \"1\"
-            --AND ts.daily_report_date <= \"2019-05-04\"
-            -- AND c.bill_cus_cd = \"10119\"
-            $querySearch
-            GROUP BY
-                ts.mst_business_office_id,
-                office.business_office_nm,
-                c.bill_cus_cd,
-                c.bill_cus_nm,
+                (
+                    SELECT
+                    ts.mst_business_office_id,
+                    office.business_office_nm as regist_office,
+                    -- ts.mst_customers_cd \"sales_cus_cd売上.得意先CD\",
+                    c.`bill_cus_cd`AS `customer_cd`,
+                    -- c.sales_cus_nm, -- <== trong modal
+                    c.bill_cus_nm AS `customer_nm`,
+                    SUM(ts.total_fee)  AS total_fee,
+                    CASE
+                WHEN c.consumption_tax_calc_unit_id = 1 THEN
+                    SUM(ts.consumption_tax)
+                ELSE
+                    SUM(
+                
+                        IF (
+                            ts.tax_classification_flg = 1,
+                            (
+                                IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)
+                            ) * (
+                                SELECT
+                                    rate
+                                FROM
+                                    consumption_taxs
+                                WHERE
+                                    start_date <= ts.daily_report_date
+                                AND ts.daily_report_date <= end_date
+                                LIMIT 1
+                            ),
+                            0
+                        )
+                    )
+                END AS consumption_tax_cal,
                 c.consumption_tax_calc_unit_id,
-                c.rounding_method_id 
-            ORDER BY
-                ts.mst_business_office_id ASC,
-                 c.bill_cus_cd ASC
+                c.rounding_method_id
+                FROM
+                    t_saleses ts
+                JOIN (
+                    SELECT
+                        connect_sales.id,
+                        connect_sales.mst_customers_cd sales_cus_cd,
+                        connect_sales.customer_nm_formal sales_cus_nm,
+                        bill_info.mst_customers_cd bill_cus_cd,
+                        bill_info.customer_nm_formal bill_cus_nm,
+                        bill_info.consumption_tax_calc_unit_id,
+                        bill_info.rounding_method_id
+                    FROM
+                        mst_customers connect_sales
+                    JOIN mst_customers bill_info ON IFNULL(
+                        connect_sales.bill_mst_customers_cd,
+                        connect_sales.mst_customers_cd
+                    ) = bill_info.mst_customers_cd
+                WHERE
+                    connect_sales.deleted_at IS NULL
+                    AND bill_info.deleted_at IS NULL
+                ) c ON ts.mst_customers_cd = c.sales_cus_cd
+                LEFT JOIN mst_business_offices office ON ts.mst_business_office_id = office.id
+                AND office.deleted_at IS NULL
+                WHERE
+                    ts.deleted_at IS NULL
+                    AND ts.invoicing_flag = 0
+                    $querySearch
+                GROUP BY
+                    ts.mst_business_office_id,
+                    office.business_office_nm,
+                    c.bill_cus_cd,
+                    c.bill_cus_nm,
+                    c.consumption_tax_calc_unit_id,
+                    c.rounding_method_id 
+                ORDER BY
+                    ts.mst_business_office_id ASC,
+                     c.bill_cus_cd ASC
+             ) invoices
         ";
         return DB::select($this->query,$paramsSearch);
 
@@ -330,8 +309,9 @@ class InvoicesController extends Controller {
 
     public function getDetailsInvoice(Request $request){
         $input = $request->all();
+        $fieldSearch = $input['fieldSearch'];
         $mSaleses = new MSaleses();
-        $listDetail =  $mSaleses->getListByCustomerCd($input['mst_customers_cd'],$input['mst_business_office_id']);
+        $listDetail =  $mSaleses->getListByCustomerCd($input['mst_customers_cd'],$input['mst_business_office_id'], $fieldSearch);
         return response()->json([
             'success'=>true,
             'info'=> $listDetail,
@@ -348,74 +328,57 @@ class InvoicesController extends Controller {
     }
 
     public function createCSV(Request $request){
-        $zip_name = 'csv.zip';
-        $zip = new \ZipArchive();
-        $zip->open($zip_name, \ZipArchive::CREATE);
+        $data = $request->all();
+        $fieldSearch = $data['fieldSearch'];
+        $item = $data['data'];
+        $keys = mb_convert_encoding(array_keys($this->csvColumn), "SJIS", "UTF-8");
+
+        $this->createHistory($item,$fieldSearch);
+        $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
-            "Content-type" => "application/zip",
-            "Content-Disposition" => "attachment; filename=$zip_name",
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0"
         );
-
-        $data = $request->all();
-        $data = $data['data'];
-        $keys = array_keys($this->csvColumn);
-        $temp_directory = public_path();
-        foreach ($data as $item){
-            $this->createHistory($item);
-            $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.date('YmdHis', time()).'.csv';
-            echo date('YmdHis', time());
-            $file = fopen($temp_directory.'/'.$fileName, 'w');
+        $callback = function() use ($keys,$item) {
+            $file = fopen('php://output', 'w');
             fputcsv($file, array_values($this->csvColumn));
-            foreach($this->csvContent[$item['customer_cd']] as $content) {
+            foreach ($this->csvContent[$item['customer_cd']] as $content) {
                 $row = [];
-                foreach ($keys as $key){
+                foreach ($keys as $key) {
                     $row[$key] = $content[$key];
                 }
-                fputcsv($file, $row,config('params.csv.delimiter'), config('params.csv.enclosure'));
+                fputcsv($file, mb_convert_encoding($row, "SJIS", "UTF-8"), config('params.csv.delimiter'), config('params.csv.enclosure'));
             }
             fclose($file);
-            $contentCSV = file_get_contents($temp_directory.'/'.$fileName);
-            $zip->addFromString($fileName, mb_convert_encoding($contentCSV, "SJIS", "UTF-8"));
-            if(is_file($temp_directory.'/'.$fileName)) {
-                unlink($temp_directory.'/'.$fileName);
-            }
-            sleep(1);
-        }
-        $zip->close();
-        readfile($zip_name);
-        unlink($zip_name);
-        return response()->download($zip_name, $zip_name,$headers);
+        };
+        return response()->stream($callback, 200, $headers);
     }
 
-    public function handleCsv(){
-
-    }
-
-    public function createHistory($item){
+    public function createHistory($item,$fieldSearch){
         $currentTime = date("Y-m-d H:i:s",time());
         $mSaleses = new MSaleses();
         $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
         $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $mNumberings =  new MNumberings();
+        $this->csvContent[$item['customer_cd']] = [];
+        $serial_number = $mNumberings->getSerialNumberByTargetID('2001');
         DB::beginTransaction();
         try
         {
-            $this->csvContent[$item['customer_cd']] = [];
-            $serial_number = $mNumberings->getSerialNumberByTargetID('2001');
             $mBillingHistoryHeaders->invoice_number = $serial_number->serial_number;
             $mBillingHistoryHeaders->mst_customers_cd = $item['customer_cd'];
             $mBillingHistoryHeaders->mst_business_office_id = $item['mst_business_office_id'];
             $mBillingHistoryHeaders->publication_date = date('Y-m-d');
             $mBillingHistoryHeaders->total_fee = $item['total_fee'];
             $mBillingHistoryHeaders->consumption_tax = $item['consumption_tax'];
-            $mBillingHistoryHeaders->tax_included_amount = $item['tax_included_amount'];
+            $mBillingHistoryHeaders->tax_included_amount = $item['consumption_tax'];
             $mBillingHistoryHeaders->add_mst_staff_id =  Auth::user()->id;
             $mBillingHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
             if($mBillingHistoryHeaders->save()){
-                $history_details =  $mSaleses->getListByCustomerCd($item['customer_cd'],$item['mst_business_office_id']);
+                $history_details =  $mSaleses->getListByCustomerCd($item['customer_cd'], $item['mst_business_office_id'], $fieldSearch);
                 $branch_number = 0;
                 foreach ($history_details as $detail){
                     $arrayInsert = json_decode(json_encode($detail),true);
