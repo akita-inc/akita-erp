@@ -3361,6 +3361,7 @@ var ctrSalesListVl = new Vue({
         fieldSearch: that.fileSearch,
         order: that.order
       };
+      that.flagSearch = false;
 
       if (that.errors.from_date === undefined && that.errors.to_date === undefined) {
         that.loading = true;
@@ -3576,7 +3577,7 @@ var ctrSalesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
 
 
 /***/ })
