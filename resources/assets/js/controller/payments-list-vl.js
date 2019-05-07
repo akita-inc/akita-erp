@@ -87,10 +87,10 @@ var ctrPaymentsListVl = new Vue({
     },
     computed: {
         inputPropsCd: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.supplier_cd,maxlength:5,class:'form-control' ,ref:"supplier_cd"}
+            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.supplier_cd,class:'form-control' ,ref:"supplier_cd"}
         },
         inputPropsNm: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeNm ,initialValue: this.fileSearch.supplier_nm,maxlength:5,class:'form-control',ref:"supplier_nm"}
+            return {id:'autosuggest__input', onInputChange: this.onInputChangeNm ,initialValue: this.fileSearch.supplier_nm,class:'form-control',ref:"supplier_nm"}
         }
     },
     methods: {
@@ -178,6 +178,20 @@ var ctrPaymentsListVl = new Vue({
                 that.loading = false;
             });
         },
+        execution: function(){
+            var that = this;
+            this.loading = true;
+            payments_service.execution({data:that.items}).then((response) => {
+                if(response.success == false){
+                    that.errors = response.message;
+                    that.loading = false;
+                }else{
+                    that.errors = [];
+                    that.message = messages["MSG10023"];
+                    that.loading = false;
+                }
+            });
+        }
         //end action list
     },
     mounted (){

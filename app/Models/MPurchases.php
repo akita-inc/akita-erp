@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
-class MSalesLists  extends Model
-{
-    protected $table = "t_saleses";
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class MPurchases extends Model {
+    use SoftDeletes;
+
+    protected $table = "t_purchases";
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
@@ -16,10 +20,4 @@ class MSalesLists  extends Model
     public $rules = [
 
     ];
-    public function getAllData()
-    {
-        return $this->where('deleted_at','=',null)
-            ->get();
-    }
-
 }
