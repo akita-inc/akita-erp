@@ -187,9 +187,11 @@
                         <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('tax_included_amount')
+                                <p>{!!"￥@{{addComma( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) )}}" !!}</p>
+                                @break
                                 @case('total_fee')
                                 @case('consumption_tax')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
+                                <p v-if="item['{{$key}}']">{!!"￥@{{ addComma(item['$key']) }}" !!}</p>
                                 <p v-else>---</p>
                                 @break
                                 @default
