@@ -126,7 +126,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table" v-if="items.length>0">
+        <div class="wrapper-table" v-cloak  v-if="items.length>0">
             <table class="table table-striped table-bordered table-blue table-green">
                 <thead>
                 <tr>
@@ -166,7 +166,7 @@
                 @include("Layouts.pagination")
             </div>
         </div>
-        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-else-if="items.length==0 && flagSearch">
+        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
