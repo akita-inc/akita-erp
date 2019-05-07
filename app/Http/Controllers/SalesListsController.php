@@ -183,7 +183,7 @@ class SalesListsController extends Controller
             ],
             'data' => $items,
             'allItems'=>$allItems,
-            'export_file_nm'=>$filename,
+            'export_file_nm'=>config("params.export_csv.sales_lists.name"),
             'fieldSearch' => $data['fieldSearch'],
             'order' => $data['order'],
         ];
