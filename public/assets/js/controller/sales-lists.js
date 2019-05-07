@@ -3541,7 +3541,7 @@ var ctrSalesListVl = new Vue({
         }
       }
 
-      var csvContent = "data:text/csv;charset=shift_jis,";
+      var csvContent = "data:text/csv;charset=shift-jis,";
       csvContent += [headerFields.join(",")].concat(_toConsumableArray(data.map(function (item) {
         return '"' + Object.values(item).join('","') + '"';
       }))).join('\n').replace(/(^\[)|(\]$)/gm, "");
