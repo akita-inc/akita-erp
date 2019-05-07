@@ -327,15 +327,6 @@ payments_service = {
     }).catch(function (error) {
       return error;
     });
-  },
-  execution: function execution(data) {
-    return axios.post('/payments/api-v1/execution', data, {
-      responseType: 'arraybuffer'
-    }).then(function (response) {
-      return response.data;
-    }).catch(function (error) {
-      return error;
-    });
   }
 };
 
@@ -586,15 +577,15 @@ vehicles_service = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\payments-service.js */"./resources/assets/js/service/payments-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\payments-service.js */"./resources/assets/js/service/payments-service.js");
 
 
 /***/ })
