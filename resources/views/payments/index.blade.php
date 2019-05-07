@@ -3,13 +3,21 @@
 @section('title_header',trans("payments.title"))
 @section('style')
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
+    <style>
+        .input-cd+div{
+            width: 300px!important;
+        }
+        .autosuggest__results-container{
+            font-size: 14px;
+        }
+    </style>
 @endsection
 @section('content')
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrPaymentsListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: #C6E0B4">
-            <div class="sub-header-line-two p-t-30 frm-search-list">
+            <div class="p-t-30 frm-search-list">
                 <div class="row">
                     <div class="col-md-5 col-sm-12 row text-left">
                         <div class="col-md-2 padding-row-5 col-list-search-f">
