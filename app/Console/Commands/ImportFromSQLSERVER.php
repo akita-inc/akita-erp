@@ -82,7 +82,7 @@ class ImportFromSQLSERVER extends Command
 
     protected function insertTJiconaxDataSales(){
 
-        $sql = "SELECT * FROM M_運転日報";
+        $sql = "SELECT * FROM M_運転日報_copy";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
