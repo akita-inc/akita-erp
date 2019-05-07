@@ -3532,6 +3532,7 @@ var ctrSalesListVl = new Vue({
     },
     downloadFile: function downloadFile(arrKeys, fields, headerFields, data, branch_cd) {
       var export_file_nm = this.export_file_nm.split("branch_office_cd").join(branch_cd ? branch_cd : data[0].branch_office_cd);
+      export_file_nm = export_file_nm.split("yyyymmddhhmmss").join(Date.now());
 
       for (var i = 0; i < arrKeys.length; i++) {
         if (arrKeys[i] !== undefined && fields[arrKeys[i]] !== undefined) {
