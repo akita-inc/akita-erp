@@ -96,6 +96,7 @@ var ctrSalesListVl = new Vue({
                 fieldSearch: that.fileSearch,
                 order: that.order,
             };
+            that.flagSearch=false;
             if(that.errors.from_date===undefined && that.errors.to_date===undefined)
             {
                 that.loading = true;
