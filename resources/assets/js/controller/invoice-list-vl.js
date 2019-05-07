@@ -176,7 +176,7 @@ var ctrInvoiceListVl = new Vue({
             this.loading = true;
             this.modal.invoice = item;
             var that = this;
-            invoice_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id}).then((response) => {
+            invoice_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id,'fieldSearch': that.fileSearch}).then((response) => {
                 if (response.info.length > 0) {
                    that.modal.sale_info = response.info;
                 }
@@ -190,16 +190,21 @@ var ctrInvoiceListVl = new Vue({
                 this.downloadFile(response, 'csv');
             });
         },
-        createCSV: function () {
+        createCSV: async function () {
             var that = this;
-            invoice_service.createCSV({data:that.items}).then((response) => {
-                this.downloadFile(response, 'csv');
+            that.items.forEach(  ( value,key) =>{
+                setTimeout(function(){
+                    invoice_service.createCSV({data:value,'fieldSearch': that.fileSearch}).then(  function (response){
+                         that.downloadFile(response, 'csv');
+                    });
+                }, key*1000);
+
             });
         },
-        downloadFile(response, filename) {
+        downloadFile(response) {
             // It is necessary to create a new blob object with mime-type explicitly set
             // otherwise only Chrome works like it should
-            var newBlob = new Blob([response.data], {type: 'application/octet-stream'})
+            var newBlob = new Blob([response.data], {type: response.headers["content-type"]})
 
             // IE doesn't allow using a blob object directly as link href
             // instead it is necessary to use msSaveOrOpenBlob
@@ -213,12 +218,17 @@ var ctrInvoiceListVl = new Vue({
             const data = window.URL.createObjectURL(newBlob)
             var link = document.createElement('a')
             link.href = data
-            link.download = filename + '.zip'
+            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
+            // link.download = filename+'_'+moment().format('YYYYMMDDHHIISS');
+            link.download = filename;
             link.click()
             setTimeout(function () {
                 // For Firefox it is necessary to delay revoking the ObjectURL
                 window.URL.revokeObjectURL(data)
             }, 100)
+        },
+        addComma: function (value) {
+           return  value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
     },
     mounted () {
