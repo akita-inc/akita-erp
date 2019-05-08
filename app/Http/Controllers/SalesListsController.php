@@ -163,7 +163,7 @@ class SalesListsController extends Controller
         $this->getQuery();
         $this->search( $data );
         $allItems=$this->query->get();
-        foreach ($allItems as $item)
+        foreach ($allItems as $key=> $item)
         {
             unset($item->consumption_tax);
 
