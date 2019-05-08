@@ -186,11 +186,21 @@ var ctrInvoiceListVl = new Vue({
         },
         createPDF: function () {
             var that = this;
-            invoice_service.createPDF({}).then((response) => {
-                this.downloadFile(response, 'csv');
+            var value = that.items[0];
+            invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch}).then(  function (response){
+                that.downloadFile(response, 'csv');
             });
+            // that.items.forEach(  ( value,key) =>{
+            //     // setTimeout(function(){
+            //         invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch}).then(  function (response){
+            //             that.downloadFile(response, 'csv');
+            //         });
+            //         return;
+            //     // }, key*1000);
+            //
+            // });
         },
-        createCSV: async function () {
+        createCSV: function () {
             var that = this;
             that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){

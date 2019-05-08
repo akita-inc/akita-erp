@@ -327,6 +327,15 @@ payments_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  execution: function execution(data) {
+    return axios.post('/payments/api-v1/execution', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
@@ -365,6 +374,13 @@ sales_lists_service = {
     return axios.post('/sales_lists/api-v1/mst-customer-list', {
       type: type
     }).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  exportCSV: function exportCSV(data) {
+    return axios.post('/sales_lists/api-v1/export-csv', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
