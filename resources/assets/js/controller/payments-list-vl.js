@@ -75,6 +75,7 @@ var ctrPaymentsListVl = new Vue({
                         that.message = '';
                     }
                     that.items = response.data;
+                    console.log(that.items);
                     //that.pagination = response.pagination;
                     that.fileSearch = response.fieldSearch;
                     //that.order = response.order;
@@ -122,7 +123,12 @@ var ctrPaymentsListVl = new Vue({
             const filteredData = this.dropdown_supplier_cd[0].data.filter(item => {
                 return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
             }).slice(0, this.limit);
-
+            //
+            console.log(filteredData);
+            if(filteredData.length == 0){
+                this.fileSearch.closed_date = '';
+                this.list_bundle_dt = [];
+            }
             this.filteredSupplierCd = [{
                 data: filteredData
             }];
@@ -130,8 +136,8 @@ var ctrPaymentsListVl = new Vue({
         onInputChangeNm(text) {
             this.fileSearch.supplier_nm = text;
             if (text === '' || text === undefined) {
-                this.getListBundleDt();
-                this.fileSearch.closed_date = '';
+                /*this.getListBundleDt();
+                this.fileSearch.closed_date = '';*/
                 this.filteredSupplierNm = [];
                 return;
             }
@@ -219,7 +225,8 @@ var ctrPaymentsListVl = new Vue({
             var that = this;
             payments_service.getDetailsPayment({
                 'mst_suppliers_cd': item.mst_suppliers_cd,
-                'mst_business_office_id': item.mst_business_office_id
+                'mst_business_office_id': item.mst_business_office_id,
+                'daily_report_date': item.daily_report_date
             }).then((response) => {
                 if (response.info.length > 0) {
                     that.modal.detail_info = response.info;
