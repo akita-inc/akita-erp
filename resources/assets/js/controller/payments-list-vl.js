@@ -113,6 +113,9 @@ var ctrPaymentsListVl = new Vue({
         onInputChangeCd(text) {
             this.fileSearch.supplier_cd = text;
             if (text === '' || text === undefined) {
+                this.getListBundleDt();
+                this.fileSearch.closed_date = '';
+                this.filteredSupplierCd = [];
                 return;
             }
             /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
@@ -127,6 +130,9 @@ var ctrPaymentsListVl = new Vue({
         onInputChangeNm(text) {
             this.fileSearch.supplier_nm = text;
             if (text === '' || text === undefined) {
+                this.getListBundleDt();
+                this.fileSearch.closed_date = '';
+                this.filteredSupplierNm = [];
                 return;
             }
             /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
@@ -146,12 +152,22 @@ var ctrPaymentsListVl = new Vue({
         onSelectedCd(option) {
             this.fileSearch.supplier_cd = option.item.mst_suppliers_cd;
             this.fileSearch.supplier_nm = option.item.supplier_nm;
-            this.getListBundleDt();
+            if(this.fileSearch.supplier_cd === ''){
+                this.getListBundleDt();
+                this.fileSearch.closed_date = '';
+            }else{
+                this.getListBundleDtWithValueSelected();
+            }
         },
         onSelectedNm(option) {
             this.fileSearch.supplier_cd = option.item.mst_suppliers_cd;
             this.fileSearch.supplier_nm = option.item.supplier_nm;
-            this.getListBundleDt();
+            if(this.fileSearch.supplier_nm === ''){
+                this.getListBundleDt();
+                this.fileSearch.closed_date = '';
+            }else{
+                this.getListBundleDtWithValueSelected();
+            }
         },
         //
         clearCondition: function clearCondition() {
@@ -176,6 +192,17 @@ var ctrPaymentsListVl = new Vue({
             }).then((response) => {
                 if (response.info.length > 0) {
                     that.list_bundle_dt = response.info;
+                }
+            });
+        },
+        getListBundleDtWithValueSelected: function(){
+            var that = this;
+            payments_service.loadListBundleDt({
+                supplier_cd:that.fileSearch.supplier_cd
+            }).then((response) => {
+                if (response.info.length > 0) {
+                    that.list_bundle_dt = response.info;
+                    that.fileSearch.closed_date = that.list_bundle_dt[0].bundle_dt;
                 }
             });
         },
