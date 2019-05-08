@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\InvoicePDF;
+use App\Helpers\InvoicePDF_;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBillingHistoryHeaderDetails;
@@ -18,6 +20,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\TcpdfFpdi;
 
 
 class InvoicesController extends Controller {
@@ -63,6 +67,9 @@ class InvoicesController extends Controller {
         ];
 
     public $csvContent = [];
+
+    public $pdfHeaderContent = [];
+    public $billingHistoryHeaderID ="";
 
     public function __construct(){
         date_default_timezone_set("Asia/Tokyo");
@@ -160,7 +167,7 @@ class InvoicesController extends Controller {
                             ts.tax_classification_flg = 1,
                             (
                                 IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)
-                            ) * (
+                            ) * IFNULL((
                                 SELECT
                                     rate
                                 FROM
@@ -169,7 +176,7 @@ class InvoicesController extends Controller {
                                     start_date <= ts.daily_report_date
                                 AND ts.daily_report_date <= end_date
                                 LIMIT 1
-                            ),
+                            ),0),
                             0
                         )
                     )
@@ -318,15 +325,32 @@ class InvoicesController extends Controller {
         ]);
     }
 
-    public function createPDF(){
-        $file = storage_path() . "/pdf_template/請求書無地P1.pdf";
-
+    public function createPDF(Request $request){
+        $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
+        $data = $request->all();
+        $fieldSearch = $data['fieldSearch'];
+        $item = $data['data'];
         $headers = [
             'Content-Type' => 'application/pdf',
         ];
-        return response()->download($file, '請求書無地P1.pdf', $headers);
+        $this->createHistory($item,$fieldSearch);
+        if(!empty($this->billingHistoryHeaderID)){
+            $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
+            $pdf = new InvoicePDF();
+            $pdf->SetPrintHeader(false);
+            $pdf->SetPrintFooter(false);
+            $pdf->AddPage();
+            $pdf->writeHeader($contentHeader[0]);
+            $pdf->Output(public_path('doc.pdf'), 'F');
+        }
+
+//        return response()->download($file, '請求書無地P1.pdf', $headers);
     }
 
+
+    public function handlePDFHeader(){
+
+    }
     public function createCSV(Request $request){
         $data = $request->all();
         $fieldSearch = $data['fieldSearch'];
@@ -378,6 +402,7 @@ class InvoicesController extends Controller {
             $mBillingHistoryHeaders->add_mst_staff_id =  Auth::user()->id;
             $mBillingHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
             if($mBillingHistoryHeaders->save()){
+                $this->billingHistoryHeaderID = $mBillingHistoryHeaders->id;
                 $history_details =  $mSaleses->getListByCustomerCd($item['customer_cd'], $item['mst_business_office_id'], $fieldSearch);
                 $branch_number = 0;
                 foreach ($history_details as $detail){
