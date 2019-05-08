@@ -20,7 +20,7 @@
             <div class="p-t-30 frm-search-list">
                 <div class="row">
                     <div class="col-md-9 col-sm-12 row text-left">
-                        <div class="col-md-1 padding-row-5 col-list-search-f">
+                        <div class="col-md-1 padding-row-5 col-list-search-f text-center">
                             {{trans("payments.list.search.sales-office")}}
                         </div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
@@ -68,7 +68,7 @@
                 <div class="break-row-form" style="height: 25px;"></div>
                 <div class="row">
                     <div class="col-md-9 col-sm-12 row">
-                        <div class="col-md-1 padding-row-5 col-list-search-f text-left">
+                        <div class="col-md-1 padding-row-5 col-list-search-f text-center">
                             {{trans("payments.list.search.supplier")}}
                         </div>
                         <div class="col-md-2 padding-row-5 grid-form-search">
@@ -112,8 +112,11 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-1 col-md-1 text-left no-padding lh-38">
-                                {{trans('payments.list.search.day')}}
+                            <div class="col-md-3 no-padding row">
+                                <div class="col-md-1 no-padding"></div>
+                                <div class="col-md-1 col-md-1 text-left no-padding lh-38">
+                                    {{trans('payments.list.search.day')}}
+                                </div>
                             </div>
                             <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
                         </div>
@@ -139,12 +142,12 @@
             </button>
         </div>
         <div class="wrapper-table" v-cloak  v-if="items.length > 0">
-            <table class="table table-striped table-bordered search-content">
+            <table class="table table-striped table-bordered search-content-no-pointer">
                 <thead>
                     <tr>
                         <th class="wd-60"></th>
                         @foreach($fieldShowTable as $key => $field)
-                            <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
+                            <th id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
                         @endforeach
                     </tr>
                 </thead>
