@@ -27,7 +27,7 @@ return [
             'closing-date' => '締め日',
             'day' => '日',
             'button' => [
-                'execution' =>'締め実行'
+                'execution' => '締め実行'
             ]
         ],
         'table' => [
@@ -37,12 +37,21 @@ return [
             'billing_amount' => '請求金額',
             'consumption_tax' => '消費税',
             'total_amount' => '合計金額',
-            'button' =>[
+            'button' => [
                 'detail' => '詳細'
             ]
         ],
-        'modal' =>[
-            'title' => '請求詳細'
-        ]
     ],
-    ];
+    'modal' => [
+        'title'=>'請求詳細',
+        'sub_title'=>'明細',
+        'table' => [
+            'daily_report_date_formatted' => '日付',
+            'departure_point_name' => '発地',
+            'landing_name' => '着地',
+            'total_fee'=>'請求金額',
+            'consumption_tax'=>'消費税',
+            'tax_included_amount'=>'合計金額',
+        ]
+    ]
+];

@@ -86,28 +86,30 @@ class PaymentsController extends Controller
            IF(SUM( t_purchases.consumption_tax ) IS NULL,0,SUM( t_purchases.consumption_tax ))
                ELSE
 							 CASE WHEN ms.rounding_method_id = 1 THEN
-								TRUNCATE(
+								FLOOR(
                    SUM( IF(t_purchases.tax_classification_flg = 1,
                            IF(t_purchases.total_fee IS NULL,0,t_purchases.total_fee)*IF((select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) IS NULL,0,(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1)) ,0)
-),0) WHEN ms.rounding_method_id = 2 THEN
+)) WHEN ms.rounding_method_id = 2 THEN
 					 ROUND(
                    SUM( IF(t_purchases.tax_classification_flg = 1,
                            IF(t_purchases.total_fee IS NULL,0,t_purchases.total_fee)*IF((select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) IS NULL,0,(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1))  ,0)
 													 ))
 							ELSE
-							TRUNCATE(
+							CEIL(
                    SUM( IF(t_purchases.tax_classification_flg = 1,
                            IF(t_purchases.total_fee IS NULL,0,t_purchases.total_fee)*IF((select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) IS NULL,0,(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1))  ,0)
-													 )+.9,0)
+													 ))
 					 END
        END AS consumption_tax
         ');
         //
-        $this->query->leftJoin('mst_business_offices as mbo', function ($join) {
-            $join->on('mbo.id', '=', 't_purchases.mst_business_office_id');
+        $this->query->join('mst_business_offices as mbo', function ($join) {
+            $join->on('mbo.id', '=', 't_purchases.mst_business_office_id')
+            ->whereNull('mbo.deleted_at');
         });
-        $this->query->leftJoin('mst_suppliers as ms', function ($join) {
-            $join->on('ms.mst_suppliers_cd', '=', 't_purchases.mst_suppliers_cd');
+        $this->query->join('mst_suppliers as ms', function ($join) {
+            $join->on('ms.mst_suppliers_cd', '=', 't_purchases.mst_suppliers_cd')
+            ->whereNull('ms.deleted_at');
         });
         if ($where['mst_business_office_id'] != '') {
             $this->query->where('t_purchases.mst_business_office_id', '=', $where['mst_business_office_id']);
@@ -166,7 +168,7 @@ class PaymentsController extends Controller
             ],
         ];
         $fieldShowTableDetails = [
-            'daily_report_date' => [
+            'daily_report_date_formatted' => [
                 "classTH" => "wd-60",
             ],
             'departure_point_name'=> [
@@ -286,6 +288,7 @@ class PaymentsController extends Controller
                     $arrayInsert['modified_at'] = $currentTime;
                     unset($arrayInsert['invoicing_flag']);
                     unset($arrayInsert['id']);
+                    unset($arrayInsert['daily_report_date_formatted']);
                     $id = TPaymentHistoryHeaderDetails::query()->insertGetId($arrayInsert);
                 }
                 //仕入データを支払締処理済みにする
