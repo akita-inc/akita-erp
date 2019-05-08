@@ -68,8 +68,8 @@ class InvoicesController extends Controller {
 
     public $csvContent = [];
 
-    public $pdfHeaderContent = [];
     public $billingHistoryHeaderID ="";
+    public $listBillingHistoryDetailID = [];
 
     public function __construct(){
         date_default_timezone_set("Asia/Tokyo");
@@ -204,7 +204,7 @@ class InvoicesController extends Controller {
                     connect_sales.deleted_at IS NULL
                     AND bill_info.deleted_at IS NULL
                 ) c ON ts.mst_customers_cd = c.sales_cus_cd
-                LEFT JOIN mst_business_offices office ON ts.mst_business_office_id = office.id
+                JOIN mst_business_offices office ON ts.mst_business_office_id = office.id
                 AND office.deleted_at IS NULL
                 WHERE
                     ts.deleted_at IS NULL
@@ -327,6 +327,7 @@ class InvoicesController extends Controller {
 
     public function createPDF(Request $request){
         $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $data = $request->all();
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
@@ -336,21 +337,20 @@ class InvoicesController extends Controller {
         $this->createHistory($item,$fieldSearch);
         if(!empty($this->billingHistoryHeaderID)){
             $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
+            $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
             $pdf = new InvoicePDF();
             $pdf->SetPrintHeader(false);
             $pdf->SetPrintFooter(false);
             $pdf->AddPage();
+            $pdf->getTotalPage($contentDetails);
             $pdf->writeHeader($contentHeader[0]);
+            $pdf->writeDetails($contentDetails);
             $pdf->Output(public_path('doc.pdf'), 'F');
         }
 
 //        return response()->download($file, '請求書無地P1.pdf', $headers);
     }
 
-
-    public function handlePDFHeader(){
-
-    }
     public function createCSV(Request $request){
         $data = $request->all();
         $fieldSearch = $data['fieldSearch'];
@@ -420,6 +420,7 @@ class InvoicesController extends Controller {
                     unset($arrayInsert['staff_nm']);
                     unset($arrayInsert['id']);
                     $id =  MBillingHistoryHeaderDetails::query()->insertGetId( $arrayInsert );
+                    array_push( $this->listBillingHistoryDetailID, $id);
                 }
 
             }

@@ -10,6 +10,30 @@ class InvoicePDF extends TcpdfFpdi
     protected $template_p1 = null;
     protected $template_p2 = null;
     protected $font = 'cid0jp';
+
+    protected $colWidth= [
+        'daily_report_date'=> 8.8, //月日
+        'goods'=> 31.5, //品名
+        'size'=> 5, //屯
+        'quantity'=> 14, //数量
+        'unit_price'=> 16.5, //単価
+        'amount'=> 16, //金額
+        'departure_point_name'=> 31, //発地
+        'landing_name'=> 30.5, //着地
+        'loading_fee'=> 13.5, //積込料
+        'wholesale_fee'=> 13, //取卸料
+        'incidental_fee'=> 13, //付帯業務料
+        'waiting_fee'=> 13, //待機料
+        'surcharge_fee'=> 13.5, //サーチャージ料
+        'billing_fast_charge'=> 13, //通行料
+        'delivery_destination'=> 35, //備考
+        'staff_nm'=> 8.5, //号車
+    ];
+
+    protected $number_record_page_first = 22;
+    protected $number_record_page_n = 42;
+    protected $total_page = 1;
+
     function __construct(string $orientation = 'L', string $unit = 'mm', string $format = 'A4', bool $unicode = true, string $encoding = 'UTF-8', bool $diskcache = false, bool $pdfa = false)
     {
         parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
@@ -23,7 +47,7 @@ class InvoicePDF extends TcpdfFpdi
         $this->tplId = $this->importPage(1);
 
         $this->useImportedPage($this->tplId);
-
+        $this->SetAutoPageBreak(true, 0);
         $this->SetFont($this->font, '', 10);
         $this->SetXY(28, 16);
         $this->Write(8,'〒'.$content->bill_zip_cd);
@@ -40,7 +64,7 @@ class InvoicePDF extends TcpdfFpdi
 
         $this->SetFontSize( 12);
         $this->SetXY(210, 25);
-        $this->Cell(0, 10, TimeFunction::getTimestamp('Y年m月d日'),1,0,'R');
+        $this->Cell(0, 10, TimeFunction::getTimestamp('Y年m月d日'),0,0,'R');
 
         $this->SetXY(210, 40);
         $this->Write(0,$content->business_office_nm);
@@ -66,14 +90,130 @@ class InvoicePDF extends TcpdfFpdi
         $this->SetXY(98, 83);
         $this->Cell(29, 11, $content->toll_fee,0,0,'R');
         $this->SetXY(127, 83);
-        $this->Cell(29, 11, '',0,0,'R');
+        $this->Cell(29, 11, $content->total_fee,0,0,'R');
         $this->SetXY(156, 83);
-        $this->Cell(29, 11, $content->consumption_tax,0,0,'R');                  $this->SetXY(185, 83);
+        $this->Cell(29, 11, $content->consumption_tax,0,0,'R');
+        $this->SetXY(185, 83);
         $this->Cell(34, 11, $content->tax_included_amount,0,0,'R');
+    }
 
-//        $this->SetTextColor(0);
-//        $this->SetXY(PDF_MARGIN_LEFT, 5);
-//        $this->Cell(0, $size['height'], 'TCPDF and FPDI');
+    public function getTotalPage($list){
+        $numRecord = count($list);
+        if($numRecord <= $this->number_record_page_first){
+            $this->total_page = 1;
+        }else{
+            $this->total_page = ceil(($numRecord-$this->number_record_page_first)/$this->number_record_page_n) +1;
+        }
+    }
+
+    public function openPagen(){
+        $this->AddPage();
+        $this->setSourceFile($this->template_p2);
+        $this->tplId = $this->importPage(1);
+
+        $this->useImportedPage($this->tplId);
+        $this->SetAutoPageBreak(true, 0);
+        $this->SetFont($this->font, '', 8);
+        $this->deleteLastRow();
+    }
+
+    public function deleteLastRow(){
+        if($this->total_page > $this->PageNo()){
+            $this->Rect(0,197,290,7, 'F',[],array(255,255,255));
+        }
+    }
+    public function writeDetails($listContentDetails){
+        $startX = 11;
+        $startY = 98.5;
+        $y = $startY;
+        $h = 4.3;
+        $sum = [
+            'amount' => 0,
+            'loading_fee' => 0,
+            'wholesale_fee' => 0,
+            'waiting_fee' => 0,
+            'incidental_fee' => 0,
+            'surcharge_fee' => 0,
+            'billing_fast_charge' => 0,
+        ];
+        $count = 0;
+        $this->SetFontSize( 8);
+        $this->deleteLastRow();
+        foreach ($listContentDetails as $detail){
+            $sum['amount'] += floatval($detail->amount);
+            $sum['loading_fee'] += $detail->loading_fee;
+            $sum['wholesale_fee'] += $detail->wholesale_fee;
+            $sum['waiting_fee'] += $detail->waiting_fee;
+            $sum['incidental_fee'] += $detail->incidental_fee;
+            $sum['surcharge_fee'] += $detail->surcharge_fee;
+            $sum['billing_fast_charge'] += $detail->billing_fast_charge;
+            $x = $startX;
+            $y +=4.3;
+            foreach ($detail as $key => $value){
+                switch ($key){
+                    case  'departure_point_name':
+                    case  'landing_name':
+                    case  'delivery_destination':
+                    case  'staff_nm':
+                        $align = 'L';
+                        break;
+                    case 'amount':
+                    case 'loading_fee':
+                    case 'wholesale_fee':
+                    case 'waiting_fee':
+                    case 'incidental_fee':
+                    case 'surcharge_fee':
+                    case 'billing_fast_charge':
+                        $value = number_format($value);
+                    default: $align ='R';
+                }
+                $w = $this->colWidth[$key];
+                $this->SetXY($x, $y);
+                $this->Cell($w, $h, $value,0,0,$align);
+                $x +=$w;
+            }
+            $count++;
+            if($this->PageNo()==1){
+                if($count==$this->number_record_page_first){
+                    $this->openPagen();
+                    $count = 0;
+                    $y =14.7;
+                }
+            }else{
+                if($count==$this->number_record_page_n){
+                    $this->openPagen();
+                    $count = 0;
+                    $y =14.7;
+                }
+            }
+        }
+        $this->writeTotal( $sum);
+
+    }
+
+    protected function writeTotal($sum){
+        $h = 4.8;
+        $y = 196.5;
+        $this->SetXY(70.5, $y);
+        $this->Cell(32, $h, number_format($sum['amount']),0,0,'R');
+        $x = 164.5;
+        $this->SetXY($x, $y);
+        $this->Cell($this->colWidth['loading_fee'], $h, number_format($sum['loading_fee']),0,0,'R');
+        $x +=$this->colWidth['loading_fee'];
+        $this->SetXY($x, $y);
+        $this->Cell($this->colWidth['wholesale_fee'], $h, number_format($sum['wholesale_fee']),0,0,'R');
+        $x +=$this->colWidth['wholesale_fee'];
+        $this->SetXY($x, $y);
+        $this->Cell($this->colWidth['incidental_fee'], $h, number_format($sum['incidental_fee']),0,0,'R');
+        $x +=$this->colWidth['incidental_fee'];
+        $this->SetXY($x, $y);
+        $this->Cell($this->colWidth['waiting_fee'], $h, number_format($sum['waiting_fee']),0,0,'R');
+        $x +=$this->colWidth['waiting_fee'];
+        $this->SetXY($x, $y);
+        $this->Cell($this->colWidth['surcharge_fee'], $h, number_format($sum['surcharge_fee']),0,0,'R');
+        $x +=$this->colWidth['surcharge_fee'];
+        $this->SetXY($x, $y);
+        $this->Cell($this->colWidth['billing_fast_charge'], $h, number_format($sum['billing_fast_charge']),0,0,'R');
     }
 
 }

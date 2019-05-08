@@ -62,6 +62,7 @@ class MBillingHistoryHeaders extends Model {
                 office.fax_number,
                 bill.consumption_tax,
                 bill.tax_included_amount,
+                bill.total_fee,
                 details.sales_amount,
                 details.incidental_other,
                 details.surcharge_fee,
