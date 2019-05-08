@@ -142,8 +142,8 @@
             </button>
         </div>
         <div class="wrapper-table" v-cloak  v-if="items.length > 0">
-            <table class="table table-striped table-bordered search-content-no-pointer">
-                <thead>
+            <table class="table table-striped table-bordered search-content">
+                <thead style="cursor: auto">
                     <tr>
                         <th class="wd-60"></th>
                         @foreach($fieldShowTable as $key => $field)
