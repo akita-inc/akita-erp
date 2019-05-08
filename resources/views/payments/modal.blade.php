@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body d-flex flex-column align-items-center">
                 <table class="table table-striped table-bordered search-content w-90">
-                    <thead>
+                    <thead style="cursor: auto">
                     <tr>
                         @foreach($fieldShowTable as $key => $field)
                             <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
@@ -42,7 +42,7 @@
                 <div class="w-100 text-left">{{trans("payments.modal.sub_title")}}</div>
 
                 <table class="table table-striped table-bordered search-content">
-                    <thead>
+                    <thead style="cursor: auto">
                     <tr>
                         @foreach($fieldShowTableDetails as $key => $field)
                             <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.modal.table.".$key)}}</th>
@@ -69,7 +69,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="modal-footer justify-content-center">
+            <div class="modal-footer justify-content-center" style="border-top: none!important;">
                 <button type="button" class="btn btn-secondary"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">閉じる</button>
             </div>
         </div>

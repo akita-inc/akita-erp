@@ -334,6 +334,13 @@ payments_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  getCurrentYearMonth: function getCurrentYearMonth(data) {
+    return axios.post('/payments/api-v1/get-current-year-month', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
