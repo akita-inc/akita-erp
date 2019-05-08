@@ -3,16 +3,24 @@
 @section('title_header',trans("payments.title"))
 @section('style')
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
+    <style>
+        .input-cd+div{
+            width: 300px!important;
+        }
+        .autosuggest__results-container{
+            font-size: 14px;
+        }
+    </style>
 @endsection
 @section('content')
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrPaymentsListVl">
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: #C6E0B4">
-            <div class="sub-header-line-two p-t-30 frm-search-list">
+            <div class="p-t-30 frm-search-list">
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 row text-left">
-                        <div class="col-md-2 padding-row-5 col-list-search-f">
+                    <div class="col-md-9 col-sm-12 row text-left">
+                        <div class="col-md-1 padding-row-5 col-list-search-f">
                             {{trans("payments.list.search.sales-office")}}
                         </div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
@@ -23,10 +31,13 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2 padding-row-5 col-list-search-f">
+                        <div class="col-md-1">
+
+                        </div>
+                        <div class="col-md-1 padding-row-5 col-list-search-f">
                             {{trans("payments.list.search.billing-date")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year">
                                 @foreach($lstYear as $year)
                                     @if($initYear == $year)
@@ -37,37 +48,38 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-1 text-left no-padding lh-38">
-                            {{trans('payments.list.search.year')}}
+                        <div class="col-md-4 row">
+                            <div class="col-md-1 text-left no-padding lh-38">
+                                {{trans('payments.list.search.year')}}
+                            </div>
+                            <div class="col-md-4 no-padding">
+                                <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
+                                    @foreach($lstMonth as $month)
+                                        @if($initMonth == $month)
+                                            <option value="{{$month}}" selected> {{$month}}</option>
+                                        @else
+                                            <option value="{{$month}}"> {{$month}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3 no-padding row">
+                                <div class="col-md-1 no-padding"></div>
+                                <div class="col-md-4 text-left no-padding lh-38">
+                                    {{trans('payments.list.search.month')}}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12 row">
-                        <div class="col-md-2 padding-row-5 grid-form-search">
-                            <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
-                                @foreach($lstMonth as $month)
-                                    @if($initMonth == $month)
-                                        <option value="{{$month}}" selected> {{$month}}</option>
-                                    @else
-                                        <option value="{{$month}}"> {{$month}}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-4 text-left no-padding lh-38">
-                            {{trans('payments.list.search.month')}}
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-12 row">
-
-                    </div>
+                    <div class="col-md-3 col-sm-12 row"></div>
                 </div>
                 <div class="break-row-form" style="height: 25px;"></div>
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-2 padding-row-5 col-list-search-f text-left">
+                    <div class="col-md-9 col-sm-12 row">
+                        <div class="col-md-1 padding-row-5 col-list-search-f text-left">
                             {{trans("payments.list.search.supplier")}}
                         </div>
-                        <div class="col-md-3 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_suppliers_cd">
                                 {{trans("payments.list.search.code")}}
                             </label>
@@ -83,7 +95,7 @@
                             >
                             </vue-autosuggest>
                         </div>
-                        <div class="col-md-6 padding-row-5 grid-form-search">
+                        <div class="col-md-4 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_suppliers_nm">
                                 {{trans("payments.list.search.name")}}
                             </label>
@@ -98,26 +110,23 @@
                             >
                             </vue-autosuggest>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12 row lh-38">
-                        <div class="col-md-3 col-sm-12 text-left pl-1">
-                            {{trans("payments.list.search.closing-date")}}
-                        </div>
-                        <div class="col-md-3 col-sm-12 no-padding row">
-                            <div class="col-md-9 col-sm-9 no-padding">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4 row no-padding">
+                            <div class="col-md-2 no-padding lh-38">
+                                {{trans("payments.list.search.closing-date")}}
+                            </div>
+                            <div class="col-md-4 col-sm-9">
                                 <select  v-bind:class="errors.closed_date != undefined ? 'form-control dropdown-list is-invalid':'form-control dropdown-list' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" v-cloak>
                                     <option v-for="item in list_bundle_dt" :value="item.bundle_dt" v-cloak>
                                         @{{ item.bundle_dt }}
                                     </option>
-
                                 </select>
                             </div>
-                            <div class="col-md-3 col-sm-3 no-padding">
+                            <div class="col-md-1 col-md-1 text-left no-padding lh-38">
                                 {{trans('payments.list.search.day')}}
                             </div>
+                            <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
                         </div>
-                        <div class="col-md-6 col-sm-12 no-padding"></div>
-                        <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
@@ -135,7 +144,7 @@
             </div>
         </div>
         <div class="mt-3 sub-header d-flex align-items-center justify-content-center" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
-            <button class="btn btn-primary" v-on:click="execution()">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#confirmExecution">
                 {{trans('payments.list.search.button.execution')}}
             </button>
         </div>
@@ -175,6 +184,9 @@
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="14">@{{message}} </td>
                     </tr>
+                    <tr v-cloak v-if="errors.execution != undefined">
+                        <td colspan="14">@{{errors.execution}} </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -182,6 +194,14 @@
         'fieldShowTable'=>$fieldShowTable,
          'fieldShowTableDetails'=>$fieldShowTableDetails
          ])
+        @include('Layouts.modal',[
+        'id'=> 'confirmExecution',
+        'title'=> '',
+        'content'=> trans('messages.MSG10024'),
+        'attr_input' => "@click='execution()'",
+        'btn_ok_title' => trans('common.button.yes'),
+        'btn_cancel_title' => trans('common.button.no'),
+        ])
     </div>
 @endsection
 @section("scripts")
@@ -192,6 +212,7 @@
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         messages["MSG10023"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
+        messages["MSG10024"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
         var currentMonth = new Date().getMonth();
         var currentYear = new Date().getFullYear();
         if(currentMonth == 0){

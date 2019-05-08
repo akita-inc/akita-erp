@@ -81,8 +81,8 @@ class ImportFromSQLSERVER extends Command
     }
 
     protected function insertTJiconaxDataSales(){
-
-        $sql = "SELECT * FROM M_運転日報";
+        $getDateMax = MTJiconaxSalesDatas::query()->select(DB::raw("MAX(last_updated) as date"))->first();
+        $sql = "SELECT * FROM M_運転日報_copy where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
@@ -95,6 +95,7 @@ class ImportFromSQLSERVER extends Command
             "transport_cd" => '便CD',
             "vehicle_cd" => '車両CD',
             "point_of_departure" => '出発地',
+            "destination" => '到着地',
             "staff_cd" => '社員CD',
             "mst_customers_cd" => '得意先CD',
             "goods" => '品物',
@@ -104,7 +105,7 @@ class ImportFromSQLSERVER extends Command
             "insurance_fee" => '保険料',
             "billing_fast_charge" => '請求高速料',
             "discount_amount" => '値引金額',
-            "billing_amount" => '値引金額',
+            "billing_amount" => '請求金額',
             "consumption_tax" => '消費税額',
             "total_fee" => '合計金額',
             "departure_point" => '発地',
@@ -128,7 +129,7 @@ class ImportFromSQLSERVER extends Command
             "opening_time" => '始業時間',
             "closing_time" => '終業時間',
             "restraint_time" => '拘束時間',
-            "lunch_break_time" => '昼休息時間',
+            "lunch_break_time" => '昼休憩時間',
             "night_break_time" => '夜休憩時間',
             "midnight_time" => '深夜時間',
             "working_time" => '労働時間',
@@ -177,7 +178,12 @@ class ImportFromSQLSERVER extends Command
             $this->countRead++;
             DB::beginTransaction();
             try{
-                $mTJiconaxSalesDatas = new MTJiconaxSalesDatas();
+                $mTJiconaxSalesDatas = MTJiconaxSalesDatas::query()
+                    ->where("document_no","=",$row["伝票NO"])
+                ->first();
+                if(empty($mTJiconaxSalesDatas)){
+                    $mTJiconaxSalesDatas = new MTJiconaxSalesDatas();
+                }
                 $mCustomer = DB::table("mst_customers")->select("mst_customers.*","mst_account_titles.account_title_code")
                     ->leftJoin("mst_account_titles","mst_customers.mst_account_titles_id","mst_account_titles.id")
                     ->where("mst_customers_cd","=",$row["得意先CD"])
@@ -194,8 +200,19 @@ class ImportFromSQLSERVER extends Command
                     $this->countFails++;
                     DB::rollBack();
                 }else{
-                    $mSaleses = new MSaleses();
-                    $mPurchases = new MPurchases();
+                    $mSaleses = MSaleses::query()
+                        ->where("document_no","=",$row["伝票NO"])
+                        ->first();
+                    if(empty($mSaleses)){
+                        $mSaleses = new MSaleses();
+                    }
+
+                    $mPurchases = MPurchases::query()
+                        ->where("document_no","=",$row["伝票NO"])
+                        ->first();
+                    if(empty($mPurchases)){
+                        $mPurchases = new MPurchases();
+                    }
 
                     foreach ( $arrayMapTSales as $key=>$field ){
                         $mSaleses->$key = $row[$field];
@@ -243,6 +260,7 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                                 $mSaleses->consumption_tax = round( $mSaleses->consumption_tax);
                             }
 
+                            $mPurchases->consumption_tax = $mPurchases->total_fee * $getTax->rate;
                             if($mSuppliers){
                                 switch ($mSuppliers->rounding_method_id){
                                     case 1:
@@ -261,6 +279,9 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                             }else{
                                 $mPurchases->consumption_tax = round( $mPurchases->consumption_tax);
                             }
+                        }else{
+                            $mSaleses->consumption_tax = 0;
+                            $mPurchases->consumption_tax = 0;
                         }
                     }
 
@@ -277,8 +298,18 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
 
                     $mPurchases->add_mst_staff_id = 9999;
                     $mPurchases->upd_mst_staff_id = 9999;
-
-                    if(!$mSaleses->save() || !$mPurchases->save()){
+                    $flagError = false;
+                    if( empty($row["労働時間"]) ){
+                        if(!$mSaleses->save()){
+                            $flagError = true;
+                        }
+                    }
+                    if( empty($row["労働時間"]) && $mSuppliers ){
+                        if(!$mPurchases->save()){
+                            $flagError = true;
+                        }
+                    }
+                    if( $flagError ){
                         $this->countFails++;
                         DB::rollBack();
                     }else {
@@ -288,8 +319,9 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                 }
 
             }catch (\Exception $ex){
+                $this->countFails++;
                 DB::rollBack();
-                $this->log("jiconax_error","伝票NO：.".$mTJiconaxSalesDatas->document_no."　エラー理由：".$ex->getMessage());
+                $this->log("jiconax_error","伝票NO：".$mTJiconaxSalesDatas->document_no."　エラー理由：".$ex->getMessage());
             }
         }
     }
@@ -313,7 +345,7 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
         if($type == "jiconaxFinal"){
             $contentLog .= mb_convert_encoding($message, "SJIS")."\r\n";
         }else{
-            $contentLog .= date("Y/m/d H:i:s ").mb_convert_encoding($message, "SJIS")."\r\n";
+            $contentLog .= date("Y-m-d H:i:s ").mb_convert_encoding($message, "SJIS")."\r\n";
         }
         file_put_contents($path,$contentLog);
     }

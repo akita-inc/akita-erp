@@ -103,8 +103,8 @@ return [
         '11004'=> '搭載物',
     ],
     'invoicing_flag'=>[
+        '1'=>'発行済み',
         '0'=>'未発行',
-        '1'=>'発行済み'
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),

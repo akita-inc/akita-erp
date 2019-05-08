@@ -96,6 +96,7 @@ var ctrSalesListVl = new Vue({
                 fieldSearch: that.fileSearch,
                 order: that.order,
             };
+            that.flagSearch=false;
             if(that.errors.from_date===undefined && that.errors.to_date===undefined)
             {
                 that.loading = true;
@@ -263,6 +264,7 @@ var ctrSalesListVl = new Vue({
         },
         downloadFile:function (arrKeys,fields,headerFields,data,branch_cd){
             let export_file_nm=this.export_file_nm.split("branch_office_cd").join(branch_cd?branch_cd:data[0].branch_office_cd);
+            export_file_nm=export_file_nm.split("yyyymmddhhmmss").join(Date.now());
             for(var i=0;i<arrKeys.length;i++)
             {
                 if(arrKeys[i]!==undefined && fields[arrKeys[i]]!==undefined)
@@ -270,7 +272,7 @@ var ctrSalesListVl = new Vue({
                     headerFields.push(fields[arrKeys[i]]);
                 }
             }
-            let csvContent = "data:text/csv;charset=shift_jis,";
+            let csvContent = "data:text/csv;charset=shift-jis,";
             csvContent += [
                             headerFields.join(","),
                             ...data.map(item => '"'+Object.values(item).join('","')+'"'

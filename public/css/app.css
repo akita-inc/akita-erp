@@ -344,11 +344,14 @@ input,select{
 .frm-search-list .grid-form-search-label{
     position: absolute;
     top: -20px;
-    left: 75px;
+    left: 5px;
     font-size: 0.7rem;
 }
 .frm-search-list .left-5px{
     left:5px!important;
+}
+.frm-search-list .left-75px{
+    left:75px!important;
 }
 .frm-search-list .input-group-addon {
     display: flex;

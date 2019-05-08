@@ -80,25 +80,24 @@ class PaymentsController extends Controller
             't_purchases.mst_suppliers_cd',
             'ms.supplier_nm_formal'
         );
-        $this->query->selectRaw('sum(t_purchases.total_fee) as billing_amount');
-        $this->query->selectRaw('
-        CASE
+        $this->query->selectRaw('IF(SUM(t_purchases.total_fee) IS NULL,0,SUM(t_purchases.total_fee)) AS billing_amount');
+        $this->query->selectRaw('CASE
            WHEN ms.consumption_tax_calc_unit_id = 1 THEN
-           SUM( t_purchases.consumption_tax )
+           IF(SUM( t_purchases.consumption_tax ) IS NULL,0,SUM( t_purchases.consumption_tax ))
                ELSE
 							 CASE WHEN ms.rounding_method_id = 1 THEN
 								TRUNCATE(
                    SUM( IF(t_purchases.tax_classification_flg = 1,
-                           t_purchases.total_fee*(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) ,0)
-            ),0) WHEN ms.rounding_method_id = 2 THEN
+                           IF(t_purchases.total_fee IS NULL,0,t_purchases.total_fee)*IF((select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) IS NULL,0,(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1)) ,0)
+),0) WHEN ms.rounding_method_id = 2 THEN
 					 ROUND(
                    SUM( IF(t_purchases.tax_classification_flg = 1,
-                           t_purchases.total_fee*(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) ,0)
+                           IF(t_purchases.total_fee IS NULL,0,t_purchases.total_fee)*IF((select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) IS NULL,0,(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1))  ,0)
 													 ))
 							ELSE
 							TRUNCATE(
                    SUM( IF(t_purchases.tax_classification_flg = 1,
-                           t_purchases.total_fee*(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) ,0)
+                           IF(t_purchases.total_fee IS NULL,0,t_purchases.total_fee)*IF((select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1) IS NULL,0,(select rate from consumption_taxs where start_date <= t_purchases.daily_report_date and t_purchases.daily_report_date<=end_date limit 1))  ,0)
 													 )+.9,0)
 					 END
        END AS consumption_tax
@@ -112,10 +111,10 @@ class PaymentsController extends Controller
         });
         if ($where['mst_business_office_id'] != '') {
             $this->query->where('t_purchases.mst_business_office_id', '=', $where['mst_business_office_id']);
-            //
-            if($where['mst_suppliers_cd'] != ''){
-                $this->query->where('t_purchases.mst_suppliers_cd', '=', $where['mst_suppliers_cd']);
-            }
+        }
+        //
+        if($where['mst_suppliers_cd'] != ''){
+            $this->query->where('t_purchases.mst_suppliers_cd', '=', $where['mst_suppliers_cd']);
         }
         //
         $this->query->where('t_purchases.daily_report_date', '<=', $date);
@@ -245,14 +244,16 @@ class PaymentsController extends Controller
         return Response()->json(array('success'=>true,'data'=>$data));
     }
     public function execution(Request $request){
+        $return = ['success'=>true];
         $data = $request->all();
         $data = $data['data'];
         foreach($data as $item){
-            $this->createHistory($item);
+            $return = $this->createHistory($item);
+            if($return['success'] == false){
+                break;
+            }
         }
-        return response()->json([
-            'success'=>true
-        ]);
+        return response()->json($return);
     }
     private function createHistory($item){
         $currentTime = date("Y-m-d H:i:s",time());
@@ -292,12 +293,15 @@ class PaymentsController extends Controller
                 $tPurchases->updateInvoicingFlag($item['mst_suppliers_cd'],$item['mst_business_office_id']);
             }
             DB::commit();
+            return [
+                'success'=>true,
+            ];
         }catch (\Exception $e) {
             DB::rollback();
-            return response()->json([
+            return [
                 'success'=>false,
-                'message'=> $e->getMessage()
-            ]);
+                'message'=> ['execution' => $e->getMessage()]
+            ];
         }
     }
 }
