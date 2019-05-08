@@ -36,6 +36,7 @@ class TPurchases extends Model {
             )->where('mst_suppliers_cd',$mst_suppliers_cd)
             ->where('mst_business_office_id',$mst_business_office_id)
             ->where('invoicing_flag',0)
+            ->where('daily_report_date',$daily_report_date)
             ->whereNull('deleted_at');
         return $query->get();
     }
