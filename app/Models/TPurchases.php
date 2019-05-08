@@ -26,7 +26,7 @@ class TPurchases extends Model {
     public function getListBySupplierCdAndBusinessOfficeId($mst_suppliers_cd, $mst_business_office_id){
         $query = DB::table('t_purchases')
             ->select(
-                DB::raw("DATE_FORMAT(t_purchases.daily_report_date, '%Y/%m/%d') AS daily_report_date"),
+                DB::raw("DATE_FORMAT(t_purchases.daily_report_date, '%Y/%m/%d') AS daily_report_date_formatted"),
                 /*'t_purchases.departure_point_name',
                 't_purchases.landing_name',
                 't_purchases.total_fee',
@@ -35,6 +35,7 @@ class TPurchases extends Model {
                 't_purchases.*'
             )->where('mst_suppliers_cd',$mst_suppliers_cd)
             ->where('mst_business_office_id',$mst_business_office_id)
+            ->where('invoicing_flag',0)
             ->whereNull('deleted_at');
         return $query->get();
     }

@@ -85,7 +85,6 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredSupplierCd"
-                                    :limit="10"
                                     :input-props="inputPropsCd"
                                     :on-selected="onSelectedCd"
                                     :render-suggestion="renderSuggestion"
@@ -101,7 +100,6 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredSupplierNm"
-                                    :limit="10"
                                     :input-props="inputPropsNm"
                                     :on-selected="onSelectedNm"
                                     :render-suggestion="renderSuggestion"
@@ -115,7 +113,7 @@
                             <div class="col-md-2 no-padding lh-38">
                                 {{trans("payments.list.search.closing-date")}}
                             </div>
-                            <div class="col-md-4 col-sm-9">
+                            <div class="col-md-3 col-sm-9 no-padding">
                                 <select  v-bind:class="errors.closed_date != undefined ? 'form-control dropdown-list is-invalid':'form-control dropdown-list' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" v-cloak>
                                     <option v-for="item in list_bundle_dt" :value="item.bundle_dt" v-cloak>
                                         @{{ item.bundle_dt }}
@@ -168,11 +166,11 @@
                                 @switch($key)
                                     @case('billing_amount')
                                     @case('consumption_tax')
-                                    <span>{!! "￥@{{item['$key']}}" !!}</span>
+                                    <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
                                     @break
                                     @case('total_amount')
                                         <span>
-                                            {!! "￥@{{parseInt(item.billing_amount) + parseInt(item.consumption_tax)}}" !!}
+                                            {!! "￥@{{Number(parseInt(item.billing_amount) + parseInt(item.consumption_tax)).toLocaleString()}}" !!}
                                         </span>
                                     @break
                                     @default

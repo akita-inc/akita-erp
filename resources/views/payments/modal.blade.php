@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg" role="document" style="max-width:1250px;">
         <div class="modal-content">
             <div class="modal-header modal_header_custom">
-                <h5 class="w-100 modal-title text-center">{{trans("payments.list.modal.title")}}</h5>
+                <h5 class="w-100 modal-title text-center">{{trans("payments.modal.title")}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -23,11 +23,11 @@
                                 @switch($key)
                                     @case('billing_amount')
                                     @case('consumption_tax')
-                                    <span>￥{!! "@{{modal.payment['$key']}}" !!}</span>
+                                    <span>￥{!! "@{{Number(modal.payment['$key']).toLocaleString()}}" !!}</span>
                                     @break
                                     @case('total_amount')
                                         <span>
-                                            ￥{!! "@{{parseInt(modal.payment.billing_amount) + parseInt(modal.payment.consumption_tax)}}" !!}
+                                            ￥{!! "@{{Number(parseInt(modal.payment.billing_amount) + parseInt(modal.payment.consumption_tax)).toLocaleString()}}" !!}
                                         </span>
                                     @break
                                     @default
@@ -39,13 +39,13 @@
                     </tbody>
                 </table>
 
-                <div class="w-100 text-left">{{trans("invoices.modal.sub_title")}}</div>
+                <div class="w-100 text-left">{{trans("payments.modal.sub_title")}}</div>
 
                 <table class="table table-striped table-bordered search-content">
                     <thead>
                     <tr>
                         @foreach($fieldShowTableDetails as $key => $field)
-                            <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("invoices.modal.table.".$key)}}</th>
+                            <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.modal.table.".$key)}}</th>
                         @endforeach
                     </tr>
                     </thead>
@@ -57,7 +57,7 @@
                                     @case('consumption_tax')
                                     @case('total_fee')
                                     @case('tax_included_amount')
-                                    <p>{!!"￥@{{ item['$key'] }}" !!}</p>
+                                    <p>{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
                                     @break
                                     @default
                                     <p>{!! "@{{ item['$key'] }}" !!}</p>

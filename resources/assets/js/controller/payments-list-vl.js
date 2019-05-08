@@ -1,7 +1,7 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 // import DatePicker from "../component/vue2-datepicker-master/lib";
 import {VueAutosuggest} from "vue-autosuggest"
-//import moment from 'moment';
+import moment from 'moment';
 
 var ctrPaymentsListVl = new Vue({
     el: '#ctrPaymentsListVl',
@@ -117,7 +117,7 @@ var ctrPaymentsListVl = new Vue({
             /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
             const filteredData = this.dropdown_supplier_cd[0].data.filter(item => {
                 return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-            });
+            }).slice(0, this.limit);
 
             this.filteredSupplierCd = [{
                 data: filteredData
