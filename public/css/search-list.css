@@ -3,6 +3,10 @@
     color: #ffffff;
     cursor: pointer;
 }
+.search-content-no-pointer thead{
+    background-color: #0070C0;
+    color: #ffffff;
+}
 .search-content td {
     vertical-align: middle;
 }
