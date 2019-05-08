@@ -76,6 +76,7 @@ class PaymentsController extends Controller
         //select
         $this->query->select(
             't_purchases.mst_business_office_id',
+            't_purchases.daily_report_date',
             'mbo.business_office_nm',
             't_purchases.mst_suppliers_cd',
             'ms.supplier_nm_formal'
@@ -125,6 +126,7 @@ class PaymentsController extends Controller
         //group by
         $this->query->groupBy(
             't_purchases.mst_business_office_id',
+            't_purchases.daily_report_date',
             'mbo.business_office_nm',
             't_purchases.mst_suppliers_cd',
             'ms.supplier_nm_formal',
@@ -237,7 +239,7 @@ class PaymentsController extends Controller
     public function getDetailsPayment(Request $request){
         $input = $request->all();
         $tPurchases = new TPurchases();
-        $lstDetail = $tPurchases->getListBySupplierCdAndBusinessOfficeId($input['mst_suppliers_cd'],$input['mst_business_office_id']);
+        $lstDetail = $tPurchases->getListBySupplierCdAndBusinessOfficeIdDailyReportDate($input['mst_suppliers_cd'],$input['mst_business_office_id'],$input['daily_report_date']);
         return response()->json([
             'success'=>true,
             'info' => $lstDetail
@@ -280,8 +282,8 @@ class PaymentsController extends Controller
             $tPaymentHistoryHeaders->add_mst_staff_id = Auth::user()->id;
             $tPaymentHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
             if($tPaymentHistoryHeaders->save()){
-                $historyDetails = $tPurchases->getListBySupplierCdAndBusinessOfficeId($item['mst_suppliers_cd'],$item['mst_business_office_id']);
-                $branch_number = 0;
+                $historyDetails = $tPurchases->getListBySupplierCdAndBusinessOfficeIdDailyReportDate($item['mst_suppliers_cd'],$item['mst_business_office_id'],$item['daily_report_date']);
+                $branch_number = 1;
                 foreach($historyDetails as $detail){
                     $arrayInsert = json_decode(json_encode($detail),true);
                     $arrayInsert['invoice_number'] = $tPaymentHistoryHeaders->invoice_number;

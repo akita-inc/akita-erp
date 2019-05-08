@@ -23,7 +23,7 @@ class TPurchases extends Model {
 
     ];
 
-    public function getListBySupplierCdAndBusinessOfficeId($mst_suppliers_cd, $mst_business_office_id){
+    public function getListBySupplierCdAndBusinessOfficeIdDailyReportDate($mst_suppliers_cd, $mst_business_office_id, $daily_report_date){
         $query = DB::table('t_purchases')
             ->select(
                 DB::raw("DATE_FORMAT(t_purchases.daily_report_date, '%Y/%m/%d') AS daily_report_date_formatted"),
