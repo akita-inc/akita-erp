@@ -16,7 +16,7 @@ Route::group(['name' => 'sales-lists', 'prefix' => 'sales_lists', 'middleware' =
         Route::any('/search-sales-lists', 'SalesListsController@searchSalesLists');
         Route::any('/updateStatus/{id}', 'SalesListsController@updateStatus');
         Route::any('/mst-customer-list', ['uses' => 'Api\SalesListsController@getCustomerList']);
-        Route::any('/export-csv', ['uses' => 'Api\SalesListsController@exportCSV']);
+        Route::any('/create-csv', 'SalesListsController@createCSV');
 
     });
 });
