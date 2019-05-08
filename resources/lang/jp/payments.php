@@ -28,7 +28,8 @@ return [
             'day' => '日',
             'button' => [
                 'execution' => '締め実行'
-            ]
+            ],
+            'no_data'=>'データがありません。',
         ],
         'table' => [
             'business_office_nm' => '営業所',

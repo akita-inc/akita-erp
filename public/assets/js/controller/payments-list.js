@@ -18732,8 +18732,8 @@ var ctrPaymentsListVl = new Vue({
     message: '',
     fileSearch: {
       mst_business_office_id: '',
-      billing_year: currentYear,
-      billing_month: currentMonth,
+      billing_year: '',
+      billing_month: '',
       supplier_cd: '',
       supplier_nm: '',
       closed_date: ''
@@ -18746,6 +18746,7 @@ var ctrPaymentsListVl = new Vue({
       current_page: 1,
       last_page: 0
     },
+    flagSearch: false,
     order: {
       col: '',
       descFlg: true,
@@ -18779,6 +18780,8 @@ var ctrPaymentsListVl = new Vue({
       var that = this;
       this.loading = true;
       payments_service.loadList(data).then(function (response) {
+        that.flagSearch = true;
+
         if (response.success == false) {
           that.errors = response.message;
           that.loading = false;
@@ -18827,7 +18830,7 @@ var ctrPaymentsListVl = new Vue({
     //suggestion
     renderSuggestion: function renderSuggestion(suggestion) {
       var supplier = suggestion.item;
-      return supplier.mst_suppliers_cd + ': ' + supplier.supplier_nm; // return this.$createElement('div', { 'style': { color: 'red',width:"500px"} }, supplier.mst_suppliers_cd+ ': '+ supplier.supplier_nm);
+      return supplier.mst_suppliers_cd + ': ' + (supplier.supplier_nm != null ? supplier.supplier_nm : '');
     },
     getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
       this.$refs.supplier_nm.searchInput = suggestion.item.supplier_nm;
@@ -18863,7 +18866,11 @@ var ctrPaymentsListVl = new Vue({
 
 
       var filteredData = this.dropdown_supplier_nm[0].data.filter(function (item) {
-        return item.supplier_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+        if (item.supplier_nm != null) {
+          return item.supplier_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+        } else {
+          return '';
+        }
       }).slice(0, this.limit);
       this.filteredSupplierNm = [{
         data: filteredData
@@ -18884,12 +18891,16 @@ var ctrPaymentsListVl = new Vue({
       this.$refs.supplier_nm.searchInput = "";
       this.$refs.supplier_cd.searchInput = "";
       this.fileSearch.mst_business_office_id = "";
-      this.fileSearch.billing_year = currentYear;
-      this.fileSearch.billing_month = currentMonth;
       this.fileSearch.supplier_cd = "";
       this.fileSearch.supplier_nm = "";
       this.fileSearch.closed_date = "";
-      this.errors = [];
+      this.errors = []; //
+
+      this.getListBundleDt();
+      this.filteredSupplierCd = [];
+      this.filteredSupplierNm = []; //
+
+      this.getCurrentYearMonth();
     },
     getListBundleDt: function getListBundleDt() {
       var that = this;
@@ -18899,6 +18910,13 @@ var ctrPaymentsListVl = new Vue({
         if (response.info.length > 0) {
           that.list_bundle_dt = response.info;
         }
+      });
+    },
+    getCurrentYearMonth: function getCurrentYearMonth() {
+      var that = this;
+      payments_service.getCurrentYearMonth().then(function (response) {
+        that.fileSearch.billing_year = response.current_year;
+        that.fileSearch.billing_month = response.current_month;
       });
     },
     openModal: function openModal(item) {
@@ -18920,6 +18938,7 @@ var ctrPaymentsListVl = new Vue({
     execution: function execution() {
       var that = this;
       this.loading = true;
+      this.flagSearch = false;
       payments_service.execution({
         data: that.items
       }).then(function (response) {
@@ -18928,6 +18947,7 @@ var ctrPaymentsListVl = new Vue({
           that.loading = false;
         } else {
           that.errors = [];
+          that.items = [];
           that.message = messages["MSG10023"];
           that.loading = false;
         }
@@ -18938,6 +18958,7 @@ var ctrPaymentsListVl = new Vue({
   mounted: function mounted() {
     var that = this;
     this.getListBundleDt();
+    this.getCurrentYearMonth();
     payments_service.loadListSuppliers().then(function (response) {
       that.dropdown_supplier_cd[0].data = response.data;
       that.dropdown_supplier_nm[0].data = response.data;

@@ -189,37 +189,41 @@ class PaymentsController extends Controller
         ];
         $mBusinessOffice = new MBusinessOffices();
         $businessOffices = $mBusinessOffice->getAllData();
-        $this->calculateYear($initYear, $lstYear);
-        //calculate month
-        $initMonth = date('m');
-        if ($initMonth == 1) {
-            $initMonth = 12;
-        } else {
-            $initMonth = $initMonth - 1;
-        }
+        $lstYear = $this->calculateYear();
         $lstMonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         return view('payments.index',
             [
                 'fieldShowTable' => $fieldShowTable,
                 'fieldShowTableDetails'=>$fieldShowTableDetails,
                 'businessOffices' => $businessOffices,
-                'initYear' => $initYear,
                 'lstYear' => $lstYear,
-                'initMonth' => $initMonth,
                 'lstMonth' => $lstMonth,
             ]);
     }
-
-    protected function calculateYear(&$initYear, &$lstYear)
-    {
-        $initYear = $currentYear = (int)date("Y");
-        $currentMonth = date('m');
-        if ($currentMonth == 1) {
-            $initYear = $initYear - 1;
+    public function getCurrentYearMonth(){
+        $currentYear = (int)date("Y");
+        $currentMonth = (int)date("m");;
+        if($currentMonth == 1){
+            $currentYear--;
         }
+        if($currentMonth == 1){
+            $currentMonth = 12;
+        }
+        else{
+            $currentMonth--;
+        }
+        return response()->json([
+            'current_year'=> $currentYear,
+            'current_month'=> $currentMonth
+        ]);
+    }
+    protected function calculateYear()
+    {
+        $currentYear = (int)date("Y");
         $lstYear[] = $currentYear - 1;
         $lstYear[] = $currentYear;
         $lstYear[] = $currentYear + 1;
+        return $lstYear;
     }
     public function loadListBundleDt(Request $request){
         $input = $request->all();
