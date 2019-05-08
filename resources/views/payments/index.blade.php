@@ -40,11 +40,7 @@
                         <div class="col-md-2 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year">
                                 @foreach($lstYear as $year)
-                                    @if($initYear == $year)
-                                        <option value="{{$year}}" selected> {{$year}}</option>
-                                    @else
-                                        <option value="{{$year}}"> {{$year}}</option>
-                                    @endif
+                                    <option value="{{$year}}"> {{$year}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -55,11 +51,7 @@
                             <div class="col-md-4 no-padding">
                                 <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
                                     @foreach($lstMonth as $month)
-                                        @if($initMonth == $month)
-                                            <option value="{{$month}}" selected> {{$month}}</option>
-                                        @else
-                                            <option value="{{$month}}"> {{$month}}</option>
-                                        @endif
+                                        <option value="{{$month}}"> {{$month}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -146,10 +138,10 @@
                 {{trans('payments.list.search.button.execution')}}
             </button>
         </div>
-        <div class="wrapper-table">
+        <div class="wrapper-table" v-cloak  v-if="items.length > 0">
             <table class="table table-striped table-bordered search-content">
                 <thead>
-                    <tr v-if="items.length > 0" v-cloak>
+                    <tr>
                         <th class="wd-60"></th>
                         @foreach($fieldShowTable as $key => $field)
                             <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
@@ -179,14 +171,28 @@
                             </td>
                         @endforeach
                     </tr>
-                    <tr v-cloak v-if="message !== ''">
-                        <td colspan="14">@{{message}} </td>
-                    </tr>
+                    {{--<tr v-cloak v-if="message !== ''">--}}
+                        {{--<td colspan="14">@{{message}} </td>--}}
+                    {{--</tr>--}}
                     <tr v-cloak v-if="errors.execution != undefined">
                         <td colspan="14">@{{errors.execution}} </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="sub-header mt-3 ml-5 mr-5" v-bind:class="flagSearch?'bg-color-pink':'bg-color-green'" v-cloak v-if="message!==''">
+            <div class="sub-header-line-two">
+                <div class="grid-form border-0">
+                    <div class="row">
+                        <div class="col-sm-12" v-if="flagSearch">
+                            {{trans("payments.list.search.no_data")}}
+                        </div>
+                        <div class="col-sm-12" v-else>
+                            @{{message}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         @include("payments.modal",[
         'fieldShowTable'=>$fieldShowTable,
@@ -210,13 +216,7 @@
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         messages["MSG10023"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
-        messages["MSG10024"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
-        var currentMonth = new Date().getMonth();
-        var currentYear = new Date().getFullYear();
-        if(currentMonth == 0){
-            currentMonth = 11;
-            currentYear--;
-        }
+        messages["MSG10024"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10024'); ?>";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/payments-list.js') }}" charset="utf-8"></script>
 @endsection
