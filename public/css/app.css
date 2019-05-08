@@ -629,7 +629,6 @@ input[type=text]::-ms-clear {
 .autosuggest__results .autosuggest__results_item.autosuggest__results_item-highlighted {
     background-color: #ddd;
 }
-
 .form-control:disabled, .form-control[readonly] {
     background-color: #D9D9D9;
     opacity: 1;
