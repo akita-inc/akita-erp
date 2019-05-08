@@ -66,7 +66,7 @@ class SalesListsController extends Controller
                 't_saleses.consumption_tax'
 //                DB::raw("DATE_FORMAT(t_billing_history_headers.publication_date, '%Y/%m/%d') as publication_date")
             );
-        $this->query->leftJoin('mst_customers', function ($join) {
+        $this->query->join('mst_customers', function ($join) {
                 $join->on('mst_customers.mst_customers_cd', '=', 't_saleses.mst_customers_cd')
                     ->whereNull('mst_customers.deleted_at');
         });
