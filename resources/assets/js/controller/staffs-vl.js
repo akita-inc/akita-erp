@@ -37,6 +37,7 @@ var ctrStaffsVl = new Vue({
             landline_phone_number:"",
             cellular_phone_number:"",
             corp_cellular_phone_number:"",
+            mail:"",
             notes:"",
             sex_id:"",
             birthday:"",
