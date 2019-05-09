@@ -1,6 +1,13 @@
 @extends('Layouts.app')
 @section('title',trans("sales_lists.list.title"))
 @section('title_header',trans("sales_lists.list.title"))
+@section('style')
+    <style>
+        .autosuggest__results-container{
+            font-size: 14px;
+        }
+    </style>
+@endsection
 @section('content')
     @include('Layouts.alert')
     <div class="row row-xs" id="ctrSalesListVl">
