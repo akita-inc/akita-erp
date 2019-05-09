@@ -81,8 +81,17 @@ class ImportFromSQLSERVER extends Command
     }
 
     protected function insertTJiconaxDataSales(){
+        $listBusiness = DB::table("mst_business_offices")->get()->pluck("id","branch_office_cd");
+        $listIn = [];
+        foreach ($listBusiness as $key=>$value){
+            if(!empty($key)){
+                $listIn[] =  $key;
+            }
+        }
         $getDateMax = MTJiconaxSalesDatas::query()->select(DB::raw("MAX(last_updated) as date"))->first();
-        $sql = "SELECT * FROM M_運転日報_copy where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
+        $sql = "SELECT * FROM M_運転日報_copy where 
+( [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL )
+and 労働時間 is null and 支店CD in (".join(',',$listIn).")";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
@@ -173,7 +182,7 @@ class ImportFromSQLSERVER extends Command
             "tax_classification_flg" => '課税区分',
             "payment" => '支払金額',
         ];
-        $listBusiness = DB::table("mst_business_offices")->get()->pluck("id","branch_office_cd");
+
         while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
             $this->countRead++;
             DB::beginTransaction();
@@ -240,7 +249,9 @@ class ImportFromSQLSERVER extends Command
                             ->whereRaw("DATE_FORMAT('".$mSaleses->daily_report_date->format('Y-m-d')."',\"%Y/%m/%d\")  BETWEEN  DATE_FORMAT(start_date,\"%Y/%m/%d\") and 
 DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                         if($getTax){
-                            $mSaleses->consumption_tax = $mSaleses->total_fee * $getTax->rate;
+                            $mSaleses->consumption_tax = (($mSaleses->quantity*$mSaleses->unit_price) + $mSaleses->insurance_fee
+                                    + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
+                                    + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) * $getTax->rate;
                             if($mCustomer){
                                 switch ($mCustomer->rounding_method_id){
                                     case 1:
