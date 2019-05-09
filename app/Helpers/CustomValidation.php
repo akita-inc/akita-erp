@@ -60,27 +60,22 @@ class CustomValidation {
 
     public static function validateCharacterEmail() {
         Validator::extend('email_character', function($attribute, $value, $parameters, $validator) {
-            if (!preg_match("/^[^@]{1,64}@[^@]{1,255}$/", $value)) {
+            if(!preg_match("/^[a-zA-Z0-9_\.@\+\?-]+$/", $value)){
                 return false;
             }
-            $email_array = explode("@", $value);
-            $local_array = explode(".", $email_array[0]);
-            for ($i = 0; $i < sizeof($local_array); $i++) {
-                if (!preg_match("/^(([A-Za-z0-9!#$%&'*+\/=?^_`{|}~-][A-Za-z0-9!#$%&'*+\/=?^_`{|}~\.-]{0,63})|(\"[^(\\|\")]{0,62}\"))$/", $local_array[$i])) {
-                    return false;
-                }
-            }
+            return true;
         });
     }
 
     public static function validateFormatEmail() {
         Validator::extend('email_format', function($attribute, $value, $parameters, $validator) {
-        	return !!filter_var($value, FILTER_VALIDATE_EMAIL);
-//            if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-//                return false;
-//            }
+            if(!preg_match("/^[^@]+@[^.^@]+\..+/",$value)){
+               return false;
+            }
+            return true;
         });
     }
+
 
     public static function validateRequiredSelect() {
         Validator::extend('select_required', function($attribute, $value, $parameters, $validator) {
