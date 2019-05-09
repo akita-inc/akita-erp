@@ -21749,6 +21749,8 @@ var ctrInvoiceListVl = new Vue({
       this.fileSearch.customer_cd = text;
 
       if (text === '' || text === undefined) {
+        this.getListBundleDt();
+        this.filteredCustomerCd = [];
         return;
       }
       /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
@@ -21765,6 +21767,7 @@ var ctrInvoiceListVl = new Vue({
       this.fileSearch.customer_nm = text;
 
       if (text === '' || text === undefined) {
+        this.filteredCustomerNm = [];
         return;
       }
       /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
