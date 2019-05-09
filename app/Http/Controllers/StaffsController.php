@@ -32,6 +32,7 @@ class StaffsController extends Controller
         'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana|nullable|length:50',
         'zip_cd'=>'zip_code|nullable|length:7',
+        'mail'=>'length:255|nullable|email_format|email_character',
         'address1'=>'length:20|nullable',
         'address2'=>'length:20|nullable',
         'address3'=>'length:50|nullable',
