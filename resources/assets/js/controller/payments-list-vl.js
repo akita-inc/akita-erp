@@ -17,6 +17,7 @@ var ctrPaymentsListVl = new Vue({
             supplier_nm: '',
             closed_date: ''
         },
+        daily_report_date:'',
         pagination: {
             total: 0,
             per_page: 2,
@@ -69,13 +70,13 @@ var ctrPaymentsListVl = new Vue({
                 }
                 else{
                     that.errors = [];
+                    that.daily_report_date = that.fileSearch.billing_year+'-'+that.fileSearch.billing_month+'-'+that.fileSearch.closed_date;
                     if (response.data.length === 0) {
                         that.message = messages["MSG05001"];
                     } else {
                         that.message = '';
                     }
                     that.items = response.data;
-                    console.log(that.items);
                     //that.pagination = response.pagination;
                     that.fileSearch = response.fieldSearch;
                     //that.order = response.order;
@@ -226,7 +227,7 @@ var ctrPaymentsListVl = new Vue({
             payments_service.getDetailsPayment({
                 'mst_suppliers_cd': item.mst_suppliers_cd,
                 'mst_business_office_id': item.mst_business_office_id,
-                'daily_report_date': that.fileSearch.billing_year+'-'+that.fileSearch.billing_month+'-'+that.fileSearch.closed_date
+                'daily_report_date': that.daily_report_date
             }).then((response) => {
                 if (response.info.length > 0) {
                     that.modal.detail_info = response.info;
@@ -239,7 +240,7 @@ var ctrPaymentsListVl = new Vue({
             var that = this;
             this.loading = true;
             this.flagSearch = false;
-            payments_service.execution({data:that.items,daily_report_date:that.fileSearch.billing_year+'-'+that.fileSearch.billing_month+'-'+that.fileSearch.closed_date}).then((response) => {
+            payments_service.execution({data:that.items,daily_report_date:that.daily_report_date}).then((response) => {
                 if(response.success === false){
                     that.errors = response.message;
                     that.loading = false;
@@ -254,6 +255,7 @@ var ctrPaymentsListVl = new Vue({
         //end action list
     },
     mounted (){
+        //
         var that = this;
         this.getListBundleDt();
         this.getCurrentYearMonth();
@@ -264,5 +266,6 @@ var ctrPaymentsListVl = new Vue({
     },
     components: {
         PulseLoader,
+        VueAutosuggest
     }
 });

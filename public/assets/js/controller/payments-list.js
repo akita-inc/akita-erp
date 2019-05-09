@@ -18738,6 +18738,7 @@ var ctrPaymentsListVl = new Vue({
       supplier_nm: '',
       closed_date: ''
     },
+    daily_report_date: '',
     pagination: {
       total: 0,
       per_page: 2,
@@ -18787,6 +18788,7 @@ var ctrPaymentsListVl = new Vue({
           that.loading = false;
         } else {
           that.errors = [];
+          that.daily_report_date = that.fileSearch.billing_year + '-' + that.fileSearch.billing_month + '-' + that.fileSearch.closed_date;
 
           if (response.data.length === 0) {
             that.message = messages["MSG05001"];
@@ -18794,8 +18796,7 @@ var ctrPaymentsListVl = new Vue({
             that.message = '';
           }
 
-          that.items = response.data;
-          console.log(that.items); //that.pagination = response.pagination;
+          that.items = response.data; //that.pagination = response.pagination;
 
           that.fileSearch = response.fieldSearch; //that.order = response.order;
 
@@ -18964,7 +18965,7 @@ var ctrPaymentsListVl = new Vue({
       payments_service.getDetailsPayment({
         'mst_suppliers_cd': item.mst_suppliers_cd,
         'mst_business_office_id': item.mst_business_office_id,
-        'daily_report_date': that.fileSearch.billing_year + '-' + that.fileSearch.billing_month + '-' + that.fileSearch.closed_date
+        'daily_report_date': that.daily_report_date
       }).then(function (response) {
         if (response.info.length > 0) {
           that.modal.detail_info = response.info;
@@ -18980,7 +18981,7 @@ var ctrPaymentsListVl = new Vue({
       this.flagSearch = false;
       payments_service.execution({
         data: that.items,
-        daily_report_date: that.fileSearch.billing_year + '-' + that.fileSearch.billing_month + '-' + that.fileSearch.closed_date
+        daily_report_date: that.daily_report_date
       }).then(function (response) {
         if (response.success === false) {
           that.errors = response.message;
@@ -18996,6 +18997,7 @@ var ctrPaymentsListVl = new Vue({
 
   },
   mounted: function mounted() {
+    //
     var that = this;
     this.getListBundleDt();
     this.getCurrentYearMonth();
@@ -19005,7 +19007,8 @@ var ctrPaymentsListVl = new Vue({
     });
   },
   components: {
-    PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    VueAutosuggest: vue_autosuggest__WEBPACK_IMPORTED_MODULE_1__["VueAutosuggest"]
   }
 });
 
@@ -19018,7 +19021,7 @@ var ctrPaymentsListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\payments-list-vl.js */"./resources/assets/js/controller/payments-list-vl.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\payments-list-vl.js */"./resources/assets/js/controller/payments-list-vl.js");
 
 
 /***/ })
