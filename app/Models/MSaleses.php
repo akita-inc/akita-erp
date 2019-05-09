@@ -38,7 +38,7 @@ class MSaleses extends Model {
                         connect_sales.mst_customers_cd sales_cus_cd,
                         connect_sales.customer_nm_formal sales_cus_nm,
                         bill_info.mst_customers_cd bill_cus_cd,
-                        bill_info.customer_nm_formal bill_cus_nm, -- ↓
+                        bill_info.customer_nm_formal bill_cus_nm,
                         bill_info.consumption_tax_calc_unit_id,
                         bill_info.rounding_method_id
                     FROM
@@ -68,7 +68,8 @@ class MSaleses extends Model {
              })
             ->whereNull('t_saleses.deleted_at')
             ->where('t_saleses.mst_business_office_id',$mst_business_office_id)
-            ->where('c.bill_cus_cd',$mst_customers_cd);
+            ->where('c.bill_cus_cd',$mst_customers_cd)
+            ->where('t_saleses.invoicing_flag',0);
         if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
             $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
             $query = $query->where('t_saleses.daily_report_date','<=',$date);

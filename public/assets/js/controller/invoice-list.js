@@ -21634,8 +21634,8 @@ var ctrInvoiceListVl = new Vue({
     items: [],
     fileSearch: {
       mst_business_office_id: "",
-      billing_year: currentYear,
-      billing_month: currentMonth,
+      billing_year: '',
+      billing_month: '',
       customer_cd: "",
       customer_nm: "",
       closed_date: "",
@@ -21716,7 +21716,7 @@ var ctrInvoiceListVl = new Vue({
         onInputChange: this.onInputChangeCd,
         initialValue: this.fileSearch.customer_cd,
         maxlength: 5,
-        class: 'form-control',
+        class: 'form-control input-cd',
         ref: "customer_cd"
       };
     },
@@ -21734,7 +21734,7 @@ var ctrInvoiceListVl = new Vue({
   methods: {
     renderSuggestion: function renderSuggestion(suggestion) {
       var customer = suggestion.item;
-      return customer.mst_customers_cd + ': ' + customer.customer_nm;
+      return customer.mst_customers_cd + ': ' + (customer.customer_nm != null ? customer.customer_nm : '');
     },
     getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
       this.$refs.customer_nm.searchInput = suggestion.item.customer_nm;
@@ -21779,46 +21779,53 @@ var ctrInvoiceListVl = new Vue({
     onSelectedCd: function onSelectedCd(option) {
       this.fileSearch.customer_cd = option.item.mst_customers_cd;
       this.fileSearch.customer_nm = option.item.customer_nm;
-      this.getListBundleDt();
+
+      if (this.fileSearch.customer_cd === '') {
+        this.getListBundleDt();
+        this.fileSearch.closed_date = '';
+      } else {
+        this.getListBundleDt(true);
+      }
     },
     onSelectedNm: function onSelectedNm(option) {
       this.fileSearch.customer_cd = option.item.mst_customers_cd;
       this.fileSearch.customer_nm = option.item.customer_nm;
-      this.getListBundleDt();
+
+      if (this.fileSearch.customer_nm === '') {
+        this.getListBundleDt();
+        this.fileSearch.closed_date = '';
+      } else {
+        this.getListBundleDt(true);
+      }
     },
     clearCondition: function clearCondition() {
       this.$refs.customer_nm.searchInput = "";
       this.$refs.customer_cd.searchInput = "";
       this.fileSearch.mst_business_office_id = "";
-      this.fileSearch.billing_year = currentYear;
-      this.fileSearch.billing_month = currentMonth;
+      this.fileSearch.billing_year = "";
+      this.fileSearch.billing_month = "";
       this.fileSearch.customer_cd = "";
       this.fileSearch.customer_nm = "";
       this.fileSearch.closed_date = "";
       this.fileSearch.special_closing_date = "";
       this.fileSearch.closed_date_input = "";
       this.errors = [];
+      this.filteredCustomerCd = [];
+      this.filteredCustomerNm = [];
+      this.getListBundleDt();
+      this.getCurrentYearMonth();
     },
-    checkIsExist: function checkIsExist(id) {
-      var _this2 = this;
-
-      empty_info_service.checkIsExist(id).then(function (response) {
-        if (!response.success) {
-          alert(response.msg);
-
-          _this2.getItems(1);
-        } else {
-          window.location.href = 'edit/' + id;
-        }
-      });
-    },
-    getListBundleDt: function getListBundleDt() {
+    getListBundleDt: function getListBundleDt(flagSelect) {
       var that = this;
       invoice_service.loadListBundleDt({
         customer_cd: that.fileSearch.customer_cd
       }).then(function (response) {
         if (response.info.length > 0) {
           that.list_bundle_dt = response.info;
+
+          if (flagSelect) {
+            that.fileSearch.closed_date = that.list_bundle_dt[0].bundle_dt;
+          }
         }
       });
     },
@@ -21843,13 +21850,13 @@ var ctrInvoiceListVl = new Vue({
       var _createPDF = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var that, value;
+        var that;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 that = this;
-                value = that.items[0];
+                this.loading = true;
                 _context2.next = 4;
                 return that.items.forEach(function (value, key) {
                   setTimeout(function () {
@@ -21900,8 +21907,9 @@ var ctrInvoiceListVl = new Vue({
 
               case 4:
                 this.disableBtn = true;
+                this.loading = false;
 
-              case 5:
+              case 6:
               case "end":
                 return _context2.stop();
             }
@@ -21925,7 +21933,8 @@ var ctrInvoiceListVl = new Vue({
             switch (_context3.prev = _context3.next) {
               case 0:
                 that = this;
-                _context3.next = 3;
+                this.loading = true;
+                _context3.next = 4;
                 return that.items.forEach(function (value, key) {
                   setTimeout(function () {
                     invoice_service.createCSV({
@@ -21937,10 +21946,11 @@ var ctrInvoiceListVl = new Vue({
                   }, key * 1000);
                 });
 
-              case 3:
-                this.disableBtn = true;
-
               case 4:
+                this.disableBtn = true;
+                this.loading = false;
+
+              case 6:
               case "end":
                 return _context3.stop();
             }
@@ -21983,11 +21993,19 @@ var ctrInvoiceListVl = new Vue({
     },
     addComma: function addComma(value) {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    getCurrentYearMonth: function getCurrentYearMonth() {
+      var that = this;
+      invoice_service.getCurrentYearMonth().then(function (response) {
+        that.fileSearch.billing_year = response.current_year;
+        that.fileSearch.billing_month = response.current_month;
+      });
     }
   },
   mounted: function mounted() {
     var that = this;
     this.getListBundleDt();
+    this.getCurrentYearMonth();
     invoice_service.loadListCustomers().then(function (response) {
       that.dropdown_customer_cd[0].data = response.data;
       that.dropdown_customer_nm[0].data = response.data;
