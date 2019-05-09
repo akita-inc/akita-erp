@@ -81,17 +81,8 @@ class ImportFromSQLSERVER extends Command
     }
 
     protected function insertTJiconaxDataSales(){
-        $listBusiness = DB::table("mst_business_offices")->get()->pluck("id","branch_office_cd");
-        $listIn = [];
-        foreach ($listBusiness as $key=>$value){
-            if(!empty($key)){
-                $listIn[] =  $key;
-            }
-        }
         $getDateMax = MTJiconaxSalesDatas::query()->select(DB::raw("MAX(last_updated) as date"))->first();
-        $sql = "SELECT * FROM M_運転日報_copy where 
-( [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL )
-and 労働時間 is null and 支店CD in (".join(',',$listIn).")";
+        $sql = "SELECT * FROM M_運転日報_copy where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
@@ -182,7 +173,7 @@ and 労働時間 is null and 支店CD in (".join(',',$listIn).")";
             "tax_classification_flg" => '課税区分',
             "payment" => '支払金額',
         ];
-
+        $listBusiness = DB::table("mst_business_offices")->get()->pluck("id","branch_office_cd");
         while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
             $this->countRead++;
             DB::beginTransaction();
@@ -310,12 +301,12 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                     $mPurchases->add_mst_staff_id = 9999;
                     $mPurchases->upd_mst_staff_id = 9999;
                     $flagError = false;
-                    if( empty($row["労働時間"]) ){
+                    if( empty($row["労働時間"]) && isset($listBusiness[$mSaleses->branch_office_cd]) ){
                         if(!$mSaleses->save()){
                             $flagError = true;
                         }
                     }
-                    if( empty($row["労働時間"]) && $mSuppliers ){
+                    if( empty($row["労働時間"]) && $mSuppliers && isset($listBusiness[$mSaleses->branch_office_cd]) ){
                         if(!$mPurchases->save()){
                             $flagError = true;
                         }
