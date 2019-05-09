@@ -173,7 +173,7 @@ class ImportFromSQLSERVER extends Command
             "tax_classification_flg" => '課税区分',
             "payment" => '支払金額',
         ];
-        $listBusiness = DB::table("mst_business_offices")->get()->pluck("id","branch_office_cd");
+        $listBusiness = DB::table("mst_business_offices")->whereNull("deleted_at")->get()->pluck("id","branch_office_cd");
         while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
             $this->countRead++;
             DB::beginTransaction();
@@ -184,11 +184,11 @@ class ImportFromSQLSERVER extends Command
                 if(empty($mTJiconaxSalesDatas)){
                     $mTJiconaxSalesDatas = new MTJiconaxSalesDatas();
                 }
-                $mCustomer = DB::table("mst_customers")->select("mst_customers.*","mst_account_titles.account_title_code")
+                $mCustomer = DB::table("mst_customers")->whereNull("deleted_at")->select("mst_customers.*","mst_account_titles.account_title_code")
                     ->leftJoin("mst_account_titles","mst_customers.mst_account_titles_id","mst_account_titles.id")
                     ->where("mst_customers_cd","=",$row["得意先CD"])
                     ->first();
-                $mSuppliers = DB::table("mst_suppliers")->select("mst_suppliers.*","mst_account_titles.account_title_code")
+                $mSuppliers = DB::table("mst_suppliers")->whereNull("deleted_at")->select("mst_suppliers.*","mst_account_titles.account_title_code")
                     ->leftJoin("mst_account_titles","mst_suppliers.mst_account_titles_id","mst_account_titles.id")
                     ->where("mst_suppliers_cd","=",$row["社員CD"])
                     ->first();
