@@ -3,6 +3,14 @@
 @section('title_header',trans("invoices.title"))
 @section('style')
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
+    <style>
+        .input-cd+div{
+            width: 200px!important;
+        }
+        .autosuggest__results-container{
+            font-size: 14px;
+        }
+    </style>
 @endsection
 @section('content')
     @include('Layouts.alert')
@@ -187,15 +195,16 @@
                         <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('tax_included_amount')
-                                <p>{!!"￥@{{addComma( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) )}}" !!}</p>
+                                <span>{!!"￥@{{Number( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) ).toLocaleString() }}" !!}</span>
+
                                 @break
                                 @case('total_fee')
                                 @case('consumption_tax')
-                                <p>{!!"￥@{{ addComma(item['$key']) }}" !!}</p>
+                                <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
                                 @break
                                 @default
-                                <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
-                                <p v-else>---</p>
+                                <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
+                                <span v-else>---</span>
                                 @break
                             @endswitch
                         </td>
@@ -247,14 +256,6 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
-        var currentMonth = new Date().getMonth();
-        var currentYear = new Date().getFullYear();
-        if(currentMonth==0){
-            currentMonth = 12;
-        }
-        if(currentMonth==11){
-            currentYear--;
-        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/invoice-list.js') }}" charset="utf-8"></script>
 @endsection

@@ -22,16 +22,15 @@
                             <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @switch($key)
                                     @case('tax_included_amount')
-                                    <p>{!!"￥@{{ parseFloat( modal.invoice['total_fee']) + parseFloat( modal.invoice['consumption_tax']) }}" !!}</p>
+                                    <span>{!!"￥@{{ Number(parseFloat( modal.invoice['total_fee']) + parseFloat( modal.invoice['consumption_tax'])).toLocaleString() }}" !!}</span>
                                     @break
                                     @case('total_fee')
                                     @case('consumption_tax')
-                                    <p v-if="modal.invoice['{{$key}}']">{!!"￥@{{ modal.invoice['$key'] }}" !!}</p>
-                                    <p v-else>---</p>
+                                    <span>{!!"￥@{{ Number(modal.invoice['$key']).toLocaleString() }}" !!}</span>
                                     @break
                                     @default
-                                    <p v-if="modal.invoice['{{$key}}']">{!! "@{{ modal.invoice['$key'] }}" !!}</p>
-                                    <p v-else>---</p>
+                                    <span v-if="modal.invoice['{{$key}}']">{!! "@{{ modal.invoice['$key'] }}" !!}</span>
+                                    <span v-else>---</span>
                                     @break
                                 @endswitch
                             </td>
@@ -58,12 +57,11 @@
                                     @case('consumption_tax')
                                     @case('total_fee')
                                     @case('tax_included_amount')
-                                    <p v-if="item['{{$key}}']">{!!"￥@{{ item['$key'] }}" !!}</p>
-                                    <p v-else>---</p>
+                                    <span>{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</span>
                                     @break
                                     @default
-                                    <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
-                                    <p v-else>---</p>
+                                    <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
+                                    <span v-else>---</span>
                                     @break
                                 @endswitch
                             </td>

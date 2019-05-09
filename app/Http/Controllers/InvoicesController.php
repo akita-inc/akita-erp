@@ -292,6 +292,24 @@ class InvoicesController extends Controller {
         ]);
     }
 
+    public function getCurrentYearMonth(){
+        $currentYear = (int)date("Y");
+        $currentMonth = (int)date("m");;
+        if($currentMonth == 1){
+            $currentYear--;
+        }
+        if($currentMonth == 1){
+            $currentMonth = 12;
+        }
+        else{
+            $currentMonth--;
+        }
+        return response()->json([
+            'current_year'=> $currentYear,
+            'current_month'=> $currentMonth
+        ]);
+    }
+
     public function getListCustomers(){
         $mCustomer = new MCustomers();
         $listBillCustomersCd = $mCustomer->select('bill_mst_customers_cd')->distinct()->whereNull('deleted_at')->get();
@@ -425,7 +443,7 @@ class InvoicesController extends Controller {
             if($mBillingHistoryHeaders->save()){
                 $this->billingHistoryHeaderID = $mBillingHistoryHeaders->id;
                 $history_details =  $mSaleses->getListByCustomerCd($item['customer_cd'], $item['mst_business_office_id'], $fieldSearch);
-                $branch_number = 0;
+                $branch_number = 1;
                 foreach ($history_details as $detail){
                     $arrayInsert = json_decode(json_encode($detail),true);
                     array_push( $this->csvContent[$item['customer_cd']], $arrayInsert);

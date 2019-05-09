@@ -300,7 +300,7 @@ class PaymentsController extends Controller
                 }
                 //仕入データを支払締処理済みにする
                 $tPurchases = new TPurchases();
-                $tPurchases->updateInvoicingFlag($item['mst_suppliers_cd'],$item['mst_business_office_id']);
+                $tPurchases->updateInvoicingFlag($item['mst_suppliers_cd'],$item['mst_business_office_id'],$daily_report_date);
             }
             DB::commit();
             return [

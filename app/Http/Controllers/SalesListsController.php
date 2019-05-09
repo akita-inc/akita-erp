@@ -63,24 +63,26 @@ class SalesListsController extends Controller
                 't_saleses.waiting_fee',
                 't_saleses.incidental_fee',
                 't_saleses.surcharge_fee',
-               't_saleses.consumption_tax'
-//                DB::raw("DATE_FORMAT(t_billing_history_headers.publication_date, '%Y/%m/%d') as publication_date")
+               't_saleses.consumption_tax',
+                DB::raw("DATE_FORMAT(headers.publication_date, '%Y/%m/%d') as publication_date")
             );
         $this->query->join('mst_customers', function ($join) {
                 $join->on('mst_customers.mst_customers_cd', '=', 't_saleses.mst_customers_cd')
-                    ->whereNull('mst_customers.deleted_at');
-        });
-        $this->query->leftJoin('mst_vehicles', function ($join) {
+                    ->whereRaw('mst_customers.deleted_at IS NULL');
+        })->leftJoin('mst_vehicles', function ($join) {
             $join->on('mst_vehicles.vehicles_cd', '=', 't_saleses.vehicles_cd')
-                ->whereNull('mst_vehicles.deleted_at');
-        });
-        $this->query->leftJoin('mst_staffs', function ($join) {
+                ->whereRaw('mst_vehicles.deleted_at IS NULL');
+        })->leftJoin('mst_staffs', function ($join) {
             $join->on('mst_staffs.staff_cd', '=', 't_saleses.staff_cd')
-                ->whereNull('mst_staffs.deleted_at');
+                ->whereRaw('mst_staffs.deleted_at IS NULL');
+        })->leftJoin('t_billing_history_header_details as details', function ($join) {
+                $join->on('details.document_no','=','t_saleses.document_no')
+                    ->whereRaw('details.deleted_at IS NULL')
+                    ->whereRaw('t_saleses.branch_office_cd=details.branch_office_cd');
+        })->leftJoin('t_billing_history_headers as headers', function ($join) {
+                $join->on('headers.invoice_number', '=', 'details.invoice_number')
+                    ->whereRaw('headers.deleted_at IS NULL');
         });
-//        $this->query->leftJoin('t_billing_history_header_details', function ($join) {
-//                $join->on('t_billing_history_header_details.document_no','=','t_saleses.document_no');
-//        });
         if ($where['mst_business_office_id'] != '') {
                 $this->query->where('t_saleses.mst_business_office_id', '=',  $where['mst_business_office_id']);
         }
@@ -149,7 +151,6 @@ class SalesListsController extends Controller
     }
     public function getItems(Request $request)
     {
-
         if(Session::exists('backQueryFlag') && Session::get('backQueryFlag')){
             if(Session::exists('backQueryFlag') ){
                 $data = Session::get('requestHistory');
@@ -166,7 +167,7 @@ class SalesListsController extends Controller
         foreach ($allItems as $key=> $item)
         {
             unset($item->consumption_tax);
-
+            unset($item->publication_date);
         }
         $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']);
         if(count($items->items())==0){
