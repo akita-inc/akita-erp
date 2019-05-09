@@ -157,7 +157,7 @@
                             <button class="btn btn-secondary" type="button" v-on:click="openModal(item)">{{trans("payments.list.table.button.detail")}}</button>
                         </td>
                         @foreach($fieldShowTable as $key => $field)
-                            <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
+                            <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @switch($key)
                                     @case('billing_amount')
                                     @case('consumption_tax')
@@ -169,7 +169,8 @@
                                         </span>
                                     @break
                                     @default
-                                        <span>{!! "@{{item['$key']}}" !!}</span>
+                                        <span v-if="item['{{$key}}']">{!! "@{{item['$key']}}" !!}</span>
+                                        <span v-else>---</span>
                                 @endswitch
                             </td>
                         @endforeach

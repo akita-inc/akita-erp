@@ -24,6 +24,7 @@ class TPurchases extends Model {
     ];
 
     public function getListBySupplierCdAndBusinessOfficeIdDailyReportDate($mst_suppliers_cd, $mst_business_office_id, $daily_report_date){
+        $daily_report_date = date('Y-m-d',strtotime($daily_report_date));
         $query = DB::table('t_purchases')
             ->select(
                 DB::raw("DATE_FORMAT(t_purchases.daily_report_date, '%Y/%m/%d') AS daily_report_date_formatted"),
@@ -36,8 +37,9 @@ class TPurchases extends Model {
             )->where('mst_suppliers_cd',$mst_suppliers_cd)
             ->where('mst_business_office_id',$mst_business_office_id)
             ->where('invoicing_flag',0)
-            ->where('daily_report_date',$daily_report_date)
-            ->whereNull('deleted_at');
+            ->where('daily_report_date','<=',$daily_report_date)
+            ->whereNull('deleted_at')
+            ->orderBy('daily_report_date');
         return $query->get();
     }
     public function updateInvoicingFlag($mst_suppliers_cd, $mst_business_office_id){

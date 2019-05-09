@@ -18964,7 +18964,7 @@ var ctrPaymentsListVl = new Vue({
       payments_service.getDetailsPayment({
         'mst_suppliers_cd': item.mst_suppliers_cd,
         'mst_business_office_id': item.mst_business_office_id,
-        'daily_report_date': item.daily_report_date
+        'daily_report_date': that.fileSearch.billing_year + '-' + that.fileSearch.billing_month + '-' + that.fileSearch.closed_date
       }).then(function (response) {
         if (response.info.length > 0) {
           that.modal.detail_info = response.info;
@@ -18979,7 +18979,8 @@ var ctrPaymentsListVl = new Vue({
       this.loading = true;
       this.flagSearch = false;
       payments_service.execution({
-        data: that.items
+        data: that.items,
+        daily_report_date: that.fileSearch.billing_year + '-' + that.fileSearch.billing_month + '-' + that.fileSearch.closed_date
       }).then(function (response) {
         if (response.success === false) {
           that.errors = response.message;
