@@ -12,8 +12,8 @@ var ctrInvoiceListVl = new Vue({
         items:[],
         fileSearch:{
             mst_business_office_id:"",
-            billing_year: currentYear,
-            billing_month: currentMonth,
+            billing_year: '',
+            billing_month: '',
             customer_cd: "",
             customer_nm:"",
             closed_date:"",
@@ -85,7 +85,7 @@ var ctrInvoiceListVl = new Vue({
     },
     computed: {
         inputPropsCd: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.customer_cd,maxlength:5,class:'form-control' ,ref:"customer_cd"}
+            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.customer_cd,maxlength:5,class:'form-control input-cd' ,ref:"customer_cd"}
         },
         inputPropsNm: function() {
             return {id:'autosuggest__input', onInputChange: this.onInputChangeNm ,initialValue: this.fileSearch.customer_nm,maxlength:5,class:'form-control',ref:"customer_nm"}
@@ -94,7 +94,7 @@ var ctrInvoiceListVl = new Vue({
     methods : {
         renderSuggestion(suggestion) {
             const customer = suggestion.item;
-            return customer.mst_customers_cd+ ': '+ customer.customer_nm;
+            return customer.mst_customers_cd+ ': '+ (customer.customer_nm != null?customer.customer_nm:'');
 
         },
         getSuggestionValueCd(suggestion) {
@@ -137,41 +137,48 @@ var ctrInvoiceListVl = new Vue({
         onSelectedCd(option) {
             this.fileSearch.customer_cd = option.item.mst_customers_cd;
             this.fileSearch.customer_nm = option.item.customer_nm;
-            this.getListBundleDt();
+            if(this.fileSearch.customer_cd === ''){
+                this.getListBundleDt();
+                this.fileSearch.closed_date = '';
+            }else{
+                this.getListBundleDt(true);
+            }
         },
         onSelectedNm(option) {
             this.fileSearch.customer_cd = option.item.mst_customers_cd;
             this.fileSearch.customer_nm = option.item.customer_nm;
-            this.getListBundleDt();
+            if(this.fileSearch.customer_nm === ''){
+                this.getListBundleDt();
+                this.fileSearch.closed_date = '';
+            }else{
+                this.getListBundleDt(true);
+            }
         },
         clearCondition: function clearCondition() {
             this.$refs.customer_nm.searchInput = "";
             this.$refs.customer_cd.searchInput = "";
             this.fileSearch.mst_business_office_id="";
-            this.fileSearch.billing_year=currentYear;
-            this.fileSearch.billing_month=currentMonth;
+            this.fileSearch.billing_year="";
+            this.fileSearch.billing_month="";
             this.fileSearch.customer_cd="";
             this.fileSearch.customer_nm="";
             this.fileSearch.closed_date="";
             this.fileSearch.special_closing_date="";
             this.fileSearch.closed_date_input="";
             this.errors = [];
+            this.filteredCustomerCd = [];
+            this.filteredCustomerNm = [];
+            this.getListBundleDt();
+            this.getCurrentYearMonth();
         },
-        checkIsExist: function (id) {
-            empty_info_service.checkIsExist(id).then((response) => {
-                if (!response.success) {
-                    alert(response.msg);
-                    this.getItems(1);
-                } else {
-                    window.location.href = 'edit/' + id;
-                }
-            });
-        },
-        getListBundleDt: function () {
+        getListBundleDt: function (flagSelect) {
             var that = this;
             invoice_service.loadListBundleDt({customer_cd:that.fileSearch.customer_cd}).then((response) => {
                 if (response.info.length>0) {
                     that.list_bundle_dt = response.info;
+                    if(flagSelect){
+                        that.fileSearch.closed_date = that.list_bundle_dt[0].bundle_dt;
+                    }
                 }
             });
         },
@@ -189,8 +196,7 @@ var ctrInvoiceListVl = new Vue({
         },
         createPDF: async function () {
             var that = this;
-            var value = that.items[0];
-
+            this.loading = true;
             await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
                     invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:1}).then( async function (response){
@@ -205,9 +211,11 @@ var ctrInvoiceListVl = new Vue({
 
             });
             this.disableBtn =  true;
+            this.loading =  false;
         },
         createCSV: async function () {
             var that = this;
+            this.loading = true;
             await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
                     invoice_service.createCSV({data:value,'fieldSearch': that.fileSearch}).then(  function (response){
@@ -217,6 +225,7 @@ var ctrInvoiceListVl = new Vue({
 
             });
             this.disableBtn =  true;
+            this.loading = false;
         },
         downloadFile(response) {
             // It is necessary to create a new blob object with mime-type explicitly set
@@ -247,10 +256,18 @@ var ctrInvoiceListVl = new Vue({
         addComma: function (value) {
            return  value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
+        getCurrentYearMonth: function(){
+            var that = this;
+            invoice_service.getCurrentYearMonth().then((response) => {
+                that.fileSearch.billing_year = response.current_year;
+                that.fileSearch.billing_month = response.current_month;
+            });
+        },
     },
     mounted () {
         var that = this;
         this.getListBundleDt();
+        this.getCurrentYearMonth();
         invoice_service.loadListCustomers().then((response) => {
             that.dropdown_customer_cd[0].data =  response.data;
             that.dropdown_customer_nm[0].data =  response.data;
