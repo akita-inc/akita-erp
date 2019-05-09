@@ -18781,12 +18781,11 @@ var ctrPaymentsListVl = new Vue({
       var that = this;
       this.loading = true;
       payments_service.loadList(data).then(function (response) {
-        that.flagSearch = true;
-
         if (response.success == false) {
           that.errors = response.message;
           that.loading = false;
         } else {
+          that.flagSearch = true;
           that.errors = [];
           that.daily_report_date = that.fileSearch.billing_year + '-' + that.fileSearch.billing_month + '-' + that.fileSearch.closed_date;
 
