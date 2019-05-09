@@ -22,7 +22,8 @@
                             <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @switch($key)
                                     @case('tax_included_amount')
-                                    <span>{!!"￥@{{ Number(parseFloat( modal.invoice['total_fee']) + parseFloat( modal.invoice['consumption_tax'])).toLocaleString() }}" !!}</span>
+                                    <span v-if="modal.invoice['total_fee']==null || modal.invoice['consumption_tax']==null">￥0</span>
+                                    <span v-else>{!!"￥@{{ Number(parseFloat( modal.invoice['total_fee']) + parseFloat( modal.invoice['consumption_tax'])).toLocaleString() }}" !!}</span>
                                     @break
                                     @case('total_fee')
                                     @case('consumption_tax')
