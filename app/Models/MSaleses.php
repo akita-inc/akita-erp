@@ -70,9 +70,9 @@ class MSaleses extends Model {
             ->where('t_saleses.mst_business_office_id',$mst_business_office_id)
             ->where('c.bill_cus_cd',$mst_customers_cd);
         if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
-            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['closed_date'] ? $dataSearch['closed_date'] : $dataSearch['closed_date_input'])));
+            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
             $query = $query->where('t_saleses.daily_report_date','<=',$date);
         }
-         return $query->get();
+         return $query->orderBy('t_saleses.daily_report_date')->get();
     }
 }

@@ -29,7 +29,7 @@ class MBillingHistoryHeaders extends Model {
                 bill.invoice_number,
                 bill.mst_customers_cd as customer_cd,
                 bill.mst_business_office_id,
-                cus.customer_nm_formal AS customer_nm,
+                CONCAT(cus.customer_nm_formal,' ', '御中') AS customer_nm,
                 ( SELECT bill_zip_cd FROM mst_bill_issue_destinations WHERE mst_customer_id = cus.id AND deleted_at IS NULL LIMIT 1 ) AS bill_zip_cd,
                 (
                 SELECT
@@ -59,13 +59,14 @@ class MBillingHistoryHeaders extends Model {
                     IFNULL( office.address3, '' ) 
                 ) AS address,
                 office.phone_number,
-                office.fax_number,
-                bill.consumption_tax,
-                bill.tax_included_amount,
-                details.sales_amount,
-                details.incidental_other,
-                details.surcharge_fee,
-                details.toll_fee 
+                office.fax_number, 
+                format(bill.consumption_tax, '#,##0') as consumption_tax,
+                format(bill.tax_included_amount, '#,##0') as tax_included_amount,
+                format(bill.total_fee, '#,##0') as total_fee,
+                format(details.sales_amount, '#,##0') as sales_amount,
+                format(details.incidental_other, '#,##0') as incidental_other,
+                format(details.surcharge_fee, '#,##0') as surcharge_fee,
+                format(details.toll_fee, '#,##0') as toll_fee
             FROM
                 t_billing_history_headers bill
                 LEFT JOIN mst_customers AS cus ON cus.mst_customers_cd = bill.mst_customers_cd 
