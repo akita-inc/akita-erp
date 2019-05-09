@@ -15,7 +15,7 @@ class AddMailToMstStaffs extends Migration
     {
         Schema::table('mst_staffs', function (Blueprint $table) {
             //
-            $table->string('mail',255)->nullable();
+            $table->string('mail',255)->nullable()->after('remember_token');
         });
     }
 
