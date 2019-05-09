@@ -28,11 +28,11 @@ sales_lists_service = {
             return error;
         });
     },
-    exportCSV:function (data) {
-        return axios.post('/sales_lists/api-v1/export-csv',data).then(function (response) {
-            return response.data;
+    createCSV: function (data) {
+        return axios.post('/sales_lists/api-v1/create-csv',data, {responseType: 'arraybuffer'}).then(function (response) {
+            return response;
         }).catch(function (error) {
             return error;
         });
-    }
+    },
 }

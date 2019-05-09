@@ -44,7 +44,7 @@ class SalesListsController extends Controller
                 't_saleses.document_no',
                 'mst_vehicles.registration_numbers',
                 't_saleses.staff_cd',
-                DB::raw('CONCAT_WS("  ",mst_staffs.last_nm,mst_staffs.first_nm) as staff_nm'),
+                DB::raw('CONCAT_WS("　",mst_staffs.last_nm,mst_staffs.first_nm) as staff_nm'),
                 't_saleses.mst_customers_cd',
                 'mst_customers.customer_nm_formal as customer_nm',
                 't_saleses.goods',
@@ -63,10 +63,10 @@ class SalesListsController extends Controller
                 't_saleses.waiting_fee',
                 't_saleses.incidental_fee',
                 't_saleses.surcharge_fee',
-                't_saleses.consumption_tax'
+               't_saleses.consumption_tax'
 //                DB::raw("DATE_FORMAT(t_billing_history_headers.publication_date, '%Y/%m/%d') as publication_date")
             );
-        $this->query->leftJoin('mst_customers', function ($join) {
+        $this->query->join('mst_customers', function ($join) {
                 $join->on('mst_customers.mst_customers_cd', '=', 't_saleses.mst_customers_cd')
                     ->whereNull('mst_customers.deleted_at');
         });
@@ -163,6 +163,11 @@ class SalesListsController extends Controller
         $this->getQuery();
         $this->search( $data );
         $allItems=$this->query->get();
+        foreach ($allItems as $key=> $item)
+        {
+            unset($item->consumption_tax);
+
+        }
         $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']);
         if(count($items->items())==0){
             if($data['page'] > 1){

@@ -66,6 +66,7 @@ return [
             "landline_phone_number"=>"固定電話番号",
             "cellular_phone_number"=>"携帯電話番号",
             "corp_cellular_phone_number"=>"支給携帯電話番号",
+            "mail"=>"メールアドレス",
             "notes"=>"備考",
             "sex_id"=>"性別",
             "birthday"=>"生年月日",
