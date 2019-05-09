@@ -122,8 +122,6 @@
                             </div>
                             <div class="col-md-1 col-sm-2 no-padding lh-38"><span class="pl-1">日</span></div>
                         </div>
-                        <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
-                        <span v-cloak v-if="errors.closed_date_input != undefined" class="message-error text-right w-100" v-html="errors.closed_date_input.join('<br />')"></span>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
@@ -136,6 +134,14 @@
                                 {{trans('common.button.search')}}
                             </button>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7 text-right" v-if="errors.closed_date != undefined" v-cloak>
+                        <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
+                    </div>
+                    <div class="col-md-9 text-right" v-if="errors.closed_date_input != undefined" v-cloak>
+                        <span v-cloak v-if="errors.closed_date_input != undefined" class="message-error text-right w-100" v-html="errors.closed_date_input.join('<br />')"></span>
                     </div>
                 </div>
             </div>
