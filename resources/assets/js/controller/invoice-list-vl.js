@@ -190,13 +190,6 @@ var ctrInvoiceListVl = new Vue({
         createPDF: async function () {
             var that = this;
             var value = that.items[0];
-            // await invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:1}).then( async function (response){
-            //     await that.downloadFile(response);
-            //     var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
-            //     invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:2,fileName:filename}).then(  function (response1){
-            //         that.downloadFile(response1);
-            //     });
-            // });
 
             await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
@@ -211,7 +204,7 @@ var ctrInvoiceListVl = new Vue({
                 }, key*1000);
 
             });
-            // this.disableBtn =  true;
+            this.disableBtn =  true;
         },
         createCSV: async function () {
             var that = this;
@@ -223,7 +216,7 @@ var ctrInvoiceListVl = new Vue({
                 }, key*1000);
 
             });
-            // this.disableBtn =  true;
+            this.disableBtn =  true;
         },
         downloadFile(response) {
             // It is necessary to create a new blob object with mime-type explicitly set

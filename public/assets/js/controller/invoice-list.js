@@ -21849,14 +21849,7 @@ var ctrInvoiceListVl = new Vue({
             switch (_context2.prev = _context2.next) {
               case 0:
                 that = this;
-                value = that.items[0]; // await invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:1}).then( async function (response){
-                //     await that.downloadFile(response);
-                //     var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
-                //     invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:2,fileName:filename}).then(  function (response1){
-                //         that.downloadFile(response1);
-                //     });
-                // });
-
+                value = that.items[0];
                 _context2.next = 4;
                 return that.items.forEach(function (value, key) {
                   setTimeout(function () {
@@ -21906,6 +21899,9 @@ var ctrInvoiceListVl = new Vue({
                 });
 
               case 4:
+                this.disableBtn = true;
+
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -21942,6 +21938,9 @@ var ctrInvoiceListVl = new Vue({
                 });
 
               case 3:
+                this.disableBtn = true;
+
+              case 4:
               case "end":
                 return _context3.stop();
             }
