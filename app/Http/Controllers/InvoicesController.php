@@ -394,7 +394,7 @@ class InvoicesController extends Controller {
         $data = $request->all();
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
-        $keys = mb_convert_encoding(array_keys($this->csvColumn), "SJIS", "UTF-8");
+        $keys = array_keys($this->csvColumn);
 
         $this->createHistory($item,$fieldSearch);
         $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
@@ -405,15 +405,16 @@ class InvoicesController extends Controller {
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0"
         );
-        $callback = function() use ($keys,$item) {
+        $enclosure = config('params.csv.enclosure');
+        $callback = function() use ($keys,$item, $enclosure) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, array_values($this->csvColumn));
+            fputcsv($file, mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"));
             foreach ($this->csvContent[$item['customer_cd']] as $content) {
                 $row = [];
                 foreach ($keys as $key) {
-                    $row[$key] = $content[$key];
+                    $row[$key] = $enclosure.$content[$key].$enclosure;
                 }
-                fputcsv($file, mb_convert_encoding($row, "SJIS", "UTF-8"), config('params.csv.delimiter'), config('params.csv.enclosure'));
+                fputcsv($file, mb_convert_encoding($row, "SJIS", "UTF-8"), config('params.csv.delimiter'), ' ');
             }
             fclose($file);
         };
