@@ -66,6 +66,7 @@ var ctrInvoiceListVl = new Vue({
                     that.loading = false;
                 }else{
                     this.flagSearch = true;
+                    this.disableBtn =  false;
                     that.errors = [];
                     if (response.data.length===0) {
                         that.message = messages["MSG05001"];
