@@ -66,7 +66,7 @@
         <a href="#menu1sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">販売</a>
         <div class="collapse" id="menu1sub1">
             <a href="{{route('sales_lists.list')}}" class="list-group-item" data-parent="#menu1sub1">売上一覧</a>
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">請求書発行</a>
+            <a href="{{route('invoices.list')}}" class="list-group-item" data-parent="#menu1sub1">請求書発行</a>
             <a href="#" class="list-group-item" data-parent="#menu1sub1">請求書発行履歴</a>
             <a href="#" class="list-group-item" data-parent="#menu1sub1">入金処理</a>
             <a href="#" class="list-group-item" data-parent="#menu1sub1">入金履歴</a>

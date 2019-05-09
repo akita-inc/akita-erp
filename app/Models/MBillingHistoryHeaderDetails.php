@@ -42,13 +42,6 @@ class MBillingHistoryHeaderDetails extends Model {
                 'details.waiting_fee',
                 'details.surcharge_fee',
                 'details.billing_fast_charge',
-
-//                DB::raw('format(details.loading_fee, "#,##0") as loading_fee'),
-//                DB::raw('format(details.wholesale_fee, "#,##0") as  wholesale_fee'),
-//                DB::raw('format(details.incidental_fee, "#,##0") as  incidental_fee'),
-//                DB::raw('format(details.waiting_fee, "#,##0") as waiting_fee'),
-//                DB::raw('format(details.surcharge_fee, "#,##0")as surcharge_fee'),
-//                DB::raw('format(details.billing_fast_charge, "#,##0") as billing_fast_charge'),
                 'details.delivery_destination',
                 DB::raw("(mst_staffs.last_nm) as staff_nm")
             )
