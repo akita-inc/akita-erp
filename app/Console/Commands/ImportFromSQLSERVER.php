@@ -240,7 +240,9 @@ class ImportFromSQLSERVER extends Command
                             ->whereRaw("DATE_FORMAT('".$mSaleses->daily_report_date->format('Y-m-d')."',\"%Y/%m/%d\")  BETWEEN  DATE_FORMAT(start_date,\"%Y/%m/%d\") and 
 DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                         if($getTax){
-                            $mSaleses->consumption_tax = $mSaleses->total_fee * $getTax->rate;
+                            $mSaleses->consumption_tax = (($mSaleses->quantity*$mSaleses->unit_price) + $mSaleses->insurance_fee
+                                    + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
+                                    + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) * $getTax->rate;
                             if($mCustomer){
                                 switch ($mCustomer->rounding_method_id){
                                     case 1:
@@ -299,12 +301,12 @@ DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
                     $mPurchases->add_mst_staff_id = 9999;
                     $mPurchases->upd_mst_staff_id = 9999;
                     $flagError = false;
-                    if( empty($row["労働時間"]) ){
+                    if( empty($row["労働時間"]) && isset($listBusiness[$mSaleses->branch_office_cd]) ){
                         if(!$mSaleses->save()){
                             $flagError = true;
                         }
                     }
-                    if( empty($row["労働時間"]) && $mSuppliers ){
+                    if( empty($row["労働時間"]) && $mSuppliers && isset($listBusiness[$mSaleses->branch_office_cd]) ){
                         if(!$mPurchases->save()){
                             $flagError = true;
                         }

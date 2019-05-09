@@ -42,8 +42,9 @@ class TPurchases extends Model {
             ->orderBy('daily_report_date');
         return $query->get();
     }
-    public function updateInvoicingFlag($mst_suppliers_cd, $mst_business_office_id){
+    public function updateInvoicingFlag($mst_suppliers_cd, $mst_business_office_id,$daily_report_date){
         $this::where(['mst_suppliers_cd'=>$mst_suppliers_cd,'mst_business_office_id'=>$mst_business_office_id])
+            ->where('daily_report_date','<=',$daily_report_date)
             ->update([
                 'invoicing_flag'=>1,
                 'upd_mst_staff_id'=>Auth::user()->id,
