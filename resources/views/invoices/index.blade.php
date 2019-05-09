@@ -19,11 +19,11 @@
         <div class="sub-header" style="background-color: #F4B084">
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 row text-left">
-                        <div class="col-md-2 padding-row-5 col-list-search-f">
+                    <div class="col-md-9 col-sm-12 row text-left">
+                        <div class="col-md-1 padding-row-5 col-list-search-f text-center">
                             {{trans("invoices.list.search.mst_business_office_id")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-3 padding-row-5 grid-form-search">
                             <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans("invoices.list.search.mst_business_office_id_default")}}</option>
                                 @foreach($businessOffices as $office)
@@ -31,36 +31,40 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2 padding-row-5 col-list-search-f">
+                        <div class="col-md-1 padding-row-5 col-list-search-f text-center">
                             {{trans("invoices.list.search.billing_year")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 row lh-38">
                             <select class="form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year">
                                 @foreach($listYear as $year)
                                     <option value="{{$year}}"> {{$year}}</option>
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12 row">
-                        <div class="col-md-2 padding-row-5 grid-form-search">
-                            <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
-                                @foreach($listMonth as $month)
-                                    <option value="{{$month}}"> {{$month}}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-md-4 padding-row-5 grid-form-search row lh-38">
+                            <div class="col-md-1 col-sm-1 no-padding text-center">年</div>
+                            <div class="col-md-4 no-padding">
+                                <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
+                                    @foreach($listMonth as $month)
+                                        <option value="{{$month}}"> {{$month}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3 no-padding row">
+                                <div class="col-md-1 no-padding"></div>
+                                <div class="col-md-4 text-left no-padding lh-38">月</div>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-left no-padding lh-38">月</div>
                     </div>
                     <div class="col-md-3 col-sm-12 row"></div>
                 </div>
                 <div class="break-row-form" style="height: 25px;"></div>
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-2 padding-row-5 col-list-search-f text-left">
+                    <div class="col-md-9 col-sm-12 row">
+                        <div class="col-md-1 padding-row-5 col-list-search-f text-center">
                             {{trans("invoices.list.search.customer")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("invoices.list.search.code")}}
                             </label>
@@ -76,7 +80,7 @@
                             >
                             </vue-autosuggest>
                         </div>
-                        <div class="col-md-6 padding-row-5 grid-form-search">
+                        <div class="col-md-3 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("invoices.list.search.name")}}
                             </label>
@@ -91,13 +95,11 @@
                             >
                             </vue-autosuggest>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12 row lh-38">
-                        <div class="col-md-2 col-sm-12 text-left pl-1">
+                        <div class="col-md-1 col-sm-12 text-center pl-1 lh-38">
                             {{trans("invoices.list.search.closed_date")}}
                         </div>
-                        <div class="col-md-3  col-sm-12 no-padding row">
-                            <div class="col-md-9  col-sm-9 no-padding">
+                        <div class="col-md-2  col-sm-12 no-padding row lh-38">
+                            <div class="col-md-10  col-sm-10 no-padding">
                                 <select  v-bind:class="errors.closed_date != undefined ? 'form-control dropdown-list is-invalid':'form-control dropdown-list' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" :disabled ='fileSearch.special_closing_date==1' v-cloak>
                                     <option v-for="item in list_bundle_dt" :value="item.bundle_dt" v-cloak>
                                         @{{ item.bundle_dt }}
@@ -105,17 +107,20 @@
 
                                 </select>
                             </div>
-                            <div class="col-md-3 col-sm-3 no-padding">日</div>
+                            <div class="col-md-2 col-sm-2 no-padding">日</div>
                         </div>
-                        <div class="col-md-7  col-sm-12 no-padding">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="checkbox" value="1" v-model="fileSearch.special_closing_date" class="form-check-input">{{trans("invoices.list.search.special_closing_date")}}
-                                </label>
+                        <div class="col-md-3  row no-padding">
+                            <div class="col-md-7 col-sm-7 no-padding lh-38 text-right">
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" value="1" v-model="fileSearch.special_closing_date" class="form-check-input">{{trans("invoices.list.search.special_closing_date")}}
+                                    </label>
+                                </div>
                             </div>
-                            <div class="wd-60 d-inline-block">
+                            <div class="col-md-3  col-sm-3 no-padding">
                                 <input id="input_closed_date" v-bind:class="errors.closed_date_input != undefined ? 'form-control is-invalid':'form-control' "  name="closed_date_input" v-model="fileSearch.closed_date_input" :disabled ='fileSearch.special_closing_date!=1' v-cloak>
-                            </div>日
+                            </div>
+                            <div class="col-md-1 col-sm-2 no-padding lh-38"><span class="pl-1">日</span></div>
                         </div>
                         <span v-cloak v-if="errors.closed_date != undefined" class="message-error" v-html="errors.closed_date.join('<br />')"></span>
                         <span v-cloak v-if="errors.closed_date_input != undefined" class="message-error text-right w-100" v-html="errors.closed_date_input.join('<br />')"></span>
@@ -195,7 +200,8 @@
                         <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('tax_included_amount')
-                                <span>{!!"￥@{{Number( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) ).toLocaleString() }}" !!}</span>
+                                <span v-if="item['total_fee']==null || item['consumption_tax']==null">￥0</span>
+                                <span v-else>{!!"￥@{{Number( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) ).toLocaleString() }}" !!}</span>
 
                                 @break
                                 @case('total_fee')
