@@ -31,7 +31,8 @@
                                         </span>
                                     @break
                                     @default
-                                    <span>{!! "@{{modal.payment['$key']}}" !!}</span>
+                                    <span v-if="modal.payment['{{$key}}']">{!! "@{{modal.payment['$key']}}" !!}</span>
+                                    <span v-else>---</span>
                                 @endswitch
                             </td>
                         @endforeach
@@ -60,7 +61,8 @@
                                     <p>{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
                                     @break
                                     @default
-                                    <p>{!! "@{{ item['$key'] }}" !!}</p>
+                                    <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
+                                    <p v-else>---</p>
                                     @break
                                 @endswitch
                             </td>

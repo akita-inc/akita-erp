@@ -76,7 +76,7 @@ class PaymentsController extends Controller
         //select
         $this->query->select(
             't_purchases.mst_business_office_id',
-            't_purchases.daily_report_date',
+//            't_purchases.daily_report_date',
             'mbo.business_office_nm',
             't_purchases.mst_suppliers_cd',
             'ms.supplier_nm_formal'
@@ -126,7 +126,7 @@ class PaymentsController extends Controller
         //group by
         $this->query->groupBy(
             't_purchases.mst_business_office_id',
-            't_purchases.daily_report_date',
+//            't_purchases.daily_report_date',
             'mbo.business_office_nm',
             't_purchases.mst_suppliers_cd',
             'ms.supplier_nm_formal',
@@ -254,16 +254,17 @@ class PaymentsController extends Controller
     public function execution(Request $request){
         $return = ['success'=>true];
         $data = $request->all();
+        $daily_report_date = $data['daily_report_date'];
         $data = $data['data'];
         foreach($data as $item){
-            $return = $this->createHistory($item);
+            $return = $this->createHistory($item,$daily_report_date);
             if($return['success'] == false){
                 break;
             }
         }
         return response()->json($return);
     }
-    private function createHistory($item){
+    private function createHistory($item,$daily_report_date){
         $currentTime = date("Y-m-d H:i:s",time());
         $tPurchases = new TPurchases();
         $tPaymentHistoryHeaders = new TPaymentHistoryHeaders();
@@ -282,7 +283,7 @@ class PaymentsController extends Controller
             $tPaymentHistoryHeaders->add_mst_staff_id = Auth::user()->id;
             $tPaymentHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
             if($tPaymentHistoryHeaders->save()){
-                $historyDetails = $tPurchases->getListBySupplierCdAndBusinessOfficeIdDailyReportDate($item['mst_suppliers_cd'],$item['mst_business_office_id'],$item['daily_report_date']);
+                $historyDetails = $tPurchases->getListBySupplierCdAndBusinessOfficeIdDailyReportDate($item['mst_suppliers_cd'],$item['mst_business_office_id'],$daily_report_date);
                 $branch_number = 1;
                 foreach($historyDetails as $detail){
                     $arrayInsert = json_decode(json_encode($detail),true);
