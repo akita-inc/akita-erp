@@ -21670,8 +21670,12 @@ var ctrInvoiceListVl = new Vue({
       invoice: {},
       sale_info: []
     },
+    disableBtn: false,
+    flagSearch: false,
     date_of_issue: moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYY/MM/DD'),
     getItems: function getItems(page, show_msg) {
+      var _this = this;
+
       if (show_msg !== true) {
         $('.alert').hide();
       }
@@ -21686,6 +21690,7 @@ var ctrInvoiceListVl = new Vue({
           that.errors = response.message;
           that.loading = false;
         } else {
+          _this.flagSearch = true;
           that.errors = [];
 
           if (response.data.length === 0) {
@@ -21795,13 +21800,13 @@ var ctrInvoiceListVl = new Vue({
       this.errors = [];
     },
     checkIsExist: function checkIsExist(id) {
-      var _this = this;
+      var _this2 = this;
 
       empty_info_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
 
-          _this.getItems(1);
+          _this2.getItems(1);
         } else {
           window.location.href = 'edit/' + id;
         }
@@ -21834,25 +21839,94 @@ var ctrInvoiceListVl = new Vue({
         that.loading = false;
       });
     },
-    createPDF: function createPDF() {
-      var _this2 = this;
+    createPDF: function () {
+      var _createPDF = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var that, value;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                that = this;
+                value = that.items[0];
+                _context2.next = 4;
+                return that.items.forEach(function (value, key) {
+                  setTimeout(function () {
+                    invoice_service.createPDF({
+                      data: value,
+                      'fieldSearch': that.fileSearch,
+                      type: 1
+                    }).then(
+                    /*#__PURE__*/
+                    function () {
+                      var _ref = _asyncToGenerator(
+                      /*#__PURE__*/
+                      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(response) {
+                        var filename;
+                        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+                          while (1) {
+                            switch (_context.prev = _context.next) {
+                              case 0:
+                                _context.next = 2;
+                                return that.downloadFile(response);
 
-      var that = this;
-      invoice_service.createPDF({}).then(function (response) {
-        _this2.downloadFile(response, 'csv');
-      });
-    },
+                              case 2:
+                                filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
+                                invoice_service.createPDF({
+                                  data: value,
+                                  'fieldSearch': that.fileSearch,
+                                  type: 2,
+                                  fileName: filename
+                                }).then(function (response1) {
+                                  that.downloadFile(response1);
+                                });
+
+                              case 4:
+                              case "end":
+                                return _context.stop();
+                            }
+                          }
+                        }, _callee);
+                      }));
+
+                      return function (_x) {
+                        return _ref.apply(this, arguments);
+                      };
+                    }());
+                    return;
+                  }, key * 1000);
+                });
+
+              case 4:
+                this.disableBtn = true;
+
+              case 5:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function createPDF() {
+        return _createPDF.apply(this, arguments);
+      }
+
+      return createPDF;
+    }(),
     createCSV: function () {
       var _createCSV = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         var that;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 that = this;
-                that.items.forEach(function (value, key) {
+                _context3.next = 3;
+                return that.items.forEach(function (value, key) {
                   setTimeout(function () {
                     invoice_service.createCSV({
                       data: value,
@@ -21863,12 +21937,15 @@ var ctrInvoiceListVl = new Vue({
                   }, key * 1000);
                 });
 
-              case 2:
+              case 3:
+                this.disableBtn = true;
+
+              case 4:
               case "end":
-                return _context.stop();
+                return _context3.stop();
             }
           }
-        }, _callee, this);
+        }, _callee3, this);
       }));
 
       function createCSV() {
@@ -21932,7 +22009,7 @@ var ctrInvoiceListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\invoice-list-vl.js */"./resources/assets/js/controller/invoice-list-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\invoice-list-vl.js */"./resources/assets/js/controller/invoice-list-vl.js");
 
 
 /***/ })

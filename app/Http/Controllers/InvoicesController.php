@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\InvoicePDF;
+use App\Helpers\InvoicePDF_;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBillingHistoryHeaderDetails;
@@ -18,6 +20,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\TcpdfFpdi;
 
 
 class InvoicesController extends Controller {
@@ -63,6 +67,9 @@ class InvoicesController extends Controller {
         ];
 
     public $csvContent = [];
+
+    public $billingHistoryHeaderID ="";
+    public $listBillingHistoryDetailID = [];
 
     public function __construct(){
         date_default_timezone_set("Asia/Tokyo");
@@ -117,7 +124,7 @@ class InvoicesController extends Controller {
             $paramsSearch['customer_cd'] = $dataSearch['customer_cd'];
         }
         if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
-            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['closed_date'] ? $dataSearch['closed_date'] : $dataSearch['closed_date_input'])));
+            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
             $querySearch .= "AND ts.daily_report_date <= :date "."\n";
             $paramsSearch['date'] = $date;
         }
@@ -125,6 +132,7 @@ class InvoicesController extends Controller {
             SELECT
                 invoices.mst_business_office_id,
                 invoices.regist_office,
+                invoices.office_cd,
                 invoices.customer_cd,
                 invoices.customer_nm,
                 CAST(invoices.total_fee AS DECIMAL(10,2)) as total_fee,
@@ -144,6 +152,7 @@ class InvoicesController extends Controller {
                 (
                     SELECT
                     ts.mst_business_office_id,
+                    office.mst_business_office_cd as office_cd,
                     office.business_office_nm as regist_office,
                     -- ts.mst_customers_cd \"sales_cus_cd売上.得意先CD\",
                     c.`bill_cus_cd`AS `customer_cd`,
@@ -160,7 +169,7 @@ class InvoicesController extends Controller {
                             ts.tax_classification_flg = 1,
                             (
                                 IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)
-                            ) * (
+                            ) * IFNULL((
                                 SELECT
                                     rate
                                 FROM
@@ -169,7 +178,7 @@ class InvoicesController extends Controller {
                                     start_date <= ts.daily_report_date
                                 AND ts.daily_report_date <= end_date
                                 LIMIT 1
-                            ),
+                            ),0),
                             0
                         )
                     )
@@ -197,7 +206,7 @@ class InvoicesController extends Controller {
                     connect_sales.deleted_at IS NULL
                     AND bill_info.deleted_at IS NULL
                 ) c ON ts.mst_customers_cd = c.sales_cus_cd
-                LEFT JOIN mst_business_offices office ON ts.mst_business_office_id = office.id
+                JOIN mst_business_offices office ON ts.mst_business_office_id = office.id
                 AND office.deleted_at IS NULL
                 WHERE
                     ts.deleted_at IS NULL
@@ -318,13 +327,49 @@ class InvoicesController extends Controller {
         ]);
     }
 
-    public function createPDF(){
-        $file = storage_path() . "/pdf_template/請求書無地P1.pdf";
+    public function createPDF(Request $request){
+        $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
+        $data = $request->all();
+        $fieldSearch = $data['fieldSearch'];
+        $item = $data['data'];
+        $type= $data['type'];
 
-        $headers = [
-            'Content-Type' => 'application/pdf',
-        ];
-        return response()->download($file, '請求書無地P1.pdf', $headers);
+        $this->createHistory($item,$fieldSearch);
+        if($type==1){
+            $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
+
+            if(!empty($this->billingHistoryHeaderID)){
+                $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
+                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
+                $pdf = new InvoicePDF();
+                $pdf->SetPrintHeader(false);
+                $pdf->SetPrintFooter(false);
+                $pdf->AddPage();
+                $pdf->getTotalPage($contentDetails);
+                $pdf->writeHeader($contentHeader[0]);
+                $pdf->writeDetails($contentDetails);
+                $pdf->Output(public_path($fileName),'FI');
+            }
+        }else{
+            $oldName = $data['fileName'];
+            $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
+            $headers = [
+                'Content-Type' => 'application/pdf',
+                "Content-Disposition" => "attachment; filename=$newName",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+            $pdf = new InvoicePDF();
+            $pdf->SetPrintHeader(false);
+            $pdf->SetPrintFooter(false);
+            $pdf->createNewPdfFromExistedFile($oldName);
+            $pdf->Close();
+            unlink(public_path($oldName));
+            $pdf->Output($newName);
+
+        }
     }
 
     public function createCSV(Request $request){
@@ -378,6 +423,7 @@ class InvoicesController extends Controller {
             $mBillingHistoryHeaders->add_mst_staff_id =  Auth::user()->id;
             $mBillingHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
             if($mBillingHistoryHeaders->save()){
+                $this->billingHistoryHeaderID = $mBillingHistoryHeaders->id;
                 $history_details =  $mSaleses->getListByCustomerCd($item['customer_cd'], $item['mst_business_office_id'], $fieldSearch);
                 $branch_number = 0;
                 foreach ($history_details as $detail){
@@ -394,9 +440,15 @@ class InvoicesController extends Controller {
                     unset($arrayInsert['registration_numbers']);
                     unset($arrayInsert['staff_nm']);
                     unset($arrayInsert['id']);
+                    $updateData = [
+                        'invoicing_flag' => 1,
+                        'modified_at' => $currentTime,
+                        'upd_mst_staff_id' => Auth::user()->id,
+                    ];
+                    MSaleses::query()->where('id',$detail->id)->update($updateData);
                     $id =  MBillingHistoryHeaderDetails::query()->insertGetId( $arrayInsert );
+                    array_push( $this->listBillingHistoryDetailID, $id);
                 }
-
             }
             DB::commit();
         }catch (\Exception $e) {

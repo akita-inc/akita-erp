@@ -152,12 +152,12 @@
                     <div class="col-md-2 padding-row-5 col-list-search-f "></div>
                     <div class="col-md-3 padding-row-5 grid-form-search row">
                         <div class="col-md-5 padding-row-5">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmPDFModal">
+                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmPDFModal" :disabled="disableBtn">
                                 {{trans('invoices.list.search.button.issue')}}
                             </button>
                         </div>
                         <div class="col-md-5 padding-row-5">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmCSVModal">
+                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmCSVModal" :disabled="disableBtn">
                                 {{trans('invoices.list.search.button.csv')}}
                             </button>
                         </div>
@@ -165,7 +165,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table">
+        <div class="wrapper-table" v-if="items.length > 0" v-cloak>
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
@@ -191,8 +191,7 @@
                                 @break
                                 @case('total_fee')
                                 @case('consumption_tax')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ addComma(item['$key']) }}" !!}</p>
-                                <p v-else>---</p>
+                                <p>{!!"￥@{{ addComma(item['$key']) }}" !!}</p>
                                 @break
                                 @default
                                 <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
@@ -207,6 +206,17 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">
+            <div class="sub-header-line-two">
+                <div class="grid-form border-0">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{trans("invoices.list.search.no_data")}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         @include("invoices.modal",[
             'fieldShowTable'=>$fieldShowTable,

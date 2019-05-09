@@ -48,6 +48,8 @@ var ctrInvoiceListVl = new Vue({
             invoice:{},
             sale_info:[],
         },
+        disableBtn: false,
+        flagSearch: false,
         date_of_issue:moment().format('YYYY/MM/DD') ,
         getItems: function(page,show_msg){
             if (show_msg !== true) {
@@ -63,6 +65,7 @@ var ctrInvoiceListVl = new Vue({
                     that.errors = response.message;
                     that.loading = false;
                 }else{
+                    this.flagSearch = true;
                     that.errors = [];
                     if (response.data.length===0) {
                         that.message = messages["MSG05001"];
@@ -184,15 +187,28 @@ var ctrInvoiceListVl = new Vue({
                 that.loading = false;
             });
         },
-        createPDF: function () {
+        createPDF: async function () {
             var that = this;
-            invoice_service.createPDF({}).then((response) => {
-                this.downloadFile(response, 'csv');
+            var value = that.items[0];
+
+            await that.items.forEach(  ( value,key) =>{
+                setTimeout(function(){
+                    invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:1}).then( async function (response){
+                        await that.downloadFile(response);
+                        var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
+                        invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:2,fileName:filename}).then(  function (response1){
+                            that.downloadFile(response1);
+                        });
+                    });
+                    return;
+                }, key*1000);
+
             });
+            this.disableBtn =  true;
         },
         createCSV: async function () {
             var that = this;
-            that.items.forEach(  ( value,key) =>{
+            await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
                     invoice_service.createCSV({data:value,'fieldSearch': that.fileSearch}).then(  function (response){
                          that.downloadFile(response, 'csv');
@@ -200,6 +216,7 @@ var ctrInvoiceListVl = new Vue({
                 }, key*1000);
 
             });
+            this.disableBtn =  true;
         },
         downloadFile(response) {
             // It is necessary to create a new blob object with mime-type explicitly set

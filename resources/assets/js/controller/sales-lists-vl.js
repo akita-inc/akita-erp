@@ -1,6 +1,7 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import DatePicker from '../component/vue2-datepicker-master';
 import { VueAutosuggest }  from "vue-autosuggest";
+import encoding from 'encoding-japanese';
 var ctrSalesListVl = new Vue({
     el: '#ctrSalesListVl',
     data: {
@@ -269,17 +270,20 @@ var ctrSalesListVl = new Vue({
             {
                 if(arrKeys[i]!==undefined && fields[arrKeys[i]]!==undefined)
                 {
-                    headerFields.push(fields[arrKeys[i]]);
+                    headerFields.push(encoding.convert(fields[arrKeys[i]], 'SJIS', 'UNICODE'));
                 }
             }
-            let csvContent = "data:text/csv;charset=shift-jis,";
+            let prefix_charset= "data:text/csv;charset=shift-jis,";
+            let csvContent = "";
             csvContent += [
-                            headerFields.join(","),
-                            ...data.map(item => '"'+Object.values(item).join('","')+'"'
+                        headerFields.join(","),
+                            ...data.map(item => {
+                                return encoding.convert('"'+Object.values(item).join('","')+'"', 'SJIS', 'UNICODE')
+                            }
                           )].join('\n').replace(/(^\[)|(\]$)/gm, "");
-            const dataExport = encodeURI(csvContent);
+            const dataExport = encoding.urlEncode(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", dataExport);
+            link.setAttribute("href",prefix_charset+dataExport);
             link.setAttribute("download", export_file_nm);
             link.click();
         }

@@ -16,9 +16,10 @@ return[
             'button' => [
                 'issue' => '発行',
                 'csv'=>'CSV',
-                'export'=>'詳',
+                'export'=>'詳細',
                 'choose'=>'選択',
             ],
+            'no_data'=>'データがありません。',
         ],
         'table' => [
             'regist_office' => '営業所',

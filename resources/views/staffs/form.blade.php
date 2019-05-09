@@ -165,6 +165,8 @@
                     <!--customer_category_id prime_business_office_id-->
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['class'=>'wd-350','filed'=>'corp_cellular_phone_number','attr_input' => "maxlength='20'"])
+                        <div class="break-row-form"></div>
+                        @include('Component.form.input',['filed'=>'mail','attr_input' => "maxlength='255'"])
                     </div>
 
                     <div class="col-md-5 col-sm-12 pd-l-20">
