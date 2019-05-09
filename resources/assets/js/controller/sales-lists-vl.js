@@ -227,6 +227,8 @@ var ctrSalesListVl = new Vue({
             this.$refs.mst_customers_cd.searchInput = "";
             this.fileSearch.mst_customers_nm="";
             this.$refs.mst_customers_nm.searchInput = "";
+            this.filteredCustomerCd = [];
+            this.filteredCustomerNm = [];
         },
         setDefaultDate:function () {
             var from_date = new Date();
