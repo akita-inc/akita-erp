@@ -371,6 +371,7 @@ class InvoicesController extends Controller {
             }
         }else{
             $oldName = $data['fileName'];
+            chmod(public_path($oldName),0777);
             $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             $headers = [
                 'Content-Type' => 'application/pdf',
