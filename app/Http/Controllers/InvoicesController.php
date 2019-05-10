@@ -439,7 +439,7 @@ class InvoicesController extends Controller {
             $mBillingHistoryHeaders->publication_date = date('Y-m-d');
             $mBillingHistoryHeaders->total_fee = $item['total_fee'];
             $mBillingHistoryHeaders->consumption_tax = $item['consumption_tax'];
-            $mBillingHistoryHeaders->tax_included_amount = $item['consumption_tax'];
+            $mBillingHistoryHeaders->tax_included_amount = floatval($item['total_fee']) + floatval($item['consumption_tax']);
             $mBillingHistoryHeaders->add_mst_staff_id =  Auth::user()->id;
             $mBillingHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
             if($mBillingHistoryHeaders->save()){
