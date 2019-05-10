@@ -236,10 +236,12 @@ var ctrInvoiceListVl = new Vue({
             // otherwise only Chrome works like it should
             var newBlob = new Blob([response.data], {type: response.headers["content-type"]})
 
+            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
+
             // IE doesn't allow using a blob object directly as link href
             // instead it is necessary to use msSaveOrOpenBlob
             if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(newBlob)
+                window.navigator.msSaveOrOpenBlob(newBlob,filename)
                 return
             }
 
@@ -248,8 +250,6 @@ var ctrInvoiceListVl = new Vue({
             const data = window.URL.createObjectURL(newBlob)
             var link = document.createElement('a')
             link.href = data
-            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
-            // link.download = filename+'_'+moment().format('YYYYMMDDHHIISS');
             link.download = filename;
             link.click()
             setTimeout(function () {
