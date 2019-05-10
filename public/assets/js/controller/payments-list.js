@@ -18850,9 +18850,8 @@ var ctrPaymentsListVl = new Vue({
         this.filteredSupplierCd = [];
         return;
       }
-
-      this.getListBundleDtWithValueSelected();
       /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
+
 
       var filteredData = this.dropdown_supplier_cd[0].data.filter(function (item) {
         return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
@@ -19019,7 +19018,7 @@ var ctrPaymentsListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payments-list-vl.js */"./resources/assets/js/controller/payments-list-vl.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\payments-list-vl.js */"./resources/assets/js/controller/payments-list-vl.js");
 
 
 /***/ })
