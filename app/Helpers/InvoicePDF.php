@@ -61,7 +61,7 @@ class InvoicePDF extends TcpdfFpdi
         $this->SetXY(28, 16);
         $this->Write(8,'〒 '.$content->bill_zip_cd);
         $this->SetXY(28, 22);
-        $this->MultiCell(82, 8, $content->bill_address,0,'L',false,'');
+        $this->MultiCell(82, 8, $content->bill_address,0,'L',false);
 
         $this->SetFont($this->font, 'B', 12);
         $this->SetXY(20, 35);
@@ -80,7 +80,11 @@ class InvoicePDF extends TcpdfFpdi
 
         $this->SetFontSize( 10);
         $this->SetXY(215, 40);
-        $this->MultiCell(0, 8, $content->address,0,'L',false,'');
+        $this->MultiCell(18, 8, $content->zip_cd,0,'L',false);
+
+        $this->SetXY(233, 40);
+        $this->setCellHeightRatio(1);
+        $this->MultiCell(0, 8, $content->address,0,'L',false);
 
         $this->SetFontSize( 9);
         $this->SetXY(220, 49);
@@ -159,12 +163,17 @@ class InvoicePDF extends TcpdfFpdi
             $sum['billing_fast_charge'] += $detail->billing_fast_charge;
             $x = $startX;
             $y +=4.23;
+            $this->setCellPaddings(1.000125,0,1.000125,0);
             foreach ($detail as $key => $value){
                 switch ($key){
                     case  'departure_point_name':
                     case  'landing_name':
                     case  'delivery_destination':
+                    case  'goods':
+                        $align = 'L';
+                        break;
                     case  'staff_nm':
+                        $this->setCellPadding(0);
                         $align = 'L';
                         break;
                     case 'amount':
@@ -184,13 +193,13 @@ class InvoicePDF extends TcpdfFpdi
             }
             $count++;
             if($this->PageNo()==1){
-                if($count==$this->number_record_page_first){
+                if($count==$this->number_record_page_first && $this->PageNo()<$this->total_page){
                     $this->openPagen();
                     $count = 0;
                     $y =15.7;
                 }
             }else{
-                if($count==$this->number_record_page_n){
+                if($count==$this->number_record_page_n && $this->PageNo()<$this->total_page){
                     $this->openPagen();
                     $count = 0;
                     $y =15.7;
@@ -202,6 +211,7 @@ class InvoicePDF extends TcpdfFpdi
     }
 
     protected function writeTotal($sum){
+        $this->setCellPaddings(1.000125,0,1.000125,0);
         $h = 4.6;
         $y = $this->PageNo()==1 ? 196.5 : 198.1;
         $this->SetXY(70.5, $y);
