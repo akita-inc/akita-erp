@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
     <style>
         .input-cd+div{
-            width: 200px!important;
+            width: 300px!important;
         }
         .autosuggest__results-container{
             font-size: 14px;
@@ -64,7 +64,7 @@
                         <div class="col-md-1 padding-row-5 col-list-search-f text-center">
                             {{trans("invoices.list.search.customer")}}
                         </div>
-                        <div class="col-md-2 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 grid-form-search text-left">
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("invoices.list.search.code")}}
                             </label>
@@ -80,7 +80,7 @@
                             >
                             </vue-autosuggest>
                         </div>
-                        <div class="col-md-3 padding-row-5 grid-form-search">
+                        <div class="col-md-3 padding-row-5 grid-form-search text-left">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("invoices.list.search.name")}}
                             </label>
