@@ -312,7 +312,7 @@ class InvoicesController extends Controller {
 
     public function getListCustomers(){
         $mCustomer = new MCustomers();
-        $listBillCustomersCd = $mCustomer->select('bill_mst_customers_cd')->distinct()->whereNull('deleted_at')->get();
+        $listBillCustomersCd = $mCustomer->select(DB::raw('IFNULL(bill_mst_customers_cd,mst_customers_cd) as bill_mst_customers_cd'))->distinct()->whereNull('deleted_at')->get();
 
         $query = $mCustomer->select('mst_customers_cd','customer_nm');
         if($listBillCustomersCd){
