@@ -21973,11 +21973,12 @@ var ctrInvoiceListVl = new Vue({
       // otherwise only Chrome works like it should
       var newBlob = new Blob([response.data], {
         type: response.headers["content-type"]
-      }); // IE doesn't allow using a blob object directly as link href
+      });
+      var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, ''); // IE doesn't allow using a blob object directly as link href
       // instead it is necessary to use msSaveOrOpenBlob
 
       if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveOrOpenBlob(newBlob);
+        window.navigator.msSaveOrOpenBlob(newBlob, filename);
         return;
       } // For other browsers:
       // Create a link pointing to the ObjectURL containing the blob.
@@ -21986,8 +21987,6 @@ var ctrInvoiceListVl = new Vue({
       var data = window.URL.createObjectURL(newBlob);
       var link = document.createElement('a');
       link.href = data;
-      var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, ''); // link.download = filename+'_'+moment().format('YYYYMMDDHHIISS');
-
       link.download = filename;
       link.click();
       setTimeout(function () {
@@ -22031,7 +22030,7 @@ var ctrInvoiceListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\invoice-list-vl.js */"./resources/assets/js/controller/invoice-list-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\invoice-list-vl.js */"./resources/assets/js/controller/invoice-list-vl.js");
 
 
 /***/ })
