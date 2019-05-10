@@ -51,8 +51,8 @@ class MBillingHistoryHeaders extends Model {
                 ) AS bill_address,
                 bill.publication_date,
                 CONCAT_WS( ' ', 'アキタ株式会', office.business_office_nm ) AS business_office_nm,
+                IF( office.zip_cd IS NULL, '', CONCAT_WS('-', SUBSTR(office.zip_cd, 1, 3), SUBSTR(office.zip_cd, 4))) AS zip_cd,
                 CONCAT(
-                    IF( office.zip_cd IS NULL, '', CONCAT_WS('-', SUBSTR(office.zip_cd, 1, 3), SUBSTR(office.zip_cd, 4))),' ',
                     IFNULL( prefectures.date_nm, '' ),
                     IFNULL( office.address1, '' ),
                     IFNULL( office.address2, '' ),
