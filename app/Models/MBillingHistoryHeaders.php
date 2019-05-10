@@ -34,8 +34,7 @@ class MBillingHistoryHeaders extends Model {
                 (
                 SELECT
                     CONCAT(
-                        IFNULL( bill_address1, '' ),
-                        ' ',
+                        IFNULL( bill_pref.date_nm, '' ),
                         IFNULL( bill_address2, '' ),
                         ' ',
                         IFNULL( bill_address3, '' ),
@@ -43,10 +42,11 @@ class MBillingHistoryHeaders extends Model {
                         IFNULL( bill_address4, '' ) 
                     ) 
                 FROM
-                    mst_bill_issue_destinations 
+                    mst_bill_issue_destinations
+                LEFT JOIN mst_general_purposes AS bill_pref ON bill_address1 = bill_pref.date_id  AND bill_pref.data_kb = '01002' 
                 WHERE
                     mst_customer_id = cus.id 
-                    AND deleted_at IS NULL 
+                    AND mst_bill_issue_destinations.deleted_at IS NULL 
                     LIMIT 1 
                 ) AS bill_address,
                 bill.publication_date,
