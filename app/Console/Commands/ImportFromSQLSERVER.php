@@ -186,10 +186,12 @@ class ImportFromSQLSERVER extends Command
                 }
                 $mCustomer = DB::table("mst_customers")->whereNull("mst_customers.deleted_at")->select("mst_customers.*","mst_account_titles.account_title_code")
                     ->leftJoin("mst_account_titles","mst_customers.mst_account_titles_id","mst_account_titles.id")
+                    ->whereNull("mst_account_titles.deleted_at")
                     ->where("mst_customers_cd","=",$row["得意先CD"])
                     ->first();
                 $mSuppliers = DB::table("mst_suppliers")->whereNull("mst_suppliers.deleted_at")->select("mst_suppliers.*","mst_account_titles.account_title_code")
                     ->leftJoin("mst_account_titles","mst_suppliers.mst_account_titles_id","mst_account_titles.id")
+                    ->whereNull("mst_account_titles.deleted_at")
                     ->where("mst_suppliers_cd","=",$row["社員CD"])
                     ->first();
 
