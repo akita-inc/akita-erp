@@ -145,9 +145,9 @@
             <table class="table table-striped table-bordered search-content">
                 <thead style="cursor: auto">
                     <tr>
-                        <th class="wd-60"></th>
+                        <th class="align-top wd-60"></th>
                         @foreach($fieldShowTable as $key => $field)
-                            <th id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
+                            <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payments.list.table.".$key)}}</th>
                         @endforeach
                     </tr>
                 </thead>

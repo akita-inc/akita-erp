@@ -58,11 +58,11 @@
                                     @case('consumption_tax')
                                     @case('total_fee')
                                     @case('tax_included_amount')
-                                    <p>{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
+                                    <span>{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</span>
                                     @break
                                     @default
-                                    <p v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</p>
-                                    <p v-else>---</p>
+                                    <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
+                                    <span v-else>---</span>
                                     @break
                                 @endswitch
                             </td>
