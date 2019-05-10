@@ -415,7 +415,7 @@ class InvoicesController extends Controller {
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content[$key].$enclosure;
                 }
-                fputcsv($file, mb_convert_encoding($row, "SJIS", "UTF-8"), config('params.csv.delimiter'), ' ');
+                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
             }
             fclose($file);
         };
