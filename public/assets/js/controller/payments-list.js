@@ -18850,14 +18850,13 @@ var ctrPaymentsListVl = new Vue({
         this.filteredSupplierCd = [];
         return;
       }
-      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
 
+      this.getListBundleDtWithValueSelected();
+      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
 
       var filteredData = this.dropdown_supplier_cd[0].data.filter(function (item) {
         return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
       }).slice(0, this.limit); //
-
-      console.log(filteredData);
 
       if (filteredData.length == 0) {
         this.fileSearch.closed_date = '';
