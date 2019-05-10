@@ -59,7 +59,7 @@ class InvoicePDF extends TcpdfFpdi
         $this->SetFont($this->font, '', 10);
 
         $this->SetXY(28, 16);
-        $this->Write(8,'〒'.$content->bill_zip_cd);
+        $this->Write(8,'〒 '.$content->bill_zip_cd);
         $this->SetXY(28, 22);
         $this->MultiCell(82, 8, $content->bill_address,0,'L',false,'');
 

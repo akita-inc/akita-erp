@@ -30,7 +30,7 @@ class MBillingHistoryHeaders extends Model {
                 bill.mst_customers_cd as customer_cd,
                 bill.mst_business_office_id,
                 CONCAT(cus.customer_nm_formal,' ', '御中') AS customer_nm,
-                ( SELECT bill_zip_cd FROM mst_bill_issue_destinations WHERE mst_customer_id = cus.id AND deleted_at IS NULL LIMIT 1 ) AS bill_zip_cd,
+                ( SELECT CONCAT_WS('-', SUBSTR(bill_zip_cd, 1, 3), SUBSTR(bill_zip_cd, 4)) AS bill_zip_cd FROM mst_bill_issue_destinations WHERE mst_customer_id = cus.id AND deleted_at IS NULL LIMIT 1 ) AS bill_zip_cd,
                 (
                 SELECT
                     CONCAT(
