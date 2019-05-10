@@ -28,7 +28,7 @@ class MSaleses extends Model {
                 't_saleses.*',
                 DB::raw("DATE_FORMAT(t_saleses.daily_report_date, '%Y/%m/%d') as daily_report_date"),
                 DB::raw("mst_customers.customer_nm_formal as customer_nm"),
-                DB::raw('CONCAT_WS(" ",mst_staffs.last_nm,mst_staffs.first_nm) as staff_nm'),
+                DB::raw('CONCAT(mst_staffs.last_nm," ",mst_staffs.first_nm) as staff_nm'),
                 'mst_vehicles.registration_numbers'
             )
              ->join(DB::raw("
