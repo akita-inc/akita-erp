@@ -232,7 +232,7 @@ class ImportFromSQLSERVER extends Command
                             + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
                             + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) + $mSaleses->billing_fast_charge;
                     $mPurchases->total_fee = $mPurchases->payment;
-                    if($mSaleses->tax_classification_flg == 2){
+                    if($mSaleses->tax_classification_flg != 1){
                         $mSaleses->consumption_tax = 0;
                         $mPurchases->consumption_tax = 0;
                     }else{
