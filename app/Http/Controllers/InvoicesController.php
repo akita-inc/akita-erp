@@ -367,11 +367,11 @@ class InvoicesController extends Controller {
                 $pdf->getTotalPage($contentDetails);
                 $pdf->writeHeader($contentHeader[0]);
                 $pdf->writeDetails($contentDetails);
-                $pdf->Output(public_path($fileName),'FI');
+                $pdf->Output(storage_path('/pdf_template/'.$fileName),'FI');
             }
         }else{
-            $oldName = $data['fileName'];
-            chmod(public_path($oldName),0777);
+            $oldName = storage_path('/pdf_template/'.$data['fileName']);
+            chmod($oldName,0777);
             $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             $headers = [
                 'Content-Type' => 'application/pdf',
@@ -385,7 +385,7 @@ class InvoicesController extends Controller {
             $pdf->SetPrintFooter(false);
             $pdf->createNewPdfFromExistedFile($oldName);
             $pdf->Close();
-            unlink(public_path($oldName));
+            unlink($oldName);
             $pdf->Output($newName);
 
         }
