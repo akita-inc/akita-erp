@@ -82,7 +82,7 @@
                                     :render-suggestion="renderSuggestion"
                                     :get-suggestion-value="getSuggestionValueCd"
                                     ref="supplier_cd"
-                                    @blur="getListBundleDt"
+                                    @blur="getListBundleDtWithValueSelected"
                             >
                             </vue-autosuggest>
                         </div>

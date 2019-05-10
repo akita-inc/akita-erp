@@ -168,7 +168,7 @@ class InvoicesController extends Controller {
                         IF (
                             ts.tax_classification_flg = 1,
                             (
-                                IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)
+                                IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)- IFNULL(ts.discount_amount,0) 
                             ) * IFNULL((
                                 SELECT
                                     rate
@@ -312,7 +312,7 @@ class InvoicesController extends Controller {
 
     public function getListCustomers(){
         $mCustomer = new MCustomers();
-        $listBillCustomersCd = $mCustomer->select('bill_mst_customers_cd')->distinct()->whereNull('deleted_at')->get();
+        $listBillCustomersCd = $mCustomer->select(DB::raw('IFNULL(bill_mst_customers_cd,mst_customers_cd) as bill_mst_customers_cd'))->distinct()->whereNull('deleted_at')->get();
 
         $query = $mCustomer->select('mst_customers_cd','customer_nm');
         if($listBillCustomersCd){
@@ -367,10 +367,11 @@ class InvoicesController extends Controller {
                 $pdf->getTotalPage($contentDetails);
                 $pdf->writeHeader($contentHeader[0]);
                 $pdf->writeDetails($contentDetails);
-                $pdf->Output(public_path($fileName),'FI');
+                $pdf->Output(storage_path('/pdf_template/'.$fileName),'FI');
             }
         }else{
-            $oldName = $data['fileName'];
+            $oldName = storage_path('/pdf_template/'.$data['fileName']);
+            chmod($oldName,0777);
             $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             $headers = [
                 'Content-Type' => 'application/pdf',
@@ -384,7 +385,7 @@ class InvoicesController extends Controller {
             $pdf->SetPrintFooter(false);
             $pdf->createNewPdfFromExistedFile($oldName);
             $pdf->Close();
-            unlink(public_path($oldName));
+            unlink($oldName);
             $pdf->Output($newName);
 
         }

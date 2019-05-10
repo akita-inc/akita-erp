@@ -24,7 +24,7 @@ class MBillingHistoryHeaderDetails extends Model {
 
     public function getInvoicePDFDetail($listID){
         $query = DB::table('t_billing_history_header_details as details')->select(
-                DB::raw("DATE_FORMAT(details.daily_report_date, '%y/%m') as daily_report_date"),
+                DB::raw("DATE_FORMAT(details.daily_report_date, '%m/%d') as daily_report_date"),
                 'details.goods',
                 DB::raw("(CASE 
                     WHEN mst_vehicles.vehicle_size_kb=1 THEN '2t' 
