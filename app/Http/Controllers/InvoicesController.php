@@ -352,9 +352,8 @@ class InvoicesController extends Controller {
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $type= $data['type'];
-
-        $this->createHistory($item,$fieldSearch);
         if($type==1){
+            $this->createHistory($item,$fieldSearch);
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
 
             if(!empty($this->billingHistoryHeaderID)){
