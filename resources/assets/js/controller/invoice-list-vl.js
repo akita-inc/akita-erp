@@ -65,8 +65,8 @@ var ctrInvoiceListVl = new Vue({
             if (show_msg !== true) {
                 $('.alert').hide();
             }
-            this.fieldSearch.customer_cd = this.$refs.customer_cd.searchInput;
-            this.fieldSearch.customer_nm = this.$refs.customer_nm.searchInput;
+            this.fileSearch.customer_cd = this.$refs.customer_cd.searchInput;
+            this.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
             var data = {
                 fieldSearch:this.fileSearch,
             };
