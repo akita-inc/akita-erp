@@ -82,7 +82,7 @@ class ImportFromSQLSERVER extends Command
 
     protected function insertTJiconaxDataSales(){
         $getDateMax = MTJiconaxSalesDatas::query()->select(DB::raw("MAX(last_updated) as date"))->first();
-        $sql = "SELECT * FROM M_運転日報_copy where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
+        $sql = "SELECT * FROM M_運転日報 where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
