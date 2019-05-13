@@ -60,6 +60,7 @@ var ctrSalesListVl = new Vue({
             last_page:0
         },
         flagSearch:false,
+        flagExport:false,
         order: null,
         dropdown_mst_customer_cd: [{
             data:[]
@@ -98,10 +99,12 @@ var ctrSalesListVl = new Vue({
                 order: that.order,
             };
             that.flagSearch=false;
+            that.flagExport=false;
             if(that.fileSearch.from_date!="" && that.fileSearch.to_date!="" && that.fileSearch.mst_suppliers_cd!=""
             && that.fileSearch.invoicing_flag=="0" && that.fileSearch.mst_business_office_id!="")
             {
                 that.flagSearch=true;
+                that.flagExport=true;
             }
             if(that.errors.from_date===undefined && that.errors.to_date===undefined)
             {
@@ -113,6 +116,7 @@ var ctrSalesListVl = new Vue({
                     that.order = response.order;
                     that.allItems=response.allItems;
                     that.export_file_nm=response.export_file_nm;
+                    that.flagSearch=true;
                     $.each(that.fileSearch, function (key, value) {
                         if (value === null)
                             that.fileSearch[key] = '';
