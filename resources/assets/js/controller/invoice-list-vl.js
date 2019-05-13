@@ -203,10 +203,10 @@ var ctrInvoiceListVl = new Vue({
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
-                    invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:1}).then( async function (response){
+                    invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:1,date_of_issue: that.date_of_issue}).then( async function (response){
                         await that.downloadFile(response);
                         var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
-                        invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:2,fileName:filename}).then(  function (response1){
+                        invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:2,fileName:filename,date_of_issue: that.date_of_issue}).then(  function (response1){
                             that.downloadFile(response1);
                         });
                     });
@@ -222,7 +222,7 @@ var ctrInvoiceListVl = new Vue({
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
-                    invoice_service.createCSV({data:value,'fieldSearch': that.fileSearch}).then(  function (response){
+                    invoice_service.createCSV({data:value,'fieldSearch': that.fileSearch,date_of_issue: that.date_of_issue}).then(  function (response){
                          that.downloadFile(response, 'csv');
                     });
                 }, key*1000);

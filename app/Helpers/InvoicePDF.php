@@ -73,7 +73,7 @@ class InvoicePDF extends TcpdfFpdi
 
         $this->SetFontSize( 12);
         $this->SetXY(210, 25);
-        $this->Cell(0, 10, TimeFunction::getTimestamp('Y年m月d日'),0,0,'R');
+        $this->Cell(0, 10, TimeFunction::dateFormat($content->publication_date, 'Y年m月d日'),0,0,'R');
 
         $this->SetXY(211, 35);
         $this->Write(0,$content->business_office_nm);
