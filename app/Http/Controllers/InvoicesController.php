@@ -352,7 +352,7 @@ class InvoicesController extends Controller {
         $publication_date = $data['date_of_issue'];
         if($type==1){
             $this->createHistory($item,$fieldSearch,$publication_date);
-            $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', strtotime($publication_date)).'.pdf';
+            $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
 
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
@@ -369,7 +369,7 @@ class InvoicesController extends Controller {
         }else{
             $oldName = storage_path('/pdf_template/'.$data['fileName']);
             chmod($oldName,0777);
-            $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', strtotime($publication_date)).'.pdf';
+            $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             $headers = [
                 'Content-Type' => 'application/pdf',
                 "Content-Disposition" => "attachment; filename=$newName",

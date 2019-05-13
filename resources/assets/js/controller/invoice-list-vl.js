@@ -51,10 +51,22 @@ var ctrInvoiceListVl = new Vue({
         disableBtn: false,
         flagSearch: false,
         date_of_issue:moment().format('YYYY/MM/DD') ,
+        fileSearched:{
+            mst_business_office_id:"",
+            billing_year: '',
+            billing_month: '',
+            customer_cd: "",
+            customer_nm:"",
+            closed_date:"",
+            special_closing_date:"",
+            closed_date_input:"",
+        },
         getItems: function(page,show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
             }
+            this.fileSearch.customer_cd = this.$refs.customer_cd.searchInput;
+            this.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
             var data = {
                 fieldSearch:this.fileSearch,
             };
@@ -65,8 +77,18 @@ var ctrInvoiceListVl = new Vue({
                     that.errors = response.message;
                     that.loading = false;
                 }else{
-                    this.flagSearch = true;
-                    this.disableBtn =  false;
+                    that.fileSearched= {
+                        mst_business_office_id:"",
+                        billing_year: '',
+                        billing_month: '',
+                        customer_cd: "",
+                        customer_nm:"",
+                        closed_date:"",
+                        special_closing_date:"",
+                        closed_date_input:"",
+                    };
+                    that.flagSearch = true;
+                    that.disableBtn =  false;
                     that.errors = [];
                     if (response.data.length===0) {
                         that.message = messages["MSG05001"];
@@ -75,6 +97,14 @@ var ctrInvoiceListVl = new Vue({
                     }
                     that.items = response.data;
                     that.fileSearch = response.fieldSearch;
+                    that.fileSearched.mst_business_office_id=response.fieldSearch.mst_business_office_id;
+                    that.fileSearched.billing_year=response.fieldSearch.billing_year;
+                    that.fileSearched.billing_month=response.fieldSearch.billing_month;
+                    that.fileSearched.customer_cd=response.fieldSearch.customer_cd;
+                    that.fileSearched.customer_nm=response.fieldSearch.customer_nm;
+                    that.fileSearched.closed_date=response.fieldSearch.closed_date;
+                    that.fileSearched.special_closing_date=response.fieldSearch.special_closing_date;
+                    that.fileSearched.closed_date_input=response.fieldSearch.closed_date_input;
                     $.each(that.fileSearch, function (key, value) {
                         if (value === null)
                             that.fileSearch[key] = '';
@@ -190,7 +220,7 @@ var ctrInvoiceListVl = new Vue({
             this.loading = true;
             this.modal.invoice = item;
             var that = this;
-            invoice_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id,'fieldSearch': that.fileSearch}).then((response) => {
+            invoice_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id,'fieldSearch': that.fileSearched}).then((response) => {
                 if (response.info.length > 0) {
                    that.modal.sale_info = response.info;
                 }
@@ -203,10 +233,10 @@ var ctrInvoiceListVl = new Vue({
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
-                    invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:1,date_of_issue: that.date_of_issue}).then( async function (response){
+                    invoice_service.createPDF({data:value,'fieldSearch': that.fileSearched,type:1,date_of_issue: that.date_of_issue}).then( async function (response){
                         await that.downloadFile(response);
                         var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
-                        invoice_service.createPDF({data:value,'fieldSearch': that.fileSearch,type:2,fileName:filename,date_of_issue: that.date_of_issue}).then(  function (response1){
+                        invoice_service.createPDF({data:value,'fieldSearch': that.fileSearched,type:2,fileName:filename,date_of_issue: that.date_of_issue}).then(  function (response1){
                             that.downloadFile(response1);
                         });
                     });
@@ -222,7 +252,7 @@ var ctrInvoiceListVl = new Vue({
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
                 setTimeout(function(){
-                    invoice_service.createCSV({data:value,'fieldSearch': that.fileSearch,date_of_issue: that.date_of_issue}).then(  function (response){
+                    invoice_service.createCSV({data:value,'fieldSearch': that.fileSearched,date_of_issue: that.date_of_issue}).then(  function (response){
                          that.downloadFile(response, 'csv');
                     });
                 }, key*1000);
