@@ -33,9 +33,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('UpdateStatusEmptyInfo')->daily();
-        $schedule->command('ImportFromSQLSERVER')->cron(config("params.runImportFromSqlServer.cron"))->skip(function () {
+        /*$schedule->command('ImportFromSQLSERVER')
+            ->cron(config("params.runImportFromSqlServer.cron"))->skip(function () {
             return true;
-        });
+        });*/
+        $schedule->command('ImportFromSQLSERVER')
+            ->cron(config("params.runImportFromSqlServer.cron"))
+        ->withoutOverlapping();
     }
 
     /**
