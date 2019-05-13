@@ -10,6 +10,9 @@
         .autosuggest__results-container{
             font-size: 14px;
         }
+        .search-content thead {
+            cursor: default !important;
+        }
     </style>
 @endsection
 @section('content')
