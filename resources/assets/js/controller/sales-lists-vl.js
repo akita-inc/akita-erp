@@ -98,6 +98,11 @@ var ctrSalesListVl = new Vue({
                 order: that.order,
             };
             that.flagSearch=false;
+            if(that.fileSearch.from_date!="" && that.fileSearch.to_date!="" && that.fileSearch.mst_suppliers_cd!=""
+            && that.fileSearch.invoicing_flag=="0" && that.fileSearch.mst_business_office_id!="")
+            {
+                that.flagSearch=true;
+            }
             if(that.errors.from_date===undefined && that.errors.to_date===undefined)
             {
                 that.loading = true;
@@ -108,7 +113,6 @@ var ctrSalesListVl = new Vue({
                     that.order = response.order;
                     that.allItems=response.allItems;
                     that.export_file_nm=response.export_file_nm;
-                    that.flagSearch=true;
                     $.each(that.fileSearch, function (key, value) {
                         if (value === null)
                             that.fileSearch[key] = '';
@@ -242,31 +246,10 @@ var ctrSalesListVl = new Vue({
             let arrKeys=Object.keys(data[0]);
             let fields=this.fields;
             let headerFields=[];
-            if(!this.fileSearch.mst_business_office_id)
-            {
-                const distinctBranchCd=[...new Set(data.map(item=>item.branch_office_cd))];
-                for(var k=0;k<distinctBranchCd.length;k++)
-                {
-                    let arrMultiExport=[];
-                    for(var j=0;j<data.length;j++)
-                    {
-                        if(distinctBranchCd[k]!==undefined && distinctBranchCd[k]==data[j].branch_office_cd)
-                        {
-                            arrMultiExport.push(data[j]);
-                        }
-                    }
-                    this.downloadFile(arrKeys,fields,headerFields,arrMultiExport,distinctBranchCd[k])
-                }
-                console.log(distinctBranchCd);
-            }
-            else
-            {
-                this.downloadFile(arrKeys,fields,headerFields,data,null)
-            }
-
+            this.downloadFile(arrKeys,fields,headerFields,data)
         },
-        downloadFile:function (arrKeys,fields,headerFields,data,branch_cd){
-            let export_file_nm=this.export_file_nm.split("branch_office_cd").join(branch_cd?branch_cd:data[0].branch_office_cd);
+        downloadFile:function (arrKeys,fields,headerFields,data){
+            let export_file_nm=this.export_file_nm.split("branch_office_cd").join(data[0].branch_office_cd);
             export_file_nm=export_file_nm.split("yyyymmddhhmmss").join(Date.now());
             for(var i=0;i<arrKeys.length;i++)
             {
