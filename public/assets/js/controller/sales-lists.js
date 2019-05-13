@@ -9427,6 +9427,8 @@ var ctrSalesListVl = new Vue({
 
       var that = this;
       that.loading = true;
+      that.flagSearch = false;
+      that.flagExport = false;
 
       if (that.fileSearch.from_date == "") {
         that.errors["from_date"] = messages["MSG02001"].split(':attribute').join('期間');
@@ -9442,14 +9444,14 @@ var ctrSalesListVl = new Vue({
         delete that.errors["to_date"];
       }
 
+      that.fileSearch.mst_customers_cd = this.$refs.mst_customers_cd.searchInput;
+      that.fileSearch.mst_customers_nm = this.$refs.mst_customers_nm.searchInput;
       var data = {
         pageSize: that.pageSize,
         page: page,
         fieldSearch: that.fileSearch,
         order: that.order
       };
-      that.flagSearch = false;
-      that.flagExport = false;
 
       if (that.fileSearch.from_date != "" && that.fileSearch.to_date != "" && that.fileSearch.mst_suppliers_cd != "" && that.fileSearch.invoicing_flag == "0" && that.fileSearch.mst_business_office_id != "") {
         that.flagSearch = true;
