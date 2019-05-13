@@ -37,7 +37,9 @@ class Kernel extends ConsoleKernel
             ->cron(config("params.runImportFromSqlServer.cron"))->skip(function () {
             return true;
         });*/
-        $schedule->command('ImportFromSQLSERVER')->cron(config("params.runImportFromSqlServer.cron"));
+        $schedule->command('ImportFromSQLSERVER')
+            ->cron(config("params.runImportFromSqlServer.cron"))
+        ->withoutOverlapping();
     }
 
     /**
