@@ -152,7 +152,7 @@
         <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row justify-content-center">
-                    <div class="col-md-2 padding-row-5 col-list-search-f ">
+                    <div class="col-md-2 padding-row-5 col-list-search-f text-right">
                         {{trans("invoices.list.search.date_of_issue")}}
                     </div>
                     <div class="col-md-3 padding-row-5 grid-form-search">
