@@ -184,10 +184,12 @@ class ImportFromSQLSERVER extends Command
                 if(empty($mTJiconaxSalesDatas)){
                     $mTJiconaxSalesDatas = new MTJiconaxSalesDatas();
                 }
+
                 $mCustomer = DB::table("mst_customers")->whereNull("mst_customers.deleted_at")->select("mst_customers.*","mst_account_titles.account_title_code")
                     ->leftJoin("mst_account_titles","mst_customers.mst_account_titles_id","mst_account_titles.id")
                     ->where("mst_customers_cd","=",$row["得意先CD"])
                     ->first();
+
                 $mSuppliers = DB::table("mst_suppliers")->whereNull("mst_suppliers.deleted_at")->select("mst_suppliers.*","mst_account_titles.account_title_code")
                     ->leftJoin("mst_account_titles","mst_suppliers.mst_account_titles_id","mst_account_titles.id")
                     ->where("mst_suppliers_cd","=",$row["社員CD"])
@@ -196,119 +198,121 @@ class ImportFromSQLSERVER extends Command
                 foreach ( $arrayMapSalesData as $key=>$field ){
                     $mTJiconaxSalesDatas->$key = $row[$field];
                 }
+
                 if(!$mTJiconaxSalesDatas->save()){
                     $this->countFails++;
                     DB::rollBack();
                 }else{
-                    $mSaleses = MSaleses::query()
-                        ->where("document_no","=",$row["伝票NO"])
-                        ->first();
-                    if(empty($mSaleses)){
-                        $mSaleses = new MSaleses();
-                    }
+                    $flagError = false;
+                    if( empty($row["労働時間"]) && isset($listBusiness[$mSaleses->branch_office_cd]) ) {
+                        $mSaleses = MSaleses::query()
+                            ->where("document_no", "=", $row["伝票NO"])
+                            ->first();
+                        if (empty($mSaleses)) {
+                            $mSaleses = new MSaleses();
+                        }
 
-                    $mPurchases = MPurchases::query()
-                        ->where("document_no","=",$row["伝票NO"])
-                        ->first();
-                    if(empty($mPurchases)){
-                        $mPurchases = new MPurchases();
-                    }
+                        $mPurchases = MPurchases::query()
+                            ->where("document_no", "=", $row["伝票NO"])
+                            ->first();
+                        if (empty($mPurchases)) {
+                            $mPurchases = new MPurchases();
+                        }
 
-                    foreach ( $arrayMapTSales as $key=>$field ){
-                        $mSaleses->$key = $row[$field];
-                        $mPurchases->$key = $row[$field];
-                    }
-                    $mSaleses->mst_customers_cd = $row["得意先CD"];
-                    $mPurchases->mst_suppliers_cd = $row["社員CD"];
+                        foreach ($arrayMapTSales as $key => $field) {
+                            $mSaleses->$key = $row[$field];
+                            $mPurchases->$key = $row[$field];
+                        }
 
-                    if(isset($listBusiness[$mSaleses->branch_office_cd])){
-                        $mSaleses->mst_business_office_id = $listBusiness[$mSaleses->branch_office_cd];
-                        $mPurchases->mst_business_office_id = $listBusiness[$mSaleses->branch_office_cd];
-                    }
+                        $mSaleses->mst_customers_cd = $row["得意先CD"];
+                        $mPurchases->mst_suppliers_cd = $row["社員CD"];
 
-                    $mSaleses->invoicing_flag = 0;
-                    $mPurchases->invoicing_flag = 0;
-                    $mSaleses->total_fee = (($mSaleses->quantity*$mSaleses->unit_price) + $mSaleses->insurance_fee
-                            + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
-                            + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) + $mSaleses->billing_fast_charge;
-                    $mPurchases->total_fee = $mPurchases->payment;
-                    if($mSaleses->tax_classification_flg == 2){
-                        $mSaleses->consumption_tax = 0;
-                        $mPurchases->consumption_tax = 0;
-                    }else{
-                        $getTax = DB::table("consumption_taxs")
-                            ->whereRaw("DATE_FORMAT('".$mSaleses->daily_report_date->format('Y-m-d')."',\"%Y/%m/%d\")  BETWEEN  DATE_FORMAT(start_date,\"%Y/%m/%d\") and 
-DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
-                        if($getTax){
-                            $mSaleses->consumption_tax = (($mSaleses->quantity*$mSaleses->unit_price) + $mSaleses->insurance_fee
-                                    + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
-                                    + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) * $getTax->rate;
-                            if($mCustomer){
-                                switch ($mCustomer->rounding_method_id){
-                                    case 1:
-                                        $mSaleses->consumption_tax = floor( $mSaleses->consumption_tax);
-                                        break;
-                                    case 2:
-                                        $mSaleses->consumption_tax = round( $mSaleses->consumption_tax);
-                                        break;
-                                    case 3:
-                                        $mSaleses->consumption_tax = ceil( $mSaleses->consumption_tax);
-                                        break;
-                                    default:
-                                        $mSaleses->consumption_tax = round( $mSaleses->consumption_tax);
-                                        break;
-                                }
-                            }else{
-                                $mSaleses->consumption_tax = round( $mSaleses->consumption_tax);
-                            }
+                        if (isset($listBusiness[$mSaleses->branch_office_cd])) {
+                            $mSaleses->mst_business_office_id = $listBusiness[$mSaleses->branch_office_cd];
+                            $mPurchases->mst_business_office_id = $listBusiness[$mSaleses->branch_office_cd];
+                        }
 
-                            $mPurchases->consumption_tax = $mPurchases->total_fee * $getTax->rate;
-                            if($mSuppliers){
-                                switch ($mSuppliers->rounding_method_id){
-                                    case 1:
-                                        $mPurchases->consumption_tax = floor( $mPurchases->consumption_tax);
-                                        break;
-                                    case 2:
-                                        $mPurchases->consumption_tax = round( $mPurchases->consumption_tax);
-                                        break;
-                                    case 3:
-                                        $mPurchases->consumption_tax = ceil( $mPurchases->consumption_tax);
-                                        break;
-                                    default:
-                                        $mPurchases->consumption_tax = round( $mPurchases->consumption_tax);
-                                        break;
-                                }
-                            }else{
-                                $mPurchases->consumption_tax = round( $mPurchases->consumption_tax);
-                            }
-                        }else{
+                        $mSaleses->invoicing_flag = 0;
+                        $mPurchases->invoicing_flag = 0;
+                        $mSaleses->total_fee = (($mSaleses->quantity * $mSaleses->unit_price) + $mSaleses->insurance_fee
+                                + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
+                                + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) + $mSaleses->billing_fast_charge;
+                        $mPurchases->total_fee = $mPurchases->payment;
+                        if ($mSaleses->tax_classification_flg == 2) {
                             $mSaleses->consumption_tax = 0;
                             $mPurchases->consumption_tax = 0;
+                        } else {
+                            $getTax = DB::table("consumption_taxs")
+                                ->whereRaw("DATE_FORMAT('" . $mSaleses->daily_report_date->format('Y-m-d') . "',\"%Y/%m/%d\")  BETWEEN  DATE_FORMAT(start_date,\"%Y/%m/%d\") and 
+DATE_FORMAT(end_date,\"%Y/%m/%d\")")->first();
+                            if ($getTax) {
+                                $mSaleses->consumption_tax = (($mSaleses->quantity * $mSaleses->unit_price) + $mSaleses->insurance_fee
+                                        + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
+                                        + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) * $getTax->rate;
+                                if ($mCustomer) {
+                                    switch ($mCustomer->rounding_method_id) {
+                                        case 1:
+                                            $mSaleses->consumption_tax = floor($mSaleses->consumption_tax);
+                                            break;
+                                        case 2:
+                                            $mSaleses->consumption_tax = round($mSaleses->consumption_tax);
+                                            break;
+                                        case 3:
+                                            $mSaleses->consumption_tax = ceil($mSaleses->consumption_tax);
+                                            break;
+                                        default:
+                                            $mSaleses->consumption_tax = round($mSaleses->consumption_tax);
+                                            break;
+                                    }
+                                } else {
+                                    $mSaleses->consumption_tax = round($mSaleses->consumption_tax);
+                                }
+
+                                $mPurchases->consumption_tax = $mPurchases->total_fee * $getTax->rate;
+                                if ($mSuppliers) {
+                                    switch ($mSuppliers->rounding_method_id) {
+                                        case 1:
+                                            $mPurchases->consumption_tax = floor($mPurchases->consumption_tax);
+                                            break;
+                                        case 2:
+                                            $mPurchases->consumption_tax = round($mPurchases->consumption_tax);
+                                            break;
+                                        case 3:
+                                            $mPurchases->consumption_tax = ceil($mPurchases->consumption_tax);
+                                            break;
+                                        default:
+                                            $mPurchases->consumption_tax = round($mPurchases->consumption_tax);
+                                            break;
+                                    }
+                                } else {
+                                    $mPurchases->consumption_tax = round($mPurchases->consumption_tax);
+                                }
+                            } else {
+                                $mSaleses->consumption_tax = 0;
+                                $mPurchases->consumption_tax = 0;
+                            }
                         }
-                    }
 
-                    $mSaleses->tax_included_amount = $mSaleses->total_fee + $mSaleses->consumption_tax;
-                    $mPurchases->tax_included_amount = $mPurchases->total_fee + $mPurchases->consumption_tax;
-                    if($mCustomer) {
-                        $mSaleses->account_title_code = $mCustomer->account_title_code;
-                    }
-                    if($mSuppliers) {
-                        $mPurchases->account_title_code = $mSuppliers->account_title_code;
-                    }
-                    $mSaleses->add_mst_staff_id = 9999;
-                    $mSaleses->upd_mst_staff_id = 9999;
+                        $mSaleses->tax_included_amount = $mSaleses->total_fee + $mSaleses->consumption_tax;
+                        $mPurchases->tax_included_amount = $mPurchases->total_fee + $mPurchases->consumption_tax;
+                        if ($mCustomer) {
+                            $mSaleses->account_title_code = $mCustomer->account_title_code;
+                        }
+                        if ($mSuppliers) {
+                            $mPurchases->account_title_code = $mSuppliers->account_title_code;
+                        }
+                        $mSaleses->add_mst_staff_id = 9999;
+                        $mSaleses->upd_mst_staff_id = 9999;
 
-                    $mPurchases->add_mst_staff_id = 9999;
-                    $mPurchases->upd_mst_staff_id = 9999;
-                    $flagError = false;
-                    if( empty($row["労働時間"]) && isset($listBusiness[$mSaleses->branch_office_cd]) ){
-                        if(!$mSaleses->save()){
+                        $mPurchases->add_mst_staff_id = 9999;
+                        $mPurchases->upd_mst_staff_id = 9999;
+                        if (!$mSaleses->save()) {
                             $flagError = true;
                         }
-                    }
-                    if( empty($row["労働時間"]) && $mSuppliers && isset($listBusiness[$mSaleses->branch_office_cd]) ){
-                        if(!$mPurchases->save()){
-                            $flagError = true;
+                        if ( $mSuppliers ) {
+                            if (!$mPurchases->save()) {
+                                $flagError = true;
+                            }
                         }
                     }
                     if( $flagError ){
