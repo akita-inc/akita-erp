@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 
 use App\Helpers\InvoicePDF;
-use App\Helpers\InvoicePDF_;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBillingHistoryHeaderDetails;
@@ -20,8 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use setasign\Fpdi\Fpdi;
-use setasign\Fpdi\TcpdfFpdi;
 
 
 class InvoicesController extends Controller {
@@ -352,9 +349,10 @@ class InvoicesController extends Controller {
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $type= $data['type'];
+        $publication_date = $data['date_of_issue'];
         if($type==1){
-            $this->createHistory($item,$fieldSearch);
-            $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
+            $this->createHistory($item,$fieldSearch,$publication_date);
+            $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', strtotime($publication_date)).'.pdf';
 
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
@@ -371,7 +369,7 @@ class InvoicesController extends Controller {
         }else{
             $oldName = storage_path('/pdf_template/'.$data['fileName']);
             chmod($oldName,0777);
-            $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
+            $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', strtotime($publication_date)).'.pdf';
             $headers = [
                 'Content-Type' => 'application/pdf',
                 "Content-Disposition" => "attachment; filename=$newName",
@@ -395,8 +393,9 @@ class InvoicesController extends Controller {
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $keys = array_keys($this->csvColumn);
+        $publication_date = $data['date_of_issue'];
 
-        $this->createHistory($item,$fieldSearch);
+        $this->createHistory($item,$fieldSearch,$publication_date);
         $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
             "Content-type" => "text/csv",
@@ -421,7 +420,7 @@ class InvoicesController extends Controller {
         return response()->stream($callback, 200, $headers);
     }
 
-    public function createHistory($item,$fieldSearch){
+    public function createHistory($item,$fieldSearch,$publication_date){
         $currentTime = date("Y-m-d H:i:s",time());
         $mSaleses = new MSaleses();
         $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
@@ -435,7 +434,7 @@ class InvoicesController extends Controller {
             $mBillingHistoryHeaders->invoice_number = $serial_number->serial_number;
             $mBillingHistoryHeaders->mst_customers_cd = $item['customer_cd'];
             $mBillingHistoryHeaders->mst_business_office_id = $item['mst_business_office_id'];
-            $mBillingHistoryHeaders->publication_date = date('Y-m-d');
+            $mBillingHistoryHeaders->publication_date = $publication_date;
             $mBillingHistoryHeaders->total_fee = $item['total_fee'];
             $mBillingHistoryHeaders->consumption_tax = $item['consumption_tax'];
             $mBillingHistoryHeaders->tax_included_amount = floatval($item['total_fee']) + floatval($item['consumption_tax']);

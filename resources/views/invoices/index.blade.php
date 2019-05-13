@@ -16,6 +16,9 @@
         #detailsModal .modal-footer{
             border-top: none !important;
         }
+        .form-control[readonly]{
+            background-color: white;
+        }
     </style>
 @endsection
 @section('content')
@@ -167,6 +170,7 @@
                                          :input-class="'form-control w-100'"
                                          :value-type="'format'"
                                          :input-name="'date_of_issue'"
+                                         :editable='false'
                             >
                             </date-picker>
                         </div>
