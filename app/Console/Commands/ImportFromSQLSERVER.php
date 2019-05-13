@@ -82,7 +82,7 @@ class ImportFromSQLSERVER extends Command
 
     protected function insertTJiconaxDataSales(){
         $getDateMax = MTJiconaxSalesDatas::query()->select(DB::raw("MAX(last_updated) as date"))->first();
-        $sql = "SELECT * FROM M_運転日報_copy where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
+        $sql = "SELECT * FROM M_運転日報 where [最終更新日] > CONVERT(datetime, '".$getDateMax["date"]."') OR　[最終更新日]　IS　NULL";
         $stmt = sqlsrv_query( $this->connect, $sql );
         if( $stmt === false) {
             die( print_r( sqlsrv_errors(), true) );
@@ -184,21 +184,24 @@ class ImportFromSQLSERVER extends Command
                 if(empty($mTJiconaxSalesDatas)){
                     $mTJiconaxSalesDatas = new MTJiconaxSalesDatas();
                 }
-
                 $mCustomer = DB::table("mst_customers")->whereNull("mst_customers.deleted_at")->select("mst_customers.*","mst_account_titles.account_title_code")
-                    ->leftJoin("mst_account_titles","mst_customers.mst_account_titles_id","mst_account_titles.id")
+                    ->leftJoin("mst_account_titles", function ($join) {
+                        $join->on('mst_account_titles.id', '=', 'mst_customers.mst_account_titles_id')
+                            ->whereNull("mst_account_titles.deleted_at");
+                    })
                     ->where("mst_customers_cd","=",$row["得意先CD"])
                     ->first();
-
                 $mSuppliers = DB::table("mst_suppliers")->whereNull("mst_suppliers.deleted_at")->select("mst_suppliers.*","mst_account_titles.account_title_code")
-                    ->leftJoin("mst_account_titles","mst_suppliers.mst_account_titles_id","mst_account_titles.id")
+                    ->leftJoin("mst_account_titles", function ($join) {
+                        $join->on('mst_account_titles.id', '=', 'mst_suppliers.mst_account_titles_id')
+                            ->whereNull("mst_account_titles.deleted_at");
+                    })
                     ->where("mst_suppliers_cd","=",$row["社員CD"])
                     ->first();
 
                 foreach ( $arrayMapSalesData as $key=>$field ){
                     $mTJiconaxSalesDatas->$key = $row[$field];
                 }
-
                 if(!$mTJiconaxSalesDatas->save()){
                     $this->countFails++;
                     DB::rollBack();
@@ -238,7 +241,7 @@ class ImportFromSQLSERVER extends Command
                                 + $mSaleses->loading_fee + $mSaleses->wholesale_fee + $mSaleses->waiting_fee
                                 + $mSaleses->incidental_fee + $mSaleses->surcharge_fee - $mSaleses->discount_amount) + $mSaleses->billing_fast_charge;
                         $mPurchases->total_fee = $mPurchases->payment;
-                        if ($mSaleses->tax_classification_flg == 2) {
+                        if ($mSaleses->tax_classification_flg != 1) {
                             $mSaleses->consumption_tax = 0;
                             $mPurchases->consumption_tax = 0;
                         } else {

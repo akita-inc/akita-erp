@@ -66,6 +66,7 @@ var ctrInvoiceListVl = new Vue({
                     that.loading = false;
                 }else{
                     this.flagSearch = true;
+                    this.disableBtn =  false;
                     that.errors = [];
                     if (response.data.length===0) {
                         that.message = messages["MSG05001"];
@@ -109,6 +110,8 @@ var ctrInvoiceListVl = new Vue({
         onInputChangeCd(text) {
             this.fileSearch.customer_cd = text;
             if (text === '' || text === undefined) {
+                this.getListBundleDt();
+                this.filteredCustomerCd = [];
                 return;
             }
             /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
@@ -123,6 +126,7 @@ var ctrInvoiceListVl = new Vue({
         onInputChangeNm(text) {
             this.fileSearch.customer_nm = text;
             if (text === '' || text === undefined) {
+                this.filteredCustomerNm = [];
                 return;
             }
             /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
@@ -232,10 +236,12 @@ var ctrInvoiceListVl = new Vue({
             // otherwise only Chrome works like it should
             var newBlob = new Blob([response.data], {type: response.headers["content-type"]})
 
+            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
+
             // IE doesn't allow using a blob object directly as link href
             // instead it is necessary to use msSaveOrOpenBlob
             if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(newBlob)
+                window.navigator.msSaveOrOpenBlob(newBlob,filename)
                 return
             }
 
@@ -244,8 +250,6 @@ var ctrInvoiceListVl = new Vue({
             const data = window.URL.createObjectURL(newBlob)
             var link = document.createElement('a')
             link.href = data
-            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
-            // link.download = filename+'_'+moment().format('YYYYMMDDHHIISS');
             link.download = filename;
             link.click()
             setTimeout(function () {

@@ -18857,8 +18857,6 @@ var ctrPaymentsListVl = new Vue({
         return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
       }).slice(0, this.limit); //
 
-      console.log(filteredData);
-
       if (filteredData.length == 0) {
         this.fileSearch.closed_date = '';
         this.list_bundle_dt = [];

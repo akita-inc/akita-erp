@@ -145,11 +145,11 @@ class PaymentsController extends Controller
     {
         $fieldShowTable =[
             'business_office_nm' => [
-                "classTH" => "wd-120",
+                "classTH" => "wd-60",
                 "sortBy" => "business_office_nm"
             ],
             'mst_suppliers_cd' => [
-                "classTH" => "wd-120",
+                "classTH" => "wd-60",
                 "sortBy" => "supplier_cd"
             ],
             'supplier_nm_formal' => [
@@ -157,11 +157,11 @@ class PaymentsController extends Controller
                 "sortBy" => "supplier_nm_formal"
             ],
             'billing_amount' => [
-                "classTH" => "wd-120",
+                "classTH" => "wd-100",
                 "sortBy" => "billing_amount"
             ],
             'consumption_tax' => [
-                "classTH" => "wd-120",
+                "classTH" => "wd-100",
                 "sortBy" => "consumption_tax"
             ],
             'total_amount' => [

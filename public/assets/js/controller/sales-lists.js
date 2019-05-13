@@ -9635,10 +9635,19 @@ var ctrSalesListVl = new Vue({
         return encoding_japanese__WEBPACK_IMPORTED_MODULE_3___default.a.convert('"' + Object.values(item).join('","') + '"', 'SJIS', 'UNICODE');
       }))).join('\n').replace(/(^\[)|(\]$)/gm, "");
       var dataExport = encoding_japanese__WEBPACK_IMPORTED_MODULE_3___default.a.urlEncode(csvContent);
-      var link = document.createElement("a");
-      link.setAttribute("href", prefix_charset + dataExport);
-      link.setAttribute("download", export_file_nm);
-      link.click();
+
+      if (navigator.msSaveBlob) {
+        // IE 10+
+        var blob = new Blob([csvContent], {
+          "type": "text/csv;charset=shift-jis;"
+        });
+        navigator.msSaveBlob(blob, export_file_nm);
+      } else {
+        var link = document.createElement("a");
+        link.href = prefix_charset + dataExport;
+        link.download = export_file_nm;
+        link.click();
+      }
     }
   },
   mounted: function mounted() {

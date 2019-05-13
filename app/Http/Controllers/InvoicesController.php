@@ -168,7 +168,7 @@ class InvoicesController extends Controller {
                         IF (
                             ts.tax_classification_flg = 1,
                             (
-                                IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)
+                                IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)- IFNULL(ts.discount_amount,0) 
                             ) * IFNULL((
                                 SELECT
                                     rate
@@ -312,7 +312,7 @@ class InvoicesController extends Controller {
 
     public function getListCustomers(){
         $mCustomer = new MCustomers();
-        $listBillCustomersCd = $mCustomer->select('bill_mst_customers_cd')->distinct()->whereNull('deleted_at')->get();
+        $listBillCustomersCd = $mCustomer->select(DB::raw('IFNULL(bill_mst_customers_cd,mst_customers_cd) as bill_mst_customers_cd'))->distinct()->whereNull('deleted_at')->get();
 
         $query = $mCustomer->select('mst_customers_cd','customer_nm');
         if($listBillCustomersCd){
@@ -352,9 +352,8 @@ class InvoicesController extends Controller {
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $type= $data['type'];
-
-        $this->createHistory($item,$fieldSearch);
         if($type==1){
+            $this->createHistory($item,$fieldSearch);
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
 
             if(!empty($this->billingHistoryHeaderID)){
@@ -367,10 +366,11 @@ class InvoicesController extends Controller {
                 $pdf->getTotalPage($contentDetails);
                 $pdf->writeHeader($contentHeader[0]);
                 $pdf->writeDetails($contentDetails);
-                $pdf->Output(public_path($fileName),'FI');
+                $pdf->Output(storage_path('/pdf_template/'.$fileName),'FI');
             }
         }else{
-            $oldName = $data['fileName'];
+            $oldName = storage_path('/pdf_template/'.$data['fileName']);
+            chmod($oldName,0777);
             $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             $headers = [
                 'Content-Type' => 'application/pdf',
@@ -384,7 +384,7 @@ class InvoicesController extends Controller {
             $pdf->SetPrintFooter(false);
             $pdf->createNewPdfFromExistedFile($oldName);
             $pdf->Close();
-            unlink(public_path($oldName));
+            unlink($oldName);
             $pdf->Output($newName);
 
         }
@@ -394,7 +394,7 @@ class InvoicesController extends Controller {
         $data = $request->all();
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
-        $keys = mb_convert_encoding(array_keys($this->csvColumn), "SJIS", "UTF-8");
+        $keys = array_keys($this->csvColumn);
 
         $this->createHistory($item,$fieldSearch);
         $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
@@ -405,15 +405,16 @@ class InvoicesController extends Controller {
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0"
         );
-        $callback = function() use ($keys,$item) {
+        $enclosure = config('params.csv.enclosure');
+        $callback = function() use ($keys,$item, $enclosure) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, array_values($this->csvColumn));
+            fputcsv($file, mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"));
             foreach ($this->csvContent[$item['customer_cd']] as $content) {
                 $row = [];
                 foreach ($keys as $key) {
-                    $row[$key] = $content[$key];
+                    $row[$key] = $enclosure.$content[$key].$enclosure;
                 }
-                fputcsv($file, mb_convert_encoding($row, "SJIS", "UTF-8"), config('params.csv.delimiter'), config('params.csv.enclosure'));
+                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
             }
             fclose($file);
         };
@@ -437,7 +438,7 @@ class InvoicesController extends Controller {
             $mBillingHistoryHeaders->publication_date = date('Y-m-d');
             $mBillingHistoryHeaders->total_fee = $item['total_fee'];
             $mBillingHistoryHeaders->consumption_tax = $item['consumption_tax'];
-            $mBillingHistoryHeaders->tax_included_amount = $item['consumption_tax'];
+            $mBillingHistoryHeaders->tax_included_amount = floatval($item['total_fee']) + floatval($item['consumption_tax']);
             $mBillingHistoryHeaders->add_mst_staff_id =  Auth::user()->id;
             $mBillingHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
             if($mBillingHistoryHeaders->save()){

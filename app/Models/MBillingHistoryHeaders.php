@@ -30,12 +30,11 @@ class MBillingHistoryHeaders extends Model {
                 bill.mst_customers_cd as customer_cd,
                 bill.mst_business_office_id,
                 CONCAT(cus.customer_nm_formal,' ', '御中') AS customer_nm,
-                ( SELECT bill_zip_cd FROM mst_bill_issue_destinations WHERE mst_customer_id = cus.id AND deleted_at IS NULL LIMIT 1 ) AS bill_zip_cd,
+                ( SELECT CONCAT_WS('-', SUBSTR(bill_zip_cd, 1, 3), SUBSTR(bill_zip_cd, 4)) AS bill_zip_cd FROM mst_bill_issue_destinations WHERE mst_customer_id = cus.id AND deleted_at IS NULL LIMIT 1 ) AS bill_zip_cd,
                 (
                 SELECT
                     CONCAT(
-                        IFNULL( bill_address1, '' ),
-                        ' ',
+                        IFNULL( bill_pref.date_nm, '' ),
                         IFNULL( bill_address2, '' ),
                         ' ',
                         IFNULL( bill_address3, '' ),
@@ -43,16 +42,17 @@ class MBillingHistoryHeaders extends Model {
                         IFNULL( bill_address4, '' ) 
                     ) 
                 FROM
-                    mst_bill_issue_destinations 
+                    mst_bill_issue_destinations
+                LEFT JOIN mst_general_purposes AS bill_pref ON bill_address1 = bill_pref.date_id  AND bill_pref.data_kb = '01002' 
                 WHERE
                     mst_customer_id = cus.id 
-                    AND deleted_at IS NULL 
+                    AND mst_bill_issue_destinations.deleted_at IS NULL 
                     LIMIT 1 
                 ) AS bill_address,
                 bill.publication_date,
                 CONCAT_WS( ' ', 'アキタ株式会', office.business_office_nm ) AS business_office_nm,
+                IF( office.zip_cd IS NULL, '', CONCAT_WS('-', SUBSTR(office.zip_cd, 1, 3), SUBSTR(office.zip_cd, 4))) AS zip_cd,
                 CONCAT(
-                    IF( office.zip_cd IS NULL, '', CONCAT_WS('-', SUBSTR(office.zip_cd, 1, 3), SUBSTR(office.zip_cd, 4))),' ',
                     IFNULL( prefectures.date_nm, '' ),
                     IFNULL( office.address1, '' ),
                     IFNULL( office.address2, '' ),

@@ -284,11 +284,21 @@ var ctrSalesListVl = new Vue({
                             }
                           )].join('\n').replace(/(^\[)|(\]$)/gm, "");
             const dataExport = encoding.urlEncode(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href",prefix_charset+dataExport);
-            link.setAttribute("download", export_file_nm);
-            link.click();
-        }
+
+            if(navigator.msSaveBlob) {// IE 10+
+                var blob = new Blob([csvContent], {
+                    "type": "text/csv;charset=shift-jis;"
+                });
+                navigator.msSaveBlob(blob, export_file_nm);
+            }
+            else
+            {
+                const link = document.createElement("a");
+                link.href = prefix_charset+dataExport
+                link.download = export_file_nm;
+                link.click();
+            }
+        },
     },
     mounted () {
         sales_lists_service.loadCustomerList().then((response) => {
