@@ -72,12 +72,13 @@ class ImportFromSQLSERVER extends Command
         else
         {
             echo "Connection could not be established.\n";
-            die( print_r( sqlsrv_errors(), true));
+            return true;
         }
 
         $this->log("jiconax","#################END####################");
         $this->log("jiconaxFinal","ステータス：成功　処理対象件数：".$this->countRead."件　成功件数：".$this->countSuccess."件　エラー件数：".$this->countFails."件");
         sqlsrv_close( $this->connect );
+        return true;
     }
 
     protected function insertTJiconaxDataSales(){

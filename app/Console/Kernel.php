@@ -38,7 +38,9 @@ class Kernel extends ConsoleKernel
             return true;
         });*/
         $schedule->command('ImportFromSQLSERVER')
-            ->everyMinute();
+            ->everyMinute()->skip(function () {
+                return true;
+            });
     }
 
     /**
