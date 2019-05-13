@@ -207,7 +207,7 @@ class ImportFromSQLSERVER extends Command
                     DB::rollBack();
                 }else{
                     $flagError = false;
-                    if( empty($row["労働時間"]) && isset($listBusiness[$mSaleses->branch_office_cd]) ) {
+                    if( empty($row["労働時間"]) && isset($listBusiness[$row["支店CD"]]) ) {
                         $mSaleses = MSaleses::query()
                             ->where("document_no", "=", $row["伝票NO"])
                             ->first();
