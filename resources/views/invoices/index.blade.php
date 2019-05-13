@@ -13,6 +13,9 @@
         .search-content thead {
             cursor: default !important;
         }
+        #detailsModal .modal-footer{
+            border-top: none !important;
+        }
     </style>
 @endsection
 @section('content')
