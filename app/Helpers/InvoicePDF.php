@@ -65,7 +65,7 @@ class InvoicePDF extends TcpdfFpdi
 
         $this->SetFont($this->font, 'B', 12);
         $this->SetXY(20, 35);
-        $this->Write(8,$content->customer_nm);
+        $this->MultiCell(82, 8, $content->customer_nm,0,'L',false);
 
         $this->SetFont($this->font, '', 10);
         $this->SetXY(98, 52);
