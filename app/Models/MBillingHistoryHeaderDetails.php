@@ -94,6 +94,10 @@ class MBillingHistoryHeaderDetails extends Model {
             ->whereIn('details.id',$listID)
             ->where('summary_indicator','<>',1);
         $result2 = $query2->get()->toArray();
-        return array_merge($result1,$result2);
+        $result = array_merge($result1,$result2);
+        usort($result, function ($a, $b){
+            return strtotime($a->daily_report_date) - strtotime($b->daily_report_date);
+        });
+        return $result;
     }
 }
