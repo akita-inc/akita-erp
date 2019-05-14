@@ -52,6 +52,7 @@ class CreateTSaleses extends Migration
             $table->integer('add_mst_staff_id')->nullable();
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('upd_mst_staff_id')->nullable();
+            $table->index('document_no');
         });
     }
 

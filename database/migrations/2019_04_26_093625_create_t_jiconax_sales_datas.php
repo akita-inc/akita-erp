@@ -72,6 +72,7 @@ class CreateTJiconaxSalesDatas extends Migration
             $table->decimal('waiting_fee',10,2);
             $table->decimal('incidental_fee',10,2);
             $table->decimal('surcharge_fee',10,2);
+            $table->index('document_no');
         });
     }
 
