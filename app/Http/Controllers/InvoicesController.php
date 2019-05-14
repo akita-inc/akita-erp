@@ -356,7 +356,7 @@ class InvoicesController extends Controller {
 
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
-                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
+                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID, $fieldSearch);
                 $pdf = new InvoicePDF();
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);
@@ -463,7 +463,7 @@ class InvoicesController extends Controller {
                         'modified_at' => $currentTime,
                         'upd_mst_staff_id' => Auth::user()->id,
                     ];
-                    MSaleses::query()->where('id',$detail->id)->update($updateData);
+//                    MSaleses::query()->where('id',$detail->id)->update($updateData);
                     $id =  MBillingHistoryHeaderDetails::query()->insertGetId( $arrayInsert );
                     array_push( $this->listBillingHistoryDetailID, $id);
                 }
