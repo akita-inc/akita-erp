@@ -26,7 +26,7 @@ class CreateTJiconaxSalesDatas extends Migration
             $table->integer('staff_cd');
             $table->integer('mst_customers_cd');
             $table->string('goods',50)->nullable();
-            $table->float('quantity');
+            $table->double('quantity');
             $table->decimal('unit_price',10,2);
             $table->decimal('transport_billing_amount',10,2);
             $table->decimal('insurance_fee',10,2);
@@ -46,7 +46,7 @@ class CreateTJiconaxSalesDatas extends Migration
             $table->integer('actual_days');
             $table->integer('mileage');
             $table->integer('actual_distance');
-            $table->float('refueling_fuel');
+            $table->double('refueling_fuel');
             $table->decimal('fast_charge',10,2);
             $table->integer('shipping_quantity');
             $table->integer('loading_rate');
