@@ -35,10 +35,8 @@ class MBillingHistoryHeaders extends Model {
                 SELECT
                     CONCAT(
                         IFNULL( bill_pref.date_nm, '' ),
-                        IFNULL( bill_address2, '' ),
-                        ' ',
+                        IFNULL( bill_address2, '' ), 
                         IFNULL( bill_address3, '' ),
-                        ' ',
                         IFNULL( bill_address4, '' ) 
                     ) 
                 FROM

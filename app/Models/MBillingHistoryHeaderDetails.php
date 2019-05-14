@@ -54,7 +54,16 @@ class MBillingHistoryHeaderDetails extends Model {
                     ->whereNull('mst_vehicles.deleted_at');
             })
             ->whereNull('details.deleted_at')
-            ->whereIn('details.id',$listID);
+            ->whereIn('details.id',$listID)
+            ->groupBy('details.transport_cd','details.goods','details.unit_price','details.departure_point_name', 'details.landing_name', 'details.delivery_destination','details.staff_cd', 'details.vehicles_cd', 'details.tax_classification_flg','details.daily_report_date','mst_vehicles.vehicle_size_kb','details.quantity','details.departure_point_name',
+                'details.landing_name',
+                'details.loading_fee',
+                'details.wholesale_fee',
+                'details.incidental_fee',
+                'details.waiting_fee',
+                'details.surcharge_fee',
+                'details.billing_fast_charge',
+                'details.delivery_destination','mst_staffs.last_nm');
         return $query->get();
     }
 }
