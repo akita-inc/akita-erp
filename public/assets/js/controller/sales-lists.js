@@ -10099,14 +10099,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
 
 
 
@@ -10356,43 +10348,6 @@ var ctrSalesListVl = new Vue({
       var lastDay = new Date(to_date.getFullYear(), to_date.getMonth() + 1, 0);
       this.fileSearch.to_date = lastDay.getFullYear() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getDate();
     },
-    exportCSV: function exportCSV() {
-      var data = this.allItems;
-      var arrKeys = Object.keys(data[0]);
-      var fields = this.fields;
-      var headerFields = [];
-      this.downloadFile(arrKeys, fields, headerFields, data);
-    },
-    downloadFile: function downloadFile(arrKeys, fields, headerFields, data) {
-      var export_file_nm = this.export_file_nm.split("branch_office_cd").join(data[0].branch_office_cd);
-      export_file_nm = export_file_nm.split("yyyymmddhhmmss").join(Date.now());
-
-      for (var i = 0; i < arrKeys.length; i++) {
-        if (arrKeys[i] !== undefined && fields[arrKeys[i]] !== undefined) {
-          headerFields.push(encoding_japanese__WEBPACK_IMPORTED_MODULE_4___default.a.convert(fields[arrKeys[i]], 'SJIS', 'UNICODE'));
-        }
-      }
-
-      var prefix_charset = "data:text/csv;charset=shift-jis,";
-      var csvContent = "";
-      csvContent += [headerFields.join(",")].concat(_toConsumableArray(data.map(function (item) {
-        return encoding_japanese__WEBPACK_IMPORTED_MODULE_4___default.a.convert('"' + Object.values(item).join('","') + '"', 'SJIS', 'UNICODE');
-      }))).join('\n').replace(/(^\[)|(\]$)/gm, "");
-      var dataExport = encoding_japanese__WEBPACK_IMPORTED_MODULE_4___default.a.urlEncode(csvContent);
-
-      if (navigator.msSaveBlob) {
-        // IE 10+
-        var blob = new Blob([dataExport], {
-          "type": "text/csv;charset=shift-jis;"
-        });
-        navigator.msSaveBlob(blob, export_file_nm);
-      } else {
-        var link = document.createElement("a");
-        link.href = prefix_charset + dataExport;
-        link.download = export_file_nm;
-        link.click();
-      }
-    },
     createCSV: function () {
       var _createCSV = _asyncToGenerator(
       /*#__PURE__*/
@@ -10405,7 +10360,7 @@ var ctrSalesListVl = new Vue({
                 that = this;
                 that.loading = true;
                 data = {
-                  fieldSearch: that.fileSearch
+                  data: that.allItems
                 };
                 sales_lists_service.createCSV(data).then(function (response) {
                   that.downloadFileCSV(response, 'csv');
