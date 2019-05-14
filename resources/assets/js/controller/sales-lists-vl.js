@@ -245,51 +245,11 @@ var ctrSalesListVl = new Vue({
             var lastDay = new Date(to_date.getFullYear(), to_date.getMonth()+1,0);
             this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
         },
-        exportCSV:function () {
-            let  data=this.allItems;
-            let arrKeys=Object.keys(data[0]);
-            let fields=this.fields;
-            let headerFields=[];
-            this.downloadFile(arrKeys,fields,headerFields,data)
-        },
-        downloadFile:function (arrKeys,fields,headerFields,data){
-            let export_file_nm=this.export_file_nm.split("branch_office_cd").join(data[0].branch_office_cd);
-            export_file_nm=export_file_nm.split("yyyymmddhhmmss").join(Date.now());
-            for(var i=0;i<arrKeys.length;i++)
-            {
-                if(arrKeys[i]!==undefined && fields[arrKeys[i]]!==undefined)
-                {
-                    headerFields.push(encoding.convert(fields[arrKeys[i]], 'SJIS', 'UNICODE'));
-                }
-            }
-            let prefix_charset= "data:text/csv;charset=shift-jis,";
-            let csvContent = "";
-            csvContent += [
-                        headerFields.join(","),
-                            ...data.map(item => {
-                                return encoding.convert('"'+Object.values(item).join('","')+'"', 'SJIS', 'UNICODE')
-                            }
-                          )].join('\n').replace(/(^\[)|(\]$)/gm, "");
-            const dataExport = encoding.urlEncode(csvContent);
-            if(navigator.msSaveBlob) {// IE 10+
-                var blob = new Blob([dataExport], {
-                    "type": "text/csv;charset=shift-jis;"
-                });
-                navigator.msSaveBlob(blob, export_file_nm);
-            }
-            else
-            {
-                const link = document.createElement("a");
-                link.href = prefix_charset+dataExport;
-                link.download = export_file_nm;
-                link.click();
-            }
-        },
         createCSV: async function () {
             var that = this;
             that.loading = true;
             var data = {
-                fieldSearch: that.fileSearch,
+                data: that.allItems,
             };
             sales_lists_service.createCSV(data).then(  function (response){
                 that.downloadFileCSV(response, 'csv');
