@@ -87,9 +87,9 @@ class InvoicePDF extends TcpdfFpdi
         $this->MultiCell(0, 8, $content->address,0,'L',false);
 
         $this->SetFontSize( 9);
-        $this->SetXY(220, 49);
+        $this->SetXY(220, 49.5);
         $this->Write(0,$content->phone_number);
-        $this->SetXY(220, 53);
+        $this->SetXY(220, 53.5);
         $this->Write(0,$content->fax_number);
 
 
