@@ -74,8 +74,6 @@ var ctrSalesListVl = new Vue({
             }
             var that = this;
             that.loading = true;
-            that.flagSearch=false;
-            that.flagExport=false;
             if( that.fileSearch.from_date=="")
             {
                 that.errors["from_date"]=messages["MSG02001"].split(':attribute').join('期間');
@@ -96,16 +94,16 @@ var ctrSalesListVl = new Vue({
             }
             that.fileSearch.mst_customers_cd=this.$refs.mst_customers_cd.searchInput;
             that.fileSearch.mst_customers_nm=this.$refs.mst_customers_nm.searchInput;
+            that.flagSearch=false;
+            that.flagExport=false;
             var data = {
                 pageSize: that.pageSize,
                 page:page,
                 fieldSearch: that.fileSearch,
                 order: that.order,
             };
-            if(that.fileSearch.from_date!="" && that.fileSearch.to_date!="" && that.fileSearch.mst_suppliers_cd!=""
-            && that.fileSearch.invoicing_flag=="0" && that.fileSearch.mst_business_office_id!="")
+            if(that.fileSearch.from_date!="" && that.fileSearch.to_date!="" && that.$refs.mst_customers_cd.searchInput!="" && that.fileSearch.invoicing_flag=="0" && that.fileSearch.mst_business_office_id)
             {
-                that.flagSearch=true;
                 that.flagExport=true;
             }
             if(that.errors.from_date===undefined && that.errors.to_date===undefined)
@@ -273,9 +271,8 @@ var ctrSalesListVl = new Vue({
                             }
                           )].join('\n').replace(/(^\[)|(\]$)/gm, "");
             const dataExport = encoding.urlEncode(csvContent);
-
             if(navigator.msSaveBlob) {// IE 10+
-                var blob = new Blob([csvContent], {
+                var blob = new Blob([dataExport], {
                     "type": "text/csv;charset=shift-jis;"
                 });
                 navigator.msSaveBlob(blob, export_file_nm);
@@ -283,10 +280,47 @@ var ctrSalesListVl = new Vue({
             else
             {
                 const link = document.createElement("a");
-                link.href = prefix_charset+dataExport
+                link.href = prefix_charset+dataExport;
                 link.download = export_file_nm;
                 link.click();
             }
+        },
+        createCSV: async function () {
+            var that = this;
+            that.loading = true;
+            var data = {
+                fieldSearch: that.fileSearch,
+            };
+            sales_lists_service.createCSV(data).then(  function (response){
+                that.downloadFileCSV(response, 'csv');
+                that.loading = false;
+            });
+        },
+        downloadFileCSV(response) {
+            // It is necessary to create a new blob object with mime-type explicitly set
+            // otherwise only Chrome works like it should
+            var newBlob = new Blob([response.data], {type: response.headers["content-type"]})
+
+            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
+
+            // IE doesn't allow using a blob object directly as link href
+            // instead it is necessary to use msSaveOrOpenBlob
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(newBlob,filename)
+                return
+            }
+
+            // For other browsers:
+            // Create a link pointing to the ObjectURL containing the blob.
+            const data = window.URL.createObjectURL(newBlob)
+            var link = document.createElement('a')
+            link.href = data
+            link.download = filename;
+            link.click()
+            setTimeout(function () {
+                // For Firefox it is necessary to delay revoking the ObjectURL
+                window.URL.revokeObjectURL(data)
+            }, 100)
         },
     },
     mounted () {
