@@ -281,8 +281,8 @@ class VehiclesController extends Controller
                 $mVehicle->registration_numbers1 = $data["registration_numbers1"];
                 $mVehicle->registration_numbers2 = $data["registration_numbers2"];
                 $mVehicle->registration_numbers3 = $data["registration_numbers3"];
-                $mVehicle->registration_numbers4 = $data["registration_numbers4"];
-                $mVehicle->registration_numbers = $data["registration_numbers1"].$data["registration_numbers2"].$data["registration_numbers3"].$data["registration_numbers4"];
+                $mVehicle->registration_numbers4 = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
+                $mVehicle->registration_numbers = $data["registration_numbers1"].$data["registration_numbers2"].$data["registration_numbers3"].str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
                 $mVehicle->mst_business_office_id = $data["mst_business_office_id"];
                 $mVehicle->vehicle_size_kb = $data["vehicle_size_kb"];
                 $mVehicle->vehicle_purpose_id = $data["vehicle_purpose_id"];

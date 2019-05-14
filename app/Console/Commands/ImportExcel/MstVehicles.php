@@ -27,7 +27,6 @@ class MstVehicles extends BaseImport
     public $excel_column_main = [
         'A'=>'vehicles_cd',
         'B'=>'vehicles_kb',
-        'C'=>'registration_numbers',
         'I'=>'vehicle_size_kb',
         'J'=>'vehicle_purpose_id',
         'AF'=>'land_transport_office_cd',
@@ -64,6 +63,10 @@ class MstVehicles extends BaseImport
         'BA' => 'modified_at',
     ];
     public $excel_column_extra_1_sheet_1 = [
+        'G' => 'registration_numbers1',
+        'H' => 'registration_numbers2',
+        'I' => 'registration_numbers3',
+        'J' => 'registration_numbers4',
         'N' => 'bed_fg',
         'O' => 'refrigerator_fg',
         'V' => 'drive_system_id',
@@ -81,6 +84,10 @@ class MstVehicles extends BaseImport
         'AK' => 'power_gate_cd',
     ];
     public $excel_column_extra_1_sheet_2 = [
+        'G' => 'registration_numbers1',
+        'H' => 'registration_numbers2',
+        'I' => 'registration_numbers3',
+        'J' => 'registration_numbers4',
         'N' => 'bed_fg',
         'O' => 'refrigerator_fg',
         'Z' => 'transmissions_id',
@@ -102,7 +109,6 @@ class MstVehicles extends BaseImport
     public $rules = [
         'vehicles_cd'=>'required',
         'vehicles_kb'=>'required',
-        'registration_numbers'=>'required|length:50',
         'mst_business_office_id'=>'required|length:5',
         'frame_numbers'=>'nullable|length:50',
         'vehicle_types'=>'nullable|length:50',
@@ -115,6 +121,10 @@ class MstVehicles extends BaseImport
         'etc_numbers'=>'nullable|length:19',
     ];
     public $rules_extra_2 = [
+        'registration_numbers1'=>'required|length:10',
+        'registration_numbers2'=>'required|one_bytes_string|length:3',
+        'registration_numbers3'=>'required|hiragana|length:1',
+        'registration_numbers4'=>'required|one_byte_number|length:4',
         'transmissions_notes'=>'nullable|length:50',
     ];
     public $rules_extra_3 = [
@@ -124,7 +134,10 @@ class MstVehicles extends BaseImport
     public $column_name = [
         'vehicles_cd'=> '車両CD',
         'vehicles_kb'=> '車両区分',
-        'registration_numbers'=> '登録番号',
+        'registration_numbers1'=> '自動車登録番号1',
+        'registration_numbers2'=> '自動車登録番号2',
+        'registration_numbers3'=> '自動車登録番号3',
+        'registration_numbers4'=> '自動車登録番号4',
         'mst_business_office_id'=> '車両所属CD',
         'vehicle_size_kb'=> '小中大区分',
         'vehicle_purpose_id'=> '用途',
@@ -336,7 +349,7 @@ class MstVehicles extends BaseImport
             }
 
             $data = $record;
-            if (DB::table('mst_vehicles')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
+            if (DB::table('mst_vehicles_copy1')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
                 $error_fg = true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
                     "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
@@ -384,20 +397,36 @@ class MstVehicles extends BaseImport
                         foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
-                                    $this->log("DataConvert_Trim",Lang::trans("log_import.check_length_and_trim",[
-                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
-                                        "excelFieldName" => $field=='transmissions_notes' ? $this->transmissions_label[$data['transmissions_id']] : $this->column_name[$field],
-                                        "row" => $data['row'],
-                                        "excelValue" => $data[$field],
-                                        "tableName" => $this->table,
-                                        "DBFieldName" => $field,
-                                        "DBvalue" => mb_substr($data[$field],0,$error[0]),
-                                    ]));
-                                    $data[$field] = mb_substr($data[$field],0,$error[0]);
+                                    if(strpos($field, 'registration_numbers') == 0){
+                                        $error_fg = true;
+                                        $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
+                                            "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
+                                            "fieldName" => $this->column_name[$field],
+                                            "row" => $data['row'],
+                                        ]));
+                                    }else {
+                                        $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
+                                            "fileName" => config('params.import_file_path.mst_vehicles.extra' . $k . '.fileName') . ($k == 2 ? '.' . $data['sheet'] : ''),
+                                            "excelFieldName" => $field == 'transmissions_notes' ? $this->transmissions_label[$data['transmissions_id']] : $this->column_name[$field],
+                                            "row" => $data['row'],
+                                            "excelValue" => $data[$field],
+                                            "tableName" => $this->table,
+                                            "DBFieldName" => $field,
+                                            "DBvalue" => mb_substr($data[$field], 0, $error[0]),
+                                        ]));
+                                        $data[$field] = mb_substr($data[$field], 0, $error[0]);
+                                    }
                                 }else if($ruleName=='Required'){
                                     $error_fg = true;
                                     $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
-                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
+                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
+                                        "fieldName" => $this->column_name[$field],
+                                        "row" => $data['row'],
+                                    ]));
+                                }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber') && strpos($field, 'registration_numbers') == 0){
+                                    $error_fg = true;
+                                    $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
+                                        "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                         "fieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                     ]));
@@ -414,7 +443,9 @@ class MstVehicles extends BaseImport
                 DB::beginTransaction();
                 try{
                     if (!empty($record)) {
-                        DB::table('mst_vehicles')->insert($data);
+                        $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
+                        $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
+                        DB::table('mst_vehicles_copy1')->insert($data);
                         DB::commit();
                         $this->numNormal++;
                     }
@@ -527,6 +558,12 @@ class MstVehicles extends BaseImport
                                         }
                                     }
                                     break;
+                                case 'G':
+                                case 'H':
+                                case 'I':
+                                case 'J':
+                                    $record[$excel_column[$pos]] = (string)$value;
+                                    break;
                             }
                         } else {
                             switch ($pos) {
@@ -551,6 +588,12 @@ class MstVehicles extends BaseImport
                                             }
                                         }
                                     }
+                                    break;
+                                case 'G':
+                                case 'H':
+                                case 'I':
+                                case 'J':
+                                    $record[$excel_column[$pos]] = (string)$value;
                                     break;
                             }
                         }
