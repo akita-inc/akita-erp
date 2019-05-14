@@ -105,22 +105,30 @@
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5 required" for="registration_numbers">自動車登録番号</label>
+                        <label class="col-md-5 col-sm-5 required" for="mst_business_office_id">営業所</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" v-bind:class="errors.registration_numbers != undefined ? 'is-invalid':'' " id="registration_numbers" name="registration_numbers" v-model="field.registration_numbers" maxlength="50" >
-                        </div>
-                        <span class="message-error w-100" role="alert" v-cloak v-if="errors.registration_numbers!= undefined" v-html="errors.registration_numbers[0]"></span>
-                    </div>
-                    <div class="col-md-7 col-sm-12 row grid-col h-100">
-                        <label class="col-md-4 col-sm-4 required" for="mst_business_office_id">営業所</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control w-50" id="mst_business_office_id" name="mst_business_office_id" v-model="field.mst_business_office_id">
+                            <select class="form-control w-100" id="mst_business_office_id" name="mst_business_office_id" v-model="field.mst_business_office_id">
                                 @foreach($listBusinessOffices as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.mst_business_office_id!= undefined" v-html="errors.mst_business_office_id[0]"></span>
+                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col h-100">
+                        <label class="col-md-4 col-sm-4 required" for="registration_numbers">自動車登録番号</label>
+                        <div class="col-md-7 col-sm-7 wrap-control">
+                            <input type="text" class="form-control w-25" v-bind:class="errors.registration_numbers1 != undefined ? 'is-invalid':'' " id="registration_numbers1" name="registration_numbers1" v-model="field.registration_numbers1" maxlength="10" >-
+                            <input type="text" class="form-control w-20" v-bind:class="errors.registration_numbers2 != undefined ? 'is-invalid':'' " id="registration_numbers2" name="registration_numbers2" v-model="field.registration_numbers2" maxlength="3" >
+                            -
+                            <input type="text" class="form-control w-15" v-bind:class="errors.registration_numbers3 != undefined ? 'is-invalid':'' " id="registration_numbers3" name="registration_numbers3" v-model="field.registration_numbers3" maxlength="1" >
+                            -
+                            <input type="text" class="form-control w-25" v-bind:class="errors.registration_numbers4 != undefined ? 'is-invalid':'' " id="registration_numbers4" name="registration_numbers4" v-model="field.registration_numbers4" maxlength="4" >
+                        </div>
+                        <span class="message-error w-100" role="alert" v-cloak v-if="errors.registration_numbers1!= undefined" v-html="errors.registration_numbers1[0]"></span>
+                        <span class="message-error w-100" role="alert" v-cloak v-if="errors.registration_numbers2!= undefined" v-html="errors.registration_numbers2[0]"></span>
+                        <span class="message-error w-100" role="alert" v-cloak v-if="errors.registration_numbers3!= undefined" v-html="errors.registration_numbers3[0]"></span>
+                        <span class="message-error w-100" role="alert" v-cloak v-if="errors.registration_numbers4!= undefined" v-html="errors.registration_numbers4[0]"></span>
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">

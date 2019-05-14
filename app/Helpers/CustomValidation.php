@@ -226,4 +226,12 @@ class CustomValidation {
             }
         });
     }
+    public static function validateHiragana() {
+        Validator::extend('hiragana', function($attribute, $value, $parameters, $validator) {
+            if (preg_match("/^[ぁ-んー]+$/u", $value)) {
+                return true;
+            }
+            return false;
+        });
+    }
 }

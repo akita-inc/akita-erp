@@ -672,3 +672,9 @@ input[type="checkbox"]:focus {
 .bg-sales-lists{
     background: rgb(244,176,132);
 }
+.w-20{
+    width: 20% !important;
+}
+.w-15{
+    width: 15% !important;
+}

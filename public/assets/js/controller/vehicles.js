@@ -21644,7 +21644,10 @@ var ctrVehiclesVl = new Vue({
       vehicles_cd: "",
       door_number: "",
       vehicles_kb: "",
-      registration_numbers: "",
+      registration_numbers1: "",
+      registration_numbers2: "",
+      registration_numbers3: "",
+      registration_numbers4: "",
       mst_business_office_id: "",
       vehicle_size_kb: "",
       vehicle_purpose_id: "",
@@ -21979,7 +21982,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })
