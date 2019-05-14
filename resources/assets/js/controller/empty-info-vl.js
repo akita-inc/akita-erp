@@ -233,10 +233,14 @@ var ctrEmptyInfoVl = new Vue({
             }
         },
         addComma: function (id) {
-            this.field[id] = (id=='asking_price' && this.field[id]!='' ? '¥ ' : '' )+this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if(this.field[id]!=null){
+                this.field[id] = (id=='asking_price' && this.field[id]!='' ? '¥ ' : '' )+this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
         },
         removeComma: function (id) {
-            this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ','');
+            if(this.field[id]!=null) {
+                this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
+            }
         },
         resetForm: function () {
             this.registration_numbers = "";
