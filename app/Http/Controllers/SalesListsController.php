@@ -56,7 +56,7 @@ class SalesListsController extends Controller
     protected function getPaging(){
         return config('params.page_size_sale_lists');
     }
-    protected function search($data,$exportCSV=null){
+    protected function search($data){
         $where = array(
             'mst_business_office_id' => $data['fieldSearch']['mst_business_office_id'],
             'from_date' =>date('Y-m-d', strtotime($data['fieldSearch']['from_date'])),
@@ -88,14 +88,10 @@ class SalesListsController extends Controller
                 't_saleses.wholesale_fee',
                 't_saleses.waiting_fee',
                 't_saleses.incidental_fee',
-                't_saleses.surcharge_fee'
-            );
-        if(!$exportCSV)
-        {
-            $this->query->addSelect('t_saleses.consumption_tax',
+                't_saleses.surcharge_fee',
+                't_saleses.consumption_tax',
                 DB::raw("DATE_FORMAT(headers.publication_date, '%Y/%m/%d') as publication_date")
             );
-        }
         $this->query->join('mst_customers', function ($join) {
                 $join->on('mst_customers.mst_customers_cd', '=', 't_saleses.mst_customers_cd')
                     ->whereRaw('mst_customers.deleted_at IS NULL');
@@ -223,13 +219,10 @@ class SalesListsController extends Controller
         return response()->json($response);
     }
     public function createCSV(Request $request){
-        $data = $request->all();
+        $items=$request->all()['data'];
         $keys = array_keys($this->csvColumn);
-        $this->getQuery();
-        $this->search($data,true);
-        $items=$this->query->get();
         $inputs=json_decode(json_encode($items), true);
-        $fileName = 'kakunin_'.$items[0]->branch_office_cd.'_'.date('YmdHis', time()).'.csv';
+        $fileName = 'kakunin_'.$items[0]['branch_office_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
             "Content-type" => "text/csv",
             "Content-Disposition" => "attachment; filename=$fileName",

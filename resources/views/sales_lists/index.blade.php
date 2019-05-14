@@ -5,6 +5,7 @@
     <style>
         .autosuggest__results-container{
             font-size: 14px;
+            text-align: left;
         }
     </style>
 @endsection
