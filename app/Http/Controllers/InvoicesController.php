@@ -356,7 +356,7 @@ class InvoicesController extends Controller {
 
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
-                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
+                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID, $fieldSearch);
                 $pdf = new InvoicePDF();
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);
