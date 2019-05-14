@@ -332,9 +332,7 @@ class EmptyInfoController extends Controller {
             })
             ->where('mst_vehicles.deleted_at','=',null)
             ->where('mst_vehicles.mst_business_office_id','=',$input['mst_business_office_id'])
-            ->where(function($q) use ($input) {
-                $q->where('registration_numbers','LIKE','%'.$input['registration_numbers'].'%')->orWhere('registration_numbers','LIKE','%'.mb_convert_kana($input['registration_numbers'], "A", 'UTF-8').'%');
-            })
+            ->where('mst_vehicles.registration_numbers4','=',$input['registration_numbers'])
             ->get();
         if(count($data) > 0){
             if(count($data) > 1){
