@@ -21125,10 +21125,14 @@ var ctrEmptyInfoVl = new Vue({
       }
     },
     addComma: function addComma(id) {
-      this.field[id] = (id == 'asking_price' && this.field[id] != '' ? '¥ ' : '') + this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      if (this.field[id] != null) {
+        this.field[id] = (id == 'asking_price' && this.field[id] != '' ? '¥ ' : '') + this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
     },
     removeComma: function removeComma(id) {
-      this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
+      if (this.field[id] != null) {
+        this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
+      }
     },
     resetForm: function resetForm() {
       this.registration_numbers = "";
