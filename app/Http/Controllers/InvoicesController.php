@@ -463,7 +463,7 @@ class InvoicesController extends Controller {
                         'modified_at' => $currentTime,
                         'upd_mst_staff_id' => Auth::user()->id,
                     ];
-//                    MSaleses::query()->where('id',$detail->id)->update($updateData);
+                    MSaleses::query()->where('id',$detail->id)->update($updateData);
                     $id =  MBillingHistoryHeaderDetails::query()->insertGetId( $arrayInsert );
                     array_push( $this->listBillingHistoryDetailID, $id);
                 }
