@@ -61,9 +61,8 @@ var ctrInvoiceListVl = new Vue({
             special_closing_date:"",
             closed_date_input:"",
         },
-        csvFile:[],
-        amazonCsvFile:[],
-        pdfFile:[],
+        listBillingHistoryHeaderID:[],
+        listBillingHistoryDetailID:[],
         getItems: function(page,show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
@@ -91,8 +90,9 @@ var ctrInvoiceListVl = new Vue({
                         closed_date_input:"",
                     };
                     that.flagSearch = true;
-                    that.disableBtn =  false;
                     that.errors = [];
+                    that.listBillingHistoryHeaderID =[];
+                    that.listBillingHistoryDetailID =[];
                     if (response.data.length===0) {
                         that.message = messages["MSG05001"];
                     } else {
@@ -235,8 +235,25 @@ var ctrInvoiceListVl = new Vue({
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
+                var listHeaderID = null;
+                var listDetailID = null;
+                if(typeof that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
+                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id];
+                }
+                if(typeof that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
+                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id];
+                }
                 setTimeout(function(){
-                    invoice_service.createPDF({data:value,'fieldSearch': that.fileSearched,type:1,date_of_issue: that.date_of_issue}).then( async function (response){
+                    invoice_service.createPDF({
+                        data:value,
+                        'fieldSearch': that.fileSearched,
+                        type:1,
+                        date_of_issue: that.date_of_issue,
+                        'listBillingHistoryHeaderID':listHeaderID,
+                        'listBillingHistoryDetailID':listDetailID
+                    }).then( async function (response){
+                        that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
+                        that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
                         await that.downloadFile(response);
                         var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
                         invoice_service.createPDF({data:value,'fieldSearch': that.fileSearched,type:2,fileName:filename,date_of_issue: that.date_of_issue}).then(  function (response1){
@@ -247,35 +264,64 @@ var ctrInvoiceListVl = new Vue({
                 }, key*1000);
 
             });
-            this.disableBtn =  true;
             this.loading =  false;
         },
         createCSV: async function () {
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
+                var listHeaderID = null;
+                var listDetailID = null;
+                if(typeof that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
+                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id];
+                }
+                if(typeof that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
+                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id];
+                }
                 setTimeout(function(){
-                    invoice_service.createCSV({data:value,'fieldSearch': that.fileSearched,date_of_issue: that.date_of_issue}).then(  function (response){
-                         that.downloadFile(response, 'csv');
+                    invoice_service.createCSV(
+                        {
+                            data:value,
+                            'fieldSearch': that.fileSearched,
+                            date_of_issue: that.date_of_issue,
+                            'listBillingHistoryHeaderID':listHeaderID,
+                            'listBillingHistoryDetailID':listDetailID
+                        }).then(  function (response){
+                        that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
+                        that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
+                         that.downloadFile(response);
                     });
                 }, key*1000);
 
             });
-            this.disableBtn =  true;
             this.loading = false;
         },
         createAmazonCSV: async function () {
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
+                var listHeaderID = null;
+                var listDetailID = null;
+                if(typeof that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
+                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id];
+                }
+                if(typeof that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
+                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id];
+                }
                 setTimeout(function(){
-                    invoice_service.createAmazonCSV({data:value,'fieldSearch': that.fileSearched,date_of_issue: that.date_of_issue}).then(  function (response){
-                        that.downloadFile(response, 'csv');
+                    invoice_service.createAmazonCSV({
+                        data:value,'fieldSearch': that.fileSearched,
+                        date_of_issue: that.date_of_issue,
+                        'listBillingHistoryHeaderID':listHeaderID,
+                        'listBillingHistoryDetailID':listDetailID
+                    }).then(  function (response){
+                        that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
+                        that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
+                        that.downloadFile(response);
                     });
                 }, key*1000);
 
             });
-            this.disableBtn =  true;
             this.loading = false;
         },
         downloadFile(response) {
@@ -283,7 +329,7 @@ var ctrInvoiceListVl = new Vue({
             // otherwise only Chrome works like it should
             var newBlob = new Blob([response.data], {type: response.headers["content-type"]})
 
-            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
+            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
 
             // IE doesn't allow using a blob object directly as link href
             // instead it is necessary to use msSaveOrOpenBlob
