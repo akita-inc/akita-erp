@@ -62,6 +62,23 @@ class InvoicesController extends Controller {
             'incidental_fee' => '附帯料',
             'surcharge_fee' => 'サーチャージ料',
         ];
+    public $amazonCsvColumn = [
+            'daily_report_date' => '月日',
+            'goods' => '品名',
+            'size' => '屯',
+            'quantity' => '数量',
+            'unit_price' => '単価',
+            'total_fee' => '金額',
+            'departure_point_name' => '発地',
+            'landing_name' => '着地',
+            'loading_fee' => '積込料',
+            'wholesale_fee' => '取卸料',
+            'incidental_fee' => '附帯料',
+            'waiting_fee' => '待機料',
+            'surcharge_fee' => 'サーチャージ料',
+            'billing_fast_charge' => '請求高速料',
+            'delivery_destination' => '納入先',
+        ];
 
     public $csvContent = [];
 
@@ -414,6 +431,41 @@ class InvoicesController extends Controller {
                     $row[$key] = $enclosure.$content[$key].$enclosure;
                 }
                 fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function createAmazonCSV(Request $request){
+        $data = $request->all();
+        $fieldSearch = $data['fieldSearch'];
+        $item = $data['data'];
+        $keys = array_keys($this->amazonCsvColumn);
+        $publication_date = $data['date_of_issue'];
+
+        $this->createHistory($item,$fieldSearch,$publication_date);
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
+        $amazonCSVContent = $mBillingHistoryHeaderDetails->getAmazonCSVContent($this->listBillingHistoryDetailID);
+        $fileName = 'Amazon_seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
+        $headers = array(
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        );
+
+        $enclosure = config('params.amazon_csv.enclosure');
+        $callback = function() use ($amazonCSVContent,$keys,$item, $enclosure) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS", "UTF-8"));
+            foreach ($amazonCSVContent as $content) {
+                $row = [];
+                foreach ($keys as $key) {
+                    $row[$key] = $enclosure.$content->{$key}.$enclosure;
+                }
+                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
             }
             fclose($file);
         };

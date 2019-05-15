@@ -121,7 +121,7 @@ class MstVehicles extends BaseImport
         'etc_numbers'=>'nullable|length:19',
     ];
     public $rules_extra_2 = [
-        'registration_numbers1'=>'required|length:10',
+        'registration_numbers1'=>'required|two_bytes_string|length:10',
         'registration_numbers2'=>'required|one_bytes_string|length:3',
         'registration_numbers3'=>'required|hiragana|length:1',
         'registration_numbers4'=>'required|one_byte_number|length:4',

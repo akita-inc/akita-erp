@@ -21683,6 +21683,9 @@ var ctrInvoiceListVl = new Vue({
       special_closing_date: "",
       closed_date_input: ""
     },
+    csvFile: [],
+    amazonCsvFile: [],
+    pdfFile: [],
     getItems: function getItems(page, show_msg) {
       if (show_msg !== true) {
         $('.alert').hide();
@@ -21998,6 +22001,48 @@ var ctrInvoiceListVl = new Vue({
       }
 
       return createCSV;
+    }(),
+    createAmazonCSV: function () {
+      var _createAmazonCSV = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        var that;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                that = this;
+                this.loading = true;
+                _context4.next = 4;
+                return that.items.forEach(function (value, key) {
+                  setTimeout(function () {
+                    invoice_service.createAmazonCSV({
+                      data: value,
+                      'fieldSearch': that.fileSearched,
+                      date_of_issue: that.date_of_issue
+                    }).then(function (response) {
+                      that.downloadFile(response, 'csv');
+                    });
+                  }, key * 1000);
+                });
+
+              case 4:
+                this.disableBtn = true;
+                this.loading = false;
+
+              case 6:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function createAmazonCSV() {
+        return _createAmazonCSV.apply(this, arguments);
+      }
+
+      return createAmazonCSV;
     }(),
     downloadFile: function downloadFile(response) {
       // It is necessary to create a new blob object with mime-type explicitly set

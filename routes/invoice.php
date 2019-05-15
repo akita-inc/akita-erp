@@ -17,5 +17,6 @@ Route::group(['name' => 'invoices', 'prefix' => 'invoices', 'middleware' => ['au
         Route::any('/create-pdf', 'InvoicesController@createPDF');
         Route::any('/create-csv', 'InvoicesController@createCSV');
         Route::any('/get-current-year-month', 'InvoicesController@getCurrentYearMonth');
+        Route::any('/create-amazon-csv', 'InvoicesController@createAmazonCSV');
     });
 });
