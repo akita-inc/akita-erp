@@ -25,7 +25,7 @@ mix.js([
     'resources/assets/js/service/invoice-service.js',
     'resources/assets/js/service/sales-lists-service.js',
     'resources/assets/js/service/payments-service.js',
-    'resources/assets/js/service/type-service.js',
+    'resources/assets/js/service/work-flow-service.js',
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -86,5 +86,5 @@ mix.js([
 ], 'public/assets/js/controller/payments-list.js');
 
 mix.js([
-    'resources/assets/js/controller/type-list-vl.js'
-], 'public/assets/js/controller/type-list.js');
+    'resources/assets/js/controller/work-flow-list-vl.js'
+], 'public/assets/js/controller/work-flow-list.js');
