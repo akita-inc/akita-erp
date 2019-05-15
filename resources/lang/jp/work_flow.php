@@ -17,9 +17,14 @@ return [
     'list' => [
         'title' => 'ワークフロー一覧',
         'search' => [
-
+            'name'=>'名称',
+            'btn_clear'=>'クリア',
+            'btn_new_register'=>'新規登録'
         ],
         'table' => [
+            'id'=>'ID',
+            'name'=>'名称',
+            'steps'=>'承認段階数',
         ]
     ],
 
