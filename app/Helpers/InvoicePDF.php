@@ -184,6 +184,10 @@ class InvoicePDF extends TcpdfFpdi
                     case 'surcharge_fee':
                     case 'billing_fast_charge':
                         $value = number_format($value);
+                        break;
+                    case 'size':
+                        $align = 'C';
+                        break;
                     default: $align ='R';
                 }
                 $w = $this->colWidth[$key];
