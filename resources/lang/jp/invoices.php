@@ -18,6 +18,7 @@ return[
                 'csv'=>'CSV',
                 'export'=>'詳細',
                 'choose'=>'選択',
+                'amazonCSV'=>'AmazonCSV',
             ],
             'no_data'=>'データがありません。',
         ],

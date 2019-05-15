@@ -61,6 +61,9 @@ var ctrInvoiceListVl = new Vue({
             special_closing_date:"",
             closed_date_input:"",
         },
+        csvFile:[],
+        amazonCsvFile:[],
+        pdfFile:[],
         getItems: function(page,show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
@@ -254,6 +257,20 @@ var ctrInvoiceListVl = new Vue({
                 setTimeout(function(){
                     invoice_service.createCSV({data:value,'fieldSearch': that.fileSearched,date_of_issue: that.date_of_issue}).then(  function (response){
                          that.downloadFile(response, 'csv');
+                    });
+                }, key*1000);
+
+            });
+            this.disableBtn =  true;
+            this.loading = false;
+        },
+        createAmazonCSV: async function () {
+            var that = this;
+            this.loading = true;
+            await that.items.forEach(  ( value,key) =>{
+                setTimeout(function(){
+                    invoice_service.createAmazonCSV({data:value,'fieldSearch': that.fileSearched,date_of_issue: that.date_of_issue}).then(  function (response){
+                        that.downloadFile(response, 'csv');
                     });
                 }, key*1000);
 

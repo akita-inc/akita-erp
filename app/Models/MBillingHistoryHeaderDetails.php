@@ -100,4 +100,36 @@ class MBillingHistoryHeaderDetails extends Model {
         });
         return $result;
     }
+
+    public function getAmazonCSVContent($listID){
+        $query = DB::table('t_billing_history_header_details as details')
+            ->select(
+                DB::raw("DATE_FORMAT(details.daily_report_date, '%m/%d') as daily_report_date"),
+                'details.goods',
+                DB::raw("(CASE 
+                        WHEN mst_vehicles.vehicle_size_kb=1 THEN '2トン' 
+                        WHEN mst_vehicles.vehicle_size_kb=2 THEN '4トン' 
+                        WHEN mst_vehicles.vehicle_size_kb=3 THEN '10トン' 
+                        END) as size"),
+                DB::raw('IFNULL(details.quantity,0) as quantity'),
+                DB::raw('IFNULL(details.unit_price,0) as unit_price'),
+                DB::raw('IFNULL(details.total_fee, 0) as total_fee'),
+                'details.departure_point_name',
+                'details.landing_name',
+                DB::raw('IFNULL(details.loading_fee,0) as loading_fee'),
+                DB::raw('IFNULL(details.wholesale_fee,0) as wholesale_fee'),
+                DB::raw('IFNULL(details.incidental_fee,0) as incidental_fee'),
+                DB::raw('IFNULL(details.waiting_fee,0) as waiting_fee'),
+                DB::raw('IFNULL(details.surcharge_fee,0) as surcharge_fee'),
+                DB::raw('IFNULL(details.billing_fast_charge,0) as billing_fast_charge'),
+                'details.delivery_destination'
+            )
+            ->leftjoin('mst_vehicles', function ($join) {
+                $join->on('mst_vehicles.vehicles_cd', '=', 'details.vehicles_cd')
+                    ->whereNull('mst_vehicles.deleted_at');
+            })
+            ->whereNull('details.deleted_at')
+            ->whereIn('details.id',$listID);
+       return $query->get();
+    }
 }

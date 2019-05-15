@@ -294,6 +294,15 @@ invoice_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  createAmazonCSV: function createAmazonCSV(data) {
+    return axios.post('/invoices/api-v1/create-amazon-csv', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
