@@ -79,7 +79,6 @@
                                 </label>
                                 <vue-autosuggest
                                         :suggestions="filteredCustomerCd"
-                                        :limit="10"
                                         :input-props="inputPropsCd"
                                         :on-selected="onSelectedCd"
                                         :render-suggestion="renderSuggestion"
@@ -95,7 +94,6 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredCustomerNm"
-                                    :limit="10"
                                     :input-props="inputPropsName"
                                     :on-selected="onSelectedName"
                                     :render-suggestion="renderSuggestion"
