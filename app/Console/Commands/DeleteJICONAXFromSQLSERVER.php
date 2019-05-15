@@ -119,6 +119,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
         $listSales = DB::table($table)->select("document_no")
             ->whereNull("deleted_at")
             ->whereRaw($queryWhere)
+            ->where("invoicing_flag","<>","1")
             ->get();
 
         foreach ($listSales as $value){
