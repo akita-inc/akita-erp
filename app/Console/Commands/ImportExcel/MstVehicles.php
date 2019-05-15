@@ -442,9 +442,11 @@ class MstVehicles extends BaseImport
             if(!$error_fg){
                 DB::beginTransaction();
                 try{
-                    if (!empty($record)) {
-                        $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
-                        $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
+                    if (!empty($data)) {
+                        if(isset($data['registration_numbers4'])){
+                            $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
+                            $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
+                        }
                         DB::table('mst_vehicles_copy1')->insert($data);
                         DB::commit();
                         $this->numNormal++;
