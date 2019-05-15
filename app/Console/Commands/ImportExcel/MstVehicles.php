@@ -437,6 +437,16 @@ class MstVehicles extends BaseImport
                     unset($data['row']);
                     unset($data['sheet']);
                     unset($this->{"data_extra_file_".$k}[$record['vehicles_cd']]);
+                }else{
+                    if($k==2){
+                        $error_fg = true;
+                        $this->log("DataConvert_Err_required",Lang::trans("log_import.registration_numbers_required",[
+                            'mainFileName' => config('params.import_file_path.mst_vehicles.main.fileName'),
+                            "fieldName" => '登録番号',
+                            "row" => $row,
+                            "extraFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
+                        ]));
+                    }
                 }
             }
             if(!$error_fg){
