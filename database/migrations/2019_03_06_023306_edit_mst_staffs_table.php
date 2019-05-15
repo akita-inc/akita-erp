@@ -19,7 +19,7 @@ class EditMstStaffsTable extends Migration
             $table->date('adhibition_start_dt');
             $table->date('adhibition_end_dt')->default('2999-12-31');
             $table->string('staff_cd',5);
-            $table->string('password',50);
+            $table->string('password',255);
             $table->string('remember_token',255)->nullable();
             $table->integer('employment_pattern_id')->nullable();
             $table->string('position_id',5)->nullable();
