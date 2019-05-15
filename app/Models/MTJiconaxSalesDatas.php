@@ -8,9 +8,12 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MTJiconaxSalesDatas extends Model
 {
+    use SoftDeletes;
+
     protected $table = "t_jiconax_sales_datas";
 
     const CREATED_AT = Null;

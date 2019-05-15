@@ -368,5 +368,9 @@ return [
     ],
     'runImportFromSqlServer' => [
         "cron" => "*/5 * * * *"
+    ],
+    'runDeleteLogicFromSqlServer' => [
+        "day_minus" => 60,
+        "cron" => "0 4 * * *"
     ]
 ];
