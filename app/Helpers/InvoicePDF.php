@@ -183,6 +183,7 @@ class InvoicePDF extends TcpdfFpdi
                     case 'incidental_fee':
                     case 'surcharge_fee':
                     case 'billing_fast_charge':
+                        $align ='R';
                         $value = number_format($value);
                         break;
                     case 'size':

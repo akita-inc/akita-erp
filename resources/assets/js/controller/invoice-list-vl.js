@@ -260,7 +260,6 @@ var ctrInvoiceListVl = new Vue({
                             that.downloadFile(response1);
                         });
                     });
-                    return;
                 }, key*1000);
 
             });

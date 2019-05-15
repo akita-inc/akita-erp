@@ -21953,7 +21953,6 @@ var ctrInvoiceListVl = new Vue({
                         return _ref.apply(this, arguments);
                       };
                     }());
-                    return;
                   }, key * 1000);
                 });
 
