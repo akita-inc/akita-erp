@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\DeleteJICONAXFromSQLSERVER;
 use App\Console\Commands\ImportFromSQLSERVER;
 use App\Console\Commands\RunBatchImport;
 use App\Console\Commands\UpdateStatusEmptyInfo;
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         ConvertDataByExcels::class,
         RunBatchImport::class,
         ImportFromSQLSERVER::class,
+        DeleteJICONAXFromSQLSERVER::class
         //
     ];
 
@@ -33,13 +35,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('UpdateStatusEmptyInfo')->daily();
-        /*$schedule->command('ImportFromSQLSERVER')
-            ->cron(config("params.runImportFromSqlServer.cron"))->skip(function () {
-            return true;
-        });*/
         $schedule->command('ImportFromSQLSERVER')
             ->cron(config("params.runImportFromSqlServer.cron"))
         ->withoutOverlapping();
+        $schedule->command('DeleteJICONAXFromSQLSERVER')
+            ->cron(config("params.runDeleteLogicFromSqlServer.cron"));
     }
 
     /**
