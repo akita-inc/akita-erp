@@ -13,7 +13,10 @@ var ctrVehiclesVl = new Vue({
             vehicles_cd:"",
             door_number:"",
             vehicles_kb:"",
-            registration_numbers:"",
+            registration_numbers1:"",
+            registration_numbers2:"",
+            registration_numbers3:"",
+            registration_numbers4:"",
             mst_business_office_id:"",
             vehicle_size_kb:"",
             vehicle_purpose_id:"",
@@ -245,7 +248,7 @@ var ctrVehiclesVl = new Vue({
         copyText: function() {
             this.field.user_nm = this.field.owner_nm;
             this.field.user_address = this.field.owner_address;
-        }
+        },
     },
     mounted () {
         this.loadFormEdit();

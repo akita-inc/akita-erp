@@ -12,32 +12,6 @@ var ctrSalesListVl = new Vue({
         allItems:[],
         export_file_nm:"",
         message:'',
-        fields: {
-            "daily_report_date": "日報日付",
-            "branch_office_cd":"支店CD",
-            "document_no":"伝票NO",
-            "registration_numbers":"登録番号",
-            "staff_cd":"社員CD",
-            "staff_nm":"社員名",
-            "mst_customers_cd":"得意先CD",
-            "customer_nm":"得意先名",
-            "goods":"品物",
-            "departure_point_name":"発地名",
-            "landing_name":"着地名",
-            "delivery_destination":"納入先",
-            "quantity":"数量",
-            "unit_price":"単価",
-            "total_fee":"便請求金額",
-            "insurance_fee":"保険料",
-            "billing_fast_charge":"請求高速料",
-            "discount_amount":"値引金額",
-            "tax_included_amount":"請求金額",
-            "loading_fee":"積込料",
-            "wholesale_fee":"取卸料",
-            "waiting_fee":"待機料",
-            "incidental_fee":"附帯料",
-            "surcharge_fee":"サーチャージ料",
-        },
         auth_staff_cd:'',
         filteredCustomerCd: [],
         filteredCustomerNm:[],
@@ -60,6 +34,7 @@ var ctrSalesListVl = new Vue({
             last_page:0
         },
         flagSearch:false,
+        flagExport:false,
         order: null,
         dropdown_mst_customer_cd: [{
             data:[]
@@ -91,13 +66,20 @@ var ctrSalesListVl = new Vue({
             {
                 delete that.errors["to_date"];
             }
+            that.fileSearch.mst_customers_cd=this.$refs.mst_customers_cd.searchInput;
+            that.fileSearch.mst_customers_nm=this.$refs.mst_customers_nm.searchInput;
+            that.flagSearch=false;
+            that.flagExport=false;
             var data = {
                 pageSize: that.pageSize,
                 page:page,
                 fieldSearch: that.fileSearch,
                 order: that.order,
             };
-            that.flagSearch=false;
+            if(that.fileSearch.from_date!="" && that.fileSearch.to_date!="" && that.$refs.mst_customers_cd.searchInput!="" && that.fileSearch.invoicing_flag=="0" && that.fileSearch.mst_business_office_id)
+            {
+                that.flagExport=true;
+            }
             if(that.errors.from_date===undefined && that.errors.to_date===undefined)
             {
                 that.loading = true;
@@ -187,6 +169,7 @@ var ctrSalesListVl = new Vue({
         onInputChangeCd(text) {
             this.fileSearch.mst_customers_cd= text;
             if (text === '' || text === undefined) {
+                this.filteredCustomerCd = [];
                 return;
             }
             const filteredDataCd = this.dropdown_mst_customer_cd[0].data.filter(item => {
@@ -199,6 +182,7 @@ var ctrSalesListVl = new Vue({
         onInputChangeName(text){
             this.fileSearch.mst_customers_nm= text;
             if (text === '' || text === undefined) {
+                this.filteredCustomerNm = [];
                 return;
             }
             const filteredDataNm = this.dropdown_mst_customer_nm[0].data.filter(item => {
@@ -237,67 +221,42 @@ var ctrSalesListVl = new Vue({
             var lastDay = new Date(to_date.getFullYear(), to_date.getMonth()+1,0);
             this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
         },
-        exportCSV:function () {
-            let  data=this.allItems;
-            let arrKeys=Object.keys(data[0]);
-            let fields=this.fields;
-            let headerFields=[];
-            if(!this.fileSearch.mst_business_office_id)
-            {
-                const distinctBranchCd=[...new Set(data.map(item=>item.branch_office_cd))];
-                for(var k=0;k<distinctBranchCd.length;k++)
-                {
-                    let arrMultiExport=[];
-                    for(var j=0;j<data.length;j++)
-                    {
-                        if(distinctBranchCd[k]!==undefined && distinctBranchCd[k]==data[j].branch_office_cd)
-                        {
-                            arrMultiExport.push(data[j]);
-                        }
-                    }
-                    this.downloadFile(arrKeys,fields,headerFields,arrMultiExport,distinctBranchCd[k])
-                }
-                console.log(distinctBranchCd);
-            }
-            else
-            {
-                this.downloadFile(arrKeys,fields,headerFields,data,null)
-            }
-
+        createCSV: async function () {
+            var that = this;
+            that.loading = true;
+            var data = {
+                data: that.allItems,
+            };
+            sales_lists_service.createCSV(data).then(  function (response){
+                that.downloadFileCSV(response, 'csv');
+                that.loading = false;
+            });
         },
-        downloadFile:function (arrKeys,fields,headerFields,data,branch_cd){
-            let export_file_nm=this.export_file_nm.split("branch_office_cd").join(branch_cd?branch_cd:data[0].branch_office_cd);
-            export_file_nm=export_file_nm.split("yyyymmddhhmmss").join(Date.now());
-            for(var i=0;i<arrKeys.length;i++)
-            {
-                if(arrKeys[i]!==undefined && fields[arrKeys[i]]!==undefined)
-                {
-                    headerFields.push(encoding.convert(fields[arrKeys[i]], 'SJIS', 'UNICODE'));
-                }
-            }
-            let prefix_charset= "data:text/csv;charset=shift-jis,";
-            let csvContent = "";
-            csvContent += [
-                        headerFields.join(","),
-                            ...data.map(item => {
-                                return encoding.convert('"'+Object.values(item).join('","')+'"', 'SJIS', 'UNICODE')
-                            }
-                          )].join('\n').replace(/(^\[)|(\]$)/gm, "");
-            const dataExport = encoding.urlEncode(csvContent);
+        downloadFileCSV(response) {
+            // It is necessary to create a new blob object with mime-type explicitly set
+            // otherwise only Chrome works like it should
+            var newBlob = new Blob([response.data], {type: response.headers["content-type"]})
 
-            if(navigator.msSaveBlob) {// IE 10+
-                var blob = new Blob([csvContent], {
-                    "type": "text/csv;charset=shift-jis;"
-                });
-                navigator.msSaveBlob(blob, export_file_nm);
+            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
+
+            // IE doesn't allow using a blob object directly as link href
+            // instead it is necessary to use msSaveOrOpenBlob
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(newBlob,filename)
+                return
             }
-            else
-            {
-                const link = document.createElement("a");
-                link.href = prefix_charset+dataExport
-                link.download = export_file_nm;
-                link.click();
-            }
+
+            // For other browsers:
+            // Create a link pointing to the ObjectURL containing the blob.
+            const data = window.URL.createObjectURL(newBlob)
+            var link = document.createElement('a')
+            link.href = data
+            link.download = filename;
+            link.click()
+            setTimeout(function () {
+                // For Firefox it is necessary to delay revoking the ObjectURL
+                window.URL.revokeObjectURL(data)
+            }, 100)
         },
     },
     mounted () {

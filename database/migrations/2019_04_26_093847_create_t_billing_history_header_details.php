@@ -38,7 +38,7 @@ class CreateTBillingHistoryHeaderDetails extends Migration
             $table->decimal('waiting_fee',10,2)->nullable();
             $table->decimal('incidental_fee',10,2)->nullable();
             $table->decimal('surcharge_fee',10,2)->nullable();
-            $table->float('quantity')->nullable();
+            $table->double('quantity')->nullable();
             $table->decimal('unit_price',10,2)->nullable();
             $table->integer('summary_indicator')->nullable();
             $table->char('tax_classification_flg',1)->nullable();

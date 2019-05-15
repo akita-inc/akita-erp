@@ -16,6 +16,9 @@
         #detailsModal .modal-footer{
             border-top: none !important;
         }
+        .form-control[readonly]{
+            background-color: white;
+        }
     </style>
 @endsection
 @section('content')
@@ -76,7 +79,6 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredCustomerCd"
-                                    :limit="10"
                                     :input-props="inputPropsCd"
                                     :on-selected="onSelectedCd"
                                     :render-suggestion="renderSuggestion"
@@ -92,7 +94,6 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredCustomerNm"
-                                    :limit="10"
                                     :input-props="inputPropsNm"
                                     :on-selected="onSelectedNm"
                                     :render-suggestion="renderSuggestion"
@@ -167,6 +168,7 @@
                                          :input-class="'form-control w-100'"
                                          :value-type="'format'"
                                          :input-name="'date_of_issue'"
+                                         :editable='false'
                             >
                             </date-picker>
                         </div>
@@ -174,16 +176,21 @@
                 </div>
                 <div class="break-row-form"></div>
                 <div class="row justify-content-center">
-                    <div class="col-md-1 padding-row-5 col-list-search-f "></div>
-                    <div class="col-md-3 padding-row-5 grid-form-search row">
-                        <div class="col-md-5 padding-row-5">
+                    <div class="col-md-2 padding-row-5 col-list-search-f "></div>
+                    <div class="col-md-4 padding-row-5 grid-form-search row">
+                        <div class="col-md-4 padding-row-5">
                             <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmPDFModal" :disabled="disableBtn">
                                 {{trans('invoices.list.search.button.issue')}}
                             </button>
                         </div>
-                        <div class="col-md-5 padding-row-5">
+                        <div class="col-md-4 padding-row-5">
                             <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmCSVModal" :disabled="disableBtn">
                                 {{trans('invoices.list.search.button.csv')}}
+                            </button>
+                        </div>
+                        <div class="col-md-4 padding-row-5">
+                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmAmazonCSVModal" :disabled="disableBtn">
+                                {{trans('invoices.list.search.button.amazonCSV')}}
                             </button>
                         </div>
                     </div>
@@ -265,6 +272,15 @@
         'btn_ok_title' => trans('common.button.yes'),
         'btn_cancel_title' => trans('common.button.no'),
         ])
+        @include('Layouts.modal',[
+        'id'=> 'confirmAmazonCSVModal',
+        'title'=> '',
+        'content'=> trans('messages.MSG10022'),
+        'attr_input' => "@click='createAmazonCSV()'",
+        'btn_ok_title' => trans('common.button.yes'),
+        'btn_cancel_title' => trans('common.button.no'),
+        ])
+
     </div>
 @endsection
 @section("scripts")

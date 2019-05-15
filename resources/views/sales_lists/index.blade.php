@@ -5,6 +5,7 @@
     <style>
         .autosuggest__results-container{
             font-size: 14px;
+            text-align: left;
         }
     </style>
 @endsection
@@ -78,7 +79,6 @@
                                 </label>
                                 <vue-autosuggest
                                         :suggestions="filteredCustomerCd"
-                                        :limit="10"
                                         :input-props="inputPropsCd"
                                         :on-selected="onSelectedCd"
                                         :render-suggestion="renderSuggestion"
@@ -94,7 +94,6 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredCustomerNm"
-                                    :limit="10"
                                     :input-props="inputPropsName"
                                     :on-selected="onSelectedName"
                                     :render-suggestion="renderSuggestion"
@@ -125,7 +124,7 @@
                             </button>
                         </div>
                         <div class="col-md-2 lh-38 text-left padding-row-5">
-                            <button class="btn btn-primary w-100" v-if="items.length>0 && flagSearch" v-on:click="exportCSV">
+                            <button class="btn btn-primary w-100" v-if="items.length>0  && flagExport==true" v-on:click="createCSV">
                                 {{trans('common.button.export_excel')}}
                             </button>
                         </div>

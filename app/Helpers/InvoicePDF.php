@@ -65,7 +65,7 @@ class InvoicePDF extends TcpdfFpdi
 
         $this->SetFont($this->font, 'B', 12);
         $this->SetXY(20, 35);
-        $this->Write(8,$content->customer_nm);
+        $this->MultiCell(82, 8, $content->customer_nm,0,'L',false);
 
         $this->SetFont($this->font, '', 10);
         $this->SetXY(98, 52);
@@ -73,9 +73,9 @@ class InvoicePDF extends TcpdfFpdi
 
         $this->SetFontSize( 12);
         $this->SetXY(210, 25);
-        $this->Cell(0, 10, TimeFunction::getTimestamp('Y年m月d日'),0,0,'R');
+        $this->Cell(0, 10, TimeFunction::dateFormat($content->publication_date, 'Y年m月d日'),0,0,'R');
 
-        $this->SetXY(211, 35);
+        $this->SetXY(211, 34.5);
         $this->Write(0,$content->business_office_nm);
 
         $this->SetFontSize( 10);
@@ -87,9 +87,9 @@ class InvoicePDF extends TcpdfFpdi
         $this->MultiCell(0, 8, $content->address,0,'L',false);
 
         $this->SetFontSize( 9);
-        $this->SetXY(220, 49);
+        $this->SetXY(220, 49.5);
         $this->Write(0,$content->phone_number);
-        $this->SetXY(220, 53);
+        $this->SetXY(220, 53.5);
         $this->Write(0,$content->fax_number);
 
 

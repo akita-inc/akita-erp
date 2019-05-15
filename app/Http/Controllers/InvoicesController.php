@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 
 use App\Helpers\InvoicePDF;
-use App\Helpers\InvoicePDF_;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBillingHistoryHeaderDetails;
@@ -20,8 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use setasign\Fpdi\Fpdi;
-use setasign\Fpdi\TcpdfFpdi;
 
 
 class InvoicesController extends Controller {
@@ -64,6 +61,23 @@ class InvoicesController extends Controller {
             'waiting_fee' => '待機料',
             'incidental_fee' => '附帯料',
             'surcharge_fee' => 'サーチャージ料',
+        ];
+    public $amazonCsvColumn = [
+            'daily_report_date' => '月日',
+            'goods' => '品名',
+            'size' => '屯',
+            'quantity' => '数量',
+            'unit_price' => '単価',
+            'total_fee' => '金額',
+            'departure_point_name' => '発地',
+            'landing_name' => '着地',
+            'loading_fee' => '積込料',
+            'wholesale_fee' => '取卸料',
+            'incidental_fee' => '附帯料',
+            'waiting_fee' => '待機料',
+            'surcharge_fee' => 'サーチャージ料',
+            'billing_fast_charge' => '請求高速料',
+            'delivery_destination' => '納入先',
         ];
 
     public $csvContent = [];
@@ -352,13 +366,14 @@ class InvoicesController extends Controller {
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $type= $data['type'];
+        $publication_date = $data['date_of_issue'];
         if($type==1){
-            $this->createHistory($item,$fieldSearch);
+            $this->createHistory($item,$fieldSearch,$publication_date);
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
 
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
-                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
+                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID, $fieldSearch);
                 $pdf = new InvoicePDF();
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);
@@ -395,8 +410,9 @@ class InvoicesController extends Controller {
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $keys = array_keys($this->csvColumn);
+        $publication_date = $data['date_of_issue'];
 
-        $this->createHistory($item,$fieldSearch);
+        $this->createHistory($item,$fieldSearch,$publication_date);
         $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
             "Content-type" => "text/csv",
@@ -421,7 +437,42 @@ class InvoicesController extends Controller {
         return response()->stream($callback, 200, $headers);
     }
 
-    public function createHistory($item,$fieldSearch){
+    public function createAmazonCSV(Request $request){
+        $data = $request->all();
+        $fieldSearch = $data['fieldSearch'];
+        $item = $data['data'];
+        $keys = array_keys($this->amazonCsvColumn);
+        $publication_date = $data['date_of_issue'];
+
+        $this->createHistory($item,$fieldSearch,$publication_date);
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
+        $amazonCSVContent = $mBillingHistoryHeaderDetails->getAmazonCSVContent($this->listBillingHistoryDetailID);
+        $fileName = 'Amazon_seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
+        $headers = array(
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        );
+
+        $enclosure = config('params.amazon_csv.enclosure');
+        $callback = function() use ($amazonCSVContent,$keys,$item, $enclosure) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS", "UTF-8"));
+            foreach ($amazonCSVContent as $content) {
+                $row = [];
+                foreach ($keys as $key) {
+                    $row[$key] = $enclosure.$content->{$key}.$enclosure;
+                }
+                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function createHistory($item,$fieldSearch,$publication_date){
         $currentTime = date("Y-m-d H:i:s",time());
         $mSaleses = new MSaleses();
         $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
@@ -435,7 +486,7 @@ class InvoicesController extends Controller {
             $mBillingHistoryHeaders->invoice_number = $serial_number->serial_number;
             $mBillingHistoryHeaders->mst_customers_cd = $item['customer_cd'];
             $mBillingHistoryHeaders->mst_business_office_id = $item['mst_business_office_id'];
-            $mBillingHistoryHeaders->publication_date = date('Y-m-d');
+            $mBillingHistoryHeaders->publication_date = $publication_date;
             $mBillingHistoryHeaders->total_fee = $item['total_fee'];
             $mBillingHistoryHeaders->consumption_tax = $item['consumption_tax'];
             $mBillingHistoryHeaders->tax_included_amount = floatval($item['total_fee']) + floatval($item['consumption_tax']);

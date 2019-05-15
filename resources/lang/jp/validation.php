@@ -108,6 +108,8 @@ return [
     'decimal_custom' => \Illuminate\Support\Facades\Lang::get('messages.MSG02020'),
     'number_range' => \Illuminate\Support\Facades\Lang::get('messages.MSG02021'),
     'is_image' => \Illuminate\Support\Facades\Lang::get('messages.MSG02018'),
+    'hiragana' => \Illuminate\Support\Facades\Lang::get('messages.MSG02026'),
+    'two_bytes_string' => \Illuminate\Support\Facades\Lang::get('messages.MSG02027'),
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

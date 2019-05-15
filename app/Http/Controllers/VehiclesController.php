@@ -198,7 +198,10 @@ class VehiclesController extends Controller
         $rules = [
             'vehicles_cd'=>'required|one_byte_number|length:10|number_range|unique:mst_vehicles,vehicles_cd,NULL,id,deleted_at,NULL',
             'door_number'=>'required|one_byte_number|length:10|number_range',
-            'registration_numbers'=>'required|length:50',
+            'registration_numbers1'=>'required|two_bytes_string|length:10',
+            'registration_numbers2'=>'required|one_bytes_string|length:3',
+            'registration_numbers3'=>'required|hiragana|length:1',
+            'registration_numbers4'=>'required|one_byte_number|length:4',
             'mst_business_office_id'=>'required',
             'vehicle_inspection_sticker_pdf'=>'nullable|mimes:pdf|max_mb:'.config('params.max_file_size'),
             'first_year_registration_dt'=>'nullable|date_format_custom:Ym',
@@ -275,7 +278,11 @@ class VehiclesController extends Controller
                 $mVehicle->vehicles_cd = $data["vehicles_cd"];
                 $mVehicle->door_number = $data["door_number"];
                 $mVehicle->vehicles_kb = $data["vehicles_kb"];
-                $mVehicle->registration_numbers = $data["registration_numbers"];
+                $mVehicle->registration_numbers1 = $data["registration_numbers1"];
+                $mVehicle->registration_numbers2 = $data["registration_numbers2"];
+                $mVehicle->registration_numbers3 = $data["registration_numbers3"];
+                $mVehicle->registration_numbers4 = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
+                $mVehicle->registration_numbers = $data["registration_numbers1"].$data["registration_numbers2"].$data["registration_numbers3"].str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
                 $mVehicle->mst_business_office_id = $data["mst_business_office_id"];
                 $mVehicle->vehicle_size_kb = $data["vehicle_size_kb"];
                 $mVehicle->vehicle_purpose_id = $data["vehicle_purpose_id"];

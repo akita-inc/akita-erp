@@ -21125,10 +21125,14 @@ var ctrEmptyInfoVl = new Vue({
       }
     },
     addComma: function addComma(id) {
-      this.field[id] = (id == 'asking_price' && this.field[id] != '' ? '¥ ' : '') + this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      if (this.field[id] != null) {
+        this.field[id] = (id == 'asking_price' && this.field[id] != '' ? '¥ ' : '') + this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
     },
     removeComma: function removeComma(id) {
-      this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
+      if (this.field[id] != null) {
+        this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
+      }
     },
     resetForm: function resetForm() {
       this.registration_numbers = "";
@@ -21307,7 +21311,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\empty-info-vl.js */"./resources/assets/js/controller/empty-info-vl.js");
 
 
 /***/ })

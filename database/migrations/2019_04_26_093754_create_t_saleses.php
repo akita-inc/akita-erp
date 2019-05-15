@@ -37,7 +37,7 @@ class CreateTSaleses extends Migration
             $table->decimal('waiting_fee',10,2)->nullable();
             $table->decimal('incidental_fee',10,2)->nullable();
             $table->decimal('surcharge_fee',10,2)->nullable();
-            $table->float('quantity')->nullable();
+            $table->double('quantity')->nullable();
             $table->decimal('unit_price',10,2)->nullable();
             $table->decimal('discount_amount',10,2)->nullable();
             $table->integer('summary_indicator')->nullable();
@@ -52,6 +52,7 @@ class CreateTSaleses extends Migration
             $table->integer('add_mst_staff_id')->nullable();
             $table->timestamp('modified_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('upd_mst_staff_id')->nullable();
+            $table->index('document_no');
         });
     }
 

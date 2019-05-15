@@ -62,5 +62,11 @@ invoice_service = {
             return error;
         });
     },
-
+    createAmazonCSV: function (data) {
+        return axios.post('/invoices/api-v1/create-amazon-csv',data, {responseType: 'arraybuffer'}).then(function (response) {
+            return response;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }

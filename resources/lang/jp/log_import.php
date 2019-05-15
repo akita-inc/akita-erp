@@ -34,5 +34,6 @@ return[
     'insert_error' => "▼ SQL実行エラー：　:fileName　:row行目　\r\n". "エラー内容：:errorDetail　",
     'no_record_in_extra_file' =>  "▼ IDマッチングエラー：　:mainFileName　:fieldName　:row行目　マッチング対象：　:extraFileName",
     'existed_record_in_db' => "▼ コード重複エラー：　:fileName　:fieldName　:row行目　",
+    'registration_numbers_err' => "▼ 自動車登録番号エラー：　:fileName　:fieldName　:row行目　",
 
 ];
