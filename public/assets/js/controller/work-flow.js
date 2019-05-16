@@ -18716,47 +18716,7 @@ var ctrWorkFlowVl = new Vue({
       name: "",
       steps: "",
       mst_wf_require_approval_base: [],
-      mst_wf_require_approval: [// [
-        //     {
-        //         applicant_section:"",
-        //         approval_steps:"",
-        //         approval_levels:"",
-        //         approval_kb:"",
-        //     },
-        //     {
-        //         applicant_section:"",
-        //         approval_steps:"",
-        //         approval_levels:"",
-        //         approval_kb:"",
-        //     },
-        //     {
-        //         applicant_section:"",
-        //         approval_steps:"",
-        //         approval_levels:"",
-        //         approval_kb:"",
-        //     },
-        // ],
-        // [
-        //     {
-        //         applicant_section:"",
-        //         approval_steps:"",
-        //         approval_levels:"",
-        //         approval_kb:"",
-        //     },
-        //     {
-        //         applicant_section:"",
-        //         approval_steps:"",
-        //         approval_levels:"",
-        //         approval_kb:"",
-        //     },
-        //     {
-        //         applicant_section:"",
-        //         approval_steps:"",
-        //         approval_levels:"",
-        //         approval_kb:"",
-        //     },
-        // ]
-      ],
+      mst_wf_require_approval: [],
       applicant_section: "",
       approval_steps: "",
       approval_levels: "",

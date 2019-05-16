@@ -24,23 +24,21 @@
             </div>
 
             <div class="sub-header-line-two">
-                    <div class="grid-form border-0">
-                        <div class="row">
-                            <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
-                            <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                    <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
-                                    <button v-else @click="submit" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
-                                    <button class="btn btn-light m-auto" type="button" @click="resetForm" >
-                                        {{ trans("work_flow.create.button.clear") }}
-                                    </button>
+                <div class="grid-form border-0">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                        <div class="col-md-7 col-sm-12 row grid-col h-100">
+                                <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                <button v-else @click="submit" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
+                                <button class="btn btn-light m-auto" type="button" @click="resetForm" >
+                                    {{ trans("work_flow.create.button.clear") }}
+                                </button>
 
-                            </div>
                         </div>
                     </div>
                 </div>
-
+            </div>
         </div>
-
 
         <form class="form-inline" role="form">
             <div class="grid-form">
@@ -65,6 +63,7 @@
                             'required'=>true,
                             'filedId'=> "'mst_wf_require_approval_base_approval_levels_'+index" ,
                             'filedMode'=>"items.approval_levels",
+                            'index' => "index+1"
                         ])
                     </div>
                     <div class="col-md-6 col-sm-12">
@@ -99,6 +98,7 @@
                             'required'=>true,
                             'filedId'=> "'mst_wf_require_approval_approval_levels_'+section+'_'+index" ,
                             'filedMode'=>"item.approval_levels",
+                            'index' => "index+1"
                         ])
                     </div>
                     <div class="col-md-6 col-sm-12">

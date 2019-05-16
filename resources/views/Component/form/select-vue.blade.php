@@ -3,7 +3,7 @@
                && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index].{!! $filed !!} != undefined ? 'error-form':'' ">
     <div class="wrap-control-group {!! isset($class) ? $class:"" !!}">
         <label class="{!! isset($required) && $required ? "required":"" !!}" v-bind:for="{!! $filedId !!}">
-            {{ trans(@$prefix.$filed) }}
+            {{ trans(@$prefix.$filed) }}{!! isset($index) ? '<span v-html="'.$index.'"> ':"" !!}
         </label>
         <select {!! isset($attr_input) ? $attr_input:"" !!}
                 v-bind:class="errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!} != undefined
