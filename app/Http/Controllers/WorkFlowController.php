@@ -6,6 +6,9 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MSaleses;
+use App\Models\MWfRequireApproval;
+use App\Models\MWfRequireApprovalBase;
+use App\Models\MWfType;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -115,13 +118,25 @@ class WorkFlowController extends Controller
     }
 
     public function store(Request $request, $id=null){
+        $mWfType = null;
+        $mWfRequireApprovalBase = null;
+        $mWfRequireApproval = null;
         $mGeneralPurposes = new MGeneralPurposes();
         $listWfLevel =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'');
         $listWfApprovalIndicator =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_approval_indicator'),'');
         $listWfApplicantAffiliationClassification= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb.wf_applicant_affiliation_classification'));
-        dd($listWfApplicantAffiliationClassification);
+        if($id != null) {
+            $mWfType = MWfType::find($id);
+            $mWfRequireApprovalBase = MWfRequireApprovalBase::query()->where('wf_type','=',$id)->get();
+            $mWfRequireApproval = MWfRequireApproval()::query()->where('wf_type','=',$id)->get();
+        }
         return view('work_flow.form', [
-
+            'mWfType' => $mWfType,
+            'mWfRequireApprovalBase' => $mWfRequireApprovalBase,
+            'mWfRequireApproval' => $mWfRequireApproval,
+            'listWfLevel' => $listWfLevel,
+            'listWfApprovalIndicator' => $listWfApprovalIndicator,
+            'listWfApplicantAffiliationClassification' => $listWfApplicantAffiliationClassification,
         ]);
     }
 

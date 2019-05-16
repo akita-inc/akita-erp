@@ -428,7 +428,7 @@ class MstVehicles extends BaseImport
                                         "fieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                     ]));
-                                }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber') && strpos($field, 'registration_numbers') === 0){
+                                }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber' || $ruleName=='TwoBytesString') && strpos($field, 'registration_numbers') === 0){
                                     $error_fg = true;
                                     $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),

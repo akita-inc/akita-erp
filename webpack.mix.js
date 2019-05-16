@@ -88,3 +88,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/work-flow-list-vl.js'
 ], 'public/assets/js/controller/work-flow-list.js');
+
+mix.js([
+    'resources/assets/js/controller/work-flow-vl.js'
+], 'public/assets/js/controller/work-flow.js');
