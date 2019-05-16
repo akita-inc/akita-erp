@@ -20,10 +20,14 @@ class WorkFlowController extends Controller
     use ListTrait;
     public $table = "wf_type";
     public $ruleValid = [
-
+        "name" => "required|",
+        "steps" => "承認段階数",
     ];
     public $messagesCustom =[];
-    public $labels=[];
+    public $labels=[
+        "name" => "名称",
+        "steps" => "承認段階数",
+    ];
     public $currentData=null;
     public function __construct(){
         parent::__construct();
@@ -148,7 +152,15 @@ class WorkFlowController extends Controller
     }
 
     public function validateData(Request $request){
+        $data=  $request->all();
+        $validator = Validator::make($data, $this->ruleValid,$this->messagesCustom,$this->labels);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success'=>FALSE,
+                'message'=> $validator->errors()
+            ]);
+        }
     }
 
 }

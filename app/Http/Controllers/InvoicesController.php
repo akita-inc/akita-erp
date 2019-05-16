@@ -434,7 +434,7 @@ class InvoicesController extends Controller {
         $enclosure = config('params.csv.enclosure');
         $callback = function() use ($keys,$item, $enclosure,$csvContent) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"));
+            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
             foreach ($csvContent as $content) {
                 $row = [];
                 foreach ($keys as $key) {
@@ -478,7 +478,7 @@ class InvoicesController extends Controller {
         $enclosure = config('params.amazon_csv.enclosure');
         $callback = function() use ($amazonCSVContent,$keys,$item, $enclosure) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS", "UTF-8"));
+            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS", "UTF-8"))."\r\n");
             foreach ($amazonCSVContent as $content) {
                 $row = [];
                 foreach ($keys as $key) {
