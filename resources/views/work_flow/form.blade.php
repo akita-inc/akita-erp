@@ -28,7 +28,8 @@
                         <div class="row">
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                    <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                    <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                    <button v-else @click="submit" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
                                     <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                         {{ trans("work_flow.create.button.clear") }}
                                     </button>
@@ -45,24 +46,71 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
-                        @include('Component.form.input',['filed'=>'name','required'=>true,'attr_input' => "maxlength='50'"])
+                        @include('Component.form.input',['filed'=>'name','required'=>true,'attr_input' => "maxlength='50' :disabled='screenStep != 1'"])
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-6 col-sm-12">
-                        @include('Component.form.input',['filed'=>'steps','required'=>true,'attr_input' => "maxlength='50'"])
+                        @include('Component.form.input',['filed'=>'steps','required'=>true,'attr_input' => "maxlength='50' :disabled='screenStep != 1'"])
                     </div>
                     <div class="col-md-6 col-sm-12 no-padding lh-38">段階</div>
 
                 </div>
             </div>
-            <div class="grid-form">
+            <div class="grid-form" v-if="screenStep==2" v-cloak>
                 <div class="row" v-for="(items,index) in field.mst_wf_require_approval_base">
-                    @include('work_flow.row',[])
+                    <div class="col-md-6 col-sm-12">
+                        @include('Component.form.select-vue',[
+                            'filed'=>'approval_levels',
+                            'array'=>$listWfLevel,
+                            'required'=>true,
+                            'filedId'=> "'mst_wf_require_approval_base_approval_levels_'+index" ,
+                            'filedMode'=>"items.approval_levels",
+                        ])
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        @include('Component.form.select-vue',[
+                            'filed'=>'approval_kb',
+                            'array'=>$listWfApprovalIndicator,
+                            'required'=>true,
+                            'filedId'=> "'mst_wf_require_approval_base_approval_kb_'+index" ,
+                            'filedMode'=>"items.approval_kb",
+                        ])
+                    </div>
+                    <div class="break-row-form"></div>
                 </div>
             </div>
-            <div class="grid-form" v-for="(items,index) in field.mst_wf_require_approval">
-                <div class="row" v-for="(item,k) in items">
-                    @include('work_flow.row',[])
+            <div class="grid-form" v-if="screenStep==3" v-cloak v-for="(items,section) in field.mst_wf_require_approval">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="wrap-control-group ">
+                            <label for="steps">
+                                申請者所属区分
+                            </label>
+                            <span class="pl-3 lh-38">@{{items.applicant_section_nm}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="break-row-form"></div>
+                <div class="row" v-for="(item,index) in items.list">
+                    <div class="col-md-6 col-sm-12">
+                        @include('Component.form.select-vue',[
+                            'filed'=>'approval_levels',
+                            'array'=>$listWfLevel,
+                            'required'=>true,
+                            'filedId'=> "'mst_wf_require_approval_approval_levels_'+section+'_'+index" ,
+                            'filedMode'=>"item.approval_levels",
+                        ])
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        @include('Component.form.select-vue',[
+                            'filed'=>'approval_kb',
+                            'array'=>$listWfApprovalIndicator,
+                            'required'=>true,
+                            'filedId'=> "'mst_wf_require_approval_approval_kb_'+section+'_'+index" ,
+                            'filedMode'=>"item.approval_kb",
+                        ])
+                    </div>
+                    <div class="break-row-form"></div>
                 </div>
             </div>
         </form>
@@ -71,9 +119,6 @@
                 <div class="d-flex">
                     <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                 </div>
-
-                <input type="hidden" id="hd_work_flow_edit" value="{!! !empty($mWfType) ? 1:0 !!}">
-                {{--<input type="hidden" id="mode" value="{!! $mode !!}">--}}
             </div>
 
             <div class="sub-header-line-two">
@@ -81,7 +126,8 @@
                     <div class="row">
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
-                            <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                            <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                            <button v-else @click="submit" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
                             <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                 {{ trans("work_flow.create.button.clear") }}
                             </button>

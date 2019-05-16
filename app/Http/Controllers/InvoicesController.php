@@ -73,11 +73,11 @@ class InvoicesController extends Controller {
             'landing_name' => '着地',
             'loading_fee' => '積込料',
             'wholesale_fee' => '取卸料',
-            'incidental_fee' => '附帯料',
+            'incidental_fee' => '付帯業務料',
             'waiting_fee' => '待機料',
             'surcharge_fee' => 'サーチャージ料',
-            'billing_fast_charge' => '請求高速料',
-            'delivery_destination' => '納入先',
+            'billing_fast_charge' => '通行料',
+            'delivery_destination' => '備考',
         ];
 
     public $csvContent = [];

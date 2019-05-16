@@ -124,7 +124,7 @@ class WorkFlowController extends Controller
         $mGeneralPurposes = new MGeneralPurposes();
         $listWfLevel =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'');
         $listWfApprovalIndicator =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_approval_indicator'),'');
-        $listWfApplicantAffiliationClassification= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb.wf_applicant_affiliation_classification'));
+
         if($id != null) {
             $mWfType = MWfType::find($id);
             $mWfRequireApprovalBase = MWfRequireApprovalBase::query()->where('wf_type','=',$id)->get();
@@ -136,7 +136,14 @@ class WorkFlowController extends Controller
             'mWfRequireApproval' => $mWfRequireApproval,
             'listWfLevel' => $listWfLevel,
             'listWfApprovalIndicator' => $listWfApprovalIndicator,
-            'listWfApplicantAffiliationClassification' => $listWfApplicantAffiliationClassification,
+        ]);
+    }
+
+    public function getListWfApplicantAffiliationClassification(Request $request){
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listWfApplicantAffiliationClassification= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb.wf_applicant_affiliation_classification'));
+        return response()->json([
+            'info'=> $listWfApplicantAffiliationClassification,
         ]);
     }
 

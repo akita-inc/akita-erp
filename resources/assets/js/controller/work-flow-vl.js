@@ -11,37 +11,100 @@ var ctrWorkFlowVl = new Vue({
             wf_type:"",
             name:"",
             steps:"",
-            mst_wf_require_approval_base: [{
-                approval_steps:"",
-                approval_levels:"",
-                approval_kb:"",
-            },{
-                approval_steps:"",
-                approval_levels:"",
-                approval_kb:"",
-            },{
-                approval_steps:"",
-                approval_levels:"",
-                approval_kb:"",
-            }],
-            mst_wf_require_approval: [{
-                applicant_section:"",
-                approval_steps:"",
-                approval_levels:"",
-                approval_kb:"",
-            }],
+            mst_wf_require_approval_base: [],
+            mst_wf_require_approval: [
+                // [
+                //     {
+                //         applicant_section:"",
+                //         approval_steps:"",
+                //         approval_levels:"",
+                //         approval_kb:"",
+                //     },
+                //     {
+                //         applicant_section:"",
+                //         approval_steps:"",
+                //         approval_levels:"",
+                //         approval_kb:"",
+                //     },
+                //     {
+                //         applicant_section:"",
+                //         approval_steps:"",
+                //         approval_levels:"",
+                //         approval_kb:"",
+                //     },
+                // ],
+                // [
+                //     {
+                //         applicant_section:"",
+                //         approval_steps:"",
+                //         approval_levels:"",
+                //         approval_kb:"",
+                //     },
+                //     {
+                //         applicant_section:"",
+                //         approval_steps:"",
+                //         approval_levels:"",
+                //         approval_kb:"",
+                //     },
+                //     {
+                //         applicant_section:"",
+                //         approval_steps:"",
+                //         approval_levels:"",
+                //         approval_kb:"",
+                //     },
+                // ]
+            ],
             applicant_section:"",
             approval_steps:"",
             approval_levels:"",
             approval_kb:"",
 
         },
-        step:1,
+        screenStep:1,
+        listApplicant:null,
         errors:{},
         modified_at: "",
 
     },
     methods : {
+        getListWfApplicantAffiliationClassification: function(){
+            var that = this;
+            work_flow_list_service.getListWfApplicantAffiliationClassification().then((response) => {
+                that.listApplicant = response.info;
+            });
+        },
+        nextStep: function(){
+            this.loading = true;
+            this.screenStep++;
+            if(this.screenStep==2){
+                this.handleStep1();
+            }else{
+                this.handleStep2();
+            }
+            this.loading = false;
+        },
+        handleStep1: function(){
+            for( var i = 0; i<this.field.steps; i++){
+                this.field.mst_wf_require_approval_base.push({
+                    approval_steps:"",
+                    approval_levels:"",
+                    approval_kb:"",
+                });
+            }
+        },
+        handleStep2: function(){
+            console.log(this.field.mst_wf_require_approval_base);
+            var that = this;
+            that.listApplicant.forEach((value,key) => {
+                that.field.mst_wf_require_approval[value.date_id] ={
+                    applicant_section_nm:"",
+                    list: [],
+                };
+                that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
+                that.field.mst_wf_require_approval[value.date_id].list = that.field.mst_wf_require_approval_base;
+            })
+            console.log(that.field.mst_wf_require_approval);
+        },
         submit: function(status){
             let that = this;
             that.loading = true;
@@ -240,7 +303,7 @@ var ctrWorkFlowVl = new Vue({
 
     },
     mounted () {
-
+        this.getListWfApplicantAffiliationClassification();
     },
     components: {
         PulseLoader

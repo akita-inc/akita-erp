@@ -18715,35 +18715,99 @@ var ctrWorkFlowVl = new Vue({
       wf_type: "",
       name: "",
       steps: "",
-      mst_wf_require_approval_base: [{
-        approval_steps: "",
-        approval_levels: "",
-        approval_kb: ""
-      }, {
-        approval_steps: "",
-        approval_levels: "",
-        approval_kb: ""
-      }, {
-        approval_steps: "",
-        approval_levels: "",
-        approval_kb: ""
-      }],
-      mst_wf_require_approval: [{
-        applicant_section: "",
-        approval_steps: "",
-        approval_levels: "",
-        approval_kb: ""
-      }],
+      mst_wf_require_approval_base: [],
+      mst_wf_require_approval: [// [
+        //     {
+        //         applicant_section:"",
+        //         approval_steps:"",
+        //         approval_levels:"",
+        //         approval_kb:"",
+        //     },
+        //     {
+        //         applicant_section:"",
+        //         approval_steps:"",
+        //         approval_levels:"",
+        //         approval_kb:"",
+        //     },
+        //     {
+        //         applicant_section:"",
+        //         approval_steps:"",
+        //         approval_levels:"",
+        //         approval_kb:"",
+        //     },
+        // ],
+        // [
+        //     {
+        //         applicant_section:"",
+        //         approval_steps:"",
+        //         approval_levels:"",
+        //         approval_kb:"",
+        //     },
+        //     {
+        //         applicant_section:"",
+        //         approval_steps:"",
+        //         approval_levels:"",
+        //         approval_kb:"",
+        //     },
+        //     {
+        //         applicant_section:"",
+        //         approval_steps:"",
+        //         approval_levels:"",
+        //         approval_kb:"",
+        //     },
+        // ]
+      ],
       applicant_section: "",
       approval_steps: "",
       approval_levels: "",
       approval_kb: ""
     },
-    step: 1,
+    screenStep: 1,
+    listApplicant: null,
     errors: {},
     modified_at: ""
   },
   methods: {
+    getListWfApplicantAffiliationClassification: function getListWfApplicantAffiliationClassification() {
+      var that = this;
+      work_flow_list_service.getListWfApplicantAffiliationClassification().then(function (response) {
+        that.listApplicant = response.info;
+      });
+    },
+    nextStep: function nextStep() {
+      this.loading = true;
+      this.screenStep++;
+
+      if (this.screenStep == 2) {
+        this.handleStep1();
+      } else {
+        this.handleStep2();
+      }
+
+      this.loading = false;
+    },
+    handleStep1: function handleStep1() {
+      for (var i = 0; i < this.field.steps; i++) {
+        this.field.mst_wf_require_approval_base.push({
+          approval_steps: "",
+          approval_levels: "",
+          approval_kb: ""
+        });
+      }
+    },
+    handleStep2: function handleStep2() {
+      console.log(this.field.mst_wf_require_approval_base);
+      var that = this;
+      that.listApplicant.forEach(function (value, key) {
+        that.field.mst_wf_require_approval[value.date_id] = {
+          applicant_section_nm: "",
+          list: []
+        };
+        that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
+        that.field.mst_wf_require_approval[value.date_id].list = that.field.mst_wf_require_approval_base;
+      });
+      console.log(that.field.mst_wf_require_approval);
+    },
     submit: function submit(status) {
       var that = this;
       that.loading = true;
@@ -18968,7 +19032,9 @@ var ctrWorkFlowVl = new Vue({
       $("#search_vehicle").focus();
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    this.getListWfApplicantAffiliationClassification();
+  },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
