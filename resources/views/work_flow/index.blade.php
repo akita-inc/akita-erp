@@ -53,8 +53,8 @@
                             </td>
                             @else
                             <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
-                                <p v-if="item['{{$key}}']">{!! "@{{item['$key']}}" !!}</p>
-                                <p v-else>---</p>
+                                <span v-if="item['{{$key}}']">{!! "@{{item['$key']}}" !!}</span>
+                                <span v-else>---</span>
                             </td>
                             @endif
                         @endforeach
