@@ -368,9 +368,15 @@ class InvoicesController extends Controller {
         $type= $data['type'];
         $publication_date = $data['date_of_issue'];
         if($type==1){
-            $this->createHistory($item,$fieldSearch,$publication_date);
+            $listBillingHistoryHeaderID = $data['listBillingHistoryHeaderID'];
+            $listBillingHistoryDetailID = $data['listBillingHistoryDetailID'];
+            if(!empty($listBillingHistoryHeaderID) && !empty($listBillingHistoryDetailID)){
+                $this->billingHistoryHeaderID = $listBillingHistoryHeaderID;
+                $this->listBillingHistoryDetailID = explode(',',$listBillingHistoryDetailID);
+            }else{
+                $this->createHistory($item,$fieldSearch,$publication_date);
+            }
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
-
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
                 $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID, $fieldSearch);
@@ -381,19 +387,14 @@ class InvoicesController extends Controller {
                 $pdf->getTotalPage($contentDetails);
                 $pdf->writeHeader($contentHeader[0]);
                 $pdf->writeDetails($contentDetails);
+                header("listBillingHistoryHeaderID: $this->billingHistoryHeaderID");
+                header("listBillingHistoryDetailID:". implode(',',$this->listBillingHistoryDetailID));
                 $pdf->Output(storage_path('/pdf_template/'.$fileName),'FI');
             }
         }else{
             $oldName = storage_path('/pdf_template/'.$data['fileName']);
             chmod($oldName,0777);
             $newName = 'seikyu_hikae_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
-            $headers = [
-                'Content-Type' => 'application/pdf',
-                "Content-Disposition" => "attachment; filename=$newName",
-                "Pragma" => "no-cache",
-                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-                "Expires" => "0"
-            ];
             $pdf = new InvoicePDF();
             $pdf->SetPrintHeader(false);
             $pdf->SetPrintFooter(false);
@@ -401,7 +402,6 @@ class InvoicesController extends Controller {
             $pdf->Close();
             unlink($oldName);
             $pdf->Output($newName);
-
         }
     }
 
@@ -411,24 +411,34 @@ class InvoicesController extends Controller {
         $item = $data['data'];
         $keys = array_keys($this->csvColumn);
         $publication_date = $data['date_of_issue'];
-
-        $this->createHistory($item,$fieldSearch,$publication_date);
-        $fileName = 'seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
+        $listBillingHistoryHeaderID = $data['listBillingHistoryHeaderID'];
+        $listBillingHistoryDetailID = $data['listBillingHistoryDetailID'];
+        if(!empty($listBillingHistoryDetailID)){
+            $this->billingHistoryHeaderID = $listBillingHistoryHeaderID;
+            $this->listBillingHistoryDetailID = explode(',',$listBillingHistoryDetailID);
+        }else{
+            $this->createHistory($item,$fieldSearch,$publication_date);
+        }
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
+        $csvContent = $mBillingHistoryHeaderDetails->getCSVContent($this->listBillingHistoryDetailID);
+        $fileName = 'seikyu_'.$csvContent[0]->branch_office_cd.'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
             "Content-type" => "text/csv",
             "Content-Disposition" => "attachment; filename=$fileName",
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
+            "Expires" => "0",
+            'listBillingHistoryHeaderID' => $this->billingHistoryHeaderID,
+            'listBillingHistoryDetailID' => implode(',',$this->listBillingHistoryDetailID),
         );
         $enclosure = config('params.csv.enclosure');
-        $callback = function() use ($keys,$item, $enclosure) {
+        $callback = function() use ($keys,$item, $enclosure,$csvContent) {
             $file = fopen('php://output', 'w');
             fputcsv($file, mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"));
-            foreach ($this->csvContent[$item['customer_cd']] as $content) {
+            foreach ($csvContent as $content) {
                 $row = [];
                 foreach ($keys as $key) {
-                    $row[$key] = $enclosure.$content[$key].$enclosure;
+                    $row[$key] = $enclosure.$content->{$key}.$enclosure;
                 }
                 fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
             }
@@ -443,17 +453,26 @@ class InvoicesController extends Controller {
         $item = $data['data'];
         $keys = array_keys($this->amazonCsvColumn);
         $publication_date = $data['date_of_issue'];
+        $listBillingHistoryHeaderID = $data['listBillingHistoryHeaderID'];
+        $listBillingHistoryDetailID = $data['listBillingHistoryDetailID'];
+        if(!empty($listBillingHistoryDetailID)){
+            $this->billingHistoryHeaderID = $listBillingHistoryHeaderID;
+            $this->listBillingHistoryDetailID = explode(',',$listBillingHistoryDetailID);
+        }else{
+            $this->createHistory($item,$fieldSearch,$publication_date);
+        }
 
-        $this->createHistory($item,$fieldSearch,$publication_date);
         $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $amazonCSVContent = $mBillingHistoryHeaderDetails->getAmazonCSVContent($this->listBillingHistoryDetailID);
-        $fileName = 'Amazon_seikyu_'.$this->csvContent[$item['customer_cd']][0]['branch_office_cd'].'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
+        $fileName = 'Amazon_seikyu_'.$amazonCSVContent[0]->branch_office_cd.'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
             "Content-type" => "text/csv",
             "Content-Disposition" => "attachment; filename=$fileName",
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
+            "Expires" => "0",
+            'listBillingHistoryHeaderID' => $this->billingHistoryHeaderID,
+            'listBillingHistoryDetailID' => implode(',',$this->listBillingHistoryDetailID),
         );
 
         $enclosure = config('params.amazon_csv.enclosure');

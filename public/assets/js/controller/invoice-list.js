@@ -21683,9 +21683,8 @@ var ctrInvoiceListVl = new Vue({
       special_closing_date: "",
       closed_date_input: ""
     },
-    csvFile: [],
-    amazonCsvFile: [],
-    pdfFile: [],
+    listBillingHistoryHeaderID: [],
+    listBillingHistoryDetailID: [],
     getItems: function getItems(page, show_msg) {
       if (show_msg !== true) {
         $('.alert').hide();
@@ -21714,8 +21713,9 @@ var ctrInvoiceListVl = new Vue({
             closed_date_input: ""
           };
           that.flagSearch = true;
-          that.disableBtn = false;
           that.errors = [];
+          that.listBillingHistoryHeaderID = [];
+          that.listBillingHistoryDetailID = [];
 
           if (response.data.length === 0) {
             that.message = messages["MSG05001"];
@@ -21894,12 +21894,25 @@ var ctrInvoiceListVl = new Vue({
                 this.loading = true;
                 _context2.next = 4;
                 return that.items.forEach(function (value, key) {
+                  var listHeaderID = null;
+                  var listDetailID = null;
+
+                  if (typeof that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id] != "undefined") {
+                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id];
+                  }
+
+                  if (typeof that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id] != "undefined") {
+                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id];
+                  }
+
                   setTimeout(function () {
                     invoice_service.createPDF({
                       data: value,
                       'fieldSearch': that.fileSearched,
                       type: 1,
-                      date_of_issue: that.date_of_issue
+                      date_of_issue: that.date_of_issue,
+                      'listBillingHistoryHeaderID': listHeaderID,
+                      'listBillingHistoryDetailID': listDetailID
                     }).then(
                     /*#__PURE__*/
                     function () {
@@ -21911,10 +21924,12 @@ var ctrInvoiceListVl = new Vue({
                           while (1) {
                             switch (_context.prev = _context.next) {
                               case 0:
-                                _context.next = 2;
+                                that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
+                                that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
+                                _context.next = 4;
                                 return that.downloadFile(response);
 
-                              case 2:
+                              case 4:
                                 filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
                                 invoice_service.createPDF({
                                   data: value,
@@ -21926,7 +21941,7 @@ var ctrInvoiceListVl = new Vue({
                                   that.downloadFile(response1);
                                 });
 
-                              case 4:
+                              case 6:
                               case "end":
                                 return _context.stop();
                             }
@@ -21938,15 +21953,13 @@ var ctrInvoiceListVl = new Vue({
                         return _ref.apply(this, arguments);
                       };
                     }());
-                    return;
                   }, key * 1000);
                 });
 
               case 4:
-                this.disableBtn = true;
                 this.loading = false;
 
-              case 6:
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -21973,22 +21986,36 @@ var ctrInvoiceListVl = new Vue({
                 this.loading = true;
                 _context3.next = 4;
                 return that.items.forEach(function (value, key) {
+                  var listHeaderID = null;
+                  var listDetailID = null;
+
+                  if (typeof that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id] != "undefined") {
+                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id];
+                  }
+
+                  if (typeof that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id] != "undefined") {
+                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id];
+                  }
+
                   setTimeout(function () {
                     invoice_service.createCSV({
                       data: value,
                       'fieldSearch': that.fileSearched,
-                      date_of_issue: that.date_of_issue
+                      date_of_issue: that.date_of_issue,
+                      'listBillingHistoryHeaderID': listHeaderID,
+                      'listBillingHistoryDetailID': listDetailID
                     }).then(function (response) {
-                      that.downloadFile(response, 'csv');
+                      that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
+                      that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
+                      that.downloadFile(response);
                     });
                   }, key * 1000);
                 });
 
               case 4:
-                this.disableBtn = true;
                 this.loading = false;
 
-              case 6:
+              case 5:
               case "end":
                 return _context3.stop();
             }
@@ -22015,22 +22042,36 @@ var ctrInvoiceListVl = new Vue({
                 this.loading = true;
                 _context4.next = 4;
                 return that.items.forEach(function (value, key) {
+                  var listHeaderID = null;
+                  var listDetailID = null;
+
+                  if (typeof that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id] != "undefined") {
+                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id];
+                  }
+
+                  if (typeof that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id] != "undefined") {
+                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id];
+                  }
+
                   setTimeout(function () {
                     invoice_service.createAmazonCSV({
                       data: value,
                       'fieldSearch': that.fileSearched,
-                      date_of_issue: that.date_of_issue
+                      date_of_issue: that.date_of_issue,
+                      'listBillingHistoryHeaderID': listHeaderID,
+                      'listBillingHistoryDetailID': listDetailID
                     }).then(function (response) {
-                      that.downloadFile(response, 'csv');
+                      that.listBillingHistoryHeaderID[value.customer_cd + '_' + value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
+                      that.listBillingHistoryDetailID[value.customer_cd + '_' + value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
+                      that.downloadFile(response);
                     });
                   }, key * 1000);
                 });
 
               case 4:
-                this.disableBtn = true;
                 this.loading = false;
 
-              case 6:
+              case 5:
               case "end":
                 return _context4.stop();
             }

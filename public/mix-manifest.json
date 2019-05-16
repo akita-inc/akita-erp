@@ -13,6 +13,7 @@
     "/assets/js/controller/suppliers-list.js": "/assets/js/controller/suppliers-list.js",
     "/assets/js/controller/vehicles.js": "/assets/js/controller/vehicles.js",
     "/assets/js/controller/vehicles-list.js": "/assets/js/controller/vehicles-list.js",
+    "/assets/js/controller/work-flow-list.js": "/assets/js/controller/work-flow-list.js",
     "/assets/js/directive/directive.js": "/assets/js/directive/directive.js",
     "/assets/js/service/service.js": "/assets/js/service/service.js"
 }

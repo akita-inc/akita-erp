@@ -397,7 +397,7 @@ class MstVehicles extends BaseImport
                         foreach ($failedRules as $field => $errors){
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
-                                    if(strpos($field, 'registration_numbers') == 0){
+                                    if(strpos($field, 'registration_numbers') === 0){
                                         $error_fg = true;
                                         $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                             "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
@@ -423,7 +423,7 @@ class MstVehicles extends BaseImport
                                         "fieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                     ]));
-                                }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber') && strpos($field, 'registration_numbers') == 0){
+                                }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber') && strpos($field, 'registration_numbers') === 0){
                                     $error_fg = true;
                                     $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
@@ -437,14 +437,26 @@ class MstVehicles extends BaseImport
                     unset($data['row']);
                     unset($data['sheet']);
                     unset($this->{"data_extra_file_".$k}[$record['vehicles_cd']]);
+                }else{
+                    if($k==2){
+                        $error_fg = true;
+                        $this->log("DataConvert_Err_required",Lang::trans("log_import.registration_numbers_required",[
+                            'mainFileName' => config('params.import_file_path.mst_vehicles.main.fileName'),
+                            "fieldName" => '登録番号',
+                            "row" => $row,
+                            "extraFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
+                        ]));
+                    }
                 }
             }
             if(!$error_fg){
                 DB::beginTransaction();
                 try{
-                    if (!empty($record)) {
-                        $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
-                        $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
+                    if (!empty($data)) {
+                        if(isset($data['registration_numbers4'])){
+                            $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
+                            $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
+                        }
                         DB::table('mst_vehicles_copy1')->insert($data);
                         DB::commit();
                         $this->numNormal++;
