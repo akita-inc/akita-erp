@@ -616,7 +616,9 @@ vehicles_service = {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-work_flow_list_service = {
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+work_flow_list_service = _defineProperty({
   loadList: function loadList(data) {
     return axios.post('/work_flow/api-v1/getItems', data).then(function (response) {
       return response.data;
@@ -645,7 +647,13 @@ work_flow_list_service = {
       return error;
     });
   }
-};
+}, "getListWfApplicantAffiliationClassification", function getListWfApplicantAffiliationClassification(data) {
+  return axios.post('/work_flow/api-v1/validate-data', data).then(function (response) {
+    return response.data;
+  }).catch(function (error) {
+    return error;
+  });
+});
 
 /***/ }),
 

@@ -33,7 +33,7 @@ return [
         'title_step_3' => 'ワークフロー-承認者設定',
         'field' => [
             "name" => "名称",
-            "steps" => "承認段階数 ",
+            "steps" => "承認段階数",
             "approval_levels" => "段階",
             "approval_kb" => "承認区分",
         ],
