@@ -440,7 +440,7 @@ class InvoicesController extends Controller {
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content->{$key}.$enclosure;
                 }
-                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
+                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
             }
             fclose($file);
         };
@@ -484,7 +484,7 @@ class InvoicesController extends Controller {
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content->{$key}.$enclosure;
                 }
-                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
+                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
             }
             fclose($file);
         };

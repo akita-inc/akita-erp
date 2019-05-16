@@ -14,5 +14,6 @@ Route::group(['name' => 'work-flow', 'prefix' => 'work_flow', 'middleware' => ['
         Route::any('/submit','WorkFlowController@submit')->name("work_flow.save");
         Route::get('/delete/{id}', 'WorkFlowController@delete')->name('work_flow.delete');
         Route::any('/get-list-wf-applicant-affiliation-classification', 'WorkFlowController@getListWfApplicantAffiliationClassification');
+        Route::any('/validate-data', 'WorkFlowController@validateData');
     });
 });
