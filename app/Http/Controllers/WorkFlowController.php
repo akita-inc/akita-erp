@@ -122,8 +122,8 @@ class WorkFlowController extends Controller
         $mWfRequireApprovalBase = null;
         $mWfRequireApproval = null;
         $mGeneralPurposes = new MGeneralPurposes();
-        $listWfLevel =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'');
-        $listWfApprovalIndicator =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_approval_indicator'),'');
+        $listWfLevel =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'Empty');
+        $listWfApprovalIndicator =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_approval_indicator'),'Empty');
 
         if($id != null) {
             $mWfType = MWfType::find($id);
@@ -147,5 +147,8 @@ class WorkFlowController extends Controller
         ]);
     }
 
+    public function validateData(Request $request){
+
+    }
 
 }

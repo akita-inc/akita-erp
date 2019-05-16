@@ -23,6 +23,8 @@ var ctrWorkFlowVl = new Vue({
         listApplicant:null,
         errors:{},
         modified_at: "",
+        defaultLevel:defaultLevel,
+        defaultKb:defaultKb,
 
     },
     methods : {
@@ -46,13 +48,12 @@ var ctrWorkFlowVl = new Vue({
             for( var i = 0; i<this.field.steps; i++){
                 this.field.mst_wf_require_approval_base.push({
                     approval_steps:"",
-                    approval_levels:"",
-                    approval_kb:"",
+                    approval_levels:this.defaultLevel,
+                    approval_kb:this.defaultKb,
                 });
             }
         },
         handleStep2: function(){
-            console.log(this.field.mst_wf_require_approval_base);
             var that = this;
             that.listApplicant.forEach((value,key) => {
                 that.field.mst_wf_require_approval[value.date_id] ={
@@ -259,10 +260,27 @@ var ctrWorkFlowVl = new Vue({
             }
             $("#search_vehicle").focus();
         },
-
+        setInputFilter: function (textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                });
+            });
+        },
     },
     mounted () {
         this.getListWfApplicantAffiliationClassification();
+        if(document.getElementById("steps")!=null){
+            this.setInputFilter(document.getElementById("steps"), function(value) {
+                return /^\d*$/.test(value); });
+        }
     },
     components: {
         PulseLoader

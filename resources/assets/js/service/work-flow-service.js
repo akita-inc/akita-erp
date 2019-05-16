@@ -27,4 +27,11 @@ work_flow_list_service = {
             return error;
         });
     },
+    getListWfApplicantAffiliationClassification: function (data) {
+        return axios.post('/work_flow/api-v1/validate-data',data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
