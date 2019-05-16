@@ -13,6 +13,6 @@ Route::group(['name' => 'work-flow', 'prefix' => 'work_flow', 'middleware' => ['
         Route::any('back-history', ['uses' => 'WorkFlowController@backHistory']);
         Route::any('/submit','WorkFlowController@submit')->name("work_flow.save");
         Route::get('/delete/{id}', 'WorkFlowController@delete')->name('work_flow.delete');
-        Route::any('/search-sales-lists', 'WorkFlowController@searchSalesLists');
+        Route::any('/get-list-wf-applicant-affiliation-classification', 'WorkFlowController@getListWfApplicantAffiliationClassification');
     });
 });

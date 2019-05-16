@@ -637,6 +637,13 @@ work_flow_list_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  getListWfApplicantAffiliationClassification: function getListWfApplicantAffiliationClassification() {
+    return axios.get('/work_flow/api-v1/get-list-wf-applicant-affiliation-classification').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
