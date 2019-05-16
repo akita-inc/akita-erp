@@ -130,7 +130,8 @@ class MBillingHistoryHeaderDetails extends Model {
                     ->whereNull('mst_vehicles.deleted_at');
             })
             ->whereNull('details.deleted_at')
-            ->whereIn('details.id',$listID);
+            ->whereIn('details.id',$listID)
+            ->orderBy('details.daily_report_date');
        return $query->get();
     }
 
