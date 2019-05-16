@@ -233,13 +233,13 @@ class SalesListsController extends Controller
         $enclosure = config('params.csv.enclosure');
         $callback = function() use ($keys,$inputs, $enclosure) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"));
+            fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
             foreach ($inputs as $content) {
                 $row = [];
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content[$key].$enclosure;
                 }
-                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\n");
+                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
             }
             fclose($file);
         };
