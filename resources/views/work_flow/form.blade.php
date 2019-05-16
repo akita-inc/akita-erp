@@ -143,6 +143,8 @@
 @endsection
 @section("scripts")
     <script>
+        var defaultLevel = "{{array_keys($listWfLevel)[0]}}";
+        var defaultKb = "{{array_keys($listWfApprovalIndicator)[0]}}";
         var listRoute = "{{route('work_flow.list')}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
