@@ -3250,8 +3250,7 @@ var ctrWorkFlowListVl = new Vue({
     loading: false,
     items: [],
     fileSearch: {
-      mst_customers_cd: "",
-      customer_nm: ""
+      name: ""
     },
     message: '',
     pagination: {
@@ -3280,6 +3279,7 @@ var ctrWorkFlowListVl = new Vue({
         fieldSearch: this.fileSearch,
         order: this.order
       };
+      console.log(data);
       var that = this;
       this.loading = true;
       work_flow_list_service.loadList(data).then(function (response) {
@@ -3319,40 +3319,7 @@ var ctrWorkFlowListVl = new Vue({
   },
   methods: {
     clearCondition: function clearCondition() {
-      this.fileSearch.mst_customers_cd = '';
-      this.fileSearch.customer_nm = '';
-    },
-    deleteSupplier: function deleteSupplier(id) {
-      var _this2 = this;
-
-      customers_service.checkIsExist(id).then(function (response) {
-        if (!response.success) {
-          alert(response.msg);
-
-          _this2.getItems(1);
-
-          return false;
-        } else {
-          if (confirm(messages["MSG06001"])) {
-            customers_service.deleteCustomer(id).then(function (response) {
-              _this2.getItems(1);
-            });
-          }
-        }
-      });
-    },
-    checkIsExist: function checkIsExist(id) {
-      var _this3 = this;
-
-      customers_service.checkIsExist(id).then(function (response) {
-        if (!response.success) {
-          alert(response.msg);
-
-          _this3.getItems(1);
-        } else {
-          window.location.href = 'edit/' + id;
-        }
-      });
+      this.fileSearch.name = '';
     }
   },
   mounted: function mounted() {

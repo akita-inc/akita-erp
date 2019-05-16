@@ -18,10 +18,10 @@
                                 {{trans("work_flow.list.search.name")}}
                             </div>
                             <div class="col-md-4 grid-form-search">
-                                <input type="text" v-model="fieldSearch.mst_suppliers_cd" name="supplier_cd" id="supplier_cd" class="form-control">
+                                <input type="text" v-model="fileSearch.name" name="name" id="name" class="form-control">
                             </div>
                             <div class="col-md-2 lh-38 padding-row-5">
-                                <button class="btn btn-black w-100" type="button" v-on:click="clearCondition()" >
+                                <button class="btn btn-light m-auto w-100" type="button" v-on:click="clearCondition()" >
                                     {{trans('work_flow.list.search.btn_clear')}}
                                 </button>
                             </div>
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="col-md-3"></div>
-            <div class="wrapper-table table-blue w-50">
+            <div class="wrapper-table table-green w-50">
                 <table class="table table-striped table-bordered search-content">
                     <thead>
                     <tr>
@@ -58,7 +58,9 @@
                     </tbody>
                 </table>
                 <div v-cloak class="mg-t-10">
-                    @include("Layouts.pagination")
+                    <div class="text-center">
+                        @include("Layouts.pagination")
+                    </div>
                 </div>
             </div>
             <div class="col-md-3"></div>
@@ -72,7 +74,6 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         var date_now ='<?php echo date('Y/m/d'); ?>';
-        var auth_offfice_id="{{Auth::user()->mst_business_office_id}}";
     </script>
-    {{--<script type="text/javascript" src="{{ mix('/assets/js/controller/work-flow-list.js') }}" charset="utf-8"></script>--}}
+    <script type="text/javascript" src="{{ mix('/assets/js/controller/work-flow-list.js') }}" charset="utf-8"></script>
 @endsection
