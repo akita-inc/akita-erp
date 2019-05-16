@@ -115,6 +115,11 @@ class WorkFlowController extends Controller
     }
 
     public function store(Request $request, $id=null){
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listWfLevel =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'');
+        $listWfApprovalIndicator =  $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_approval_indicator'),'');
+        $listWfApplicantAffiliationClassification= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb.wf_applicant_affiliation_classification'));
+        dd($listWfApplicantAffiliationClassification);
         return view('work_flow.form', [
 
         ]);
