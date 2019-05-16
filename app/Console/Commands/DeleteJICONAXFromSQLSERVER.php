@@ -34,9 +34,9 @@ class DeleteJICONAXFromSQLSERVER extends Command
     protected $dateTimeRun = '';
     protected $description = '';
     protected $connect = null;
-    protected $countRead = 0;
-    protected $countSuccess = 0;
-    protected $countFails = 0;
+    protected $arrayDocumentNoFails = [];
+    protected $arrayDocumentNoSuccess = [];
+    protected $arrayDocumentNoRead = [];
 
     /**
      * Create a new command instance.
@@ -68,7 +68,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
         if( $this->connect )
         {
             $arrayDocumentNo = [];
-            $sql = "SELECT [伝票NO] FROM M_運転日報_copy WHERE CONVERT(datetime, [最終更新日]) > DATEADD(DAY, -60,getdate())";
+            $sql = "SELECT [伝票NO] FROM M_運転日報_copy WHERE CONVERT(datetime, [最終更新日]) > DATEADD(DAY, -".config("params.runDeleteLogicFromSqlServer.day_minus").",getdate())";
             $stmt = sqlsrv_query( $this->connect, $sql );
             if( $stmt === false) {
                 die( print_r( sqlsrv_errors(), true) );
@@ -87,7 +87,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
         }
 
         $this->log("jiconax","#################END####################");
-        $this->log("jiconaxFinal","ステータス：成功　処理対象件数：".$this->countRead."件　成功件数：".$this->countSuccess."件　エラー件数：".$this->countFails."件");
+        $this->log("jiconaxFinal","ステータス：成功　処理対象件数：".count($this->arrayDocumentNoRead)."件　成功件数：".count($this->arrayDocumentNoSuccess)."件　エラー件数：".count($this->arrayDocumentNoFails)."件");
         sqlsrv_close( $this->connect );
         return true;
     }
@@ -99,15 +99,15 @@ class DeleteJICONAXFromSQLSERVER extends Command
             ->whereRaw($queryWhere)
             ->get();
         foreach ($listJconaxModel as $value){
-            $this->countRead++;
-            if( !isset($arrayDocumentNo[$value->document_no]) ){
+            if( !isset($arrayDocumentNo[$value->document_no]) && !isset($this->arrayDocumentNoFails[$value->document_no]) ){
+                $this->arrayDocumentNoRead[$value->document_no] = $value->document_no;
                 try{
                     DB::table("t_jiconax_sales_datas_copy")
                         ->where("document_no",$value->document_no)
                         ->update(["deleted_at"=>DB::raw("Now()")]);
-                    $this->countSuccess++;
+                    $this->arrayDocumentNoSuccess[$value->document_no] = $value->document_no;
                 }catch (\Exception $ex){
-                    $this->countFails++;
+                    $this->rollBackDelete($value->document_no);
                     $this->log("jiconax_error","伝票NO：".$value->document_no."　エラー理由：".$ex->getMessage());
                 }
             }
@@ -123,19 +123,36 @@ class DeleteJICONAXFromSQLSERVER extends Command
             ->get();
 
         foreach ($listSales as $value){
-            $this->countRead++;
-            if( !isset($arrayDocumentNo[$value->document_no]) ){
+            if( !isset($arrayDocumentNo[$value->document_no]) && !isset($this->arrayDocumentNoFails[$value->document_no]) ){
+                $this->arrayDocumentNoRead[$value->document_no] = $value->document_no;
                 try{
                     DB::table($table)
                         ->where("document_no",$value->document_no)
                         ->update(["deleted_at"=>DB::raw("Now()")]);
-                    $this->countSuccess++;
+                    $this->arrayDocumentNoSuccess[$value->document_no] = $value->document_no;
                 }catch (\Exception $ex){
-                    $this->countFails++;
+                    $this->rollBackDelete($value->document_no);
                     $this->log("jiconax_error","伝票NO：".$value->document_no."　エラー理由：".$ex->getMessage());
                 }
             }
         }
+    }
+
+    protected function rollBackDelete($document_no){
+        unset($this->arrayDocumentNoSuccess[$document_no]);
+        $this->arrayDocumentNoFails[$document_no] = $document_no;
+        DB::table("t_saleses_copy")
+            ->where("document_no",$document_no)
+            ->whereNotNull("deleted_at")
+            ->update(["deleted_at"=>DB::raw("Null")]);
+        DB::table("t_purchases_copy")
+            ->where("document_no",$document_no)
+            ->whereNotNull("deleted_at")
+            ->update(["deleted_at"=>DB::raw("Null")]);
+        DB::table("t_jiconax_sales_datas_copy")
+            ->where("document_no",$document_no)
+            ->whereNotNull("deleted_at")
+            ->update(["deleted_at"=>DB::raw("Null")]);
     }
 
     protected function log($type,$message){
