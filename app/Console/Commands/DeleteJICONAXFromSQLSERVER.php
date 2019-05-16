@@ -124,6 +124,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
 
         foreach ($listSales as $value){
             if( !isset($arrayDocumentNo[$value->document_no]) && !isset($this->arrayDocumentNoFails[$value->document_no]) ){
+                $this->arrayDocumentNoRead[$value->document_no] = $value->document_no;
                 try{
                     DB::table($table)
                         ->where("document_no",$value->document_no)
