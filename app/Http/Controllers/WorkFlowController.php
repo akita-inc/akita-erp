@@ -29,13 +29,27 @@ class WorkFlowController extends Controller
     protected function getPaging(){
     }
     protected function search($data){
+        $this->query->select('id','name','steps');
     }
 
     public function index(Request $request){
         $fieldShowTable = [
+            'id' => [
+                "classTH" => "wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"id"
+            ],
+            'name' => [
+                "classTH" => "min-wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"name"
+            ],
+            'steps' => [
+                "classTH" => "min-wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"steps"
+            ]
         ];
-        $mBussinessOffice = new MBusinessOffices();
-        $businessOffices = $mBussinessOffice->getAllData();
         return view('work_flow.index',[
             'fieldShowTable'=>$fieldShowTable
         ]);

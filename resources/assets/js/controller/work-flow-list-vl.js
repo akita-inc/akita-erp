@@ -1,8 +1,8 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import DatePicker from '../component/vue2-datepicker-master'
 
-var ctrCustomersListVl = new Vue({
-    el: '#ctrCustomersListVl',
+var ctrWorkFlowListVl = new Vue({
+    el: '#ctrWorkFlowListVl',
     data: {
         lang:lang_date_picker,
         format_date: format_date_picker,
@@ -39,7 +39,7 @@ var ctrCustomersListVl = new Vue({
             };
             var that = this;
             this.loading = true;
-            customers_service.loadList(data).then((response) => {
+            work_flow_list_service.loadList(data).then((response) => {
                 if (response.data.data.length===0) {
                     this.message = messages["MSG05001"];
                 } else {
