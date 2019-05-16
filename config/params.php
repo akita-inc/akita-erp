@@ -371,6 +371,6 @@ return [
     ],
     'runDeleteLogicFromSqlServer' => [
         "day_minus" => 60,
-        "cron" => "0 4 * * *"
+        "cron" => "0 10 * * *"
     ]
 ];

@@ -55,6 +55,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
      */
     public function handle(){
         date_default_timezone_set("Asia/Tokyo");
+        $this->log("jiconax","#################START####################");
         $this->dateTimeRun = date("Ymd");
         $serverName = env("DB_SQLSERVER_HOST","172.30.30.193");
         $connectionInfo = [
@@ -66,7 +67,6 @@ class DeleteJICONAXFromSQLSERVER extends Command
         $this->connect = sqlsrv_connect( $serverName, $connectionInfo);
         if( $this->connect )
         {
-            $this->log("jiconax","#################START####################");
             $arrayDocumentNo = [];
             $sql = "SELECT [伝票NO] FROM M_運転日報 WHERE CONVERT(datetime, [最終更新日]) > DATEADD(DAY, -60,getdate())";
             $stmt = sqlsrv_query( $this->connect, $sql );
