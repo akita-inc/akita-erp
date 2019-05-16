@@ -26,10 +26,27 @@ class WorkFlowController extends Controller
         parent::__construct();
 
     }
-    protected function getPaging(){
-    }
+
     protected function search($data){
+        $where = array(
+            'name' => $data['fieldSearch']['name'],
+        );
         $this->query->select('id','name','steps');
+        if($where['name']!='')
+        {
+            $this->query->where('name','LIKE','%'.$where['name'].'%');
+        }
+        $this->query->whereNull('delete_at');
+        if ($data["order"]["col"] != '') {
+            $orderCol = $data["order"]["col"];
+            if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
+                $orderCol .= " DESC";
+            }
+            $this->query->orderbyRaw($orderCol);
+        } else {
+            $this->query->orderBy('id','asc');
+
+        }
     }
 
     public function index(Request $request){
