@@ -3253,6 +3253,7 @@ var ctrWorkFlowListVl = new Vue({
       name: ""
     },
     message: '',
+    flagSearch: false,
     pagination: {
       total: 0,
       per_page: 2,
@@ -3281,7 +3282,7 @@ var ctrWorkFlowListVl = new Vue({
       };
       console.log(data);
       var that = this;
-      this.loading = true;
+      that.loading = true;
       work_flow_list_service.loadList(data).then(function (response) {
         if (response.data.data.length === 0) {
           _this.message = messages["MSG05001"];
@@ -3289,12 +3290,26 @@ var ctrWorkFlowListVl = new Vue({
           _this.message = '';
         }
 
+        that.flagSearch = true;
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.fileSearch = response.fieldSearch;
         that.order = response.order;
         that.loading = false;
         if (that.order.col !== null) $('#' + that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+      });
+    },
+    checkIsExist: function checkIsExist(id) {
+      var _this2 = this;
+
+      work_flow_list_service.checkIsExist(id).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this2.getItems(1);
+        } else {
+          window.location.href = 'edit/' + id;
+        }
       });
     },
     changePage: function changePage(page) {
@@ -3323,7 +3338,7 @@ var ctrWorkFlowListVl = new Vue({
     }
   },
   mounted: function mounted() {
-    this.getItems(1, true);
+    this.flagSearch = false;
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -3340,7 +3355,7 @@ var ctrWorkFlowListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\work-flow-list-vl.js */"./resources/assets/js/controller/work-flow-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\work-flow-list-vl.js */"./resources/assets/js/controller/work-flow-list-vl.js");
 
 
 /***/ })
