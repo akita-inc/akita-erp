@@ -55,5 +55,11 @@ class WorkFlowController extends Controller
         ]);
     }
 
+    public function store(Request $request, $id=null){
+        return view('work_flow.form', [
+
+        ]);
+    }
+
 
 }
