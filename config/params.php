@@ -1,6 +1,7 @@
 <?php
 return [
     'page_size' => 10,
+    'page_size_work_flow'=>10,
     'page_size_sale_lists'=>50,
     'data_kb' => [
         'sex'                           => '01001', // 性別ID

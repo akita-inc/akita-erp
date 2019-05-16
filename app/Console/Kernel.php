@@ -34,12 +34,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('DeleteJICONAXFromSQLSERVER')
+            ->cron(config("params.runDeleteLogicFromSqlServer.cron"));
         $schedule->command('UpdateStatusEmptyInfo')->daily();
         $schedule->command('ImportFromSQLSERVER')
             ->cron(config("params.runImportFromSqlServer.cron"))
         ->withoutOverlapping();
-        $schedule->command('DeleteJICONAXFromSQLSERVER')
-            ->cron(config("params.runDeleteLogicFromSqlServer.cron"));
     }
 
     /**

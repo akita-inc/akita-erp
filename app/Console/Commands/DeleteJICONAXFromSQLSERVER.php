@@ -56,6 +56,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
     public function handle(){
         date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("Ymd");
+        $this->log("jiconax","#################START####################");
         $serverName = env("DB_SQLSERVER_HOST","172.30.30.193");
         $connectionInfo = [
             "Database" => env("DB_SQLSERVER_DB","AKITA"),
@@ -66,9 +67,8 @@ class DeleteJICONAXFromSQLSERVER extends Command
         $this->connect = sqlsrv_connect( $serverName, $connectionInfo);
         if( $this->connect )
         {
-            $this->log("jiconax","#################START####################");
             $arrayDocumentNo = [];
-            $sql = "SELECT [伝票NO] FROM M_運転日報 WHERE CONVERT(datetime, [最終更新日]) > DATEADD(DAY, -60,getdate())";
+            $sql = "SELECT [伝票NO] FROM M_運転日報_copy WHERE CONVERT(datetime, [最終更新日]) > DATEADD(DAY, -60,getdate())";
             $stmt = sqlsrv_query( $this->connect, $sql );
             if( $stmt === false) {
                 die( print_r( sqlsrv_errors(), true) );
@@ -77,8 +77,8 @@ class DeleteJICONAXFromSQLSERVER extends Command
                 $arrayDocumentNo[$row["伝票NO"]] = $row["伝票NO"];
             }
             $this->deleteJiconax($arrayDocumentNo);
-            $this->deleteSalesORPurchases($arrayDocumentNo,"t_saleses");
-            $this->deleteSalesORPurchases($arrayDocumentNo,"t_purchases");
+            $this->deleteSalesORPurchases($arrayDocumentNo,"t_saleses_copy");
+            $this->deleteSalesORPurchases($arrayDocumentNo,"t_purchases_copy");
         }
         else
         {
@@ -94,7 +94,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
 
     protected function deleteJiconax($arrayDocumentNo){
         $queryWhere = 'DATE_FORMAT(last_updated,"%Y/%m/%d") > DATE_FORMAT(DATE_SUB(NOW(),INTERVAL '.config("params.runDeleteLogicFromSqlServer.day_minus").' DAY),"%Y/%m/%d")';
-        $listJconaxModel = DB::table("t_jiconax_sales_datas")->select("document_no")
+        $listJconaxModel = DB::table("t_jiconax_sales_datas_copy")->select("document_no")
             ->whereNull("deleted_at")
             ->whereRaw($queryWhere)
             ->get();
@@ -102,7 +102,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
             $this->countRead++;
             if( !isset($arrayDocumentNo[$value->document_no]) ){
                 try{
-                    DB::table("t_jiconax_sales_datas")
+                    DB::table("t_jiconax_sales_datas_copy")
                         ->where("document_no",$value->document_no)
                         ->update(["deleted_at"=>DB::raw("Now()")]);
                     $this->countSuccess++;

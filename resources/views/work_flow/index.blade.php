@@ -7,7 +7,7 @@
             <pulse-loader :loading="loading"></pulse-loader>
             <div class="sub-header">
                 <div class="sub-header-line-one text-right">
-                     <button class="btn btn-yellow">
+                     <button class="btn btn-yellow" onclick="window.location.href= '{{route('work_flow.create')}}'">
                          {{trans('work_flow.list.search.btn_new_register')}}
                      </button>
                 </div>
@@ -26,7 +26,7 @@
                                 </button>
                             </div>
                             <div class="col-md-2 lh-38 text-right no-padding">
-                                <button class="btn w-100 btn-primary" type="button" v-on:click="getItems(1)">
+                                <button class="btn w-100 btn-primary" type="button" id="searchItems" v-on:click="getItems(1)">
                                     {{trans('common.button.search')}}
                                 </button>
                             </div>
@@ -35,21 +35,28 @@
                 </div>
             </div>
             <div class="col-md-3"></div>
-            <div class="wrapper-table table-green w-50">
+            <div class="wrapper-table table-green w-50" v-cloak v-if="flagSearch">
                 <table class="table table-striped table-bordered search-content">
                     <thead>
                     <tr>
                         @foreach($fieldShowTable as $key => $field)
-                            <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("work_flow.list.table.".$key)}}</th>
+                            <th  v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="cursor-pointer {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("work_flow.list.table.".$key)}}</th>
                         @endforeach
                     </tr>
                     </thead>
                     <tbody>
                     <tr  v-cloak v-for="item in items">
                         @foreach($fieldShowTable as $key => $field)
-                            <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
-                                <span>{!! "@{{ item['$key'] }}" !!}</span>
+                            @if($key=='id')
+                            <td>
+                                <div class="cd-link text-center" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
                             </td>
+                            @else
+                            <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
+                                <p v-if="item['{{$key}}']">{!! "@{{item['$key']}}" !!}</p>
+                                <p v-else>---</p>
+                            </td>
+                            @endif
                         @endforeach
                     </tr>
                     <tr v-cloak v-if="message !== ''">
@@ -58,9 +65,7 @@
                     </tbody>
                 </table>
                 <div v-cloak class="mg-t-10">
-                    <div class="text-center">
                         @include("Layouts.pagination")
-                    </div>
                 </div>
             </div>
             <div class="col-md-3"></div>

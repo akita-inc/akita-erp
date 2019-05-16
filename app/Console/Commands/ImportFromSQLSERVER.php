@@ -56,6 +56,7 @@ class ImportFromSQLSERVER extends Command
     public function handle(){
         date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("Ymd");
+        $this->log("jiconax","#################START####################");
         $serverName = env("DB_SQLSERVER_HOST","172.30.30.193");
         $connectionInfo = [
             "Database" => env("DB_SQLSERVER_DB","AKITA"),
@@ -66,7 +67,6 @@ class ImportFromSQLSERVER extends Command
         $this->connect = sqlsrv_connect( $serverName, $connectionInfo);
         if( $this->connect )
         {
-            $this->log("jiconax","#################START####################");
             $this->insertTJiconaxDataSales();
         }
         else
