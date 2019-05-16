@@ -255,6 +255,7 @@ class MstVehicles extends BaseImport
         $this->getDataFromExcel(config('params.import_file_path.mst_vehicles.main.path'));
         $this->start_row = 1;
         for ($row = $this->start_row; $row <= $this->highestRow; $row++) {
+            $existed_record_in_db = false;
             $error_fg = false;
             $record = array();
             $rowData = $this->sheet->rangeToArray('A' . $row . ':' .  $this->highestColumn . $row, null, false, false, true);
@@ -342,15 +343,19 @@ class MstVehicles extends BaseImport
 
                 }
             }
-
-            $findOffice = $mBusinessOffices->where('mst_business_office_cd',(integer)$rowData[$row]['AG'])->whereNull('deleted_at')->first();
-            if($findOffice){
-                $record['mst_business_office_id'] = $findOffice->id;
+            if(!empty($rowData[$row]['AG']) && is_numeric($rowData[$row]['AG'])){
+                $findOffice = $mBusinessOffices->where('mst_business_office_cd','=',(string)$rowData[$row]['AG'])->whereNull('deleted_at')->first();
+                if($findOffice){
+                    $record['mst_business_office_id'] = $findOffice->id;
+                }
+            }else{
+                $record['mst_business_office_id'] = '';
             }
 
             $data = $record;
-            if (DB::table('mst_vehicles_copy1')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
+            if (DB::table('mst_vehicles')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
                 $error_fg = true;
+                $existed_record_in_db = true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
                     "fileName" => config('params.import_file_path.mst_vehicles.main.fileName'),
                     "fieldName" => $this->column_name['vehicles_cd'],
@@ -423,7 +428,7 @@ class MstVehicles extends BaseImport
                                         "fieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                     ]));
-                                }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber') && strpos($field, 'registration_numbers') === 0){
+                                }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber' || $ruleName=='TwoBytesString') && strpos($field, 'registration_numbers') === 0){
                                     $error_fg = true;
                                     $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
@@ -438,7 +443,7 @@ class MstVehicles extends BaseImport
                     unset($data['sheet']);
                     unset($this->{"data_extra_file_".$k}[$record['vehicles_cd']]);
                 }else{
-                    if($k==2){
+                    if($k==2 && $existed_record_in_db==false){
                         $error_fg = true;
                         $this->log("DataConvert_Err_required",Lang::trans("log_import.registration_numbers_required",[
                             'mainFileName' => config('params.import_file_path.mst_vehicles.main.fileName'),
@@ -457,7 +462,7 @@ class MstVehicles extends BaseImport
                             $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
                             $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
                         }
-                        DB::table('mst_vehicles_copy1')->insert($data);
+                        DB::table('mst_vehicles')->insert($data);
                         DB::commit();
                         $this->numNormal++;
                     }

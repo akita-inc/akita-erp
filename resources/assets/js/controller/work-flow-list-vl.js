@@ -12,6 +12,7 @@ var ctrWorkFlowListVl = new Vue({
             name:"",
         },
         message: '',
+        flagSearch:false,
         pagination:{
             total: 0,
             per_page: 2,
@@ -37,14 +38,14 @@ var ctrWorkFlowListVl = new Vue({
             };
             console.log(data);
             var that = this;
-            this.loading = true;
+            that.loading = true;
             work_flow_list_service.loadList(data).then((response) => {
                 if (response.data.data.length===0) {
                     this.message = messages["MSG05001"];
                 } else {
                     this.message = '';
                 }
-
+                that.flagSearch=true;
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
@@ -52,6 +53,16 @@ var ctrWorkFlowListVl = new Vue({
                 that.loading = false;
                 if (that.order.col !== null)
                     $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+            });
+        },
+        checkIsExist: function (id) {
+            work_flow_list_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.getItems(1);
+                } else {
+                    window.location.href = 'edit/' + id;
+                }
             });
         },
         changePage: function (page) {
@@ -76,9 +87,10 @@ var ctrWorkFlowListVl = new Vue({
         clearCondition: function clearCondition() {
             this.fileSearch.name = '';
         },
+
     },
     mounted () {
-        this.getItems(1, true);
+        this.flagSearch=false;
     },
     components: {
         PulseLoader,

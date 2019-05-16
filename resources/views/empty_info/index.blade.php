@@ -145,7 +145,7 @@
                 <tr>
                     <th class="wd-60"></th>
                     @foreach($fieldShowTable as $key => $field)
-                        <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("empty_info.list.table.".$key)}}</th>
+                        <th v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="cursor-pointer align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("empty_info.list.table.".$key)}}</th>
                     @endforeach
                 </tr>
                 </thead>
