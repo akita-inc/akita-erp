@@ -1,5 +1,4 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-import { Core } from '../package/yubinbango-core';
 import moment from 'moment';
 
 var ctrWorkFlowVl = new Vue({
@@ -12,6 +11,25 @@ var ctrWorkFlowVl = new Vue({
             wf_type:"",
             name:"",
             steps:"",
+            mst_wf_require_approval_base: [{
+                approval_steps:"",
+                approval_levels:"",
+                approval_kb:"",
+            },{
+                approval_steps:"",
+                approval_levels:"",
+                approval_kb:"",
+            },{
+                approval_steps:"",
+                approval_levels:"",
+                approval_kb:"",
+            }],
+            mst_wf_require_approval: [{
+                applicant_section:"",
+                approval_steps:"",
+                approval_levels:"",
+                approval_kb:"",
+            }],
             applicant_section:"",
             approval_steps:"",
             approval_levels:"",
@@ -225,7 +243,6 @@ var ctrWorkFlowVl = new Vue({
 
     },
     components: {
-        DatePicker,
         PulseLoader
     }
 });
