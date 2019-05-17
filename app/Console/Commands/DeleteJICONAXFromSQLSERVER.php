@@ -106,7 +106,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
                 try{
                     DB::table("t_jiconax_sales_datas_copy")
                         ->where("document_no",$value->document_no)
-                        ->update(["deleted_at"=>DB::raw("Now()")]);
+                        ->update(["deleted_at"=>date("YmdHis")]);
                     $this->arrayDocumentNoSuccess[$value->document_no] = $value->document_no;
                 }catch (\Exception $ex){
                     $this->rollBackDelete($value->document_no);
@@ -130,7 +130,7 @@ class DeleteJICONAXFromSQLSERVER extends Command
                 try{
                     DB::table($table)
                         ->where("document_no",$value->document_no)
-                        ->update(["deleted_at"=>DB::raw("Now()")]);
+                        ->update(["deleted_at"=>date("YmdHis")]);
                     $this->arrayDocumentNoSuccess[$value->document_no] = $value->document_no;
                 }catch (\Exception $ex){
                     $this->rollBackDelete($value->document_no);
