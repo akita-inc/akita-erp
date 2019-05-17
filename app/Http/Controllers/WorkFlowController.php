@@ -57,27 +57,25 @@ class WorkFlowController extends Controller
                 $orderCol .= " DESC";
             }
             $this->query->orderbyRaw($orderCol);
-        } else {
-            $this->query->orderBy('id','asc');
-
         }
+        $this->query->orderBy('id','asc');
     }
 
     public function index(Request $request){
         $fieldShowTable = [
             'id' => [
                 "classTH" => "wd-100",
-                "classTD" => "text-center",
+                "classTD" => "text-left",
                 "sortBy"=>"id"
             ],
             'name' => [
                 "classTH" => "min-wd-100",
-                "classTD" => "text-center",
+                "classTD" => "text-left",
                 "sortBy"=>"name"
             ],
             'steps' => [
-                "classTH" => "min-wd-100",
-                "classTD" => "text-center",
+                "classTH" => "wd-120",
+                "classTD" => "text-left",
                 "sortBy"=>"steps"
             ]
         ];
