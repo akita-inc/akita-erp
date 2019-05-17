@@ -82,6 +82,8 @@ class DeleteJICONAXFromSQLSERVER extends Command
         }
         else
         {
+            $this->log("jiconax","#################END####################");
+            $this->log("jiconaxFinal","ステータス：失敗　理由：SQLSERVERへ接続できません。");
             echo "Connection could not be established.\n";
             return true;
         }
@@ -141,18 +143,22 @@ class DeleteJICONAXFromSQLSERVER extends Command
     protected function rollBackDelete($document_no){
         unset($this->arrayDocumentNoSuccess[$document_no]);
         $this->arrayDocumentNoFails[$document_no] = $document_no;
-        DB::table("t_saleses_copy")
-            ->where("document_no",$document_no)
-            ->whereNotNull("deleted_at")
-            ->update(["deleted_at"=>DB::raw("Null")]);
-        DB::table("t_purchases_copy")
-            ->where("document_no",$document_no)
-            ->whereNotNull("deleted_at")
-            ->update(["deleted_at"=>DB::raw("Null")]);
-        DB::table("t_jiconax_sales_datas_copy")
-            ->where("document_no",$document_no)
-            ->whereNotNull("deleted_at")
-            ->update(["deleted_at"=>DB::raw("Null")]);
+        try {
+            DB::table("t_jiconax_sales_datas_copy")
+                ->where("document_no",$document_no)
+                ->whereNotNull("deleted_at")
+                ->update(["deleted_at"=>DB::raw("Null")]);
+            DB::table("t_saleses_copy")
+                ->where("document_no",$document_no)
+                ->whereNotNull("deleted_at")
+                ->update(["deleted_at"=>DB::raw("Null")]);
+            DB::table("t_purchases_copy")
+                ->where("document_no",$document_no)
+                ->whereNotNull("deleted_at")
+                ->update(["deleted_at"=>DB::raw("Null")]);
+        }catch (\Exception $ex){
+
+        }
     }
 
     protected function log($type,$message){
