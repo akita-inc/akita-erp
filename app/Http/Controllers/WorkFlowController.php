@@ -10,6 +10,7 @@ use App\Models\MSaleses;
 use App\Models\MWfRequireApproval;
 use App\Models\MWfRequireApprovalBase;
 use App\Models\MWfType;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -175,11 +176,8 @@ class WorkFlowController extends Controller
     }
 
     protected function save($data){
-        $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
         $mWfType = new MWfType();
-        $mWfRequireApprovalBase = new MWfRequireApprovalBase();
-//        dd($data);
         $id = isset($data['id']) ?$data['id']  :null;
         if(!is_null($id)){
             $mWfType = $mWfType->find($id);
@@ -189,6 +187,10 @@ class WorkFlowController extends Controller
             $mWfType->name = $data['name'];
             $mWfType->steps = $data['steps'];
             $mWfType->save();
+            if(!is_null($id)){
+                MWfRequireApprovalBase::query()->where('wf_type','=',$id)->delete();
+                MWfRequireApproval::query()->where('wf_type','=',$id)->delete();
+            }
             $dataApprovalBase = [];
             foreach ($data['mst_wf_require_approval_base'] as $item){
                 $row = $item;
@@ -200,6 +202,7 @@ class WorkFlowController extends Controller
             $dataApproval = [];
             foreach ($data['mst_wf_require_approval'] as $section =>$items){
                 foreach ($items['list'] as $item) {
+                    unset($item['applicant_section_nm']);
                     $row = $item;
                     $row['wf_type'] = $mWfType->id;
                     $row['applicant_section'] = $section;
@@ -209,6 +212,12 @@ class WorkFlowController extends Controller
             }
             MWfRequireApproval::query()->insert($dataApproval);
             DB::commit();
+            if(isset( $data["id"])){
+                $this->backHistory();
+                \Session::flash('message',Lang::get('messages.MSG04002'));
+            }else{
+                \Session::flash('message',Lang::get('messages.MSG03002'));
+            }
         }catch (\Exception $e){
             DB::rollback();
             dd($e);
@@ -221,7 +230,11 @@ class WorkFlowController extends Controller
 
     public function getListApprovalBase(Request $request){
         $wf_type = $request->input('wf_type');
-        $listApprovalBase = MWfRequireApprovalBase::query()->where('wf_type', '=', $wf_type)->get();
+        $listApprovalBase = MWfRequireApprovalBase::query()->select(
+            'mst_wf_require_approval_base.approval_kb',
+            'mst_wf_require_approval_base.approval_levels',
+            'mst_wf_require_approval_base.approval_steps'
+        )->where('wf_type', '=', $wf_type)->get();
         return response()->json([
             'info'=>$listApprovalBase,
         ]);
@@ -229,7 +242,20 @@ class WorkFlowController extends Controller
 
     public function getListApproval(Request $request){
         $wf_type = $request->input('wf_type');
-        $listApprovalBase = MWfRequireApproval::query()->where('wf_type', '=', $wf_type)->get()->groupBy('applicant_section')->toArray();
+        $listApprovalBase = MWfRequireApproval::query()
+            ->select(
+                'mst_wf_require_approval.applicant_section',
+                'mst_wf_require_approval.approval_kb',
+                'mst_wf_require_approval.approval_levels',
+                'mst_wf_require_approval.approval_steps',
+                DB::raw('wf_applicant_affiliation_classification.date_nm as applicant_section_nm')
+            )
+            ->leftjoin('mst_general_purposes as wf_applicant_affiliation_classification', function ($join) {
+                $join->on('wf_applicant_affiliation_classification.date_id', '=', 'mst_wf_require_approval.applicant_section')
+                    ->where('wf_applicant_affiliation_classification.data_kb', config('params.data_kb.wf_applicant_affiliation_classification'));
+            })
+            ->where('wf_type', '=', $wf_type)
+            ->get()->groupBy('applicant_section')->toArray();
         return response()->json([
             'info'=>$listApprovalBase,
         ]);
