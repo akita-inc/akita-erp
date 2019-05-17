@@ -5,18 +5,13 @@ var ctrWorkFlowVl = new Vue({
     el: '#ctrWorkFlowVl',
     data: {
         loading:false,
-        empty_info_edit:0,
-        empty_info_id:null,
+        work_flow_edit:0,
+        work_flow_id:null,
         field:{
-            wf_type:"",
             name:"",
             steps:"",
             mst_wf_require_approval_base: [],
             mst_wf_require_approval: [],
-            applicant_section:"",
-            approval_steps:"",
-            approval_levels:"",
-            approval_kb:"",
 
         },
         screenStep:1,
@@ -34,107 +29,128 @@ var ctrWorkFlowVl = new Vue({
                 that.listApplicant = response.info;
             });
         },
-        nextStep: function(){
+        nextStep: async function(){
             this.loading = true;
             this.screenStep++;
             if(this.screenStep==2){
-                this.handleStep1();
+                await this.handleStep2();
             }else{
-                this.handleStep2();
+                await this.handleStep3();
             }
             this.loading = false;
         },
-        handleStep1: function(){
-            for( var i = 0; i<this.field.steps; i++){
-                this.field.mst_wf_require_approval_base.push({
-                    approval_steps:"",
-                    approval_levels:this.defaultLevel,
-                    approval_kb:this.defaultKb,
+        handleStep2:async function(){
+            var that = this;
+            if(that.work_flow_edit==0) {
+                await work_flow_list_service.validateData({
+                    name: that.field.name,
+                    steps: that.field.steps
+                }).then((response) => {
+                    if (response.success) {
+                        that.errors = [];
+                        for (var i = 0; i < that.field.steps; i++) {
+                            that.field.mst_wf_require_approval_base.push({
+                                approval_steps: i + 1,
+                                approval_levels: that.defaultLevel,
+                                approval_kb: that.defaultKb,
+                            });
+                        }
+                    } else {
+                        that.screenStep--;
+                        that.errors = response.message;
+                    }
+                });
+            }else{
+                await work_flow_list_service.validateData({
+                    name: that.field.name,
+                    steps: that.field.steps
+                }).then((response) => {
+                    if (response.success) {
+                        that.errors = [];
+                        work_flow_list_service.getListApprovalBase({wf_type:that.work_flow_id}).then((response1) => {
+                            if(response1.info.length > 0){
+                                that.field.mst_wf_require_approval_base = response1.info;
+                            }
+                        });
+                    } else {
+                        that.screenStep--;
+                        that.errors = response.message;
+                    }
                 });
             }
+
         },
-        handleStep2: function(){
+        handleStep3: function(){
             var that = this;
-            that.listApplicant.forEach((value,key) => {
-                that.field.mst_wf_require_approval[value.date_id] ={
-                    applicant_section_nm:"",
-                    list: [],
-                };
-                that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
-                that.field.mst_wf_require_approval[value.date_id].list = that.field.mst_wf_require_approval_base;
-            })
-            console.log(that.field.mst_wf_require_approval);
+            if(that.work_flow_edit==0) {
+                that.listApplicant.forEach((value, key) => {
+                    that.field.mst_wf_require_approval[value.date_id] = {
+                        applicant_section_nm: "",
+                        list: [],
+                    };
+                    that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
+                    that.field.mst_wf_require_approval_base.forEach((value1, key1) => {
+                        var data = {};
+                        data.approval_steps = value1.approval_steps;
+                        data.approval_levels = value1.approval_levels;
+                        data.approval_kb = value1.approval_kb;
+                        that.field.mst_wf_require_approval[value.date_id].list.push(data)
+                    });
+                });
+            }else{
+                work_flow_list_service.getListApproval({wf_type:that.work_flow_id}).then((response) => {
+                    if(response.info.length > 0){
+                        that.field.mst_wf_require_approval = response.info;
+                    }
+                    console.log(that.field.mst_wf_require_approval);
+                });
+            }
         },
         submit: function(status){
             let that = this;
             that.loading = true;
-            if(this.field.mode != 'register'){
-                this.field["id"] = this.empty_info_id;
-            }
-            this.removeComma('asking_price');
-            this.removeComma('max_load_capacity');
-            switch (this.field.mode) {
-                case 'register':
-                    empty_info_service.submit(that.field).then((response) => {
-                        if(response.success == false){
-                            that.addComma('asking_price');
-                            that.addComma('max_load_capacity');
-                            that.errors = response.message;
-                        }else{
-                            that.errors = [];
-                            window.location.href = listRoute;
-                        }
+            if($("#hd_work_flow_edit").val() == 1){
+                this.field["id"] = this.work_flow_id;
+                work_flow_list_service.checkIsExist(that.work_flow_id, {'mode' : this.field.mode,'status': status,'modified_at': that.modified_at }).then((response) => {
+                    if (!response.success) {
                         that.loading = false;
-                        that.cursorWhenError();
-                    });
-                    break;
-                case 'edit':
-                    empty_info_service.checkIsExist(that.empty_info_id, {'mode' : this.field.mode,'status': status,'modified_at': that.modified_at }).then((response) => {
-                        if (!response.success) {
-                            that.loading = false;
-                            alert(response.msg);
-                            that.backHistory();
-                            return false;
-                        } else {
-                            empty_info_service.submit(that.field).then((response) => {
-                                if(response.success == false){
-                                    that.addComma('asking_price');
-                                    that.addComma('max_load_capacity');
-                                    that.errors = response.message;
-                                }else{
-                                    that.errors = [];
-                                    window.location.href = listRoute;
-                                }
-                                that.loading = false;
-                                that.cursorWhenError();
-                            });
-                        }
-                    });
-                    break;
-                case 'reservation':
-                case 'reservation_approval':
-                    empty_info_service.checkIsExist(that.empty_info_id, {'status': status,'modified_at': that.modified_at}).then((response) => {
-                        if (!response.success) {
-                            that.loading = false;
-                            alert(response.msg);
-                            that.backHistory();
-                            return false;
-                        } else {
-                            empty_info_service.updateStatus(that.empty_info_id,{status:status}).then((response) => {
-                                that.loading = false;
+                        alert(response.msg);
+                        that.backHistory();
+                        return false;
+                    } else {
+                        work_flow_service.submit(that.field).then((response) => {
+                            if(response.success == false){
+                                that.addComma('asking_price');
+                                that.addComma('max_load_capacity');
+                                that.errors = response.message;
+                            }else{
+                                that.errors = [];
                                 window.location.href = listRoute;
-                            });
-                        }
-                    });
-                    break;
+                            }
+                            that.loading = false;
+                            that.cursorWhenError();
+                        });
+                    }
+                });
+            }else{
+                work_flow_list_service.submit(that.field).then((response) => {
+                    if(response.success == false){
+                        that.errors = response.message;
+                    }else{
+                        that.errors = [];
+                        // window.location.href = listRoute;
+                    }
+                    that.loading = false;
+                });
+
             }
         },
         showError: function ( errors ){
             return errors.join("<br/>");
         },
         backHistory: function () {
-            if(this.empty_info_edit == 1){
-                empty_info_service.backHistory().then(function () {
+            if(this.work_flow_edit == 1){
+                work_flow_service.backHistory().then(function () {
                     window.location.href = listRoute;
                 });
             }else{
@@ -143,122 +159,42 @@ var ctrWorkFlowVl = new Vue({
         },
         loadFormEdit: function () {
             let that = this;
-            if(this.field.mode != 'register'){
-                this.loading = true;
-                that.empty_info_edit = 1;
-                that.empty_info_id = $("#hd_id").val();
-                $.each(this.field,function (key,value) {
-                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
-                        that.field[key] = $("#hd_"+key).val();
-                        if(key == "asking_price"){
-                            that.field[key] = '¥ '+$("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-                        }
-                        if(key == "max_load_capacity"){
-                            that.field[key] = $("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-                        }
-                    }
-                });
-                if(this.field.mode=='reservation_approval'){
-                    this.field.application_office_id = $("#hd_ask_office").val();;
-                    this.field.reservation_person =$("#hd_reservation_person").val();
-                }
-                this.modified_at = $('#hd_modified_at').val();
-                this.loading = false;
-            }
-        },
-        deleteInfo: function(id){
-            var that = this;
-            empty_info_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
-                if (!response.success) {
-                    alert(response.msg);
-                    that.backHistory();
-                    return false;
-                } else {
-                    if (confirm(messages["MSG06001"])) {
-                        empty_info_service.delete(id).then((response) => {
-                            window.location.href = listRoute;
-                        });
-                    }
+            this.loading = true;
+            that.work_flow_edit = 1;
+            that.work_flow_id = $("#hd_id").val();
+            $.each(this.field,function (key,value) {
+                if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
+                    that.field[key] = $("#hd_"+key).val();
                 }
             });
-        },
-        searchVehicle: function () {
-            var that = this;
-            if(that.field.vehicle_kb==0){
-                if(that.registration_numbers==''){
-                    alert(messages['MSG10009']);
-                    return;
-                }else{
-                    if(isNaN(that.registration_numbers)){
-                        alert(messages['MSG10010']);
-                        return;
-                    }
-                }
-                empty_info_service.searchVehicle({registration_numbers: that.registration_numbers,mst_business_office_id:that.field.regist_office_id}).then((response) => {
-                    if (!response.success) {
-                        alert(response.msg);
-                        return false;
-                    } else {
-                        let result = response.info;
-                        that.field.registration_numbers = result.registration_numbers;
-                        that.field.vehicle_size = result.vehicle_size_kb;
-                        that.field.vehicle_body_shape = result.car_body_shape;
-                        that.field.max_load_capacity = result.max_loading_capacity;
-                        that.addComma('max_load_capacity');
-                    }
-                });
-            }else{
-                alert(messages['MSG10012']);
-            }
+            this.modified_at = $('#hd_modified_at').val();
+            this.loading = false;
 
         },
-        addComma: function (id) {
-            if(this.field[id]!=null){
-                this.field[id] = (id=='asking_price' && this.field[id]!='' ? '¥ ' : '' )+this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
-        },
-        removeComma: function (id) {
-            if(this.field[id]!=null) {
-                this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥ ', '');
-            }
-        },
-        resetForm: function () {
-            this.registration_numbers = "";
+        resetForm: async function () {
+            this.loading = true;
             this.errors = {};
-            this.checkOther = false;
-            if($("#hd_empty_info_edit").val() == 1){
+            if($("#hd_work_flow_edit").val() == 1){
                 this.loadFormEdit();
             }else{
-                this.field = {
-                    status:1,
-                    regist_staff:"",
-                    regist_office_id:user_login_mst_business_office_id,
-                    email_address:"",
-                    vehicle_kb:0,
-                    registration_numbers:"",
-                    vehicle_size:"",
-                    vehicle_body_shape:"",
-                    max_load_capacity:"",
-                    equipment:[],
-                    start_date:"",
-                    start_time:"",
-                    start_pref_cd:"",
-                    start_address:"",
-                    asking_price:"",
-                    asking_baggage:"",
-                    arrive_pref_cd:"",
-                    arrive_address:"",
-                    arrive_date:"",
-                    mode:$('#mode').val(),
-                };
-                $('input:checkbox').prop('checked',false);
+                switch (this.screenStep) {
+                    case 1:
+                        this.field.name ="";
+                        this.field.steps ="";
+                        break;
+                    case 2:
+                        this.field.mst_wf_require_approval_base =[];
+                        await this.handleStep2();
+                        break;
+                    case 3:
+                        this.field.mst_wf_require_approval =[];
+                        await this.handleStep3();
+                        break;
+
+                }
                 $('input:text').val('');
-                $('input[type="tel"]').val('');
-                $('textarea').val('');
             }
-            $("#search_vehicle").focus();
+            this.loading = false;
         },
         setInputFilter: function (textbox, inputFilter) {
             ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
@@ -277,6 +213,9 @@ var ctrWorkFlowVl = new Vue({
     },
     mounted () {
         this.getListWfApplicantAffiliationClassification();
+        if($("#hd_work_flow_edit").val() == 1) {
+            this.loadFormEdit();
+        }
         if(document.getElementById("steps")!=null){
             this.setInputFilter(document.getElementById("steps"), function(value) {
                 return /^\d*$/.test(value); });

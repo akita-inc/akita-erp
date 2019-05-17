@@ -27,11 +27,32 @@ work_flow_list_service = {
             return error;
         });
     },
-    getListWfApplicantAffiliationClassification: function (data) {
+    validateData: function (data) {
         return axios.post('/work_flow/api-v1/validate-data',data).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;
         });
     },
+    submit: function (data) {
+        return axios.post('/work_flow/api-v1/submit', data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    getListApprovalBase: function (data) {
+        return axios.post('/work_flow/api-v1/get-list-approval-base', data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    getListApproval: function (data) {
+        return axios.post('/work_flow/api-v1/get-list-approval', data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    }
 }

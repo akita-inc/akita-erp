@@ -29,7 +29,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
                                 <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
-                                <button v-else @click="submit" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
+                                <button v-else v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
                                 <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                     {{ trans("work_flow.create.button.clear") }}
                                 </button>
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <form class="form-inline" role="form">
+        <form class="form-inline" role="form" autocomplete="off">
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
@@ -96,7 +96,7 @@
                             'filed'=>'approval_levels',
                             'array'=>$listWfLevel,
                             'required'=>true,
-                            'filedId'=> "'mst_wf_require_approval_approval_levels_'+section+'_'+index" ,
+                            'filedId'=> "'mst_wf_require_approval_levels_'+section+'_'+index" ,
                             'filedMode'=>"item.approval_levels",
                             'index' => "index+1"
                         ])
@@ -106,7 +106,7 @@
                             'filed'=>'approval_kb',
                             'array'=>$listWfApprovalIndicator,
                             'required'=>true,
-                            'filedId'=> "'mst_wf_require_approval_approval_kb_'+section+'_'+index" ,
+                            'filedId'=> "'mst_wf_require_approval_kb_'+section+'_'+index" ,
                             'filedMode'=>"item.approval_kb",
                         ])
                     </div>
@@ -127,7 +127,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
                             <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
-                            <button v-else @click="submit" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
+                            <button v-else v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
                             <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                 {{ trans("work_flow.create.button.clear") }}
                             </button>
