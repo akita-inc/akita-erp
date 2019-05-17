@@ -11,8 +11,9 @@ class MWfType extends Model {
 
     protected $table = "wf_type";
 
-    const CREATED_AT = 'created_at';
+    const CREATED_AT = 'create_at';
     const UPDATED_AT = 'modified_at';
+    const DELETED_AT = 'delete_at';
 
     public $label = [];
 }

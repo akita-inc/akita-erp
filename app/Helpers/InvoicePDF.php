@@ -165,6 +165,10 @@ class InvoicePDF extends TcpdfFpdi
             $y +=4.23;
             $this->setCellPaddings(1.000125,0,1.000125,0);
             foreach ($detail as $key => $value){
+                if($key=='daily_report_date_or'){
+                    unset($detail->{$key});
+                    continue;
+                }
                 switch ($key){
                     case  'departure_point_name':
                     case  'landing_name':

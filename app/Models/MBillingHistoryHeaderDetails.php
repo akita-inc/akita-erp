@@ -24,9 +24,10 @@ class MBillingHistoryHeaderDetails extends Model {
 
     public function getInvoicePDFDetail($listID,$dataSearch){
         $date = date("m/d",strtotime($dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
-
+        $yearDate = date("m/d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
         $query1 = DB::table('t_billing_history_header_details as details')->select(
                 DB::raw("'$date' as daily_report_date"),
+                DB::raw("'$yearDate' as daily_report_date_or"),
                 'details.goods',
                 DB::raw("(CASE 
                     WHEN mst_vehicles.vehicle_size_kb=1 THEN '2t' 
@@ -62,6 +63,7 @@ class MBillingHistoryHeaderDetails extends Model {
         $result1 = $query1->get()->toArray();
         $query2 = DB::table('t_billing_history_header_details as details')->select(
             DB::raw("DATE_FORMAT(details.daily_report_date, '%m/%d') as daily_report_date"),
+            DB::raw("DATE_FORMAT(details.daily_report_date, '%Y/%m/%d') as daily_report_date_or"),
             'details.goods',
             DB::raw("(CASE 
                     WHEN mst_vehicles.vehicle_size_kb=1 THEN '2t' 
@@ -96,7 +98,7 @@ class MBillingHistoryHeaderDetails extends Model {
         $result2 = $query2->get()->toArray();
         $result = array_merge($result1,$result2);
         usort($result, function ($a, $b){
-            return strtotime($a->daily_report_date) - strtotime($b->daily_report_date);
+            return strtotime($a->daily_report_date_or) - strtotime($b->daily_report_date_or);
         });
         return $result;
     }
@@ -176,7 +178,8 @@ class MBillingHistoryHeaderDetails extends Model {
                     ->whereNull('mst_customers.deleted_at');
             })
             ->whereNull('details.deleted_at')
-            ->whereIn('details.id',$listID);
+            ->whereIn('details.id',$listID)
+            ->orderBy('details.daily_report_date');
         return $query->get();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
@@ -17,13 +18,17 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
 class WorkFlowController extends Controller
 {
-    use ListTrait;
+    use ListTrait, FormTrait;
     public $table = "wf_type";
     public $ruleValid = [
-        "name" => "required|",
-        "steps" => "承認段階数",
+        "name" => "required",
+        "steps" => "required|between_custom:1,10",
     ];
-    public $messagesCustom =[];
+    public $messagesCustom =[
+        'name.required' => '名称を入力してください。',
+        'steps.required' => '10以下の数値を入力してください。',
+        'between_custom' => '10以下の数値を入力してください',
+    ];
     public $labels=[
         "name" => "名称",
         "steps" => "承認段階数",
@@ -131,8 +136,11 @@ class WorkFlowController extends Controller
 
         if($id != null) {
             $mWfType = MWfType::find($id);
-            $mWfRequireApprovalBase = MWfRequireApprovalBase::query()->where('wf_type','=',$id)->get();
-            $mWfRequireApproval = MWfRequireApproval()::query()->where('wf_type','=',$id)->get();
+            if(empty($mWfType)){
+                abort('404');
+            }else {
+                $mWfType = $mWfType->toArray();
+            }
         }
         return view('work_flow.form', [
             'mWfType' => $mWfType,
@@ -154,13 +162,76 @@ class WorkFlowController extends Controller
     public function validateData(Request $request){
         $data=  $request->all();
         $validator = Validator::make($data, $this->ruleValid,$this->messagesCustom,$this->labels);
-
         if ($validator->fails()) {
             return response()->json([
                 'success'=>FALSE,
                 'message'=> $validator->errors()
             ]);
+        }else{
+            return response()->json([
+                'success'=>true,
+            ]);
         }
     }
 
+    protected function save($data){
+        $arrayInsert = $data;
+        $currentTime = date("Y-m-d H:i:s",time());
+        $mWfType = new MWfType();
+        $mWfRequireApprovalBase = new MWfRequireApprovalBase();
+//        dd($data);
+        $id = isset($data['id']) ?$data['id']  :null;
+        if(!is_null($id)){
+            $mWfType = $mWfType->find($id);
+        }
+        DB::beginTransaction();
+        try{
+            $mWfType->name = $data['name'];
+            $mWfType->steps = $data['steps'];
+            $mWfType->save();
+            $dataApprovalBase = [];
+            foreach ($data['mst_wf_require_approval_base'] as $item){
+                $row = $item;
+                $row['wf_type'] = $mWfType->id;
+                $row['create_at'] = $currentTime;
+                array_push($dataApprovalBase,$row);
+            }
+            MWfRequireApprovalBase::query()->insert($dataApprovalBase);
+            $dataApproval = [];
+            foreach ($data['mst_wf_require_approval'] as $section =>$items){
+                foreach ($items['list'] as $item) {
+                    $row = $item;
+                    $row['wf_type'] = $mWfType->id;
+                    $row['applicant_section'] = $section;
+                    $row['create_at'] = $currentTime;
+                    array_push($dataApproval, $row);
+                }
+            }
+            MWfRequireApproval::query()->insert($dataApproval);
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollback();
+            dd($e);
+        }
+        return response()->json([
+            'success'=>true,
+            'message'=> [],
+        ]);
+    }
+
+    public function getListApprovalBase(Request $request){
+        $wf_type = $request->input('wf_type');
+        $listApprovalBase = MWfRequireApprovalBase::query()->where('wf_type', '=', $wf_type)->get();
+        return response()->json([
+            'info'=>$listApprovalBase,
+        ]);
+    }
+
+    public function getListApproval(Request $request){
+        $wf_type = $request->input('wf_type');
+        $listApprovalBase = MWfRequireApproval::query()->where('wf_type', '=', $wf_type)->get()->groupBy('applicant_section')->toArray();
+        return response()->json([
+            'info'=>$listApprovalBase,
+        ]);
+    }
 }
