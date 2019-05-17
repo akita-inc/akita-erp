@@ -17,7 +17,7 @@
                             <div class="col-md-2 col-list-search-f">
                                 {{trans("work_flow.list.search.name")}}
                             </div>
-                            <div class="col-md-4 grid-form-search">
+                            <div class="col-md-6 grid-form-search">
                                 <input type="text" v-model="fileSearch.name" name="name" id="name" class="form-control">
                             </div>
                             <div class="col-md-2 lh-38 padding-row-5">
