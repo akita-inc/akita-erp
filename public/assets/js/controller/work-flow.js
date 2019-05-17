@@ -19479,7 +19479,8 @@ var ctrWorkFlowVl = new Vue({
     errors: {},
     modified_at: "",
     defaultLevel: defaultLevel,
-    defaultKb: defaultKb
+    defaultKb: defaultKb,
+    steps_default: null
   },
   methods: {
     getListWfApplicantAffiliationClassification: function getListWfApplicantAffiliationClassification() {
@@ -19532,23 +19533,67 @@ var ctrWorkFlowVl = new Vue({
 
       return nextStep;
     }(),
-    handleStep2: function () {
-      var _handleStep = _asyncToGenerator(
+    previousStep: function () {
+      var _previousStep = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var that;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                that = this;
+                this.loading = true;
+                this.screenStep--;
 
-                if (!(that.work_flow_edit == 0)) {
-                  _context2.next = 6;
+                if (!(this.screenStep == 2)) {
+                  _context2.next = 7;
                   break;
                 }
 
-                _context2.next = 4;
+                _context2.next = 5;
+                return this.handleStep2();
+
+              case 5:
+                _context2.next = 9;
+                break;
+
+              case 7:
+                _context2.next = 9;
+                return this.handleStep3();
+
+              case 9:
+                this.loading = false;
+
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function previousStep() {
+        return _previousStep.apply(this, arguments);
+      }
+
+      return previousStep;
+    }(),
+    handleStep2: function () {
+      var _handleStep = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        var that;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                that = this;
+
+                if (!(that.work_flow_edit == 0)) {
+                  _context4.next = 6;
+                  break;
+                }
+
+                _context4.next = 4;
                 return work_flow_list_service.validateData({
                   name: that.field.name,
                   steps: that.field.steps
@@ -19570,36 +19615,80 @@ var ctrWorkFlowVl = new Vue({
                 });
 
               case 4:
-                _context2.next = 8;
+                _context4.next = 8;
                 break;
 
               case 6:
-                _context2.next = 8;
+                _context4.next = 8;
                 return work_flow_list_service.validateData({
                   name: that.field.name,
                   steps: that.field.steps
-                }).then(function (response) {
-                  if (response.success) {
-                    that.errors = [];
-                    work_flow_list_service.getListApprovalBase({
-                      wf_type: that.work_flow_id
-                    }).then(function (response1) {
-                      if (response1.info.length > 0) {
-                        that.field.mst_wf_require_approval_base = response1.info;
+                }).then(
+                /*#__PURE__*/
+                function () {
+                  var _ref = _asyncToGenerator(
+                  /*#__PURE__*/
+                  _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(response) {
+                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+                      while (1) {
+                        switch (_context3.prev = _context3.next) {
+                          case 0:
+                            if (!response.success) {
+                              _context3.next = 6;
+                              break;
+                            }
+
+                            that.errors = [];
+                            _context3.next = 4;
+                            return work_flow_list_service.getListApprovalBase({
+                              wf_type: that.work_flow_id
+                            }).then(function (response1) {
+                              if (response1.info.length > 0) {
+                                that.field.mst_wf_require_approval_base = response1.info;
+                              }
+
+                              if (that.field.steps < that.steps_default) {
+                                for (var i = that.steps_default; i > that.field.steps; i--) {
+                                  that.field.mst_wf_require_approval_base.splice(i - 1, 1);
+                                }
+                              } else if (that.field.steps > that.steps_default) {
+                                for (var i = that.steps_default; i < that.field.steps; i++) {
+                                  that.field.mst_wf_require_approval_base.push({
+                                    approval_steps: i + 1,
+                                    approval_levels: that.defaultLevel,
+                                    approval_kb: that.defaultKb
+                                  });
+                                }
+                              }
+                            });
+
+                          case 4:
+                            _context3.next = 8;
+                            break;
+
+                          case 6:
+                            that.screenStep--;
+                            that.errors = response.message;
+
+                          case 8:
+                          case "end":
+                            return _context3.stop();
+                        }
                       }
-                    });
-                  } else {
-                    that.screenStep--;
-                    that.errors = response.message;
-                  }
-                });
+                    }, _callee3);
+                  }));
+
+                  return function (_x) {
+                    return _ref.apply(this, arguments);
+                  };
+                }());
 
               case 8:
               case "end":
-                return _context2.stop();
+                return _context4.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee4, this);
       }));
 
       function handleStep2() {
@@ -19608,36 +19697,116 @@ var ctrWorkFlowVl = new Vue({
 
       return handleStep2;
     }(),
-    handleStep3: function handleStep3() {
-      var that = this;
+    handleStep3: function () {
+      var _handleStep2 = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        var that;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                that = this;
 
-      if (that.work_flow_edit == 0) {
-        that.listApplicant.forEach(function (value, key) {
-          that.field.mst_wf_require_approval[value.date_id] = {
-            applicant_section_nm: "",
-            list: []
-          };
-          that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
-          that.field.mst_wf_require_approval_base.forEach(function (value1, key1) {
-            var data = {};
-            data.approval_steps = value1.approval_steps;
-            data.approval_levels = value1.approval_levels;
-            data.approval_kb = value1.approval_kb;
-            that.field.mst_wf_require_approval[value.date_id].list.push(data);
-          });
-        });
-      } else {
-        work_flow_list_service.getListApproval({
-          wf_type: that.work_flow_id
-        }).then(function (response) {
-          if (response.info.length > 0) {
-            that.field.mst_wf_require_approval = response.info;
+                if (!(that.work_flow_edit == 0)) {
+                  _context6.next = 6;
+                  break;
+                }
+
+                _context6.next = 4;
+                return that.listApplicant.forEach(function (value, key) {
+                  that.field.mst_wf_require_approval[value.date_id] = {
+                    applicant_section_nm: "",
+                    list: []
+                  };
+                  that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
+                  that.field.mst_wf_require_approval_base.forEach(function (value1, key1) {
+                    var data = {};
+                    data.approval_steps = value1.approval_steps;
+                    data.approval_levels = value1.approval_levels;
+                    data.approval_kb = value1.approval_kb;
+                    that.field.mst_wf_require_approval[value.date_id].list.push(data);
+                  });
+                });
+
+              case 4:
+                _context6.next = 8;
+                break;
+
+              case 6:
+                _context6.next = 8;
+                return work_flow_list_service.getListApproval({
+                  wf_type: that.work_flow_id
+                }).then(
+                /*#__PURE__*/
+                function () {
+                  var _ref2 = _asyncToGenerator(
+                  /*#__PURE__*/
+                  _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(response) {
+                    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+                      while (1) {
+                        switch (_context5.prev = _context5.next) {
+                          case 0:
+                            if (response.info.length > 0) {
+                              response.info.forEach(function (items, section) {
+                                that.field.mst_wf_require_approval[section] = {
+                                  applicant_section_nm: "",
+                                  list: []
+                                };
+                                that.field.mst_wf_require_approval[section].applicant_section_nm = items[0].applicant_section_nm;
+                                that.field.mst_wf_require_approval[section].list = items;
+                              });
+                            }
+
+                            if (that.field.steps < that.steps_default) {
+                              that.field.mst_wf_require_approval.forEach(function (value, key) {
+                                for (var i = that.steps_default; i > that.field.steps; i--) {
+                                  value.list.splice(i - 1, 1);
+                                }
+                              });
+                            } else if (that.field.steps > that.steps_default) {
+                              that.field.mst_wf_require_approval.forEach(function (value, key) {
+                                for (var i = that.steps_default; i < that.field.steps; i++) {
+                                  that.field.mst_wf_require_approval_base.forEach(function (value1, key1) {
+                                    if (key1 == i) {
+                                      var data = {};
+                                      data.approval_steps = value1.approval_steps;
+                                      data.approval_levels = value1.approval_levels;
+                                      data.approval_kb = value1.approval_kb;
+                                      value.list.push(data);
+                                    }
+                                  });
+                                }
+                              });
+                            }
+
+                          case 2:
+                          case "end":
+                            return _context5.stop();
+                        }
+                      }
+                    }, _callee5);
+                  }));
+
+                  return function (_x2) {
+                    return _ref2.apply(this, arguments);
+                  };
+                }());
+
+              case 8:
+              case "end":
+                return _context6.stop();
+            }
           }
+        }, _callee6, this);
+      }));
 
-          console.log(that.field.mst_wf_require_approval);
-        });
+      function handleStep3() {
+        return _handleStep2.apply(this, arguments);
       }
-    },
+
+      return handleStep3;
+    }(),
     submit: function submit(status) {
       var that = this;
       that.loading = true;
@@ -19655,10 +19824,8 @@ var ctrWorkFlowVl = new Vue({
             that.backHistory();
             return false;
           } else {
-            work_flow_service.submit(that.field).then(function (response) {
+            work_flow_list_service.submit(that.field).then(function (response) {
               if (response.success == false) {
-                that.addComma('asking_price');
-                that.addComma('max_load_capacity');
                 that.errors = response.message;
               } else {
                 that.errors = [];
@@ -19666,7 +19833,6 @@ var ctrWorkFlowVl = new Vue({
               }
 
               that.loading = false;
-              that.cursorWhenError();
             });
           }
         });
@@ -19675,7 +19841,8 @@ var ctrWorkFlowVl = new Vue({
           if (response.success == false) {
             that.errors = response.message;
           } else {
-            that.errors = []; // window.location.href = listRoute;
+            that.errors = [];
+            window.location.href = listRoute;
           }
 
           that.loading = false;
@@ -19687,7 +19854,7 @@ var ctrWorkFlowVl = new Vue({
     },
     backHistory: function backHistory() {
       if (this.work_flow_edit == 1) {
-        work_flow_service.backHistory().then(function () {
+        work_flow_list_service.backHistory().then(function () {
           window.location.href = listRoute;
         });
       } else {
@@ -19699,6 +19866,7 @@ var ctrWorkFlowVl = new Vue({
       this.loading = true;
       that.work_flow_edit = 1;
       that.work_flow_id = $("#hd_id").val();
+      that.steps_default = $('#hd_steps').val();
       $.each(this.field, function (key, value) {
         if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
           that.field[key] = $("#hd_" + key).val();
@@ -19710,61 +19878,85 @@ var ctrWorkFlowVl = new Vue({
     resetForm: function () {
       var _resetForm = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 this.loading = true;
                 this.errors = {};
 
                 if (!($("#hd_work_flow_edit").val() == 1)) {
-                  _context3.next = 6;
+                  _context7.next = 18;
                   break;
                 }
 
-                this.loadFormEdit();
-                _context3.next = 21;
+                _context7.t0 = this.screenStep;
+                _context7.next = _context7.t0 === 1 ? 6 : _context7.t0 === 2 ? 8 : _context7.t0 === 3 ? 12 : 16;
                 break;
 
               case 6:
-                _context3.t0 = this.screenStep;
-                _context3.next = _context3.t0 === 1 ? 9 : _context3.t0 === 2 ? 12 : _context3.t0 === 3 ? 16 : 20;
-                break;
+                this.loadFormEdit();
+                return _context7.abrupt("break", 16);
 
-              case 9:
-                this.field.name = "";
-                this.field.steps = "";
-                return _context3.abrupt("break", 20);
-
-              case 12:
+              case 8:
                 this.field.mst_wf_require_approval_base = [];
-                _context3.next = 15;
+                _context7.next = 11;
                 return this.handleStep2();
 
-              case 15:
-                return _context3.abrupt("break", 20);
+              case 11:
+                return _context7.abrupt("break", 16);
 
-              case 16:
+              case 12:
                 this.field.mst_wf_require_approval = [];
-                _context3.next = 19;
+                _context7.next = 15;
                 return this.handleStep3();
 
-              case 19:
-                return _context3.abrupt("break", 20);
+              case 15:
+                return _context7.abrupt("break", 16);
 
-              case 20:
-                $('input:text').val('');
+              case 16:
+                _context7.next = 33;
+                break;
+
+              case 18:
+                _context7.t1 = this.screenStep;
+                _context7.next = _context7.t1 === 1 ? 21 : _context7.t1 === 2 ? 24 : _context7.t1 === 3 ? 28 : 32;
+                break;
 
               case 21:
+                this.field.name = "";
+                this.field.steps = "";
+                return _context7.abrupt("break", 32);
+
+              case 24:
+                this.field.mst_wf_require_approval_base = [];
+                _context7.next = 27;
+                return this.handleStep2();
+
+              case 27:
+                return _context7.abrupt("break", 32);
+
+              case 28:
+                this.field.mst_wf_require_approval = [];
+                _context7.next = 31;
+                return this.handleStep3();
+
+              case 31:
+                return _context7.abrupt("break", 32);
+
+              case 32:
+                $('input:text').val('');
+
+              case 33:
                 this.loading = false;
 
-              case 22:
+              case 34:
               case "end":
-                return _context3.stop();
+                return _context7.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee7, this);
       }));
 
       function resetForm() {

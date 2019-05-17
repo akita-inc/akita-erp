@@ -13,6 +13,7 @@ class MWfRequireApproval extends Model {
 
 
     const CREATED_AT = 'create_at';
+    const UPDATED_AT = null;
     const DELETED_AT = 'delete_at';
 
     public $label = [];

@@ -11,7 +11,8 @@
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
                 <div class="d-flex">
-                    <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
+                    <button class="btn btn-black" type="button" @click="backHistory" v-cloak v-if="screenStep==1">{{ trans("common.button.back") }}</button>
+                    <button class="btn btn-black" type="button" @click="previousStep" v-cloak v-else>{{ trans("common.button.back") }}</button>
                 </div>
 
                 <input type="hidden" id="hd_work_flow_edit" value="{!! !empty($mWfType) ? 1:0 !!}">
@@ -28,8 +29,9 @@
                     <div class="row">
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
-                                <button v-else v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
+                                <button v-if="screenStep==3 && work_flow_edit==0" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                <button v-if="screenStep==3&& work_flow_edit==1" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.edit") }}</button>
+                                <button v-if="screenStep!=3" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
                                 <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                     {{ trans("work_flow.create.button.clear") }}
                                 </button>
@@ -126,8 +128,9 @@
                     <div class="row">
                         <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                         <div class="col-md-7 col-sm-12 row grid-col h-100">
-                            <button v-if="screenStep==3" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
-                            <button v-else v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
+                            <button v-if="screenStep==3 && work_flow_edit==0" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                            <button v-if="screenStep==3&& work_flow_edit==1" v-cloak @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.edit") }}</button>
+                            <button v-if="screenStep!=3" v-cloak class="btn btn-primary btn-submit" type="button" v-on:click="nextStep">{{ trans("work_flow.create.button.next") }}</button>
                             <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                 {{ trans("work_flow.create.button.clear") }}
                             </button>

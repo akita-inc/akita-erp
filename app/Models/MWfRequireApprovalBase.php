@@ -12,6 +12,7 @@ class MWfRequireApprovalBase extends Model {
     protected $table = "mst_wf_require_approval_base";
 
     const CREATED_AT = 'create_at';
+    const UPDATED_AT = null;
     const DELETED_AT = 'delete_at';
 
     public $label = [];
