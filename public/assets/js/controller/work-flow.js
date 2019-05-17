@@ -19501,25 +19501,27 @@ var ctrWorkFlowVl = new Vue({
                 this.screenStep++;
 
                 if (!(this.screenStep == 2)) {
-                  _context.next = 7;
+                  _context.next = 8;
                   break;
                 }
 
-                _context.next = 5;
+                this.field.mst_wf_require_approval_base = [];
+                _context.next = 6;
                 return this.handleStep2();
 
-              case 5:
-                _context.next = 9;
+              case 6:
+                _context.next = 11;
                 break;
 
-              case 7:
-                _context.next = 9;
+              case 8:
+                this.field.mst_wf_require_approval = [];
+                _context.next = 11;
                 return this.handleStep3();
 
-              case 9:
+              case 11:
                 this.loading = false;
 
-              case 10:
+              case 12:
               case "end":
                 return _context.stop();
             }
@@ -19543,27 +19545,9 @@ var ctrWorkFlowVl = new Vue({
               case 0:
                 this.loading = true;
                 this.screenStep--;
-
-                if (!(this.screenStep == 2)) {
-                  _context2.next = 7;
-                  break;
-                }
-
-                _context2.next = 5;
-                return this.handleStep2();
-
-              case 5:
-                _context2.next = 9;
-                break;
-
-              case 7:
-                _context2.next = 9;
-                return this.handleStep3();
-
-              case 9:
                 this.loading = false;
 
-              case 10:
+              case 3:
               case "end":
                 return _context2.stop();
             }

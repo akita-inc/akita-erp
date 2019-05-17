@@ -34,8 +34,10 @@ var ctrWorkFlowVl = new Vue({
             this.loading = true;
             this.screenStep++;
             if(this.screenStep==2){
+                this.field.mst_wf_require_approval_base =[];
                 await this.handleStep2();
             }else{
+                this.field.mst_wf_require_approval =[];
                 await this.handleStep3();
             }
             this.loading = false;
@@ -43,11 +45,6 @@ var ctrWorkFlowVl = new Vue({
         previousStep: async function(){
             this.loading = true;
             this.screenStep--;
-            if(this.screenStep==2){
-                await this.handleStep2();
-            }else{
-                await this.handleStep3();
-            }
             this.loading = false;
         },
         handleStep2:async function(){
