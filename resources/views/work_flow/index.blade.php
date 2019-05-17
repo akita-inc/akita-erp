@@ -40,7 +40,7 @@
                     <thead>
                     <tr>
                         @foreach($fieldShowTable as $key => $field)
-                            <th  v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="cursor-pointer {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("work_flow.list.table.".$key)}}</th>
+                            <th  v-on:click="sortList($event, '{{$field["sortBy"]}}')" id="th_{{$key}}" class="text-left cursor-pointer {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("work_flow.list.table.".$key)}}</th>
                         @endforeach
                     </tr>
                     </thead>
@@ -49,7 +49,7 @@
                         @foreach($fieldShowTable as $key => $field)
                             @if($key=='id')
                             <td>
-                                <div class="cd-link text-center" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
+                                <div class="cd-link text-left" v-on:click="checkIsExist(item.id)">{!! "@{{ item['$key'] }}" !!}</div>
                             </td>
                             @else
                             <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
