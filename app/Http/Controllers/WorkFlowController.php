@@ -59,10 +59,8 @@ class WorkFlowController extends Controller
                 $orderCol .= " DESC";
             }
             $this->query->orderbyRaw($orderCol);
-        } else {
-            $this->query->orderBy('id','asc');
-
         }
+        $this->query->orderBy('id','asc');
     }
 
     public function index(Request $request){
