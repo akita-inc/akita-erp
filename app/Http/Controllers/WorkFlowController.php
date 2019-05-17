@@ -212,6 +212,12 @@ class WorkFlowController extends Controller
             }
             MWfRequireApproval::query()->insert($dataApproval);
             DB::commit();
+            if(isset( $data["id"])){
+                $this->backHistory();
+                \Session::flash('message',Lang::get('messages.MSG04002'));
+            }else{
+                \Session::flash('message',Lang::get('messages.MSG03002'));
+            }
         }catch (\Exception $e){
             DB::rollback();
             dd($e);
