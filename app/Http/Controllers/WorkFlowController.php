@@ -25,11 +25,7 @@ class WorkFlowController extends Controller
         "name" => "required",
         "steps" => "required|between_custom:1,10",
     ];
-    public $messagesCustom =[
-        'name.required' => '名称を入力してください。',
-        'steps.required' => '10以下の数値を入力してください。',
-        'between_custom' => '10以下の数値を入力してください',
-    ];
+    public $messagesCustom =[];
     public $labels=[
         "name" => "名称",
         "steps" => "承認段階数",
@@ -37,6 +33,7 @@ class WorkFlowController extends Controller
     public $currentData=null;
     public function __construct(){
         parent::__construct();
+        $this->messagesCustom['between_custom'] = Lang::get('messages.MSG02028');
 
     }
     protected function getPaging()
