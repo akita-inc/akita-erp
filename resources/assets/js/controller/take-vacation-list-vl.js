@@ -4,7 +4,6 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 var ctrTakeVacationListVl = new Vue({
     el: '#ctrTakeVacationListVl',
     data: {
-        lang:lang_date_picker,
         loading:false,
         items:[],
         fileSearch:{
@@ -54,6 +53,10 @@ var ctrTakeVacationListVl = new Vue({
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
                 that.order = response.order;
+                $.each(that.fileSearch, function (key, value) {
+                    if (value === null)
+                        that.fileSearch[key] = '';
+                });
                 that.loading = false;
                 if (that.order.col !== null)
                     $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
