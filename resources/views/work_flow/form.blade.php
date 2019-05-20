@@ -48,6 +48,9 @@
         </div>
 
         <form class="form-inline" role="form" autocomplete="off">
+            <div class="text-danger">
+                {{ trans("common.description-form.indicates_required_items") }}
+            </div>
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
@@ -67,7 +70,6 @@
                         @include('Component.form.select-vue',[
                             'filed'=>'approval_levels',
                             'array'=>$listWfLevel,
-                            'required'=>true,
                             'filedId'=> "'mst_wf_require_approval_base_approval_levels_'+index" ,
                             'filedMode'=>"items.approval_levels",
                             'index' => "index+1"
@@ -77,7 +79,6 @@
                         @include('Component.form.select-vue',[
                             'filed'=>'approval_kb',
                             'array'=>$listWfApprovalIndicator,
-                            'required'=>true,
                             'filedId'=> "'mst_wf_require_approval_base_approval_kb_'+index" ,
                             'filedMode'=>"items.approval_kb",
                         ])
@@ -102,7 +103,6 @@
                         @include('Component.form.select-vue',[
                             'filed'=>'approval_levels',
                             'array'=>$listWfLevel,
-                            'required'=>true,
                             'filedId'=> "'mst_wf_require_approval_levels_'+section+'_'+index" ,
                             'filedMode'=>"item.approval_levels",
                             'index' => "index+1"
@@ -112,7 +112,6 @@
                         @include('Component.form.select-vue',[
                             'filed'=>'approval_kb',
                             'array'=>$listWfApprovalIndicator,
-                            'required'=>true,
                             'filedId'=> "'mst_wf_require_approval_kb_'+section+'_'+index" ,
                             'filedMode'=>"item.approval_kb",
                         ])
