@@ -11,6 +11,7 @@
     "/assets/js/controller/staffs-list.js": "/assets/js/controller/staffs-list.js",
     "/assets/js/controller/suppliers.js": "/assets/js/controller/suppliers.js",
     "/assets/js/controller/suppliers-list.js": "/assets/js/controller/suppliers-list.js",
+    "/assets/js/controller/take-vacation-list.js": "/assets/js/controller/take-vacation-list.js",
     "/assets/js/controller/vehicles.js": "/assets/js/controller/vehicles.js",
     "/assets/js/controller/vehicles-list.js": "/assets/js/controller/vehicles-list.js",
     "/assets/js/controller/work-flow.js": "/assets/js/controller/work-flow.js",
