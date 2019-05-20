@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="col-md-3"></div>
-            <div class="wrapper-table table-green w-50" v-cloak v-if="flagSearch">
+            <div class="wrapper-table table-green w-50">
                 <table class="table table-striped table-bordered search-content">
                     <thead>
                     <tr>
