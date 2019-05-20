@@ -98,7 +98,7 @@
         <a href="{{ route('empty_info.list')  }}" class="list-group-item">KARAマッチ</a>
         <a href="#menu4sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">ワークフロー</a>
         <div class="collapse" id="menu4sub1">
-            <a href="/take_vacation/list" class="list-group-item" data-parent="#menu4sub1">休暇取得申請</a>
+            <a href="{{url('/take_vacation/list')}}" class="list-group-item" data-parent="#menu4sub1">休暇取得申請</a>
             @if(Auth::user()->sysadmin_flg==1)
             <a href="{{route('work_flow.list')}}" class="list-group-item" data-parent="#menu4sub1">基本設定</a>
             @endif
