@@ -2,7 +2,12 @@
 @section('title',trans("work_flow.create.title_step_1"))
 @section('title_header',trans("work_flow.create.title_step_1"))
 @section('css')
+    <style>
+        .form-control{
+            background-clip: initial !important;
+        }
 
+    </style>
 @endsection
 @section('content')
     @php $prefix='work_flow.create.field.' @endphp

@@ -181,6 +181,9 @@ class WorkFlowController extends Controller
         try{
             $mWfType->name = $data['name'];
             $mWfType->steps = $data['steps'];
+            if(!is_null($id)) {
+                $mWfType->modified_at = $currentTime;
+            }
             $mWfType->save();
             if(!is_null($id)){
                 MWfRequireApprovalBase::query()->where('wf_type','=',$id)->delete();
