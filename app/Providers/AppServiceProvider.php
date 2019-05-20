@@ -44,5 +44,6 @@ class AppServiceProvider extends ServiceProvider
         CustomValidation::validateImage();
         CustomValidation::validateKanaCustom();
         CustomValidation::validateHiragana();
+        CustomValidation::validateRequireLength();
     }
 }

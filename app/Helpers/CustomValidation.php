@@ -235,4 +235,15 @@ class CustomValidation {
             return false;
         });
     }
+
+    public static function validateRequireLength() {
+
+        Validator::extend('require_length', function($attribute, $value, $parameters, $validator) {
+            return  mb_strlen($value, 'UTF-8')==$parameters[0];
+
+        });
+        Validator::replacer('require_length', function($message, $attribute, $rule, $parameters) {
+            return str_replace(':length', $parameters[0], $message);
+        });
+    }
 }

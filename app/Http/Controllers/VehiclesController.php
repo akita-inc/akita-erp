@@ -201,7 +201,7 @@ class VehiclesController extends Controller
             'registration_numbers1'=>'required|two_bytes_string|length:10',
             'registration_numbers2'=>'required|one_bytes_string|length:3',
             'registration_numbers3'=>'required|hiragana|length:1',
-            'registration_numbers4'=>'required|one_byte_number|length:4',
+            'registration_numbers4'=>'required|one_byte_number|require_length:4',
             'mst_business_office_id'=>'required',
             'vehicle_inspection_sticker_pdf'=>'nullable|mimes:pdf|max_mb:'.config('params.max_file_size'),
             'first_year_registration_dt'=>'nullable|date_format_custom:Ym',
