@@ -12,7 +12,6 @@ var ctrWorkFlowListVl = new Vue({
             name:"",
         },
         message: '',
-        flagSearch:false,
         pagination:{
             total: 0,
             per_page: 2,
@@ -36,7 +35,6 @@ var ctrWorkFlowListVl = new Vue({
                 fieldSearch:this.fileSearch,
                 order:this.order,
             };
-            console.log(data);
             var that = this;
             that.loading = true;
             work_flow_list_service.loadList(data).then((response) => {
@@ -45,7 +43,6 @@ var ctrWorkFlowListVl = new Vue({
                 } else {
                     this.message = '';
                 }
-                that.flagSearch=true;
                 that.items = response.data.data;
                 that.pagination = response.pagination;
                 that.fileSearch = response.fieldSearch;
@@ -90,6 +87,7 @@ var ctrWorkFlowListVl = new Vue({
 
     },
     mounted () {
+        this.getItems(1, true);
         this.flagSearch=false;
     },
     components: {
