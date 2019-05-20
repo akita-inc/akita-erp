@@ -19564,20 +19564,70 @@ var ctrWorkFlowVl = new Vue({
     handleStep2: function () {
       var _handleStep = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-        var that;
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(flag_validated) {
+        var that, i;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 that = this;
 
+                if (!(typeof flag_validated != "undefined" && flag_validated == true)) {
+                  _context4.next = 10;
+                  break;
+                }
+
                 if (!(that.work_flow_edit == 0)) {
                   _context4.next = 6;
                   break;
                 }
 
-                _context4.next = 4;
+                for (i = 0; i < that.field.steps; i++) {
+                  that.field.mst_wf_require_approval_base.push({
+                    approval_steps: i + 1,
+                    approval_levels: that.defaultLevel,
+                    approval_kb: that.defaultKb
+                  });
+                }
+
+                _context4.next = 8;
+                break;
+
+              case 6:
+                _context4.next = 8;
+                return work_flow_list_service.getListApprovalBase({
+                  wf_type: that.work_flow_id
+                }).then(function (response1) {
+                  if (response1.info.length > 0) {
+                    that.field.mst_wf_require_approval_base = response1.info;
+                  }
+
+                  if (that.field.steps < that.steps_default) {
+                    for (var i = that.steps_default; i > that.field.steps; i--) {
+                      that.field.mst_wf_require_approval_base.splice(i - 1, 1);
+                    }
+                  } else if (that.field.steps > that.steps_default) {
+                    for (var i = that.steps_default; i < that.field.steps; i++) {
+                      that.field.mst_wf_require_approval_base.push({
+                        approval_steps: i + 1,
+                        approval_levels: that.defaultLevel,
+                        approval_kb: that.defaultKb
+                      });
+                    }
+                  }
+                });
+
+              case 8:
+                _context4.next = 17;
+                break;
+
+              case 10:
+                if (!(that.work_flow_edit == 0)) {
+                  _context4.next = 15;
+                  break;
+                }
+
+                _context4.next = 13;
                 return work_flow_list_service.validateData({
                   name: that.field.name,
                   steps: that.field.steps
@@ -19598,12 +19648,12 @@ var ctrWorkFlowVl = new Vue({
                   }
                 });
 
-              case 4:
-                _context4.next = 8;
+              case 13:
+                _context4.next = 17;
                 break;
 
-              case 6:
-                _context4.next = 8;
+              case 15:
+                _context4.next = 17;
                 return work_flow_list_service.validateData({
                   name: that.field.name,
                   steps: that.field.steps
@@ -19662,12 +19712,12 @@ var ctrWorkFlowVl = new Vue({
                     }, _callee3);
                   }));
 
-                  return function (_x) {
+                  return function (_x2) {
                     return _ref.apply(this, arguments);
                   };
                 }());
 
-              case 8:
+              case 17:
               case "end":
                 return _context4.stop();
             }
@@ -19675,7 +19725,7 @@ var ctrWorkFlowVl = new Vue({
         }, _callee4, this);
       }));
 
-      function handleStep2() {
+      function handleStep2(_x) {
         return _handleStep.apply(this, arguments);
       }
 
@@ -19772,7 +19822,7 @@ var ctrWorkFlowVl = new Vue({
                     }, _callee5);
                   }));
 
-                  return function (_x2) {
+                  return function (_x3) {
                     return _ref2.apply(this, arguments);
                   };
                 }());
@@ -19886,7 +19936,7 @@ var ctrWorkFlowVl = new Vue({
               case 8:
                 this.field.mst_wf_require_approval_base = [];
                 _context7.next = 11;
-                return this.handleStep2();
+                return this.handleStep2(true);
 
               case 11:
                 return _context7.abrupt("break", 16);
@@ -19916,7 +19966,7 @@ var ctrWorkFlowVl = new Vue({
               case 24:
                 this.field.mst_wf_require_approval_base = [];
                 _context7.next = 27;
-                return this.handleStep2();
+                return this.handleStep2(true);
 
               case 27:
                 return _context7.abrupt("break", 32);

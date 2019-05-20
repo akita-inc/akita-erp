@@ -47,57 +47,88 @@ var ctrWorkFlowVl = new Vue({
             this.screenStep--;
             this.loading = false;
         },
-        handleStep2:async function(){
+        handleStep2:async function(flag_validated){
             var that = this;
-            if(that.work_flow_edit==0) {
-                await work_flow_list_service.validateData({
-                    name: that.field.name,
-                    steps: that.field.steps
-                }).then((response) => {
-                    if (response.success) {
-                        that.errors = [];
-                        for (var i = 0; i < that.field.steps; i++) {
-                            that.field.mst_wf_require_approval_base.push({
-                                approval_steps: i + 1,
-                                approval_levels: that.defaultLevel,
-                                approval_kb: that.defaultKb,
-                            });
-                        }
-                    } else {
-                        that.screenStep--;
-                        that.errors = response.message;
-                    }
-                });
-            }else{
-                await work_flow_list_service.validateData({
-                    name: that.field.name,
-                    steps: that.field.steps
-                }).then(async function(response) {
-                    if (response.success) {
-                        that.errors = [];
-                        await work_flow_list_service.getListApprovalBase({wf_type:that.work_flow_id}).then((response1) => {
-                            if(response1.info.length > 0){
-                                that.field.mst_wf_require_approval_base = response1.info;
-                            }
-                            if( that.field.steps< that.steps_default ){
-                                for (var i = that.steps_default ; i > that.field.steps; i--) {
-                                    that.field.mst_wf_require_approval_base.splice(i-1, 1);
-                                }
-                            }else if(that.field.steps > that.steps_default ){
-                                for (var i = that.steps_default ; i < that.field.steps; i++) {
-                                    that.field.mst_wf_require_approval_base.push({
-                                        approval_steps: i + 1,
-                                        approval_levels: that.defaultLevel,
-                                        approval_kb: that.defaultKb,
-                                    });
-                                }
-                            }
+            if(typeof flag_validated != "undefined" && flag_validated==true){
+                if(that.work_flow_edit==0) {
+                    for (var i = 0; i < that.field.steps; i++) {
+                        that.field.mst_wf_require_approval_base.push({
+                            approval_steps: i + 1,
+                            approval_levels: that.defaultLevel,
+                            approval_kb: that.defaultKb,
                         });
-                    } else {
-                        that.screenStep--;
-                        that.errors = response.message;
                     }
-                });
+                }else{
+                    await work_flow_list_service.getListApprovalBase({wf_type:that.work_flow_id}).then((response1) => {
+                        if(response1.info.length > 0){
+                            that.field.mst_wf_require_approval_base = response1.info;
+                        }
+                        if( that.field.steps< that.steps_default ){
+                            for (var i = that.steps_default ; i > that.field.steps; i--) {
+                                that.field.mst_wf_require_approval_base.splice(i-1, 1);
+                            }
+                        }else if(that.field.steps > that.steps_default ){
+                            for (var i = that.steps_default ; i < that.field.steps; i++) {
+                                that.field.mst_wf_require_approval_base.push({
+                                    approval_steps: i + 1,
+                                    approval_levels: that.defaultLevel,
+                                    approval_kb: that.defaultKb,
+                                });
+                            }
+                        }
+                    });
+                }
+            }else {
+                if (that.work_flow_edit == 0) {
+                    await work_flow_list_service.validateData({
+                        name: that.field.name,
+                        steps: that.field.steps
+                    }).then((response) => {
+                        if (response.success) {
+                            that.errors = [];
+                            for (var i = 0; i < that.field.steps; i++) {
+                                that.field.mst_wf_require_approval_base.push({
+                                    approval_steps: i + 1,
+                                    approval_levels: that.defaultLevel,
+                                    approval_kb: that.defaultKb,
+                                });
+                            }
+                        } else {
+                            that.screenStep--;
+                            that.errors = response.message;
+                        }
+                    });
+                } else {
+                    await work_flow_list_service.validateData({
+                        name: that.field.name,
+                        steps: that.field.steps
+                    }).then(async function (response) {
+                        if (response.success) {
+                            that.errors = [];
+                            await work_flow_list_service.getListApprovalBase({wf_type: that.work_flow_id}).then((response1) => {
+                                if (response1.info.length > 0) {
+                                    that.field.mst_wf_require_approval_base = response1.info;
+                                }
+                                if (that.field.steps < that.steps_default) {
+                                    for (var i = that.steps_default; i > that.field.steps; i--) {
+                                        that.field.mst_wf_require_approval_base.splice(i - 1, 1);
+                                    }
+                                } else if (that.field.steps > that.steps_default) {
+                                    for (var i = that.steps_default; i < that.field.steps; i++) {
+                                        that.field.mst_wf_require_approval_base.push({
+                                            approval_steps: i + 1,
+                                            approval_levels: that.defaultLevel,
+                                            approval_kb: that.defaultKb,
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            that.screenStep--;
+                            that.errors = response.message;
+                        }
+                    });
+                }
             }
         },
         handleStep3: async function(){
@@ -227,7 +258,7 @@ var ctrWorkFlowVl = new Vue({
                         break;
                     case 2:
                         this.field.mst_wf_require_approval_base =[];
-                        await this.handleStep2();
+                        await this.handleStep2(true);
                         break;
                     case 3:
                         this.field.mst_wf_require_approval =[];
@@ -243,7 +274,7 @@ var ctrWorkFlowVl = new Vue({
                         break;
                     case 2:
                         this.field.mst_wf_require_approval_base =[];
-                        await this.handleStep2();
+                        await this.handleStep2(true);
                         break;
                     case 3:
                         this.field.mst_wf_require_approval =[];
