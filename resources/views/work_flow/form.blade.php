@@ -123,7 +123,8 @@
         <div class="sub-header mt-3">
             <div class="sub-header-line-one d-flex">
                 <div class="d-flex">
-                    <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
+                    <button class="btn btn-black" type="button" @click="backHistory" v-cloak v-if="screenStep==1">{{ trans("common.button.back") }}</button>
+                    <button class="btn btn-black" type="button" @click="previousStep" v-cloak v-else>{{ trans("common.button.back") }}</button>
                 </div>
             </div>
 
