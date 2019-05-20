@@ -22,8 +22,8 @@ class WorkFlowController extends Controller
     use ListTrait, FormTrait;
     public $table = "wf_type";
     public $ruleValid = [
-        "name" => "required",
-        "steps" => "required|between_custom:1,10",
+        "name" => "required|length:100",
+        "steps" => "required|between_custom:1,10|length:2",
     ];
     public $messagesCustom =[];
     public $labels=[

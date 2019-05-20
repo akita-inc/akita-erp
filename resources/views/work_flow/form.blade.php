@@ -46,11 +46,11 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
-                        @include('Component.form.input',['filed'=>'name','required'=>true,'attr_input' => "maxlength='50' :disabled='screenStep != 1'"])
+                        @include('Component.form.input',['filed'=>'name','required'=>true,'attr_input' => "maxlength='100' :disabled='screenStep != 1'"])
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-6 col-sm-12">
-                        @include('Component.form.input',['filed'=>'steps','required'=>true,'attr_input' => "maxlength='50' :disabled='screenStep != 1'"])
+                        @include('Component.form.input',['filed'=>'steps','required'=>true,'attr_input' => "maxlength='2' :disabled='screenStep != 1'"])
                     </div>
                     <div class="col-md-6 col-sm-12 no-padding lh-38">段階</div>
 
