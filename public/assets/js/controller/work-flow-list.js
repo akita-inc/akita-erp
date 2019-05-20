@@ -3253,7 +3253,6 @@ var ctrWorkFlowListVl = new Vue({
       name: ""
     },
     message: '',
-    flagSearch: false,
     pagination: {
       total: 0,
       per_page: 2,
@@ -3280,7 +3279,6 @@ var ctrWorkFlowListVl = new Vue({
         fieldSearch: this.fileSearch,
         order: this.order
       };
-      console.log(data);
       var that = this;
       that.loading = true;
       work_flow_list_service.loadList(data).then(function (response) {
@@ -3290,7 +3288,6 @@ var ctrWorkFlowListVl = new Vue({
           _this.message = '';
         }
 
-        that.flagSearch = true;
         that.items = response.data.data;
         that.pagination = response.pagination;
         that.fileSearch = response.fieldSearch;
@@ -3338,6 +3335,7 @@ var ctrWorkFlowListVl = new Vue({
     }
   },
   mounted: function mounted() {
+    this.getItems(1, true);
     this.flagSearch = false;
   },
   components: {
@@ -3355,7 +3353,7 @@ var ctrWorkFlowListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\work-flow-list-vl.js */"./resources/assets/js/controller/work-flow-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\work-flow-list-vl.js */"./resources/assets/js/controller/work-flow-list-vl.js");
 
 
 /***/ })
