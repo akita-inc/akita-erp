@@ -19480,7 +19480,7 @@ var ctrWorkFlowVl = new Vue({
     modified_at: "",
     defaultLevel: defaultLevel,
     defaultKb: defaultKb,
-    steps_default: 0
+    steps_default: null
   },
   methods: {
     getListWfApplicantAffiliationClassification: function getListWfApplicantAffiliationClassification() {
@@ -19575,13 +19575,14 @@ var ctrWorkFlowVl = new Vue({
             switch (_context4.prev = _context4.next) {
               case 0:
                 that = this;
-                that.field.steps = parseInt(that.field.steps);
-                that.field.steps_default = parseInt(that.field.steps_default);
 
                 if (!(typeof flag_validated != "undefined" && flag_validated == true)) {
                   _context4.next = 12;
                   break;
                 }
+
+                that.field.steps = parseInt(that.field.steps);
+                that.steps_default = parseInt(that.steps_default);
 
                 if (!(that.work_flow_edit == 0)) {
                   _context4.next = 8;
@@ -19639,6 +19640,8 @@ var ctrWorkFlowVl = new Vue({
                   steps: that.field.steps
                 }).then(function (response) {
                   if (response.success) {
+                    that.field.steps = parseInt(that.field.steps);
+                    that.steps_default = parseInt(that.steps_default);
                     that.errors = [];
 
                     for (var i = 0; i < that.field.steps; i++) {
@@ -19674,12 +19677,14 @@ var ctrWorkFlowVl = new Vue({
                         switch (_context3.prev = _context3.next) {
                           case 0:
                             if (!response.success) {
-                              _context3.next = 6;
+                              _context3.next = 8;
                               break;
                             }
 
+                            that.field.steps = parseInt(that.field.steps);
+                            that.steps_default = parseInt(that.steps_default);
                             that.errors = [];
-                            _context3.next = 4;
+                            _context3.next = 6;
                             return work_flow_list_service.getListApprovalBase({
                               wf_type: that.work_flow_id
                             }).then(function (response1) {
@@ -19702,15 +19707,15 @@ var ctrWorkFlowVl = new Vue({
                               }
                             });
 
-                          case 4:
-                            _context3.next = 8;
+                          case 6:
+                            _context3.next = 10;
                             break;
 
-                          case 6:
+                          case 8:
                             that.screenStep--;
                             that.errors = response.message;
 
-                          case 8:
+                          case 10:
                           case "end":
                             return _context3.stop();
                         }
