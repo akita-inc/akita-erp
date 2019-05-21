@@ -210,7 +210,7 @@ var ctrWorkFlowVl = new Vue({
                                 that.errors = response.message;
                             }else{
                                 that.errors = [];
-                                // window.location.href = listRoute;
+                                window.location.href = listRoute;
                             }
                             that.loading = false;
                         });
@@ -222,7 +222,7 @@ var ctrWorkFlowVl = new Vue({
                         that.errors = response.message;
                     }else{
                         that.errors = [];
-                        // window.location.href = listRoute;
+                        window.location.href = listRoute;
                     }
                     that.loading = false;
                 });
