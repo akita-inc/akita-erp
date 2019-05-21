@@ -28,9 +28,9 @@ return [
         ]
     ],
     'create' => [
-        'title_step_1' => 'ワークフロー登録',
-        'title_step_2' => 'ワークフロー-基本承認者設定',
-        'title_step_3' => 'ワークフロー-承認者設定',
+        'title_step_1' => 'ワークフロー',
+        'title_step_2' => 'ワークフロー - 基本承認者設定',
+        'title_step_3' => 'ワークフロー - 承認者設定',
         'field' => [
             "name" => "名称",
             "steps" => "承認段階数",
