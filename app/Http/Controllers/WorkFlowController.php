@@ -199,13 +199,16 @@ class WorkFlowController extends Controller
             MWfRequireApprovalBase::query()->insert($dataApprovalBase);
             $dataApproval = [];
             foreach ($data['mst_wf_require_approval'] as $section =>$items){
-                foreach ($items['list'] as $item) {
-                    unset($item['applicant_section_nm']);
-                    $row = $item;
-                    $row['wf_type'] = $mWfType->id;
-                    $row['applicant_section'] = $section;
-                    $row['create_at'] = $currentTime;
-                    array_push($dataApproval, $row);
+                if($items) {
+                    foreach ($items['list'] as $item) {
+                        unset($item['applicant_section_nm']);
+                        unset($item['disp_number']);
+
+                        $row = $item;
+                        $row['wf_type'] = $mWfType->id;
+                        $row['create_at'] = $currentTime;
+                        array_push($dataApproval, $row);
+                    }
                 }
             }
             MWfRequireApproval::query()->insert($dataApproval);
@@ -246,14 +249,17 @@ class WorkFlowController extends Controller
                 'mst_wf_require_approval.approval_kb',
                 'mst_wf_require_approval.approval_levels',
                 'mst_wf_require_approval.approval_steps',
-                DB::raw('wf_applicant_affiliation_classification.date_nm as applicant_section_nm')
+                DB::raw('wf_applicant_affiliation_classification.date_nm as applicant_section_nm'),
+                'disp_number'
             )
-            ->leftjoin('mst_general_purposes as wf_applicant_affiliation_classification', function ($join) {
+            ->join('mst_general_purposes as wf_applicant_affiliation_classification', function ($join) {
                 $join->on('wf_applicant_affiliation_classification.date_id', '=', 'mst_wf_require_approval.applicant_section')
-                    ->where('wf_applicant_affiliation_classification.data_kb', config('params.data_kb.wf_applicant_affiliation_classification'));
+                    ->where('wf_applicant_affiliation_classification.data_kb', config('params.data_kb.wf_applicant_affiliation_classification'))
+                    ->whereNull('wf_applicant_affiliation_classification.deleted_at');
             })
             ->where('wf_type', '=', $wf_type)
-            ->get()->groupBy('applicant_section')->toArray();
+            ->orderBy('wf_applicant_affiliation_classification.disp_number')
+            ->get()->groupBy('disp_number')->toArray();
         return response()->json([
             'info'=>$listApprovalBase,
         ]);

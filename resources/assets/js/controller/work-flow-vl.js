@@ -40,11 +40,15 @@ var ctrWorkFlowVl = new Vue({
                 this.field.mst_wf_require_approval =[];
                 await this.handleStep3();
             }
+            $('.navbar h1').html(title[this.screenStep]);
+            $('title').html(title[this.screenStep]);
             this.loading = false;
         },
         previousStep: async function(){
             this.loading = true;
             this.screenStep--;
+            $('.navbar h1').html(title[this.screenStep]);
+            $('title').html(title[this.screenStep]);
             this.loading = false;
         },
         handleStep2:async function(flag_validated){
@@ -135,31 +139,34 @@ var ctrWorkFlowVl = new Vue({
             var that = this;
             if(that.work_flow_edit==0) {
                 await that.listApplicant.forEach((value, key) => {
-                    that.field.mst_wf_require_approval[value.date_id] = {
+                    that.field.mst_wf_require_approval[value.disp_number] = {
                         applicant_section_nm: "",
                         list: [],
                     };
-                    that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
+                    that.field.mst_wf_require_approval[value.disp_number].applicant_section_nm = value.date_nm;
                     that.field.mst_wf_require_approval_base.forEach((value1, key1) => {
                         var data = {};
+                        data.applicant_section = value.date_id;
                         data.approval_steps = value1.approval_steps;
                         data.approval_levels = value1.approval_levels;
                         data.approval_kb = value1.approval_kb;
-                        that.field.mst_wf_require_approval[value.date_id].list.push(data)
+                        that.field.mst_wf_require_approval[value.disp_number].list.push(data)
                     });
                 });
             }else{
                 await work_flow_list_service.getListApproval({wf_type:that.work_flow_id}).then(async (response) => {
-                    if(response.info.length > 0){
-                        response.info.forEach((items,section)=>{
-                            that.field.mst_wf_require_approval[section] = {
+
+                    const resultArray = Object.values(response.info);
+                    resultArray.forEach((items,key)=>{
+                            let disp_number = items[0].disp_number;
+                            that.field.mst_wf_require_approval[disp_number] = {
                                 applicant_section_nm: "",
                                 list: [],
                             };
-                            that.field.mst_wf_require_approval[section].applicant_section_nm = items[0].applicant_section_nm;
-                            that.field.mst_wf_require_approval[section].list = items
-                        });
-                    }
+                            that.field.mst_wf_require_approval[disp_number].applicant_section_nm = items[0].applicant_section_nm;
+                            that.field.mst_wf_require_approval[disp_number].list = items
+                    });
+
                     if( that.field.steps< that.steps_default ){
                         that.field.mst_wf_require_approval.forEach((value,key)=>{
                             for (var i = that.steps_default ; i > that.field.steps; i--) {
@@ -173,6 +180,7 @@ var ctrWorkFlowVl = new Vue({
                                 that.field.mst_wf_require_approval_base.forEach((value1, key1) => {
                                     if(key1==i){
                                         var data = {};
+                                        data.applicant_section = value.list[0].applicant_section;
                                         data.approval_steps = value1.approval_steps;
                                         data.approval_levels = value1.approval_levels;
                                         data.approval_kb = value1.approval_kb;
@@ -202,7 +210,7 @@ var ctrWorkFlowVl = new Vue({
                                 that.errors = response.message;
                             }else{
                                 that.errors = [];
-                                window.location.href = listRoute;
+                                // window.location.href = listRoute;
                             }
                             that.loading = false;
                         });
@@ -214,7 +222,7 @@ var ctrWorkFlowVl = new Vue({
                         that.errors = response.message;
                     }else{
                         that.errors = [];
-                        window.location.href = listRoute;
+                        // window.location.href = listRoute;
                     }
                     that.loading = false;
                 });

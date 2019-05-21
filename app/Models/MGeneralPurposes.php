@@ -91,7 +91,7 @@ class MGeneralPurposes extends Model
                     'value' => $data_kb
                 ]
             ),
-            array('id', 'date_nm','date_id','contents1'),
+            array('id', 'date_nm','date_id','contents1','disp_number'),
             array(
                 [
                     'field' => 'disp_number',
