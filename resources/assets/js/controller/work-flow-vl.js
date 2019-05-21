@@ -20,7 +20,7 @@ var ctrWorkFlowVl = new Vue({
         modified_at: "",
         defaultLevel:defaultLevel,
         defaultKb:defaultKb,
-        steps_default: 0,
+        steps_default: null,
 
     },
     methods : {
@@ -53,13 +53,13 @@ var ctrWorkFlowVl = new Vue({
         },
         handleStep2:async function(flag_validated){
             var that = this;
-            that.field.steps = parseInt(that.field.steps);
-            that.field.steps_default = parseInt(that.field.steps_default);
             if(typeof flag_validated != "undefined" && flag_validated==true){
+                that.field.steps = parseInt(that.field.steps);
+                that.steps_default = parseInt(that.steps_default);
                 if(that.work_flow_edit==0) {
                     for (var i = 0; i < that.field.steps; i++) {
                         that.field.mst_wf_require_approval_base.push({
-                            approval_steps: i + 1,
+                            approval_steps: (i + 1),
                             approval_levels: that.defaultLevel,
                             approval_kb: that.defaultKb,
                         });
@@ -76,7 +76,7 @@ var ctrWorkFlowVl = new Vue({
                         }else if(that.field.steps > that.steps_default ){
                             for (var i = that.steps_default ; i < that.field.steps; i++) {
                                 that.field.mst_wf_require_approval_base.push({
-                                    approval_steps: i + 1,
+                                    approval_steps: (i + 1),
                                     approval_levels: that.defaultLevel,
                                     approval_kb: that.defaultKb,
                                 });
@@ -91,10 +91,12 @@ var ctrWorkFlowVl = new Vue({
                         steps: that.field.steps
                     }).then((response) => {
                         if (response.success) {
+                            that.field.steps = parseInt(that.field.steps);
+                            that.steps_default = parseInt(that.steps_default);
                             that.errors = [];
                             for (var i = 0; i < that.field.steps; i++) {
                                 that.field.mst_wf_require_approval_base.push({
-                                    approval_steps: i + 1,
+                                    approval_steps: (i + 1),
                                     approval_levels: that.defaultLevel,
                                     approval_kb: that.defaultKb,
                                 });
@@ -110,6 +112,8 @@ var ctrWorkFlowVl = new Vue({
                         steps: that.field.steps
                     }).then(async function (response) {
                         if (response.success) {
+                            that.field.steps = parseInt(that.field.steps);
+                            that.steps_default = parseInt(that.steps_default);
                             that.errors = [];
                             await work_flow_list_service.getListApprovalBase({wf_type: that.work_flow_id}).then((response1) => {
                                 if (response1.info.length > 0) {
@@ -122,7 +126,7 @@ var ctrWorkFlowVl = new Vue({
                                 } else if (that.field.steps > that.steps_default) {
                                     for (var i = that.steps_default; i < that.field.steps; i++) {
                                         that.field.mst_wf_require_approval_base.push({
-                                            approval_steps: i + 1,
+                                            approval_steps: (i + 1),
                                             approval_levels: that.defaultLevel,
                                             approval_kb: that.defaultKb,
                                         });
