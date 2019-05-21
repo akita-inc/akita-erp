@@ -26,6 +26,7 @@ mix.js([
     'resources/assets/js/service/sales-lists-service.js',
     'resources/assets/js/service/payments-service.js',
     'resources/assets/js/service/work-flow-service.js',
+    'resources/assets/js/service/take-vacation-service.js',
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -92,3 +93,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/work-flow-vl.js'
 ], 'public/assets/js/controller/work-flow.js');
+
+mix.js([
+    'resources/assets/js/controller/take-vacation-list-vl.js'
+], 'public/assets/js/controller/take-vacation-list.js');
