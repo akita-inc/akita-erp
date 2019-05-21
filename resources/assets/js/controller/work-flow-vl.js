@@ -20,7 +20,7 @@ var ctrWorkFlowVl = new Vue({
         modified_at: "",
         defaultLevel:defaultLevel,
         defaultKb:defaultKb,
-        steps_default: null,
+        steps_default: 0,
 
     },
     methods : {
@@ -53,6 +53,8 @@ var ctrWorkFlowVl = new Vue({
         },
         handleStep2:async function(flag_validated){
             var that = this;
+            that.field.steps = parseInt(that.field.steps);
+            that.field.steps_default = parseInt(that.field.steps_default);
             if(typeof flag_validated != "undefined" && flag_validated==true){
                 if(that.work_flow_edit==0) {
                     for (var i = 0; i < that.field.steps; i++) {
