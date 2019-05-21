@@ -15,6 +15,7 @@ return [
     'button' => [
         'add' => '新規追加',
         'condition-clear' => '条件クリア',
+        'clear' => 'クリア',
         'search' => '検索',
         'back' => '戻る',
         'register' => '登録',
