@@ -19519,9 +19519,11 @@ var ctrWorkFlowVl = new Vue({
                 return this.handleStep3();
 
               case 11:
+                $('.navbar h1').html(title[this.screenStep]);
+                $('title').html(title[this.screenStep]);
                 this.loading = false;
 
-              case 12:
+              case 14:
               case "end":
                 return _context.stop();
             }
@@ -19545,9 +19547,11 @@ var ctrWorkFlowVl = new Vue({
               case 0:
                 this.loading = true;
                 this.screenStep--;
+                $('.navbar h1').html(title[this.screenStep]);
+                $('title').html(title[this.screenStep]);
                 this.loading = false;
 
-              case 3:
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -19749,17 +19753,18 @@ var ctrWorkFlowVl = new Vue({
 
                 _context6.next = 4;
                 return that.listApplicant.forEach(function (value, key) {
-                  that.field.mst_wf_require_approval[value.date_id] = {
+                  that.field.mst_wf_require_approval[value.disp_number] = {
                     applicant_section_nm: "",
                     list: []
                   };
-                  that.field.mst_wf_require_approval[value.date_id].applicant_section_nm = value.date_nm;
+                  that.field.mst_wf_require_approval[value.disp_number].applicant_section_nm = value.date_nm;
                   that.field.mst_wf_require_approval_base.forEach(function (value1, key1) {
                     var data = {};
+                    data.applicant_section = value.date_id;
                     data.approval_steps = value1.approval_steps;
                     data.approval_levels = value1.approval_levels;
                     data.approval_kb = value1.approval_kb;
-                    that.field.mst_wf_require_approval[value.date_id].list.push(data);
+                    that.field.mst_wf_require_approval[value.disp_number].list.push(data);
                   });
                 });
 
@@ -19777,20 +19782,21 @@ var ctrWorkFlowVl = new Vue({
                   var _ref2 = _asyncToGenerator(
                   /*#__PURE__*/
                   _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(response) {
+                    var resultArray;
                     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
                       while (1) {
                         switch (_context5.prev = _context5.next) {
                           case 0:
-                            if (response.info.length > 0) {
-                              response.info.forEach(function (items, section) {
-                                that.field.mst_wf_require_approval[section] = {
-                                  applicant_section_nm: "",
-                                  list: []
-                                };
-                                that.field.mst_wf_require_approval[section].applicant_section_nm = items[0].applicant_section_nm;
-                                that.field.mst_wf_require_approval[section].list = items;
-                              });
-                            }
+                            resultArray = Object.values(response.info);
+                            resultArray.forEach(function (items, key) {
+                              var disp_number = items[0].disp_number;
+                              that.field.mst_wf_require_approval[disp_number] = {
+                                applicant_section_nm: "",
+                                list: []
+                              };
+                              that.field.mst_wf_require_approval[disp_number].applicant_section_nm = items[0].applicant_section_nm;
+                              that.field.mst_wf_require_approval[disp_number].list = items;
+                            });
 
                             if (that.field.steps < that.steps_default) {
                               that.field.mst_wf_require_approval.forEach(function (value, key) {
@@ -19804,6 +19810,7 @@ var ctrWorkFlowVl = new Vue({
                                   that.field.mst_wf_require_approval_base.forEach(function (value1, key1) {
                                     if (key1 == i) {
                                       var data = {};
+                                      data.applicant_section = value.list[0].applicant_section;
                                       data.approval_steps = value1.approval_steps;
                                       data.approval_levels = value1.approval_levels;
                                       data.approval_kb = value1.approval_kb;
@@ -19814,7 +19821,7 @@ var ctrWorkFlowVl = new Vue({
                               });
                             }
 
-                          case 2:
+                          case 3:
                           case "end":
                             return _context5.stop();
                         }
@@ -19862,8 +19869,7 @@ var ctrWorkFlowVl = new Vue({
               if (response.success == false) {
                 that.errors = response.message;
               } else {
-                that.errors = [];
-                window.location.href = listRoute;
+                that.errors = []; // window.location.href = listRoute;
               }
 
               that.loading = false;
@@ -19875,8 +19881,7 @@ var ctrWorkFlowVl = new Vue({
           if (response.success == false) {
             that.errors = response.message;
           } else {
-            that.errors = [];
-            window.location.href = listRoute;
+            that.errors = []; // window.location.href = listRoute;
           }
 
           that.loading = false;

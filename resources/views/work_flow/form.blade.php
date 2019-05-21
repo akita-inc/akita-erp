@@ -6,6 +6,9 @@
         .form-control{
             background-clip: initial !important;
         }
+        .no-padding-bottom{
+            padding-bottom: 0px!important;
+        }
 
     </style>
 @endsection
@@ -21,7 +24,6 @@
                 </div>
 
                 <input type="hidden" id="hd_work_flow_edit" value="{!! !empty($mWfType) ? 1:0 !!}">
-                {{--<input type="hidden" id="mode" value="{!! $mode !!}">--}}
                 @if(!empty($mWfType))
                     @foreach($mWfType as $key=>$value)
                         <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">
@@ -64,7 +66,7 @@
 
                 </div>
             </div>
-            <div class="grid-form" v-if="screenStep==2" v-cloak>
+            <div class="grid-form no-padding-bottom" v-if="screenStep==2" v-cloak >
                 <div class="row" v-for="(items,index) in field.mst_wf_require_approval_base">
                     <div class="col-md-6 col-sm-12">
                         @include('Component.form.select-vue',[
@@ -86,7 +88,7 @@
                     <div class="break-row-form"></div>
                 </div>
             </div>
-            <div class="grid-form" v-if="screenStep==3" v-cloak v-for="(items,section) in field.mst_wf_require_approval">
+            <div class="grid-form no-padding-bottom" v-if="screenStep==3 && items" v-cloak v-for="(items,section) in field.mst_wf_require_approval">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <div class="wrap-control-group ">
@@ -156,6 +158,10 @@
         var listRoute = "{{route('work_flow.list')}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        var title = [];
+        title[1] = "<?php echo \Illuminate\Support\Facades\Lang::get('work_flow.create.title_step_1'); ?>";
+        title[2] = "<?php echo \Illuminate\Support\Facades\Lang::get('work_flow.create.title_step_2'); ?>";
+        title[3] = "<?php echo \Illuminate\Support\Facades\Lang::get('work_flow.create.title_step_3'); ?>";
 
 
     </script>
