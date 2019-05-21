@@ -91,7 +91,8 @@ class TakeVacationController extends Controller
                     ) ,' 承認待ち'
                 )
 	        END AS approval_status
-            ")
+            "),
+            'wf_paid_vacation.delete_at'
         );
         //join
         $this->query->join('mst_staffs as ms', function($join){
