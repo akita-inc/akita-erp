@@ -83,7 +83,12 @@
                         </div>
                         <div class="col-md-5 col-sm-12 row">
                             <div class="col-md-6 row">
-                                <div class="col-md-4 row">
+                                <div class="col-md-6 row">
+                                    <button class="btn w-100 btn-black mr-2" type="button" id="clearConditions" v-on:click="clearCondition()">
+                                        {{trans('common.button.condition-clear')}}
+                                    </button>
+                                </div>
+                                <div class="col-md-6 row">
                                     <button class="btn w-100 btn-primary" type="button" id="searchItems" v-on:click="getItems(1)">
                                         {{trans('common.button.search')}}
                                     </button>

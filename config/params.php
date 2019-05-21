@@ -3,6 +3,7 @@ return [
     'page_size' => 10,
     'page_size_work_flow'=>10,
     'page_size_sale_lists'=>50,
+    'page_size_take_vacation'=>10,
     'data_kb' => [
         'sex'                           => '01001', // 性別ID
         'prefecture_cd'                 => '01002', // 都道府県CD

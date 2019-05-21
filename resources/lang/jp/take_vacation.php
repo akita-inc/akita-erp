@@ -31,9 +31,9 @@ return [
             'applicant_date'=>'申請日',
             'applicant_nm'=>'申請者',
             'sales_office'=>'営業所',
-            'vacation_class'=>'休暇区分',
+            'vacation_class_nm'=>'休暇区分',
             'period'=>'期間',
-            'days'=>'日数',
+            'datetime'=>'日数',
             'approval_status'=>'承認ステータス',
         ]
     ],
