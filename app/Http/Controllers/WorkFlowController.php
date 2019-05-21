@@ -258,7 +258,7 @@ class WorkFlowController extends Controller
                     ->whereNull('wf_applicant_affiliation_classification.deleted_at');
             })
             ->where('wf_type', '=', $wf_type)
-            ->orderBy('wf_applicant_affiliation_classification.disp_number')
+            ->orderBy('approval_steps')
             ->get()->groupBy('disp_number')->toArray();
         return response()->json([
             'info'=>$listApprovalBase,
