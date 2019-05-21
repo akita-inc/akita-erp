@@ -19480,7 +19480,7 @@ var ctrWorkFlowVl = new Vue({
     modified_at: "",
     defaultLevel: defaultLevel,
     defaultKb: defaultKb,
-    steps_default: null
+    steps_default: 0
   },
   methods: {
     getListWfApplicantAffiliationClassification: function getListWfApplicantAffiliationClassification() {
@@ -19575,14 +19575,16 @@ var ctrWorkFlowVl = new Vue({
             switch (_context4.prev = _context4.next) {
               case 0:
                 that = this;
+                that.field.steps = parseInt(that.field.steps);
+                that.field.steps_default = parseInt(that.field.steps_default);
 
                 if (!(typeof flag_validated != "undefined" && flag_validated == true)) {
-                  _context4.next = 10;
+                  _context4.next = 12;
                   break;
                 }
 
                 if (!(that.work_flow_edit == 0)) {
-                  _context4.next = 6;
+                  _context4.next = 8;
                   break;
                 }
 
@@ -19594,11 +19596,11 @@ var ctrWorkFlowVl = new Vue({
                   });
                 }
 
-                _context4.next = 8;
+                _context4.next = 10;
                 break;
 
-              case 6:
-                _context4.next = 8;
+              case 8:
+                _context4.next = 10;
                 return work_flow_list_service.getListApprovalBase({
                   wf_type: that.work_flow_id
                 }).then(function (response1) {
@@ -19621,17 +19623,17 @@ var ctrWorkFlowVl = new Vue({
                   }
                 });
 
-              case 8:
-                _context4.next = 17;
+              case 10:
+                _context4.next = 19;
                 break;
 
-              case 10:
+              case 12:
                 if (!(that.work_flow_edit == 0)) {
-                  _context4.next = 15;
+                  _context4.next = 17;
                   break;
                 }
 
-                _context4.next = 13;
+                _context4.next = 15;
                 return work_flow_list_service.validateData({
                   name: that.field.name,
                   steps: that.field.steps
@@ -19652,12 +19654,12 @@ var ctrWorkFlowVl = new Vue({
                   }
                 });
 
-              case 13:
-                _context4.next = 17;
+              case 15:
+                _context4.next = 19;
                 break;
 
-              case 15:
-                _context4.next = 17;
+              case 17:
+                _context4.next = 19;
                 return work_flow_list_service.validateData({
                   name: that.field.name,
                   steps: that.field.steps
@@ -19721,7 +19723,7 @@ var ctrWorkFlowVl = new Vue({
                   };
                 }());
 
-              case 17:
+              case 19:
               case "end":
                 return _context4.stop();
             }
