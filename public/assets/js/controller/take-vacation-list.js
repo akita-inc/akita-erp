@@ -1184,6 +1184,17 @@ var ctrTakeVacationListVl = new Vue({
       this.fileSearch.show_deleted = false;
       this.fileSearch.sales_office = "";
       this.fileSearch.vacation_class = "";
+    },
+    setBgColor: function setBgColor(delete_at) {
+      var bgColor = "";
+
+      if (delete_at !== null) {
+        bgColor = "#DDDDDD";
+      } else {
+        bgColor = "rgb(255, 255, 255)";
+      }
+
+      return bgColor;
     }
   },
   mounted: function mounted() {

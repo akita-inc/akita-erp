@@ -110,7 +110,16 @@ var ctrTakeVacationListVl = new Vue({
             this.fileSearch.sales_office="";
             this.fileSearch.vacation_class="";
         },
-
+        setBgColor:function(delete_at){
+            let bgColor="";
+            if(delete_at !== null){
+                bgColor="#DDDDDD";
+            }
+            else            {
+                bgColor="rgb(255, 255, 255)";
+            }
+            return bgColor;
+        },
     },
     mounted () {
         this.flagSearch=true;

@@ -110,7 +110,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  v-cloak v-for="item in items">
+                    <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.delete_at) }">
                         @foreach($fieldShowTable as $key => $field)
                             @if($key=='id')
                             <td>
