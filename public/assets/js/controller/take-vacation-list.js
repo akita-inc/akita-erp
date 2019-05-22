@@ -1198,7 +1198,8 @@ var ctrTakeVacationListVl = new Vue({
     }
   },
   mounted: function mounted() {
-    this.flagSearch = true; //this.getItems(1, true);
+    this.flagSearch = true;
+    this.getItems(1, true);
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"] //DatePicker,

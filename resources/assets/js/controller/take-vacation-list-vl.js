@@ -123,7 +123,7 @@ var ctrTakeVacationListVl = new Vue({
     },
     mounted () {
         this.flagSearch=true;
-        //this.getItems(1, true);
+        this.getItems(1, true);
     },
     components: {
         PulseLoader,
