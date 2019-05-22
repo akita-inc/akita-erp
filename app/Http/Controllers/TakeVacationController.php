@@ -212,7 +212,7 @@ class TakeVacationController extends Controller
         $status= $request->get('status');
         $mode = $request->get('mode');
         $modified_at = $request->get('modified_at');
-        $data = DB::table($this->table)->where('id',$id)->whereNull('delete_at')->first();
+        $data = DB::table($this->table)->where('id',$id)/*->whereNull('delete_at')*/->first();
         if (isset($data)) {
             if($this->table!='empty_info' || ($mode!='edit' && $this->table=='empty_info') || ($mode=='edit' && $this->table=='empty_info' && Session::get('sysadmin_flg')==1)){
                 if(!is_null($modified_at)){
@@ -227,21 +227,25 @@ class TakeVacationController extends Controller
             $WApprovalStatus = new WApprovalStatus();
             $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
             $return =['mode' =>''];
-            if($approvalStatus->count() >= 1){
-                if($data->applicant_id == Auth::user()->staff_cd){//1-1-1. 申請者＝ログインID
-                    $return['mode'] = 'edit';
-                }
-                else{//1-1-2.  申請者 != ログインID
-                    if($WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'approval_levels'=>Auth::user()->approval_levels])->count() > 0){// 1-1-2-1. ログイン者＝承認権限を持っている（mst_staffs.approval_levels is not null）かつ、その承認レベルが未承認である。
-                        $return['mode'] = 'approve';
-                    }else{//1-1-2-2. それ以外
-                        $return['mode'] = 'reference';
-                    }
-                }
-            }else{//1-2. それ以外（すべて承認済みor却下済み）
+            if($data->delete_at == null){
                 $return['mode'] = 'reference';
             }
-
+            else{
+                if($approvalStatus->count() >= 1){
+                    if($data->applicant_id == Auth::user()->staff_cd){//1-1-1. 申請者＝ログインID
+                        $return['mode'] = 'edit';
+                    }
+                    else{//1-1-2.  申請者 != ログインID
+                        if($WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'approval_levels'=>Auth::user()->approval_levels])->count() > 0){// 1-1-2-1. ログイン者＝承認権限を持っている（mst_staffs.approval_levels is not null）かつ、その承認レベルが未承認である。
+                            $return['mode'] = 'approve';
+                        }else{//1-1-2-2. それ以外
+                            $return['mode'] = 'reference';
+                        }
+                    }
+                }else{//1-2. それ以外（すべて承認済みor却下済み）
+                    $return['mode'] = 'reference';
+                }
+            }
             return Response()->json(array_merge(array('success'=>true),$return));
         } else {
             if($this->table=='empty_info'){
