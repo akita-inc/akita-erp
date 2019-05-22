@@ -92,6 +92,7 @@ class TakeVacationController extends Controller
                     WHERE
                         was.wf_type_id = 1 
                         AND was.wf_id = wf_paid_vacation.id
+                        AND was.approval_fg = 0
                     ORDER BY
                         was.approval_steps,
                         was.id 
