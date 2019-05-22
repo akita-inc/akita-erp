@@ -32,23 +32,19 @@
                             </div>
                         </div>
                         <div class="col-md-5 col-sm-12 row">
-                            <div class="col-md-8 row">
-                                <div class="col-md-6 row col-list-search-f">
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" value="1" v-model="fileSearch.show_approved" class="form-check-input">{{trans("take_vacation.list.search.show_approved")}}
-                                        </label>
-                                    </div>
+                            <div class="col-md-7 row">
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" value="1" v-model="fileSearch.show_approved" class="form-check-input">{{trans("take_vacation.list.search.show_approved")}}
+                                    </label>
                                 </div>
-                                <div class="col-md-6 row col-list-search-f">
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="form-check-input">{{trans("take_vacation.list.search.show_deleted")}}
-                                        </label>
-                                    </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="form-check-input">{{trans("take_vacation.list.search.show_deleted")}}
+                                    </label>
                                 </div>
                             </div>
-                            <div class="col-md-4"></div>
+                            <div class="col-md-5"></div>
                         </div>
                     </div>
                     <div class="break-row-form" style="height: 25px;"></div>
