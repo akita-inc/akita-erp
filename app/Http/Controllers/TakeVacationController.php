@@ -73,23 +73,23 @@ class TakeVacationController extends Controller
                 '承認済み' 
                 WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
 		        '却下'
-                ELSE 
-                CONCAT((
+            ELSE 
+                CONCAT(
+                    COALESCE((
                     SELECT
-                        mgp.date_nm 
+                        was.title
                     FROM
-                        wf_approval_status was
-                        JOIN mst_general_purposes mgp ON was.approval_levels = mgp.date_id 
+                        wf_approval_status was			
                     WHERE
                         was.wf_type_id = 1 
-                        AND was.wf_id = wf_paid_vacation.id 
-                        AND mgp.data_kb = '12001' 
+                        AND was.wf_id = wf_paid_vacation.id
                     ORDER BY
                         was.approval_steps,
                         was.id 
                         LIMIT 1 
-                    ) ,' 承認待ち'
-                )
+                    ),''),
+                    ' 承認待ち' 
+                ) 
 	        END AS approval_status
             "),
             'wf_paid_vacation.delete_at'
