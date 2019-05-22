@@ -290,7 +290,7 @@ class TakeVacationController extends Controller
             $WApprovalStatus = new WApprovalStatus();
             $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
             $return =['mode' =>''];
-            if($data->delete_at == null){
+            if($data->delete_at != null){
                 $return['mode'] = 'reference';
             }
             else{
