@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
+use App\Models\WApprovalStatus;
+use App\Models\WPaidVacation;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 class TakeVacationController extends Controller
 {
     use ListTrait;
@@ -25,7 +28,7 @@ class TakeVacationController extends Controller
     }
     protected function getPaging()
     {
-        return config('params.page_size_work_flow');
+        return config('params.page_size_take_vacation');
     }
 
     protected function search($data){
@@ -40,15 +43,21 @@ class TakeVacationController extends Controller
         //select
         $this->query->select(
             'wf_paid_vacation.id',
-            DB::raw("DATE_FORMAT(wf_paid_vacation.regist_date,'%d/%m/%Y') as applicant_date"),
+            DB::raw("DATE_FORMAT(wf_paid_vacation.regist_date,'%Y/%m/%d') as applicant_date"),
+            'ms.staff_cd as staff_cd',
             DB::raw('CONCAT_WS("    ",ms.last_nm,ms.first_nm) as applicant_nm'),
+            'mbo.id as business_office_id',
             'mbo.business_office_nm as sales_office',
-            'mgp.date_nm as vacation_class',
+            'mgp.date_id as vacation_class_id',
+            'mgp.date_nm as vacation_class_nm',
+            'wf_paid_vacation.start_date as start_date',
+            'wf_paid_vacation.days as days',
+            'wf_paid_vacation.times as times',
             DB::raw("
             CASE	
                 WHEN wf_paid_vacation.start_date = wf_paid_vacation.end_date THEN
-                DATE_FORMAT(wf_paid_vacation.start_date,'%d/%m/%Y')
-                ELSE CONCAT_WS( '～', DATE_FORMAT(wf_paid_vacation.start_date,'%d/%m/%Y'), DATE_FORMAT(wf_paid_vacation.end_date,'%d/%m/%Y')) 
+                DATE_FORMAT(wf_paid_vacation.start_date,'%Y/%m/%d')
+                ELSE CONCAT_WS( '～', DATE_FORMAT(wf_paid_vacation.start_date,'%Y/%m/%d'), DATE_FORMAT(wf_paid_vacation.end_date,'%Y/%m/%d')) 
             END AS period,
             CASE		
                 WHEN ( wf_paid_vacation.days = 0 AND wf_paid_vacation.times = 0 ) THEN
@@ -58,10 +67,12 @@ class TakeVacationController extends Controller
                 WHEN ( wf_paid_vacation.days = 0 AND wf_paid_vacation.times <> 0 ) THEN
                 CONCAT( wf_paid_vacation.times, '時間' )
                 ELSE CONCAT( wf_paid_vacation.days, '日 ', wf_paid_vacation.times, '時間' ) 
-            END AS days,
+            END AS datetime,
             CASE		
                 WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 ) = 0 ) THEN
                 '承認済み' 
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+		        '却下'
                 ELSE 
                 CONCAT((
                     SELECT
@@ -80,7 +91,8 @@ class TakeVacationController extends Controller
                     ) ,' 承認待ち'
                 )
 	        END AS approval_status
-            ")
+            "),
+            'wf_paid_vacation.delete_at'
         );
         //join
         $this->query->join('mst_staffs as ms', function($join){
@@ -116,11 +128,11 @@ class TakeVacationController extends Controller
         //
         if($where['show_approved']!=true)
         {
-            $this->query->join('wf_approval_status as was', function($join){
-                $join->on('was.wf_id','=','wf_paid_vacation.id')
-                    ->where('was.wf_type_id',1)
-                ->where('was.approval_fg',0);
-            });
+            $this->query->whereRaw('(SELECT COUNT(*)
+                                    FROM wf_approval_status
+                                    WHERE wf_id = wf_paid_vacation.id 
+                                    AND wf_type_id = 1 
+                                    AND approval_fg = 0) > 0');
         }
         //
         if($where['show_deleted']!=true)
@@ -131,12 +143,15 @@ class TakeVacationController extends Controller
         if ($data["order"]["col"] != '') {
             $orderCol = $data["order"]["col"];
             if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
-                $orderCol .= " DESC";
+                if($orderCol  == 'days,times'){
+                    $orderCol = 'days DESC,times DESC';
+                }else{
+                    $orderCol .= " DESC";
+                }
             }
             $this->query->orderbyRaw($orderCol);
         } else {
             $this->query->orderBy('id','desc');
-
         }
     }
 
@@ -150,37 +165,37 @@ class TakeVacationController extends Controller
             'applicant_date' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"name"
+                "sortBy"=>"applicant_date"
             ],
             'applicant_nm' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"steps"
+                "sortBy"=>"staff_cd"
             ],
             'sales_office' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"steps"
+                "sortBy"=>"business_office_id"
             ],
-            'vacation_class' => [
+            'vacation_class_nm' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"steps"
+                "sortBy"=>"vacation_class_id"
             ],
             'period' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"steps"
+                "sortBy"=>"start_date"
             ],
-            'days' => [
+            'datetime' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"steps"
+                "sortBy"=>"days,times"
             ],
             'approval_status' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"steps"
+                "sortBy"=>"approval_status"
             ],
         ];
         $mGeneralPurpose = new MGeneralPurposes();
@@ -207,7 +222,27 @@ class TakeVacationController extends Controller
                     }
                 }
             }
-            return Response()->json(array('success'=>true));
+            //1. 承認ステータスを判断
+            // 1-1. 未承認の承認ステータスが1レコード以上ある場合
+            $WApprovalStatus = new WApprovalStatus();
+            $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
+            $return =['mode' =>''];
+            if($approvalStatus->count() >= 1){
+                if($data->applicant_id == Auth::user()->staff_cd){//1-1-1. 申請者＝ログインID
+                    $return['mode'] = 'edit';
+                }
+                else{//1-1-2.  申請者 != ログインID
+                    if($WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'approval_levels'=>Auth::user()->approval_levels])->count() > 0){// 1-1-2-1. ログイン者＝承認権限を持っている（mst_staffs.approval_levels is not null）かつ、その承認レベルが未承認である。
+                        $return['mode'] = 'approve';
+                    }else{//1-1-2-2. それ以外
+                        $return['mode'] = 'reference';
+                    }
+                }
+            }else{//1-2. それ以外（すべて承認済みor却下済み）
+                $return['mode'] = 'reference';
+            }
+
+            return Response()->json(array_merge(array('success'=>true),$return));
         } else {
             if($this->table=='empty_info'){
                 if($mode=='edit' || $mode=='delete'){

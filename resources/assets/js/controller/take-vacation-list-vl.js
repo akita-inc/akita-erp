@@ -39,7 +39,6 @@ var ctrTakeVacationListVl = new Vue({
                 fieldSearch:this.fileSearch,
                 order:this.order,
             };
-            console.log(data);
             var that = this;
             that.loading = true;
             take_vacation_list_service.loadList(data).then((response) => {
@@ -68,7 +67,19 @@ var ctrTakeVacationListVl = new Vue({
                     alert(response.msg);
                     this.getItems(1);
                 } else {
-                    window.location.href = 'edit/' + id;
+                    // window.location.href = 'edit/' + id;
+                    var mode = '';
+                    switch (response.mode) {
+                        case 'edit':
+                            mode = '編集モード';
+                            break;
+                        case 'approve':
+                            mode = '承認モード';
+                            break;
+                        default:
+                            mode = '参照モード';
+                    }
+                    alert(mode);
                 }
             });
         },
@@ -92,9 +103,23 @@ var ctrTakeVacationListVl = new Vue({
     },
     methods : {
         clearCondition: function clearCondition() {
-            this.fileSearch.name = '';
+            this.fileSearch.vacation_id="";
+            this.fileSearch.applicant_nm="";
+            this.fileSearch.show_approved=false;
+            this.fileSearch.show_deleted=false;
+            this.fileSearch.sales_office="";
+            this.fileSearch.vacation_class="";
         },
-
+        setBgColor:function(delete_at){
+            let bgColor="";
+            if(delete_at !== null){
+                bgColor="#DDDDDD";
+            }
+            else            {
+                bgColor="rgb(255, 255, 255)";
+            }
+            return bgColor;
+        },
     },
     mounted () {
         this.flagSearch=true;
