@@ -115,7 +115,7 @@ class TakeVacationController extends Controller
                 FROM wf_approval_status 
                 WHERE wf_id = wf_paid_vacation.id
                 AND approval_fg = 0
-                ORDER BY id
+                ORDER BY approval_steps,id
                 LIMIT 1)
             END AS approval_fg,
 
@@ -140,7 +140,7 @@ class TakeVacationController extends Controller
                 FROM wf_approval_status 
                 WHERE wf_id = wf_paid_vacation.id
                 AND approval_fg = 0
-                ORDER BY id
+                ORDER BY approval_steps,id
                 LIMIT 1)
             END AS approval_levels
             "),
