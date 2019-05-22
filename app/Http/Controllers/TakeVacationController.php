@@ -132,7 +132,8 @@ class TakeVacationController extends Controller
                                     FROM wf_approval_status
                                     WHERE wf_id = wf_paid_vacation.id 
                                     AND wf_type_id = 1 
-                                    AND approval_fg = 0) > 0');
+                                    AND (approval_fg = 0 
+                                    OR approval_fg  = 2)) > 0');
         }
         //
         if($where['show_deleted']!=true)
