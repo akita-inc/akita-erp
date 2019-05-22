@@ -38,7 +38,19 @@ return [
         ]
     ],
     'create' =>[
-        'title' => '休暇取得申請　新規追加',
-        'title_edit' => '休暇取得申請　修正',
+        'title_register' => '休暇取得申請',
+        'title_edit' => '休暇取得申請',
+        'title_approval' => '休暇取得申請',
+        'field' => [
+            'applicant_id' => '申請者',
+            'applicant_office_id' => '所属営業所',
+            'approval_kb' => '休暇区分',
+            'half_day_kb' => '時間区分',
+            'start_end_date' => '期間',
+            'days' => '日数',
+            'times' => '時間数',
+            'reasons' => '理由',
+            '' => '追加通知',
+        ],
     ]
 ];

@@ -272,8 +272,44 @@ class TakeVacationController extends Controller
     }
 
     public function store(Request $request, $id=null){
-        return view('work_flow.form', [
-
+        $mWPaidVacation = null;
+        $mode = "register";
+        $role = 1;
+        if($id != null){
+            $mWPaidVacation = WPaidVacation::find( $id );
+            if(empty($mWPaidVacation)){
+                abort('404');
+            }else{
+                $mWPaidVacation = $mWPaidVacation->toArray();
+                $routeName = $request->route()->getName();
+                switch ($routeName){
+                    case 'empty_info.approval':
+                        $mode = 'approval';
+                        if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
+                    default:
+                        $mode ='edit';
+                        if($mWPaidVacation['status']!=1 || $mWPaidVacation['regist_office_id']!= Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
+                }
+            }
+        }
+        $mBusinessOffices = new MBusinessOffices();
+        $mGeneralPurposes = new MGeneralPurposes();
+        $businessOfficeNm = $mBusinessOffices->select('business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
+        $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
+        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'));
+        return view('take_vacation.form', [
+            'mWPaidVacation' => $mWPaidVacation,
+            'businessOfficeNm' => $businessOfficeNm,
+            'listVacationIndicator' => $listVacationIndicator,
+            'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,
+            'role' => $role,
+            'mode' => $mode
         ]);
     }
 
