@@ -281,8 +281,8 @@ return [
 
     'empty_info_reservation_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【KARAマッチ】No.[id] に申請がありました。',
-        'template' => "【KARAマッチ】\n".
+        'subject' => '【ハコカラ】No.[id] に申請がありました。',
+        'template' => "【ハコカラ】\n".
                 "No.[id]\n".
                 "発地：[start_address]\n".
                 "着地：[arrive_address]\n".
@@ -307,13 +307,13 @@ return [
                 "[asking_baggage]\n\n".
                 "確認の後、承認お願いいたします。\n\n".
                 "------------------------------------------------------\n".
-                "Akita ERP - KARAマッチ\n\n"
+                "Akita ERP - ハコカラ\n\n"
         ,
     ),
     'empty_info_reservation_approval_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【KARAマッチ】No.[id] の申請が承認されました。',
-        'template' => "【KARAマッチ】\n".
+        'subject' => '【ハコカラ】No.[id] の申請が承認されました。',
+        'template' => "【ハコカラ】\n".
             "No.[id]\n".
             "発地：[start_address]\n".
             "着地：[arrive_address]\n".
@@ -337,12 +337,12 @@ return [
             "＜希望荷物＞\n".
             "[asking_baggage]\n\n".
             "------------------------------------------------------\n".
-            "Akita ERP - KARAマッチ\n\n"
+            "Akita ERP - ハコカラ\n\n"
     ),
     'empty_info_reservation_reject_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【KARAマッチ】No.[id] の申請が却下されました。',
-        'template' => "【KARAマッチ】\n".
+        'subject' => '【ハコカラ】No.[id] の申請が却下されました。',
+        'template' => "【ハコカラ】\n".
             "No.[id]\n".
             "発地：[start_address]\n".
             "着地：[arrive_address]\n".
@@ -366,7 +366,7 @@ return [
             "＜希望荷物＞\n".
             "[asking_baggage]\n\n".
             "------------------------------------------------------\n".
-            "Akita ERP - KARAマッチ\n\n"
+            "Akita ERP - ハコカラ\n\n"
     ),
     'csv' => [
         'delimiter' => ',',

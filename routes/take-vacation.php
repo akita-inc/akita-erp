@@ -14,5 +14,6 @@ Route::group(['name' => 'take-vacation', 'prefix' => 'take_vacation', 'middlewar
         Route::any('/submit','TakeVacationController@submit')->name("take_vacation.save");
         Route::get('/delete/{id}', 'TakeVacationController@delete')->name('take_vacation.delete');
         Route::any('/search-sales-lists', 'TakeVacationController@searchSalesLists');
+        Route::any('/search-staff', 'TakeVacationController@searchStaff');
     });
 });

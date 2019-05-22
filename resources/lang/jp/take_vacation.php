@@ -43,14 +43,45 @@ return [
         'title_approval' => '休暇取得申請',
         'field' => [
             'applicant_id' => '申請者',
-            'applicant_office_id' => '所属営業所',
+            'staff_nm' => '',
+            'applicant_office_nm' => '所属営業所',
             'approval_kb' => '休暇区分',
             'half_day_kb' => '時間区分',
-            'start_end_date' => '期間',
+            'start_date' => '期間',
+            'end_date' => '',
             'days' => '日数',
-            'times' => '時間数',
+            'times' => '',
             'reasons' => '理由',
-            '' => '追加通知',
+            'additional_notice' => '追加通知',
+        ],
+        'search' => [
+            'name' => '氏名 / ふりがな',
+            'mst_business_office_id' => '営業所',
+        ],
+        'modal' =>[
+            'table'=>[
+                'staff_nm' => '氏名',
+                'business_office_nm' => '営業所',
+                'mail' => 'メールアドレス',
+            ]
+        ]
+    ],
+    'modal' => [
+        'register'=>[
+            'title' => '登録',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
+        ],
+        'edit'=>[
+            'title' => '仮押さえ',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10013')
+        ],
+        'approval'=>[
+            'title' => '承認',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10016')
+        ],
+        'reject'=>[
+            'title' => '却下',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10019')
         ],
     ]
 ];

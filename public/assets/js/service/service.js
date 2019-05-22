@@ -581,6 +581,27 @@ take_vacation_list_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  searchStaff: function searchStaff(data) {
+    return axios.post('/take_vacation/api-v1/search-staff', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  delete: function _delete(id) {
+    return axios.get('/take_vacation/api-v1/delete/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  submit: function submit(data) {
+    return axios.post('/take_vacation/api-v1/submit', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
