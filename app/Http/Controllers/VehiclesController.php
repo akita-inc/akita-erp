@@ -173,6 +173,7 @@ class VehiclesController extends Controller
     }
 
     public function save(Request $request){
+        $listConvertCharacter = config('params.convertCharacter');
         $currentTime = date("Y-m-d H:i:s",time());
         $mVehicle = new MVehicles();
         $input = $request->all();
@@ -275,6 +276,9 @@ class VehiclesController extends Controller
         }else{
             DB::beginTransaction();
             try {
+                if(isset($listConvertCharacter[$data["registration_numbers3"]])){
+                    $data["registration_numbers3"] = $listConvertCharacter[$data["registration_numbers3"]];
+                }
                 $mVehicle->vehicles_cd = $data["vehicles_cd"];
                 $mVehicle->door_number = $data["door_number"];
                 $mVehicle->vehicles_kb = $data["vehicles_kb"];
