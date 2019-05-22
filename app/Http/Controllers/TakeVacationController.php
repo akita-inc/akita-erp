@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
+use App\Models\MStaffs;
 use App\Models\WApprovalStatus;
 use App\Models\WPaidVacation;
 use Illuminate\Support\Facades\Lang;
@@ -17,7 +18,13 @@ class TakeVacationController extends Controller
     use ListTrait;
     public $table = "wf_paid_vacation";
     public $ruleValid = [
-
+        'approval_kb' => 'required',
+        'half_day_kb' => 'required',
+        'start_date' => 'required',
+        'end_date' => 'required',
+        'days' => 'required|one_byte_number|length:11',
+        'times' => 'required|one_byte_number|length:11',
+        'reasons' => 'required|length:300',
     ];
     public $messagesCustom =[];
     public $labels=[];
@@ -326,6 +333,20 @@ class TakeVacationController extends Controller
     }
 
     public function store(Request $request, $id=null){
+        $fieldShowTable = [
+            'staff_nm' => [
+                "classTH" => "wd-100",
+                "sortBy"=>"staff_nm"
+            ],
+            'business_office_nm'=> [
+                "classTH" => "wd-60",
+                "sortBy"=>"business_office_nm"
+            ],
+            'mail'=> [
+                "classTH" => "wd-120",
+                "sortBy"=>"mail"
+            ],
+        ];
         $mWPaidVacation = null;
         $mode = "register";
         $role = 1;
@@ -354,17 +375,78 @@ class TakeVacationController extends Controller
         }
         $mBusinessOffices = new MBusinessOffices();
         $mGeneralPurposes = new MGeneralPurposes();
+        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices();
         $businessOfficeNm = $mBusinessOffices->select('business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
         $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
-        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'));
+        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
+        $currentDate = date('Y/m/d');
         return view('take_vacation.form', [
             'mWPaidVacation' => $mWPaidVacation,
-            'businessOfficeNm' => $businessOfficeNm,
+            'businessOfficeNm' => $businessOfficeNm->business_office_nm,
             'listVacationIndicator' => $listVacationIndicator,
             'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,
+            'currentDate' => $currentDate,
+            'listBusinessOffices' => $listBusinessOffices,
             'role' => $role,
-            'mode' => $mode
+            'mode' => $mode,
+            'fieldShowTable' => $fieldShowTable
         ]);
+    }
+
+    public function searchStaff(Request $request){
+        $input = $request->all();
+        $mStaff = new MStaffs();
+        $query = $mStaff
+            ->select(
+                'mst_staffs.staff_cd',
+                DB::raw("CONCAT(mst_staffs.last_nm,mst_staffs.first_nm) as staff_nm"),
+                'mst_business_offices.business_office_nm',
+                'mst_staffs.mail'
+            )
+            ->join(DB::raw('mst_business_offices'), function ($join) {
+                $join->on('mst_business_offices.id', '=', 'mst_staffs.mst_business_office_id')
+                    ->whereNull('mst_business_offices.deleted_at');
+            })
+            ->whereNotNull('mst_staffs.mail')
+            ->whereNull('mst_staffs.deleted_at');
+        if(isset($input['name']) && !empty($input['name'])){
+            $query = $query->where(DB::raw("CONCAT(mst_staffs.last_nm , mst_staffs.first_nm ,mst_staffs.last_nm_kana ,mst_staffs.first_nm_kana)"),'LIKE','%'.$input['name'].'%');
+        }
+        if(isset($input['mst_business_office_id']) && !empty($input['mst_business_office_id'])){
+            $query = $query->where('mst_staffs.mst_business_office_id','=',$input['mst_business_office_id']);
+        }
+        if ($input["order"]["col"] != '') {
+            if ($input["order"]["col"] == 'staff_nm')
+                $orderCol = 'CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)';
+            else if($input["order"]["col"]=='business_office_nm')
+                $orderCol='mst_business_offices.business_office_nm';
+            else if($input["order"]["col"]=='mail')
+                $orderCol='mst_staffs.mail';
+            else
+                $orderCol = $input["order"]["col"];
+            if (isset($input["order"]["descFlg"]) && $input["order"]["descFlg"]) {
+                $orderCol .= " DESC";
+            }
+            $query->orderbyRaw($orderCol);
+        } else {
+            $query->orderBy('mst_staffs.last_nm_kana', 'mst_staffs.first_nm_kana');
+        }
+        $data = $query->get();
+        if(count($data) > 0){
+            return response()->json([
+                'success'=>true,
+                'info'=> $data,
+            ]);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'msg'=> Lang::get('messages.MSG10010'),
+            ]);
+        }
+    }
+
+    protected function save($data){
+
     }
 
 

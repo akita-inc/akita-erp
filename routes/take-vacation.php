@@ -9,5 +9,9 @@ Route::group(['name' => 'take-vacation', 'prefix' => 'take_vacation', 'middlewar
         Route::post('/getItems','TakeVacationController@getItems')->name("take_vacation.getItems");
         Route::any('/checkIsExist/{id}','TakeVacationController@checkIsExist')->name("take_vacation.checkIsExist");
         Route::any('back-history', ['uses' => 'TakeVacationController@backHistory']);
+        Route::any('/submit','TakeVacationController@submit')->name("take_vacation.save");
+        Route::get('/delete/{id}', 'TakeVacationController@delete')->name('take_vacation.delete');
+        Route::any('/search-sales-lists', 'TakeVacationController@searchSalesLists');
+        Route::any('/search-staff', 'TakeVacationController@searchStaff');
     });
 });
