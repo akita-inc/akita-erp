@@ -90,7 +90,56 @@ class TakeVacationController extends Controller
                     ),''),
                     ' 承認待ち' 
                 ) 
-	        END AS approval_status
+	        END AS approval_status,
+	        CASE -- approval_fg
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 ) = 0 ) THEN
+                (SELECT  approval_fg
+                FROM wf_approval_status 
+                WHERE wf_id = wf_paid_vacation.id
+                ORDER BY id
+                LIMIT 1)-- 承認済み
+                
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                (SELECT  approval_fg
+                FROM wf_approval_status 
+                WHERE wf_id = wf_paid_vacation.id
+                AND approval_fg = 2
+                ORDER BY id
+                LIMIT 1)-- 却下
+                
+                ELSE
+                (SELECT  approval_fg
+                FROM wf_approval_status 
+                WHERE wf_id = wf_paid_vacation.id
+                AND approval_fg = 0
+                ORDER BY id
+                LIMIT 1)
+            END AS approval_fg,
+
+            CASE -- approval_levels
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 ) = 0 ) THEN
+                (SELECT  approval_levels
+                FROM wf_approval_status 
+                WHERE wf_id = wf_paid_vacation.id
+                ORDER BY id
+                LIMIT 1)-- 承認済み
+                
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                (SELECT  approval_levels
+                FROM wf_approval_status 
+                WHERE wf_id = wf_paid_vacation.id
+                AND approval_fg = 2
+                ORDER BY id
+                LIMIT 1)-- 却下
+                
+                ELSE
+                (SELECT  approval_levels
+                FROM wf_approval_status 
+                WHERE wf_id = wf_paid_vacation.id
+                AND approval_fg = 0
+                ORDER BY id
+                LIMIT 1)
+            END AS approval_levels
             "),
             'wf_paid_vacation.delete_at'
         );
@@ -146,7 +195,11 @@ class TakeVacationController extends Controller
             if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
                 if($orderCol  == 'days,times'){
                     $orderCol = 'days DESC,times DESC';
-                }else{
+                }
+                else if($orderCol  == 'approval_fg,approval_levels'){
+                    $orderCol = 'approval_fg DESC,approval_levels DESC';
+                }
+                else{
                     $orderCol .= " DESC";
                 }
             }
@@ -196,7 +249,7 @@ class TakeVacationController extends Controller
             'approval_status' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"approval_status"
+                "sortBy"=>"approval_fg,approval_levels"
             ],
         ];
         $mGeneralPurpose = new MGeneralPurposes();
