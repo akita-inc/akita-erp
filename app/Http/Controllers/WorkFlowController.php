@@ -23,7 +23,7 @@ class WorkFlowController extends Controller
     public $table = "wf_type";
     public $ruleValid = [
         "name" => "required|length:100",
-        "steps" => "required|one_byte_number|between_custom:1,10|length:2",
+        "steps" => "required|between_custom:1,10|length:2",
     ];
     public $messagesCustom =[];
     public $labels=[

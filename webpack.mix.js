@@ -97,3 +97,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/take-vacation-list-vl.js'
 ], 'public/assets/js/controller/take-vacation-list.js');
+
+mix.js([
+    'resources/assets/js/controller/take-vacation-vl.js'
+], 'public/assets/js/controller/take-vacation.js');

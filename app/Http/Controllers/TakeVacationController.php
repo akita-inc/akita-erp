@@ -6,6 +6,7 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\WApprovalStatus;
+use App\Models\WPaidVacation;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,23 +73,23 @@ class TakeVacationController extends Controller
                 '承認済み' 
                 WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
 		        '却下'
-            ELSE 
-                CONCAT(
-                    COALESCE((
+                ELSE 
+                CONCAT((
                     SELECT
-                        was.title
+                        mgp.date_nm 
                     FROM
-                        wf_approval_status was			
+                        wf_approval_status was
+                        JOIN mst_general_purposes mgp ON was.approval_levels = mgp.date_id 
                     WHERE
                         was.wf_type_id = 1 
-                        AND was.wf_id = wf_paid_vacation.id
+                        AND was.wf_id = wf_paid_vacation.id 
+                        AND mgp.data_kb = '12001' 
                     ORDER BY
                         was.approval_steps,
                         was.id 
                         LIMIT 1 
-                    ),''),
-                    ' 承認待ち' 
-                ) 
+                    ) ,' 承認待ち'
+                )
 	        END AS approval_status
             "),
             'wf_paid_vacation.delete_at'
@@ -131,8 +132,7 @@ class TakeVacationController extends Controller
                                     FROM wf_approval_status
                                     WHERE wf_id = wf_paid_vacation.id 
                                     AND wf_type_id = 1 
-                                    AND (approval_fg = 0 
-                                    OR approval_fg  = 2)) > 0');
+                                    AND approval_fg = 0) > 0');
         }
         //
         if($where['show_deleted']!=true)
@@ -272,8 +272,44 @@ class TakeVacationController extends Controller
     }
 
     public function store(Request $request, $id=null){
+        $mWPaidVacation = null;
+        $mode = "register";
+        $role = 1;
+        if($id != null){
+            $mWPaidVacation = WPaidVacation::find( $id );
+            if(empty($mWPaidVacation)){
+                abort('404');
+            }else{
+                $mWPaidVacation = $mWPaidVacation->toArray();
+                $routeName = $request->route()->getName();
+                switch ($routeName){
+                    case 'empty_info.approval':
+                        $mode = 'approval';
+                        if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
+                    default:
+                        $mode ='edit';
+                        if($mWPaidVacation['status']!=1 || $mWPaidVacation['regist_office_id']!= Auth::user()->mst_business_office_id ){
+                            $role = 2; // no authentication
+                        }
+                        break;
+                }
+            }
+        }
+        $mBusinessOffices = new MBusinessOffices();
+        $mGeneralPurposes = new MGeneralPurposes();
+        $businessOfficeNm = $mBusinessOffices->select('business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
+        $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
+        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getInfoByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'));
         return view('take_vacation.form', [
-
+            'mWPaidVacation' => $mWPaidVacation,
+            'businessOfficeNm' => $businessOfficeNm,
+            'listVacationIndicator' => $listVacationIndicator,
+            'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,
+            'role' => $role,
+            'mode' => $mode
         ]);
     }
 
