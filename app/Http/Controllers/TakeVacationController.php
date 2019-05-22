@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MStaffs;
+use App\Models\MWfAdditionalNotice;
 use App\Models\WApprovalStatus;
 use App\Models\WPaidVacation;
 use Illuminate\Support\Facades\Lang;
@@ -13,9 +15,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 class TakeVacationController extends Controller
 {
-    use ListTrait;
+    use ListTrait,FormTrait;
     public $table = "wf_paid_vacation";
     public $ruleValid = [
         'approval_kb' => 'required',
@@ -27,7 +31,18 @@ class TakeVacationController extends Controller
         'reasons' => 'required|length:300',
     ];
     public $messagesCustom =[];
-    public $labels=[];
+    public $labels=[
+        'applicant_id' => '申請者',
+        'applicant_office_nm' => '所属営業所',
+        'approval_kb' => '休暇区分',
+        'half_day_kb' => '時間区分',
+        'start_date' => '開始日',
+        'end_date' => '終了日',
+        'days' => '日数',
+        'times' => '時間数',
+        'reasons' => '理由',
+        'email_address' => '追加通知',
+    ];
     public $currentData=null;
     public function __construct(){
         parent::__construct();
@@ -393,6 +408,40 @@ class TakeVacationController extends Controller
         ]);
     }
 
+    public function beforeSubmit($data){
+        if($data['half_day_kb']=='4'){
+            $this->ruleValid['times'] = 'required|one_byte_number|between_custom:1,8|length:11';
+        }
+
+    }
+    protected function validAfter( &$validator,$data ){
+        $listWfAdditionalNotice = $data['wf_additional_notice'];
+        $listMailChecked = [];
+        $errorsEx = [];
+        foreach ($listWfAdditionalNotice as $key => $item){
+            $validatorEx = Validator::make(['email_address' => $item['email_address']], ['email_address' => 'length:255|nullable|email_format|email_character'], $this->messagesCustom, $this->labels);
+            if ($validatorEx->fails()) {
+                $errorsEx[$key] = $validatorEx->errors()->first();
+            }else{
+                if(!empty($item['email_address'])){
+                    if(strstr($item['email_address'],"@") != config('params.domain_email_address')){
+                        $errorsEx[$key] = Lang::get('messages.MSG10026');
+                    }else{
+                        if(!in_array($item['email_address'],$listMailChecked)){
+                            array_push($listMailChecked,$item['email_address']);
+                        }else{
+                            $errorsEx[$key] = Lang::get('messages.MSG10027');
+                        }
+                    }
+                }
+            }
+        }
+        if (count($errorsEx) > 0) {
+            $validator->errors()
+                ->add("wf_additional_notice", $errorsEx);
+        }
+    }
+
     public function searchStaff(Request $request){
         $input = $request->all();
         $mStaff = new MStaffs();
@@ -446,7 +495,56 @@ class TakeVacationController extends Controller
     }
 
     protected function save($data){
+        $arrayInsert = $data;
+        $listWfAdditionalNotice = $arrayInsert['wf_additional_notice'];
+        $currentTime = date("Y-m-d H:i:s",time());
+        $arrayInsert['regist_date'] = $currentTime;
+        unset($arrayInsert["id"]);
+        unset($arrayInsert["mode"]);
+        unset($arrayInsert["staff_nm"]);
+        unset($arrayInsert["applicant_office_nm"]);
+        unset($arrayInsert["wf_additional_notice"]);
+        DB::beginTransaction();
+        if(isset( $data["id"]) && $data["id"]){
+            $id = $data["id"];
+            $arrayInsert["modified_at"] = $currentTime;
+            WPaidVacation::query()->where("id","=",$id)->update( $arrayInsert );
+        }else {
+            $arrayInsert["create_at"] = $currentTime;
+            $arrayInsert["modified_at"] = $currentTime;
+            $id =  WPaidVacation::query()->insertGetId( $arrayInsert );
+            if($id){
+                $dataWfApprovalStatus = [
+                    'wf_type_id' => 1,
+                    'wf_id ' => $id,
+                    'approver_id' => null,
+                    'approval_fg' => 0,
+                    'approval_date' => null,
+                    'send_back_reason' => null,
+                ];
+                WApprovalStatus::query()->insertGetId( $dataWfApprovalStatus );
+                $dataWfAdditionalNotice = [];
+                foreach ($listWfAdditionalNotice as $item){
+                    if(!empty($item['email_address'])){
+                        $row= $item;
+                        $row['wf_type_id'] = 1;
+                        $row['wf_id'] = $id;
+                        array_push($dataWfAdditionalNotice, $row);
+                    }
+                }
+                MWfAdditionalNotice::query()->insertGetId( $dataWfAdditionalNotice );
+            }
 
+
+        }
+        DB::commit();
+        if(isset( $data["id"])){
+            $this->backHistory();
+            \Session::flash('message',Lang::get('messages.MSG04002'));
+        }else{
+            \Session::flash('message',Lang::get('messages.MSG03002'));
+        }
+        return $id;
     }
 
 

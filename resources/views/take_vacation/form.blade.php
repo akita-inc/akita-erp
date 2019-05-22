@@ -156,7 +156,9 @@
                                                        class="form-control w-100"
                                                        :id="'email_address'+index"
                                                        maxlength="300"
+                                                       v-bind:class="errors.wf_additional_notice!= undefined && errors.wf_additional_notice[0][index]!= undefined ? 'form-control is-invalid':'form-control' "
                                                 >
+                                                <span v-cloak v-if="errors.wf_additional_notice != undefined" class="message-error" v-html="errors.wf_additional_notice[0][index]"></span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -169,7 +171,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if($mode=='reservation' || $mode=='reservation_approval')
+                        @if($mode=='view' || $mode=='approval')
                     </fieldset>
                 @endif
             </form>

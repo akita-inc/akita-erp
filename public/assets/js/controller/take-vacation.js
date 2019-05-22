@@ -20931,8 +20931,7 @@ var ctrTakeVacationVl = new Vue({
       this.handleChangeHalfDay();
     },
     submit: function submit(status) {
-      var that = this;
-      that.loading = true;
+      var that = this; // that.loading = true;
 
       if (this.field.mode != 'register') {
         this.field["id"] = this.take_vacation_id;
@@ -21162,10 +21161,40 @@ var ctrTakeVacationVl = new Vue({
       that.field.wf_additional_notice[that.currentIndex].email_address = item.mail;
       that.field.wf_additional_notice[that.currentIndex].staff_cd = item.staff_cd;
       $('#searchStaffModal').modal('hide');
+    },
+    setInputFilter: function setInputFilter(textbox, inputFilter) {
+      ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+        textbox.addEventListener(event, function () {
+          if (inputFilter(this.value)) {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+          }
+        });
+      });
     }
   },
   mounted: function mounted() {
     this.handleChangeHalfDay();
+
+    if ($("#hd_take_vacation_edit").val() == 1) {
+      this.loadFormEdit();
+    }
+
+    if (document.getElementById("days") != null) {
+      this.setInputFilter(document.getElementById("days"), function (value) {
+        return /^\d*$/.test(value);
+      });
+    }
+
+    if (document.getElementById("times") != null) {
+      this.setInputFilter(document.getElementById("times"), function (value) {
+        return /^\d*$/.test(value);
+      });
+    }
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],

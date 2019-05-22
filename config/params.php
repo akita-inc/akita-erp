@@ -401,4 +401,28 @@ return [
         "ゐ"=>"い",
         "ゑ"=>"え",
     ],
+    'domain_email_address' => '@akita-inc.co.jp',
+    'vacation_register_mail' => array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '',
+        'template' => ""
+    ,
+    ),
+    'vacation_edit_mail' => array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '',
+        'template' => ""
+    ,
+    ),
+    'vacation_approval_mail' => array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【ハコカラ】No.[id] の申請が承認されました。',
+        'subject' => '',
+        'template' => ""
+    ),
+    'vacation_reject_mail' => array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '',
+        'template' => ""
+    ),
 ];
