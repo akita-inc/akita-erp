@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MStaffs;
+use App\Models\MWfAdditionalNotice;
+use App\Models\MWfRequireApproval;
 use App\Models\WApprovalStatus;
 use App\Models\WPaidVacation;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 class TakeVacationController extends Controller
 {
-    use ListTrait;
+    use ListTrait,FormTrait;
     public $table = "wf_paid_vacation";
     public $ruleValid = [
         'approval_kb' => 'required',
@@ -27,7 +34,18 @@ class TakeVacationController extends Controller
         'reasons' => 'required|length:300',
     ];
     public $messagesCustom =[];
-    public $labels=[];
+    public $labels=[
+        'applicant_id' => '申請者',
+        'applicant_office_nm' => '所属営業所',
+        'approval_kb' => '休暇区分',
+        'half_day_kb' => '時間区分',
+        'start_date' => '開始日',
+        'end_date' => '終了日',
+        'days' => '日数',
+        'times' => '時間数',
+        'reasons' => '理由',
+        'email_address' => '追加通知',
+    ];
     public $currentData=null;
     public function __construct(){
         parent::__construct();
@@ -273,6 +291,7 @@ class TakeVacationController extends Controller
             'vacationClasses' => $vacationClasses
         ]);
     }
+
     public function checkIsExist(Request $request, $id){
         $status= $request->get('status');
         $mode = $request->get('mode');
@@ -354,15 +373,21 @@ class TakeVacationController extends Controller
         $mWPaidVacation = null;
         $mode = "register";
         $role = 1;
+        $listWfAdditionalNotice = [];
+        $listWApprovalStatus = [];
+        $mWApprovalStatus = new WApprovalStatus();
         if($id != null){
-            $mWPaidVacation = WPaidVacation::find( $id );
+            $modelWPaidVacation = new WPaidVacation();
+            $mWPaidVacation = $modelWPaidVacation->getInfoByID($id);
             if(empty($mWPaidVacation)){
                 abort('404');
             }else{
                 $mWPaidVacation = $mWPaidVacation->toArray();
+                $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('staff_cd','email_address')->where('wf_id','=',$id)->where('wf_type_id','=',1)->get()->toArray();
+                $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
                 $routeName = $request->route()->getName();
                 switch ($routeName){
-                    case 'empty_info.approval':
+                    case 'take_vacation.approval':
                         $mode = 'approval';
                         if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
                             $role = 2; // no authentication
@@ -370,9 +395,9 @@ class TakeVacationController extends Controller
                         break;
                     default:
                         $mode ='edit';
-                        if($mWPaidVacation['status']!=1 || $mWPaidVacation['regist_office_id']!= Auth::user()->mst_business_office_id ){
-                            $role = 2; // no authentication
-                        }
+//                        if($mWPaidVacation['status']!=1 || $mWPaidVacation['regist_office_id']!= Auth::user()->mst_business_office_id ){
+//                            $role = 2; // no authentication
+//                        }
                         break;
                 }
             }
@@ -393,8 +418,45 @@ class TakeVacationController extends Controller
             'listBusinessOffices' => $listBusinessOffices,
             'role' => $role,
             'mode' => $mode,
-            'fieldShowTable' => $fieldShowTable
+            'fieldShowTable' => $fieldShowTable,
+            'listWfAdditionalNotice' => json_encode($listWfAdditionalNotice,true),
+            'listWApprovalStatus' => $listWApprovalStatus,
         ]);
+    }
+
+    public function beforeSubmit($data){
+        if($data['half_day_kb']=='4'){
+            $this->ruleValid['times'] = 'required|one_byte_number|between_custom:1,8|length:11';
+        }
+
+    }
+
+    protected function validAfter( &$validator,$data ){
+        $listWfAdditionalNotice = $data['wf_additional_notice'];
+        $listMailChecked = [];
+        $errorsEx = [];
+        foreach ($listWfAdditionalNotice as $key => $item){
+            $validatorEx = Validator::make(['email_address' => $item['email_address']], ['email_address' => 'length:255|nullable|email_format|email_character'], $this->messagesCustom, $this->labels);
+            if ($validatorEx->fails()) {
+                $errorsEx[$key] = $validatorEx->errors()->first();
+            }else{
+                if(!empty($item['email_address'])){
+                    if(strstr($item['email_address'],"@") != config('params.domain_email_address')){
+                        $errorsEx[$key] = Lang::get('messages.MSG10026');
+                    }else{
+                        if(!in_array($item['email_address'],$listMailChecked)){
+                            array_push($listMailChecked,$item['email_address']);
+                        }else{
+                            $errorsEx[$key] = Lang::get('messages.MSG10027');
+                        }
+                    }
+                }
+            }
+        }
+        if (count($errorsEx) > 0) {
+            $validator->errors()
+                ->add("wf_additional_notice", $errorsEx);
+        }
     }
 
     public function searchStaff(Request $request){
@@ -450,8 +512,125 @@ class TakeVacationController extends Controller
     }
 
     protected function save($data){
+        $id_before =  null;
+        date_default_timezone_set("Asia/Tokyo");
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listLevel= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'Empty');
+        $arrayInsert = $data;
+        $listWfAdditionalNotice = $arrayInsert['wf_additional_notice'];
+        $currentTime = date("Y-m-d H:i:s",time());
+        $arrayInsert['regist_date'] = $currentTime;
+        $mode = $arrayInsert["mode"];
+        unset($arrayInsert["id"]);
+        unset($arrayInsert["mode"]);
+        unset($arrayInsert["staff_nm"]);
+        unset($arrayInsert["applicant_office_nm"]);
+        unset($arrayInsert["wf_additional_notice"]);
+        $mStaff = new MStaffs();
+        DB::beginTransaction();
+        try{
+            if(isset( $data["id"]) && $data["id"]){
+                $id_before = $data["id"];
+                $arrayInsert["modified_at"] = $currentTime;
+                WPaidVacation::query()->where("id","=",$id_before)->delete();
+                $configMail = config('params.vacation_edit_mail');
+            }else{
+                $configMail = config('params.vacation_register_mail');
+            }
+            $approval_levels_step_1 = "";
+            $arrayInsert["create_at"] = $currentTime;
+            $arrayInsert["modified_at"] = $currentTime;
+            $id =  WPaidVacation::query()->insertGetId( $arrayInsert );
+            if($id){
+                $dataWfApprovalStatus = [];
+                $fixValue = [
+                    'wf_type_id' => 1,
+                    'wf_id' => $id,
+                    'approver_id' => null,
+                    'approval_fg' => 0,
+                    'approval_date' => null,
+                    'send_back_reason' => null,
+                ];
+                $listRequireApproval = MWfRequireApproval::query()->where('wf_type','=',1)->where('applicant_section','=',Auth::user()->section_id)->get();
+                if(count($listRequireApproval) > 0){
+                    foreach ($listRequireApproval as $item){
+                        if($item->approval_steps==1){
+                            $approval_levels_step_1 = $item->approval_levels;
+                        }
+                        $row = $fixValue;
+                        $row['approval_steps'] = $item->approval_steps;
+                        $row['approval_levels'] = $item->approval_levels;
+                        $row['approval_kb'] = $item->approval_kb;
+                        $row['title'] = $listLevel[$item->approval_levels];
+                        array_push($dataWfApprovalStatus, $row);
+                    }
+                    WApprovalStatus::query()->insert( $dataWfApprovalStatus );
+                }
 
+                $dataWfAdditionalNotice = [];
+                foreach ($listWfAdditionalNotice as $key => $item){
+                    if(!empty($item['email_address'])){
+                        $row= $item;
+                        $row['wf_type_id'] = 1;
+                        $row['wf_id'] = $id;
+                        array_push($dataWfAdditionalNotice, $row);
+                    }else{
+                        unset($listWfAdditionalNotice[$key]);
+                    }
+                }
+                if(count($dataWfAdditionalNotice) > 0){
+                    MWfAdditionalNotice::query()->insert( $dataWfAdditionalNotice );
+                }
+            }
+
+            $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$approval_levels_step_1);
+            $mailCC = [Auth::user()->mail];
+            $mailCC = array_merge($mailCC,array_column($listWfAdditionalNotice,'email_address'));
+            DB::commit();
+            $this->handleMail($id,$configMail,$mailTo,$mailCC,$id_before);
+            if(isset( $data["id"])){
+                $this->backHistory();
+                \Session::flash('message',Lang::get('messages.MSG04002'));
+            }else{
+                \Session::flash('message',Lang::get('messages.MSG03002'));
+            }
+        }catch (\Exception $e){
+            DB::rollback();
+            dd($e);
+        }
+        return $id;
     }
 
+    public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
+        $mWPaidVacation = new WPaidVacation();
+        $data = $mWPaidVacation->getInfoForMail($id);
+        $field = ['[id]','[applicant_id]','[approval_kb]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]'];
+        $data['id_before'] = $id_before;
+        $data['title'] = null;
+        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title']],
+            $configMail['template']);
+        $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
+        Mail::raw($text,
+            function ($message) use ($configMail,$subject,$mailTo,$mailCC) {
+                $message->from($configMail["from"]);
+                $message->cc($mailCC);
+                $message->to($mailTo)
+                    ->subject($subject);
+            });
+    }
+
+    public function delete($id)
+    {
+        $mWPaidVacation = WPaidVacation::find($id);
+        $this->backHistory();
+        if ($mWPaidVacation->delete()) {
+            \Session::flash('message',Lang::get('messages.MSG10004'));
+            $response = ['data' => 'success'];
+        } else {
+            \Session::flash('message',Lang::get('messages.MSG06002'));
+            $response = ['data' => 'failed', 'msg' => Lang::get('messages.MSG06002')];
+        }
+        return response()->json($response);
+    }
 
 }

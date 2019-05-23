@@ -38,9 +38,15 @@
                     @foreach($mWPaidVacation as $key=>$value)
                         <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">
                     @endforeach
+                    {{--@if(!empty($listWfAdditionalNotice))--}}
+                        {{--@foreach($listWfAdditionalNotice as $key=>$value)--}}
+                            {{--<input type="hidden" id="notice_staff_cd_{!! $key !!}" value="{{$value['staff_cd'] }}" name="wf_additional_notice[][staff_cd]" class="wf_additional_notice">--}}
+                            {{--<input type="hidden" id="notice_email_address_{!! $key !!}" value="{{$value['email_address'] }}" name="wf_additional_notice[][email_address]" class="wf_additional_notice">--}}
+                        {{--@endforeach--}}
+                    {{--@endif--}}
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
-                            <button class="btn btn-danger text-white" v-on:click="deleteInfo('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -52,7 +58,7 @@
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
                                 @if($mode=='register' || $mode=='edit')
-                                    <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                    <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                     <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                         {{ trans("common.button.reset") }}
                                     </button>
@@ -156,7 +162,9 @@
                                                        class="form-control w-100"
                                                        :id="'email_address'+index"
                                                        maxlength="300"
+                                                       v-bind:class="errors.wf_additional_notice!= undefined && errors.wf_additional_notice[0][index]!= undefined ? 'form-control is-invalid':'form-control' "
                                                 >
+                                                <span v-cloak v-if="errors.wf_additional_notice != undefined" class="message-error" v-html="errors.wf_additional_notice[0][index]"></span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -169,7 +177,20 @@
                                 </div>
                             </div>
                         </div>
-                        @if($mode=='reservation' || $mode=='reservation_approval')
+                        @if(!empty($listWApprovalStatus))
+                            <div class="grid-form">
+                                <div class="row">
+                                    @foreach($listWApprovalStatus as $item)
+                                        <div class="wd-180 text-right font-weight-bold">{{$item->title}}</div>
+                                        <div class="col-md-1 col-sm-12">{{$item->status}}</div>
+                                        <div class="col-md-2 col-sm-12">{{$item->approval_date}}</div>
+                                        <div class="col-md-7 col-sm-12">{{$item->send_back_reason}}</div>
+                                        <div class="break-row-form"></div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                        @if($mode=='view' || $mode=='approval')
                     </fieldset>
                 @endif
             </form>
@@ -180,8 +201,8 @@
                     </div>
                     @if(!empty($mWPaidVacation))
                         <div class="d-flex ml-auto">
-                            @if($role==1 && $mode=='edit' && $mWPaidVacation['regist_office_id']== \Illuminate\Support\Facades\Auth::user()->mst_business_office_id)
-                                <button class="btn btn-danger text-white" v-on:click="deleteInfo('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            @if($role==1 && $mode=='edit')
+                                <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif
@@ -193,7 +214,7 @@
                                 <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                                 <div class="col-md-7 col-sm-12 row grid-col h-100">
                                     @if($mode=='register' || $mode=='edit')
-                                        <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                        <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                         <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                             {{ trans("common.button.reset") }}
                                         </button>
@@ -220,6 +241,7 @@
 @endsection
 @section("scripts")
     <script>
+        var listRoute = "{{route('take_vacation.list')}}";
         var defaultApprovalKb = "{{array_keys($listVacationIndicator)[0]}}";
         var defaultHalfDayKb = "{{array_keys($listVacationAcquisitionTimeIndicator)[0]}}";
         var messages = [];
@@ -230,6 +252,7 @@
         var mst_business_office_id = "<?php echo \Illuminate\Support\Facades\Auth::user()->mst_business_office_id?>";
         var business_ofice_nm = "{{ $businessOfficeNm}}";
         var currentDate = "{{ $currentDate}}";
+        var listWfAdditionalNotice = "{{ $listWfAdditionalNotice}}";
 
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/take-vacation.js') }}" charset="utf-8"></script>
