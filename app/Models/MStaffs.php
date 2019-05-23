@@ -127,4 +127,17 @@ class MStaffs extends Authenticatable
             ->count();
         return $data;
     }
+
+    public function getListMailTo($applicant_office_id, $level){
+        $result = [];
+        $data =  $this->select('mail')
+            ->where('deleted_at','=',null)
+            ->where('mst_business_office_id','=',$applicant_office_id)
+            ->where('approval_levels','=',$level)
+            ->get();
+        if($data){
+            $result = array_column($data->toArray(),'mail');
+        }
+        return $result;
+    }
 }

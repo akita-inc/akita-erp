@@ -404,25 +404,84 @@ return [
     'domain_email_address' => '@akita-inc.co.jp',
     'vacation_register_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '',
-        'template' => ""
-    ,
+        'subject' => '【休暇取得申請】No. [id] [approval_kb] [applicant_id]（[applicant_office_id]）',
+        'template' => "【休暇取得申請】\n\n".
+                "＜申請ID＞\n".
+                "No. [id]\n\n".
+                "＜登録者＞\n".
+                "[applicant_id]\n\n".
+                "＜休暇区分＞\n".
+                "[approval_kb]\n\n".
+                "＜期間＞\n".
+                "[start_date] ～ [end_date]\n".
+                "[days] 日 [times] 時間\n\n".
+                "＜理由＞\n".
+                "[reasons]\n\n\n".
+                "確認の後、承認お願いいたします。\n\n".
+                "------------------------------------------------------\n\n".
+                "Akita ERP - ワークフロー\n\n"
     ),
     'vacation_edit_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '',
-        'template' => ""
+        'subject' => '【休暇取得申請】No. [id] [approval_kb] [applicant_id]（[applicant_office_id]）（修正）',
+        'template' => "【休暇取得申請】\n\n".
+            "＜申請ID＞\n".
+            "No. [id] （No. [id_before] を修正）\n\n".
+            "＜登録者＞\n".
+            "[applicant_id\n\n".
+            "＜休暇区分＞\n".
+            "[approval_kb]\n\n".
+            "＜期間＞\n".
+            "[start_date] ～ [end_date]\n".
+            "[days] 日 [times] 時間\n\n".
+            "＜理由＞\n".
+            "[reasons]\n\n\n".
+            "確認の後、承認お願いいたします。\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
     ,
     ),
     'vacation_approval_mail' => array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【ハコカラ】No.[id] の申請が承認されました。',
+        'subject' => '【休暇取得申請】承認：No. [id] [approval_kb] [applicant_id]（[applicant_office_id]）',
         'subject' => '',
-        'template' => ""
+        'template' => "【休暇取得申請】\n".
+            "[title] に承認されました。\n\n".
+            "＜申請ID＞\n".
+            "No. [id]\n\n".
+            "＜登録者＞\n".
+            "[applicant_id\n\n".
+            "＜休暇区分＞\n".
+            "[approval_kb]\n\n".
+            "＜期間＞\n".
+            "[start_date] ～ [end_date]\n".
+            "[days] 日 [times] 時間\n\n".
+            "＜理由＞\n".
+            "[reasons]\n\n\n".
+            "確認の後、承認お願いいたします。\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
     ),
     'vacation_reject_mail' => array(
         'from' => 'shinwaytest@gmail.com',
+        'subject' => '【休暇取得申請】却下：No. [id] [approval_kb] [applicant_id]（[applicant_office_id]）',
         'subject' => '',
-        'template' => ""
+        'template' => "【休暇取得申請】\n".
+            "[title] に却下されました。\n".
+            "理由：[send_back_reason]\n\n".
+            "＜申請ID＞\n".
+            "No. [id]\n\n".
+            "＜登録者＞\n".
+            "[applicant_id\n\n".
+            "＜休暇区分＞\n".
+            "[approval_kb]\n\n".
+            "＜期間＞\n".
+            "[start_date] ～ [end_date]\n".
+            "[days] 日 [times] 時間\n\n".
+            "＜理由＞\n".
+            "[reasons]\n\n\n".
+            "確認の後、承認お願いいたします。\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
     ),
 ];
