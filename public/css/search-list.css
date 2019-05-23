@@ -1,0 +1,16 @@
+.search-content thead{
+    background-color: #0070C0;
+    color: #ffffff;
+    cursor: pointer;
+}
+.search-content td {
+    vertical-align: middle;
+}
+.search-content th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+.search-content tbody .flex-column .small-size {
+    font-size:10px;
+}
