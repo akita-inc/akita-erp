@@ -71,6 +71,7 @@ class TakeVacationController extends Controller
             DB::raw("DATE_FORMAT(wf_paid_vacation.regist_date,'%Y/%m/%d') as applicant_date"),
             'ms.staff_cd as staff_cd',
             DB::raw('CONCAT_WS("    ",ms.last_nm,ms.first_nm) as applicant_nm'),
+            DB::raw('CONCAT_WS("    ",ms.last_nm_kana,ms.first_nm_kana) as applicant_nm_kana'),
             'mbo.id as business_office_id',
             'mbo.business_office_nm as sales_office',
             'mgp.date_id as vacation_class_id',
@@ -93,7 +94,9 @@ class TakeVacationController extends Controller
                 CONCAT( wf_paid_vacation.times, '時間' )
                 ELSE CONCAT( wf_paid_vacation.days, '日 ', wf_paid_vacation.times, '時間' ) 
             END AS datetime,
-            CASE		
+            CASE	
+                WHEN (( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id) = 0) THEN
+                '---'	
                 WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 ) = 0 ) THEN
                 '承認済み' 
                 WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
@@ -108,6 +111,7 @@ class TakeVacationController extends Controller
                     WHERE
                         was.wf_type_id = 1 
                         AND was.wf_id = wf_paid_vacation.id
+                        AND was.approval_fg = 0
                     ORDER BY
                         was.approval_steps,
                         was.id 
@@ -137,7 +141,7 @@ class TakeVacationController extends Controller
                 FROM wf_approval_status 
                 WHERE wf_id = wf_paid_vacation.id
                 AND approval_fg = 0
-                ORDER BY id
+                ORDER BY approval_steps,id
                 LIMIT 1)
             END AS approval_fg,
 
@@ -162,7 +166,7 @@ class TakeVacationController extends Controller
                 FROM wf_approval_status 
                 WHERE wf_id = wf_paid_vacation.id
                 AND approval_fg = 0
-                ORDER BY id
+                ORDER BY approval_steps,id
                 LIMIT 1)
             END AS approval_levels
             "),
@@ -249,7 +253,7 @@ class TakeVacationController extends Controller
             'applicant_nm' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"staff_cd"
+                "sortBy"=>"applicant_nm_kana"
             ],
             'sales_office' => [
                 "classTH" => "min-wd-100",
@@ -307,7 +311,7 @@ class TakeVacationController extends Controller
             $WApprovalStatus = new WApprovalStatus();
             $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
             $return =['mode' =>''];
-            if($data->delete_at == null){
+            if($data->delete_at != null){
                 $return['mode'] = 'reference';
             }
             else{
