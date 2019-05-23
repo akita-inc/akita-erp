@@ -53,6 +53,7 @@ class TakeVacationController extends Controller
             DB::raw("DATE_FORMAT(wf_paid_vacation.regist_date,'%Y/%m/%d') as applicant_date"),
             'ms.staff_cd as staff_cd',
             DB::raw('CONCAT_WS("    ",ms.last_nm,ms.first_nm) as applicant_nm'),
+            DB::raw('CONCAT_WS("    ",ms.last_nm_kana,ms.first_nm_kana) as applicant_nm_kana'),
             'mbo.id as business_office_id',
             'mbo.business_office_nm as sales_office',
             'mgp.date_id as vacation_class_id',
@@ -234,7 +235,7 @@ class TakeVacationController extends Controller
             'applicant_nm' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"staff_cd"
+                "sortBy"=>"applicant_nm_kana"
             ],
             'sales_office' => [
                 "classTH" => "min-wd-100",
