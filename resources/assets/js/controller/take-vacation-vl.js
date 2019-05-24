@@ -28,6 +28,7 @@ var ctrTakeVacationVl = new Vue({
                 }
             ],
             mode:$('#mode').val(),
+            approval_fg:null
         },
         search:{
             name:"",
@@ -46,6 +47,7 @@ var ctrTakeVacationVl = new Vue({
         listStaffs:[],
         message: '',
         currentIndex:0,
+        listWfAdditionalNoticeDB: JSON.parse(listWfAdditionalNotice.replace(/&quot;/g,'"')),
     },
     methods : {
         resetForm: function () {
@@ -84,7 +86,7 @@ var ctrTakeVacationVl = new Vue({
             }
             this.handleChangeHalfDay();
         },
-        submit: function(status){
+        submit: function(approval_fg){
             let that = this;
             // that.loading = true;
             if(this.field.mode != 'register'){
@@ -103,6 +105,10 @@ var ctrTakeVacationVl = new Vue({
                     });
                     break;
                 case 'edit':
+                case 'approval':
+                    if(that.field.mode=='approval'){
+                        that.field.approval_fg = approval_fg;
+                    }
                     take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'status': status,'modified_at': that.modified_at }).then((response) => {
                         if (!response.success) {
                             that.loading = false;
@@ -118,21 +124,6 @@ var ctrTakeVacationVl = new Vue({
                                     window.location.href = listRoute;
                                 }
                                 that.loading = false;
-                            });
-                        }
-                    });
-                    break;
-                case 'approval':
-                    take_vacation_list_service.checkIsExist(that.take_vacation_id, {'status': status,'modified_at': that.modified_at}).then((response) => {
-                        if (!response.success) {
-                            that.loading = false;
-                            alert(response.msg);
-                            that.backHistory();
-                            return false;
-                        } else {
-                            take_vacation_list_service.updateStatus(that.take_vacation_id,{status:status}).then((response) => {
-                                that.loading = false;
-                                window.location.href = listRoute;
                             });
                         }
                     });
@@ -153,19 +144,18 @@ var ctrTakeVacationVl = new Vue({
         },
         loadFormEdit: function () {
             let that = this;
-            if(this.field.mode != 'register'){
-                this.loading = true;
-                that.take_vacation_edit = 1;
-                that.take_vacation_id = $("#hd_id").val();
-                $.each(this.field,function (key,value) {
-                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
-                        that.field[key] = $("#hd_"+key).val();
-                    }
-                });
-                that.field.wf_additional_notice = JSON.parse(listWfAdditionalNotice.replace(/&quot;/g,'"'))
-                this.modified_at = $('#hd_modified_at').val();
-                this.loading = false;
-            }
+            this.loading = true;
+            that.take_vacation_edit = 1;
+            that.take_vacation_id = $("#hd_id").val();
+            $.each(this.field, function (key,value) {
+                if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
+                    that.field[key] = $("#hd_"+key).val();
+                }
+            });
+            that.field.wf_additional_notice = JSON.parse(listWfAdditionalNotice.replace(/&quot;/g,'"'));
+            this.modified_at = $('#hd_modified_at').val();
+            this.loading = false;
+
         },
         deleteVacation: function(id){
             var that = this;
@@ -297,10 +287,10 @@ var ctrTakeVacationVl = new Vue({
         },
 
     },
-    mounted () {
+     mounted () {
         this.handleChangeHalfDay();
         if($("#hd_take_vacation_edit").val() == 1) {
-            this.loadFormEdit();
+             this.loadFormEdit();
         }
         if(document.getElementById("days")!=null){
             this.setInputFilter(document.getElementById("days"), function(value) {
