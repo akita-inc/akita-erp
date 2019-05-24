@@ -597,7 +597,7 @@ class TakeVacationController extends Controller
             }
 
             $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$approval_levels_step_1);
-            $mailCC = [Auth::user()->mail];
+            $mailCC = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
             $mailCC = array_merge($mailCC,array_column($listWfAdditionalNotice,'email_address'));
             DB::commit();
             $this->handleMail($id,$configMail,$mailTo,$mailCC,$id_before);
@@ -623,13 +623,17 @@ class TakeVacationController extends Controller
         $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title']],
             $configMail['template']);
         $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
-        Mail::raw($text,
-            function ($message) use ($configMail,$subject,$mailTo,$mailCC) {
-                $message->from($configMail["from"]);
-                $message->cc($mailCC);
-                $message->to($mailTo)
-                    ->subject($subject);
-            });
+        if(count($mailTo) > 0){
+            Mail::raw($text,
+                function ($message) use ($configMail,$subject,$mailTo,$mailCC) {
+                    $message->from($configMail["from"]);
+                    if(count($mailCC) > 0){
+                        $message->cc($mailCC);
+                    }
+                    $message->to($mailTo)
+                        ->subject($subject);
+                });
+        }
     }
 
     public function delete($id)

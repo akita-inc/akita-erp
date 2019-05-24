@@ -131,6 +131,7 @@ class MStaffs extends Authenticatable
     public function getListMailTo($applicant_office_id, $level){
         $result = [];
         $query =  $this->select('mail')
+            ->whereNotNull('mail')
             ->where('deleted_at','=',null)
             ->where('approval_levels','=',$level);
         if($level=='1'){
