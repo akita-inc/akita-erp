@@ -243,7 +243,7 @@ INSERT INTO `mst_general_purposes` VALUES (NULL, '12001', 'ワークフロー承
 INSERT INTO `mst_general_purposes` VALUES (NULL, '12001', 'ワークフロー承認レベル', 73, '業務部員', 'ギョウムブイン', NULL, 1, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
 INSERT INTO `mst_general_purposes` VALUES (NULL, '12001', 'ワークフロー承認レベル', 74, '営業部員', 'エイギョウブイン', NULL, 1, 18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
 INSERT INTO `mst_general_purposes` VALUES (NULL, '12001', 'ワークフロー承認レベル', 75, '安全部員', 'アンゼンブイン', NULL, 1, 19, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
-INSERT INTO `mst_general_purposes` VALUES (NULL, '12001', 'ワークフロー承認レベル', 81, '営業所長', 'エイギョウショチョウ', NULL, 1, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
+INSERT INTO `mst_general_purposes` VALUES (NULL, '12001', 'ワークフロー承認レベル', 81, '営業所長', 'エイギョウショチョウ', NULL, 1, 20, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
 INSERT INTO `mst_general_purposes` VALUES (NULL, '12002', 'ワークフロー承認区分', 1, '承認・却下', 'ショウニン・キャッカ', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
 INSERT INTO `mst_general_purposes` VALUES (NULL, '12002', 'ワークフロー承認区分', 2, '確認', 'カクニン', NULL, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
 INSERT INTO `mst_general_purposes` VALUES (NULL, '12003', 'ワークフロー承認ステータス', 0, '未承認', 'ミショウニン', NULL, 1, 1, '未承認', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP ,CURRENT_TIMESTAMP , NULL);
