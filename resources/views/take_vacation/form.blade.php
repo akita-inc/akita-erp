@@ -233,7 +233,7 @@
         var defaultApprovalKb = "{{array_keys($listVacationIndicator)[0]}}";
         var defaultHalfDayKb = "{{array_keys($listVacationAcquisitionTimeIndicator)[0]}}";
         var messages = [];
-        messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG10028"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10028'); ?>";
         var staff_cd = "<?php echo \Illuminate\Support\Facades\Auth::user()->staff_cd ?>";
         var staff_nm = "<?php echo \Illuminate\Support\Facades\Auth::user()->last_nm. \Illuminate\Support\Facades\Auth::user()->first_nm?>";
         var staff_nm = "<?php echo \Illuminate\Support\Facades\Auth::user()->last_nm. \Illuminate\Support\Facades\Auth::user()->first_nm?>";

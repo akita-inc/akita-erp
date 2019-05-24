@@ -21021,7 +21021,7 @@ var ctrTakeVacationVl = new Vue({
           that.backHistory();
           return false;
         } else {
-          if (confirm(messages["MSG06001"])) {
+          if (confirm(messages["MSG10028"])) {
             take_vacation_list_service.delete(id).then(function (response) {
               window.location.href = listRoute;
             });
