@@ -49,6 +49,7 @@ class TakeVacationController extends Controller
     public $currentData=null;
     public function __construct(){
         parent::__construct();
+        date_default_timezone_set("Asia/Tokyo");
 
     }
     protected function getPaging()
@@ -385,19 +386,30 @@ class TakeVacationController extends Controller
                 $mWPaidVacation = $mWPaidVacation->toArray();
                 $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('staff_cd','email_address')->where('wf_id','=',$id)->where('wf_type_id','=',1)->get()->toArray();
                 $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
+                $countVacationNotApproval = $mWApprovalStatus->countVacationNotApproval($id);
                 $routeName = $request->route()->getName();
                 switch ($routeName){
                     case 'take_vacation.approval':
                         $mode = 'approval';
-                        if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
-                            $role = 2; // no authentication
-                        }
+//                        if(!empty($mWPaidVacation['delete_at']) || $countVacationNotApproval<0 || $mWPaidVacation['applicant_id']== Auth::user()->staff_cd){
+//                            return redirect()->route('take_vacation.reference', ['id' => $id]);
+//                        }
+//                        if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
+//                            $role = 2; // no authentication
+//                        }
+                        break;
+                    case 'take_vacation.reference':
+                        $mode = 'reference';
+//                        if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
+//                            $role = 2; // no authentication
+//                        }
                         break;
                     default:
                         $mode ='edit';
-//                        if($mWPaidVacation['status']!=1 || $mWPaidVacation['regist_office_id']!= Auth::user()->mst_business_office_id ){
+                        if(!empty($mWPaidVacation['delete_at']) || $countVacationNotApproval<0 || $mWPaidVacation['applicant_id']!= Auth::user()->staff_cd){
+                            return redirect()->route('take_vacation.reference', ['id' => $id]);
 //                            $role = 2; // no authentication
-//                        }
+                        }
                         break;
                 }
             }
@@ -513,7 +525,6 @@ class TakeVacationController extends Controller
 
     protected function save($data){
         $id_before =  null;
-        date_default_timezone_set("Asia/Tokyo");
         $mGeneralPurposes = new MGeneralPurposes();
         $listLevel= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'Empty');
         $arrayInsert = $data;
@@ -532,7 +543,7 @@ class TakeVacationController extends Controller
             if(isset( $data["id"]) && $data["id"]){
                 $id_before = $data["id"];
                 $arrayInsert["modified_at"] = $currentTime;
-                WPaidVacation::query()->where("id","=",$id_before)->delete();
+                WPaidVacation::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
                 $configMail = config('params.vacation_edit_mail');
             }else{
                 $configMail = config('params.vacation_register_mail');
@@ -621,9 +632,8 @@ class TakeVacationController extends Controller
 
     public function delete($id)
     {
-        $mWPaidVacation = WPaidVacation::find($id);
         $this->backHistory();
-        if ($mWPaidVacation->delete()) {
+        if (WPaidVacation::query()->where("id","=",$id)->update(['delete_at' => date("Y-m-d H:i:s",time())])) {
             \Session::flash('message',Lang::get('messages.MSG10004'));
             $response = ['data' => 'success'];
         } else {

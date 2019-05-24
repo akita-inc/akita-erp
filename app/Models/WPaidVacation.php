@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class WPaidVacation extends Model {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $table = "wf_paid_vacation";
 

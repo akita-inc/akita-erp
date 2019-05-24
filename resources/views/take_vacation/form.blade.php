@@ -38,12 +38,6 @@
                     @foreach($mWPaidVacation as $key=>$value)
                         <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">
                     @endforeach
-                    {{--@if(!empty($listWfAdditionalNotice))--}}
-                        {{--@foreach($listWfAdditionalNotice as $key=>$value)--}}
-                            {{--<input type="hidden" id="notice_staff_cd_{!! $key !!}" value="{{$value['staff_cd'] }}" name="wf_additional_notice[][staff_cd]" class="wf_additional_notice">--}}
-                            {{--<input type="hidden" id="notice_email_address_{!! $key !!}" value="{{$value['email_address'] }}" name="wf_additional_notice[][email_address]" class="wf_additional_notice">--}}
-                        {{--@endforeach--}}
-                    {{--@endif--}}
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
                             <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
@@ -63,10 +57,8 @@
                                         {{ trans("common.button.reset") }}
                                     </button>
                                 @else
-                                    @if(($mode=='reservation' && $mWPaidVacation['status']==1) || $mode=='reservation_approval')
-                                        <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
-                                    @endif
-                                    @if($mode=='reservation_approval')
+                                    @if($mode=='approval')
+                                        <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
                                         <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
                                     @endif
                                 @endif
@@ -83,25 +75,12 @@
         @endif
         @if($role==1)
             <form class="form-inline" role="form">
-                @if($mode=='reservation' || $mode=='reservation_approval')
+                @if($mode=='approval' || $mode=='reference')
                     <fieldset disabled="disabled">
                         @endif
                         <div class="text-danger">
                             {{ trans("common.description-form.indicates_required_items") }}
                         </div>
-                        @if($role==1 && $mode=='reservation_approval')
-                            <div class="grid-form">
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-12">
-                                        @include('Component.form.select',['filed'=>'application_office_id','array'=>$listBusinessOffices])
-                                    </div>
-                                    <div class="break-row-form"></div>
-                                    <div class="col-md-12 col-sm-12">
-                                        @include('Component.form.input',['filed'=>'reservation_person','attr_input' => "maxlength='50'"])
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
                     <!--Block 1-->
                         <div class="grid-form">
                             <div class="row">
@@ -125,12 +104,12 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledStartDate'"])
+                                    @include('Component.form.date-picker',['filed'=>'start_date','required'=>true, 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledStartDate'"])
 
                                 </div>
                                 <div class="no-padding wd-32 lh-38 text-center">～</div>
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',['class' => 'pl-0','filed'=>'end_date','role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledEndDate'"])
+                                    @include('Component.form.date-picker',['class' => 'pl-0','filed'=>'end_date', 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledEndDate'"])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
@@ -147,6 +126,9 @@
                                 </div>
                             </div>
                         </div>
+                        @if($mode=='reference' || $mode=='approval')
+                    </fieldset>
+                @endif
                         <div class="grid-form">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
@@ -170,7 +152,7 @@
                                         <div class="row">
                                             <div class="col-md-1 col-sm-12"></div>
                                             <div class="col-md-11 col-sm-12">
-                                                <button class="btn btn-outline-secondary" type="button" @click="addRow">{{ trans("common.button.add") }}</button>
+                                                <button class="btn btn-outline-secondary" type="button" @click="addRow"> {{ trans("common.button.add") }}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -190,9 +172,7 @@
                                 </div>
                             </div>
                         @endif
-                        @if($mode=='view' || $mode=='approval')
-                    </fieldset>
-                @endif
+
             </form>
             <div class="sub-header mt-3">
                 <div class="sub-header-line-one d-flex">
@@ -219,10 +199,8 @@
                                             {{ trans("common.button.reset") }}
                                         </button>
                                     @else
-                                        @if(($mode=='reservation' && $mWPaidVacation['status']==1) || $mode=='reservation_approval')
-                                            <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
-                                        @endif
-                                        @if($mode=='reservation_approval')
+                                        @if($mode=='approval')
+                                            <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
                                             <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
                                         @endif
                                     @endif

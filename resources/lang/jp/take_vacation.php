@@ -41,6 +41,7 @@ return [
         'title_register' => '休暇取得申請',
         'title_edit' => '休暇取得申請',
         'title_approval' => '休暇取得申請',
+        'title_reference' => '休暇取得申請',
         'field' => [
             'applicant_id' => '申請者',
             'staff_nm' => '',

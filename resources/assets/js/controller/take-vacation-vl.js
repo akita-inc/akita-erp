@@ -310,6 +310,12 @@ var ctrTakeVacationVl = new Vue({
             this.setInputFilter(document.getElementById("times"), function(value) {
                 return /^\d*$/.test(value); });
         }
+        if(this.field.mode!='register' && this.field.mode!='edit'){
+            this.disabledStartDate = true;
+            this.disabledEndDate = true;
+            this.disabledDays = true;
+            this.disabledTimes= true;
+        }
     },
     components: {
         PulseLoader,
