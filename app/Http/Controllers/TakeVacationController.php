@@ -185,6 +185,9 @@ class TakeVacationController extends Controller
                 ->where('mgp.data_kb',config('params.data_kb')['vacation_indicator']);
         });
         //where
+        if(Auth::user()->approval_levels == null){
+            $this->query->where('wf_paid_vacation.applicant_id','=',Auth::user()->staff_cd);
+        }
         if($where['vacation_id']!='')
         {
             $this->query->where('wf_paid_vacation.id','LIKE','%' .$where['vacation_id'].'%');
