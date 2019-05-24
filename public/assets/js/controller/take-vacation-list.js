@@ -1136,23 +1136,18 @@ var ctrTakeVacationListVl = new Vue({
 
           _this2.getItems(1);
         } else {
-          // window.location.href = 'edit/' + id;
-          var mode = '';
-
           switch (response.mode) {
             case 'edit':
-              mode = '編集モード';
+              window.location.href = 'edit/' + id;
               break;
 
-            case 'approve':
-              mode = '承認モード';
+            case 'approval':
+              window.location.href = 'approval/' + id;
               break;
 
             default:
-              mode = '参照モード';
+              window.location.href = 'reference/' + id;
           }
-
-          alert(mode);
         }
       });
     },
@@ -1216,7 +1211,7 @@ var ctrTakeVacationListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\take-vacation-list-vl.js */"./resources/assets/js/controller/take-vacation-list-vl.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\take-vacation-list-vl.js */"./resources/assets/js/controller/take-vacation-list-vl.js");
 
 
 /***/ })
