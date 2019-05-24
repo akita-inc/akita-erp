@@ -387,30 +387,27 @@ class TakeVacationController extends Controller
                 $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('staff_cd','email_address')->where('wf_id','=',$id)->where('wf_type_id','=',1)->get()->toArray();
                 $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
                 $countVacationNotApproval = $mWApprovalStatus->countVacationNotApproval($id);
+                $countVacationNotApprovalOfUserLogin = $mWApprovalStatus->countVacationNotApproval($id, true);
                 $routeName = $request->route()->getName();
                 switch ($routeName){
                     case 'take_vacation.approval':
                         $mode = 'approval';
-//                        if(!empty($mWPaidVacation['delete_at']) || $countVacationNotApproval<0 || $mWPaidVacation['applicant_id']== Auth::user()->staff_cd){
-//                            return redirect()->route('take_vacation.reference', ['id' => $id]);
-//                        }
-//                        if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
-//                            $role = 2; // no authentication
-//                        }
+                        if(!empty($mWPaidVacation['delete_at']) || is_null(Auth::user()->approval_levels) ||  $countVacationNotApprovalOfUserLogin<=0 || $mWPaidVacation['applicant_id']== Auth::user()->staff_cd  ){
+                            $role = 2; // no authentication
+                        }
                         break;
                     case 'take_vacation.reference':
                         $mode = 'reference';
-//                        if(($mWPaidVacation['status']==1 || $mWPaidVacation['status']==2 ) && $mWPaidVacation['regist_office_id']== Auth::user()->mst_business_office_id ){
-//                            $role = 2; // no authentication
-//                        }
+                            if((!empty($mWPaidVacation['delete_at']) &&  $mWPaidVacation['applicant_id']!= Auth::user()->staff_cd) ||
+                                (empty($mWPaidVacation['delete_at']) &&  is_null(Auth::user()->approval_levels ))
+                            )
+                                $role = 2;
                         break;
                     default:
                         $mode ='edit';
-                        if(!empty($mWPaidVacation['delete_at']) || $countVacationNotApproval<0 || $mWPaidVacation['applicant_id']!= Auth::user()->staff_cd){
-                            return redirect()->route('take_vacation.reference', ['id' => $id]);
-//                            $role = 2; // no authentication
+                        if(!empty($mWPaidVacation['delete_at'])  || $mWPaidVacation['applicant_id']!= Auth::user()->staff_cd || $countVacationNotApproval<=0 ){
+                            $role = 2;
                         }
-                        break;
                 }
             }
         }
@@ -532,11 +529,13 @@ class TakeVacationController extends Controller
         $currentTime = date("Y-m-d H:i:s",time());
         $arrayInsert['regist_date'] = $currentTime;
         $mode = $arrayInsert["mode"];
+        $approval_fg = $arrayInsert["approval_fg"];
         unset($arrayInsert["id"]);
         unset($arrayInsert["mode"]);
         unset($arrayInsert["staff_nm"]);
         unset($arrayInsert["applicant_office_nm"]);
         unset($arrayInsert["wf_additional_notice"]);
+        unset($arrayInsert["approval_fg"]);
         $mStaff = new MStaffs();
         DB::beginTransaction();
         try{

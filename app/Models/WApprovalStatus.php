@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class WApprovalStatus extends Model {
@@ -36,10 +37,13 @@ class WApprovalStatus extends Model {
 
     }
 
-    public function countVacationNotApproval($wf_id){
-        return $this->where('wf_id','=',$wf_id)
+    public function countVacationNotApproval($wf_id, $flag_is_user_login=null){
+         $query = $this->where('wf_id','=',$wf_id)
                 ->where('wf_type_id','=',1)
-                ->where('approval_fg','=',0)
-                ->count();
+                ->where('approval_fg','=',0);
+         if(!is_null($flag_is_user_login) && $flag_is_user_login){
+             $query = $query->where('approval_levels','=',Auth::user()->approval_levels);
+         }
+        return $query->count();
     }
 }
