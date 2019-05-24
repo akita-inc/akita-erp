@@ -183,10 +183,11 @@ class MGeneralPurposes extends Model
             ->first();
     }
 
-    public function getDataByDivAndCd($div, $date_id){
-        return $this->where('data_kb',$div)
+    public function getDataByDateIDAndDataKB($data_kb, $date_id){
+        return $this->where('data_kb',$data_kb)
+            ->where('date_id','=',$date_id)
             ->where('deleted_at','=',null)
-            ->get()->first();
+            ->first();
     }
 
     public function getAllData($data, $isPaging = true){

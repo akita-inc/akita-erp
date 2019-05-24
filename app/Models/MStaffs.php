@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use App\Models\MGeneralPurposes;
 class MStaffs extends Authenticatable
 {
     use Notifiable;
@@ -130,11 +131,17 @@ class MStaffs extends Authenticatable
 
     public function getListMailTo($applicant_office_id, $level){
         $result = [];
+        $content1 =null;
         $query =  $this->select('mail')
             ->whereNotNull('mail')
             ->where('deleted_at','=',null)
             ->where('approval_levels','=',$level);
-        if($level=='1'){
+        $mGeneralPurposes = new MGeneralPurposes();
+        $dataGeneralPurposes = $mGeneralPurposes->getDataByDateIDAndDataKB($level,config('params.data_kb.wf_level'));
+        if($dataGeneralPurposes){
+            $content1 = $dataGeneralPurposes->content1;
+        }
+        if($content1=='1'){
             $query = $query->where('mst_business_office_id','=',$applicant_office_id);
         }
         $data = $query->get();

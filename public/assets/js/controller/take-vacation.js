@@ -20874,7 +20874,8 @@ var ctrTakeVacationVl = new Vue({
         staff_cd: ''
       }],
       mode: $('#mode').val(),
-      approval_fg: null
+      approval_fg: null,
+      send_back_reason: ""
     },
     search: {
       name: "",
@@ -20945,8 +20946,7 @@ var ctrTakeVacationVl = new Vue({
             if (response.success == false) {
               that.errors = response.message;
             } else {
-              that.errors = [];
-              window.location.href = listRoute;
+              that.errors = []; // window.location.href = listRoute;
             }
 
             that.loading = false;
@@ -20974,8 +20974,7 @@ var ctrTakeVacationVl = new Vue({
                 if (response.success == false) {
                   that.errors = response.message;
                 } else {
-                  that.errors = [];
-                  window.location.href = listRoute;
+                  that.errors = []; // window.location.href = listRoute;
                 }
 
                 that.loading = false;
@@ -21008,6 +21007,14 @@ var ctrTakeVacationVl = new Vue({
         }
       });
       that.field.wf_additional_notice = JSON.parse(listWfAdditionalNotice.replace(/&quot;/g, '"'));
+
+      if (that.field.wf_additional_notice.length == 0) {
+        that.field.wf_additional_notice = [{
+          email_address: '',
+          staff_cd: ''
+        }];
+      }
+
       this.modified_at = $('#hd_modified_at').val();
       this.loading = false;
     },
