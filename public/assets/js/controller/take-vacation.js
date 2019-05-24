@@ -21097,6 +21097,7 @@ var ctrTakeVacationVl = new Vue({
     },
     searchStaff: function searchStaff() {
       var that = this;
+      that.listStaffs = [];
       take_vacation_list_service.searchStaff({
         name: that.search.name,
         mst_business_office_id: that.search.mst_business_office_id,
