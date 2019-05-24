@@ -13,9 +13,9 @@ class WApprovalStatus extends Model {
 
     protected $table = "wf_approval_status";
 
-    /*const CREATED_AT = 'create_at';
-    const UPDATED_AT = 'modified_at';
-    const DELETED_AT = 'delete_at';*/
+    const CREATED_AT = null;
+    const UPDATED_AT = null;
+    const DELETED_AT = null;
 
     public $label = [];
 
@@ -53,7 +53,7 @@ class WApprovalStatus extends Model {
                 ->where('wf_type_id','=',1)
                 ->where('approval_levels','=',Auth::user()->approval_levels)
                 ->update([
-                    'approver_id' => Auth::user()->staff_cd,
+                    'approver_id' => Auth::user()->id,
                     'approval_fg' => 1,
                     'approval_date' => $currentTime,
                 ]);
@@ -64,7 +64,7 @@ class WApprovalStatus extends Model {
             ->where('wf_type_id','=',1)
             ->where('approval_fg ','=',0)
             ->update([
-                'approver_id' => Auth::user()->staff_cd,
+                'approver_id' => Auth::user()->id,
                 'approval_fg' => 2,
                 'approval_date' => $currentTime,
             ]);

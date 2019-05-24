@@ -563,7 +563,7 @@ class TakeVacationController extends Controller
                         $configMail = config('params.vacation_approval_mail');
                     }
                     if($approval_fg==0){
-                        $mWApprovalStatus->approvalVacation($data["id"], $currentTime,$data['send_back_reason']);
+                        $mWApprovalStatus->rejectVacation($data["id"], $currentTime,$data['send_back_reason']);
                         $configMail = config('params.vacation_reject_mail');
                     }
                 }
@@ -627,6 +627,7 @@ class TakeVacationController extends Controller
                     $mailCC = array_merge($mailCC,array_column($listWfAdditionalNotice,'email_address'));
                 }
             }else{
+                $id = $data['id'];
                 if($approval_fg==1) {
                     $dataWfAdditionalNotice = [];
                     foreach ($listWfAdditionalNotice as $key => $item) {
@@ -634,7 +635,7 @@ class TakeVacationController extends Controller
                             if (!isset($item['id'])) {
                                 $row = $item;
                                 $row['wf_type_id'] = 1;
-                                $row['wf_id'] = $data['id'];
+                                $row['wf_id'] = $id;
                                 array_push($dataWfAdditionalNotice, $row);
                             }
                         } else {
@@ -644,7 +645,7 @@ class TakeVacationController extends Controller
                     if (count($dataWfAdditionalNotice) > 0) {
                         MWfAdditionalNotice::query()->insert($dataWfAdditionalNotice);
                     }
-                    $minStepLevel = $mWApprovalStatus->getMinStepsLevel($data['id']);
+                    $minStepLevel = $mWApprovalStatus->getMinStepsLevel($id);
                     if($minStepLevel){
                         $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$minStepLevel->approval_levels);
                     }else{
@@ -652,7 +653,7 @@ class TakeVacationController extends Controller
                         $mailTo = array_merge($mailTo,array_filter(array_column($listWfAdditionalNotice, 'email_address')));
                     }
                 }else{
-                    $listWApprovalStatus = $mWApprovalStatus->getListByWfID($data['id']);
+                    $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
                     $mailTo = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
                     foreach ($listWApprovalStatus as $item){
                         $listMail = $mStaff->getListMailTo($arrayInsert['applicant_office_id'],$item->approval_levels);
