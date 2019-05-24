@@ -185,7 +185,7 @@ class TakeVacationController extends Controller
                 ->where('mgp.data_kb',config('params.data_kb')['vacation_indicator']);
         });
         //where
-        if(Auth::user()->approval_levels == null){
+        if(Auth::user()->approval_levels === null){
             $this->query->where('wf_paid_vacation.applicant_id','=',Auth::user()->staff_cd);
         }
         if($where['vacation_id']!='')
@@ -325,7 +325,7 @@ class TakeVacationController extends Controller
                     }
                     else{//1-1-2.  申請者 != ログインID
                         if($WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'approval_levels'=>Auth::user()->approval_levels])->count() > 0){// 1-1-2-1. ログイン者＝承認権限を持っている（mst_staffs.approval_levels is not null）かつ、その承認レベルが未承認である。
-                            $return['mode'] = 'approve';
+                            $return['mode'] = 'approval';
                         }else{//1-1-2-2. それ以外
                             $return['mode'] = 'reference';
                         }
