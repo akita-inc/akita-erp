@@ -428,7 +428,7 @@ return [
             "＜申請ID＞\n".
             "No. [id] （No. [id_before] を修正）\n\n".
             "＜登録者＞\n".
-            "[applicant_id\n\n".
+            "[applicant_id]\n\n".
             "＜休暇区分＞\n".
             "[approval_kb]\n\n".
             "＜期間＞\n".
@@ -450,7 +450,7 @@ return [
             "＜申請ID＞\n".
             "No. [id]\n\n".
             "＜登録者＞\n".
-            "[applicant_id\n\n".
+            "[applicant_id]\n\n".
             "＜休暇区分＞\n".
             "[approval_kb]\n\n".
             "＜期間＞\n".
@@ -472,7 +472,7 @@ return [
             "＜申請ID＞\n".
             "No. [id]\n\n".
             "＜登録者＞\n".
-            "[applicant_id\n\n".
+            "[applicant_id]\n\n".
             "＜休暇区分＞\n".
             "[approval_kb]\n\n".
             "＜期間＞\n".

@@ -21181,6 +21181,13 @@ var ctrTakeVacationVl = new Vue({
         return /^\d*$/.test(value);
       });
     }
+
+    if (this.field.mode != 'register' && this.field.mode != 'edit') {
+      this.disabledStartDate = true;
+      this.disabledEndDate = true;
+      this.disabledDays = true;
+      this.disabledTimes = true;
+    }
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],

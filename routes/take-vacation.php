@@ -3,6 +3,8 @@ Route::group(['name' => 'take-vacation', 'prefix' => 'take_vacation', 'middlewar
     Route::any('/list', 'TakeVacationController@index')->name('take_vacation.list');
     Route::get('/create', 'TakeVacationController@store')->name('take_vacation.create');
     Route::get('/edit/{id}', 'TakeVacationController@store')->name('take_vacation.edit');
+    Route::get('/approval/{id}', 'TakeVacationController@store')->name('take_vacation.approval');
+    Route::get('/reference/{id}', 'TakeVacationController@store')->name('take_vacation.reference');
 
     /*Api using Vue*/
     Route::group(['prefix' => 'api-v1'], function () {
