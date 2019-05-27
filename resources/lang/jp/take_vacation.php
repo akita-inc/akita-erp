@@ -74,8 +74,8 @@ return [
             'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
         ],
         'edit'=>[
-            'title' => '仮押さえ',
-            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10013')
+            'title' => '登録',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
         ],
         'approval'=>[
             'title' => '承認',
