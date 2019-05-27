@@ -54,6 +54,7 @@ return [
             'times' => '',
             'reasons' => '理由',
             'additional_notice' => '追加通知',
+            'send_back_reason' => '却下理由',
         ],
         'search' => [
             'name' => '氏名 / ふりがな',

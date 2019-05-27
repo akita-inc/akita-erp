@@ -49,20 +49,39 @@
                 <div class="sub-header-line-two">
                     <div class="grid-form border-0">
                         <div class="row">
+                            @if($mode=='register' || $mode=='edit')
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                @if($mode=='register' || $mode=='edit')
-                                    <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
-                                    <button class="btn btn-light m-auto" type="button" @click="resetForm" >
-                                        {{ trans("common.button.reset") }}
-                                    </button>
-                                @else
-                                    @if($mode=='approval')
-                                        <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
-                                        <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
-                                    @endif
-                                @endif
+                                <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                <button class="btn btn-light m-auto" type="button" @click="resetForm" >
+                                    {{ trans("common.button.clear") }}
+                                </button>
                             </div>
+                            @else
+                                @if($mode=='approval')
+                                    <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
+                                        <div class="col-md-4 row h-100 justify-content-start">
+                                            <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
+                                            <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                        </div>
+                                        <div class="col-md-4 row lh-38">
+                                            <div class="col-md-2 col-sm-12 no-padding text-right">
+                                                {{ trans("take_vacation.create.field.send_back_reason") }}
+                                            </div>
+                                            <div class="col-md-10 col-sm-12 text-left pr-0">
+                                                <input v-model="field.send_back_reason"
+                                                       type="text"
+                                                       class="form-control w-100"
+                                                       maxlength="200"
+                                                       name="send_back_reason"
+                                                       v-bind:class="errors.send_back_reason!= undefined ? 'form-control is-invalid':'form-control' "
+                                                >
+                                                <span v-cloak v-if="errors.send_back_reason != undefined" class="message-error" v-html="errors.send_back_reason.join('<br />')"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -198,20 +217,39 @@
                     <div class="sub-header-line-two">
                         <div class="grid-form border-0">
                             <div class="row">
-                                <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
-                                <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                    @if($mode=='register' || $mode=='edit')
+                                @if($mode=='register' || $mode=='edit')
+                                    <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                                    <div class="col-md-7 col-sm-12 row grid-col h-100">
                                         <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                         <button class="btn btn-light m-auto" type="button" @click="resetForm" >
-                                            {{ trans("common.button.reset") }}
+                                            {{ trans("common.button.clear") }}
                                         </button>
-                                    @else
-                                        @if($mode=='approval')
-                                            <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
-                                            <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
-                                        @endif
+                                    </div>
+                                @else
+                                    @if($mode=='approval')
+                                        <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
+                                            <div class="col-md-4 row h-100 justify-content-start">
+                                                <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
+                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                            </div>
+                                            <div class="col-md-4 row lh-38">
+                                                <div class="col-md-2 col-sm-12 no-padding text-right">
+                                                    {{ trans("take_vacation.create.field.send_back_reason") }}
+                                                </div>
+                                                <div class="col-md-10 col-sm-12 text-left pr-0">
+                                                    <input v-model="field.send_back_reason"
+                                                           type="text"
+                                                           class="form-control w-100"
+                                                           maxlength="200"
+                                                           name="send_back_reason"
+                                                           v-bind:class="errors.send_back_reason!= undefined ? 'form-control is-invalid':'form-control' "
+                                                    >
+                                                    <span v-cloak v-if="errors.send_back_reason != undefined" class="message-error" v-html="errors.send_back_reason.join('<br />')"></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

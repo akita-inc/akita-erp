@@ -28,7 +28,8 @@ var ctrTakeVacationVl = new Vue({
                 }
             ],
             mode:$('#mode').val(),
-            approval_fg:null
+            approval_fg:null,
+            send_back_reason:""
         },
         search:{
             name:"",
@@ -88,7 +89,7 @@ var ctrTakeVacationVl = new Vue({
         },
         submit: function(approval_fg){
             let that = this;
-            // that.loading = true;
+            that.loading = true;
             if(this.field.mode != 'register'){
                 this.field["id"] = this.take_vacation_id;
             }
@@ -109,7 +110,7 @@ var ctrTakeVacationVl = new Vue({
                     if(that.field.mode=='approval'){
                         that.field.approval_fg = approval_fg;
                     }
-                    take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'status': status,'modified_at': that.modified_at }).then((response) => {
+                    take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
                         if (!response.success) {
                             that.loading = false;
                             alert(response.msg);
@@ -153,6 +154,14 @@ var ctrTakeVacationVl = new Vue({
                 }
             });
             that.field.wf_additional_notice = JSON.parse(listWfAdditionalNotice.replace(/&quot;/g,'"'));
+            if(that.field.wf_additional_notice.length==0){
+                that.field.wf_additional_notice =[
+                    {
+                        email_address:'',
+                        staff_cd:''
+                    }
+                ];
+            }
             this.modified_at = $('#hd_modified_at').val();
             this.loading = false;
 

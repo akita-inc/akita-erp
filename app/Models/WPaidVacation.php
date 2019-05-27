@@ -4,11 +4,10 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class WPaidVacation extends Model {
-//    use SoftDeletes;
 
     protected $table = "wf_paid_vacation";
 
@@ -28,11 +27,17 @@ class WPaidVacation extends Model {
                 DB::raw("DATE_FORMAT(wf_paid_vacation.end_date, '%Y/%m/%d') as end_date"),
                 'wf_paid_vacation.days',
                 'wf_paid_vacation.times',
-                'wf_paid_vacation.reasons'
+                'wf_paid_vacation.reasons',
+                'wf_approval_status.send_back_reason',
+                'wf_approval_status.title'
             )
             ->leftjoin('mst_general_purposes as vacation_indicator', function ($join) {
                 $join->on('vacation_indicator.date_id', '=', 'wf_paid_vacation.approval_kb')
                     ->where('vacation_indicator.data_kb', config('params.data_kb.vacation_indicator'));
+            })
+            ->leftjoin('wf_approval_status', function ($join) {
+                $join->on('wf_approval_status.wf_id', '=', 'wf_paid_vacation.id')
+                    ->where('approval_levels','=',Auth::user()->approval_levels);
             })
             ->join(DB::raw('mst_business_offices'), function ($join) {
                 $join->on('mst_business_offices.id', '=', 'wf_paid_vacation.applicant_office_id')

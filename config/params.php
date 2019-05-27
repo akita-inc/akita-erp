@@ -444,7 +444,6 @@ return [
     'vacation_approval_mail' => array(
         'from' => 'shinwaytest@gmail.com',
         'subject' => '【休暇取得申請】承認：No. [id] [approval_kb] [applicant_id]（[applicant_office_id]）',
-        'subject' => '',
         'template' => "【休暇取得申請】\n".
             "[title] に承認されました。\n\n".
             "＜申請ID＞\n".
@@ -465,7 +464,6 @@ return [
     'vacation_reject_mail' => array(
         'from' => 'shinwaytest@gmail.com',
         'subject' => '【休暇取得申請】却下：No. [id] [approval_kb] [applicant_id]（[applicant_office_id]）',
-        'subject' => '',
         'template' => "【休暇取得申請】\n".
             "[title] に却下されました。\n".
             "理由：[send_back_reason]\n\n".
