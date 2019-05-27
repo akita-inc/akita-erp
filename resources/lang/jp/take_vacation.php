@@ -54,6 +54,7 @@ return [
             'times' => '',
             'reasons' => '理由',
             'additional_notice' => '追加通知',
+            'send_back_reason' => '却下理由',
         ],
         'search' => [
             'name' => '氏名 / ふりがな',
@@ -73,8 +74,8 @@ return [
             'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
         ],
         'edit'=>[
-            'title' => '仮押さえ',
-            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10013')
+            'title' => '登録',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
         ],
         'approval'=>[
             'title' => '承認',

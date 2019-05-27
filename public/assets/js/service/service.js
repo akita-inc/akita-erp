@@ -220,6 +220,94 @@ home_service = {
 
 /***/ }),
 
+/***/ "./resources/assets/js/service/invoice-history-service.js":
+/*!****************************************************************!*\
+  !*** ./resources/assets/js/service/invoice-history-service.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+invoice_history_service = {
+  loadListCustomers: function loadListCustomers(data) {
+    return axios.get('/invoice_history/api-v1/getListCustomers', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  loadList: function loadList(data) {
+    return axios.post('/invoice_history/api-v1/getItems', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  checkIsExist: function checkIsExist(id, data) {
+    return axios.post('/invoice_history/api-v1/checkIsExist/' + id, data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  backHistory: function backHistory() {
+    return axios.get('/invoice_history/api-v1/back-history').then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  loadListBundleDt: function loadListBundleDt(data) {
+    return axios.post('/invoice_history/api-v1/load-list-bundle-dt', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getDetailsInvoice: function getDetailsInvoice(data) {
+    return axios.post('/invoice_history/api-v1/get-details-invoice', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  createPDF: function createPDF(data) {
+    return axios.post('/invoice_history/api-v1/create-pdf', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  createCSV: function createCSV(data) {
+    return axios.post('/invoice_history/api-v1/create-csv', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getFirstLastDatePreviousMonth: function getFirstLastDatePreviousMonth(data) {
+    return axios.post('/invoice_history/api-v1/get-first-last-date-previous-month', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  createAmazonCSV: function createAmazonCSV(data) {
+    return axios.post('/invoice_history/api-v1/create-amazon-csv', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
+    }).catch(function (error) {
+      return error;
+    });
+  }
+};
+
+/***/ }),
+
 /***/ "./resources/assets/js/service/invoice-service.js":
 /*!********************************************************!*\
   !*** ./resources/assets/js/service/invoice-service.js ***!
@@ -783,9 +871,9 @@ work_flow_list_service = {
 /***/ }),
 
 /***/ 1:
-/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ./resources/assets/js/service/invoice-service.js ./resources/assets/js/service/sales-lists-service.js ./resources/assets/js/service/payments-service.js ./resources/assets/js/service/work-flow-service.js ./resources/assets/js/service/take-vacation-service.js ./resources/assets/js/service/payment-histories-service.js ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ./resources/assets/js/service/invoice-service.js ./resources/assets/js/service/sales-lists-service.js ./resources/assets/js/service/payments-service.js ./resources/assets/js/service/work-flow-service.js ./resources/assets/js/service/take-vacation-service.js ./resources/assets/js/service/invoice-history-service.js ./resources/assets/js/service/payment-histories-service.js ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -800,6 +888,7 @@ __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\sale
 __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\payments-service.js */"./resources/assets/js/service/payments-service.js");
 __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\work-flow-service.js */"./resources/assets/js/service/work-flow-service.js");
 __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\take-vacation-service.js */"./resources/assets/js/service/take-vacation-service.js");
+__webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\invoice-history-service.js */"./resources/assets/js/service/invoice-history-service.js");
 module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\service\payment-histories-service.js */"./resources/assets/js/service/payment-histories-service.js");
 
 
