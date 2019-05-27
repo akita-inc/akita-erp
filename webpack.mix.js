@@ -24,10 +24,12 @@ mix.js([
     'resources/assets/js/service/empty-info-service.js',
     'resources/assets/js/service/invoice-service.js',
     'resources/assets/js/service/sales-lists-service.js',
+    'resources/assets/js/service/purchases-lists-service.js',
     'resources/assets/js/service/payments-service.js',
     'resources/assets/js/service/work-flow-service.js',
     'resources/assets/js/service/take-vacation-service.js',
     'resources/assets/js/service/invoice-history-service.js',
+    'resources/assets/js/service/payment-histories-service.js'
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -82,6 +84,9 @@ mix.js([
 mix.js([
    'resources/assets/js/controller/sales-lists-vl.js'
 ],'public/assets/js/controller/sales-lists.js');
+mix.js([
+    'resources/assets/js/controller/purchases-lists-vl.js'
+],'public/assets/js/controller/purchases-lists.js');
 //payments
 mix.js([
     'resources/assets/js/controller/payments-list-vl.js'
@@ -106,3 +111,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/invoice-history-list-vl.js'
 ], 'public/assets/js/controller/invoice-history-list.js');
+
+mix.js([
+    'resources/assets/js/controller/payment-histories-list-vl.js'
+], 'public/assets/js/controller/payment-histories-list.js');

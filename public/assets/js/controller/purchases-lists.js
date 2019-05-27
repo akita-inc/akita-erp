@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -10076,10 +10076,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/controller/sales-lists-vl.js":
-/*!**********************************************************!*\
-  !*** ./resources/assets/js/controller/sales-lists-vl.js ***!
-  \**********************************************************/
+/***/ "./resources/assets/js/controller/purchases-lists-vl.js":
+/*!**************************************************************!*\
+  !*** ./resources/assets/js/controller/purchases-lists-vl.js ***!
+  \**************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -10103,8 +10103,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
-var ctrSalesListVl = new Vue({
-  el: '#ctrSalesListVl',
+var ctrPurchasesListVl = new Vue({
+  el: '#ctrPurchasesListVl',
   data: {
     loading: false,
     lang: lang_date_picker,
@@ -10114,16 +10114,16 @@ var ctrSalesListVl = new Vue({
     export_file_nm: "",
     message: '',
     auth_staff_cd: '',
-    filteredCustomerCd: [],
-    filteredCustomerNm: [],
+    filteredSupplierCd: [],
+    filteredSupplierNm: [],
     fileSearch: {
       daily_report_date: "",
       from_date: "",
       to_date: "",
       mst_business_office_id: "",
       invoicing_flag: "",
-      mst_customers_cd: "",
-      mst_customers_nm: ""
+      mst_suppliers_cd: "",
+      mst_suppliers_nm: ""
     },
     errors: [],
     pagination: {
@@ -10137,10 +10137,10 @@ var ctrSalesListVl = new Vue({
     flagSearch: false,
     flagExport: false,
     order: null,
-    dropdown_mst_customer_cd: [{
+    dropdown_mst_supplier_cd: [{
       data: []
     }],
-    dropdown_mst_customer_nm: [{
+    dropdown_mst_supplier_nm: [{
       data: []
     }],
     getItems: function getItems(page, show_msg) {
@@ -10165,8 +10165,8 @@ var ctrSalesListVl = new Vue({
         delete that.errors["to_date"];
       }
 
-      that.fileSearch.mst_customers_cd = this.$refs.mst_customers_cd.searchInput;
-      that.fileSearch.mst_customers_nm = this.$refs.mst_customers_nm.searchInput;
+      that.fileSearch.mst_suppliers_cd = this.$refs.mst_suppliers_cd.searchInput;
+      that.fileSearch.mst_suppliers_nm = this.$refs.mst_suppliers_nm.searchInput;
       that.flagSearch = false;
       that.flagExport = false;
       var data = {
@@ -10176,13 +10176,13 @@ var ctrSalesListVl = new Vue({
         order: that.order
       };
 
-      if (that.fileSearch.from_date != "" && that.fileSearch.to_date != "" && that.$refs.mst_customers_cd.searchInput != "" && that.fileSearch.invoicing_flag == "0" && that.fileSearch.mst_business_office_id) {
+      if (that.fileSearch.from_date != "" && that.fileSearch.to_date != "" && that.$refs.mst_suppliers_cd.searchInput != "" && that.fileSearch.invoicing_flag == "0" && that.fileSearch.mst_business_office_id) {
         that.flagExport = true;
       }
 
       if (that.errors.from_date === undefined && that.errors.to_date === undefined) {
         that.loading = true;
-        sales_lists_service.loadList(data).then(function (response) {
+        purchases_lists_service.loadList(data).then(function (response) {
           that.items = response.data.data;
           that.pagination = response.pagination;
           that.fileSearch = response.fieldSearch;
@@ -10204,7 +10204,7 @@ var ctrSalesListVl = new Vue({
     checkIsExist: function checkIsExist(id) {
       var _this = this;
 
-      sales_lists_service.checkIsExist(id).then(function (response) {
+      purchases_lists_service.checkIsExist(id).then(function (response) {
         if (!response.success) {
           alert(response.msg);
 
@@ -10232,90 +10232,90 @@ var ctrSalesListVl = new Vue({
   },
   computed: {
     inputPropsCd: function inputPropsCd() {
-      var cls_error = this.fileSearch.mst_customers_cd != undefined ? 'form-control is-invalid' : '';
+      var cls_error = this.fileSearch.mst_suppliers_cd != undefined ? 'form-control is-invalid' : '';
       return {
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeCd,
-        initialValue: this.fileSearch.mst_customers_cd,
+        initialValue: this.fileSearch.mst_suppliers_cd,
         maxlength: 6,
         class: 'form-control',
-        ref: "mst_customers_cd"
+        ref: "mst_suppliers_cd"
       };
     },
     inputPropsName: function inputPropsName() {
-      var cls_error = this.fileSearch.mst_customers_nm != undefined ? 'form-control is-invalid' : '';
+      var cls_error = this.fileSearch.mst_suppliers_nm != undefined ? 'form-control is-invalid' : '';
       return {
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeName,
-        initialValue: this.fileSearch.mst_customers_nm,
+        initialValue: this.fileSearch.mst_suppliers_nm,
         maxlength: 50,
         class: 'form-control w-100',
-        ref: "mst_customers_nm"
+        ref: "mst_suppliers_nm"
       };
     }
   },
   methods: {
     renderSuggestion: function renderSuggestion(suggestion) {
       var customer = suggestion.item;
-      return customer.mst_customers_cd + ': ' + customer.mst_customers_nm;
+      return customer.mst_suppliers_cd + ': ' + customer.mst_suppliers_nm;
     },
     getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
-      this.$refs.mst_customers_nm.searchInput = suggestion.item.mst_customers_nm;
-      return suggestion.item.mst_customers_cd;
+      this.$refs.mst_suppliers_nm.searchInput = suggestion.item.mst_suppliers_nm;
+      return suggestion.item.mst_suppliers_cd;
     },
     getSuggestionValueName: function getSuggestionValueName(suggestion) {
-      this.$refs.mst_customers_cd.searchInput = suggestion.item.mst_customers_cd;
-      return suggestion.item.mst_customers_nm;
+      this.$refs.mst_suppliers_cd.searchInput = suggestion.item.mst_suppliers_cd;
+      return suggestion.item.mst_suppliers_nm;
     },
     onInputChangeCd: function onInputChangeCd(text) {
-      this.fileSearch.mst_customers_cd = text;
+      this.fileSearch.mst_suppliers_cd = text;
 
       if (text === '' || text === undefined) {
-        this.filteredCustomerCd = [];
+        this.filteredSupplierCd = [];
         return;
       }
 
-      var filteredDataCd = this.dropdown_mst_customer_cd[0].data.filter(function (item) {
-        return item.mst_customers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+      var filteredDataCd = this.dropdown_mst_supplier_cd[0].data.filter(function (item) {
+        return item.mst_suppliers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
       }).slice(0, this.limit);
-      this.filteredCustomerCd = [{
+      this.filteredSupplierCd = [{
         data: filteredDataCd
       }];
     },
     onInputChangeName: function onInputChangeName(text) {
-      this.fileSearch.mst_customers_nm = text;
+      this.fileSearch.mst_suppliers_nm = text;
 
       if (text === '' || text === undefined) {
-        this.filteredCustomerNm = [];
+        this.filteredSupplierNm = [];
         return;
       }
 
-      var filteredDataNm = this.dropdown_mst_customer_nm[0].data.filter(function (item) {
-        return item.mst_customers_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+      var filteredDataNm = this.dropdown_mst_supplier_nm[0].data.filter(function (item) {
+        return item.mst_suppliers_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
       }).slice(0, this.limit);
-      this.filteredCustomerNm = [{
+      this.filteredSupplierNm = [{
         data: filteredDataNm
       }];
     },
     onSelectedCd: function onSelectedCd(option) {
-      this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
-      this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
+      this.fileSearch.mst_suppliers_cd = option.item.mst_suppliers_cd;
+      this.fileSearch.mst_suppliers_nm = option.item.mst_suppliers_nm;
     },
     onSelectedName: function onSelectedName(option) {
-      this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
-      this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
+      this.fileSearch.mst_suppliers_cd = option.item.mst_suppliers_cd;
+      this.fileSearch.mst_suppliers_nm = option.item.mst_suppliers_nm;
     },
     clearCondition: function clearCondition() {
       this.fileSearch.daily_report_date = "";
       this.fileSearch.mst_business_office_id = "";
       this.setDefaultDate();
       this.fileSearch.invoicing_flag = "";
-      this.fileSearch.mst_customers_cd = "";
-      this.$refs.mst_customers_cd.searchInput = "";
-      this.fileSearch.mst_customers_nm = "";
-      this.$refs.mst_customers_nm.searchInput = "";
-      this.filteredCustomerCd = [];
-      this.filteredCustomerNm = [];
+      this.fileSearch.mst_suppliers_cd = "";
+      this.$refs.mst_suppliers_cd.searchInput = "";
+      this.fileSearch.mst_suppliers_nm = "";
+      this.$refs.mst_suppliers_nm.searchInput = "";
+      this.filteredSupplierCd = [];
+      this.filteredSupplierNm = [];
     },
     setDefaultDate: function setDefaultDate() {
       var from_date = new Date();
@@ -10338,7 +10338,7 @@ var ctrSalesListVl = new Vue({
                 data = {
                   data: that.allItems
                 };
-                sales_lists_service.createCSV(data).then(function (response) {
+                purchases_lists_service.createCSV(data).then(function (response) {
                   that.downloadFileCSV(response, 'csv');
                   that.loading = false;
                 });
@@ -10387,9 +10387,9 @@ var ctrSalesListVl = new Vue({
   mounted: function mounted() {
     var _this2 = this;
 
-    sales_lists_service.loadCustomerList().then(function (response) {
-      _this2.dropdown_mst_customer_cd[0].data = response.data;
-      _this2.dropdown_mst_customer_nm[0].data = response.data;
+    purchases_lists_service.loadSupplierList().then(function (response) {
+      _this2.dropdown_mst_supplier_cd[0].data = response.data;
+      _this2.dropdown_mst_supplier_nm[0].data = response.data;
     });
     this.setDefaultDate();
   },
@@ -10402,14 +10402,14 @@ var ctrSalesListVl = new Vue({
 
 /***/ }),
 
-/***/ 14:
-/*!****************************************************************!*\
-  !*** multi ./resources/assets/js/controller/sales-lists-vl.js ***!
-  \****************************************************************/
+/***/ 15:
+/*!********************************************************************!*\
+  !*** multi ./resources/assets/js/controller/purchases-lists-vl.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\purchases-lists-vl.js */"./resources/assets/js/controller/purchases-lists-vl.js");
 
 
 /***/ })
