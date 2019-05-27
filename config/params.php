@@ -3,6 +3,7 @@ return [
     'page_size' => 10,
     'page_size_work_flow'=>10,
     'page_size_sale_lists'=>50,
+    'page_size_purchase_lists'=>50,
     'page_size_take_vacation'=>10,
     'data_kb' => [
         'sex'                           => '01001', // 性別ID
@@ -119,6 +120,10 @@ return [
     'invoicing_flag'=>[
         '1'=>'発行済み',
         '0'=>'未発行',
+    ],
+    'payment_closed'=>[
+        '1'=>'締有り',
+        '0'=>'締無し',
     ],
     'adhibition_end_dt_default' => '2999/12/31',
     'vehicles_path' => storage_path('vehicles/'),

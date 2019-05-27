@@ -8,6 +8,7 @@
     "/assets/js/controller/invoice-list.js": "/assets/js/controller/invoice-list.js",
     "/assets/js/controller/payment-histories-list.js": "/assets/js/controller/payment-histories-list.js",
     "/assets/js/controller/payments-list.js": "/assets/js/controller/payments-list.js",
+    "/assets/js/controller/purchases-lists.js": "/assets/js/controller/purchases-lists.js",
     "/assets/js/controller/sales-lists.js": "/assets/js/controller/sales-lists.js",
     "/assets/js/controller/staffs.js": "/assets/js/controller/staffs.js",
     "/assets/js/controller/staffs-list.js": "/assets/js/controller/staffs-list.js",
