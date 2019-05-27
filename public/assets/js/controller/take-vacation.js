@@ -20934,7 +20934,8 @@ var ctrTakeVacationVl = new Vue({
       this.handleChangeHalfDay();
     },
     submit: function submit(approval_fg) {
-      var that = this; // that.loading = true;
+      var that = this;
+      that.loading = true;
 
       if (this.field.mode != 'register') {
         this.field["id"] = this.take_vacation_id;
@@ -20946,7 +20947,8 @@ var ctrTakeVacationVl = new Vue({
             if (response.success == false) {
               that.errors = response.message;
             } else {
-              that.errors = []; // window.location.href = listRoute;
+              that.errors = [];
+              window.location.href = listRoute;
             }
 
             that.loading = false;
@@ -20961,7 +20963,7 @@ var ctrTakeVacationVl = new Vue({
 
           take_vacation_list_service.checkIsExist(that.take_vacation_id, {
             'mode': this.field.mode,
-            'status': status,
+            'approval_fg': approval_fg,
             'modified_at': that.modified_at
           }).then(function (response) {
             if (!response.success) {
@@ -20974,7 +20976,8 @@ var ctrTakeVacationVl = new Vue({
                 if (response.success == false) {
                   that.errors = response.message;
                 } else {
-                  that.errors = []; // window.location.href = listRoute;
+                  that.errors = [];
+                  window.location.href = listRoute;
                 }
 
                 that.loading = false;
@@ -21195,7 +21198,7 @@ var ctrTakeVacationVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\take-vacation-vl.js */"./resources/assets/js/controller/take-vacation-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\take-vacation-vl.js */"./resources/assets/js/controller/take-vacation-vl.js");
 
 
 /***/ })

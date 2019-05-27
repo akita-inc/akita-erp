@@ -298,19 +298,12 @@ class TakeVacationController extends Controller
     }
 
     public function checkIsExist(Request $request, $id){
-        $status= $request->get('status');
+        $approval_fg= $request->get('approval_fg');
         $mode = $request->get('mode');
         $modified_at = $request->get('modified_at');
-        $data = DB::table($this->table)->where('id',$id)/*->whereNull('delete_at')*/->first();
-        if (isset($data)) {
-            if($this->table!='empty_info' || ($mode!='edit' && $this->table=='empty_info') || ($mode=='edit' && $this->table=='empty_info' && Session::get('sysadmin_flg')==1)){
-                if(!is_null($modified_at)){
-                    if(Carbon::parse($modified_at) != Carbon::parse($data->modified_at)){
-                        $message = Lang::get('messages.MSG04003');
-                        return Response()->json(array('success'=>false, 'msg'=> $message));
-                    }
-                }
-            }
+        $data = DB::table($this->table)->where('id',$id)->first();
+
+        if(is_null($mode)){
             //1. 承認ステータスを判断
             // 1-1. 未承認の承認ステータスが1レコード以上ある場合
             $WApprovalStatus = new WApprovalStatus();
@@ -336,26 +329,35 @@ class TakeVacationController extends Controller
                 }
             }
             return Response()->json(array_merge(array('success'=>true),$return));
-        } else {
-            if($this->table=='empty_info'){
+        }else{
+            if (is_null($data->delete_at)) {
+                if($this->table!='empty_info' || ($mode!='edit' && $this->table=='empty_info') || ($mode=='edit' && $this->table=='empty_info' && Session::get('sysadmin_flg')==1)){
+
+                    if(!is_null($modified_at)){
+                        if(Carbon::parse($modified_at) != Carbon::parse($data->modified_at)){
+                            $message = Lang::get('messages.MSG04003');
+                            return Response()->json(array('success'=>false, 'msg'=> $message));
+                        }
+                    }
+                }
+
+                $WApprovalStatus = new WApprovalStatus();
+                $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
+                if($approvalStatus->count() <= 0){
+                    return Response()->json(array('success'=>false, 'msg'=> Lang::get('messages.MSG04003')));
+                }
+                return Response()->json(array('success'=>true));
+            } else {
                 if($mode=='edit' || $mode=='delete'){
                     $message = Lang::get('messages.MSG04004');
                 }else{
-                    switch ($status){
-                        case 1:
-                            $message = Lang::get('messages.MSG10021');
-                            break;
-                        case 2:
-                            $message = Lang::get('messages.MSG10015');
-                            break;
-                        case 8:
-                            $message = Lang::get('messages.MSG10018');
-                            break;
+                    if ($approval_fg){
+                        $message = Lang::get('messages.MSG10018');
+                    }else{
+                        $message = Lang::get('messages.MSG10021');
                     }
                 }
                 return Response()->json(array('success'=>false, 'msg'=> $message));
-            }else{
-                return Response()->json(array('success'=>false, 'msg'=> is_null($mode) ? Lang::trans('messages.MSG04003') : Lang::trans('messages.MSG04004')));
             }
         }
     }
@@ -689,10 +691,9 @@ class TakeVacationController extends Controller
     public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
         $mWPaidVacation = new WPaidVacation();
         $data = $mWPaidVacation->getInfoForMail($id);
-        $field = ['[id]','[applicant_id]','[approval_kb]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]'];
+        $field = ['[id]','[applicant_id]','[approval_kb]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]','[send_back_reason]'];
         $data['id_before'] = $id_before;
-        $data['title'] = null;
-        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title']],
+        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title'],$data['send_back_reason']],
             $configMail['template']);
         $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
         if(count($mailTo) > 0){

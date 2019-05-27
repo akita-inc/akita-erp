@@ -89,7 +89,7 @@ var ctrTakeVacationVl = new Vue({
         },
         submit: function(approval_fg){
             let that = this;
-            // that.loading = true;
+            that.loading = true;
             if(this.field.mode != 'register'){
                 this.field["id"] = this.take_vacation_id;
             }
@@ -100,7 +100,7 @@ var ctrTakeVacationVl = new Vue({
                             that.errors = response.message;
                         }else{
                             that.errors = [];
-                            // window.location.href = listRoute;
+                            window.location.href = listRoute;
                         }
                         that.loading = false;
                     });
@@ -110,7 +110,7 @@ var ctrTakeVacationVl = new Vue({
                     if(that.field.mode=='approval'){
                         that.field.approval_fg = approval_fg;
                     }
-                    take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'status': status,'modified_at': that.modified_at }).then((response) => {
+                    take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
                         if (!response.success) {
                             that.loading = false;
                             alert(response.msg);
@@ -122,7 +122,7 @@ var ctrTakeVacationVl = new Vue({
                                     that.errors = response.message;
                                 }else{
                                     that.errors = [];
-                                    // window.location.href = listRoute;
+                                    window.location.href = listRoute;
                                 }
                                 that.loading = false;
                             });

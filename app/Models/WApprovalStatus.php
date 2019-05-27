@@ -53,7 +53,7 @@ class WApprovalStatus extends Model {
                 ->where('wf_type_id','=',1)
                 ->where('approval_levels','=',Auth::user()->approval_levels)
                 ->update([
-                    'approver_id' => Auth::user()->id,
+                    'approver_id' => Auth::user()->staff_cd,
                     'approval_fg' => 1,
                     'approval_date' => $currentTime,
                 ]);
@@ -62,18 +62,21 @@ class WApprovalStatus extends Model {
     public function rejectVacation($wf_id,$currentTime,$send_back_reason ){
         $this->where('wf_id','=',$wf_id)
             ->where('wf_type_id','=',1)
-            ->where('approval_fg ','=',0)
+            ->where('approval_fg','=',0)
+            ->where('approval_levels','=',Auth::user()->approval_levels)
             ->update([
-                'approver_id' => Auth::user()->id,
+                'send_back_reason' => $send_back_reason,
+                'approver_id' => Auth::user()->staff_cd,
                 'approval_fg' => 2,
                 'approval_date' => $currentTime,
             ]);
         $this->where('wf_id','=',$wf_id)
             ->where('wf_type_id','=',1)
-            ->where('approval_fg ','=',0)
-            ->where('approval_levels','=',Auth::user()->approval_levels)
+            ->where('approval_fg','=',0)
             ->update([
-                'send_back_reason' => $send_back_reason,
+                'approver_id' => Auth::user()->id,
+                'approval_fg' => 2,
+                'approval_date' => $currentTime,
             ]);
     }
 

@@ -54,7 +54,7 @@
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
                                 <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                 <button class="btn btn-light m-auto" type="button" @click="resetForm" >
-                                    {{ trans("common.button.reset") }}
+                                    {{ trans("common.button.clear") }}
                                 </button>
                             </div>
                             @else
@@ -222,7 +222,7 @@
                                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                                         <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                         <button class="btn btn-light m-auto" type="button" @click="resetForm" >
-                                            {{ trans("common.button.reset") }}
+                                            {{ trans("common.button.clear") }}
                                         </button>
                                     </div>
                                 @else
