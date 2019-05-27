@@ -20,7 +20,7 @@ class CreateWfApprovalStatusTable extends Migration
             $table->tinyInteger('approval_steps')->nullable();
             $table->integer('approval_levels')->nullable();
             $table->string('title',30)->nullable();
-            $table->integer('approver_id')->nullable();
+            $table->string('approver_id',5)->nullable();
             $table->integer('approval_kb')->nullable();
             $table->integer('approval_fg')->nullable();
             $table->dateTime('approval_date')->nullable();
