@@ -14,7 +14,7 @@ class AddDaysToWfPaidVacation extends Migration
     public function up()
     {
         Schema::table('wf_paid_vacation', function (Blueprint $table) {
-            $table->decimal('days',3,0)->nullable();
+            $table->unsignedTinyInteger('days')->nullable()->after('end_date');
         });
     }
 
