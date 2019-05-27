@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -21107,13 +21107,13 @@ var ctrTakeVacationVl = new Vue({
     },
     searchStaff: function searchStaff() {
       var that = this;
-      that.listStaffs = [];
       take_vacation_list_service.searchStaff({
         name: that.search.name,
         mst_business_office_id: that.search.mst_business_office_id,
         order: that.order
       }).then(function (response) {
         if (!response.success) {
+          that.listStaffs = [];
           that.message = response.msg;
           return false;
         } else {
@@ -21191,14 +21191,14 @@ var ctrTakeVacationVl = new Vue({
 
 /***/ }),
 
-/***/ 20:
+/***/ 19:
 /*!******************************************************************!*\
   !*** multi ./resources/assets/js/controller/take-vacation-vl.js ***!
   \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\take-vacation-vl.js */"./resources/assets/js/controller/take-vacation-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\take-vacation-vl.js */"./resources/assets/js/controller/take-vacation-vl.js");
 
 
 /***/ })

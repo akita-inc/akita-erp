@@ -52,7 +52,7 @@
                             @if($mode=='register' || $mode=='edit')
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                 <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                     {{ trans("common.button.clear") }}
                                 </button>
@@ -220,7 +220,7 @@
                                 @if($mode=='register' || $mode=='edit')
                                     <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                                     <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                        <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                        <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                         <button class="btn btn-light m-auto" type="button" @click="resetForm" >
                                             {{ trans("common.button.clear") }}
                                         </button>
