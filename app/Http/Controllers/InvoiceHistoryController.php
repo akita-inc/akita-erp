@@ -117,16 +117,62 @@ class InvoiceHistoryController extends Controller {
         $dataSearch=$data['fieldSearch'];
         $start_date = TimeFunction::dateFormat($dataSearch['start_date'],'Y-m-d');
         $end_date = TimeFunction::dateFormat($dataSearch['end_date'],'Y-m-d');
-        $this->query = DB::table($this->table)->select()
-        ->whereNull('deleted_at')
-        ->where('publication_date','>=',$start_date)
-        ->where('publication_date','<=',$end_date);
+        $this->query = DB::table(DB::raw($this->table.' as tb') )->select(
+            'tb.id',
+            'tb.invoice_number',
+            DB::raw("tb.mst_customers_cd as customer_cd"),
+            'tb.mst_business_office_id',
+            DB::raw("format(IFNULL( tp.total_dw_amount, 0 ), '#,##0') AS payment_amount"),
+            DB::raw("format(IFNULL( ( tb.tax_included_amount - IFNULL( tp.total_dw_amount, 0 )), 0 ), '#,##0') AS payment_remaining"),
+            DB::raw("( CASE WHEN tp.total_dw_amount = tb.tax_included_amount THEN '済' ELSE '未' END ) AS payment "),
+            DB::raw("office.business_office_nm as regist_office"),
+            DB::raw("mst_customers.customer_nm_formal as customer_nm"),
+            DB::raw("DATE_FORMAT(publication_date, '%Y/%m/%d') as publication_date"),
+            DB::raw("format(IFNULL(tb.total_fee,0), '#,##0') as total_fee"),
+            DB::raw("format( IFNULL(tb.consumption_tax,0), '#,##0') as consumption_tax"),
+            DB::raw("format(IFNULL(tb.tax_included_amount,0), '#,##0') as tax_included_amount")
+        )
+        ->whereNull('tb.deleted_at')
+        ->where('tb.publication_date','>=',$start_date)
+        ->where('tb.publication_date','<=',$end_date)
+        ->leftJoin(DB::raw('( SELECT invoice_number, IFNULL( SUM( total_dw_amount ), 0 ) AS total_dw_amount FROM t_payment_histories WHERE deleted_at IS NULL GROUP BY invoice_number ) tp'),
+            function($join)
+            {
+                $join->on('tb.invoice_number', '=', 'tp.invoice_number');
+            })
+        ->join('mst_customers', function ($join) {
+            $join->on('mst_customers.mst_customers_cd', '=', 'tb.mst_customers_cd')
+                ->whereNull('mst_customers.deleted_at');
+        })
+        ->join(DB::raw('mst_business_offices office'), function ($join) {
+            $join->on('office.id', '=', 'tb.mst_business_office_id')
+                ->whereNull('office.deleted_at');
+        });
         if ($dataSearch['mst_business_office_id'] != '') {
-            $this->query->where('mst_business_office_id','=',$dataSearch['mst_business_office_id']);
+            $this->query->where('tb.mst_business_office_id','=',$dataSearch['mst_business_office_id']);
         };
         if ($dataSearch['customer_cd'] != '') {
-            $this->query->where('mst_customers_cd','=',$dataSearch['customer_cd']);
+            $this->query->where('tb.mst_customers_cd','=',$dataSearch['customer_cd']);
         }
+        if($dataSearch['display_remaining_payment']){
+
+            $this->query->having('payment' ,'=', '未');
+            $this->query->groupBy(
+                'tb.id',
+                'tb.invoice_number',
+                "tb.mst_customers_cd",
+                'tb.mst_business_office_id',
+                'tp.total_dw_amount',
+                'tb.publication_date',
+                'tb.total_fee',
+                'tb.consumption_tax',
+                'tb.tax_included_amount',
+                'mst_customers.customer_nm_formal',
+                'office.business_office_nm'
+            );
+        }
+        $this->query->orderBy('tb.mst_business_office_id');
+        $this->query->orderBy('tb.mst_customers_cd');
         return $this->query->get();
 
     }
@@ -134,13 +180,19 @@ class InvoiceHistoryController extends Controller {
     public function index(Request $request){
         $fieldShowTable = [
             'regist_office' => [
-                "classTH" => "wd-60",
+                "classTH" => "wd-100",
             ],
             'customer_cd'=> [
                 "classTH" => "wd-60",
             ],
             'customer_nm'=> [
                 "classTH" => "wd-120",
+            ],
+            'invoice_number'=>[
+                "classTH" => "wd-60",
+            ],
+            'publication_date'=>[
+                "classTH" => "wd-60",
             ],
             'total_fee'=> [
                 "classTH" => "wd-100",
@@ -151,6 +203,16 @@ class InvoiceHistoryController extends Controller {
             'tax_included_amount'=> [
                 "classTH" => "wd-120",
             ],
+            'payment'=> [
+                "classTH" => "wd-60",
+            ],
+            'payment_amount'=> [
+                "classTH" => "wd-100",
+            ],
+            'payment_remaining'=> [
+                "classTH" => "wd-100",
+            ],
+
 
         ];
         $fieldShowTableDetails = [
@@ -177,10 +239,9 @@ class InvoiceHistoryController extends Controller {
         $mBussinessOffice = new MBusinessOffices();
         $mCustomer = new MCustomers();
         $businessOffices = $mBussinessOffice->getAllData();
-        $month_start = new \DateTime("first day of last month");
-        $first_day = $month_start->format('m/d/Y');
-        $month_end = new \DateTime("last day of last month");
-        $last_day = $month_end->format('m/d/Y');
+        $dateData = $this->getFirstLastDatePreviousMonth(true);
+        $first_day = $dateData['firstDayPreviousMonth'];
+        $last_day = $dateData['lastDayPreviousMonth'];
         return view('invoice_history.index',[
             'fieldShowTable'=>$fieldShowTable,
             'fieldShowTableDetails'=>$fieldShowTableDetails,
@@ -190,11 +251,17 @@ class InvoiceHistoryController extends Controller {
         ]);
     }
 
-    public function getFirstLastDatePreviousMonth(){
+    public function getFirstLastDatePreviousMonth($notJsonFg=false){
         $month_start = new \DateTime("first day of last month");
-        $first_day = $month_start->format('m/d/Y');
+        $first_day = $month_start->format('Y/m/d');
         $month_end = new \DateTime("last day of last month");
-        $last_day = $month_end->format('m/d/Y');
+        $last_day = $month_end->format('Y/m/d');
+        if($notJsonFg){
+            return [
+                'firstDayPreviousMonth'=>$first_day,
+                'lastDayPreviousMonth'=>$last_day,
+            ];
+        }
         return response()->json([
             'firstDayPreviousMonth'=>$first_day,
             'lastDayPreviousMonth'=>$last_day,
@@ -215,21 +282,11 @@ class InvoiceHistoryController extends Controller {
         return Response()->json(array('success'=>true,'data'=>$data));
     }
 
-    public function loadListBundleDt(Request $request){
-        $input = $request->all();
-        $mCustomer = new MCustomers();
-        $listBundleDt= $mCustomer->getListBundleDt($input['customer_cd']);
-        return response()->json([
-            'success'=>true,
-            'info'=> $listBundleDt,
-        ]);
-    }
 
     public function getDetailsInvoice(Request $request){
         $input = $request->all();
-        $fieldSearch = $input['fieldSearch'];
-        $mSaleses = new MSaleses();
-        $listDetail =  $mSaleses->getListByCustomerCd($input['mst_customers_cd'],$input['mst_business_office_id'], $fieldSearch);
+        $mBillingHistoryHeaderDetails= new MBillingHistoryHeaderDetails();
+        $listDetail =  $mBillingHistoryHeaderDetails->getListByCondition($input);
         return response()->json([
             'success'=>true,
             'info'=> $listDetail,
@@ -243,15 +300,11 @@ class InvoiceHistoryController extends Controller {
         $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $type= $data['type'];
-        $publication_date = $data['date_of_issue'];
         if($type==1){
-            $listBillingHistoryHeaderID = $data['listBillingHistoryHeaderID'];
-            $listBillingHistoryDetailID = $data['listBillingHistoryDetailID'];
-            if(!empty($listBillingHistoryHeaderID) && !empty($listBillingHistoryDetailID)){
-                $this->billingHistoryHeaderID = $listBillingHistoryHeaderID;
-                $this->listBillingHistoryDetailID = explode(',',$listBillingHistoryDetailID);
-            }else{
-                $this->createHistory($item,$fieldSearch,$publication_date);
+            $this->billingHistoryHeaderID = $item['id'];
+            $listDetails = $mBillingHistoryHeaderDetails->getListByCondition($item);
+            if($listDetails){
+                $this->listBillingHistoryDetailID = array_column($listDetails->toArray(),'id');
             }
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             if(!empty($this->billingHistoryHeaderID)){
@@ -264,8 +317,6 @@ class InvoiceHistoryController extends Controller {
                 $pdf->getTotalPage($contentDetails);
                 $pdf->writeHeader($contentHeader[0]);
                 $pdf->writeDetails($contentDetails);
-                header("listBillingHistoryHeaderID: $this->billingHistoryHeaderID");
-                header("listBillingHistoryDetailID:". implode(',',$this->listBillingHistoryDetailID));
                 $pdf->Output(storage_path('/pdf_template/'.$fileName),'FI');
             }
         }else{
@@ -283,20 +334,15 @@ class InvoiceHistoryController extends Controller {
     }
 
     public function createCSV(Request $request){
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $data = $request->all();
-        $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $keys = array_keys($this->csvColumn);
-        $publication_date = $data['date_of_issue'];
-        $listBillingHistoryHeaderID = $data['listBillingHistoryHeaderID'];
-        $listBillingHistoryDetailID = $data['listBillingHistoryDetailID'];
-        if(!empty($listBillingHistoryDetailID)){
-            $this->billingHistoryHeaderID = $listBillingHistoryHeaderID;
-            $this->listBillingHistoryDetailID = explode(',',$listBillingHistoryDetailID);
-        }else{
-            $this->createHistory($item,$fieldSearch,$publication_date);
+        $this->billingHistoryHeaderID = $item['id'];
+        $listDetails = $mBillingHistoryHeaderDetails->getListByCondition($item);
+        if($listDetails){
+            $this->listBillingHistoryDetailID = array_column($listDetails->toArray(),'id');
         }
-        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $csvContent = $mBillingHistoryHeaderDetails->getCSVContent($this->listBillingHistoryDetailID);
         $fileName = 'seikyu_'.$csvContent[0]->branch_office_cd.'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
@@ -305,8 +351,6 @@ class InvoiceHistoryController extends Controller {
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0",
-            'listBillingHistoryHeaderID' => $this->billingHistoryHeaderID,
-            'listBillingHistoryDetailID' => implode(',',$this->listBillingHistoryDetailID),
         );
         $enclosure = config('params.csv.enclosure');
         $callback = function() use ($keys,$item, $enclosure,$csvContent) {
@@ -325,21 +369,15 @@ class InvoiceHistoryController extends Controller {
     }
 
     public function createAmazonCSV(Request $request){
+        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $data = $request->all();
-        $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $keys = array_keys($this->amazonCsvColumn);
-        $publication_date = $data['date_of_issue'];
-        $listBillingHistoryHeaderID = $data['listBillingHistoryHeaderID'];
-        $listBillingHistoryDetailID = $data['listBillingHistoryDetailID'];
-        if(!empty($listBillingHistoryDetailID)){
-            $this->billingHistoryHeaderID = $listBillingHistoryHeaderID;
-            $this->listBillingHistoryDetailID = explode(',',$listBillingHistoryDetailID);
-        }else{
-            $this->createHistory($item,$fieldSearch,$publication_date);
+        $this->billingHistoryHeaderID = $item['id'];
+        $listDetails = $mBillingHistoryHeaderDetails->getListByCondition($item);
+        if($listDetails){
+            $this->listBillingHistoryDetailID = array_column($listDetails->toArray(),'id');
         }
-
-        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $amazonCSVContent = $mBillingHistoryHeaderDetails->getAmazonCSVContent($this->listBillingHistoryDetailID);
         $fileName = 'Amazon_seikyu_'.$amazonCSVContent[0]->branch_office_cd.'_'.$item['customer_cd'].'_'.date('YmdHis', time()).'.csv';
         $headers = array(
@@ -348,8 +386,6 @@ class InvoiceHistoryController extends Controller {
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0",
-            'listBillingHistoryHeaderID' => $this->billingHistoryHeaderID,
-            'listBillingHistoryDetailID' => implode(',',$this->listBillingHistoryDetailID),
         );
 
         $enclosure = config('params.amazon_csv.enclosure');
@@ -366,61 +402,5 @@ class InvoiceHistoryController extends Controller {
             fclose($file);
         };
         return response()->stream($callback, 200, $headers);
-    }
-
-    public function createHistory($item,$fieldSearch,$publication_date){
-        $currentTime = date("Y-m-d H:i:s",time());
-        $mSaleses = new MSaleses();
-        $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
-        $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
-        $mNumberings =  new MNumberings();
-        $this->csvContent[$item['customer_cd']] = [];
-        $serial_number = $mNumberings->getSerialNumberByTargetID('2001');
-        DB::beginTransaction();
-        try
-        {
-            $mBillingHistoryHeaders->invoice_number = $serial_number->serial_number;
-            $mBillingHistoryHeaders->mst_customers_cd = $item['customer_cd'];
-            $mBillingHistoryHeaders->mst_business_office_id = $item['mst_business_office_id'];
-            $mBillingHistoryHeaders->publication_date = $publication_date;
-            $mBillingHistoryHeaders->total_fee = $item['total_fee'];
-            $mBillingHistoryHeaders->consumption_tax = $item['consumption_tax'];
-            $mBillingHistoryHeaders->tax_included_amount = floatval($item['total_fee']) + floatval($item['consumption_tax']);
-            $mBillingHistoryHeaders->add_mst_staff_id =  Auth::user()->id;
-            $mBillingHistoryHeaders->upd_mst_staff_id = Auth::user()->id;
-            if($mBillingHistoryHeaders->save()){
-                $this->billingHistoryHeaderID = $mBillingHistoryHeaders->id;
-                $history_details =  $mSaleses->getListByCustomerCd($item['customer_cd'], $item['mst_business_office_id'], $fieldSearch);
-                $branch_number = 1;
-                foreach ($history_details as $detail){
-                    $arrayInsert = json_decode(json_encode($detail),true);
-                    array_push( $this->csvContent[$item['customer_cd']], $arrayInsert);
-                    $arrayInsert['invoice_number'] = $mBillingHistoryHeaders->invoice_number;
-                    $arrayInsert['branch_number'] = $branch_number++;
-                    $arrayInsert['add_mst_staff_id'] = Auth::user()->id;
-                    $arrayInsert['upd_mst_staff_id'] = Auth::user()->id;
-                    $arrayInsert['created_at'] = $currentTime;
-                    $arrayInsert['modified_at'] = $currentTime;
-                    unset($arrayInsert['invoicing_flag']);
-                    unset($arrayInsert['customer_nm']);
-                    unset($arrayInsert['registration_numbers']);
-                    unset($arrayInsert['staff_nm']);
-                    unset($arrayInsert['id']);
-                    $updateData = [
-                        'invoicing_flag' => 1,
-                        'modified_at' => $currentTime,
-                        'upd_mst_staff_id' => Auth::user()->id,
-                    ];
-                    MSaleses::query()->where('id',$detail->id)->update($updateData);
-                    $id =  MBillingHistoryHeaderDetails::query()->insertGetId( $arrayInsert );
-                    array_push( $this->listBillingHistoryDetailID, $id);
-                }
-            }
-            DB::commit();
-        }catch (\Exception $e) {
-            DB::rollback();
-            dd($e);
-        }
-
     }
 }

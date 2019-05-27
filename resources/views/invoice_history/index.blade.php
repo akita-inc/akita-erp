@@ -1,6 +1,6 @@
 @extends('Layouts.app')
-@section('title',trans("invoices.title"))
-@section('title_header',trans("invoices.title"))
+@section('title',trans("invoice_history.title"))
+@section('title_header',trans("invoice_history.title"))
 @section('style')
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
     <style>
@@ -44,7 +44,7 @@
                             {{trans("invoice_history.list.search.billing_year")}}
                         </div>
                         <div class="col-md-3 padding-row-5 row lh-38">
-                            <date-picker format="MM/DD/YYYY"
+                            <date-picker format="YYYY/MM/DD"
                                          placeholder=""
                                          v-model="fileSearch.start_date" v-cloak=""
                                          :lang="lang"
@@ -58,7 +58,7 @@
                         <div class="col-md-4 padding-row-5 grid-form-search row lh-38">
                             <div class="col-md-1 col-sm-1 no-padding text-center">～</div>
                             <div class="col-md-9 no-padding">
-                                <date-picker format="MM/DD/YYYY"
+                                <date-picker format="YYYY/MM/DD"
                                              placeholder=""
                                              v-model="fileSearch.end_date" v-cloak=""
                                              :lang="lang"
@@ -96,7 +96,6 @@
                                     :render-suggestion="renderSuggestion"
                                     :get-suggestion-value="getSuggestionValueCd"
                                     ref="customer_cd"
-                                    @blur="getListBundleDt"
                             >
                             </vue-autosuggest>
                         </div>
@@ -141,26 +140,6 @@
         <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row justify-content-center">
-                    <div class="col-md-1 padding-row-5 col-list-search-f">
-                        {{trans("invoice_history.list.search.date_of_issue")}}
-                    </div>
-                    <div class="col-md-3 padding-row-5 grid-form-search">
-                        <div class="col-md-7 no-padding">
-                            <date-picker format="YYYY/MM/DD"
-                                         placeholder=""
-                                         v-model="date_of_issue" v-cloak=""
-                                         :lang="lang"
-                                         :input-class="'form-control w-100'"
-                                         :value-type="'format'"
-                                         :input-name="'date_of_issue'"
-                                         :editable='false'
-                            >
-                            </date-picker>
-                        </div>
-                    </div>
-                </div>
-                <div class="break-row-form"></div>
-                <div class="row justify-content-center">
                     <div class="col-md-2 padding-row-5 col-list-search-f "></div>
                     <div class="col-md-4 padding-row-5 grid-form-search row">
                         <div class="col-md-4 padding-row-5">
@@ -204,13 +183,11 @@
                         <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('tax_included_amount')
-                                <span v-if="item['total_fee']==null || item['consumption_tax']==null">￥0</span>
-                                <span v-else>{!!"￥@{{Number( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) ).toLocaleString() }}" !!}</span>
-
-                                @break
                                 @case('total_fee')
                                 @case('consumption_tax')
-                                <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
+                                @case('payment_amount')
+                                @case('payment_remaining')
+                                <span>{!! "￥@{{ item['$key'] }}" !!}</span>
                                 @break
                                 @default
                                 <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
@@ -237,7 +214,7 @@
                 </div>
             </div>
         </div>
-        @include("invoices.modal",[
+        @include("invoice_history.modal",[
             'fieldShowTable'=>$fieldShowTable,
             'fieldShowTableDetails'=>$fieldShowTableDetails,
          ])

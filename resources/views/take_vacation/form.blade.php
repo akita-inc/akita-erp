@@ -175,7 +175,7 @@
                                     <div class="row">
                                         <div class="col-md-1 col-sm-12"></div>
                                         <div class="col-md-11 col-sm-12">
-                                            <button class="btn btn-outline-secondary" type="button" @click="addRow" v-cloak> {{ trans("common.button.add") }}</button>
+                                            <button class="btn btn-outline-secondary" type="button" @click="addRow" v-cloak> {{ trans("common.button.add_row") }}</button>
                                         </div>
                                     </div>
                                 </div>

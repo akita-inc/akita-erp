@@ -182,4 +182,21 @@ class MBillingHistoryHeaderDetails extends Model {
             ->orderBy('details.daily_report_date');
         return $query->get();
     }
+
+    public function getListByCondition($condition){
+        $query = DB::table('t_billing_history_header_details as details')
+            ->select(
+                'details.id',
+                DB::raw("DATE_FORMAT(details.daily_report_date, '%Y/%m/%d') as daily_report_date"),
+                'details.departure_point_name',
+                'details.landing_name',
+                DB::raw("format(IFNULL(details.total_fee,0), '#,##0') as total_fee"),
+                DB::raw("format(IFNULL(details.insurance_fee,0), '#,##0') as consumption_tax"),
+                DB::raw("format(IFNULL(details.tax_included_amount,0), '#,##0') as tax_included_amount")
+            )
+            ->whereNull('details.deleted_at')
+            ->where('details.invoice_number','=',$condition['invoice_number'])
+            ->orderBy('details.daily_report_date');
+        return $query->get();
+    }
 }

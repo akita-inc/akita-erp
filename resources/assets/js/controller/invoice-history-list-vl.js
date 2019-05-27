@@ -97,13 +97,11 @@ var ctrInvoiceHistoryListVl = new Vue({
                     that.items = response.data;
                     that.fileSearch = response.fieldSearch;
                     that.fileSearched.mst_business_office_id=response.fieldSearch.mst_business_office_id;
-                    that.fileSearched.billing_year=response.fieldSearch.billing_year;
-                    that.fileSearched.billing_month=response.fieldSearch.billing_month;
+                    that.fileSearched.display_remaining_payment=response.fieldSearch.display_remaining_payment;
+                    that.fileSearched.start_date=response.fieldSearch.start_date;
+                    that.fileSearched.end_date=response.fieldSearch.end_date;
                     that.fileSearched.customer_cd=response.fieldSearch.customer_cd;
                     that.fileSearched.customer_nm=response.fieldSearch.customer_nm;
-                    that.fileSearched.closed_date=response.fieldSearch.closed_date;
-                    that.fileSearched.special_closing_date=response.fieldSearch.special_closing_date;
-                    that.fileSearched.closed_date_input=response.fieldSearch.closed_date_input;
                     $.each(that.fileSearch, function (key, value) {
                         if (value === null)
                             that.fileSearch[key] = '';
@@ -180,17 +178,15 @@ var ctrInvoiceHistoryListVl = new Vue({
                 this.fileSearch.closed_date = '';
             }
         },
-        clearCondition: function clearCondition() {
+        clearCondition: async function() {
             this.$refs.customer_nm.searchInput = "";
             this.$refs.customer_cd.searchInput = "";
             this.fileSearch.mst_business_office_id="";
-            this.fileSearch.billing_year="";
-            this.fileSearch.billing_month="";
+            this.fileSearch.start_date="";
+            this.fileSearch.end_date="";
             this.fileSearch.customer_cd="";
             this.fileSearch.customer_nm="";
-            this.fileSearch.closed_date="";
-            this.fileSearch.special_closing_date="";
-            this.fileSearch.closed_date_input="";
+            this.fileSearch.display_remaining_payment=0;
             this.errors = [];
             this.filteredCustomerCd = [];
             this.filteredCustomerNm = [];
@@ -200,7 +196,7 @@ var ctrInvoiceHistoryListVl = new Vue({
             this.loading = true;
             this.modal.invoice = item;
             var that = this;
-            invoice_history_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id,'fieldSearch': that.fileSearched}).then((response) => {
+            invoice_history_service.getDetailsInvoice({'invoice_number':item.invoice_number}).then((response) => {
                 if (response.info.length > 0) {
                    that.modal.sale_info = response.info;
                 }
@@ -246,25 +242,13 @@ var ctrInvoiceHistoryListVl = new Vue({
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
-                var listHeaderID = null;
-                var listDetailID = null;
-                if(typeof that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
-                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id];
-                }
-                if(typeof that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
-                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id];
-                }
+                console.log(value);
                 setTimeout(function(){
                     invoice_history_service.createCSV(
                         {
                             data:value,
                             'fieldSearch': that.fileSearched,
-                            date_of_issue: that.date_of_issue,
-                            'listBillingHistoryHeaderID':listHeaderID,
-                            'listBillingHistoryDetailID':listDetailID
                         }).then(  function (response){
-                        that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
-                        that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
                          that.downloadFile(response);
                     });
                 }, key*1000);
