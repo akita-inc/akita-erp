@@ -10256,8 +10256,8 @@ var ctrPurchasesListVl = new Vue({
   },
   methods: {
     renderSuggestion: function renderSuggestion(suggestion) {
-      var customer = suggestion.item;
-      return customer.mst_suppliers_cd + ': ' + customer.mst_suppliers_nm;
+      var supplier = suggestion.item;
+      return supplier.mst_suppliers_cd + ': ' + supplier.mst_suppliers_nm;
     },
     getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
       this.$refs.mst_suppliers_nm.searchInput = suggestion.item.mst_suppliers_nm;
