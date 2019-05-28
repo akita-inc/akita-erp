@@ -49,9 +49,9 @@ class MCustomers extends Model
     public function getListBundleDt($customer_cd=""){
         $mCustomer = new MCustomers();
         if(!empty($customer_cd)){
-            $mCustomer = $mCustomer->select('bundle_dt')->where('mst_customers_cd','LIKE','%'.$customer_cd.'%')->whereNull('deleted_at')->groupBy('bundle_dt');
+            $mCustomer = $mCustomer->select('bundle_dt')->where('mst_customers_cd','LIKE','%'.$customer_cd.'%')->whereNull('deleted_at')->whereNotNull('bundle_dt')->groupBy('bundle_dt');
         }else{
-            $mCustomer = $mCustomer->select('bundle_dt')->distinct('bundle_dt')->whereNull('deleted_at')->orderBy('bundle_dt');
+            $mCustomer = $mCustomer->select('bundle_dt')->distinct('bundle_dt')->whereNull('deleted_at')->whereNotNull('bundle_dt')->orderBy('bundle_dt');
         }
         return $mCustomer->get();
     }

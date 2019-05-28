@@ -86,6 +86,41 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./resources/assets/js/service/accounts-payable-data-output-service.js":
+/*!*****************************************************************************!*\
+  !*** ./resources/assets/js/service/accounts-payable-data-output-service.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+accounts_payable_data_output_service = {
+  loadList: function loadList(data) {
+    return axios.post('/accounts_payable_data_output/api-v1/getItems', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  createCSV: function createCSV(data) {
+    return axios.post('/accounts_payable_data_output/api-v1/create-csv', data, {
+      responseType: 'arraybuffer'
+    }).then(function (response) {
+      return response;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  getCurrentYearMonth: function getCurrentYearMonth(data) {
+    return axios.post('/accounts_payable_data_output/api-v1/get-current-year-month', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  }
+};
+
+/***/ }),
+
 /***/ "./resources/assets/js/service/customers-service.js":
 /*!**********************************************************!*\
   !*** ./resources/assets/js/service/customers-service.js ***!
@@ -922,26 +957,27 @@ work_flow_list_service = {
 /***/ }),
 
 /***/ 1:
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ./resources/assets/js/service/invoice-service.js ./resources/assets/js/service/sales-lists-service.js ./resources/assets/js/service/purchases-lists-service.js ./resources/assets/js/service/payments-service.js ./resources/assets/js/service/work-flow-service.js ./resources/assets/js/service/take-vacation-service.js ./resources/assets/js/service/invoice-history-service.js ./resources/assets/js/service/payment-histories-service.js ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/assets/js/service/home-service.js ./resources/assets/js/service/customers-service.js ./resources/assets/js/service/suppliers-service.js ./resources/assets/js/service/staffs-service.js ./resources/assets/js/service/vehicles-service.js ./resources/assets/js/service/empty-info-service.js ./resources/assets/js/service/invoice-service.js ./resources/assets/js/service/sales-lists-service.js ./resources/assets/js/service/purchases-lists-service.js ./resources/assets/js/service/payments-service.js ./resources/assets/js/service/work-flow-service.js ./resources/assets/js/service/take-vacation-service.js ./resources/assets/js/service/invoice-history-service.js ./resources/assets/js/service/payment-histories-service.js ./resources/assets/js/service/accounts-payable-data-output-service.js ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\purchases-lists-service.js */"./resources/assets/js/service/purchases-lists-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\payments-service.js */"./resources/assets/js/service/payments-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\work-flow-service.js */"./resources/assets/js/service/work-flow-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\take-vacation-service.js */"./resources/assets/js/service/take-vacation-service.js");
-__webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\invoice-history-service.js */"./resources/assets/js/service/invoice-history-service.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\service\payment-histories-service.js */"./resources/assets/js/service/payment-histories-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\home-service.js */"./resources/assets/js/service/home-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\customers-service.js */"./resources/assets/js/service/customers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\suppliers-service.js */"./resources/assets/js/service/suppliers-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\staffs-service.js */"./resources/assets/js/service/staffs-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\vehicles-service.js */"./resources/assets/js/service/vehicles-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\empty-info-service.js */"./resources/assets/js/service/empty-info-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\invoice-service.js */"./resources/assets/js/service/invoice-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\sales-lists-service.js */"./resources/assets/js/service/sales-lists-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\purchases-lists-service.js */"./resources/assets/js/service/purchases-lists-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\payments-service.js */"./resources/assets/js/service/payments-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\work-flow-service.js */"./resources/assets/js/service/work-flow-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\take-vacation-service.js */"./resources/assets/js/service/take-vacation-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\invoice-history-service.js */"./resources/assets/js/service/invoice-history-service.js");
+__webpack_require__(/*! F:\akita-erp\resources\assets\js\service\payment-histories-service.js */"./resources/assets/js/service/payment-histories-service.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\service\accounts-payable-data-output-service.js */"./resources/assets/js/service/accounts-payable-data-output-service.js");
 
 
 /***/ })

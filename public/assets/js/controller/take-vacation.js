@@ -21046,9 +21046,11 @@ var ctrTakeVacationVl = new Vue({
         that.field.end_date = that.field.start_date;
       }
 
-      var end_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.end_date);
-      var start_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.start_date);
-      that.field.days = end_date.diff(start_date, 'days') + 1;
+      if (that.field.half_day_kb == 1) {
+        var end_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.end_date);
+        var start_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.start_date);
+        that.field.days = end_date.diff(start_date, 'days') + 1;
+      }
     },
     handleChangeHalfDay: function handleChangeHalfDay() {
       var that = this;
@@ -21198,7 +21200,7 @@ var ctrTakeVacationVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\take-vacation-vl.js */"./resources/assets/js/controller/take-vacation-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\take-vacation-vl.js */"./resources/assets/js/controller/take-vacation-vl.js");
 
 
 /***/ })
