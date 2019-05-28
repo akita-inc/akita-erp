@@ -25,8 +25,8 @@ class WPaidVacation extends Model {
                 DB::raw('mst_business_offices.business_office_nm as applicant_office_id'),
                 DB::raw("DATE_FORMAT(wf_paid_vacation.start_date, '%Y/%m/%d') as start_date"),
                 DB::raw("DATE_FORMAT(wf_paid_vacation.end_date, '%Y/%m/%d') as end_date"),
-                'wf_paid_vacation.days',
-                'wf_paid_vacation.times',
+                DB::raw("(CASE WHEN wf_paid_vacation.days > 0 THEN CONCAT(wf_paid_vacation.days, ' 日')  ELSE '' END) as days"),
+                DB::raw("(CASE WHEN wf_paid_vacation.times > 0 THEN CONCAT(wf_paid_vacation.times, ' 時間')  ELSE '' END) as times"),
                 'wf_paid_vacation.reasons',
                 'wf_approval_status.send_back_reason',
                 'wf_approval_status.title'
