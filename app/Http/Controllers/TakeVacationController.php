@@ -111,7 +111,7 @@ class TakeVacationController extends Controller
                     FROM
                         wf_approval_status was			
                     WHERE
-                        was.wf_type_id = 1 
+                        was.wf_type_id = ".config('params.vacation_wf_type_id_default')." 
                         AND was.wf_id = wf_paid_vacation.id
                         AND was.approval_fg = 0
                     ORDER BY
@@ -214,7 +214,7 @@ class TakeVacationController extends Controller
             $this->query->whereRaw('(SELECT COUNT(*)
                                     FROM wf_approval_status
                                     WHERE wf_id = wf_paid_vacation.id 
-                                    AND wf_type_id = 1 
+                                    AND wf_type_id = '.config('params.vacation_wf_type_id_default').' 
                                     AND (approval_fg = 0 
                                     OR approval_fg  = 2)) > 0');
         }
@@ -390,7 +390,7 @@ class TakeVacationController extends Controller
                 abort('404');
             }else{
                 $mWPaidVacation = $mWPaidVacation->toArray();
-                $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('id','staff_cd','email_address')->where('wf_id','=',$id)->where('wf_type_id','=',1)->get()->toArray();
+                $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('id','staff_cd','email_address')->where('wf_id','=',$id)->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))->get()->toArray();
                 $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
                 $countVacationNotApproval = $mWApprovalStatus->countVacationNotApproval($id);
                 $countVacationNotApprovalOfUserLogin = $mWApprovalStatus->countVacationNotApproval($id, true);
@@ -581,7 +581,7 @@ class TakeVacationController extends Controller
                 if ($id) {
                     $dataWfApprovalStatus = [];
                     $fixValue = [
-                        'wf_type_id' => 1,
+                        'wf_type_id' => config('params.vacation_wf_type_id_default'),
                         'wf_id' => $id,
                         'approver_id' => null,
                         'approval_fg' => 0,
@@ -610,7 +610,7 @@ class TakeVacationController extends Controller
                             $row =[];
                             $row['staff_cd'] = $item['staff_cd'];
                             $row['email_address'] = $item['email_address'];
-                            $row['wf_type_id'] = 1;
+                            $row['wf_type_id'] = config('params.vacation_wf_type_id_default');
                             $row['wf_id'] = $id;
                             array_push($dataWfAdditionalNotice, $row);
                         } else {
@@ -637,7 +637,7 @@ class TakeVacationController extends Controller
                         if (!empty($item['email_address'])) {
                             if (!isset($item['id'])) {
                                 $row = $item;
-                                $row['wf_type_id'] = 1;
+                                $row['wf_type_id'] = config('params.vacation_wf_type_id_default');
                                 $row['wf_id'] = $id;
                                 array_push($dataWfAdditionalNotice, $row);
                             }

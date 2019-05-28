@@ -32,7 +32,7 @@ class WApprovalStatus extends Model {
                     ->where('mst_general_purposes.data_kb', config('params.data_kb.wf_approval_status'));
             })
             ->where('wf_id','=',$wf_id)
-            ->where('wf_type_id','=',1)
+            ->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))
             ->orderBy('wf_approval_status.approval_steps')
             ->get();
 
@@ -40,7 +40,7 @@ class WApprovalStatus extends Model {
 
     public function countVacationNotApproval($wf_id, $flag_is_user_login=null){
          $query = $this->where('wf_id','=',$wf_id)
-                ->where('wf_type_id','=',1)
+                ->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))
                 ->where('approval_fg','=',0);
          if(!is_null($flag_is_user_login) && $flag_is_user_login){
              $query = $query->where('approval_levels','=',Auth::user()->approval_levels);
@@ -50,7 +50,7 @@ class WApprovalStatus extends Model {
 
     public function approvalVacation($wf_id,$currentTime){
         return $this->where('wf_id','=',$wf_id)
-                ->where('wf_type_id','=',1)
+                ->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))
                 ->where('approval_levels','=',Auth::user()->approval_levels)
                 ->update([
                     'approver_id' => Auth::user()->staff_cd,
@@ -61,7 +61,7 @@ class WApprovalStatus extends Model {
 
     public function rejectVacation($wf_id,$currentTime,$send_back_reason ){
         $this->where('wf_id','=',$wf_id)
-            ->where('wf_type_id','=',1)
+            ->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))
             ->where('approval_fg','=',0)
             ->where('approval_levels','=',Auth::user()->approval_levels)
             ->update([
@@ -71,7 +71,7 @@ class WApprovalStatus extends Model {
                 'approval_date' => $currentTime,
             ]);
         $this->where('wf_id','=',$wf_id)
-            ->where('wf_type_id','=',1)
+            ->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))
             ->where('approval_fg','=',0)
             ->update([
                 'approver_id' => Auth::user()->id,
@@ -85,7 +85,7 @@ class WApprovalStatus extends Model {
                 'approval_levels'
             )
             ->where('wf_id','=',$wf_id)
-            ->where('wf_type_id','=',1)
+            ->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))
             ->where('approval_fg','=',0)
             ->orderBy('approval_steps','ASC')
             ->first();
