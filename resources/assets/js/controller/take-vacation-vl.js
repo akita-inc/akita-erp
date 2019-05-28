@@ -187,10 +187,11 @@ var ctrTakeVacationVl = new Vue({
             if(that.field.half_day_kb==2 || that.field.half_day_kb==3 ){
                 that.field.end_date = that.field.start_date;
             }
-            let end_date =  moment(that.field.end_date);
-            let start_date =  moment(that.field.start_date);
-            that.field.days = end_date.diff(start_date, 'days')+1;
-
+            if(that.field.half_day_kb==1){
+                let end_date =  moment(that.field.end_date);
+                let start_date =  moment(that.field.start_date);
+                that.field.days = end_date.diff(start_date, 'days')+1;
+            }
         },
         handleChangeHalfDay: function () {
             var that = this;
@@ -222,8 +223,6 @@ var ctrTakeVacationVl = new Vue({
                     that.disabledDays = true;
                     that.disabledTimes = false;
                     break;
-
-
             }
         },
         openModal: function (index) {
