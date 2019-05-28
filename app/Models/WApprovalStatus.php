@@ -74,7 +74,7 @@ class WApprovalStatus extends Model {
             ->where('wf_type_id','=',config('params.vacation_wf_type_id_default'))
             ->where('approval_fg','=',0)
             ->update([
-                'approver_id' => Auth::user()->id,
+                'approver_id' => Auth::user()->staff_cd,
                 'approval_fg' => 2,
                 'approval_date' => $currentTime,
             ]);

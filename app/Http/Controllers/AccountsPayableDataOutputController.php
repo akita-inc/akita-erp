@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\TimeFunction;
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Models\MPurchases;
 use App\Models\MSupplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,36 +24,13 @@ class AccountsPayableDataOutputController extends Controller {
     public $ruleValid = [
     ];
 
-    public $labels = [
-        "closed_date" => "締め日",
-        "closed_date_input" => "特例締め日",
-    ];
+    public $labels = [];
 
     public $csvColumn = [
-        'daily_report_date' => '日報日付',
-        'branch_office_cd' => '支店CD',
-        'document_no' => '伝票NO',
-        'registration_numbers' => '登録番号',
-        'staff_cd' => '社員CD',
-        'staff_nm' => '社員名',
-        'mst_customers_cd' => '得意先CD',
-        'customer_nm' => '得意先名',
-        'goods' => '品物',
-        'departure_point_name' => '発地名',
-        'landing_name' => '着地名',
-        'delivery_destination' => '納入先',
-        'quantity' => '数量',
-        'unit_price' => '単価',
-        'total_fee' => '便請求金額',
-        'insurance_fee' => '保険料',
-        'billing_fast_charge' => '請求高速料',
-        'discount_amount' => '値引金額',
-        'tax_included_amount' => '請求金額',
-        'loading_fee' => '積込料',
-        'wholesale_fee' => '取卸料',
-        'waiting_fee' => '待機料',
-        'incidental_fee' => '附帯料',
-        'surcharge_fee' => 'サーチャージ料',
+        'mst_suppliers_cd' => '仕入先コード',
+        'suppliers_nm' => '仕入先名',
+        'purchases_tax_included_amount' => '請求金額',
+        'saleses_tax_included_amount' => '売上金額',
     ];
 
     public function __construct(){
@@ -87,5 +66,41 @@ class AccountsPayableDataOutputController extends Controller {
             'current_year'=> $currentYear,
             'current_month'=> $currentMonth
         ]);
+    }
+
+    public function createCSV(Request $request){
+        $data = $request->all();
+        $fieldSearch = $data['fieldSearch'];
+        $header1 = '買掛（傭車）,,,';
+        $monthYear = TimeFunction::dateFormat($fieldSearch['billing_year'].'-'.$fieldSearch['billing_month'],'Y年m月');
+        $date = ($fieldSearch['closed_date'] < 10 ? '0'.$fieldSearch['closed_date'] : $fieldSearch['closed_date'] ).'日締め';
+        $header2 = "$monthYear,$date,,";
+        $keys = array_keys($this->csvColumn);
+        $mPurchases =  new MPurchases();
+        $csvContent = $mPurchases->getAccountsPayableData();
+        $fileName = 'purchase'.TimeFunction::dateFormat($fieldSearch['start_date'],'Ymd').'-'.TimeFunction::dateFormat($fieldSearch['end_date'],'Ymd').'.csv';
+        $headers = array(
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0",
+        );
+        $enclosure = config('params.csv.enclosure');
+        $callback = function() use ($keys, $enclosure,$csvContent,$header1,$header2) {
+            $file = fopen('php://output', 'w');
+            fwrite ($file,mb_convert_encoding($header1, "SJIS", "UTF-8")."\r\n");
+            fwrite ($file,mb_convert_encoding($header2, "SJIS", "UTF-8")."\r\n");
+            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
+            foreach ($csvContent as $content) {
+                $row = [];
+                foreach ($keys as $key) {
+                    $row[$key] = $enclosure.$content->{$key}.$enclosure;
+                }
+                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
     }
 }
