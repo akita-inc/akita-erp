@@ -21642,62 +21642,7 @@ var ctrAccountsPayableDataOutputVl = new Vue({
     message: '',
     errors: [],
     flagSearch: false,
-    list_bundle_dt: [],
-    getItems: function getItems(page, show_msg) {
-      if (show_msg !== true) {
-        $('.alert').hide();
-      }
-
-      this.fileSearch.customer_cd = this.$refs.customer_cd.searchInput;
-      this.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
-      var data = {
-        fieldSearch: this.fileSearch
-      };
-      var that = this;
-      this.loading = true;
-      accounts_payable_data_output_service.loadList(data).then(function (response) {
-        if (response.success == false) {
-          that.errors = response.message;
-          that.loading = false;
-        } else {
-          that.fileSearched = {
-            mst_business_office_id: "",
-            billing_year: '',
-            billing_month: '',
-            customer_cd: "",
-            customer_nm: "",
-            closed_date: "",
-            special_closing_date: "",
-            closed_date_input: ""
-          };
-          that.flagSearch = true;
-          that.errors = [];
-          that.listBillingHistoryHeaderID = [];
-          that.listBillingHistoryDetailID = [];
-
-          if (response.data.length === 0) {
-            that.message = messages["MSG05001"];
-          } else {
-            that.message = '';
-          }
-
-          that.items = response.data;
-          that.fileSearch = response.fieldSearch;
-          that.fileSearched.mst_business_office_id = response.fieldSearch.mst_business_office_id;
-          that.fileSearched.billing_year = response.fieldSearch.billing_year;
-          that.fileSearched.billing_month = response.fieldSearch.billing_month;
-          that.fileSearched.customer_cd = response.fieldSearch.customer_cd;
-          that.fileSearched.customer_nm = response.fieldSearch.customer_nm;
-          that.fileSearched.closed_date = response.fieldSearch.closed_date;
-          that.fileSearched.special_closing_date = response.fieldSearch.special_closing_date;
-          that.fileSearched.closed_date_input = response.fieldSearch.closed_date_input;
-          $.each(that.fileSearch, function (key, value) {
-            if (value === null) that.fileSearch[key] = '';
-          });
-          that.loading = false;
-        }
-      });
-    }
+    outputSuccess: false
   },
   methods: {
     clearCondition: function clearCondition() {
@@ -21725,7 +21670,14 @@ var ctrAccountsPayableDataOutputVl = new Vue({
                 accounts_payable_data_output_service.createCSV({
                   'fieldSearch': that.fileSearch
                 }).then(function (response) {
-                  that.downloadFile(response);
+                  if (response.headers['content-type'] == 'application/json') {
+                    that.outputSuccess = false;
+                    that.flagSearch = true;
+                  } else {
+                    that.outputSuccess = true;
+                    that.flagSearch = true;
+                    that.downloadFile(response);
+                  }
                 });
                 this.loading = false;
 
@@ -21785,7 +21737,6 @@ var ctrAccountsPayableDataOutputVl = new Vue({
     }
   },
   mounted: function mounted() {
-    // var that = this;
     this.getCurrentYearMonth();
   },
   components: {
