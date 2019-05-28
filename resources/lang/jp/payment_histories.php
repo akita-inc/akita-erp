@@ -23,7 +23,8 @@ return [
             'payment_date'=>'入金日',
             'button' => [
                 'detail'=>'詳細',
-                'close'=>'閉じる'
+                'close'=>'閉じる',
+                'delete'=>'削除'
             ],
             'no_data'=>'データがありません',
             'deleted'=>'削除しました'
@@ -53,7 +54,7 @@ return [
             'fee'=>'手数料',
             'discount'=>'値引き',
             'deposit_balance'=>'入金残'
-        ]
+        ],
     ]
 
 ];

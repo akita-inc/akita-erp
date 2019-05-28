@@ -70,7 +70,8 @@
                 </table>
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">閉じる</button>
+                <button type="button" class="btn btn-danger"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">{{trans("payment_histories.list.search.button.delete")}}</button>
+                <button type="button" class="btn btn-secondary"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">{{trans("payment_histories.list.search.button.close")}}</button>
             </div>
         </div>
     </div>
