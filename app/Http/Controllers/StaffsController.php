@@ -53,6 +53,10 @@ class StaffsController extends Controller
         "health_insurance_numbers"=>"length:20|nullable",
         "employees_pension_insurance_numbers"=>"length:10|nullable",
         "drivers_license_number"=>"length:12|nullable",
+        "approval_levels"=>'required',
+        "section_id"=>'required',
+        "belong_company_id"=>'required',
+        "mst_business_office_id"=>'required'
     ];
     public $messagesCustom =[];
     public function __construct(){
@@ -368,6 +372,8 @@ class StaffsController extends Controller
         $listRoles = $mRoles->getListRoles();
         $listStaffScreens = $mScreen->getListScreensByCondition(['screen_category_id' => 1]);
         $listAccessiblePermission=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['accessible_kb'],'Empty');
+        $listApprovalLevels=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['wf_level'],'');
+        $listSectionIds=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['wf_applicant_affiliation_classification'],'');
         $staff=null;
         //load form by update
         if($id != null){
@@ -399,6 +405,8 @@ class StaffsController extends Controller
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
             'role'=>$role,
             'rolesStaffScreen'=>$rolesStaffScreen,
+            'listApprovalLevels'=>$listApprovalLevels,
+            'listSectionIds'=>$listSectionIds
         ]);
     }
 }
