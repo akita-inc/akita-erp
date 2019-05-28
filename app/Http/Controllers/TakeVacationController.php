@@ -607,6 +607,7 @@ class TakeVacationController extends Controller
                     $dataWfAdditionalNotice = [];
                     foreach ($listWfAdditionalNotice as $key => $item) {
                         if (!empty($item['email_address'])) {
+                            $row =[];
                             $row['staff_cd'] = $item['staff_cd'];
                             $row['email_address'] = $item['email_address'];
                             $row['wf_type_id'] = 1;
