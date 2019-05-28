@@ -1,22 +1,26 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-import DatePicker from '../component/vue2-datepicker-master'
+import DatePicker from '../component/vue2-datepicker-master';
 import { VueAutosuggest }  from "vue-autosuggest";
-import moment from 'moment';
-
 var ctrPaymentHistoryListVl = new Vue({
     el: '#ctrPaymentHistoryListVl',
     data: {
+        loading:false,
         lang:lang_date_picker,
         format_date: format_date_picker,
-        loading:false,
         items:[],
+        allItems:[],
+        export_file_nm:"",
+        message:'',
+        auth_staff_cd:'',
+        filteredCustomerCd: [],
+        filteredCustomerNm:[],
         fileSearch:{
-            customer_cd: "",
-            customer_nm:"",
             from_date:"",
             to_date:"",
+            mst_customers_cd:"",
+            mst_customers_nm:"",
         },
-        message: '',
+        errors:[],
         pagination:{
             total: 0,
             per_page: 2,
@@ -25,174 +29,204 @@ var ctrPaymentHistoryListVl = new Vue({
             current_page: 1,
             last_page:0
         },
-        order: {
-            col:'',
-            descFlg: true,
-            divId:''
-        },
-        errors:[],
-        filteredCustomerCd: [],
-        filteredCustomerNm: [],
-        dropdown_customer_cd: [{
+        flagSearch:false,
+        order: null,
+        dropdown_mst_customer_cd: [{
             data:[]
         }],
-        dropdown_customer_nm: [{
+        dropdown_mst_customer_nm:[{
             data:[]
         }],
-        list_bundle_dt:[],
-        modal:{
-            invoice:{},
-            sale_info:[],
-        },
-        disableBtn: false,
-        flagSearch: false,
-        date_of_issue:moment().format('YYYY/MM/DD') ,
-        fileSearched:{
-            customer_cd: "",
-            customer_nm:"",
-            from_date:"",
-            to_date:"",
-
-        },
-        listBillingHistoryHeaderID:[],
-        listBillingHistoryDetailID:[],
-        getItems: function(page,show_msg){
+        getItems: function(page, show_msg){
             if (show_msg !== true) {
                 $('.alert').hide();
             }
-            this.fileSearch.customer_cd = this.$refs.customer_cd.searchInput;
-            this.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
-            var data = {
-                fieldSearch:this.fileSearch,
-            };
             var that = this;
-            this.loading = true;
-            payment_histories_service.loadList(data).then((response) => {
-                if(response.success == false){
-                    that.errors = response.message;
-                    that.loading = false;
-                }else{
-                    that.fileSearched= {
-                        customer_cd: "",
-                        customer_nm:"",
-                        from_date:"",
-                        to_date:"",
-                    };
-                    that.flagSearch = true;
-                    that.errors = [];
-                    that.items = response.data;
+            that.loading = true;
+            if( that.fileSearch.from_date=="")
+            {
+                that.errors["from_date"]=messages["MSG02001"].split(':attribute').join('期間');
+                that.loading = false;
+            }
+            else
+            {
+                delete that.errors["from_date"];
+            }
+            if( that.fileSearch.to_date=="")
+            {
+                that.errors["to_date"]=messages["MSG02001"].split(':attribute').join('期間');
+                that.loading = false;
+            }
+            else
+            {
+                delete that.errors["to_date"];
+            }
+            that.fileSearch.mst_customers_cd=this.$refs.mst_customers_cd.searchInput;
+            that.fileSearch.mst_customers_nm=this.$refs.mst_customers_nm.searchInput;
+            that.flagSearch=false;
+            var data = {
+                pageSize: that.pageSize,
+                page:page,
+                fieldSearch: that.fileSearch,
+                order: that.order,
+            };
+            if(that.errors.from_date===undefined && that.errors.to_date===undefined)
+            {
+                that.loading = true;
+                payment_histories_service.loadList(data).then((response) => {
+                    that.items = response.data.data;
+                    that.pagination = response.pagination;
                     that.fileSearch = response.fieldSearch;
-                    that.fileSearched.customer_cd=response.fieldSearch.customer_cd;
-                    that.fileSearched.customer_nm=response.fieldSearch.customer_nm;
+                    that.order = response.order;
+                    that.flagSearch=true;
                     $.each(that.fileSearch, function (key, value) {
                         if (value === null)
                             that.fileSearch[key] = '';
                     });
                     that.loading = false;
+                });
+            }
+        },
+        changePage: function (page) {
+            this.pagination.current_page = page;
+            this.getItems(page);
+        },
+        checkIsExist: function (id) {
+            payment_histories_service.checkIsExist(id).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                    this.getItems(1);
+                } else {
+                    window.location.href = 'edit/' + id;
                 }
             });
         },
+        sortList: function(event, order_by) {
+            $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
+            if (this.order.col === order_by && this.order.descFlg) {
+                this.order.descFlg = false;
+                event.target.classList.toggle('sort-asc');
+            } else {
+                this.order.descFlg = true;
+                event.target.classList.toggle('sort-desc');
+            }
+            this.order.col = order_by;
+            this.order.divId = event.currentTarget.id;
+            this.getItems(this.pagination.current_page);
+        }
     },
-    computed: {
+    computed:{
         inputPropsCd: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeCd ,initialValue: this.fileSearch.customer_cd,maxlength:5,class:'form-control input-cd' ,ref:"customer_cd"}
+            var cls_error = this.fileSearch.mst_customers_cd != undefined ? 'form-control is-invalid':'';
+            return {
+                id: 'autosuggest__input',
+                onInputChange: this.onInputChangeCd,
+                initialValue: this.fileSearch.mst_customers_cd,
+                maxlength: 6,
+                class: 'form-control input-cd',
+                ref:"mst_customers_cd"
+            };
         },
-        inputPropsNm: function() {
-            return {id:'autosuggest__input', onInputChange: this.onInputChangeNm ,initialValue: this.fileSearch.customer_nm,maxlength:5,class:'form-control',ref:"customer_nm"}
+        inputPropsName:function () {
+            var cls_error = this.fileSearch.mst_customers_nm != undefined ? 'form-control is-invalid':'';
+            return {
+                id: 'autosuggest__input',
+                onInputChange: this.onInputChangeName,
+                initialValue: this.fileSearch.mst_customers_nm,
+                maxlength: 50,
+                class: 'form-control w-100',
+                ref:"mst_customers_nm"
+            };
         }
     },
     methods : {
         renderSuggestion(suggestion) {
             const customer = suggestion.item;
-            return customer.mst_customers_cd+ ': '+ (customer.customer_nm != null?customer.customer_nm:'');
+            return customer.mst_customers_cd+ ': '+ customer.mst_customers_nm;
 
         },
         getSuggestionValueCd(suggestion) {
-            this.$refs.customer_nm.searchInput = suggestion.item.customer_nm;
+            this.$refs.mst_customers_nm.searchInput = suggestion.item.mst_customers_nm;
             return suggestion.item.mst_customers_cd;
 
         },
-        getSuggestionValueNm(suggestion) {
-            this.$refs.customer_cd.searchInput = suggestion.item.mst_customers_cd;
-            return suggestion.item.customer_nm;
+        getSuggestionValueName(suggestion) {
+            this.$refs.mst_customers_cd.searchInput = suggestion.item.mst_customers_cd;
+            return suggestion.item.mst_customers_nm;
         },
         onInputChangeCd(text) {
-            this.fileSearch.customer_cd = text;
+            this.fileSearch.mst_customers_cd= text;
             if (text === '' || text === undefined) {
                 this.filteredCustomerCd = [];
                 return;
             }
-            /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-            const filteredData = this.dropdown_customer_cd[0].data.filter(item => {
+            const filteredDataCd = this.dropdown_mst_customer_cd[0].data.filter(item => {
                 return item.mst_customers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
             }).slice(0, this.limit);
-
-            this.filteredCustomerCd = [{
-                data: filteredData
-            }];
+            this.filteredCustomerCd=[{
+                data:filteredDataCd
+            }]
         },
-        onInputChangeNm(text) {
-            this.fileSearch.customer_nm = text;
+        onInputChangeName(text){
+            this.fileSearch.mst_customers_nm= text;
             if (text === '' || text === undefined) {
                 this.filteredCustomerNm = [];
                 return;
             }
-            /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-            const filteredData = this.dropdown_customer_nm[0].data.filter(item => {
-                return item.customer_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+            const filteredDataNm = this.dropdown_mst_customer_nm[0].data.filter(item => {
+                return item.mst_customers_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
             }).slice(0, this.limit);
 
-            this.filteredCustomerNm = [{
-                data: filteredData
-            }];
+            this.filteredCustomerNm=[{
+                data:filteredDataNm
+            }]
+
         },
         onSelectedCd(option) {
-            this.fileSearch.customer_cd = option.item.mst_customers_cd;
-            this.fileSearch.customer_nm = option.item.customer_nm;
+            this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
+            this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
         },
-        onSelectedNm(option) {
-            this.fileSearch.customer_cd = option.item.mst_customers_cd;
-            this.fileSearch.customer_nm = option.item.customer_nm;
+        onSelectedName(option) {
+            this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
+            this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
         },
-        clearCondition: function clearCondition() {
-            this.$refs.customer_nm.searchInput = "";
-            this.$refs.customer_cd.searchInput = "";
-            this.fileSearch.customer_cd="";
-            this.fileSearch.customer_nm="";
-            this.errors = [];
+        clearCondition:function () {
+            this.setDefaultDate();
+            this.fileSearch.mst_customers_cd="";
+            this.$refs.mst_customers_cd.searchInput = "";
+            this.fileSearch.mst_customers_nm="";
+            this.$refs.mst_customers_nm.searchInput = "";
             this.filteredCustomerCd = [];
             this.filteredCustomerNm = [];
         },
-        getListBundleDt: function (flagSelect) {
-            var that = this;
-            invoice_service.loadListBundleDt({customer_cd:that.fileSearch.customer_cd}).then((response) => {
-                if (response.info.length>0) {
-                    that.list_bundle_dt = response.info;
-                    if(flagSelect){
-                        that.fileSearch.closed_date = that.list_bundle_dt[0].bundle_dt;
-                    }
-                }
-            });
+        setDefaultDate:function () {
+            var from_date = new Date();
+            this.fileSearch.from_date=from_date.getFullYear()+"/"+(from_date.getMonth()+1)+"/"+1;
+            var to_date = new Date();
+            var lastDay = new Date(to_date.getFullYear(), to_date.getMonth()+1,0);
+            this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
         },
         openModal: function (item) {
-            this.loading = true;
-            this.modal.invoice = item;
+            // this.loading = true;
+            // this.modal.invoice = item;
             var that = this;
-            payment_histories_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id,'fieldSearch': that.fileSearched}).then((response) => {
-                if (response.info.length > 0) {
-                    that.modal.sale_info = response.info;
-                }
-                $('#detailsModal').modal('show');
-                that.loading = false;
-            });
-        }
+            // invoice_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id,'fieldSearch': that.fileSearched}).then((response) => {
+            //     if (response.info.length > 0) {
+            //         that.modal.sale_info = response.info;
+            //     }
+            //     $('#detailsModal').modal('show');
+            //     that.loading = false;
+            // });
+            $('#detailsModal').modal('show');
+
+        },
     },
     mounted () {
-        var that = this;
-        invoice_service.loadListCustomers().then((response) => {
-            that.dropdown_customer_cd[0].data =  response.data;
-            that.dropdown_customer_nm[0].data =  response.data;
+        sales_lists_service.loadCustomerList().then((response) => {
+            this.dropdown_mst_customer_cd[0].data =  response.data;
+            this.dropdown_mst_customer_nm[0].data =  response.data;
         });
+        this.setDefaultDate();
     },
     components: {
         PulseLoader,

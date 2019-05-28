@@ -33,11 +33,27 @@ return [
           'mst_customers_cd'=>'得意先CD',
           'customer_nm'=>'得意先名',
           'dw_classification'=>'入金区分',
-          'total_dw_amount'=>'入金金額合計',
+          'actual_dw'=>'入金額',
           'fee'=>'手数料',
           'discount'=>'値引き',
+          'total_dw_amount'=>'合計入金額',
           'note'=>'備考'
         ]
     ],
+    'modal' => [
+        'title'=>'入金明細',
+        'table' => [
+            'invoice_number' => '請求書No.',
+            'publication_date' => '発行日',
+            'total_fee'=>'請求金額',
+            'consumption_tax'=>'消費税',
+            'tax_included_amount'=>'合計金額',
+            'last_payment_amount'=>'前回入金額',
+            'total_dw_amount'=>'入金額',
+            'fee'=>'手数料',
+            'discount'=>'値引き',
+            'deposit_balance'=>'入金残'
+        ]
+    ]
 
 ];
