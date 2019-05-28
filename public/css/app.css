@@ -452,6 +452,9 @@ input,select{
 .wd-350{
     width: 350px !important;
 }
+.wd-380{
+    width: 380px !important;
+}
 .min-wd-100 {
     min-width: 100px;
 }
@@ -680,4 +683,10 @@ input[type="checkbox"]:focus {
 }
 .wd-32{
     width: 32px !important;
+}
+.wd-180{
+    width: 180px !important;
+}
+.w-85{
+    width: 85% !important;
 }

@@ -137,6 +137,8 @@ return [
             "employment_insurance_numbers"=>"雇用保険番号",
             "health_insurance_numbers"=>"健康保険番号",
             "employees_pension_insurance_numbers"=>"厚生年金番号",
+            "approval_levels"=>'ワークフロー承認レベル',
+            "section_id"=>'ワークフロー申請者所属区分',
             "admin_fg"=>"管理者フラグ",
             "mst_role_id"=>"役割（システム権限）",
             "screen_category_id"=>[
