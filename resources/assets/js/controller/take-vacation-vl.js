@@ -258,6 +258,7 @@ var ctrTakeVacationVl = new Vue({
                     return false;
                 } else {
                     that.listStaffs = response.info;
+                    that.message = '';
                 }
             });
         },

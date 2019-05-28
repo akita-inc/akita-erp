@@ -494,7 +494,7 @@ class TakeVacationController extends Controller
             ->whereNotNull('mst_staffs.mail')
             ->whereNull('mst_staffs.deleted_at');
         if(isset($input['name']) && !empty($input['name'])){
-            $query = $query->where(DB::raw("CONCAT(mst_staffs.last_nm , mst_staffs.first_nm ,mst_staffs.last_nm_kana ,mst_staffs.first_nm_kana)"),'LIKE','%'.$input['name'].'%');
+            $query = $query->where(DB::raw("CONCAT_WS('',mst_staffs.last_nm , mst_staffs.first_nm ,mst_staffs.last_nm_kana ,mst_staffs.first_nm_kana)"),'LIKE','%'.$input['name'].'%');
         }
         if(isset($input['mst_business_office_id']) && !empty($input['mst_business_office_id'])){
             $query = $query->where('mst_staffs.mst_business_office_id','=',$input['mst_business_office_id']);
@@ -524,7 +524,7 @@ class TakeVacationController extends Controller
         }else{
             return response()->json([
                 'success'=>false,
-                'msg'=> Lang::get('messages.MSG10010'),
+                'msg'=> Lang::get('messages.MSG05001'),
             ]);
         }
     }

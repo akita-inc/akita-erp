@@ -48,7 +48,7 @@
                     <tbody>
                     <tr  v-cloak v-for="item in listStaffs">
                         @foreach($fieldShowTable as $key => $field)
-                            <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
+                            <td class="text-left {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @if($key=='staff_nm')
                                     <a href="javaScript:void(0);" @click="setEmailAddress(item)">{!!"@{{ item['$key'] }}" !!}</a>
                                 @else

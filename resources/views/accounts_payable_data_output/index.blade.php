@@ -81,7 +81,7 @@
                 <div class="break-row-form" style="height: 25px;"></div>
                 <div class="row">
                     <div class="col-md-12 justify-content-center">
-                        <button class="btn btn-primary  btn-submit" v-on:click="getItems(1)">
+                        <button class="btn btn-primary  btn-submit" v-on:click="createCSV">
                             {{trans('accounts_payable_data_output.list.search.button.output')}}
                         </button>
                     </div>
