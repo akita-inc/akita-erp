@@ -381,6 +381,9 @@ return [
         'delimiter' => ',',
         'enclosure' => '"',
     ],
+    'accounts_payable_csv' => [
+        'delimiter' => ',',
+    ],
     'invoice_pdf_template' =>[
         'page_1' =>  storage_path("pdf_template/請求書無地P1.pdf"),
         'page_2' =>  storage_path("pdf_template/請求書無地P2.pdf"),
