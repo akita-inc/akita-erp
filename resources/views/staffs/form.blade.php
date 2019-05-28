@@ -1,6 +1,23 @@
 @extends('Layouts.app')
 @section('title',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
 @section('title_header',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
+@section('css')
+    <style>
+        .wrap-control-group{
+            padding-left: 230px!important;
+        }
+        .wrap-control-group label{
+            width:230px!important;
+        }
+        .wrap-control-group .label-file-image{
+            width: 120px!important;
+            left: 50px!important;
+        }
+        .btnPreviewdrivers_license_picture{
+            margin-left: 130px!important;
+        }
+    </style>
+@endsection
 @section('content')
     @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
@@ -55,7 +72,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'staff_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'staff_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                     </div>
@@ -78,7 +95,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'employment_pattern_id','array'=>@$listEmployPattern])
+                        @include('Component.form.select',['class'=>'wd-380','filed'=>'employment_pattern_id','array'=>@$listEmployPattern])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -119,7 +136,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'zip_cd','attr_input' => "maxlength=7"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'zip_cd','attr_input' => "maxlength=7"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode()">〒 → 住所</button>
@@ -130,7 +147,7 @@
                     <!--prefectures_cd address1-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'prefectures_cd','array'=>@$listPrefecture])
+                        @include('Component.form.select',['class'=>'wd-380','filed'=>'prefectures_cd','array'=>@$listPrefecture])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -153,18 +170,18 @@
                     <!--phone_number fax_number-->
 
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'landline_phone_number','attr_input' => "maxlength='20'"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'landline_phone_number','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'cellular_phone_number','attr_input' => "maxlength='20'"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'cellular_phone_number','attr_input' => "maxlength='20'"])
                     </div>
 
                     <div class="break-row-form"></div>
 
                     <!--customer_category_id prime_business_office_id-->
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'corp_cellular_phone_number','attr_input' => "maxlength='20'"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'corp_cellular_phone_number','attr_input' => "maxlength='20'"])
                         <div class="break-row-form"></div>
                         @include('Component.form.input',['filed'=>'mail','attr_input' => "maxlength='255'"])
                     </div>
@@ -178,11 +195,11 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.select',['class'=>'wd-300','filed'=>'sex_id','array'=>@$listSex])
+                        @include('Component.form.select',['class'=>'wd-380','filed'=>'sex_id','array'=>@$listSex])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'birthday','role' => $role])
+                        @include('Component.form.date-picker',['class'=>'wd-380','filed'=>'birthday','role' => $role])
                     </div>
 
                 </div>
@@ -191,11 +208,11 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'enter_date','role' => $role])
+                        @include('Component.form.date-picker',['class'=>'wd-380','filed'=>'enter_date','role' => $role])
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.date-picker',['class'=>'wd-350','filed'=>'retire_date','role' => $role])
+                        @include('Component.form.date-picker',['class'=>'wd-380','filed'=>'retire_date','role' => $role])
                     </div>
 
                 </div>
@@ -204,10 +221,10 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'insurer_number','attr_input' => "maxlength='3'"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'insurer_number','attr_input' => "maxlength='3'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'basic_pension_number','attr_input' => "maxlength='11'"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'basic_pension_number','attr_input' => "maxlength='11'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -216,7 +233,7 @@
                         @include('Component.form.input',['filed'=>'person_insured_number','attr_input' => "maxlength='11'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-350','filed'=>'health_insurance_class','attr_input'=>"maxlength='10'"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'health_insurance_class','attr_input'=>"maxlength='10'"])
                     </div>
 
                     <div class="break-row-form"></div>
@@ -264,7 +281,7 @@
                                             <div class="col-md-5 col-sm-12">
                                                 @include('Component.form.select-vue',[
                                                     'filed'=>'dept_dependent_kb',
-                                                     'class'=>'wd-350',
+                                                     'class'=>'wd-380',
                                                     'filedId'=>"'mst_staff_dependents_dependent_kb'+index",
                                                     'filedMode'=>"items.dept_dependent_kb",
                                                     'array'=>$listDependentKBs,
@@ -322,7 +339,7 @@
                                             <div class="col-md-5 col-sm-12">
                                                 @include('Component.form.date-picker-vue',[
                                                     'filed'=>'dept_birthday',
-                                                    'class'=>'wd-350',
+                                                    'class'=>'wd-380',
                                                     'filedId'=>"'mst_staff_dependents_birthday'+index",
                                                     'filedMode'=>"items.dept_birthday",
                                                     'filedErrors'=>"mst_staff_dependents",
@@ -332,7 +349,7 @@
                                             <div class="col-md-7 col-sm-12 pd-l-20">
                                                 @include('Component.form.select-vue',[
                                                     'filed'=>'dept_sex_id',
-                                                    'class'=>'wd-300',
+                                                    'class'=>'wd-380',
                                                     'filedId'=>"'mst_staff_dependents_sex_id'+index",
                                                     'filedMode'=>"items.dept_sex_id",
                                                     'array'=>$listSex,
@@ -344,7 +361,7 @@
                                             <div class="col-md-5 col-sm-12">
                                                 @include('Component.form.input-vue',[
                                                     'filed'=>'dept_social_security_number',
-                                                    'class'=>'wd-350',
+                                                    'class'=>'wd-380',
                                                     'attr_input' => "maxlength='10'",
                                                     'filedId'=>"'mst_staff_dependents_social_security_number'+index",
                                                     'filedMode'=>"items.dept_social_security_number",
@@ -379,7 +396,7 @@
 
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',['filed'=>'educational_background_dt','class'=>'wd-350','role' => $role])
+                                    @include('Component.form.date-picker',['filed'=>'educational_background_dt','class'=>'wd-380','role' => $role])
                                 </div>
                             </div>
                         </div>
@@ -414,7 +431,7 @@
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.date-picker-vue',[
                                         'filed'=>'staff_tenure_start_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"'mst_staff_job_experiences_staff_tenure_start_dt'+index",
                                         'filedMode'=>"items.staff_tenure_start_dt",
                                         'filedErrors'=>"mst_staff_job_experiences",
@@ -425,7 +442,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.date-picker-vue',[
                                         'filed'=>'staff_tenure_end_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"'mst_staff_job_experiences_staff_tenure_start_dt'+index",
                                         'filedMode'=>"items.staff_tenure_end_dt",
                                         'filedErrors'=>"mst_staff_job_experiences",
@@ -467,7 +484,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.date-picker-vue',[
                                         'filed'=>'acquisition_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"'mst_staff_qualifications_acquisition_dt'+index",
                                         'filedMode'=>"items.acquisition_dt",
                                         'filedErrors'=>"mst_staff_qualifications",
@@ -480,7 +497,7 @@
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.date-picker-vue',[
                                         'filed'=>'period_validity_start_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"'mst_staff_qualifications_period_validity_start_dt'+index",
                                         'filedMode'=>"items.period_validity_start_dt",
                                          'filedErrors'=>"mst_staff_qualifications",
@@ -492,7 +509,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.date-picker-vue',[
                                         'filed'=>'period_validity_end_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"'mst_staff_qualifications_period_validity_end_dt'+index",
                                         'filedMode'=>"items.period_validity_end_dt",
                                         'filedErrors'=>"mst_staff_qualifications",
@@ -513,7 +530,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.input-vue',[
                                         'filed'=>'amounts',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"'mst_staff_qualifications_amounts'+index",
                                         'filedMode'=>"items.amounts",
                                         'filedErrors'=>"mst_staff_qualifications"
@@ -522,7 +539,7 @@
                                     <div class="break-row-form"></div>
                                         @include('Component.form.date-picker-vue',[
                                             'filed'=>'payday',
-                                            'class'=>'wd-350',
+                                            'class'=>'wd-380',
                                             'filedId'=>"'mst_staff_qualifications_payday'+index",
                                             'filedMode'=>"items.payday",
                                             'filedErrors'=>"mst_staff_qualifications",
@@ -561,7 +578,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.select',[
                                        'filed'=>'drivers_license_color_id',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                        'filedId'=>"mst_staff_driver_license_color_id",
                                        'filedMode'=>"items.drivers_license_color_id",
                                        'array'=>$listDriversLicenseColors,
@@ -573,7 +590,7 @@
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.date-picker',[
                                         'filed'=>'drivers_license_issued_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"mst_staff_driver_license_issued_dt",
                                         'filedMode'=>"items.drivers_license_issued_dt",
                                         'role' => $role
@@ -582,7 +599,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.date-picker',[
                                         'filed'=>'drivers_license_period_validity',
-                                         'class'=>'wd-350',
+                                         'class'=>'wd-380',
                                         'filedId'=>"mst_staff_drivers_license_period_validity",
                                         'filedMode'=>"items.drivers_license_period_validity",
                                         'role' => $role
@@ -734,7 +751,7 @@
             @if(in_array(7,$rolesStaffScreen))
             <div class="grid-form">
                 <p class="header-collapse" >
-                    <a data-toggle="collapse" href="#b_mst_others" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <a data-toggle="collapse" href="#b_mst_others" role="button" aria-expanded="false" aria-controls="collapseExample" id="title_mst_others">
                         その他
                     </a>
                 </p>
@@ -747,6 +764,7 @@
                                         'filed'=>'belong_company_id',
                                         'filedId'=>"mst_others_belong_company_id",
                                         'filedMode'=>"items.belong_company_id",
+                                        'required'=>true,
                                         'array'=>$listBelongCompanies,
                                     ])
                                 </div>
@@ -766,6 +784,7 @@
                                         'filed'=>'mst_business_office_id',
                                         'filedId'=>"mst_others_mst_business_office_id",
                                         'filedMode'=>"items.mst_business_office_id",
+                                        'required'=>true,
                                         'array'=>$mBusinessOffices
                                     ])
                                 </div>
@@ -791,7 +810,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.date-picker',[
                                        'filed'=>'retire_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                        'filedId'=>"mst_others_retire_dt",
                                        'filedMode'=>"items.retire_dt",
                                        'role' => $role
@@ -811,7 +830,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.date-picker',[
                                         'filed'=>'death_dt',
-                                         'class'=>'wd-350',
+                                         'class'=>'wd-380',
                                         'filedId'=>"mst_others_death_dt",
                                         'filedMode'=>"items.death_dt",
                                         'role' => $role
@@ -821,7 +840,7 @@
                                 <div class="col-md-5 col-sm-12">
                                     @include('Component.form.date-picker',[
                                         'filed'=>'driver_election_dt',
-                                        'class'=>'wd-350',
+                                        'class'=>'wd-380',
                                         'filedId'=>"mst_others_driver_election_dt",
                                         'filedMode'=>"items.driver_election_dt",
                                         'role' => $role
@@ -830,7 +849,7 @@
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.select',[
                                         'filed'=>'medical_checkup_interval_id',
-                                         'class'=>'wd-350',
+                                         'class'=>'wd-380',
                                         'filedId'=>"mst_others_medical_checkup_interval_id",
                                         'filedMode'=>"items.medical_checkup_interval_id",
                                         'array'=>$listMedicalCheckupInterval
@@ -870,6 +889,27 @@
                                         'filedId'=>"mst_others_workmens_compensation_insurance_fg",
                                         'filedMode'=>"items.workmens_compensation_insurance_fg",
                                         'checkboxLabel'=>'あり'
+                                    ])
+                                </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-5 col-sm-12">
+                                    @include('Component.form.select',[
+                                       'filed'=>'approval_levels',
+                                       'filedId'=>"mst_others_approval_levels",
+                                       'filedMode'=>"items.approval_levels",
+                                       'required'=>true,
+                                       'array'=>$listApprovalLevels,
+                                   ])
+                                </div>
+
+                                <div class="col-md-7 col-sm-12 pd-l-20">
+                                    @include('Component.form.select',[
+                                        'filed'=>'section_id',
+                                        'filedId'=>"mst_others_section_id",
+                                        'filedMode'=>"items.section_id",
+                                        'required'=>true,
+                                        'class'=>"w-75",
+                                        'array'=>$listSectionIds,
                                     ])
                                 </div>
                             </div>
