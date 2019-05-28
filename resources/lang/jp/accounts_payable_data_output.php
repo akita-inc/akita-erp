@@ -10,8 +10,8 @@ return[
             'button' => [
                 'output' => '出力',
             ],
-            'ouput_success'=>'出力しました。',
-            'no_data'=>'対象データがありません。',
+            'output_success'=>'出力しました',
+            'no_data'=>'対象データがありません',
         ],
 
     ],

@@ -78,29 +78,34 @@ class AccountsPayableDataOutputController extends Controller {
         $keys = array_keys($this->csvColumn);
         $mPurchases =  new MPurchases();
         $csvContent = $mPurchases->getAccountsPayableData($fieldSearch);
-        $fileName = 'purchase'.TimeFunction::dateFormat($fieldSearch['start_date'],'Ymd').'-'.TimeFunction::dateFormat($fieldSearch['end_date'],'Ymd').'.csv';
-        $headers = array(
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0",
-        );
+        if(count($csvContent) > 0 ){
+            $fileName = 'purchase'.TimeFunction::dateFormat($fieldSearch['start_date'],'Ymd').'-'.TimeFunction::dateFormat($fieldSearch['end_date'],'Ymd').'.csv';
+            $headers = array(
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0",
+            );
 
-        $callback = function() use ($keys,$csvContent,$header1,$header2) {
-            $file = fopen('php://output', 'w');
-            fwrite ($file,mb_convert_encoding($header1, "SJIS", "UTF-8")."\r\n");
-            fwrite ($file,mb_convert_encoding($header2, "SJIS", "UTF-8")."\r\n");
-            fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
-            foreach ($csvContent as $content) {
-                $row = [];
-                foreach ($keys as $key) {
-                    $row[$key] = $content->{$key};
+            $callback = function() use ($keys,$csvContent,$header1,$header2) {
+                $file = fopen('php://output', 'w');
+                fwrite ($file,mb_convert_encoding($header1, "SJIS", "UTF-8")."\r\n");
+                fwrite ($file,mb_convert_encoding($header2, "SJIS", "UTF-8")."\r\n");
+                fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
+                foreach ($csvContent as $content) {
+                    $row = [];
+                    foreach ($keys as $key) {
+                        $row[$key] = $content->{$key};
+                    }
+                    fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
                 }
-                fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
-            }
-            fclose($file);
-        };
-        return response()->stream($callback, 200, $headers);
+                fclose($file);
+            };
+            return response()->stream($callback, 200, $headers);
+        }else{
+            return response()->json(['success' =>false,'msg' => '']);
+        }
+
     }
 }

@@ -3,23 +3,6 @@
 @section('title_header',trans("accounts_payable_data_output.title"))
 @section('style')
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
-    <style>
-        .input-cd+div{
-            width: 300px!important;
-        }
-        .autosuggest__results-container{
-            font-size: 14px;
-        }
-        .search-content thead {
-            cursor: default !important;
-        }
-        #detailsModal .modal-footer{
-            border-top: none !important;
-        }
-        .form-control[readonly]{
-            background-color: white;
-        }
-    </style>
 @endsection
 @section('content')
     @include('Layouts.alert')
@@ -88,41 +71,20 @@
                 </div>
             </div>
         </div>
-        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">
+        <div class="sub-header mt-3 ml-5 mr-5" v-bind:class="outputSuccess?'bg-color-green':'bg-color-pink'" v-cloak v-if="flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" v-if="outputSuccess">
+                            {{trans("accounts_payable_data_output.list.search.output_success")}}
+                        </div>
+                        <div class="col-sm-12" v-else>
                             {{trans("accounts_payable_data_output.list.search.no_data")}}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        @include('Layouts.modal',[
-        'id'=> 'confirmPDFModal',
-        'title'=> '',
-        'content'=> trans('messages.MSG10022'),
-        'attr_input' => "@click='createPDF()'",
-        'btn_ok_title' => trans('common.button.yes'),
-        'btn_cancel_title' => trans('common.button.no'),
-        ])
-        @include('Layouts.modal',[
-        'id'=> 'confirmCSVModal',
-        'title'=> '',
-        'content'=> trans('messages.MSG10022'),
-        'attr_input' => "@click='createCSV()'",
-        'btn_ok_title' => trans('common.button.yes'),
-        'btn_cancel_title' => trans('common.button.no'),
-        ])
-        @include('Layouts.modal',[
-        'id'=> 'confirmAmazonCSVModal',
-        'title'=> '',
-        'content'=> trans('messages.MSG10022'),
-        'attr_input' => "@click='createAmazonCSV()'",
-        'btn_ok_title' => trans('common.button.yes'),
-        'btn_cancel_title' => trans('common.button.no'),
-        ])
 
     </div>
 @endsection
