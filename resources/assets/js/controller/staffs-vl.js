@@ -107,6 +107,8 @@ var ctrStaffsVl = new Vue({
             employment_insurance_numbers:"",
             health_insurance_numbers:"",
             employees_pension_insurance_numbers:"",
+            approval_levels:"",
+            section_id:"",
             workmens_compensation_insurance_fg:"",
             mst_role_id:"",
             mst_staff_auths: {
@@ -235,6 +237,8 @@ var ctrStaffsVl = new Vue({
                 that.field.health_insurance_numbers="";
                 that.field.employees_pension_insurance_numbers="";
                 that.field.workmens_compensation_insurance_fg="";
+                that.field.approval_levels="";
+                that.field.section_id="";
             }
             if(that.roles_staff_screen.indexOf(8)<0)
             {
@@ -305,6 +309,17 @@ var ctrStaffsVl = new Vue({
                         staffs_service.submit(formData).then((response) => {
                             if(response.success == false){
                                 that.errors = response.message;
+                                if(that.errors.belong_company_id != undefined ||that.errors.mst_business_office_id != undefined || that.errors.approval_levels != undefined || that.errors.section_id!=undefined)
+                                {
+                                    $('#b_mst_others').addClass("show");
+                                    $("#title_mst_others").attr("aria-expanded","true");
+
+                                }
+                                else
+                                {
+                                    $('#b_mst_others').removeClass("show");
+                                    $("#title_mst_others").attr("aria-expanded","false");
+                                }
                             }
                             else {
                                 that.errors = {};
@@ -320,6 +335,17 @@ var ctrStaffsVl = new Vue({
                 staffs_service.submit(formData).then((response) => {
                     if(response.success == false){
                         that.errors = response.message;
+                        if(that.errors.belong_company_id != undefined ||that.errors.mst_business_office_id != undefined || that.errors.approval_levels != undefined || that.errors.section_id!=undefined)
+                        {
+                            $('#b_mst_others').addClass("show");
+                            $("#title_mst_others").attr("aria-expanded","true");
+
+                        }
+                        else
+                        {
+                            $('#b_mst_others').removeClass("show");
+                            $("#title_mst_others").attr("aria-expanded","false");
+                        }
                     }
                     else
                     {
