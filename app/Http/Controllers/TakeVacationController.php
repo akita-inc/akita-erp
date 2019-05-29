@@ -39,6 +39,7 @@ class TakeVacationController extends Controller
         'applicant_office_nm' => '所属営業所',
         'approval_kb' => '休暇区分',
         'half_day_kb' => '時間区分',
+        'date' => '期間',
         'start_date' => '開始日',
         'end_date' => '終了日',
         'days' => '日数',
@@ -453,6 +454,10 @@ class TakeVacationController extends Controller
         $listWfAdditionalNotice = $data['wf_additional_notice'];
         $listMailChecked = [];
         $errorsEx = [];
+        if ($data['start_date'] != "" && $data['end_date'] != ""
+            && Carbon::parse($data['start_date']) > Carbon::parse($data['end_date'])) {
+            $validator->errors()->add('start_date', str_replace(' :attribute', $this->labels['date'], Lang::get('messages.MSG02014')));
+        }
         foreach ($listWfAdditionalNotice as $key => $item){
             $validatorEx = Validator::make(['email_address' => $item['email_address']], ['email_address' => 'length:255|nullable|email_format|email_character'], $this->messagesCustom, $this->labels);
             if ($validatorEx->fails()) {

@@ -137,26 +137,20 @@
                 </div>
             </div>
         </div>
-        <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
-            <div class="sub-header-line-two p-t-30 frm-search-list">
+        <div class="mt-3 sub-header d-flex justify-content-center align-items-center" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
+            <div class="sub-header-line-two frm-search-list">
                 <div class="row justify-content-center">
-                    <div class="col-md-2 padding-row-5 col-list-search-f "></div>
-                    <div class="col-md-4 padding-row-5 grid-form-search row">
-                        <div class="col-md-4 padding-row-5">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmPDFModal" :disabled="disableBtn">
-                                {{trans('invoice_history.list.search.button.issue')}}
-                            </button>
-                        </div>
-                        <div class="col-md-4 padding-row-5">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmCSVModal" :disabled="disableBtn">
-                                {{trans('invoice_history.list.search.button.csv')}}
-                            </button>
-                        </div>
-                        <div class="col-md-4 padding-row-5">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmAmazonCSVModal" :disabled="disableBtn">
-                                {{trans('invoice_history.list.search.button.amazonCSV')}}
-                            </button>
-                        </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-primary btn-submit" data-toggle="modal" data-target="#confirmPDFModal" :disabled="disableBtn">
+                            {{trans('invoice_history.list.search.button.issue')}}
+                        </button>
+
+                        <button class="btn btn-primary btn-submit" data-toggle="modal" data-target="#confirmCSVModal" :disabled="disableBtn">
+                            {{trans('invoice_history.list.search.button.csv')}}
+                        </button>
+                        <button class="btn btn-primary btn-submit" data-toggle="modal" data-target="#confirmAmazonCSVModal" :disabled="disableBtn">
+                            {{trans('invoice_history.list.search.button.amazonCSV')}}
+                        </button>
                     </div>
                 </div>
             </div>
