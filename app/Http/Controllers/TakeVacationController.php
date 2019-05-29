@@ -631,6 +631,8 @@ class TakeVacationController extends Controller
                 }
             }else{
                 $id = $data['id'];
+                $mWPaidVacation = new WPaidVacation();
+                $vacationInfo = $mWPaidVacation->getInfoByID($id);
                 if($approval_fg==1) {
                     $dataWfAdditionalNotice = [];
                     foreach ($listWfAdditionalNotice as $key => $item) {
@@ -652,12 +654,12 @@ class TakeVacationController extends Controller
                     if($minStepLevel){
                         $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$minStepLevel->approval_levels);
                     }else{
-                        $mailTo = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
+                        $mailTo = !empty($vacationInfo->mail) ? [$vacationInfo->mail] : [];
                         $mailTo = array_merge($mailTo,array_filter(array_column($listWfAdditionalNotice, 'email_address')));
                     }
                 }else{
                     $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
-                    $mailTo = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
+                    $mailTo = !empty($vacationInfo->mail) ? [$vacationInfo->mail] : [];
                     foreach ($listWApprovalStatus as $item){
                         $listMail = $mStaff->getListMailTo($arrayInsert['applicant_office_id'],$item->approval_levels);
                         $mailTo = array_merge($mailTo,$listMail);
@@ -694,9 +696,9 @@ class TakeVacationController extends Controller
         $data = $mWPaidVacation->getInfoForMail($id);
         $field = ['[id]','[applicant_id]','[approval_kb]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]','[send_back_reason]'];
         $data['id_before'] = $id_before;
-        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title'],$data['send_back_reason']],
+        $text = str_replace($field, [$data['id'],$data['staff_nm'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title'],$data['send_back_reason']],
             $configMail['template']);
-        $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
+        $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['staff_nm'],$data['applicant_office_id']],$configMail["subject"]);
         if(count($mailTo) > 0){
             Mail::raw($text,
                 function ($message) use ($configMail,$subject,$mailTo,$mailCC) {
