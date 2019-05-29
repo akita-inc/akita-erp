@@ -13,6 +13,7 @@ use App\Models\MCustomers;
 use App\Models\MGeneralPurposes;
 use App\Models\MNumberings;
 use App\Models\MSaleses;
+use App\Models\TPaymentHistories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,21 +50,17 @@ class PaymentHistoriesController extends Controller {
         $this->query->select(
             DB::raw("DATE_FORMAT(t_payment_histories.dw_day, '%Y/%m/%d') as dw_day"),
             "t_payment_histories.mst_customers_cd",
-            "mst_customers.customer_nm",
+            DB::raw("mst_customers.customer_nm_formal as customer_nm"),
             "t_payment_histories.dw_classification",
-            "t_payment_histories.actual_dw",
-            "t_payment_histories.fee",
-            "t_payment_histories.discount",
-            "t_payment_histories.total_dw_amount",
-            "t_payment_histories.note"
-
-        );
+            DB::raw('SUM(t_payment_histories.actual_dw) as actual_dw'),
+            DB::raw('SUM(t_payment_histories.fee) as fee'),
+            DB::raw('SUM(t_payment_histories.discount) as discount'),
+            DB::raw('SUM(t_payment_histories.total_dw_amount) as total_dw_amount'),
+            't_payment_histories.dw_number',
+            't_payment_histories.note');
         $this->query->join('mst_customers', function ($join) {
             $join->on('mst_customers.mst_customers_cd', '=', 't_payment_histories.mst_customers_cd')
                 ->whereRaw('mst_customers.deleted_at IS NULL');
-        })->leftJoin('t_billing_history_headers as headers',function ($join){
-            $join->on('headers.invoice_number', '=', 't_payment_histories.invoice_number')
-                ->whereRaw('headers.deleted_at IS NULL');
         });
         if ($where['from_date'] != '' && $where['to_date'] != '' ) {
             $this->query->where('t_payment_histories.dw_day', '>=',$where['from_date'])
@@ -73,7 +70,15 @@ class PaymentHistoriesController extends Controller {
             $this->query->where('t_payment_histories.mst_customers_cd', '=',  $where['mst_customers_cd']);
         }
         $this->query->where('t_payment_histories.deleted_at',null);
-        $this->query->orderBy('t_payment_histories.dw_number','asc');
+        $this->query->groupBy(
+                            't_payment_histories.dw_number',
+                            't_payment_histories.dw_day',
+                            't_payment_histories.mst_customers_cd',
+                            'mst_customers.customer_nm_formal',
+                            't_payment_histories.dw_classification',
+                            't_payment_histories.note'
+        );
+        $this->query->orderBy('t_payment_histories.dw_number','desc');
 
     }
 
@@ -109,29 +114,52 @@ class PaymentHistoriesController extends Controller {
 
         ];
         $fieldShowTableDetails = [
-            'daily_report_date' => [
+            'invoice_number' => [
                 "classTH" => "wd-60",
             ],
-            'departure_point_name'=> [
+            'publication_date'=> [
                 "classTH" => "wd-60",
-            ],
-            'landing_name'=> [
-                "classTH" => "wd-120",
             ],
             'total_fee'=> [
-                "classTH" => "wd-100",
+                "classTH" => "wd-120",
             ],
             'consumption_tax'=> [
                 "classTH" => "wd-100",
             ],
             'tax_included_amount'=> [
+                "classTH" => "wd-100",
+            ],
+            'last_payment_amount'=> [
                 "classTH" => "wd-120",
+            ],
+            'total_dw_amount'=> [
+                "classTH" => "wd-60",
+            ],
+            'fee'=> [
+                "classTH" => "wd-60",
+            ],
+            'discount'=> [
+                "classTH" => "wd-60",
+            ],
+            'deposit_balance'=> [
+                "classTH" => "wd-60",
             ],
 
         ];
         return view('payment_histories.index',[
             'fieldShowTable'=>$fieldShowTable,
             'fieldShowTableDetails'=>$fieldShowTableDetails,
+        ]);
+    }
+    public function getDetailsPaymentHistories(Request $request)
+    {
+        $input = $request->all();
+        $fieldSearch = $input['fieldSearch'];
+        $mPaymentHistories = new TPaymentHistories();
+        $listDetail =  $mPaymentHistories->getListByCustomerCd($input['dw_number'], $fieldSearch);
+        return response()->json([
+            'success'=>true,
+            'info'=> $listDetail,
         ]);
     }
 

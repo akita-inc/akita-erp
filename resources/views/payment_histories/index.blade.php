@@ -130,7 +130,7 @@
                 <tbody>
                 <tr  v-cloak v-for="item in items">
                     <td class="no-padding wd-60 text-center">
-                        <button type="button" class="btn  btn-secondary" v-on:click="openModal(item.id)">
+                        <button type="button" class="btn  btn-secondary" v-on:click="openModal(item)">
                             <span> {{trans("payment_histories.list.search.button.detail")}} </span>
                         </button>
                     </td>

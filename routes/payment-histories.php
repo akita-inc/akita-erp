@@ -14,9 +14,7 @@ Route::group(['name' => 'payment-histories', 'prefix' => 'payment_histories', 'm
         Route::any('/submit','PaymentHistoriesController@submit')->name("payment_histories.save");
         Route::get('/delete/{id}', 'PaymentHistoriesController@delete')->name('payment_histories.delete');
         Route::any('/search-sales-lists', 'PaymentHistoriesController@searchSalesLists');
-        Route::any('/updateStatus/{id}', 'PaymentHistoriesController@updateStatus');
-        Route::any('/mst-customer-list', ['uses' => 'Api\PaymentHistoriesController@getCustomerList']);
-        Route::any('/create-csv', 'PaymentHistoriesController@createCSV');
+        Route::any('/details-payment-histories', 'PaymentHistoriesController@getDetailsPaymentHistories');
 
     });
 });

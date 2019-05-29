@@ -20055,7 +20055,7 @@ var ctrWorkFlowVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\akita-erp\resources\assets\js\controller\work-flow-vl.js */"./resources/assets/js/controller/work-flow-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\work-flow-vl.js */"./resources/assets/js/controller/work-flow-vl.js");
 
 
 /***/ })

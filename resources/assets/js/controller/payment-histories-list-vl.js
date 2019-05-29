@@ -20,6 +20,16 @@ var ctrPaymentHistoryListVl = new Vue({
             mst_customers_cd:"",
             mst_customers_nm:"",
         },
+        fileSearched:{
+            from_date:"",
+            to_date:"",
+            mst_customers_cd:"",
+            mst_customers_nm:"",
+        },
+        modal:{
+            payment_histories:{},
+            billing_headers:[],
+        },
         errors:[],
         pagination:{
             total: 0,
@@ -74,9 +84,19 @@ var ctrPaymentHistoryListVl = new Vue({
             {
                 that.loading = true;
                 payment_histories_service.loadList(data).then((response) => {
+                    that.fileSearched= {
+                        from_date:"",
+                        to_date:"",
+                        mst_customers_cd:"",
+                        mst_customers_nm:"",
+                    };
                     that.items = response.data.data;
                     that.pagination = response.pagination;
                     that.fileSearch = response.fieldSearch;
+                    that.fileSearched.from_date= response.fieldSearch.from_date;
+                    that.fileSearched.to_date= response.fieldSearch.to_date;
+                    that.fileSearched.mst_customers_cd= response.fieldSearch.mst_customers_cd;
+                    that.fileSearched.mst_customers_nm= response.fieldSearch.mst_customers_nm;
                     that.order = response.order;
                     that.flagSearch=true;
                     $.each(that.fileSearch, function (key, value) {
@@ -207,18 +227,16 @@ var ctrPaymentHistoryListVl = new Vue({
             this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
         },
         openModal: function (item) {
-            // this.loading = true;
-            // this.modal.invoice = item;
+            this.loading = true;
             var that = this;
-            // invoice_service.getDetailsInvoice({'mst_customers_cd':item.customer_cd,'mst_business_office_id':item.mst_business_office_id,'fieldSearch': that.fileSearched}).then((response) => {
-            //     if (response.info.length > 0) {
-            //         that.modal.sale_info = response.info;
-            //     }
-            //     $('#detailsModal').modal('show');
-            //     that.loading = false;
-            // });
-            $('#detailsModal').modal('show');
-
+            this.modal.payment_histories = item;
+            payment_histories_service.getDetailsPaymentHistories({'dw_number':item.dw_number,'fieldSearch': that.fileSearched}).then((response) => {
+                if (response.info.length > 0) {
+                    that.modal.billing_headers = response.info;
+                }
+                $('#detailsModal').modal('show');
+                that.loading = false;
+            });
         },
     },
     mounted () {
