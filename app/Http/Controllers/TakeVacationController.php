@@ -621,7 +621,7 @@ class TakeVacationController extends Controller
                         MWfAdditionalNotice::query()->insert($dataWfAdditionalNotice);
                     }
                 }
-                $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$approval_levels_step_1);
+                $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$approval_levels_step_1,$arrayInsert['applicant_id']);
                 if(count($mailTo)==0){
                     $mailCC = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
                     $mailTo = array_column($listWfAdditionalNotice,'email_address');
@@ -652,7 +652,7 @@ class TakeVacationController extends Controller
                     }
                     $minStepLevel = $mWApprovalStatus->getMinStepsLevel($id);
                     if($minStepLevel){
-                        $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$minStepLevel->approval_levels);
+                        $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$minStepLevel->approval_levels,$vacationInfo->applicant_id);
                     }else{
                         $mailTo = !empty($vacationInfo->mail) ? [$vacationInfo->mail] : [];
                         $mailTo = array_merge($mailTo,array_filter(array_column($listWfAdditionalNotice, 'email_address')));
@@ -661,7 +661,7 @@ class TakeVacationController extends Controller
                     $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
                     $mailTo = !empty($vacationInfo->mail) ? [$vacationInfo->mail] : [];
                     foreach ($listWApprovalStatus as $item){
-                        $listMail = $mStaff->getListMailTo($arrayInsert['applicant_office_id'],$item->approval_levels);
+                        $listMail = $mStaff->getListMailTo($arrayInsert['applicant_office_id'],$item->approval_levels,$vacationInfo->applicant_id);
                         $mailTo = array_merge($mailTo,$listMail);
                     }
                     $mailTo = array_merge($mailTo,array_filter(array_column($listWfAdditionalNotice, 'email_address')));
