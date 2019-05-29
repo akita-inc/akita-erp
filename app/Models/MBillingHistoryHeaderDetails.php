@@ -22,12 +22,10 @@ class MBillingHistoryHeaderDetails extends Model {
 
     ];
 
-    public function getInvoicePDFDetail($listID,$dataSearch){
-        $date = date("m/d",strtotime($dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
-        $yearDate = date("m/d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
+    public function getInvoicePDFDetail($listID){
         $query1 = DB::table('t_billing_history_header_details as details')->select(
-                DB::raw("'$date' as daily_report_date"),
-                DB::raw("'$yearDate' as daily_report_date_or"),
+                DB::raw("DATE_FORMAT(MAX(details.daily_report_date), '%m/%d') as daily_report_date"),
+                DB::raw("DATE_FORMAT(MAX(details.daily_report_date), '%Y/%m/%d') as daily_report_date_or"),
                 'details.goods',
                 DB::raw("(CASE 
                     WHEN mst_vehicles.vehicle_size_kb=1 THEN '2t' 

@@ -379,7 +379,7 @@ class InvoicesController extends Controller {
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
-                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID, $fieldSearch);
+                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
                 $pdf = new InvoicePDF();
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);
