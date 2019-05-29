@@ -129,12 +129,13 @@ class MStaffs extends Authenticatable
         return $data;
     }
 
-    public function getListMailTo($applicant_office_id, $level){
+    public function getListMailTo($applicant_office_id, $level, $applicant_id){
         $result = [];
         $content1 =null;
         $query =  $this->select('mail')
             ->whereNotNull('mail')
             ->where('deleted_at','=',null)
+            ->where('staff_cd','!=',$applicant_id)
             ->where('approval_levels','=',$level);
         $mGeneralPurposes = new MGeneralPurposes();
         $dataGeneralPurposes = $mGeneralPurposes->getDataByDateIDAndDataKB($level,config('params.data_kb.wf_level'));
