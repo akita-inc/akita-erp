@@ -85,7 +85,12 @@ var ctrTakeVacationVl = new Vue({
                 $('input[type="tel"]').val('');
                 $('textarea').val('');
             }
-            this.handleChangeHalfDay();
+            if(this.field.mode=='register'){
+                this.handleChangeHalfDay();
+            }
+            if(this.field.mode=='edit'){
+                this.handleChangeHalfDayEdit();
+            }
         },
         submit: function(approval_fg){
             let that = this;
