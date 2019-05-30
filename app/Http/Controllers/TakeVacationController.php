@@ -31,7 +31,7 @@ class TakeVacationController extends Controller
         'end_date' => 'required',
         'days' => 'required|one_byte_number|length:11',
         'times' => 'required|one_byte_number|length:11',
-        'reasons' => 'required|length:300',
+        'reasons' => 'required|length:200',
     ];
     public $messagesCustom =[];
     public $labels=[

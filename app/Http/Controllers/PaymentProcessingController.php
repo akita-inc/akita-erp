@@ -55,27 +55,14 @@ class PaymentProcessingController extends Controller{
             $data = $request->all();
             Session::put('requestHistory', $data);
         }
-        $fieldSearch = $data['fieldSearch'];
-        if($fieldSearch['special_closing_date']==1){
-            $this->ruleValid['closed_date_input'] = 'required';
-        }else{
-            $this->ruleValid['closed_date'] = 'required';
-        }
-        $validator = Validator::make( $fieldSearch, $this->ruleValid ,[] ,$this->labels );
-        if ( $validator->fails() ) {
-            return response()->json([
-                'success'=>FALSE,
-                'message'=> $validator->errors()
-            ]);
-        }else {
-            $items = $this->search($data);
-            $response = [
-                'success'=>true,
-                'data' => $items,
-                'fieldSearch' => $data['fieldSearch'],
-            ];
-            return response()->json($response);
-        }
+        $items = $this->search($data);
+        $response = [
+            'success'=>true,
+            'data' => $items,
+            'fieldSearch' => $data['fieldSearch'],
+        ];
+        return response()->json($response);
+
     }
 
     protected function search($data){
@@ -95,103 +82,7 @@ class PaymentProcessingController extends Controller{
             $querySearch .= "AND ts.daily_report_date <= :date "."\n";
             $paramsSearch['date'] = $date;
         }
-        $this->query = "
-            SELECT
-                invoices.mst_business_office_id,
-                invoices.regist_office,
-                invoices.office_cd,
-                invoices.customer_cd,
-                invoices.customer_nm,
-                CAST(invoices.total_fee AS DECIMAL(10,2)) as total_fee,
-            IF
-                (
-                    invoices.consumption_tax_calc_unit_id = 0,
-                CASE
-                        
-                        WHEN invoices.rounding_method_id = 1 THEN
-                        FLOOR( invoices.consumption_tax_cal ) 
-                        WHEN invoices.rounding_method_id = 2 || invoices.rounding_method_id IS NULL THEN
-                        ROUND( invoices.consumption_tax_cal ) ELSE CEIL( invoices.consumption_tax_cal ) 
-                    END,
-                    invoices.consumption_tax_cal 
-                ) AS consumption_tax
-            FROM
-                (
-                    SELECT
-                    ts.mst_business_office_id,
-                    office.mst_business_office_cd as office_cd,
-                    office.business_office_nm as regist_office,
-                    -- ts.mst_customers_cd \"sales_cus_cd売上.得意先CD\",
-                    c.`bill_cus_cd`AS `customer_cd`,
-                    -- c.sales_cus_nm, -- <== trong modal
-                    c.bill_cus_nm AS `customer_nm`,
-                    SUM(ts.total_fee)  AS total_fee,
-                    CASE
-                WHEN c.consumption_tax_calc_unit_id = 1 THEN
-                    SUM(ts.consumption_tax)
-                ELSE
-                    SUM(
-                
-                        IF (
-                            ts.tax_classification_flg = 1,
-                            (
-                                IFNULL(ts.unit_price,0) * IFNULL(ts.quantity,0) +IFNULL(ts.insurance_fee,0) + IFNULL(ts.loading_fee,0) + IFNULL(ts.wholesale_fee,0) + IFNULL(ts.waiting_fee,0) + IFNULL(ts.incidental_fee,0) + IFNULL(ts.surcharge_fee,0)- IFNULL(ts.discount_amount,0) 
-                            ) * IFNULL((
-                                SELECT
-                                    rate
-                                FROM
-                                    consumption_taxs
-                                WHERE
-                                    start_date <= ts.daily_report_date
-                                AND ts.daily_report_date <= end_date
-                                LIMIT 1
-                            ),0),
-                            0
-                        )
-                    )
-                END AS consumption_tax_cal,
-                c.consumption_tax_calc_unit_id,
-                c.rounding_method_id
-                FROM
-                    t_saleses ts
-                JOIN (
-                    SELECT
-                        connect_sales.id,
-                        connect_sales.mst_customers_cd sales_cus_cd,
-                        connect_sales.customer_nm_formal sales_cus_nm,
-                        bill_info.mst_customers_cd bill_cus_cd,
-                        bill_info.customer_nm_formal bill_cus_nm,
-                        bill_info.consumption_tax_calc_unit_id,
-                        bill_info.rounding_method_id
-                    FROM
-                        mst_customers connect_sales
-                    JOIN mst_customers bill_info ON IFNULL(
-                        connect_sales.bill_mst_customers_cd,
-                        connect_sales.mst_customers_cd
-                    ) = bill_info.mst_customers_cd
-                WHERE
-                    connect_sales.deleted_at IS NULL
-                    AND bill_info.deleted_at IS NULL
-                ) c ON ts.mst_customers_cd = c.sales_cus_cd
-                JOIN mst_business_offices office ON ts.mst_business_office_id = office.id
-                AND office.deleted_at IS NULL
-                WHERE
-                    ts.deleted_at IS NULL
-                    AND ts.invoicing_flag = 0
-                    $querySearch
-                GROUP BY
-                    ts.mst_business_office_id,
-                    office.business_office_nm,
-                    c.bill_cus_cd,
-                    c.bill_cus_nm,
-                    c.consumption_tax_calc_unit_id,
-                    c.rounding_method_id 
-                ORDER BY
-                    ts.mst_business_office_id ASC,
-                     c.bill_cus_cd ASC
-             ) invoices
-        ";
-        return DB::select($this->query,$paramsSearch);
+//        $this->query->select()->whereNull('deleted_at');
 
     }
 
@@ -231,11 +122,13 @@ class PaymentProcessingController extends Controller{
                 "classTH" => "wd-60",
             ],
         ];
+        $currentDate = date("Y/m/d",time());
         $mGeneralPurposes = new MGeneralPurposes();
         $listDepositMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.deposit_method'),'Empty');
         return view('payment_processing.index',[
             'fieldShowTable'=>$fieldShowTable,
             'listDepositMethod'=>$listDepositMethod,
+            'currentDate'=>$currentDate,
         ]);
     }
 
@@ -252,4 +145,5 @@ class PaymentProcessingController extends Controller{
         $data = $query->whereNull('deleted_at')->get();
         return Response()->json(array('success'=>true,'data'=>$data));
     }
+
 }

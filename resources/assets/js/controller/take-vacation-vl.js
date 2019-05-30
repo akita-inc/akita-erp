@@ -197,6 +197,9 @@ var ctrTakeVacationVl = new Vue({
                 let end_date =  moment(that.field.end_date);
                 let start_date =  moment(that.field.start_date);
                 that.field.days = end_date.diff(start_date, 'days')+1;
+                if(that.field.days < 0){
+                    that.field.days = 0;
+                }
             }
         },
         handleChangeHalfDay: function () {
