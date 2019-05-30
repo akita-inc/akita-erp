@@ -365,7 +365,6 @@ var ctrStaffsVl = new Vue({
                 this.loading = true;
                 that.staff_edit = 1;
                 that.staff_id = $("#hd_id").val();
-                console.log(this.staff_id);
                 $.each(this.field,function (key,value) {
                     if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_staff_job_experiences' && key != 'mst_staff_dependents'){
                         that.field.workmens_compensation_insurance_fg=that.field.workmens_compensation_insurance_fg==0?"":1;
