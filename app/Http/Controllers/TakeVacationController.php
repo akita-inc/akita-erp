@@ -506,7 +506,7 @@ class TakeVacationController extends Controller
         }
         if ($input["order"]["col"] != '') {
             if ($input["order"]["col"] == 'staff_nm')
-                $orderCol = 'CONCAT(mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)';
+                $orderCol = "CONCAT_WS('',mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)";
             else if($input["order"]["col"]=='business_office_nm')
                 $orderCol='mst_business_offices.business_office_nm';
             else if($input["order"]["col"]=='mail')
@@ -518,7 +518,7 @@ class TakeVacationController extends Controller
             }
             $query->orderbyRaw($orderCol);
         } else {
-            $query->orderBy('mst_staffs.last_nm_kana', 'mst_staffs.first_nm_kana');
+            $query->orderByRaw("CONCAT_WS('',mst_staffs.last_nm_kana,mst_staffs.first_nm_kana) ASC");
         }
         $data = $query->get();
         if(count($data) > 0){

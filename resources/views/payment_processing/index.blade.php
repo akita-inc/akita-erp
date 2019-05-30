@@ -56,7 +56,7 @@
                             </button>
                         </div>
                         <div class="col-md-7 lh-38 text-right no-padding">
-                            <button class="btn btn-primary w-100" v-on:click="getItems(1)">
+                            <button class="btn btn-primary w-100" v-on:click="getItems">
                                 {{trans('common.button.search')}}
                             </button>
                         </div>
@@ -64,29 +64,36 @@
                 </div>
             </div>
         </div>
-        <div class="mt-3 sub-header" style="background-color: #FFD966" v-if="items.length > 0" v-cloak>
-            <div class="sub-header-line-two p-t-30 frm-search-list">
-                <div class="row justify-content-center">
+        <div class="mt-3 sub-header" style="background-color: #FFD966"  v-cloak>
+            <div class="sub-header-line-two frm-search-list">
+                <div class="row">
                     <div class="col-md-1 padding-row-5 col-list-search-f">
-                        {{trans("payment_processing.list.search.date_of_issue")}}
+                        {{trans("payment_processing.list.field.dw_day")}}
                     </div>
-                    <div class="col-md-3 padding-row-5 grid-form-search">
-                        <div class="col-md-7 no-padding">
-                            <date-picker format="YYYY/MM/DD"
-                                         placeholder=""
-                                         v-model="date_of_issue" v-cloak=""
-                                         :lang="lang"
-                                         :input-class="'form-control w-100'"
-                                         :value-type="'format'"
-                                         :input-name="'date_of_issue'"
-                                         :editable='false'
-                            >
-                            </date-picker>
-                        </div>
+                    <div class="col-md-2 padding-row-5 grid-form-search">
+                        <date-picker format="YYYY/MM/DD"
+                                     placeholder=""
+                                     v-model="dw_day" v-cloak=""
+                                     :lang="lang"
+                                     :input-class="'form-control w-100'"
+                                     :value-type="'format'"
+                                     :input-name="'dw_day'"
+                                     :editable='false'
+                        >
+                        </date-picker>
                     </div>
                 </div>
                 <div class="break-row-form"></div>
-                <div class="row justify-content-center">
+                <div class="row">
+                    <div class="col-md-1 padding-row-5 col-list-search-f">
+                        {{trans("payment_processing.list.field.invoice_balance_total")}}
+                    </div>
+                    <div class="col-md-2 padding-row-5 grid-form-search">
+                        <input type="text" v-model="field.invoice_balance_total" name="invoice_balance_total" maxlength="11" disabled class="form-control">
+                    </div>
+                </div>
+                <div class="break-row-form"></div>
+                <div class="row">
                     <div class="col-md-2 padding-row-5 col-list-search-f "></div>
                     <div class="col-md-4 padding-row-5 grid-form-search row">
                         <div class="col-md-4 padding-row-5">
