@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentHistoriesController extends Controller {
     use ListTrait,FormTrait;
@@ -144,7 +145,9 @@ class PaymentHistoriesController extends Controller {
     public function delete($dw_number)
     {
         $this->backHistory();
-        if (TPaymentHistories::query()->where("dw_number","=",$dw_number)->update(['deleted_at' => date("Y-m-d H:i:s",time())]))
+        if (TPaymentHistories::query()->where("dw_number","=",$dw_number)->update([
+                    'deleted_at' => date("Y-m-d H:i:s",time()),
+                    'upd_mst_staff_id'=>Auth::user()->id]))
         {
             $response = ['success' => 'false','msg'=>Lang::get('messages.MSG10004')];
         } else {
