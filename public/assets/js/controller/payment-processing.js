@@ -20891,26 +20891,13 @@ var ctrPaymentProcessingVl = new Vue({
       note: ''
     },
     message: '',
-    errors: [],
-    filteredCustomerCd: [],
-    filteredCustomerNm: [],
-    dropdown_customer_cd: [{
-      data: []
-    }],
-    dropdown_customer_nm: [{
-      data: []
-    }],
-    list_bundle_dt: [],
-    modal: {
-      invoice: {},
-      sale_info: []
-    },
     disableBtn: false,
     flagSearch: false,
     fileSearched: {
       customer_cd: "",
       customer_nm: ""
     },
+    listCustomer: [],
     getItems: function getItems(page, show_msg) {
       if (show_msg !== true) {
         $('.alert').hide();
@@ -20967,108 +20954,31 @@ var ctrPaymentProcessingVl = new Vue({
       });
     }
   },
-  computed: {
-    inputPropsCd: function inputPropsCd() {
-      return {
-        id: 'autosuggest__input',
-        onInputChange: this.onInputChangeCd,
-        initialValue: this.fileSearch.customer_cd,
-        maxlength: 5,
-        class: 'form-control input-cd',
-        ref: "customer_cd"
-      };
-    },
-    inputPropsNm: function inputPropsNm() {
-      return {
-        id: 'autosuggest__input',
-        onInputChange: this.onInputChangeNm,
-        initialValue: this.fileSearch.customer_nm,
-        maxlength: 5,
-        class: 'form-control',
-        ref: "customer_nm"
-      };
-    }
-  },
   methods: {
-    renderSuggestion: function renderSuggestion(suggestion) {
-      var customer = suggestion.item;
-      return customer.mst_customers_cd + ': ' + (customer.customer_nm != null ? customer.customer_nm : '');
-    },
-    getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
-      this.$refs.customer_nm.searchInput = suggestion.item.customer_nm;
-      return suggestion.item.mst_customers_cd;
-    },
-    getSuggestionValueNm: function getSuggestionValueNm(suggestion) {
-      this.$refs.customer_cd.searchInput = suggestion.item.mst_customers_cd;
-      return suggestion.item.customer_nm;
-    },
-    onInputChangeCd: function onInputChangeCd(text) {
-      this.fileSearch.customer_cd = text;
-
-      if (text === '' || text === undefined) {
-        this.filteredCustomerCd = [];
-        return;
+    handleChangeCustomerNm: function handleChangeCustomerNm() {
+      for (var i = 0; i < this.listCustomer.length; i++) {
+        if (this.listCustomer[i].mst_customers_cd === this.fileSearch.customer_nm) {
+          this.fileSearch.customer_cd = this.listCustomer[i].mst_customers_cd;
+          return;
+        }
       }
-      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-
-
-      var filteredData = this.dropdown_customer_cd[0].data.filter(function (item) {
-        return item.mst_customers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-      }).slice(0, this.limit);
-      this.filteredCustomerCd = [{
-        data: filteredData
-      }];
     },
-    onInputChangeNm: function onInputChangeNm(text) {
-      this.fileSearch.customer_nm = text;
-
-      if (text === '' || text === undefined) {
-        this.filteredCustomerNm = [];
-        return;
+    handleChangeCustomerCd: function handleChangeCustomerCd() {
+      if (this.fileSearch.customer_cd != '') {
+        for (var i = 0; i < this.listCustomer.length; i++) {
+          if (this.listCustomer[i].mst_customers_cd === this.fileSearch.customer_cd) {
+            this.fileSearch.customer_nm = this.listCustomer[i].mst_customers_cd;
+            return;
+          }
+        }
+      } else {
+        this.fileSearch.customer_nm = "";
       }
-      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-
-
-      var filteredData = this.dropdown_customer_nm[0].data.filter(function (item) {
-        return item.customer_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-      }).slice(0, this.limit);
-      this.filteredCustomerNm = [{
-        data: filteredData
-      }];
-    },
-    onSelectedCd: function onSelectedCd(option) {
-      this.fileSearch.customer_cd = option.item.mst_customers_cd;
-      this.fileSearch.customer_nm = option.item.customer_nm;
-    },
-    onSelectedNm: function onSelectedNm(option) {
-      this.fileSearch.customer_cd = option.item.mst_customers_cd;
-      this.fileSearch.customer_nm = option.item.customer_nm;
     },
     clearCondition: function clearCondition() {
-      this.$refs.customer_nm.searchInput = "";
-      this.$refs.customer_cd.searchInput = "";
       this.fileSearch.customer_cd = "";
       this.fileSearch.customer_nm = "";
       this.errors = [];
-      this.filteredCustomerCd = [];
-      this.filteredCustomerNm = [];
-    },
-    openModal: function openModal(item) {
-      this.loading = true;
-      this.modal.invoice = item;
-      var that = this;
-      payment_processing_service.getDetailsInvoice({
-        'mst_customers_cd': item.customer_cd,
-        'mst_business_office_id': item.mst_business_office_id,
-        'fieldSearch': that.fileSearched
-      }).then(function (response) {
-        if (response.info.length > 0) {
-          that.modal.sale_info = response.info;
-        }
-
-        $('#detailsModal').modal('show');
-        that.loading = false;
-      });
     },
     addComma: function addComma(value) {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -21077,8 +20987,7 @@ var ctrPaymentProcessingVl = new Vue({
   mounted: function mounted() {
     var that = this;
     payment_processing_service.loadListCustomers().then(function (response) {
-      that.dropdown_customer_cd[0].data = response.data;
-      that.dropdown_customer_nm[0].data = response.data;
+      that.listCustomer = response.data;
     });
   },
   components: {

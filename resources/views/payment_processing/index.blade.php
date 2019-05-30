@@ -24,34 +24,20 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("payment_processing.list.search.code")}}
                             </label>
-                            <vue-autosuggest
-                                    :suggestions="filteredCustomerCd"
-                                    :input-props="inputPropsCd"
-                                    :on-selected="onSelectedCd"
-                                    :render-suggestion="renderSuggestion"
-                                    :get-suggestion-value="getSuggestionValueCd"
-                                    ref="customer_cd"
-                            >
-                            </vue-autosuggest>
+                            <input type="text" v-model="fileSearch.customer_cd" name="customer_cd" maxlength="5" class="form-control" @change="handleChangeCustomerCd">
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search text-left">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("payment_processing.list.search.name")}}
                             </label>
-                            <vue-autosuggest
-                                    :suggestions="filteredCustomerNm"
-                                    :input-props="inputPropsNm"
-                                    :on-selected="onSelectedNm"
-                                    :render-suggestion="renderSuggestion"
-                                    :get-suggestion-value="getSuggestionValueNm"
-                                    ref="customer_nm"
-                            >
-                            </vue-autosuggest>
+                            <select class="form-control" v-model="fileSearch.customer_nm" name="customer_nm"  v-cloak @change="handleChangeCustomerNm">
+                                <option v-for="option in listCustomer" v-bind:value="option.mst_customers_cd">@{{option.customer_nm}}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
-                            <button class="btn btn-black w-100" v-on:click="clearCondition()">
+                            <button class="btn btn-black w-100" v-on:click="clearCondition">
                                 {{trans('common.button.condition-clear')}}
                             </button>
                         </div>
@@ -106,7 +92,6 @@
                         </div>
                     </div>
                     <div class="col-md-4 row">
-                        {{--<div class="col-md-1 no-padding"></div>--}}
                         <div class="col-md-3 padding-row-5 col-list-search-f text-left">
                             {{trans("payment_processing.list.field.payment_amount")}}
                         </div>
