@@ -16,6 +16,7 @@ use App\Models\MSaleses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,16 +28,13 @@ class PaymentProcessingController extends Controller{
     public $add_log = false;
 
     public $ruleValid = [
+        'customer_cd' => 'required'
     ];
 
-    public $labels = [];
-
-    public $csvColumn = [
-        'mst_suppliers_cd' => '仕入先コード',
-        'supplier_nm' => '仕入先名',
-        'purchases_tax_included_amount' => '請求金額',
-        'saleses_tax_included_amount' => '売上金額',
+    public $labels = [
+        'customer_cd' => '得意先'
     ];
+
 
     public function __construct(){
         date_default_timezone_set("Asia/Tokyo");
@@ -55,35 +53,57 @@ class PaymentProcessingController extends Controller{
             $data = $request->all();
             Session::put('requestHistory', $data);
         }
-        $items = $this->search($data);
-        $response = [
-            'success'=>true,
-            'data' => $items,
-            'fieldSearch' => $data['fieldSearch'],
-        ];
-        return response()->json($response);
-
+        $fieldSearch = $data['fieldSearch'];
+        $validator = Validator::make( $fieldSearch, $this->ruleValid ,['required' => Lang::get('messages.MSG10029')] ,$this->labels );
+        if ( $validator->fails() ) {
+            return response()->json([
+                'success'=>FALSE,
+                'message'=> $validator->errors()
+            ]);
+        }else {
+            $items = $this->search($data);
+            $response = [
+                'success' => true,
+                'data' => $items,
+                'fieldSearch' => $data['fieldSearch'],
+            ];
+            return response()->json($response);
+        }
     }
 
     protected function search($data){
         $dataSearch=$data['fieldSearch'];
-        $querySearch = "\n";
-        $paramsSearch = [];
-        if ($dataSearch['mst_business_office_id'] != '') {
-            $querySearch .= "AND ts.mst_business_office_id = :mst_business_office_id "."\n";
-            $paramsSearch['mst_business_office_id'] = $dataSearch['mst_business_office_id'];
-        };
+        $this->query = DB::table(DB::raw($this->table.' as billing') )->select(
+                'billing.invoice_number',
+                'billing.mst_business_office_id',
+                DB::raw("office.business_office_nm as office_nm"),
+                DB::raw("DATE_FORMAT(publication_date, '%Y/%m/%d') as publication_date"),
+                DB::raw("IFNULL(billing.total_fee,0) as total_fee"),
+                DB::raw("IFNULL(billing.consumption_tax,0) as consumption_tax"),
+                DB::raw("IFNULL(billing.tax_included_amount,0) as tax_included_amount"),
+                DB::raw("IFNULL(payment.total_dw_amount,0) as last_payment_amount"),
+                DB::raw("0 as fee"),
+                DB::raw("0 as discount"),
+                DB::raw("0 as total_dw_amount"),
+                DB::raw("IFNULL(IFNULL(billing.tax_included_amount,0)- IFNULL(payment.total_dw_amount,0),0)  as payment_remaining")
+            )
+            ->whereNull('billing.deleted_at')
+            ->leftJoin(DB::raw('( SELECT invoice_number, IFNULL( SUM( total_dw_amount ), 0 ) AS total_dw_amount FROM t_payment_histories WHERE deleted_at IS NULL GROUP BY invoice_number ) payment'),
+                function($join)
+                {
+                    $join->on('billing.invoice_number', '=', 'payment.invoice_number')
+                    ->whereRaw('billing.tax_included_amount - payment.total_dw_amount > 0');
+                })
+            ->join(DB::raw('mst_business_offices office'), function ($join) {
+                $join->on('office.id', '=', 'billing.mst_business_office_id')
+                    ->whereNull('office.deleted_at');
+            });
         if ($dataSearch['customer_cd'] != '') {
-            $querySearch .= "AND c.bill_cus_cd = :customer_cd "."\n";
-            $paramsSearch['customer_cd'] = $dataSearch['customer_cd'];
+            $this->query->where('billing.mst_customers_cd','=',$dataSearch['customer_cd']);
         }
-        if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
-            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
-            $querySearch .= "AND ts.daily_report_date <= :date "."\n";
-            $paramsSearch['date'] = $date;
-        }
-//        $this->query->select()->whereNull('deleted_at');
-
+        $this->query->orderBy('mst_business_office_id')
+        ->orderBy('invoice_number');
+        return $this->query->get();
     }
 
     public function index(Request $request){

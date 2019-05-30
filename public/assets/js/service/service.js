@@ -505,28 +505,28 @@ payment_histories_service = {
 
 payment_processing_service = {
   loadListCustomers: function loadListCustomers(data) {
-    return axios.get('/invoices/api-v1/getListCustomers', data).then(function (response) {
+    return axios.get('/payment_processing/api-v1/getListCustomers', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
     });
   },
   loadList: function loadList(data) {
-    return axios.post('/invoices/api-v1/getItems', data).then(function (response) {
+    return axios.post('/payment_processing/api-v1/getItems', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
     });
   },
   checkIsExist: function checkIsExist(id, data) {
-    return axios.post('/invoices/api-v1/checkIsExist/' + id, data).then(function (response) {
+    return axios.post('/payment_processing/api-v1/checkIsExist/' + id, data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
     });
   },
   backHistory: function backHistory() {
-    return axios.get('/invoices/api-v1/back-history').then(function (response) {
+    return axios.get('/payment_processing/api-v1/back-history').then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
