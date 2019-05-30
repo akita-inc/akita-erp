@@ -163,7 +163,7 @@ var ctrTakeVacationVl = new Vue({
                 ];
             }
             this.modified_at = $('#hd_modified_at').val();
-            this.handleChangeHalfDay();
+            this.handleChangeHalfDayEdit();
             this.loading = false;
 
         },
@@ -219,6 +219,30 @@ var ctrTakeVacationVl = new Vue({
                     that.field.start_date = currentDate;
                     that.field.end_date = currentDate;
                     that.field.days = 0;
+                    that.disabledStartDate = true;
+                    that.disabledEndDate = true;
+                    that.disabledDays = true;
+                    that.disabledTimes = false;
+                    break;
+            }
+        },
+        handleChangeHalfDayEdit: function () {
+            var that = this;
+            switch (that.field.half_day_kb) {
+                case '1':
+                    that.disabledStartDate = false;
+                    that.disabledEndDate = false;
+                    that.disabledDays = false;
+                    that.disabledTimes= true;
+                    break;
+                case '2':
+                case '3':
+                    that.disabledStartDate = false;
+                    that.disabledEndDate = true;
+                    that.disabledDays = true;
+                    that.disabledTimes= true;
+                    break;
+                case '4':
                     that.disabledStartDate = true;
                     that.disabledEndDate = true;
                     that.disabledDays = true;
