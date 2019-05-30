@@ -20931,7 +20931,13 @@ var ctrTakeVacationVl = new Vue({
         $('textarea').val('');
       }
 
-      this.handleChangeHalfDay();
+      if (this.field.mode == 'register') {
+        this.handleChangeHalfDay();
+      }
+
+      if (this.field.mode == 'edit') {
+        this.handleChangeHalfDayEdit();
+      }
     },
     submit: function submit(approval_fg) {
       var that = this;

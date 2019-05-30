@@ -85,10 +85,40 @@
                 </div>
                 <div class="break-row-form"></div>
                 <div class="row">
+                    <div class="col-md-4 row">
+                        <div class="col-md-3 no-padding col-list-search-f">
+                            {{trans("payment_processing.list.field.invoice_balance_total")}}
+                        </div>
+                        <div class="col-md-4 no-padding grid-form-search">
+                            <input type="text" v-model="field.invoice_balance_total" name="invoice_balance_total" maxlength="11" disabled class="form-control">
+                        </div>
+                        <div class="col-md-2 no-padding col-list-search-f">
+                            {{trans("payment_processing.list.field.dw_classification")}}
+                        </div>
+                        <div class="col-md-3 no-padding col-list-search-f">
+                            <select class="form-control" v-model="field.dw_classification" name="dw_classification">
+                                @foreach($listDepositMethod as $key => $value)
+                                    <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-1 no-padding col-list-search-f">
+                        {{trans("payment_processing.list.field.payment_amount")}}
+                    </div>
+                    <div class="col-md-3 no-padding grid-form-search">
+                        <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" disabled class="form-control">
+                    </div>
                     <div class="col-md-1 padding-row-5 col-list-search-f">
+                        {{trans("payment_processing.list.field.fee")}}
+                    </div>
+                    <div class="col-md-1 no-padding grid-form-search">
+                        <input type="text" v-model="field.fee" name="fee" maxlength="11" disabled class="form-control">
+                    </div>
+                    <div class="col-md-1 no-padding col-list-search-f">
                         {{trans("payment_processing.list.field.invoice_balance_total")}}
                     </div>
-                    <div class="col-md-2 padding-row-5 grid-form-search">
+                    <div class="col-md-1 padding-row-5 grid-form-search">
                         <input type="text" v-model="field.invoice_balance_total" name="invoice_balance_total" maxlength="11" disabled class="form-control">
                     </div>
                 </div>

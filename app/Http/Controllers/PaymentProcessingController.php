@@ -230,10 +230,12 @@ class PaymentProcessingController extends Controller{
             'payment_remaining'=> [
                 "classTH" => "wd-60",
             ],
-
         ];
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listDepositMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.deposit_method'),'Empty');
         return view('payment_processing.index',[
             'fieldShowTable'=>$fieldShowTable,
+            'listDepositMethod'=>$listDepositMethod,
         ]);
     }
 
