@@ -6,9 +6,22 @@ payment_histories_service = {
             return error;
         });
     },
-
+    getDetailsPaymentHistories: function (data) {
+        return axios.post('/payment_histories/api-v1/details-payment-histories',data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
     checkIsExist: function (id,data) {
         return axios.post('/payment_histories/api-v1/checkIsExist/' + id, data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    delete: function (dw_number) {
+        return axios.get('/payment_histories/api-v1/delete/' + dw_number).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

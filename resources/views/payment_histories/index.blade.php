@@ -9,6 +9,7 @@
         }
         .autosuggest__results-container{
             font-size: 14px;
+            text-align: left;
         }
         .search-content thead {
             cursor: default !important;
@@ -42,8 +43,7 @@
                                     :on-selected="onSelectedCd"
                                     :render-suggestion="renderSuggestion"
                                     :get-suggestion-value="getSuggestionValueCd"
-                                    ref="customer_cd"
-                                    @blur="getListBundleDt"
+                                    ref="mst_customers_cd"
                             >
                             </vue-autosuggest>
                         </div>
@@ -53,11 +53,11 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredCustomerNm"
-                                    :input-props="inputPropsNm"
-                                    :on-selected="onSelectedNm"
+                                    :input-props="inputPropsName"
+                                    :on-selected="onSelectedName"
                                     :render-suggestion="renderSuggestion"
-                                    :get-suggestion-value="getSuggestionValueNm"
-                                    ref="customer_nm"
+                                    :get-suggestion-value="getSuggestionValueName"
+                                    ref="mst_customers_nm"
                             >
                             </vue-autosuggest>
                         </div>
@@ -87,7 +87,7 @@
                                 <date-picker
                                         :lang='lang'
                                         id="to_date"
-                                        :format="to_date"
+                                        :format="format_date"
                                         value-type="format"
                                         v-model="fileSearch.to_date"
                                         :input-class="errors.to_date != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="break-row-form" style="height: 20px;"></div>
+                <div class="break-row-form" style="height: 15px;"></div>
                 <div class="row">
                     <div class="col-md-7 col-sm-12 row text-left">
                     </div>
@@ -117,7 +117,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table" v-cloak>
+        <div class="wrapper-table" v-if="items.length>0 && deleteFlagSuccess==false" v-cloak>
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
@@ -130,19 +130,17 @@
                 <tbody>
                 <tr  v-cloak v-for="item in items">
                     <td class="no-padding wd-60 text-center">
-                        <button type="button" class="btn  btn-secondary" >
+                        <button type="button" class="btn  btn-secondary" v-on:click="openModal(item)">
                             <span> {{trans("payment_histories.list.search.button.detail")}} </span>
                         </button>
                     </td>
                     @foreach($fieldShowTable as $key => $field)
                         <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
-                                @case('tax_included_amount')
-                                <span v-if="item['total_fee']==null || item['consumption_tax']==null">￥0</span>
-                                <span v-else>{!!"￥@{{Number( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) ).toLocaleString() }}" !!}</span>
-                                @break
-                                @case('total_fee')
-                                @case('consumption_tax')
+                                @case('actual_dw')
+                                @case('fee')
+                                @case('discount')
+                                @case('total_dw_amount')
                                 <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
                                 @break
                                 @default
@@ -170,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <div class="sub-header bg-color-green mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">
+        <div class="sub-header bg-color-green mt-3 ml-5 mr-5" v-cloak v-if="deleteFlagSuccess">
               <div class="sub-header-line-two">
                     <div class="grid-form border-0">
                         <div class="row">
@@ -183,8 +181,17 @@
         </div>
         @include("payment_histories.modal",[
             'fieldShowTable'=>$fieldShowTable,
+            'attr_input'=>'v-if="recent_dw_number==modal.payment_histories.dw_number"',
             'fieldShowTableDetails'=>$fieldShowTableDetails,
          ])
+        @include('Layouts.modal',[
+               'id'=> 'confirmDeleteModal',
+               'title'=> '',
+               'content'=> trans('messages.MSG10028'),
+               'attr_input' => "@click='confirmDelete(dw_number)'",
+               'btn_ok_title' => trans('common.button.yes'),
+               'btn_cancel_title' => trans('common.button.no'),
+       ])
     </div>
 @endsection
 @section("scripts")
@@ -194,6 +201,8 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        messages["MSG10028"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10028'); ?>";
+        var listRoute = "{{route('payment_histories.list')}}";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/payment-histories-list.js') }}" charset="utf-8"></script>
 @endsection
