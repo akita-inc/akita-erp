@@ -31,7 +31,7 @@ class MPurchases extends Model {
             )
             ->leftjoin('mst_suppliers', function ($join) {
                 $join->on('t_purchases.mst_suppliers_cd', '=', 'mst_suppliers.mst_suppliers_cd')
-                    ->whereNull('t_purchases.deleted_at');
+                    ->whereNull('mst_suppliers.deleted_at');
             })
             ->leftjoin('t_saleses', function ($join) {
                 $join->on('t_saleses.document_no', '=', 't_purchases.document_no')
