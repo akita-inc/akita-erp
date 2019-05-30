@@ -163,6 +163,7 @@ var ctrTakeVacationVl = new Vue({
                 ];
             }
             this.modified_at = $('#hd_modified_at').val();
+            this.handleChangeHalfDay();
             this.loading = false;
 
         },
@@ -298,7 +299,7 @@ var ctrTakeVacationVl = new Vue({
 
     },
      mounted () {
-        this.handleChangeHalfDay();
+         this.handleChangeHalfDay();
         if($("#hd_take_vacation_edit").val() == 1) {
              this.loadFormEdit();
         }
