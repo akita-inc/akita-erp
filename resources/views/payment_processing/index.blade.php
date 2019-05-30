@@ -65,22 +65,24 @@
             </div>
         </div>
         <div class="mt-3 sub-header" style="background-color: #FFD966"  v-cloak>
-            <div class="sub-header-line-two frm-search-list">
+            <div class="sub-header-line-one frm-search-list">
                 <div class="row">
-                    <div class="col-md-1 padding-row-5 col-list-search-f">
-                        {{trans("payment_processing.list.field.dw_day")}}
-                    </div>
-                    <div class="col-md-2 padding-row-5 grid-form-search">
-                        <date-picker format="YYYY/MM/DD"
-                                     placeholder=""
-                                     v-model="dw_day" v-cloak=""
-                                     :lang="lang"
-                                     :input-class="'form-control w-100'"
-                                     :value-type="'format'"
-                                     :input-name="'dw_day'"
-                                     :editable='false'
-                        >
-                        </date-picker>
+                    <div class="col-md-4 row">
+                        <div class="col-md-3 no-padding col-list-search-f">
+                            {{trans("payment_processing.list.field.dw_day")}}
+                        </div>
+                        <div class="col-md-4 no-padding grid-form-search">
+                            <date-picker format="YYYY/MM/DD"
+                                         placeholder=""
+                                         v-model="field.dw_day" v-cloak=""
+                                         :lang="lang"
+                                         :input-class="'form-control w-100'"
+                                         :value-type="'format'"
+                                         :input-name="'dw_day'"
+                                         :editable='false'
+                            >
+                            </date-picker>
+                        </div>
                     </div>
                 </div>
                 <div class="break-row-form"></div>
@@ -92,7 +94,7 @@
                         <div class="col-md-4 no-padding grid-form-search">
                             <input type="text" v-model="field.invoice_balance_total" name="invoice_balance_total" maxlength="11" disabled class="form-control">
                         </div>
-                        <div class="col-md-2 no-padding col-list-search-f">
+                        <div class="col-md-2 no-padding col-list-search-f text-center">
                             {{trans("payment_processing.list.field.dw_classification")}}
                         </div>
                         <div class="col-md-3 no-padding col-list-search-f">
@@ -103,42 +105,59 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-1 no-padding col-list-search-f">
-                        {{trans("payment_processing.list.field.payment_amount")}}
+                    <div class="col-md-4 row">
+                        {{--<div class="col-md-1 no-padding"></div>--}}
+                        <div class="col-md-3 padding-row-5 col-list-search-f text-left">
+                            {{trans("payment_processing.list.field.payment_amount")}}
+                        </div>
+                        <div class="col-md-9 no-padding grid-form-search">
+                            <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" class="form-control">
+                        </div>
                     </div>
-                    <div class="col-md-3 no-padding grid-form-search">
-                        <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" disabled class="form-control">
-                    </div>
-                    <div class="col-md-1 padding-row-5 col-list-search-f">
-                        {{trans("payment_processing.list.field.fee")}}
-                    </div>
-                    <div class="col-md-1 no-padding grid-form-search">
-                        <input type="text" v-model="field.fee" name="fee" maxlength="11" disabled class="form-control">
-                    </div>
-                    <div class="col-md-1 no-padding col-list-search-f">
-                        {{trans("payment_processing.list.field.invoice_balance_total")}}
-                    </div>
-                    <div class="col-md-1 padding-row-5 grid-form-search">
-                        <input type="text" v-model="field.invoice_balance_total" name="invoice_balance_total" maxlength="11" disabled class="form-control">
+                    <div class="col-md-4 row">
+                        <div class="col-md-3 padding-row-5 col-list-search-f text-left">
+                            {{trans("payment_processing.list.field.fee")}}
+                        </div>
+                        <div class="col-md-4 no-padding grid-form-search">
+                            <input type="text" v-model="field.fee" name="fee" maxlength="11" class="form-control">
+                        </div>
+                        <div class="col-md-2 no-padding col-list-search-f text-center">
+                            {{trans("payment_processing.list.field.discount")}}
+                        </div>
+                        <div class="col-md-3 padding-row-5 grid-form-search">
+                            <input type="text" v-model="field.discount" name="discount" maxlength="11" disabled class="form-control">
+                        </div>
                     </div>
                 </div>
                 <div class="break-row-form"></div>
                 <div class="row">
-                    <div class="col-md-2 padding-row-5 col-list-search-f "></div>
-                    <div class="col-md-4 padding-row-5 grid-form-search row">
-                        <div class="col-md-4 padding-row-5">
+                    <div class="col-md-4 row">
+                        <div class="col-md-3 no-padding col-list-search-f">
+                            {{trans("payment_processing.list.field.note")}}
+                        </div>
+                        <div class="col-md-9 no-padding grid-form-search">
+                            <input type="text" v-model="field.note" name="note" maxlength="200" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4 row">
+                        <div class="col-md-3 padding-row-5 col-list-search-f text-left">
+                            {{trans("payment_processing.list.field.total_payment_amount")}}
+                        </div>
+                        <div class="col-md-9 no-padding grid-form-search">
+                            <input type="text" v-model="field.total_payment_amount" name="total_payment_amount" maxlength="11" disabled class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4 row">
+                        <div class="col-md-3 padding-row-5 col-list-search-f text-left">
+                            {{trans("payment_processing.list.field.item_payment_total")}}
+                        </div>
+                        <div class="col-md-4 no-padding grid-form-search">
+                            <input type="text" v-model="field.item_payment_total" name="item_payment_total" maxlength="11" class="form-control" disabled>
+                        </div>
+                        <div class="col-md-2 no-padding col-list-search-f text-center"></div>
+                        <div class="col-md-3 padding-row-5 grid-form-search">
                             <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmPDFModal" :disabled="disableBtn">
-                                {{trans('payment_processing.list.search.button.issue')}}
-                            </button>
-                        </div>
-                        <div class="col-md-4 padding-row-5">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmCSVModal" :disabled="disableBtn">
-                                {{trans('payment_processing.list.search.button.csv')}}
-                            </button>
-                        </div>
-                        <div class="col-md-4 padding-row-5">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmAmazonCSVModal" :disabled="disableBtn">
-                                {{trans('payment_processing.list.search.button.amazonCSV')}}
+                                {{trans('common.button.register')}}
                             </button>
                         </div>
                     </div>
@@ -214,6 +233,7 @@
 @endsection
 @section("scripts")
     <script>
+        var currentDate = "{{$currentDate}}";
         var messages = [];
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
