@@ -31,7 +31,7 @@ class TakeVacationController extends Controller
         'end_date' => 'required',
         'days' => 'required|one_byte_number|length:11',
         'times' => 'required|one_byte_number|length:11',
-        'reasons' => 'required|length:300',
+        'reasons' => 'required|length:200',
     ];
     public $messagesCustom =[];
     public $labels=[
@@ -39,6 +39,7 @@ class TakeVacationController extends Controller
         'applicant_office_nm' => '所属営業所',
         'approval_kb' => '休暇区分',
         'half_day_kb' => '時間区分',
+        'date' => '期間',
         'start_date' => '開始日',
         'end_date' => '終了日',
         'days' => '日数',
@@ -419,7 +420,7 @@ class TakeVacationController extends Controller
         }
         $mBusinessOffices = new MBusinessOffices();
         $mGeneralPurposes = new MGeneralPurposes();
-        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices();
+        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices('==選択してください==');
         $businessOfficeNm = $mBusinessOffices->select('business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
         $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
         $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
@@ -453,6 +454,10 @@ class TakeVacationController extends Controller
         $listWfAdditionalNotice = $data['wf_additional_notice'];
         $listMailChecked = [];
         $errorsEx = [];
+        if ($data['start_date'] != "" && $data['end_date'] != ""
+            && Carbon::parse($data['start_date']) > Carbon::parse($data['end_date'])) {
+            $validator->errors()->add('start_date', str_replace(' :attribute', $this->labels['date'], Lang::get('messages.MSG02014')));
+        }
         foreach ($listWfAdditionalNotice as $key => $item){
             $validatorEx = Validator::make(['email_address' => $item['email_address']], ['email_address' => 'length:255|nullable|email_format|email_character'], $this->messagesCustom, $this->labels);
             if ($validatorEx->fails()) {
@@ -494,14 +499,14 @@ class TakeVacationController extends Controller
             ->whereNotNull('mst_staffs.mail')
             ->whereNull('mst_staffs.deleted_at');
         if(isset($input['name']) && !empty($input['name'])){
-            $query = $query->where(DB::raw("CONCAT(mst_staffs.last_nm , mst_staffs.first_nm ,mst_staffs.last_nm_kana ,mst_staffs.first_nm_kana)"),'LIKE','%'.$input['name'].'%');
+            $query = $query->where(DB::raw("CONCAT_WS('',mst_staffs.last_nm , mst_staffs.first_nm ,mst_staffs.last_nm_kana ,mst_staffs.first_nm_kana)"),'LIKE','%'.$input['name'].'%');
         }
         if(isset($input['mst_business_office_id']) && !empty($input['mst_business_office_id'])){
             $query = $query->where('mst_staffs.mst_business_office_id','=',$input['mst_business_office_id']);
         }
         if ($input["order"]["col"] != '') {
             if ($input["order"]["col"] == 'staff_nm')
-                $orderCol = 'CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)';
+                $orderCol = "CONCAT_WS('',mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)";
             else if($input["order"]["col"]=='business_office_nm')
                 $orderCol='mst_business_offices.business_office_nm';
             else if($input["order"]["col"]=='mail')
@@ -513,7 +518,7 @@ class TakeVacationController extends Controller
             }
             $query->orderbyRaw($orderCol);
         } else {
-            $query->orderBy('mst_staffs.last_nm_kana', 'mst_staffs.first_nm_kana');
+            $query->orderByRaw("CONCAT_WS('',mst_staffs.last_nm_kana,mst_staffs.first_nm_kana) ASC");
         }
         $data = $query->get();
         if(count($data) > 0){
@@ -524,7 +529,7 @@ class TakeVacationController extends Controller
         }else{
             return response()->json([
                 'success'=>false,
-                'msg'=> Lang::get('messages.MSG10010'),
+                'msg'=> Lang::get('messages.MSG05001'),
             ]);
         }
     }
@@ -621,7 +626,7 @@ class TakeVacationController extends Controller
                         MWfAdditionalNotice::query()->insert($dataWfAdditionalNotice);
                     }
                 }
-                $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$approval_levels_step_1);
+                $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$approval_levels_step_1,$arrayInsert['applicant_id']);
                 if(count($mailTo)==0){
                     $mailCC = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
                     $mailTo = array_column($listWfAdditionalNotice,'email_address');
@@ -631,6 +636,8 @@ class TakeVacationController extends Controller
                 }
             }else{
                 $id = $data['id'];
+                $mWPaidVacation = new WPaidVacation();
+                $vacationInfo = $mWPaidVacation->getInfoByID($id);
                 if($approval_fg==1) {
                     $dataWfAdditionalNotice = [];
                     foreach ($listWfAdditionalNotice as $key => $item) {
@@ -650,16 +657,16 @@ class TakeVacationController extends Controller
                     }
                     $minStepLevel = $mWApprovalStatus->getMinStepsLevel($id);
                     if($minStepLevel){
-                        $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$minStepLevel->approval_levels);
+                        $mailTo =$mStaff->getListMailTo($arrayInsert['applicant_office_id'],$minStepLevel->approval_levels,$vacationInfo->applicant_id);
                     }else{
-                        $mailTo = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
+                        $mailTo = !empty($vacationInfo->mail) ? [$vacationInfo->mail] : [];
                         $mailTo = array_merge($mailTo,array_filter(array_column($listWfAdditionalNotice, 'email_address')));
                     }
                 }else{
                     $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id);
-                    $mailTo = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
+                    $mailTo = !empty($vacationInfo->mail) ? [$vacationInfo->mail] : [];
                     foreach ($listWApprovalStatus as $item){
-                        $listMail = $mStaff->getListMailTo($arrayInsert['applicant_office_id'],$item->approval_levels);
+                        $listMail = $mStaff->getListMailTo($arrayInsert['applicant_office_id'],$item->approval_levels,$vacationInfo->applicant_id);
                         $mailTo = array_merge($mailTo,$listMail);
                     }
                     $mailTo = array_merge($mailTo,array_filter(array_column($listWfAdditionalNotice, 'email_address')));
@@ -694,9 +701,9 @@ class TakeVacationController extends Controller
         $data = $mWPaidVacation->getInfoForMail($id);
         $field = ['[id]','[applicant_id]','[approval_kb]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]','[send_back_reason]'];
         $data['id_before'] = $id_before;
-        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title'],$data['send_back_reason']],
+        $text = str_replace($field, [$data['id'],$data['staff_nm'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title'],$data['send_back_reason']],
             $configMail['template']);
-        $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
+        $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['staff_nm'],$data['applicant_office_id']],$configMail["subject"]);
         if(count($mailTo) > 0){
             Mail::raw($text,
                 function ($message) use ($configMail,$subject,$mailTo,$mailCC) {

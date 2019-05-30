@@ -129,17 +129,18 @@ class MStaffs extends Authenticatable
         return $data;
     }
 
-    public function getListMailTo($applicant_office_id, $level){
+    public function getListMailTo($applicant_office_id, $level, $applicant_id){
         $result = [];
         $content1 =null;
         $query =  $this->select('mail')
             ->whereNotNull('mail')
             ->where('deleted_at','=',null)
+            ->where('staff_cd','!=',$applicant_id)
             ->where('approval_levels','=',$level);
         $mGeneralPurposes = new MGeneralPurposes();
-        $dataGeneralPurposes = $mGeneralPurposes->getDataByDateIDAndDataKB($level,config('params.data_kb.wf_level'));
+        $dataGeneralPurposes = $mGeneralPurposes->getDataByDateIDAndDataKB(config('params.data_kb.wf_level'),$level);
         if($dataGeneralPurposes){
-            $content1 = $dataGeneralPurposes->content1;
+            $content1 = $dataGeneralPurposes->contents1;
         }
         if($content1=='1'){
             $query = $query->where('mst_business_office_id','=',$applicant_office_id);

@@ -381,6 +381,9 @@ return [
         'delimiter' => ',',
         'enclosure' => '"',
     ],
+    'accounts_payable_csv' => [
+        'delimiter' => ',',
+    ],
     'invoice_pdf_template' =>[
         'page_1' =>  storage_path("pdf_template/請求書無地P1.pdf"),
         'page_2' =>  storage_path("pdf_template/請求書無地P2.pdf"),
@@ -419,7 +422,7 @@ return [
                 "[approval_kb]\n\n".
                 "＜期間＞\n".
                 "[start_date] ～ [end_date]\n".
-                "[days] 日 [times] 時間\n\n".
+                "[days] [times]\n\n".
                 "＜理由＞\n".
                 "[reasons]\n\n\n".
                 "確認の後、承認お願いいたします。\n\n".
@@ -438,7 +441,7 @@ return [
             "[approval_kb]\n\n".
             "＜期間＞\n".
             "[start_date] ～ [end_date]\n".
-            "[days] 日 [times] 時間\n\n".
+            "[days] [times]\n\n".
             "＜理由＞\n".
             "[reasons]\n\n\n".
             "確認の後、承認お願いいたします。\n\n".
@@ -459,10 +462,9 @@ return [
             "[approval_kb]\n\n".
             "＜期間＞\n".
             "[start_date] ～ [end_date]\n".
-            "[days] 日 [times] 時間\n\n".
+            "[days] [times]\n\n".
             "＜理由＞\n".
-            "[reasons]\n\n\n".
-            "確認の後、承認お願いいたします。\n\n".
+            "[reasons]\n\n".
             "------------------------------------------------------\n\n".
             "Akita ERP - ワークフロー\n\n"
     ),
@@ -480,10 +482,9 @@ return [
             "[approval_kb]\n\n".
             "＜期間＞\n".
             "[start_date] ～ [end_date]\n".
-            "[days] 日 [times] 時間\n\n".
+            "[days] [times]\n\n".
             "＜理由＞\n".
-            "[reasons]\n\n\n".
-            "確認の後、承認お願いいたします。\n\n".
+            "[reasons]\n\n".
             "------------------------------------------------------\n\n".
             "Akita ERP - ワークフロー\n\n"
     ),

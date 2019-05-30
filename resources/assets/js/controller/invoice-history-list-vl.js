@@ -208,30 +208,21 @@ var ctrInvoiceHistoryListVl = new Vue({
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
-                var listHeaderID = null;
-                var listDetailID = null;
-                if(typeof that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
-                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id];
-                }
-                if(typeof that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
-                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id];
-                }
                 setTimeout(function(){
                     invoice_history_service.createPDF({
                         data:value,
-                        'fieldSearch': that.fileSearched,
-                        type:1,
-                        date_of_issue: that.date_of_issue,
-                        'listBillingHistoryHeaderID':listHeaderID,
-                        'listBillingHistoryDetailID':listDetailID
+                        type:1
                     }).then( async function (response){
-                        that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
-                        that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
                         await that.downloadFile(response);
                         var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '');
-                        invoice_history_service.createPDF({data:value,'fieldSearch': that.fileSearched,type:2,fileName:filename,date_of_issue: that.date_of_issue}).then(  function (response1){
+                        invoice_history_service.createPDF({
+                            data:value,
+                            type:2,
+                            fileName:filename
+                        }).then(  function (response1){
                             that.downloadFile(response1);
                         });
+
                     });
                 }, key*1000);
 
@@ -242,7 +233,6 @@ var ctrInvoiceHistoryListVl = new Vue({
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
-                console.log(value);
                 setTimeout(function(){
                     invoice_history_service.createCSV(
                         {
@@ -260,23 +250,11 @@ var ctrInvoiceHistoryListVl = new Vue({
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
-                var listHeaderID = null;
-                var listDetailID = null;
-                if(typeof that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
-                    listHeaderID = that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id];
-                }
-                if(typeof that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] != "undefined"){
-                    listDetailID = that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id];
-                }
                 setTimeout(function(){
                     invoice_history_service.createAmazonCSV({
-                        data:value,'fieldSearch': that.fileSearched,
-                        date_of_issue: that.date_of_issue,
-                        'listBillingHistoryHeaderID':listHeaderID,
-                        'listBillingHistoryDetailID':listDetailID
+                        data:value,
+                        'fieldSearch': that.fileSearched,
                     }).then(  function (response){
-                        that.listBillingHistoryHeaderID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistoryheaderid'];
-                        that.listBillingHistoryDetailID[value.customer_cd+'_'+value.mst_business_office_id] = response.headers['listbillinghistorydetailid'];
                         that.downloadFile(response);
                     });
                 }, key*1000);

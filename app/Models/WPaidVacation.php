@@ -25,8 +25,9 @@ class WPaidVacation extends Model {
                 DB::raw('mst_business_offices.business_office_nm as applicant_office_id'),
                 DB::raw("DATE_FORMAT(wf_paid_vacation.start_date, '%Y/%m/%d') as start_date"),
                 DB::raw("DATE_FORMAT(wf_paid_vacation.end_date, '%Y/%m/%d') as end_date"),
-                'wf_paid_vacation.days',
-                'wf_paid_vacation.times',
+                DB::raw("(CASE WHEN wf_paid_vacation.days > 0 THEN CONCAT(wf_paid_vacation.days, ' 日')  ELSE '' END) as days"),
+                DB::raw("(CASE WHEN wf_paid_vacation.times > 0 THEN CONCAT(wf_paid_vacation.times, ' 時間')  ELSE '' END) as times"),
+                DB::raw('CONCAT(mst_staffs.last_nm , mst_staffs.first_nm) as staff_nm'),
                 'wf_paid_vacation.reasons',
                 'wf_approval_status.send_back_reason',
                 'wf_approval_status.title'
@@ -43,6 +44,10 @@ class WPaidVacation extends Model {
                 $join->on('mst_business_offices.id', '=', 'wf_paid_vacation.applicant_office_id')
                     ->whereNull('mst_business_offices.deleted_at');
             })
+            ->leftjoin('mst_staffs', function ($join) {
+                $join->on('mst_staffs.staff_cd', '=', 'wf_paid_vacation.applicant_id')
+                    ->whereNull('mst_staffs.deleted_at');
+            })
             ->where('wf_paid_vacation.id','=',$id);
     return $query->first()->toArray();
 
@@ -51,6 +56,7 @@ class WPaidVacation extends Model {
     public function getInfoByID($id){
         return $this->select(
                 'wf_paid_vacation.*',
+                'mst_staffs.mail',
                 DB::raw('CONCAT(mst_staffs.last_nm , mst_staffs.first_nm) as staff_nm'),
                 DB::raw('mst_business_offices.business_office_nm as applicant_office_nm')
             )

@@ -29,7 +29,9 @@ mix.js([
     'resources/assets/js/service/work-flow-service.js',
     'resources/assets/js/service/take-vacation-service.js',
     'resources/assets/js/service/invoice-history-service.js',
-    'resources/assets/js/service/payment-histories-service.js'
+    'resources/assets/js/service/payment-histories-service.js',
+    'resources/assets/js/service/accounts-payable-data-output-service.js',
+    'resources/assets/js/service/payment-processing-service.js'
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -115,3 +117,11 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/payment-histories-list-vl.js'
 ], 'public/assets/js/controller/payment-histories-list.js');
+
+mix.js([
+    'resources/assets/js/controller/accounts-payable-data-output-vl.js'
+], 'public/assets/js/controller/accounts-payable-data-output.js');
+
+mix.js([
+    'resources/assets/js/controller/payment-processing-vl.js'
+], 'public/assets/js/controller/payment-processing.js');

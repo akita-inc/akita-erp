@@ -122,6 +122,7 @@ class InvoiceHistoryController extends Controller {
             'tb.invoice_number',
             DB::raw("tb.mst_customers_cd as customer_cd"),
             'tb.mst_business_office_id',
+            DB::raw("office.mst_business_office_cd as office_cd"),
             DB::raw("format(IFNULL( tp.total_dw_amount, 0 ), '#,##0') AS payment_amount"),
             DB::raw("format(IFNULL( ( tb.tax_included_amount - IFNULL( tp.total_dw_amount, 0 )), 0 ), '#,##0') AS payment_remaining"),
             DB::raw("( CASE WHEN tp.total_dw_amount = tb.tax_included_amount THEN '済' ELSE '未' END ) AS payment "),
@@ -297,7 +298,6 @@ class InvoiceHistoryController extends Controller {
         $mBillingHistoryHeaders =  new MBillingHistoryHeaders();
         $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $data = $request->all();
-        $fieldSearch = $data['fieldSearch'];
         $item = $data['data'];
         $type= $data['type'];
         if($type==1){
@@ -309,7 +309,7 @@ class InvoiceHistoryController extends Controller {
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
-                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID, $fieldSearch);
+                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
                 $pdf = new InvoicePDF();
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);

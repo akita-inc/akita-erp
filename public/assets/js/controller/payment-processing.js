@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 22);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -20849,10 +20849,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/controller/payment-histories-list-vl.js":
-/*!*********************************************************************!*\
-  !*** ./resources/assets/js/controller/payment-histories-list-vl.js ***!
-  \*********************************************************************/
+/***/ "./resources/assets/js/controller/payment-processing-vl.js":
+/*!*****************************************************************!*\
+  !*** ./resources/assets/js/controller/payment-processing-vl.js ***!
+  \*****************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20868,8 +20868,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var ctrPaymentHistoryListVl = new Vue({
-  el: '#ctrPaymentHistoryListVl',
+var ctrPaymentProcessingVl = new Vue({
+  el: '#ctrPaymentProcessingVl',
   data: {
     lang: lang_date_picker,
     format_date: format_date_picker,
@@ -20877,49 +20877,27 @@ var ctrPaymentHistoryListVl = new Vue({
     items: [],
     fileSearch: {
       customer_cd: "",
-      customer_nm: "",
-      from_date: "",
-      to_date: ""
+      customer_nm: ""
+    },
+    field: {
+      dw_day: currentDate,
+      invoice_balance_total: '',
+      dw_classification: '',
+      payment_amount: 0,
+      fee: 0,
+      discount: '',
+      total_payment_amount: '',
+      item_payment_total: '',
+      note: ''
     },
     message: '',
-    pagination: {
-      total: 0,
-      per_page: 2,
-      from: 1,
-      to: 0,
-      current_page: 1,
-      last_page: 0
-    },
-    order: {
-      col: '',
-      descFlg: true,
-      divId: ''
-    },
-    errors: [],
-    filteredCustomerCd: [],
-    filteredCustomerNm: [],
-    dropdown_customer_cd: [{
-      data: []
-    }],
-    dropdown_customer_nm: [{
-      data: []
-    }],
-    list_bundle_dt: [],
-    modal: {
-      invoice: {},
-      sale_info: []
-    },
     disableBtn: false,
     flagSearch: false,
-    date_of_issue: moment__WEBPACK_IMPORTED_MODULE_3___default()().format('YYYY/MM/DD'),
     fileSearched: {
       customer_cd: "",
-      customer_nm: "",
-      from_date: "",
-      to_date: ""
+      customer_nm: ""
     },
-    listBillingHistoryHeaderID: [],
-    listBillingHistoryDetailID: [],
+    listCustomer: [],
     getItems: function getItems(page, show_msg) {
       if (show_msg !== true) {
         $('.alert').hide();
@@ -20932,23 +20910,42 @@ var ctrPaymentHistoryListVl = new Vue({
       };
       var that = this;
       this.loading = true;
-      payment_histories_service.loadList(data).then(function (response) {
+      payment_processing_service.loadList(data).then(function (response) {
         if (response.success == false) {
           that.errors = response.message;
           that.loading = false;
         } else {
           that.fileSearched = {
+            mst_business_office_id: "",
+            billing_year: '',
+            billing_month: '',
             customer_cd: "",
             customer_nm: "",
-            from_date: "",
-            to_date: ""
+            closed_date: "",
+            special_closing_date: "",
+            closed_date_input: ""
           };
           that.flagSearch = true;
           that.errors = [];
+          that.listBillingHistoryHeaderID = [];
+          that.listBillingHistoryDetailID = [];
+
+          if (response.data.length === 0) {
+            that.message = messages["MSG05001"];
+          } else {
+            that.message = '';
+          }
+
           that.items = response.data;
           that.fileSearch = response.fieldSearch;
+          that.fileSearched.mst_business_office_id = response.fieldSearch.mst_business_office_id;
+          that.fileSearched.billing_year = response.fieldSearch.billing_year;
+          that.fileSearched.billing_month = response.fieldSearch.billing_month;
           that.fileSearched.customer_cd = response.fieldSearch.customer_cd;
           that.fileSearched.customer_nm = response.fieldSearch.customer_nm;
+          that.fileSearched.closed_date = response.fieldSearch.closed_date;
+          that.fileSearched.special_closing_date = response.fieldSearch.special_closing_date;
+          that.fileSearched.closed_date_input = response.fieldSearch.closed_date_input;
           $.each(that.fileSearch, function (key, value) {
             if (value === null) that.fileSearch[key] = '';
           });
@@ -20957,129 +20954,40 @@ var ctrPaymentHistoryListVl = new Vue({
       });
     }
   },
-  computed: {
-    inputPropsCd: function inputPropsCd() {
-      return {
-        id: 'autosuggest__input',
-        onInputChange: this.onInputChangeCd,
-        initialValue: this.fileSearch.customer_cd,
-        maxlength: 5,
-        class: 'form-control input-cd',
-        ref: "customer_cd"
-      };
-    },
-    inputPropsNm: function inputPropsNm() {
-      return {
-        id: 'autosuggest__input',
-        onInputChange: this.onInputChangeNm,
-        initialValue: this.fileSearch.customer_nm,
-        maxlength: 5,
-        class: 'form-control',
-        ref: "customer_nm"
-      };
-    }
-  },
   methods: {
-    renderSuggestion: function renderSuggestion(suggestion) {
-      var customer = suggestion.item;
-      return customer.mst_customers_cd + ': ' + (customer.customer_nm != null ? customer.customer_nm : '');
-    },
-    getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
-      this.$refs.customer_nm.searchInput = suggestion.item.customer_nm;
-      return suggestion.item.mst_customers_cd;
-    },
-    getSuggestionValueNm: function getSuggestionValueNm(suggestion) {
-      this.$refs.customer_cd.searchInput = suggestion.item.mst_customers_cd;
-      return suggestion.item.customer_nm;
-    },
-    onInputChangeCd: function onInputChangeCd(text) {
-      this.fileSearch.customer_cd = text;
-
-      if (text === '' || text === undefined) {
-        this.filteredCustomerCd = [];
-        return;
+    handleChangeCustomerNm: function handleChangeCustomerNm() {
+      for (var i = 0; i < this.listCustomer.length; i++) {
+        if (this.listCustomer[i].mst_customers_cd === this.fileSearch.customer_nm) {
+          this.fileSearch.customer_cd = this.listCustomer[i].mst_customers_cd;
+          return;
+        }
       }
-      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-
-
-      var filteredData = this.dropdown_customer_cd[0].data.filter(function (item) {
-        return item.mst_customers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-      }).slice(0, this.limit);
-      this.filteredCustomerCd = [{
-        data: filteredData
-      }];
     },
-    onInputChangeNm: function onInputChangeNm(text) {
-      this.fileSearch.customer_nm = text;
-
-      if (text === '' || text === undefined) {
-        this.filteredCustomerNm = [];
-        return;
+    handleChangeCustomerCd: function handleChangeCustomerCd() {
+      if (this.fileSearch.customer_cd != '') {
+        for (var i = 0; i < this.listCustomer.length; i++) {
+          if (this.listCustomer[i].mst_customers_cd === this.fileSearch.customer_cd) {
+            this.fileSearch.customer_nm = this.listCustomer[i].mst_customers_cd;
+            return;
+          }
+        }
+      } else {
+        this.fileSearch.customer_nm = "";
       }
-      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
-
-
-      var filteredData = this.dropdown_customer_nm[0].data.filter(function (item) {
-        return item.customer_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
-      }).slice(0, this.limit);
-      this.filteredCustomerNm = [{
-        data: filteredData
-      }];
-    },
-    onSelectedCd: function onSelectedCd(option) {
-      this.fileSearch.customer_cd = option.item.mst_customers_cd;
-      this.fileSearch.customer_nm = option.item.customer_nm;
-    },
-    onSelectedNm: function onSelectedNm(option) {
-      this.fileSearch.customer_cd = option.item.mst_customers_cd;
-      this.fileSearch.customer_nm = option.item.customer_nm;
     },
     clearCondition: function clearCondition() {
-      this.$refs.customer_nm.searchInput = "";
-      this.$refs.customer_cd.searchInput = "";
       this.fileSearch.customer_cd = "";
       this.fileSearch.customer_nm = "";
       this.errors = [];
-      this.filteredCustomerCd = [];
-      this.filteredCustomerNm = [];
     },
-    getListBundleDt: function getListBundleDt(flagSelect) {
-      var that = this;
-      invoice_service.loadListBundleDt({
-        customer_cd: that.fileSearch.customer_cd
-      }).then(function (response) {
-        if (response.info.length > 0) {
-          that.list_bundle_dt = response.info;
-
-          if (flagSelect) {
-            that.fileSearch.closed_date = that.list_bundle_dt[0].bundle_dt;
-          }
-        }
-      });
-    },
-    openModal: function openModal(item) {
-      this.loading = true;
-      this.modal.invoice = item;
-      var that = this;
-      payment_histories_service.getDetailsInvoice({
-        'mst_customers_cd': item.customer_cd,
-        'mst_business_office_id': item.mst_business_office_id,
-        'fieldSearch': that.fileSearched
-      }).then(function (response) {
-        if (response.info.length > 0) {
-          that.modal.sale_info = response.info;
-        }
-
-        $('#detailsModal').modal('show');
-        that.loading = false;
-      });
+    addComma: function addComma(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   mounted: function mounted() {
     var that = this;
-    invoice_service.loadListCustomers().then(function (response) {
-      that.dropdown_customer_cd[0].data = response.data;
-      that.dropdown_customer_nm[0].data = response.data;
+    payment_processing_service.loadListCustomers().then(function (response) {
+      that.listCustomer = response.data;
     });
   },
   components: {
@@ -21091,14 +20999,14 @@ var ctrPaymentHistoryListVl = new Vue({
 
 /***/ }),
 
-/***/ 22:
-/*!***************************************************************************!*\
-  !*** multi ./resources/assets/js/controller/payment-histories-list-vl.js ***!
-  \***************************************************************************/
+/***/ 24:
+/*!***********************************************************************!*\
+  !*** multi ./resources/assets/js/controller/payment-processing-vl.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-histories-list-vl.js */"./resources/assets/js/controller/payment-histories-list-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
 
 
 /***/ })

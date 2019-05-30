@@ -3,27 +3,13 @@
 namespace App\Http\Controllers;
 
 
-use App\Helpers\InvoicePDF;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
-use App\Models\MBillingHistoryHeaderDetails;
-use App\Models\MBillingHistoryHeaders;
-use App\Models\MBusinessOffices;
-use App\Models\MCustomers;
-use App\Models\MGeneralPurposes;
-use App\Models\MNumberings;
-use App\Models\MSaleses;
 use App\Models\TPaymentHistories;
-use App\Models\WApprovalStatus;
-use App\Models\WPaidVacation;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-
 
 class PaymentHistoriesController extends Controller {
     use ListTrait,FormTrait;
@@ -179,7 +165,6 @@ class PaymentHistoriesController extends Controller {
     }
     public function getItems(Request $request)
     {
-
         if(Session::exists('backQueryFlag') && Session::get('backQueryFlag')){
             if(Session::exists('backQueryFlag') ){
                 $data = Session::get('requestHistory');
