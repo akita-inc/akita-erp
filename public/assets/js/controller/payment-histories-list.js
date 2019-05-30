@@ -3273,6 +3273,7 @@ var ctrPaymentHistoryListVl = new Vue({
     auth_staff_cd: '',
     filteredCustomerCd: [],
     filteredCustomerNm: [],
+    recent_dw_number: "",
     fileSearch: {
       from_date: "",
       to_date: "",
@@ -3290,6 +3291,7 @@ var ctrPaymentHistoryListVl = new Vue({
       billing_headers: []
     },
     errors: [],
+    dw_number: "",
     pagination: {
       total: 0,
       per_page: 2,
@@ -3299,6 +3301,7 @@ var ctrPaymentHistoryListVl = new Vue({
       last_page: 0
     },
     flagSearch: false,
+    deleteFlagSuccess: false,
     order: null,
     dropdown_mst_customer_cd: [{
       data: []
@@ -3331,6 +3334,7 @@ var ctrPaymentHistoryListVl = new Vue({
       that.fileSearch.mst_customers_cd = this.$refs.mst_customers_cd.searchInput;
       that.fileSearch.mst_customers_nm = this.$refs.mst_customers_nm.searchInput;
       that.flagSearch = false;
+      that.deleteFlagSuccess = false;
       var data = {
         pageSize: that.pageSize,
         page: page,
@@ -3348,6 +3352,7 @@ var ctrPaymentHistoryListVl = new Vue({
             mst_customers_nm: ""
           };
           that.items = response.data.data;
+          that.recent_dw_number = response.recent_dw_number;
           that.pagination = response.pagination;
           that.fileSearch = response.fieldSearch;
           that.fileSearched.from_date = response.fieldSearch.from_date;
@@ -3491,6 +3496,7 @@ var ctrPaymentHistoryListVl = new Vue({
       this.loading = true;
       var that = this;
       this.modal.payment_histories = item;
+      console.log(item);
       payment_histories_service.getDetailsPaymentHistories({
         'dw_number': item.dw_number,
         'fieldSearch': that.fileSearched
@@ -3502,14 +3508,38 @@ var ctrPaymentHistoryListVl = new Vue({
         $('#detailsModal').modal('show');
         that.loading = false;
       });
+    },
+    confirmDelete: function confirmDelete() {
+      var _this2 = this;
+
+      var that = this;
+      console.log(that.dw_number);
+      that.loading = true;
+      payment_histories_service.delete(that.dw_number).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+
+          _this2.getItems(1);
+        } else {
+          that.loading = false;
+          that.deleteFlagSuccess = true;
+        }
+      });
+    },
+    openModalDelete: function openModalDelete(dw_number) {
+      $('#confirmDeleteModal').modal('show');
+
+      if (dw_number) {
+        this.dw_number = dw_number;
+      }
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
     sales_lists_service.loadCustomerList().then(function (response) {
-      _this2.dropdown_mst_customer_cd[0].data = response.data;
-      _this2.dropdown_mst_customer_nm[0].data = response.data;
+      _this3.dropdown_mst_customer_cd[0].data = response.data;
+      _this3.dropdown_mst_customer_nm[0].data = response.data;
     });
     this.setDefaultDate();
   },

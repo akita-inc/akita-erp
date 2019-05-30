@@ -117,7 +117,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table" v-if="items.length>0" v-cloak>
+        <div class="wrapper-table" v-if="items.length>0 && deleteFlagSuccess==false" v-cloak>
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
@@ -168,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <div class="sub-header bg-color-green mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">
+        <div class="sub-header bg-color-green mt-3 ml-5 mr-5" v-cloak v-if="deleteFlagSuccess">
               <div class="sub-header-line-two">
                     <div class="grid-form border-0">
                         <div class="row">
@@ -181,8 +181,17 @@
         </div>
         @include("payment_histories.modal",[
             'fieldShowTable'=>$fieldShowTable,
+            'attr_input'=>'v-if="recent_dw_number==modal.payment_histories.dw_number"',
             'fieldShowTableDetails'=>$fieldShowTableDetails,
          ])
+        @include('Layouts.modal',[
+               'id'=> 'confirmDeleteModal',
+               'title'=> '',
+               'content'=> trans('messages.MSG10028'),
+               'attr_input' => "@click='confirmDelete(dw_number)'",
+               'btn_ok_title' => trans('common.button.yes'),
+               'btn_cancel_title' => trans('common.button.no'),
+       ])
     </div>
 @endsection
 @section("scripts")
@@ -192,6 +201,8 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        messages["MSG10028"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10028'); ?>";
+        var listRoute = "{{route('payment_histories.list')}}";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/payment-histories-list.js') }}" charset="utf-8"></script>
 @endsection

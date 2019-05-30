@@ -14,9 +14,13 @@ use App\Models\MGeneralPurposes;
 use App\Models\MNumberings;
 use App\Models\MSaleses;
 use App\Models\TPaymentHistories;
+use App\Models\WApprovalStatus;
+use App\Models\WPaidVacation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,10 +56,10 @@ class PaymentHistoriesController extends Controller {
             "t_payment_histories.mst_customers_cd",
             DB::raw("mst_customers.customer_nm_formal as customer_nm"),
             "t_payment_histories.dw_classification",
-            DB::raw('SUM(t_payment_histories.actual_dw) as actual_dw'),
-            DB::raw('SUM(t_payment_histories.fee) as fee'),
-            DB::raw('SUM(t_payment_histories.discount) as discount'),
-            DB::raw('SUM(t_payment_histories.total_dw_amount) as total_dw_amount'),
+            DB::raw('IFNULL(SUM(t_payment_histories.actual_dw),0) as actual_dw'),
+            DB::raw('IFNULL(SUM(t_payment_histories.fee),0) as fee'),
+            DB::raw('IFNULL(SUM(t_payment_histories.discount),0) as discount'),
+            DB::raw('IFNULL(SUM(t_payment_histories.total_dw_amount),0) as total_dw_amount'),
             't_payment_histories.dw_number',
             't_payment_histories.note');
         $this->query->join('mst_customers', function ($join) {
@@ -115,13 +119,13 @@ class PaymentHistoriesController extends Controller {
         ];
         $fieldShowTableDetails = [
             'invoice_number' => [
-                "classTH" => "wd-60",
+                "classTH" => "wd-100",
             ],
             'publication_date'=> [
                 "classTH" => "wd-60",
             ],
             'total_fee'=> [
-                "classTH" => "wd-120",
+                "classTH" => "wd-100",
             ],
             'consumption_tax'=> [
                 "classTH" => "wd-100",
@@ -130,19 +134,19 @@ class PaymentHistoriesController extends Controller {
                 "classTH" => "wd-100",
             ],
             'last_payment_amount'=> [
-                "classTH" => "wd-120",
+                "classTH" => "wd-100",
             ],
             'total_dw_amount'=> [
                 "classTH" => "wd-60",
             ],
             'fee'=> [
-                "classTH" => "wd-60",
+                "classTH" => "wd-100",
             ],
             'discount'=> [
                 "classTH" => "wd-60",
             ],
             'deposit_balance'=> [
-                "classTH" => "wd-60",
+                "classTH" => "wd-120",
             ],
 
         ];
@@ -150,6 +154,17 @@ class PaymentHistoriesController extends Controller {
             'fieldShowTable'=>$fieldShowTable,
             'fieldShowTableDetails'=>$fieldShowTableDetails,
         ]);
+    }
+    public function delete($dw_number)
+    {
+        $this->backHistory();
+        if (TPaymentHistories::query()->where("dw_number","=",$dw_number)->update(['deleted_at' => date("Y-m-d H:i:s",time())]))
+        {
+            $response = ['success' => 'false','msg'=>Lang::get('messages.MSG10004')];
+        } else {
+            $response = ['success' => 'true', 'msg' => Lang::get('messages.MSG06002')];
+        }
+        return response()->json($response);
     }
     public function getDetailsPaymentHistories(Request $request)
     {
@@ -161,6 +176,51 @@ class PaymentHistoriesController extends Controller {
             'success'=>true,
             'info'=> $listDetail,
         ]);
+    }
+    public function getItems(Request $request)
+    {
+
+        if(Session::exists('backQueryFlag') && Session::get('backQueryFlag')){
+            if(Session::exists('backQueryFlag') ){
+                $data = Session::get('requestHistory');
+            }
+            Session::put('backQueryFlag', false);
+        }else{
+            $data = $request->all();
+            Session::put('requestHistory', $data);
+        }
+        $this->getQuery();
+        $this->search( $data );
+        $recentDwNumber=DB::select('SELECT
+                                                dw_number
+                                          FROM
+                                                t_payment_histories
+                                          WHERE
+                                                deleted_at IS NULL
+                                          ORDER BY
+                                                created_at DESC
+                                                LIMIT 1');
+        $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']);
+        if(count($items->items())==0){
+            if($data['page'] > 1){
+                $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']-1);
+            }
+        }
+        $response = [
+            'pagination' => [
+                'total' => $items->total(),
+                'per_page' => $items->perPage(),
+                'current_page' => $items->currentPage(),
+                'last_page' => $items->lastPage(),
+                'from' => $items->firstItem(),
+                'to' => $items->lastItem()
+            ],
+            'data' => $items,
+            'recent_dw_number'=>isset($recentDwNumber[0]->dw_number)?$recentDwNumber[0]->dw_number:null,
+            'fieldSearch' => $data['fieldSearch'],
+            'order' => $data['order'],
+        ];
+        return response()->json($response);
     }
 
 

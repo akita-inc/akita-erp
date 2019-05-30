@@ -30,8 +30,13 @@ class TPaymentHistories extends Model {
                         DB::raw('IFNULL(bill_headers.total_fee,0) as total_fee'),
                         DB::raw('IFNULL(bill_headers.consumption_tax,0) as consumption_tax'),
                         DB::raw('IFNULL(bill_headers.tax_included_amount,0) as tax_included_amount'),
-                        DB::raw('0 as total_dw_amount')
-                    )->leftJoin('t_billing_history_headers as bill_headers', function ($join) {
+                        DB::raw('0 as last_payment_amount'),
+                        DB::raw('IFNULL(payment.total_dw_amount,0) as total_dw_amount'),
+                        DB::raw('IFNULL(payment.fee,0) as fee'),
+                        DB::raw('IFNULL(payment.discount,0) as discount'),
+                        'bill_headers.tax_included_amount',
+                        DB::raw('0 as deposit_balance')
+                    )->join('t_billing_history_headers as bill_headers', function ($join) {
                         $join->on('bill_headers.invoice_number', '=',  'payment.invoice_number')
                             ->whereRaw('bill_headers.deleted_at IS NULL');
                     })
@@ -46,10 +51,12 @@ class TPaymentHistories extends Model {
         $query=$query->whereNull('payment.deleted_at')
             ->orderBy('payment.dw_number','desc')
             ->get();
-        foreach($query as $key=>$value)
+        if(count($query)>0)
         {
-            $price=DB::select('SELECT
-                        sum( total_dw_amount ) AS total_dw_amount 
+            foreach($query as $key=>$value)
+            {
+                $price=DB::select('SELECT
+                        sum( total_dw_amount ) AS last_payment_amount 
                     FROM
                         t_payment_histories 
                     WHERE
@@ -57,8 +64,11 @@ class TPaymentHistories extends Model {
                         AND invoice_number = :invoice_number 
                     GROUP BY
                         invoice_number',['invoice_number'=>$value->invoice_number]);
-            $value->total_dw_amount=isset($price[0]->total_dw_amount)?$price[0]->total_dw_amount:0;
+                $value->last_payment_amount=isset($price[0]->last_payment_amount)?$price[0]->last_payment_amount:0;
+                $value->deposit_balance=$value->tax_included_amount-$value->last_payment_amount;
+            }
         }
+
         return $query;
     }
 }

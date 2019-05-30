@@ -425,6 +425,13 @@ payment_histories_service = {
       return error;
     });
   },
+  delete: function _delete(dw_number) {
+    return axios.get('/payment_histories/api-v1/delete/' + dw_number).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
   backHistory: function backHistory() {
     return axios.get('/payment_histories/api-v1/back-history').then(function (response) {
       return response.data;

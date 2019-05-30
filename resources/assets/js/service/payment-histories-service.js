@@ -20,6 +20,13 @@ payment_histories_service = {
             return error;
         });
     },
+    delete: function (dw_number) {
+        return axios.get('/payment_histories/api-v1/delete/' + dw_number).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
     backHistory: function () {
         return axios.get('/payment_histories/api-v1/back-history').then(function (response) {
             return response.data;
