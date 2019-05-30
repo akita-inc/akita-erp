@@ -21019,6 +21019,7 @@ var ctrTakeVacationVl = new Vue({
       }
 
       this.modified_at = $('#hd_modified_at').val();
+      this.handleChangeHalfDay();
       this.loading = false;
     },
     deleteVacation: function deleteVacation(id) {
