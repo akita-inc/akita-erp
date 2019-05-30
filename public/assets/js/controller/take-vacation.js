@@ -21057,6 +21057,10 @@ var ctrTakeVacationVl = new Vue({
         var end_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.end_date);
         var start_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.start_date);
         that.field.days = end_date.diff(start_date, 'days') + 1;
+
+        if (that.field.days < 0) {
+          that.field.days = 0;
+        }
       }
     },
     handleChangeHalfDay: function handleChangeHalfDay() {
