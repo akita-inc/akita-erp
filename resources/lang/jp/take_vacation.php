@@ -38,10 +38,10 @@ return [
         ]
     ],
     'create' =>[
-        'title_register' => '休暇取得申請',
-        'title_edit' => '休暇取得申請',
-        'title_approval' => '休暇取得申請',
-        'title_reference' => '休暇取得申請',
+        'title_register' => '休暇取得申請 登録',
+        'title_edit' => '休暇取得申請 編集',
+        'title_approval' => '休暇取得申請 承認・却下',
+        'title_reference' => '休暇取得申請 照会 ',
         'field' => [
             'applicant_id' => '申請者',
             'staff_nm' => '',

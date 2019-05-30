@@ -506,7 +506,7 @@ class TakeVacationController extends Controller
         }
         if ($input["order"]["col"] != '') {
             if ($input["order"]["col"] == 'staff_nm')
-                $orderCol = 'CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)';
+                $orderCol = 'CONCAT(mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)';
             else if($input["order"]["col"]=='business_office_nm')
                 $orderCol='mst_business_offices.business_office_nm';
             else if($input["order"]["col"]=='mail')
