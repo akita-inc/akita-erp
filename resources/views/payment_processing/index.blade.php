@@ -24,13 +24,14 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("payment_processing.list.search.code")}}
                             </label>
-                            <input type="text" v-model="fileSearch.customer_cd" name="customer_cd" maxlength="5" class="form-control" @change="handleChangeCustomerCd">
+                            <input type="text" v-model="fileSearch.customer_cd" name="customer_cd" maxlength="5" v-bind:class="errors.customer_cd != undefined ? 'form-control is-invalid':'form-control' " @change="handleChangeCustomerCd">
+
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search text-left">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("payment_processing.list.search.name")}}
                             </label>
-                            <select class="form-control" v-model="fileSearch.customer_nm" name="customer_nm"  v-cloak @change="handleChangeCustomerNm">
+                            <select v-bind:class="errors.customer_cd != undefined ? 'form-control is-invalid':'form-control'" v-model="fileSearch.customer_nm" name="customer_nm"  v-cloak @change="handleChangeCustomerNm">
                                 <option v-for="option in listCustomer" v-bind:value="option.mst_customers_cd">@{{option.customer_nm}}</option>
                             </select>
                         </div>
@@ -45,6 +46,14 @@
                             <button class="btn btn-primary w-100" v-on:click="getItems">
                                 {{trans('common.button.search')}}
                             </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-sm-12 row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-11 text-left padding-row-5">
+                            <span v-cloak v-if="errors.customer_cd != undefined" class="message-error" v-html="errors.customer_cd.join('<br />')"></span>
                         </div>
                     </div>
                 </div>
@@ -149,50 +158,56 @@
                 </div>
             </div>
         </div>
-        {{--<div class="wrapper-table" v-if="items.length > 0" v-cloak>--}}
-            {{--<table class="table table-striped table-bordered search-content">--}}
-                {{--<thead>--}}
-                {{--<tr>--}}
-                    {{--<th class="wd-60"></th>--}}
-                    {{--@foreach($fieldShowTable as $key => $field)--}}
-                        {{--<th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payment_processing.list.table.".$key)}}</th>--}}
-                    {{--@endforeach--}}
-                {{--</tr>--}}
-                {{--</thead>--}}
-                {{--<tbody>--}}
-                {{--<tr  v-cloak v-for="item in items">--}}
-                    {{--<td class="no-padding wd-60 text-center">--}}
-                        {{--<button type="button" class="btn  btn-secondary" v-on:click="openModal(item)">--}}
-                            {{--<span> {{trans("payment_processing.list.search.button.export")}} </span>--}}
+        <div class="wrapper-table" v-if="items.length > 0" v-cloak>
+            <table class="table table-striped table-bordered search-content">
+                <thead>
+                <tr>
+                    <th class="wd-60"></th>
+                    @foreach($fieldShowTable as $key => $field)
+                        <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payment_processing.list.table.".$key)}}</th>
+                    @endforeach
+                </tr>
+                </thead>
+                <tbody>
+                <tr  v-cloak v-for="(item,index) in items">
+                    <td class="no-padding wd-60 text-center">
+                        <input type="checkbox" v-model="listCheckbox" @change="handleChecked($event)" :value="index" :id="index">
+                    </td>
+                    @foreach($fieldShowTable as $key => $field)
+                        <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
+                            @switch($key)
+                                @case('tax_included_amount')
+                                <span v-if="item['total_fee']==null || item['consumption_tax']==null">￥0</span>
+                                <span v-else>{!!"￥@{{Number( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) ).toLocaleString() }}" !!}</span>
 
-                        {{--</button>--}}
-                    {{--</td>--}}
-                    {{--@foreach($fieldShowTable as $key => $field)--}}
-                        {{--<td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>--}}
-                            {{--@switch($key)--}}
-                                {{--@case('tax_included_amount')--}}
-                                {{--<span v-if="item['total_fee']==null || item['consumption_tax']==null">￥0</span>--}}
-                                {{--<span v-else>{!!"￥@{{Number( parseFloat(item['total_fee']) + parseFloat(item['consumption_tax']) ).toLocaleString() }}" !!}</span>--}}
-
-                                {{--@break--}}
-                                {{--@case('total_fee')--}}
-                                {{--@case('consumption_tax')--}}
-                                {{--<span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>--}}
-                                {{--@break--}}
-                                {{--@default--}}
-                                {{--<span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>--}}
-                                {{--<span v-else>---</span>--}}
-                                {{--@break--}}
-                            {{--@endswitch--}}
-                        {{--</td>--}}
-                    {{--@endforeach--}}
-                {{--</tr>--}}
-                {{--<tr v-cloak v-if="message !== ''">--}}
-                    {{--<td colspan="14">@{{message}} </td>--}}
-                {{--</tr>--}}
-                {{--</tbody>--}}
-            {{--</table>--}}
-        {{--</div>--}}
+                                @break
+                                @case('total_fee')
+                                @case('consumption_tax')
+                                @case('fee')
+                                @case('last_payment_amount')
+                                @case('payment_remaining')
+                                <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
+                                @break
+                                @case('total_dw_amount')
+                                    <input type="text" v-model="item.total_dw_amount" name="'total_dw_amount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1">
+                                @break
+                                @case('discount')
+                                    <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1">
+                                @break
+                                @default
+                                <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
+                                <span v-else>---</span>
+                                @break
+                            @endswitch
+                        </td>
+                    @endforeach
+                </tr>
+                <tr v-cloak v-if="message !== ''">
+                    <td colspan="14">@{{message}} </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         {{--<div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">--}}
             {{--<div class="sub-header-line-two">--}}
                 {{--<div class="grid-form border-0">--}}

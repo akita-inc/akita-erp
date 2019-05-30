@@ -420,7 +420,7 @@ class TakeVacationController extends Controller
         }
         $mBusinessOffices = new MBusinessOffices();
         $mGeneralPurposes = new MGeneralPurposes();
-        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices('==選択してください==');
+        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices(trans('common.kara_select_option'));
         $businessOfficeNm = $mBusinessOffices->select('business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
         $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
         $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');

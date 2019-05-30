@@ -20898,13 +20898,11 @@ var ctrPaymentProcessingVl = new Vue({
       customer_nm: ""
     },
     listCustomer: [],
-    getItems: function getItems(page, show_msg) {
-      if (show_msg !== true) {
-        $('.alert').hide();
-      }
-
-      this.fileSearch.customer_cd = this.$refs.customer_cd.searchInput;
-      this.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
+    errors: [],
+    listCheckbox: []
+  },
+  methods: {
+    getItems: function getItems() {
       var data = {
         fieldSearch: this.fileSearch
       };
@@ -20937,24 +20935,15 @@ var ctrPaymentProcessingVl = new Vue({
           }
 
           that.items = response.data;
-          that.fileSearch = response.fieldSearch;
-          that.fileSearched.mst_business_office_id = response.fieldSearch.mst_business_office_id;
-          that.fileSearched.billing_year = response.fieldSearch.billing_year;
-          that.fileSearched.billing_month = response.fieldSearch.billing_month;
           that.fileSearched.customer_cd = response.fieldSearch.customer_cd;
           that.fileSearched.customer_nm = response.fieldSearch.customer_nm;
-          that.fileSearched.closed_date = response.fieldSearch.closed_date;
-          that.fileSearched.special_closing_date = response.fieldSearch.special_closing_date;
-          that.fileSearched.closed_date_input = response.fieldSearch.closed_date_input;
           $.each(that.fileSearch, function (key, value) {
             if (value === null) that.fileSearch[key] = '';
           });
           that.loading = false;
         }
       });
-    }
-  },
-  methods: {
+    },
     handleChangeCustomerNm: function handleChangeCustomerNm() {
       for (var i = 0; i < this.listCustomer.length; i++) {
         if (this.listCustomer[i].mst_customers_cd === this.fileSearch.customer_nm) {
@@ -20982,6 +20971,9 @@ var ctrPaymentProcessingVl = new Vue({
     },
     addComma: function addComma(value) {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    handleChecked: function handleChecked() {
+      console.log(this.listCheckbox);
     }
   },
   mounted: function mounted() {
