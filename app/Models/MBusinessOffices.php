@@ -41,13 +41,13 @@ class MBusinessOffices  extends Model
         }
         return $result;
     }
-    public function getListBusinessOffices()
+    public function getListBusinessOffices($firstItemTxt=null)
     {
         $data = $this->select('id', 'business_office_nm')
             ->where('deleted_at','=',null)
             ->orderBy('disp_number', 'asc')
             ->get();
-        $result = array("" => '==選択==');
+        $result = array("" => $firstItemTxt ? $firstItemTxt :'==選択==');
         foreach (json_decode(json_encode($data), true) as $key => $item) {
             $result[$item['id']] = $item['business_office_nm'];
         }

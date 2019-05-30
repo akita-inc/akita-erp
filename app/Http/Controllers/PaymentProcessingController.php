@@ -134,15 +134,7 @@ class PaymentProcessingController extends Controller{
 
     public function getListCustomers(){
         $mCustomer = new MCustomers();
-        $listBillCustomersCd = $mCustomer->select(DB::raw('IFNULL(bill_mst_customers_cd,mst_customers_cd) as bill_mst_customers_cd'))->distinct()->whereNull('deleted_at')->get();
-
-        $query = $mCustomer->select('mst_customers_cd','customer_nm');
-        if($listBillCustomersCd){
-            $listBillCustomersCd = $listBillCustomersCd->toArray();
-            $query = $query->whereIn('mst_customers_cd',$listBillCustomersCd);
-
-        }
-        $data = $query->whereNull('deleted_at')->get();
+        $data = $mCustomer->select('mst_customers_cd','customer_nm')->whereNull('deleted_at')->orderBy('customer_nm_kana')->get();
         return Response()->json(array('success'=>true,'data'=>$data));
     }
 
