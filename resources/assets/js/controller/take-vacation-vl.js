@@ -235,6 +235,11 @@ var ctrTakeVacationVl = new Vue({
                 name:"",
                     mst_business_office_id:"",
             };
+            that.order = {
+                    col:'',
+                    descFlg: true,
+                    divId:''
+            }
             $('#searchStaffModal').modal('show');
         },
         addRow: function () {

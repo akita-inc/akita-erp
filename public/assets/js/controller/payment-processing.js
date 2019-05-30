@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -18336,6 +18336,22 @@ module.exports = function (css) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-autosuggest/dist/vue-autosuggest.esm.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vue-autosuggest/dist/vue-autosuggest.esm.js ***!
+  \******************************************************************/
+/*! exports provided: default, VueAutosuggest, DefaultSection */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VueAutosuggest", function() { return VueAutosuggest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultSection", function() { return DefaultSection; });
+var DefaultSection={name:"default-section",props:{section:{type:Object,required:!0},currentIndex:{type:[Number,String],required:!1,default:1/0},updateCurrentIndex:{type:Function,required:!0},searchInput:{type:[String,Number],required:!1,default:""},renderSuggestion:{type:Function,required:!1},normalizeItemFunction:{type:Function,required:!0}},computed:{list:function(){var e=this.section,t=e.limit,n=e.data;return n.length<t&&(t=n.length),n.slice(0,t)},className:function(){return"autosuggest__results_title autosuggest__results_title_"+this.section.name}},methods:{getItemIndex:function(e){return this.section.start_index+e},getItemByIndex:function(e){return this.section.data[e]},getLabelByIndex:function(e){return this.section.data[e]},onMouseEnter:function(e){this.updateCurrentIndex(e.currentTarget.getAttribute("data-suggestion-index"))},onMouseLeave:function(){this.updateCurrentIndex(null)}},render:function(e){var t=this,n=this.section.label?e("li",{class:this.className},this.section.label):"";return e("ul",{attrs:{role:"listbox","aria-labelledby":"autosuggest"}},[n,this.list.map(function(n,s){var i=t.normalizeItemFunction(t.section.name,t.section.type,t.getLabelByIndex(s),n);return e("li",{attrs:{role:"option","data-suggestion-index":t.getItemIndex(s),"data-section-name":t.section.name,id:"autosuggest__results_item-"+t.getItemIndex(s)},key:t.getItemIndex(s),class:{"autosuggest__results_item-highlighted":t.getItemIndex(s)==t.currentIndex,autosuggest__results_item:!0},on:{mouseenter:t.onMouseEnter,mouseleave:t.onMouseLeave}},[t.renderSuggestion?t.renderSuggestion(i):t.$scopedSlots.default&&t.$scopedSlots.default({key:s,suggestion:i})])})])}};function hasClass(e,t){return!!e.className.match(new RegExp("(\\s|^)"+t+"(\\s|$)"))}function addClass(e,t){hasClass(e,t)||(e.className+=" "+t)}function removeClass(e,t){e.classList&&e.classList.remove(t)}var VueAutosuggest={render:function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",{attrs:{id:e.componentAttrIdAutosuggest}},[n("input",e._g(e._b({directives:[{name:"model",rawName:"v-model",value:e.searchInput,expression:"searchInput"}],class:[e.isOpen?"autosuggest__input-open":"",e.inputProps.class],attrs:{type:"text",autocomplete:e.inputProps.autocomplete,role:"combobox","aria-autocomplete":"list","aria-owns":"autosuggest__results","aria-activedescendant":e.isOpen&&null!==e.currentIndex?"autosuggest__results_item-"+e.currentIndex:"","aria-haspopup":e.isOpen?"true":"false","aria-expanded":e.isOpen?"true":"false"},domProps:{value:e.searchInput},on:{keydown:e.handleKeyStroke,input:function(t){t.target.composing||(e.searchInput=t.target.value)}}},"input",e.inputProps,!1),e.listeners)),e._v(" "),n("div",{class:e.componentAttrClassAutosuggestResultsContainer},[e.getSize()>0&&!e.loading?n("div",{class:e.componentAttrClassAutosuggestResults,attrs:{"aria-labelledby":e.componentAttrIdAutosuggest}},[e._t("header"),e._v(" "),e._l(e.computedSections,function(t,s){return n(t.type,{key:e.getSectionRef(s),ref:e.getSectionRef(s),refInFor:!0,tag:"component",attrs:{"current-index":e.currentIndex,"normalize-item-function":e.normalizeItem,"render-suggestion":e.renderSuggestion,section:t,"update-current-index":e.updateCurrentIndex,"search-input":e.searchInput},scopedSlots:e._u([{key:"default",fn:function(t){var n=t.suggestion,s=t._key;return[e._t("default",[e._v(" "+e._s(n.item)+" ")],{suggestion:n,index:s})]}}])})}),e._v(" "),e._t("footer")],2):e._e()])])},staticRenderFns:[],name:"Autosuggest",components:{DefaultSection:DefaultSection},props:{inputProps:{type:Object,required:!0,default:function(){return{id:{type:String,default:"autosuggest__input"},onInputChange:{type:Function,required:!0},initialValue:{type:String,required:!1},onClick:{type:Function,required:!1}}}},limit:{type:Number,required:!1,default:1/0},suggestions:{type:Array,required:!0,default:function(){return[]}},renderSuggestion:{type:Function,required:!1,default:null},getSuggestionValue:{type:Function,required:!1,default:function(e){var t=e.item;return"object"==typeof t&&t.hasOwnProperty("name")?t.name:t}},shouldRenderSuggestions:{type:Function,required:!1,default:function(){return!0}},sectionConfigs:{type:Object,required:!1,default:function(){return{default:{onSelected:null}}}},onSelected:{type:Function,required:!1,default:null},componentAttrIdAutosuggest:{type:String,required:!1,default:"autosuggest"},componentAttrClassAutosuggestResultsContainer:{type:String,required:!1,default:"autosuggest__results-container"},componentAttrClassAutosuggestResults:{type:String,required:!1,default:"autosuggest__results"}},data:function(){return{searchInput:"",searchInputOriginal:null,currentIndex:null,currentItem:null,loading:!1,didSelectFromOptions:!1,computedSections:[],computedSize:0,internal_inputProps:{},defaultInputProps:{name:"q",initialValue:"",autocomplete:"off",class:"form-control"},defaultSectionConfig:{name:"default",type:"default-section"},clientXMouseDownInitial:null}},computed:{listeners:function(){var e=this;return Object.assign({},this.$listeners,{focus:function(t){e.$listeners.focus&&e.$listeners.focus(t),e.inputProps.onFocus&&e.onFocus(t)},blur:function(t){e.$listeners.blur&&e.$listeners.blur(t),e.inputProps.onBlur&&e.onBlur(t)},click:function(){e.loading=!1,e.$listeners.click&&e.$listeners.click(e.currentItem),e.inputProps.onClick&&e.onClick(e.currentItem),e.$nextTick(function(){e.ensureItemVisible(e.currentItem,e.currentIndex)})},selected:function(){e.currentItem&&e.sectionConfigs[e.currentItem.name]&&e.sectionConfigs[e.currentItem.name].onSelected?e.sectionConfigs[e.currentItem.name].onSelected(e.currentItem,e.searchInputOriginal):e.sectionConfigs.default.onSelected?e.sectionConfigs.default.onSelected(null,e.searchInputOriginal):e.$listeners.selected?e.$emit("selected",e.currentItem):e.onSelected&&e._onSelected(e.currentItem),e.setChangeItem(null)}})},isOpen:function(){return this.getSize()>0&&this.shouldRenderSuggestions()&&!this.loading}},watch:{searchInput:function(e,t){this.value=e,this.didSelectFromOptions||(this.searchInputOriginal=this.value,this.currentIndex=null,this.internal_inputProps.onInputChange(e,t))},suggestions:{immediate:!0,handler:function(){var e=this;this.computedSections=[],this.computedSize=0,this.suggestions.forEach(function(t){if(t.data){var n=t.name?t.name:e.defaultSectionConfig.name,s=e.sectionConfigs[n],i=s.type,u=s.limit,o=s.label;u=u||e.limit,i=i||e.defaultSectionConfig.type,u=u||1/0,u=t.data.length<u?t.data.length:u;var r={name:n,label:o=o||t.label,type:i,limit:u,data:t.data,start_index:e.computedSize,end_index:e.computedSize+u-1};e.computedSections.push(r),e.computedSize+=u}},this)}}},created:function(){this.internal_inputProps=Object.assign({},this.defaultInputProps,this.inputProps),this.inputProps.autocomplete=this.internal_inputProps.autocomplete,this.inputProps.name=this.internal_inputProps.name,this.inputProps.class=this.internal_inputProps.class,this.searchInput=this.internal_inputProps.initialValue,this.loading=this.shouldRenderSuggestions()},mounted:function(){document.addEventListener("mouseup",this.onDocumentMouseUp),document.addEventListener("mousedown",this.onDocumentMouseDown)},beforeDestroy:function(){document.removeEventListener("mouseup",this.onDocumentMouseUp),document.removeEventListener("mousedown",this.onDocumentMouseDown)},methods:{getSectionRef:function(e){return"computed_section_"+e},getSize:function(){return this.computedSize},getItemByIndex:function(e){var t=!1;if(null===e)return t;for(var n=0;n<this.computedSections.length;n++)if(e>=this.computedSections[n].start_index&&e<=this.computedSections[n].end_index){var s=e-this.computedSections[n].start_index,i=this.$refs["computed_section_"+n][0];if(i){t=this.normalizeItem(this.computedSections[n].name,this.computedSections[n].type,i.getLabelByIndex(s),i.getItemByIndex(s));break}}return t},handleKeyStroke:function(e){var t=e.keyCode;if(!([16,9,18,91,93].indexOf(t)>-1))switch(this.loading=!1,this.didSelectFromOptions=!1,t){case 40:case 38:if(e.preventDefault(),this.isOpen){if(38===t&&null===this.currentIndex)break;var n=40===t?1:-1,s=parseInt(this.currentIndex)+n;this.setCurrentIndex(s,this.getSize(),n),this.didSelectFromOptions=!0,this.getSize()>0&&this.currentIndex>=0?(this.setChangeItem(this.getItemByIndex(this.currentIndex)),this.didSelectFromOptions=!0):-1==this.currentIndex&&(this.currentIndex=null,this.searchInput=this.searchInputOriginal,e.preventDefault())}break;case 13:if(e.preventDefault(),229===t)break;this.getSize()>0&&this.currentIndex>=0&&(this.setChangeItem(this.getItemByIndex(this.currentIndex),!0),this.didSelectFromOptions=!0),this.loading=!0,this.listeners.selected(this.didSelectFromOptions);break;case 27:this.isOpen&&(this.loading=!0,this.currentIndex=null,this.searchInput=this.searchInputOriginal,e.preventDefault())}},setChangeItem:function(e,t){void 0===t&&(t=!1),null!==this.currentIndex&&e?e&&(this.searchInput=this.getSuggestionValue(e),this.currentItem=e,t&&(this.searchInputOriginal=this.getSuggestionValue(e)),this.ensureItemVisible(e,this.currentIndex)):this.currentItem=null},normalizeItem:function(e,t,n,s){return{name:e,type:t,label:n,item:s}},ensureItemVisible:function(e,t){var n=this.$el.querySelector("."+this.componentAttrClassAutosuggestResults);if(e&&(t||0===t)&&n){var s=this.$el.querySelector("#autosuggest__results_item-"+t);if(s){var i=n.clientHeight,u=n.scrollTop,o=s.clientHeight,r=s.offsetTop;o+r>=u+i?n.scrollTop=o+r-i:r<u&&u>0&&(n.scrollTop=r)}}},updateCurrentIndex:function(e){this.currentIndex=e},clickedOnScrollbar:function(e,t){var n=this.$el.querySelector("."+this.componentAttrClassAutosuggestResults),s=n&&n.clientWidth<=t+17&&t+17<=n.clientWidth+34;return"DIV"===e.target.tagName&&n&&s||!1},onDocumentMouseDown:function(e){var t=e.target.getBoundingClientRect?e.target.getBoundingClientRect():0;this.clientXMouseDownInitial=e.clientX-t.left},onDocumentMouseUp:function(e){var t=this;this.$el.contains(e.target)&&"INPUT"===e.target.tagName||this.clickedOnScrollbar(e,this.clientXMouseDownInitial)||(null!==this.currentIndex&&this.isOpen?(this.loading=!0,this.didSelectFromOptions=!0,this.setChangeItem(this.getItemByIndex(this.currentIndex),!0),this.$nextTick(function(){t.listeners.selected(!0)})):this.loading=this.shouldRenderSuggestions())},setCurrentIndex:function(e,t,n){void 0===t&&(t=-1);var s=e;null===this.currentIndex&&(s=0),this.currentIndex<0&&1===n&&(s=0),e>=t&&(s=0),this.currentIndex=s;var i=this.$el.querySelector("#autosuggest__results_item-"+this.currentIndex),u="autosuggest__results_item-highlighted";this.$el.querySelector("."+u)&&removeClass(this.$el.querySelector("."+u),u),i&&addClass(i,u)},_onSelected:function(e){console.warn('onSelected is deprecated. Please use click event listener \n\ne.g. <vue-autosuggest ... @selected="onSelectedMethod" /> \n\nhttps://vuejs.org/v2/guide/syntax.html#v-on-Shorthand'),this.onSelected&&this.onSelected(e)},onClick:function(e){console.warn('inputProps.onClick is deprecated. Please use native click event listener \n\ne.g. <vue-autosuggest ... @click="clickMethod" /> \n\nhttps://vuejs.org/v2/guide/syntax.html#v-on-Shorthand'),this.internal_inputProps.onClick&&this.internal_inputProps.onClick(e)},onBlur:function(e){console.warn('inputProps.onBlur is deprecated. Please use native blur event listener \n\ne.g. <vue-autosuggest ... @blur="blurMethod" /> \n\nhttps://vuejs.org/v2/guide/syntax.html#v-on-Shorthand'),this.internal_inputProps.onBlur&&this.internal_inputProps.onBlur(e)},onFocus:function(e){console.warn('inputProps.onFocus is deprecated. Please use native focus event listener \n\ne.g. <vue-autosuggest ... @focus="focusMethod" /> \n\nhttps://vuejs.org/v2/guide/syntax.html#v-on-Shorthand'),this.internal_inputProps.onFocus&&this.internal_inputProps.onFocus(e)}}},VueAutosuggestPlugin={install:function(e){e.component("vue-autosuggest-default-section",DefaultSection),e.component("vue-autosuggest",VueAutosuggest)}};"undefined"!=typeof window&&window.Vue&&window.Vue.use(VueAutosuggestPlugin);/* harmony default export */ __webpack_exports__["default"] = (VueAutosuggestPlugin);
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-spinner/src/PulseLoader.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-spinner/src/PulseLoader.vue?vue&type=script&lang=js& ***!
@@ -20833,10 +20849,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/controller/take-vacation-vl.js":
-/*!************************************************************!*\
-  !*** ./resources/assets/js/controller/take-vacation-vl.js ***!
-  \************************************************************/
+/***/ "./resources/assets/js/controller/payment-processing-vl.js":
+/*!*****************************************************************!*\
+  !*** ./resources/assets/js/controller/payment-processing-vl.js ***!
+  \*****************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -20845,369 +20861,243 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-spinner/src/PulseLoader.vue */ "./node_modules/vue-spinner/src/PulseLoader.vue");
 /* harmony import */ var _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../component/vue2-datepicker-master */ "./resources/assets/js/component/vue2-datepicker-master/lib/index.js");
 /* harmony import */ var _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue_autosuggest__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-autosuggest */ "./node_modules/vue-autosuggest/dist/vue-autosuggest.esm.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
-var ctrTakeVacationVl = new Vue({
-  el: '#ctrTakeVacationVl',
+
+var ctrPaymentProcessingVl = new Vue({
+  el: '#ctrPaymentProcessingVl',
   data: {
     lang: lang_date_picker,
+    format_date: format_date_picker,
     loading: false,
-    take_vacation_edit: 0,
-    take_vacation_id: null,
+    items: [],
+    fileSearch: {
+      customer_cd: "",
+      customer_nm: ""
+    },
     field: {
-      applicant_id: staff_cd,
-      staff_nm: staff_nm,
-      applicant_office_id: mst_business_office_id,
-      applicant_office_nm: business_ofice_nm,
-      approval_kb: defaultApprovalKb,
-      half_day_kb: defaultHalfDayKb,
-      start_date: currentDate,
-      end_date: currentDate,
-      days: 1,
-      times: 0,
-      reasons: '',
-      wf_additional_notice: [{
-        email_address: '',
-        staff_cd: ''
-      }],
-      mode: $('#mode').val(),
-      approval_fg: null,
-      send_back_reason: ""
+      dw_day: "",
+      invoice_balance_total: '',
+      dw_classification: '',
+      payment_amount: '',
+      fee: '',
+      discount: '',
+      total_payment_amount: '',
+      item_payment_total: '',
+      note: ''
     },
-    search: {
-      name: "",
-      mst_business_office_id: ""
-    },
-    errors: {},
-    disabledStartDate: false,
-    disabledEndDate: false,
-    disabledDays: false,
-    disabledTimes: false,
-    order: {
-      col: '',
-      descFlg: true,
-      divId: ''
-    },
-    listStaffs: [],
     message: '',
-    currentIndex: 0,
-    listWfAdditionalNoticeDB: JSON.parse(listWfAdditionalNotice.replace(/&quot;/g, '"'))
-  },
-  methods: {
-    resetForm: function resetForm() {
-      this.errors = {};
-      this.disabledStartDate = false;
-      this.disabledEndDate = false;
-      this.disabledDays = false;
-      this.disabledTimes = false;
-
-      if ($("#hd_take_vacation_edit").val() == 1) {
-        this.loadFormEdit();
-      } else {
-        this.field = {
-          applicant_id: staff_cd,
-          staff_nm: staff_nm,
-          applicant_office_id: mst_business_office_id,
-          applicant_office_nm: business_ofice_nm,
-          approval_kb: defaultApprovalKb,
-          half_day_kb: defaultHalfDayKb,
-          start_date: currentDate,
-          end_date: currentDate,
-          days: 1,
-          times: 0,
-          reasons: '',
-          wf_additional_notice: [{
-            email_address: '',
-            staff_cd: ''
-          }],
-          mode: $('#mode').val()
-        };
-        $('input:checkbox').prop('checked', false);
-        $('input:text').val('');
-        $('input[type="tel"]').val('');
-        $('textarea').val('');
+    errors: [],
+    filteredCustomerCd: [],
+    filteredCustomerNm: [],
+    dropdown_customer_cd: [{
+      data: []
+    }],
+    dropdown_customer_nm: [{
+      data: []
+    }],
+    list_bundle_dt: [],
+    modal: {
+      invoice: {},
+      sale_info: []
+    },
+    disableBtn: false,
+    flagSearch: false,
+    fileSearched: {
+      customer_cd: "",
+      customer_nm: ""
+    },
+    getItems: function getItems(page, show_msg) {
+      if (show_msg !== true) {
+        $('.alert').hide();
       }
 
-      this.handleChangeHalfDay();
-    },
-    submit: function submit(approval_fg) {
-      var that = this;
-      that.loading = true;
-
-      if (this.field.mode != 'register') {
-        this.field["id"] = this.take_vacation_id;
-      }
-
-      switch (this.field.mode) {
-        case 'register':
-          take_vacation_list_service.submit(that.field).then(function (response) {
-            if (response.success == false) {
-              that.errors = response.message;
-            } else {
-              that.errors = [];
-              window.location.href = listRoute;
-            }
-
-            that.loading = false;
-          });
-          break;
-
-        case 'edit':
-        case 'approval':
-          if (that.field.mode == 'approval') {
-            that.field.approval_fg = approval_fg;
-          }
-
-          take_vacation_list_service.checkIsExist(that.take_vacation_id, {
-            'mode': this.field.mode,
-            'approval_fg': approval_fg,
-            'modified_at': that.modified_at
-          }).then(function (response) {
-            if (!response.success) {
-              that.loading = false;
-              alert(response.msg);
-              that.backHistory();
-              return false;
-            } else {
-              take_vacation_list_service.submit(that.field).then(function (response) {
-                if (response.success == false) {
-                  that.errors = response.message;
-                } else {
-                  that.errors = [];
-                  window.location.href = listRoute;
-                }
-
-                that.loading = false;
-              });
-            }
-          });
-          break;
-      }
-    },
-    showError: function showError(errors) {
-      return errors.join("<br/>");
-    },
-    backHistory: function backHistory() {
-      if (this.take_vacation_edit == 1) {
-        take_vacation_list_service.backHistory().then(function () {
-          window.location.href = listRoute;
-        });
-      } else {
-        window.location.href = listRoute;
-      }
-    },
-    loadFormEdit: function loadFormEdit() {
+      this.fileSearch.customer_cd = this.$refs.customer_cd.searchInput;
+      this.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
+      var data = {
+        fieldSearch: this.fileSearch
+      };
       var that = this;
       this.loading = true;
-      that.take_vacation_edit = 1;
-      that.take_vacation_id = $("#hd_id").val();
-      $.each(this.field, function (key, value) {
-        if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
-          that.field[key] = $("#hd_" + key).val();
-        }
-      });
-      that.field.wf_additional_notice = JSON.parse(listWfAdditionalNotice.replace(/&quot;/g, '"'));
-
-      if (that.field.wf_additional_notice.length == 0) {
-        that.field.wf_additional_notice = [{
-          email_address: '',
-          staff_cd: ''
-        }];
-      }
-
-      this.modified_at = $('#hd_modified_at').val();
-      this.handleChangeHalfDay();
-      this.loading = false;
-    },
-    deleteVacation: function deleteVacation(id) {
-      var that = this;
-      take_vacation_list_service.checkIsExist(id, {
-        'mode': 'delete'
-      }).then(function (response) {
-        if (!response.success) {
-          alert(response.msg);
-          that.backHistory();
-          return false;
+      payment_processing_service.loadList(data).then(function (response) {
+        if (response.success == false) {
+          that.errors = response.message;
+          that.loading = false;
         } else {
-          if (confirm(messages["MSG10028"])) {
-            take_vacation_list_service.delete(id).then(function (response) {
-              window.location.href = listRoute;
-            });
+          that.fileSearched = {
+            mst_business_office_id: "",
+            billing_year: '',
+            billing_month: '',
+            customer_cd: "",
+            customer_nm: "",
+            closed_date: "",
+            special_closing_date: "",
+            closed_date_input: ""
+          };
+          that.flagSearch = true;
+          that.errors = [];
+          that.listBillingHistoryHeaderID = [];
+          that.listBillingHistoryDetailID = [];
+
+          if (response.data.length === 0) {
+            that.message = messages["MSG05001"];
+          } else {
+            that.message = '';
           }
+
+          that.items = response.data;
+          that.fileSearch = response.fieldSearch;
+          that.fileSearched.mst_business_office_id = response.fieldSearch.mst_business_office_id;
+          that.fileSearched.billing_year = response.fieldSearch.billing_year;
+          that.fileSearched.billing_month = response.fieldSearch.billing_month;
+          that.fileSearched.customer_cd = response.fieldSearch.customer_cd;
+          that.fileSearched.customer_nm = response.fieldSearch.customer_nm;
+          that.fileSearched.closed_date = response.fieldSearch.closed_date;
+          that.fileSearched.special_closing_date = response.fieldSearch.special_closing_date;
+          that.fileSearched.closed_date_input = response.fieldSearch.closed_date_input;
+          $.each(that.fileSearch, function (key, value) {
+            if (value === null) that.fileSearch[key] = '';
+          });
+          that.loading = false;
         }
       });
-    },
-    handleSelectDate: function handleSelectDate(date) {
-      var that = this;
-
-      if (that.field.half_day_kb == 2 || that.field.half_day_kb == 3) {
-        that.field.end_date = that.field.start_date;
-      }
-
-      if (that.field.half_day_kb == 1) {
-        var end_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.end_date);
-        var start_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.start_date);
-        that.field.days = end_date.diff(start_date, 'days') + 1;
-      }
-    },
-    handleChangeHalfDay: function handleChangeHalfDay() {
-      var that = this;
-
-      switch (that.field.half_day_kb) {
-        case '1':
-          that.handleSelectDate();
-          that.field.times = 0;
-          that.disabledStartDate = false;
-          that.disabledEndDate = false;
-          that.disabledDays = false;
-          that.disabledTimes = true;
-          break;
-
-        case '2':
-        case '3':
-          that.field.days = 0;
-          that.field.times = 4;
-          that.field.end_date = that.field.start_date;
-          that.disabledStartDate = false;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = true;
-          break;
-
-        case '4':
-          that.field.start_date = currentDate;
-          that.field.end_date = currentDate;
-          that.field.days = 0;
-          that.disabledStartDate = true;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = false;
-          break;
-      }
-    },
-    openModal: function openModal(index) {
-      var that = this;
-      that.currentIndex = index;
-      that.message = '';
-      that.listStaffs = [];
-      that.search = {
-        name: "",
-        mst_business_office_id: ""
+    }
+  },
+  computed: {
+    inputPropsCd: function inputPropsCd() {
+      return {
+        id: 'autosuggest__input',
+        onInputChange: this.onInputChangeCd,
+        initialValue: this.fileSearch.customer_cd,
+        maxlength: 5,
+        class: 'form-control input-cd',
+        ref: "customer_cd"
       };
-      that.order = {
-        col: '',
-        descFlg: true,
-        divId: ''
+    },
+    inputPropsNm: function inputPropsNm() {
+      return {
+        id: 'autosuggest__input',
+        onInputChange: this.onInputChangeNm,
+        initialValue: this.fileSearch.customer_nm,
+        maxlength: 5,
+        class: 'form-control',
+        ref: "customer_nm"
       };
-      $('#searchStaffModal').modal('show');
+    }
+  },
+  methods: {
+    renderSuggestion: function renderSuggestion(suggestion) {
+      var customer = suggestion.item;
+      return customer.mst_customers_cd + ': ' + (customer.customer_nm != null ? customer.customer_nm : '');
     },
-    addRow: function addRow() {
-      var that = this;
-      that.loading = true;
-      that.field.wf_additional_notice.push({
-        email_address: '',
-        staff_cd: ''
-      });
-      that.loading = false;
+    getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
+      this.$refs.customer_nm.searchInput = suggestion.item.customer_nm;
+      return suggestion.item.mst_customers_cd;
     },
-    searchStaff: function searchStaff() {
+    getSuggestionValueNm: function getSuggestionValueNm(suggestion) {
+      this.$refs.customer_cd.searchInput = suggestion.item.mst_customers_cd;
+      return suggestion.item.customer_nm;
+    },
+    onInputChangeCd: function onInputChangeCd(text) {
+      this.fileSearch.customer_cd = text;
+
+      if (text === '' || text === undefined) {
+        this.filteredCustomerCd = [];
+        return;
+      }
+      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
+
+
+      var filteredData = this.dropdown_customer_cd[0].data.filter(function (item) {
+        return item.mst_customers_cd.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+      }).slice(0, this.limit);
+      this.filteredCustomerCd = [{
+        data: filteredData
+      }];
+    },
+    onInputChangeNm: function onInputChangeNm(text) {
+      this.fileSearch.customer_nm = text;
+
+      if (text === '' || text === undefined) {
+        this.filteredCustomerNm = [];
+        return;
+      }
+      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
+
+
+      var filteredData = this.dropdown_customer_nm[0].data.filter(function (item) {
+        return item.customer_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+      }).slice(0, this.limit);
+      this.filteredCustomerNm = [{
+        data: filteredData
+      }];
+    },
+    onSelectedCd: function onSelectedCd(option) {
+      this.fileSearch.customer_cd = option.item.mst_customers_cd;
+      this.fileSearch.customer_nm = option.item.customer_nm;
+    },
+    onSelectedNm: function onSelectedNm(option) {
+      this.fileSearch.customer_cd = option.item.mst_customers_cd;
+      this.fileSearch.customer_nm = option.item.customer_nm;
+    },
+    clearCondition: function clearCondition() {
+      this.$refs.customer_nm.searchInput = "";
+      this.$refs.customer_cd.searchInput = "";
+      this.fileSearch.customer_cd = "";
+      this.fileSearch.customer_nm = "";
+      this.errors = [];
+      this.filteredCustomerCd = [];
+      this.filteredCustomerNm = [];
+    },
+    openModal: function openModal(item) {
+      this.loading = true;
+      this.modal.invoice = item;
       var that = this;
-      take_vacation_list_service.searchStaff({
-        name: that.search.name,
-        mst_business_office_id: that.search.mst_business_office_id,
-        order: that.order
+      payment_processing_service.getDetailsInvoice({
+        'mst_customers_cd': item.customer_cd,
+        'mst_business_office_id': item.mst_business_office_id,
+        'fieldSearch': that.fileSearched
       }).then(function (response) {
-        if (!response.success) {
-          that.listStaffs = [];
-          that.message = response.msg;
-          return false;
-        } else {
-          that.listStaffs = response.info;
-          that.message = '';
+        if (response.info.length > 0) {
+          that.modal.sale_info = response.info;
         }
+
+        $('#detailsModal').modal('show');
+        that.loading = false;
       });
     },
-    sortList: function sortList(event, order_by) {
-      $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
-
-      if (this.order.col === order_by && this.order.descFlg) {
-        this.order.descFlg = false;
-        event.target.classList.toggle('sort-asc');
-      } else {
-        this.order.descFlg = true;
-        event.target.classList.toggle('sort-desc');
-      }
-
-      this.order.col = order_by;
-      this.order.divId = event.currentTarget.id;
-      this.searchStaff();
-    },
-    setEmailAddress: function setEmailAddress(item) {
-      var that = this;
-      that.field.wf_additional_notice[that.currentIndex].email_address = item.mail;
-      that.field.wf_additional_notice[that.currentIndex].staff_cd = item.staff_cd;
-      $('#searchStaffModal').modal('hide');
-    },
-    setInputFilter: function setInputFilter(textbox, inputFilter) {
-      ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
-        textbox.addEventListener(event, function () {
-          if (inputFilter(this.value)) {
-            this.oldValue = this.value;
-            this.oldSelectionStart = this.selectionStart;
-            this.oldSelectionEnd = this.selectionEnd;
-          } else if (this.hasOwnProperty("oldValue")) {
-            this.value = this.oldValue;
-            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-          }
-        });
-      });
+    addComma: function addComma(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   mounted: function mounted() {
-    this.handleChangeHalfDay();
-
-    if ($("#hd_take_vacation_edit").val() == 1) {
-      this.loadFormEdit();
-    }
-
-    if (document.getElementById("days") != null) {
-      this.setInputFilter(document.getElementById("days"), function (value) {
-        return /^\d*$/.test(value);
-      });
-    }
-
-    if (document.getElementById("times") != null) {
-      this.setInputFilter(document.getElementById("times"), function (value) {
-        return /^\d*$/.test(value);
-      });
-    }
-
-    if (this.field.mode != 'register' && this.field.mode != 'edit') {
-      this.disabledStartDate = true;
-      this.disabledEndDate = true;
-      this.disabledDays = true;
-      this.disabledTimes = true;
-    }
+    var that = this;
+    payment_processing_service.loadListCustomers().then(function (response) {
+      that.dropdown_customer_cd[0].data = response.data;
+      that.dropdown_customer_nm[0].data = response.data;
+    });
   },
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a
+    DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_1___default.a,
+    VueAutosuggest: vue_autosuggest__WEBPACK_IMPORTED_MODULE_2__["VueAutosuggest"]
   }
 });
 
 /***/ }),
 
-/***/ 20:
-/*!******************************************************************!*\
-  !*** multi ./resources/assets/js/controller/take-vacation-vl.js ***!
-  \******************************************************************/
+/***/ 24:
+/*!***********************************************************************!*\
+  !*** multi ./resources/assets/js/controller/payment-processing-vl.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\take-vacation-vl.js */"./resources/assets/js/controller/take-vacation-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
 
 
 /***/ })
