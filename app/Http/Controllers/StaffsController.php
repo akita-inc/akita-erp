@@ -53,7 +53,6 @@ class StaffsController extends Controller
         "health_insurance_numbers"=>"length:20|nullable",
         "employees_pension_insurance_numbers"=>"length:10|nullable",
         "drivers_license_number"=>"length:12|nullable",
-        "approval_levels"=>'required',
         "section_id"=>'required',
         "belong_company_id"=>'required',
         "mst_business_office_id"=>'required'
