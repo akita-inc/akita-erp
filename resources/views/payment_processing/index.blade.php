@@ -24,7 +24,7 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("payment_processing.list.search.code")}}
                             </label>
-                            <input type="text" v-model="fileSearch.customer_cd" name="customer_cd" maxlength="5" v-bind:class="errors.customer_cd != undefined ? 'form-control is-invalid':'form-control' " @change="handleChangeCustomerCd">
+                            <input type="text" v-model="fileSearch.customer_cd" name="customer_cd" id="customer_cd" maxlength="5" v-bind:class="errors.customer_cd != undefined ? 'form-control  number_only is-invalid':'form-control number_only' " @change="handleChangeCustomerCd" v-cloak>
 
                         </div>
                         <div class="col-md-4 padding-row-5 grid-form-search text-left">
@@ -105,7 +105,7 @@
                             {{trans("payment_processing.list.field.payment_amount")}}
                         </div>
                         <div class="col-md-9 no-padding grid-form-search">
-                            <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" class="form-control" @change="handlePayment" @focus="removeCommaByID('payment_amount')">
+                            <input type="text" v-model="field.payment_amount" name="payment_amount" id="payment_amount"  maxlength="11" @change="handlePayment" @focus="removeCommaByID('payment_amount')" v-bind:class="errors.payment_amount!= undefined ? 'form-control number_only is-invalid':'form-control number_only'">
                         </div>
                     </div>
                     <div class="col-md-4 row">
@@ -113,7 +113,7 @@
                             {{trans("payment_processing.list.field.fee")}}
                         </div>
                         <div class="col-md-4 no-padding grid-form-search">
-                            <input type="text" v-model="field.fee" name="fee" maxlength="11" class="form-control" @change="handleFee">
+                            <input type="text" v-model="field.fee" name="fee" maxlength="11" class="form-control number_only" @change="handleFee" id="fee">
                         </div>
                         <div class="col-md-2 no-padding col-list-search-f text-center">
                             {{trans("payment_processing.list.field.discount")}}
@@ -150,7 +150,7 @@
                         </div>
                         <div class="col-md-2 no-padding col-list-search-f text-center"></div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#confirmPDFModal" :disabled="disableBtn">
+                            <button class="btn btn-primary w-100" @click="submit">
                                 {{trans('common.button.register')}}
                             </button>
                         </div>
@@ -191,10 +191,10 @@
                                 <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
                                 @break
                                 @case('total_dw_amount')
-                                    <input type="text" v-model="item.total_dw_amount" name="'total_dw_amount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)">
+                                    <input type="text" v-model="item.total_dw_amount" :name="'total_dw_amount'+index" maxlength="11" class="text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)" :id="'total_dw_amount'+index" v-bind:class="errors.total_dw_amount!= undefined && errors.total_dw_amount.indexError.indexOf(index) != -1 ? 'form-control is-invalid':'form-control'">
                                 @break
                                 @case('discount')
-                                    <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1" @change="changeDiscount(index)">
+                                    <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="11" class="form-control text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeDiscount(index)" :id="'discount'+index">
                                 @break
                                 @default
                                 <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
@@ -236,6 +236,7 @@
 @section("scripts")
     <script>
         var currentDate = "{{$currentDate}}";
+        var defaultDwClassification = "{{array_keys($listDepositMethod)[0]}}";
         var messages = [];
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
