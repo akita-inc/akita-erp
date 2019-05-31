@@ -105,7 +105,7 @@
                             {{trans("payment_processing.list.field.payment_amount")}}
                         </div>
                         <div class="col-md-9 no-padding grid-form-search">
-                            <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" class="form-control">
+                            <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" class="form-control" @change="handlePayment">
                         </div>
                     </div>
                     <div class="col-md-4 row">
@@ -113,7 +113,7 @@
                             {{trans("payment_processing.list.field.fee")}}
                         </div>
                         <div class="col-md-4 no-padding grid-form-search">
-                            <input type="text" v-model="field.fee" name="fee" maxlength="11" class="form-control">
+                            <input type="text" v-model="field.fee" name="fee" maxlength="11" class="form-control" @change="handleFee">
                         </div>
                         <div class="col-md-2 no-padding col-list-search-f text-center">
                             {{trans("payment_processing.list.field.discount")}}
@@ -189,10 +189,10 @@
                                 <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
                                 @break
                                 @case('total_dw_amount')
-                                    <input type="text" v-model="item.total_dw_amount" name="'total_dw_amount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1">
+                                    <input type="text" v-model="item.total_dw_amount" name="'total_dw_amount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)">
                                 @break
                                 @case('discount')
-                                    <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1">
+                                    <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1" @change="changeFee(index)">
                                 @break
                                 @default
                                 <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>

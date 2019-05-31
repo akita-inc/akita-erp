@@ -29,7 +29,7 @@ class TakeVacationController extends Controller
         'half_day_kb' => 'required',
         'start_date' => 'required',
         'end_date' => 'required',
-        'days' => 'required|one_byte_number|length:11',
+        'days' => 'required|one_byte_number|number_range_custom:127|length:11',
         'times' => 'required|one_byte_number|length:11',
         'reasons' => 'required|length:200',
     ];
