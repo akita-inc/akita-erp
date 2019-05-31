@@ -245,7 +245,7 @@
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            <label class="grid-form-label pl-150">コード</label>
+                            <label class="grid-form-label pl-200">コード</label>
                             <div class="wrap-control-group ">
                                 <label for="relocation_municipal_office_cd">
                                     {{ trans($prefix.'relocation_municipal_office_cd') }}
@@ -897,7 +897,6 @@
                                        'filed'=>'approval_levels',
                                        'filedId'=>"mst_others_approval_levels",
                                        'filedMode'=>"items.approval_levels",
-                                       'required'=>true,
                                        'array'=>$listApprovalLevels,
                                    ])
                                 </div>
