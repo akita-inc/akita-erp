@@ -111,6 +111,7 @@ return [
     'hiragana' => \Illuminate\Support\Facades\Lang::get('messages.MSG02026'),
     'two_bytes_string' => \Illuminate\Support\Facades\Lang::get('messages.MSG02027'),
     'require_length' => \Illuminate\Support\Facades\Lang::get('messages.MSG02029'),
+    'number_range_custom' => \Illuminate\Support\Facades\Lang::get('messages.MSG02030'),
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

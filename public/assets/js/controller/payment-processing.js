@@ -20885,7 +20885,7 @@ var ctrPaymentProcessingVl = new Vue({
       dw_classification: '',
       payment_amount: 0,
       fee: 0,
-      discount: '',
+      discount: 0,
       total_payment_amount: '',
       item_payment_total: '',
       note: ''
@@ -20935,6 +20935,7 @@ var ctrPaymentProcessingVl = new Vue({
           }
 
           that.items = response.data;
+          that.handleCaculator();
           that.fileSearched.customer_cd = response.fieldSearch.customer_cd;
           that.fileSearched.customer_nm = response.fieldSearch.customer_nm;
           $.each(that.fileSearch, function (key, value) {
@@ -20970,10 +20971,77 @@ var ctrPaymentProcessingVl = new Vue({
       this.errors = [];
     },
     addComma: function addComma(value) {
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      if (value != null && value != '') {
+        return '¥' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      } else {
+        return 0;
+      }
+    },
+    removeComma: function removeComma(value) {
+      if (value != null && value != '') {
+        return parseFloat(value.toString().replace(/,/g, '').replace('¥', ''));
+      } else {
+        return 0;
+      }
     },
     handleChecked: function handleChecked() {
-      console.log(this.listCheckbox);
+      var that = this;
+      that.changeFee();
+    },
+    handleCaculator: function handleCaculator() {
+      var that = this;
+      that.field.invoice_balance_total = that.removeComma(that.field.invoice_balance_total);
+      $.each(that.items, function (key, item) {
+        that.field.invoice_balance_total += parseFloat(item.payment_remaining);
+      });
+      that.field.invoice_balance_total = that.addComma(that.field.invoice_balance_total);
+    },
+    handlePayment: function handlePayment() {
+      var that = this;
+      var payment_amount = that.removeComma(that.field.payment_amount);
+      $.each(that.items, function (key, item) {
+        if (that.listCheckbox.indexOf(key) != -1) {
+          if (payment_amount > 0) {
+            var payment_remaining = that.addComma(item.payment_remaining);
+            item.payment_remaining = parseFloat(item.payment_remaining);
+
+            if (payment_amount <= item.payment_remaining) {
+              item.total_dw_amount = payment_amount;
+              payment_amount = 0;
+            } else {
+              item.total_dw_amount = item.payment_remaining;
+              payment_amount = payment_amount - parseFloat(item.payment_remaining);
+            }
+          } else {
+            item.total_dw_amount = 0;
+          }
+        }
+      });
+    },
+    handleFee: function handleFee() {
+      var that = this;
+
+      if (that.listCheckbox.length > 0) {
+        var min = Math.min.apply(Math, that.listCheckbox);
+        that.items[min].fee = that.field.fee;
+        that.handleToTalPayment();
+      }
+    },
+    handleToTalPayment: function handleToTalPayment() {
+      var that = this;
+      that.field.total_payment_amount = that.field.payment_amount + that.field.fee + that.field.discount;
+    },
+    handleDiscount: function handleDiscount() {},
+    changeTotalDwAmount: function changeTotalDwAmount() {},
+    changeFee: function changeFee() {
+      var that = this;
+      that.field.discount = 0;
+      $.each(that.items, function (key, item) {
+        if (that.listCheckbox.indexOf(key) != -1) {
+          that.field.discount += parseFloat(item.discount);
+        }
+      });
+      that.field.discount = that.addComma(that.field.discount);
     }
   },
   mounted: function mounted() {
@@ -20998,7 +21066,7 @@ var ctrPaymentProcessingVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
 
 
 /***/ })
