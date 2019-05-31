@@ -25,6 +25,7 @@ class TakeVacationController extends Controller
     use ListTrait,FormTrait;
     public $table = "wf_paid_vacation";
     public $ruleValid = [
+        'applicant_office_nm' => 'required',
         'approval_kb' => 'required',
         'half_day_kb' => 'required',
         'start_date' => 'required',
@@ -421,13 +422,14 @@ class TakeVacationController extends Controller
         $mBusinessOffices = new MBusinessOffices();
         $mGeneralPurposes = new MGeneralPurposes();
         $listBusinessOffices = $mBusinessOffices->getListBusinessOffices(trans('common.kara_select_option'));
-        $businessOfficeNm = $mBusinessOffices->select('business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
+        $businessOfficeNm = $mBusinessOffices->select('id','business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
         $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
         $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
         $currentDate = date('Y/m/d');
         return view('take_vacation.form', [
             'mWPaidVacation' => $mWPaidVacation,
-            'businessOfficeNm' => $businessOfficeNm->business_office_nm,
+            'businessOfficeNm' => $businessOfficeNm ? $businessOfficeNm->business_office_nm: null,
+            'businessOfficeID' => $businessOfficeNm ? $businessOfficeNm->id: null,
             'listVacationIndicator' => $listVacationIndicator,
             'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,
             'currentDate' => $currentDate,

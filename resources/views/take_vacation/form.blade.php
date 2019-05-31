@@ -275,7 +275,7 @@
         var staff_cd = "<?php echo \Illuminate\Support\Facades\Auth::user()->staff_cd ?>";
         var staff_nm = "<?php echo \Illuminate\Support\Facades\Auth::user()->last_nm. \Illuminate\Support\Facades\Auth::user()->first_nm?>";
         var staff_nm = "<?php echo \Illuminate\Support\Facades\Auth::user()->last_nm. \Illuminate\Support\Facades\Auth::user()->first_nm?>";
-        var mst_business_office_id = "<?php echo \Illuminate\Support\Facades\Auth::user()->mst_business_office_id?>";
+        var mst_business_office_id = "{{$businessOfficeID}}";
         var business_ofice_nm = "{{ $businessOfficeNm}}";
         var currentDate = "{{ $currentDate}}";
         var listWfAdditionalNotice = "{{ $listWfAdditionalNotice}}";

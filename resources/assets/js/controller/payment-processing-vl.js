@@ -10,6 +10,7 @@ var ctrPaymentProcessingVl = new Vue({
         format_date: format_date_picker,
         loading:false,
         items:[],
+        itemsDB:[],
         fileSearch:{
             customer_cd: "",
             customer_nm:"",
@@ -35,6 +36,7 @@ var ctrPaymentProcessingVl = new Vue({
         listCustomer:[],
         errors:[],
         listCheckbox: [],
+        allSelected: false,
     },
     methods: {
         getItems: function(){
@@ -60,15 +62,42 @@ var ctrPaymentProcessingVl = new Vue({
                     };
                     that.flagSearch = true;
                     that.errors = [];
-                    that.listBillingHistoryHeaderID =[];
-                    that.listBillingHistoryDetailID =[];
                     if (response.data.length===0) {
                         that.message = messages["MSG05001"];
                     } else {
                         that.message = '';
                     }
-                    that.items = response.data;
-                    that.handleCaculator();
+                    $.each(response.data, function (key, item) {
+                        that.items[key] = [{
+                            invoice_number:'',
+                            mst_business_office_id:'',
+                            office_nm:'',
+                            publication_date:'',
+                            total_fee:'',
+                            consumption_tax:'',
+                            tax_included_amount:'',
+                            last_payment_amount:'',
+                            fee:'',
+                            discount:'',
+                            total_dw_amount:'',
+                            payment_remaining:'',
+                        }];
+                        that.items[key].invoice_number  = item.invoice_number;
+                        that.items[key].mst_business_office_id  = item.mst_business_office_id;
+                        that.items[key].office_nm  = item.office_nm;
+                        that.items[key].publication_date  = item.publication_date;
+                        that.items[key].total_fee  = item.total_fee;
+                        that.items[key].consumption_tax  = item.consumption_tax;
+                        that.items[key].tax_included_amount  = item.tax_included_amount;
+                        that.items[key].last_payment_amount  = item.last_payment_amount;
+                        that.items[key].fee  = item.fee;
+                        that.items[key].discount  = item.discount;
+                        that.items[key].total_dw_amount  = item.total_dw_amount;
+                        that.items[key].payment_remaining  = item.payment_remaining;
+                    });
+
+                    that.itemsDB = response.data;
+                    that.handlePaymentRemainingTotal();
                     that.fileSearched.customer_cd=response.fieldSearch.customer_cd;
                     that.fileSearched.customer_nm=response.fieldSearch.customer_nm;
                     $.each(that.fileSearch, function (key, value) {
@@ -118,59 +147,96 @@ var ctrPaymentProcessingVl = new Vue({
                 return 0;
             }
         },
-        handleChecked: function(){
-            var that = this;
-            that.changeFee();
+        removeCommaByID: function (id) {
+            if(this.field[id]!=null) {
+                this.field[id] = this.field[id].toString().replace(/,/g, '').replace('¥', '');
+            }
         },
-        handleCaculator: function () {
+        handleChecked: function(e){
+            var that = this;
+            that.changeDiscount();
+            that.handlePayment();
+            that.handleFee();
+            that.handlePaymentRemaining();
+        },
+        selectAll: function() {
+            var that = this;
+            that.listCheckbox = [];
+            if (!that.allSelected) {
+                $.each(that.items, function (key, item) {
+                    that.listCheckbox.push(key);
+                });
+            }
+            that.changeDiscount();
+            that.handlePayment();
+            that.handleFee();
+            that.handlePaymentRemaining();
+        },
+        handlePaymentRemainingTotal: function () {
             var that = this;
             that.field.invoice_balance_total = that.removeComma(that.field.invoice_balance_total);
-            $.each(that.items, function (key, item) {
+            $.each(that.itemsDB, function (key, item) {
                 that.field.invoice_balance_total += parseFloat(item.payment_remaining);
             });
             that.field.invoice_balance_total = that.addComma(that.field.invoice_balance_total);
         },
         handlePayment: function () {
             var that = this;
+            that.field.payment_amount =  that.removeComma(that.field.payment_amount);
             var payment_amount =  that.removeComma(that.field.payment_amount);
+            that.field.item_payment_total = 0;
             $.each(that.items, function (key, item) {
+                item.total_dw_amount = that.addComma(0);
                 if(that.listCheckbox.indexOf(key)!= -1){
                     if(payment_amount > 0){
-                        var payment_remaining = that.addComma(item.payment_remaining);
-                        item.payment_remaining = parseFloat(item.payment_remaining);
-                        if(payment_amount <=  item.payment_remaining){
+                        var payment_remaining = that.removeComma(that.itemsDB[key].payment_remaining);
+                        if(payment_amount <  payment_remaining){
                             item.total_dw_amount = payment_amount;
                             payment_amount = 0;
                         }else{
-                            item.total_dw_amount = item.payment_remaining;
-                            payment_amount = payment_amount - parseFloat(item.payment_remaining);
+                            item.total_dw_amount = payment_remaining;
+                            payment_amount = payment_amount - parseFloat(payment_remaining);
                         }
-
                     }else {
                         item.total_dw_amount = 0;
                     }
+                    that.field.item_payment_total += item.total_dw_amount;
                 }
             });
+            that.field.payment_amount =  that.addComma(that.field.payment_amount);
+            that.field.item_payment_total =  that.addComma(that.field.item_payment_total);
+            that.handleToTalPayment();
+            that.handlePaymentRemaining();
         },
         handleFee: function () {
             var that = this;
+            $.each(that.items, function (key, item) {
+                item.fee = that.addComma(0);
+            });
             if(that.listCheckbox.length > 0){
                 let min = Math.min.apply(Math,that.listCheckbox);
                 that.items[min].fee = that.field.fee;
-                that.handleToTalPayment();
             }
+            that.handleToTalPayment();
+            that.handlePaymentRemaining();
         },
         handleToTalPayment: function () {
             var that = this;
-            that.field.total_payment_amount = that.field.payment_amount +  that.field.fee+ that.field.discount;
+            that.field.total_payment_amount = 0;
+            let payment_amount =  that.removeComma(that.field.payment_amount);
+            let fee =  that.removeComma(that.field.fee);
+            let discount =  that.removeComma(that.field.discount);
+            that.field.total_payment_amount = payment_amount +  fee+ discount;
+            that.field.total_payment_amount = that.addComma(that.field.total_payment_amount);
         },
         handleDiscount: function () {
 
         },
         changeTotalDwAmount: function () {
-
+            var that = this;
+            that.handleItemPaymentTotal();
         },
-        changeFee: function () {
+        changeDiscount: function () {
             var that = this;
             that.field.discount = 0;
             $.each(that.items, function (key, item) {
@@ -179,6 +245,27 @@ var ctrPaymentProcessingVl = new Vue({
                 }
             });
             that.field.discount = that.addComma(that.field.discount);
+            that.handleToTalPayment();
+        },
+        handleItemPaymentTotal: function () {
+            var that = this;
+            that.field.item_payment_total = 0;
+            $.each(that.items, function (key, item) {
+                if(that.listCheckbox.indexOf(key)!= -1){
+                    that.field.item_payment_total += parseFloat(item.total_dw_amount);
+                }
+            });
+            that.field.item_payment_total =  that.addComma(that.field.item_payment_total);
+        },
+        handlePaymentRemaining: function(){
+            var that = this;
+            $.each(that.items, function (key, item) {
+                item.payment_remaining = that.itemsDB[key].payment_remaining;
+                let tax_included_amount = parseFloat(that.itemsDB[key].tax_included_amount)
+                if(that.listCheckbox.indexOf(key)!= -1){
+                   item.payment_remaining = tax_included_amount -  parseFloat(item.last_payment_amount) -  parseFloat(item.total_dw_amount)-  parseFloat(item.fee) -  parseFloat(item.discount);
+                }
+            });
         }
     },
     mounted () {
