@@ -16,6 +16,9 @@
         .btnPreviewdrivers_license_picture{
             margin-left: 130px!important;
         }
+        .grid-form-label {
+            left: 80px!important;
+        }
     </style>
 @endsection
 @section('content')
@@ -235,18 +238,16 @@
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         @include('Component.form.input',['class'=>'wd-380','filed'=>'health_insurance_class','attr_input'=>"maxlength='10'"])
                     </div>
-
                     <div class="break-row-form"></div>
                     <div class="break-row-form"></div>
                     <div class="break-row-form"></div>
-
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['filed'=>'welfare_annuity_class','attr_input'=>"maxlength='10'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            <label class="grid-form-label pl-200">コード</label>
-                            <div class="wrap-control-group ">
+                            <label class="grid-form-label pl-150">コード</label>
+                            <div class="wrap-control-group">
                                 <label for="relocation_municipal_office_cd">
                                     {{ trans($prefix.'relocation_municipal_office_cd') }}
                                 </label>
