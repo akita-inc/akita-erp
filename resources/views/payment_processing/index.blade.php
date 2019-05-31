@@ -105,7 +105,7 @@
                             {{trans("payment_processing.list.field.payment_amount")}}
                         </div>
                         <div class="col-md-9 no-padding grid-form-search">
-                            <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" class="form-control" @change="handlePayment">
+                            <input type="text" v-model="field.payment_amount" name="payment_amount" maxlength="11" class="form-control" @change="handlePayment" @focus="removeCommaByID('payment_amount')">
                         </div>
                     </div>
                     <div class="col-md-4 row">
@@ -162,7 +162,9 @@
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
-                    <th class="wd-60"></th>
+                    <th class="wd-60">
+                        <input type="checkbox" @click="selectAll" v-model="allSelected">
+                    </th>
                     @foreach($fieldShowTable as $key => $field)
                         <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payment_processing.list.table.".$key)}}</th>
                     @endforeach
@@ -192,7 +194,7 @@
                                     <input type="text" v-model="item.total_dw_amount" name="'total_dw_amount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)">
                                 @break
                                 @case('discount')
-                                    <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1" @change="changeFee(index)">
+                                    <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="11" class="form-control text-center" :disabled="listCheckbox.indexOf(index) == -1" @change="changeDiscount(index)">
                                 @break
                                 @default
                                 <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
