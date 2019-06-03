@@ -90,15 +90,15 @@ class AccountsPayableDataOutputController extends Controller {
 
             $callback = function() use ($keys,$csvContent,$header1,$header2) {
                 $file = fopen('php://output', 'w');
-                fwrite ($file,mb_convert_encoding($header1, "SJIS", "UTF-8")."\r\n");
-                fwrite ($file,mb_convert_encoding($header2, "SJIS", "UTF-8")."\r\n");
-                fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
+                fwrite ($file,mb_convert_encoding($header1, "SJIS-win", "UTF-8")."\r\n");
+                fwrite ($file,mb_convert_encoding($header2, "SJIS-win", "UTF-8")."\r\n");
+                fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS-win", "UTF-8"))."\r\n");
                 foreach ($csvContent as $content) {
                     $row = [];
                     foreach ($keys as $key) {
                         $row[$key] = $content->{$key};
                     }
-                    fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
+                    fwrite ($file,implode(config('params.accounts_payable_csv.delimiter'),mb_convert_encoding($row, "SJIS-win", "UTF-8"))."\r\n");
                 }
                 fclose($file);
             };

@@ -36,7 +36,7 @@ return[
         ],
     ],
     'modal' => [
-        'title'=>'請求詳細',
+        'title'=>'請求明細',
         'sub_title'=>'明細',
         'table' => [
             'daily_report_date' => '日付',
