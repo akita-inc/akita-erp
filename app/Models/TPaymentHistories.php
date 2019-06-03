@@ -39,8 +39,8 @@ class TPaymentHistories extends Model {
                     )->join('t_billing_history_headers as bill_headers', function ($join) {
                         $join->on('bill_headers.invoice_number', '=',  'payment.invoice_number')
                             ->whereRaw('bill_headers.deleted_at IS NULL');
-                    })
-                    ->where('payment.dw_number',$dw_number);
+                    });
+        $query=$query->where('payment.dw_number','=',$dw_number);
         if ($dataSearch['from_date'] != '' && $dataSearch['to_date'] != '' ) {
             $query=$query->where('payment.dw_day', '>=',$dataSearch['from_date'])
                 ->where('payment.dw_day','<=',$dataSearch['to_date']);
@@ -48,7 +48,7 @@ class TPaymentHistories extends Model {
         if ($dataSearch['mst_customers_cd'] != '' ) {
             $query=$query->where('payment.mst_customers_cd', '=',  $dataSearch['mst_customers_cd']);
         }
-        $query=$query->whereNull('payment.deleted_at')
+        $query=$query->whereRaw('payment.deleted_at IS NULL')
             ->orderBy('payment.dw_number','desc')
             ->get();
         if(count($query)>0)
@@ -56,19 +56,18 @@ class TPaymentHistories extends Model {
             foreach($query as $key=>$value)
             {
                 $price=DB::select('SELECT
-                        sum( total_dw_amount ) AS last_payment_amount 
+                        sum( total_dw_amount ) AS last_payment_amount
                     FROM
-                        t_payment_histories 
+                        t_payment_histories
                     WHERE
-                        deleted_at IS NULL 
-                        AND invoice_number = :invoice_number 
+                        deleted_at IS NULL
+                        AND invoice_number = :invoice_number
                     GROUP BY
                         invoice_number',['invoice_number'=>$value->invoice_number]);
                 $value->last_payment_amount=isset($price[0]->last_payment_amount)?$price[0]->last_payment_amount:0;
                 $value->deposit_balance=$value->tax_included_amount-$value->last_payment_amount;
             }
         }
-
         return $query;
     }
 }

@@ -57,7 +57,7 @@
                                     :on-selected="onSelectedName"
                                     :render-suggestion="renderSuggestion"
                                     :get-suggestion-value="getSuggestionValueName"
-                                    ref="mst_customers_nm"
+                                    ref="customer_nm"
                             >
                             </vue-autosuggest>
                         </div>

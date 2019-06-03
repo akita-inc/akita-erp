@@ -159,7 +159,7 @@ class ExpenseApplicationController extends Controller
             $this->query->whereRaw('(SELECT COUNT(*)
                                     FROM wf_approval_status
                                     WHERE wf_id = wf_business_entertaining.id AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
-                                    AND approval_fg = 0) > 0)');
+                                    AND approval_fg = 0) > 0');
         }
         if($where['show_deleted']!=true)
         {
