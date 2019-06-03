@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -20048,7 +20048,7 @@ var ctrWorkFlowVl = new Vue({
 
 /***/ }),
 
-/***/ 17:
+/***/ 18:
 /*!**************************************************************!*\
   !*** multi ./resources/assets/js/controller/work-flow-vl.js ***!
   \**************************************************************/

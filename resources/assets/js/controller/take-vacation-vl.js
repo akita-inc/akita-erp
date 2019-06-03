@@ -28,6 +28,8 @@ var ctrTakeVacationVl = new Vue({
                 }
             ],
             mode:$('#mode').val(),
+            approval_fg:null,
+            send_back_reason:""
         },
         search:{
             name:"",
@@ -46,6 +48,7 @@ var ctrTakeVacationVl = new Vue({
         listStaffs:[],
         message: '',
         currentIndex:0,
+        listWfAdditionalNoticeDB: JSON.parse(listWfAdditionalNotice.replace(/&quot;/g,'"')),
     },
     methods : {
         resetForm: function () {
@@ -82,9 +85,14 @@ var ctrTakeVacationVl = new Vue({
                 $('input[type="tel"]').val('');
                 $('textarea').val('');
             }
-            this.handleChangeHalfDay();
+            if(this.field.mode=='register'){
+                this.handleChangeHalfDay();
+            }
+            if(this.field.mode=='edit'){
+                this.handleChangeHalfDayEdit();
+            }
         },
-        submit: function(status){
+        submit: function(approval_fg){
             let that = this;
             that.loading = true;
             if(this.field.mode != 'register'){
@@ -103,7 +111,11 @@ var ctrTakeVacationVl = new Vue({
                     });
                     break;
                 case 'edit':
-                    take_vacation_list_service.checkIsExist(that.empty_info_id, {'mode' : this.field.mode,'status': status,'modified_at': that.modified_at }).then((response) => {
+                case 'approval':
+                    if(that.field.mode=='approval'){
+                        that.field.approval_fg = approval_fg;
+                    }
+                    take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
                         if (!response.success) {
                             that.loading = false;
                             alert(response.msg);
@@ -122,29 +134,14 @@ var ctrTakeVacationVl = new Vue({
                         }
                     });
                     break;
-                case 'approval':
-                    empty_info_service.checkIsExist(that.empty_info_id, {'status': status,'modified_at': that.modified_at}).then((response) => {
-                        if (!response.success) {
-                            that.loading = false;
-                            alert(response.msg);
-                            that.backHistory();
-                            return false;
-                        } else {
-                            empty_info_service.updateStatus(that.empty_info_id,{status:status}).then((response) => {
-                                that.loading = false;
-                                window.location.href = listRoute;
-                            });
-                        }
-                    });
-                    break;
             }
         },
         showError: function ( errors ){
             return errors.join("<br/>");
         },
         backHistory: function () {
-            if(this.empty_info_edit == 1){
-                empty_info_service.backHistory().then(function () {
+            if(this.take_vacation_edit == 1){
+                take_vacation_list_service.backHistory().then(function () {
                     window.location.href = listRoute;
                 });
             }else{
@@ -153,41 +150,38 @@ var ctrTakeVacationVl = new Vue({
         },
         loadFormEdit: function () {
             let that = this;
-            if(this.field.mode != 'register'){
-                this.loading = true;
-                that.empty_info_edit = 1;
-                that.empty_info_id = $("#hd_id").val();
-                $.each(this.field,function (key,value) {
-                    if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
-                        that.field[key] = $("#hd_"+key).val();
-                        if(key == "asking_price"){
-                            that.field[key] = '¥ '+$("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-                        }
-                        if(key == "max_load_capacity"){
-                            that.field[key] = $("#hd_"+key).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-                        }
-                    }
-                });
-                if(this.field.mode=='reservation_approval'){
-                    this.field.application_office_id = $("#hd_ask_office").val();;
-                    this.field.reservation_person =$("#hd_reservation_person").val();
+            this.loading = true;
+            that.take_vacation_edit = 1;
+            that.take_vacation_id = $("#hd_id").val();
+            $.each(this.field, function (key,value) {
+                if( $("#hd_"+key) != undefined && $("#hd_"+key).val() != undefined && key != 'mst_bill_issue_destinations'){
+                    that.field[key] = $("#hd_"+key).val();
                 }
-                this.modified_at = $('#hd_modified_at').val();
-                this.loading = false;
+            });
+            that.field.wf_additional_notice = JSON.parse(listWfAdditionalNotice.replace(/&quot;/g,'"'));
+            if(that.field.wf_additional_notice.length==0){
+                that.field.wf_additional_notice =[
+                    {
+                        email_address:'',
+                        staff_cd:''
+                    }
+                ];
             }
+            this.modified_at = $('#hd_modified_at').val();
+            this.handleChangeHalfDayEdit();
+            this.loading = false;
+
         },
-        deleteInfo: function(id){
+        deleteVacation: function(id){
             var that = this;
-            empty_info_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
+            take_vacation_list_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
                     that.backHistory();
                     return false;
                 } else {
-                    if (confirm(messages["MSG06001"])) {
-                        empty_info_service.delete(id).then((response) => {
+                    if (confirm(messages["MSG10028"])) {
+                        take_vacation_list_service.delete(id).then((response) => {
                             window.location.href = listRoute;
                         });
                     }
@@ -199,10 +193,14 @@ var ctrTakeVacationVl = new Vue({
             if(that.field.half_day_kb==2 || that.field.half_day_kb==3 ){
                 that.field.end_date = that.field.start_date;
             }
-            let end_date =  moment(that.field.end_date);
-            let start_date =  moment(that.field.start_date);
-            that.field.days = end_date.diff(start_date, 'days')+1;
-
+            if(that.field.half_day_kb==1){
+                let end_date =  moment(that.field.end_date);
+                let start_date =  moment(that.field.start_date);
+                that.field.days = end_date.diff(start_date, 'days')+1;
+                if(that.field.days < 0){
+                    that.field.days = 0;
+                }
+            }
         },
         handleChangeHalfDay: function () {
             var that = this;
@@ -234,8 +232,30 @@ var ctrTakeVacationVl = new Vue({
                     that.disabledDays = true;
                     that.disabledTimes = false;
                     break;
-
-
+            }
+        },
+        handleChangeHalfDayEdit: function () {
+            var that = this;
+            switch (that.field.half_day_kb) {
+                case '1':
+                    that.disabledStartDate = false;
+                    that.disabledEndDate = false;
+                    that.disabledDays = false;
+                    that.disabledTimes= true;
+                    break;
+                case '2':
+                case '3':
+                    that.disabledStartDate = false;
+                    that.disabledEndDate = true;
+                    that.disabledDays = true;
+                    that.disabledTimes= true;
+                    break;
+                case '4':
+                    that.disabledStartDate = true;
+                    that.disabledEndDate = true;
+                    that.disabledDays = true;
+                    that.disabledTimes = false;
+                    break;
             }
         },
         openModal: function (index) {
@@ -247,6 +267,11 @@ var ctrTakeVacationVl = new Vue({
                 name:"",
                     mst_business_office_id:"",
             };
+            that.order = {
+                    col:'',
+                    descFlg: true,
+                    divId:''
+            }
             $('#searchStaffModal').modal('show');
         },
         addRow: function () {
@@ -266,10 +291,12 @@ var ctrTakeVacationVl = new Vue({
                 order:that.order
             }).then((response) => {
                 if (!response.success) {
+                    that.listStaffs = [];
                     that.message = response.msg;
                     return false;
                 } else {
                     that.listStaffs = response.info;
+                    that.message = '';
                 }
             });
         },
@@ -291,11 +318,42 @@ var ctrTakeVacationVl = new Vue({
             that.field.wf_additional_notice[that.currentIndex].email_address = item.mail;
             that.field.wf_additional_notice[that.currentIndex].staff_cd = item.staff_cd;
             $('#searchStaffModal').modal('hide');
-        }
+        },
+        setInputFilter: function (textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                });
+            });
+        },
 
     },
-    mounted () {
-        this.handleChangeHalfDay();
+     mounted () {
+         this.handleChangeHalfDay();
+        if($("#hd_take_vacation_edit").val() == 1) {
+             this.loadFormEdit();
+        }
+        if(document.getElementById("days")!=null){
+            this.setInputFilter(document.getElementById("days"), function(value) {
+                return /^\d*$/.test(value); });
+        }
+        if(document.getElementById("times")!=null){
+            this.setInputFilter(document.getElementById("times"), function(value) {
+                return /^\d*$/.test(value); });
+        }
+        if(this.field.mode!='register' && this.field.mode!='edit'){
+            this.disabledStartDate = true;
+            this.disabledEndDate = true;
+            this.disabledDays = true;
+            this.disabledTimes= true;
+        }
     },
     components: {
         PulseLoader,

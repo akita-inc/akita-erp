@@ -29,7 +29,7 @@ return [
         'export_excel'=>'確認書',
         'yes' => 'はい',
         'no' => 'いいえ',
-        'add' => '追加',
+        'add_row' => '追加',
     ],
     'btn_kara'=>[
         'add'=>'新規登録'
