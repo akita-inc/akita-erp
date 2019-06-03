@@ -58,7 +58,7 @@ class PaymentHistoriesController extends Controller {
                 ->whereRaw('bill_headers.deleted_at IS NULL');
         })->leftJoin('mst_general_purposes',function ($join){
             $join->on('mst_general_purposes.date_id', '=',  't_payment_histories.dw_classification')
-                ->where('mst_general_purposes.data_kb', config('params.data_kb')['payment_method_id']);;
+                ->where('mst_general_purposes.data_kb', config('params.data_kb')['payment_method_id']);
         });
         if ($where['from_date'] != '' && $where['to_date'] != '' ) {
             $this->query->where('t_payment_histories.dw_day', '>=',$where['from_date'])
