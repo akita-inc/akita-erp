@@ -3350,12 +3350,12 @@ var ctrExpenseApplicationVl = new Vue({
   },
   methods: {
     clearCondition: function clearCondition() {
-      this.fileSearch.vacation_id = "";
+      this.fileSearch.applicant_id = "";
       this.fileSearch.applicant_nm = "";
-      this.fileSearch.show_approved = false;
+      this.fileSearch.client_company_name = "";
+      this.fileSearch.applicant_office_id = "";
+      this.fileSearch.show_status = false;
       this.fileSearch.show_deleted = false;
-      this.fileSearch.sales_office = "";
-      this.fileSearch.vacation_class = "";
     },
     setBgColor: function setBgColor(delete_at) {
       console.log(delete_at);

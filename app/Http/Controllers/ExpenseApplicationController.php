@@ -6,6 +6,8 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MSaleses;
+use App\Models\WApprovalStatus;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
@@ -190,6 +192,71 @@ class ExpenseApplicationController extends Controller
         $this->query->orderBy('wf_business_entertaining.id','desc');
 
     }
+    public function checkIsExist(Request $request, $id){
+        $approval_fg= $request->get('approval_fg');
+        $mode = $request->get('mode');
+        $modified_at = $request->get('modified_at');
+        $data = DB::table($this->table)->where('id',$id)->first();
+
+        if(is_null($mode)){
+            //1. 承認ステータスを判断
+            // 1-1. 未承認の承認ステータスが1レコード以上ある場合
+            $WApprovalStatus = new WApprovalStatus();
+            $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
+            $return =['mode' =>''];
+            if($data->delete_at != null){
+                $return['mode'] = 'reference';
+            }
+            else{
+                if($approvalStatus->count() >= 1){
+                    if($data->applicant_id == Auth::user()->staff_cd){//1-1-1. 申請者＝ログインID
+                        $return['mode'] = 'edit';
+                    }
+                    else{//1-1-2.  申請者 != ログインID
+                        if($WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'approval_levels'=>Auth::user()->approval_levels])->count() > 0){// 1-1-2-1. ログイン者＝承認権限を持っている（mst_staffs.approval_levels is not null）かつ、その承認レベルが未承認である。
+                            $return['mode'] = 'approval';
+                        }else{//1-1-2-2. それ以外
+                            $return['mode'] = 'reference';
+                        }
+                    }
+                }else{//1-2. それ以外（すべて承認済みor却下済み）
+                    $return['mode'] = 'reference';
+                }
+            }
+            return Response()->json(array_merge(array('success'=>true),$return));
+        }else{
+            if (is_null($data->delete_at)) {
+                if($this->table!='empty_info' || ($mode!='edit' && $this->table=='empty_info') || ($mode=='edit' && $this->table=='empty_info' && Session::get('sysadmin_flg')==1)){
+
+                    if(!is_null($modified_at)){
+                        if(Carbon::parse($modified_at) != Carbon::parse($data->modified_at)){
+                            $message = Lang::get('messages.MSG04003');
+                            return Response()->json(array('success'=>false, 'msg'=> $message));
+                        }
+                    }
+                }
+
+                $WApprovalStatus = new WApprovalStatus();
+                $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
+                if($approvalStatus->count() <= 0){
+                    return Response()->json(array('success'=>false, 'msg'=> Lang::get('messages.MSG04003')));
+                }
+                return Response()->json(array('success'=>true));
+            } else {
+                if($mode=='edit' || $mode=='delete'){
+                    $message = Lang::get('messages.MSG04004');
+                }else{
+                    if ($approval_fg){
+                        $message = Lang::get('messages.MSG10018');
+                    }else{
+                        $message = Lang::get('messages.MSG10021');
+                    }
+                }
+                return Response()->json(array('success'=>false, 'msg'=> $message));
+            }
+        }
+    }
+
 
     public function index(Request $request){
         $fieldShowTable = [
