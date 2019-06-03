@@ -50,7 +50,6 @@ class StaffsController extends Controller
         "retire_reasons"=>"length:50|nullable",
         "death_reasons"=>"length:50|nullable",
         "employment_insurance_numbers"=>"length:20|nullable",
-        "health_insurance_numbers"=>"length:20|nullable",
         "employees_pension_insurance_numbers"=>"length:10|nullable",
         "drivers_license_number"=>"length:12|nullable",
         "section_id"=>'required',
@@ -203,7 +202,6 @@ class StaffsController extends Controller
         return response()->json($response);
     }
     protected function addLogModify( $dataBeforeUpdate,$data ){
-        $data['workmens_compensation_insurance_fg']=$data['workmens_compensation_insurance_fg']==null?0:1;
         unset($data["mst_staff_job_experiences"]);
         unset($data["dropdown_relocate_municipal_office_nm"]);//
         unset($data["mst_staff_qualifications"]);
@@ -283,7 +281,6 @@ class StaffsController extends Controller
             $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
             $data['password'] = $passwordStaff->password;
         }
-        $data['workmens_compensation_insurance_fg']=$data['workmens_compensation_insurance_fg']==false?0:1;
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
         $mst_staff_auths=$data["mst_staff_auths"];
