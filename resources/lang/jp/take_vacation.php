@@ -38,9 +38,10 @@ return [
         ]
     ],
     'create' =>[
-        'title_register' => '休暇取得申請',
-        'title_edit' => '休暇取得申請',
-        'title_approval' => '休暇取得申請',
+        'title_register' => '休暇取得申請 登録',
+        'title_edit' => '休暇取得申請 編集',
+        'title_approval' => '休暇取得申請 承認・却下',
+        'title_reference' => '休暇取得申請 照会 ',
         'field' => [
             'applicant_id' => '申請者',
             'staff_nm' => '',
@@ -53,6 +54,7 @@ return [
             'times' => '',
             'reasons' => '理由',
             'additional_notice' => '追加通知',
+            'send_back_reason' => '却下理由',
         ],
         'search' => [
             'name' => '氏名 / ふりがな',
@@ -72,8 +74,8 @@ return [
             'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
         ],
         'edit'=>[
-            'title' => '仮押さえ',
-            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10013')
+            'title' => '登録',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
         ],
         'approval'=>[
             'title' => '承認',

@@ -246,4 +246,17 @@ class CustomValidation {
             return str_replace(':length', $parameters[0], $message);
         });
     }
+
+    public static function validateNumberRangeCustom(){
+        Validator::extend('number_range_custom', function($attribute, $value, $parameters, $validator) {
+            if ($value >  $parameters[0]) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+        Validator::replacer('number_range_custom', function($message, $attribute, $rule, $parameters) {
+            return str_replace(':number', $parameters[0], $message);
+        });
+    }
 }

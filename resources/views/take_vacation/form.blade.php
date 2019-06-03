@@ -40,7 +40,7 @@
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
-                            <button class="btn btn-danger text-white" v-on:click="deleteInfo('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -49,22 +49,39 @@
                 <div class="sub-header-line-two">
                     <div class="grid-form border-0">
                         <div class="row">
+                            @if($mode=='register' || $mode=='edit')
                             <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
                             <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                @if($mode=='register' || $mode=='edit')
-                                    <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
-                                    <button class="btn btn-light m-auto" type="button" @click="resetForm" >
-                                        {{ trans("common.button.reset") }}
-                                    </button>
-                                @else
-                                    @if(($mode=='reservation' && $mWPaidVacation['status']==1) || $mode=='reservation_approval')
-                                        <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
-                                    @endif
-                                    @if($mode=='reservation_approval')
-                                        <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
-                                    @endif
-                                @endif
+                                <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
+                                <button class="btn btn-light m-auto" type="button" @click="resetForm" >
+                                    {{ trans("common.button.clear") }}
+                                </button>
                             </div>
+                            @else
+                                @if($mode=='approval')
+                                    <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
+                                        <div class="col-md-4 row h-100 justify-content-start">
+                                            <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
+                                            <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                        </div>
+                                        <div class="col-md-4 row lh-38">
+                                            <div class="col-md-2 col-sm-12 no-padding text-right">
+                                                {{ trans("take_vacation.create.field.send_back_reason") }}
+                                            </div>
+                                            <div class="col-md-10 col-sm-12 text-left pr-0">
+                                                <input v-model="field.send_back_reason"
+                                                       type="text"
+                                                       class="form-control w-100"
+                                                       maxlength="200"
+                                                       name="send_back_reason"
+                                                       v-bind:class="errors.send_back_reason!= undefined ? 'form-control is-invalid':'form-control' "
+                                                >
+                                                <span v-cloak v-if="errors.send_back_reason != undefined" class="message-error" v-html="errors.send_back_reason.join('<br />')"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -77,25 +94,12 @@
         @endif
         @if($role==1)
             <form class="form-inline" role="form">
-                @if($mode=='reservation' || $mode=='reservation_approval')
+                @if($mode=='approval' || $mode=='reference')
                     <fieldset disabled="disabled">
                         @endif
                         <div class="text-danger">
                             {{ trans("common.description-form.indicates_required_items") }}
                         </div>
-                        @if($role==1 && $mode=='reservation_approval')
-                            <div class="grid-form">
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-12">
-                                        @include('Component.form.select',['filed'=>'application_office_id','array'=>$listBusinessOffices])
-                                    </div>
-                                    <div class="break-row-form"></div>
-                                    <div class="col-md-12 col-sm-12">
-                                        @include('Component.form.input',['filed'=>'reservation_person','attr_input' => "maxlength='50'"])
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
                     <!--Block 1-->
                         <div class="grid-form">
                             <div class="row">
@@ -119,12 +123,12 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',['filed'=>'start_date','required'=>true,'role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledStartDate'"])
+                                    @include('Component.form.date-picker',['filed'=>'start_date','required'=>true, 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledStartDate'"])
 
                                 </div>
                                 <div class="no-padding wd-32 lh-38 text-center">～</div>
                                 <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.date-picker',['class' => 'pl-0','filed'=>'end_date','role' => $mode=='register' || $mode=='edit' ? 1 :2, 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledEndDate'"])
+                                    @include('Component.form.date-picker',['class' => 'pl-0','filed'=>'end_date', 'attr_input' => ":editable='false' @change='handleSelectDate' :disabled='disabledEndDate'"])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
@@ -141,37 +145,60 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="grid-form">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12">
-                                    <div class="wrap-control-group">
-                                        <label for="search_vehicle">{{ trans("take_vacation.create.field.additional_notice") }}</label>
-                                        <div class="row" v-for="(item,index) in  field.wf_additional_notice" style="margin-bottom: 10px !important;">
-                                            <div class="col-md-1 col-sm-12" >
-                                                <button class="btn btn-outline-secondary" type="button" @click="openModal(index)">{{ trans("common.button.search") }}</button>
-                                            </div>
-                                            <div class="col-md-11 col-sm-12">
-                                                <input v-model="item.email_address"
-                                                       type="email"
-                                                       class="form-control w-100"
-                                                       :id="'email_address'+index"
-                                                       maxlength="300"
-                                                >
-                                            </div>
+                        @if($mode=='reference' || $mode=='approval')
+                    </fieldset>
+                @endif
+                @if($mode=='reference')
+                    <fieldset disabled="disabled" class="w-100">
+                @endif
+                    <div class="grid-form">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="wrap-control-group">
+                                    <label for="search_vehicle">{{ trans("take_vacation.create.field.additional_notice") }}</label>
+                                    <div class="row" v-cloak v-for="(item,index) in  field.wf_additional_notice" style="margin-bottom: 10px !important;">
+                                        <div class="col-md-1 col-sm-12" >
+                                            <button class="btn btn-outline-secondary" type="button" @click="openModal(index)" :disabled="field.mode =='approval' && typeof listWfAdditionalNoticeDB[index] !='undefined'">{{ trans("common.button.search") }}</button>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-1 col-sm-12"></div>
-                                            <div class="col-md-11 col-sm-12">
-                                                <button class="btn btn-outline-secondary" type="button" @click="addRow">{{ trans("common.button.add") }}</button>
-                                            </div>
+                                        <div class="col-md-11 col-sm-12">
+                                            <input v-model="item.email_address"
+                                                   type="email"
+                                                   class="form-control w-100"
+                                                   :id="'email_address'+index"
+                                                   maxlength="300"
+                                                   v-bind:class="errors.wf_additional_notice!= undefined && errors.wf_additional_notice[0][index]!= undefined ? 'form-control is-invalid':'form-control' "
+                                                   :disabled="field.mode =='approval' && typeof listWfAdditionalNoticeDB[index] !='undefined'"
+                                            >
+                                            <span v-cloak v-if="errors.wf_additional_notice != undefined" class="message-error" v-html="errors.wf_additional_notice[0][index]"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1 col-sm-12"></div>
+                                        <div class="col-md-11 col-sm-12">
+                                            <button class="btn btn-outline-secondary" type="button" @click="addRow" v-cloak v-if="field.mode!= 'reference'"> {{ trans("common.button.add_row") }}</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @if($mode=='reservation' || $mode=='reservation_approval')
+                    </div>
+                @if($mode=='reference')
                     </fieldset>
                 @endif
+                @if(!empty($listWApprovalStatus))
+                    <div class="grid-form">
+                        <div class="row">
+                            @foreach($listWApprovalStatus as $item)
+                                <div class="wd-180 text-right font-weight-bold">{{$item->title}}</div>
+                                <div class="col-md-1 col-sm-12">{{$item->status}}</div>
+                                <div class="col-md-2 col-sm-12">{{$item->approval_date}}</div>
+                                <div class="col-md-7 col-sm-12">{{$item->send_back_reason}}</div>
+                                <div class="break-row-form"></div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
             </form>
             <div class="sub-header mt-3">
                 <div class="sub-header-line-one d-flex">
@@ -180,8 +207,8 @@
                     </div>
                     @if(!empty($mWPaidVacation))
                         <div class="d-flex ml-auto">
-                            @if($role==1 && $mode=='edit' && $mWPaidVacation['regist_office_id']== \Illuminate\Support\Facades\Auth::user()->mst_business_office_id)
-                                <button class="btn btn-danger text-white" v-on:click="deleteInfo('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            @if($role==1 && $mode=='edit')
+                                <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif
@@ -190,22 +217,39 @@
                     <div class="sub-header-line-two">
                         <div class="grid-form border-0">
                             <div class="row">
-                                <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
-                                <div class="col-md-7 col-sm-12 row grid-col h-100">
-                                    @if($mode=='register' || $mode=='edit')
-                                        <button @click="submit" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
+                                @if($mode=='register' || $mode=='edit')
+                                    <div class="col-md-5 col-sm-12 row grid-col h-100"></div>
+                                    <div class="col-md-7 col-sm-12 row grid-col h-100">
+                                        <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.register") }}</button>
                                         <button class="btn btn-light m-auto" type="button" @click="resetForm" >
-                                            {{ trans("common.button.reset") }}
+                                            {{ trans("common.button.clear") }}
                                         </button>
-                                    @else
-                                        @if(($mode=='reservation' && $mWPaidVacation['status']==1) || $mode=='reservation_approval')
-                                            <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
-                                        @endif
-                                        @if($mode=='reservation_approval')
-                                            <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
-                                        @endif
+                                    </div>
+                                @else
+                                    @if($mode=='approval')
+                                        <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
+                                            <div class="col-md-4 row h-100 justify-content-start">
+                                                <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
+                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                            </div>
+                                            <div class="col-md-4 row lh-38">
+                                                <div class="col-md-2 col-sm-12 no-padding text-right">
+                                                    {{ trans("take_vacation.create.field.send_back_reason") }}
+                                                </div>
+                                                <div class="col-md-10 col-sm-12 text-left pr-0">
+                                                    <input v-model="field.send_back_reason"
+                                                           type="text"
+                                                           class="form-control w-100"
+                                                           maxlength="200"
+                                                           name="send_back_reason"
+                                                           v-bind:class="errors.send_back_reason!= undefined ? 'form-control is-invalid':'form-control' "
+                                                    >
+                                                    <span v-cloak v-if="errors.send_back_reason != undefined" class="message-error" v-html="errors.send_back_reason.join('<br />')"></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -214,22 +258,27 @@
         @endif
         @include("take_vacation.modalSearch")
         @if($role==1)
-            @include('Layouts.modal',['id'=> $mode.'Modal','title'=> trans("take_vacation.modal.".$mode.".title"),'content'=> trans("take_vacation.modal.".$mode.".content"),'attr_input' => "@click='submit(".($mode=='reservation' ? 2 : 8).")'"])
+            @include('Layouts.modal',['id'=> $mode.'Modal','title'=> trans("take_vacation.modal.".$mode.".title"),'content'=> trans("take_vacation.modal.".$mode.".content"),'attr_input' => "@click='submit(".($mode=='approval' ? 1 : '').")'"])
+        @endif
+        @if($role==1 && $mode=='approval')
+            @include('Layouts.modal',['id'=> 'vacation_rejectModal','title'=> trans("take_vacation.modal.reject.title"),'content'=> trans("take_vacation.modal.reject.content"),'attr_input' => "@click='submit(0)'"])
         @endif
     </div>
 @endsection
 @section("scripts")
     <script>
+        var listRoute = "{{route('take_vacation.list')}}";
         var defaultApprovalKb = "{{array_keys($listVacationIndicator)[0]}}";
         var defaultHalfDayKb = "{{array_keys($listVacationAcquisitionTimeIndicator)[0]}}";
         var messages = [];
-        messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        messages["MSG10028"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10028'); ?>";
         var staff_cd = "<?php echo \Illuminate\Support\Facades\Auth::user()->staff_cd ?>";
         var staff_nm = "<?php echo \Illuminate\Support\Facades\Auth::user()->last_nm. \Illuminate\Support\Facades\Auth::user()->first_nm?>";
         var staff_nm = "<?php echo \Illuminate\Support\Facades\Auth::user()->last_nm. \Illuminate\Support\Facades\Auth::user()->first_nm?>";
-        var mst_business_office_id = "<?php echo \Illuminate\Support\Facades\Auth::user()->mst_business_office_id?>";
+        var mst_business_office_id = "{{$businessOfficeID}}";
         var business_ofice_nm = "{{ $businessOfficeNm}}";
         var currentDate = "{{ $currentDate}}";
+        var listWfAdditionalNotice = "{{ $listWfAdditionalNotice}}";
 
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/take-vacation.js') }}" charset="utf-8"></script>

@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1136,23 +1136,18 @@ var ctrTakeVacationListVl = new Vue({
 
           _this2.getItems(1);
         } else {
-          // window.location.href = 'edit/' + id;
-          var mode = '';
-
           switch (response.mode) {
             case 'edit':
-              mode = '編集モード';
+              window.location.href = 'edit/' + id;
               break;
 
-            case 'approve':
-              mode = '承認モード';
+            case 'approval':
+              window.location.href = 'approval/' + id;
               break;
 
             default:
-              mode = '参照モード';
+              window.location.href = 'reference/' + id;
           }
-
-          alert(mode);
         }
       });
     },
@@ -1209,7 +1204,7 @@ var ctrTakeVacationListVl = new Vue({
 
 /***/ }),
 
-/***/ 18:
+/***/ 19:
 /*!***********************************************************************!*\
   !*** multi ./resources/assets/js/controller/take-vacation-list-vl.js ***!
   \***********************************************************************/
