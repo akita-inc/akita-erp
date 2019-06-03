@@ -73,11 +73,11 @@
     left: 30px;
     font-size: 0.7rem;
 }
-.pl-150{
-    padding-left: 150px;
-}
 .pl-200{
     padding-left: 200px;
+}
+.pl-150{
+    padding-left: 150px;
 }
 .bg-color-pink{
     background-color: rgb(255,204,255) !important;

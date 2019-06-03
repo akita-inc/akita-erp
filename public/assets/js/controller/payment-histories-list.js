@@ -3278,13 +3278,13 @@ var ctrPaymentHistoryListVl = new Vue({
       from_date: "",
       to_date: "",
       mst_customers_cd: "",
-      mst_customers_nm: ""
+      customer_nm: ""
     },
     fileSearched: {
       from_date: "",
       to_date: "",
       mst_customers_cd: "",
-      mst_customers_nm: ""
+      customer_nm: ""
     },
     modal: {
       payment_histories: {},
@@ -3332,7 +3332,7 @@ var ctrPaymentHistoryListVl = new Vue({
       }
 
       that.fileSearch.mst_customers_cd = this.$refs.mst_customers_cd.searchInput;
-      that.fileSearch.mst_customers_nm = this.$refs.mst_customers_nm.searchInput;
+      that.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
       that.flagSearch = false;
       that.deleteFlagSuccess = false;
       var data = {
@@ -3349,7 +3349,7 @@ var ctrPaymentHistoryListVl = new Vue({
             from_date: "",
             to_date: "",
             mst_customers_cd: "",
-            mst_customers_nm: ""
+            customer_nm: ""
           };
           that.items = response.data.data;
           that.recent_dw_number = response.recent_dw_number;
@@ -3358,7 +3358,7 @@ var ctrPaymentHistoryListVl = new Vue({
           that.fileSearched.from_date = response.fieldSearch.from_date;
           that.fileSearched.to_date = response.fieldSearch.to_date;
           that.fileSearched.mst_customers_cd = response.fieldSearch.mst_customers_cd;
-          that.fileSearched.mst_customers_nm = response.fieldSearch.mst_customers_nm;
+          that.fileSearched.customer_nm = response.fieldSearch.customer_nm;
           that.order = response.order;
           that.flagSearch = true;
           $.each(that.fileSearch, function (key, value) {
@@ -3414,29 +3414,29 @@ var ctrPaymentHistoryListVl = new Vue({
       };
     },
     inputPropsName: function inputPropsName() {
-      var cls_error = this.fileSearch.mst_customers_nm != undefined ? 'form-control is-invalid' : '';
+      var cls_error = this.fileSearch.customer_nm != undefined ? 'form-control is-invalid' : '';
       return {
         id: 'autosuggest__input',
         onInputChange: this.onInputChangeName,
-        initialValue: this.fileSearch.mst_customers_nm,
+        initialValue: this.fileSearch.customer_nm,
         maxlength: 50,
         class: 'form-control w-100',
-        ref: "mst_customers_nm"
+        ref: "customer_nm"
       };
     }
   },
   methods: {
     renderSuggestion: function renderSuggestion(suggestion) {
       var customer = suggestion.item;
-      return customer.mst_customers_cd + ': ' + customer.mst_customers_nm;
+      return customer.mst_customers_cd + ': ' + (customer.customer_nm != null ? customer.customer_nm : '');
     },
     getSuggestionValueCd: function getSuggestionValueCd(suggestion) {
-      this.$refs.mst_customers_nm.searchInput = suggestion.item.mst_customers_nm;
+      this.$refs.customer_nm.searchInput = suggestion.item.customer_nm;
       return suggestion.item.mst_customers_cd;
     },
     getSuggestionValueName: function getSuggestionValueName(suggestion) {
       this.$refs.mst_customers_cd.searchInput = suggestion.item.mst_customers_cd;
-      return suggestion.item.mst_customers_nm;
+      return suggestion.item.customer_nm;
     },
     onInputChangeCd: function onInputChangeCd(text) {
       this.fileSearch.mst_customers_cd = text;
@@ -3454,7 +3454,7 @@ var ctrPaymentHistoryListVl = new Vue({
       }];
     },
     onInputChangeName: function onInputChangeName(text) {
-      this.fileSearch.mst_customers_nm = text;
+      this.fileSearch.customer_nm = text;
 
       if (text === '' || text === undefined) {
         this.filteredCustomerNm = [];
@@ -3462,26 +3462,28 @@ var ctrPaymentHistoryListVl = new Vue({
       }
 
       var filteredDataNm = this.dropdown_mst_customer_nm[0].data.filter(function (item) {
-        return item.mst_customers_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+        return item.customer_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
       }).slice(0, this.limit);
+      /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
+
       this.filteredCustomerNm = [{
         data: filteredDataNm
       }];
     },
     onSelectedCd: function onSelectedCd(option) {
       this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
-      this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
+      this.fileSearch.customer_nm = option.item.customer_nm;
     },
     onSelectedName: function onSelectedName(option) {
       this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
-      this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
+      this.fileSearch.customer_nm = option.item.customer_nm;
     },
     clearCondition: function clearCondition() {
       this.setDefaultDate();
       this.fileSearch.mst_customers_cd = "";
       this.$refs.mst_customers_cd.searchInput = "";
-      this.fileSearch.mst_customers_nm = "";
-      this.$refs.mst_customers_nm.searchInput = "";
+      this.fileSearch.customer_nm = "";
+      this.$refs.customer_nm.searchInput = "";
       this.filteredCustomerCd = [];
       this.filteredCustomerNm = [];
     },
@@ -3495,7 +3497,8 @@ var ctrPaymentHistoryListVl = new Vue({
     openModal: function openModal(item) {
       this.loading = true;
       var that = this;
-      this.modal.payment_histories = item;
+      that.modal.payment_histories = item;
+      that.modal.billing_headers = "";
       console.log(item);
       payment_histories_service.getDetailsPaymentHistories({
         'dw_number': item.dw_number,
@@ -3537,7 +3540,7 @@ var ctrPaymentHistoryListVl = new Vue({
   mounted: function mounted() {
     var _this3 = this;
 
-    sales_lists_service.loadCustomerList().then(function (response) {
+    invoice_service.loadListCustomers().then(function (response) {
       _this3.dropdown_mst_customer_cd[0].data = response.data;
       _this3.dropdown_mst_customer_nm[0].data = response.data;
     });
@@ -3559,7 +3562,7 @@ var ctrPaymentHistoryListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-histories-list-vl.js */"./resources/assets/js/controller/payment-histories-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\payment-histories-list-vl.js */"./resources/assets/js/controller/payment-histories-list-vl.js");
 
 
 /***/ })

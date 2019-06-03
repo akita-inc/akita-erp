@@ -491,4 +491,5 @@ return [
             "Akita ERP - ワークフロー\n\n"
     ),
     'vacation_wf_type_id_default' => 1,
+    'expense_wf_type_id_default'=>3,
 ];

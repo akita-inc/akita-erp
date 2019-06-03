@@ -36,7 +36,8 @@ class PaymentHistoriesController extends Controller {
         $where = array(
             'from_date' =>date('Y-m-d', strtotime($data['fieldSearch']['from_date'])),
             'to_date'=>date('Y-m-d', strtotime($data['fieldSearch']['to_date'])),
-            'mst_customers_cd'=>$data['fieldSearch']['mst_customers_cd']
+            'mst_customers_cd'=>$data['fieldSearch']['mst_customers_cd'],
+            'customer_nm_formal'=>$data['fieldSearch']['customer_nm']
         );
         $this->query->select(
             DB::raw("DATE_FORMAT(t_payment_histories.dw_day, '%Y/%m/%d') as dw_day"),
@@ -52,13 +53,19 @@ class PaymentHistoriesController extends Controller {
         $this->query->join('mst_customers', function ($join) {
             $join->on('mst_customers.mst_customers_cd', '=', 't_payment_histories.mst_customers_cd')
                 ->whereRaw('mst_customers.deleted_at IS NULL');
+        })->join('t_billing_history_headers as bill_headers', function ($join) {
+            $join->on('bill_headers.invoice_number', '=',  't_payment_histories.invoice_number')
+                ->whereRaw('bill_headers.deleted_at IS NULL');
         });
         if ($where['from_date'] != '' && $where['to_date'] != '' ) {
             $this->query->where('t_payment_histories.dw_day', '>=',$where['from_date'])
                 ->where('t_payment_histories.dw_day','<=',$where['to_date']);
         }
         if ($where['mst_customers_cd'] != '' ) {
-            $this->query->where('t_payment_histories.mst_customers_cd', '=',  $where['mst_customers_cd']);
+            $this->query->where('mst_customers.mst_customers_cd', '=',  $where['mst_customers_cd']);
+        }
+        if ($where['customer_nm_formal'] != '' ) {
+            $this->query->where('mst_customers.customer_nm_formal', 'LIKE',  '%'.$where['customer_nm_formal'].'%');
         }
         $this->query->where('t_payment_histories.deleted_at',null);
         $this->query->groupBy(
@@ -180,14 +187,11 @@ class PaymentHistoriesController extends Controller {
         $this->getQuery();
         $this->search( $data );
         $recentDwNumber=DB::select('SELECT
-                                                dw_number
+                                                max(dw_number) as dw_number
                                           FROM
                                                 t_payment_histories
                                           WHERE
-                                                deleted_at IS NULL
-                                          ORDER BY
-                                                created_at DESC
-                                                LIMIT 1');
+                                                deleted_at IS NULL');
         $items = $this->query->paginate($this->getPaging(), ['*'], 'page', $data['page']);
         if(count($items->items())==0){
             if($data['page'] > 1){
