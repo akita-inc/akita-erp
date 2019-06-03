@@ -40,8 +40,6 @@ class ExpenseApplicationController extends Controller
             'show_status' =>$data['fieldSearch']['show_status'],
             'show_deleted' =>$data['fieldSearch']['show_deleted'],
         );
-//        dd($where);
-        //select
         $this->query->select(
             'wf_business_entertaining.id',
             DB::raw("DATE_FORMAT(wf_business_entertaining.regist_date,'%Y/%m/%d') as regist_date"),
@@ -129,7 +127,6 @@ class ExpenseApplicationController extends Controller
             END AS approval_levels
             ")
         );
-        //join
         $this->query->join('mst_staffs as ms', function($join){
             $join->on('ms.staff_cd','=','wf_business_entertaining.applicant_id')
                 ->whereRaw('ms.deleted_at IS NULL');
@@ -161,16 +158,13 @@ class ExpenseApplicationController extends Controller
         {
             $this->query->whereRaw('(SELECT COUNT(*)
                                     FROM wf_approval_status
-                                    WHERE wf_id = wf_business_entertaining.id
-                                    AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
-                                    AND approval_fg = 0) > 0');
+                                    WHERE wf_id = wf_business_entertaining.id AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
+                                    AND approval_fg = 0) > 0)');
         }
-        //
         if($where['show_deleted']!=true)
         {
             $this->query->whereNull('delete_at');
         }
-        //Order by
         if ($data["order"]["col"] != '') {
             $orderCol = $data["order"]["col"];
             if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
