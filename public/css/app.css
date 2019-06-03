@@ -690,3 +690,12 @@ input[type="checkbox"]:focus {
 .w-85{
     width: 85% !important;
 }
+.wd-20{
+    width: 20px !important;
+}
+.wd-80{
+    width: 80px !important;
+}
+.wd-140{
+    width: 140px !important;
+}

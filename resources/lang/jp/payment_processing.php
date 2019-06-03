@@ -29,7 +29,7 @@ return[
             'dw_classification' => '入金区分',
             'payment_amount' => '入金額',
             'fee' => '手数料',
-            'discount' => '値引き',
+            'total_discount' => '値引き',
             'total_payment_amount' => '入金額合計',
             'item_payment_total' => '明細入金合計',
             'note' => '備考',

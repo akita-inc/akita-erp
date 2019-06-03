@@ -13,6 +13,7 @@ use App\Models\MCustomers;
 use App\Models\MGeneralPurposes;
 use App\Models\MNumberings;
 use App\Models\MSaleses;
+use App\Models\TPaymentHistories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,18 +22,36 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class PaymentProcessingController extends Controller{
-    use ListTrait;
+    use ListTrait, FormTrait;
     public $table = "t_billing_history_headers";
     public $allNullAble = false;
     public $beforeItem = null;
     public $add_log = false;
 
     public $ruleValid = [
-        'customer_cd' => 'required'
+        'dw_day' => 'required',
+        'invoice_balance_total' => 'required|one_byte_number|length:13',
+        'dw_classification' => 'required|one_byte_number|length:13',
+        'fee' => 'required|one_byte_number|length:13',
+        'total_discount' => 'required|one_byte_number|length:13',
+        'total_payment_amount' => 'required|one_byte_number|length:13',
+        'item_payment_total' => 'required|one_byte_number|length:13',
+        'note' => 'nullable|length:200',
     ];
 
     public $labels = [
-        'customer_cd' => '得意先'
+        'total_dw_amount' => '入金額',
+        'customer_cd' => '得意先',
+        'dw_day' => '入金日',
+        'invoice_balance_total' => '請求残合計',
+        'dw_classification' => '入金区分',
+        'payment_amount' => '入金額',
+        'fee' => '手数料',
+        'discount' => '値引き',
+        'total_discount' => '値引き',
+        'total_payment_amount' => '入金額合計',
+        'item_payment_total' => '明細入金合計',
+        'note' => '備考',
     ];
 
 
@@ -54,7 +73,7 @@ class PaymentProcessingController extends Controller{
             Session::put('requestHistory', $data);
         }
         $fieldSearch = $data['fieldSearch'];
-        $validator = Validator::make( $fieldSearch, $this->ruleValid ,['required' => Lang::get('messages.MSG10029')] ,$this->labels );
+        $validator = Validator::make( $fieldSearch, ['customer_cd' => 'required'] ,['required' => Lang::get('messages.MSG10029')] ,$this->labels );
         if ( $validator->fails() ) {
             return response()->json([
                 'success'=>FALSE,
@@ -88,7 +107,7 @@ class PaymentProcessingController extends Controller{
                 DB::raw("IFNULL(IFNULL(billing.tax_included_amount,0)- IFNULL(payment.total_dw_amount,0),0)  as payment_remaining")
             )
             ->whereNull('billing.deleted_at')
-            ->leftJoin(DB::raw('( SELECT invoice_number, IFNULL( SUM( total_dw_amount ), 0 ) AS total_dw_amount FROM t_payment_histories WHERE deleted_at IS NULL GROUP BY invoice_number ) payment'),
+            ->join(DB::raw('( SELECT invoice_number, IFNULL( SUM( total_dw_amount ), 0 ) AS total_dw_amount FROM t_payment_histories WHERE deleted_at IS NULL GROUP BY invoice_number ) payment'),
                 function($join)
                 {
                     $join->on('billing.invoice_number', '=', 'payment.invoice_number')
@@ -110,41 +129,52 @@ class PaymentProcessingController extends Controller{
         $fieldShowTable = [
             'invoice_number' => [
                 "classTH" => "wd-60",
+                "classTD" => "wd-60",
             ],
             'publication_date'=> [
-                "classTH" => "wd-60",
+                "classTH" => "wd-80",
+                "classTD" => "wd-80",
             ],
             'office_nm'=> [
-                "classTH" => "wd-120",
+                "classTH" => "wd-80",
+                "classTD" => "wd-80",
             ],
             'total_fee'=> [
                 "classTH" => "wd-100",
+                "classTD" => "wd-100",
             ],
             'consumption_tax'=> [
-                "classTH" => "wd-100",
+                "classTH" => "wd-80",
+                "classTD" => "wd-80",
             ],
             'tax_included_amount'=> [
-                "classTH" => "wd-120",
+                "classTH" => "wd-140",
+                "classTD" => "wd-140",
             ],
             'last_payment_amount'=> [
-                "classTH" => "wd-60",
+                "classTH" => "wd-140",
+                "classTD" => "wd-140",
             ],
             'total_dw_amount'=> [
-                "classTH" => "wd-60",
+                "classTH" => "wd-80",
+                "classTD" => "wd-80",
             ],
             'fee'=> [
                 "classTH" => "wd-60",
+                "classTD" => "wd-60",
             ],
             'discount'=> [
-                "classTH" => "wd-60",
+                "classTH" => "wd-80",
+                "classTD" => "wd-80",
             ],
             'payment_remaining'=> [
-                "classTH" => "wd-60",
+                "classTH" => "wd-140",
+                "classTD" => "wd-140",
             ],
         ];
         $currentDate = date("Y/m/d",time());
         $mGeneralPurposes = new MGeneralPurposes();
-        $listDepositMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.deposit_method'),'Empty');
+        $listDepositMethod= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.payment_method_id'),'Empty');
         return view('payment_processing.index',[
             'fieldShowTable'=>$fieldShowTable,
             'listDepositMethod'=>$listDepositMethod,
@@ -158,4 +188,137 @@ class PaymentProcessingController extends Controller{
         return Response()->json(array('success'=>true,'data'=>$data));
     }
 
+    public function submit(Request $request){
+        $data = $request->all();
+        $dataPayment = $data['dataPayment'];
+        $dataPayment['total_discount']= number_format($dataPayment['total_discount'],0,null,'');
+        $dataPayment['fee']= number_format($dataPayment['fee'],0,null,'');
+        $dataPayment['invoice_balance_total']= number_format($dataPayment['invoice_balance_total'],0,null,'');
+        $dataPayment['item_payment_total']= number_format($dataPayment['item_payment_total'],0,null,'');
+        $dataPayment['payment_amount']= number_format($dataPayment['payment_amount'],0,null,'');
+        $dataPayment['total_payment_amount']= number_format($dataPayment['total_payment_amount'],0,null,'');
+        $listInvoice = $data['listInvoice'];
+        $error = [];
+        $validator = Validator::make( $dataPayment, $this->ruleValid ,[] ,$this->labels );
+        $validator->after(function($validator) use ($listInvoice,$error) {
+            foreach ($listInvoice as $key => $value) {
+                $value['total_dw_amount'] = number_format($value['total_dw_amount'],0,null,'');
+                $value['discount'] = number_format($value['discount'],0,null,'');
+                $validatorEx = Validator::make( $value, [
+                    'total_dw_amount' => 'nullable|one_byte_number|length:13',
+                    'discount' => 'nullable|one_byte_number|length:13'
+                ] ,[] ,$this->labels );
+                if ( $validatorEx->fails() ) {
+                    $failedRules = $validatorEx->failed();
+                    foreach ($failedRules as $field => $errors) {
+                        if(!isset($error[$field])){
+                            $error[$field] = [
+                                'message' => "",
+                                'indexError' => [],
+                            ];
+                        }
+                        if($error[$field]['message']==''){
+                            $error[$field]['message'] = $validatorEx->errors()->first($field);
+                        }
+                        array_push($error[$field]['indexError'], $key);
+                    }
+                }
+            }
+            if(count($error) > 0){
+                $validator->errors()
+                    ->add("listInvoice", $error);
+            }
+        });
+
+        if ( $validator->fails() ) {
+            return response()->json([
+                'success'=>false,
+                'errorValidate'=> $validator->errors(),
+                'error'=> []
+            ]);
+        }else {
+            if (is_null($dataPayment['payment_amount']) || $dataPayment['payment_amount'] == 0) {
+                $error['payment_amount'] = Lang::get('messages.MSG10032');
+            } else {
+                if ($dataPayment['payment_amount'] != $dataPayment['item_payment_total']) {
+                    $error['payment_amount'] = Lang::get('messages.MSG10031');
+                }
+            }
+
+            foreach ($listInvoice as $key => $value) {
+                if ($value['payment_remaining'] < 0) {
+                    if(!isset($error['total_dw_amount'])){
+                        $error['total_dw_amount'] = [
+                            'message' => [],
+                            'indexError' => [],
+                        ];
+                    }
+                    if (!in_array(Lang::get('messages.MSG10030'), $error['total_dw_amount']['message'])) {
+                        array_push($error['total_dw_amount']['message'], Lang::get('messages.MSG10030'));
+                    }
+                    if (!in_array($key, $error['total_dw_amount']['indexError'])) {
+                        array_push($error['total_dw_amount']['indexError'], $key);
+                    }
+                }
+                if ($value['total_dw_amount'] <= 0) {
+                    if(!isset($error['total_dw_amount'])){
+                        $error['total_dw_amount'] = [
+                            'message' => [],
+                            'indexError' => [],
+                        ];
+                    }
+                    if (!in_array(Lang::get('messages.MSG10032'), $error['total_dw_amount']['message']) && (!isset($error['payment_amount']) || isset($error['payment_amount']) && $error['payment_amount'] != Lang::get('messages.MSG10032'))) {
+                        array_push($error['total_dw_amount']['message'], Lang::get('messages.MSG10032'));
+                    }
+                    if (!in_array($key, $error['total_dw_amount']['indexError'])) {
+                        array_push($error['total_dw_amount']['indexError'], $key);
+                    }
+                }
+            }
+            if(count($error) > 0){
+                return response()->json([
+                    'success'=>FALSE,
+                    'error'=> $error,
+                    'errorValidate'=> [],
+                ]);
+            }
+        }
+        $this->save($data);
+
+    }
+
+    public function save($data){
+        $dataPayment = $data['dataPayment'];
+        $listInvoice = $data['listInvoice'];
+        $dataSearch = $data['dataSearch'];
+        $currentTime = date("Y-m-d H:i:s",time());
+        $listPayment = [];
+        $mNumberings =  new MNumberings();
+        $serial_number = $mNumberings->getSerialNumberByTargetID('4001');
+        $branch_number = 1;
+        foreach ($listInvoice as $key => $value) {
+            $row = [];
+            $row['dw_number'] = $serial_number->serial_number;
+            $row['branch_number'] = $branch_number++;
+            $row['mst_customers_cd'] = $dataSearch['customer_cd'];
+            $row['dw_day'] = $dataPayment['dw_day'];
+            $row['dw_classification'] = $dataPayment['dw_classification'];
+            $row['total_dw_amount'] = $value['total_dw_amount'] + $value['fee'] + $value['discount'];
+            $row['actual_dw'] = $value['total_dw_amount'];
+            $row['fee'] = $value['fee'];
+            $row['discount'] = $value['discount'];
+            $row['invoice_number'] = $value['invoice_number'];
+            $row['note'] = $dataPayment['note'];
+            $row['created_at'] = $currentTime;
+            $row['add_mst_staff_id'] = Auth::user()->id;
+            $row['modified_at'] = $currentTime;
+            $row['upd_mst_staff_id'] = Auth::user()->id;
+            array_push($listPayment,$row);
+        }
+        TPaymentHistories::query()->insert( $listPayment );
+        return response()->json([
+            'success'=>true,
+            'message'=> ''
+        ]);
+    }
 }
