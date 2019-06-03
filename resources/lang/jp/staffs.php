@@ -82,7 +82,7 @@ return [
             "educational_background"=>"最終学歴",
             "educational_background_dt"=>"最終学歴日付",
             "mst_staff_job_experiences_title"=>"前職経歴",
-            "job_duties"=>"職務内容",
+            "job_duties"=>"社名及び職務内容",
             "staff_tenure_start_dt"=>"在職期間（開始日）",
             "staff_tenure_end_dt"=>"在職期間（終了日）",
             "disp_number"=>"'表示順",
