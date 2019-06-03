@@ -41,7 +41,7 @@
 
                 <div class="w-100 text-left"></div>
 
-                <table class="table table-striped table-bordered search-content">
+                <table class="table table-striped table-bordered search-content" v-if="modal.billing_headers.length>0">
                     <thead>
                     <tr>
                         @foreach($fieldShowTableDetails as $key => $field)

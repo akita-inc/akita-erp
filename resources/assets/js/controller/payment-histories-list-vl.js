@@ -234,7 +234,8 @@ var ctrPaymentHistoryListVl = new Vue({
         openModal: function (item) {
             this.loading = true;
             var that = this;
-            this.modal.payment_histories = item;
+            that.modal.payment_histories = item;
+            that.modal.billing_headers="";
             console.log(item);
             payment_histories_service.getDetailsPaymentHistories({'dw_number':item.dw_number,'fieldSearch': that.fileSearched}).then((response) => {
                 if (response.info.length > 0) {
