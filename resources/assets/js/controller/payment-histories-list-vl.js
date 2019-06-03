@@ -19,13 +19,13 @@ var ctrPaymentHistoryListVl = new Vue({
             from_date:"",
             to_date:"",
             mst_customers_cd:"",
-            mst_customers_nm:"",
+            customer_nm:"",
         },
         fileSearched:{
             from_date:"",
             to_date:"",
             mst_customers_cd:"",
-            mst_customers_nm:"",
+            customer_nm:"",
         },
         modal:{
             payment_histories:{},
@@ -75,7 +75,7 @@ var ctrPaymentHistoryListVl = new Vue({
                 delete that.errors["to_date"];
             }
             that.fileSearch.mst_customers_cd=this.$refs.mst_customers_cd.searchInput;
-            that.fileSearch.mst_customers_nm=this.$refs.mst_customers_nm.searchInput;
+            that.fileSearch.customer_nm=this.$refs.customer_nm.searchInput;
             that.flagSearch=false;
             that.deleteFlagSuccess=false;
             var data = {
@@ -92,7 +92,7 @@ var ctrPaymentHistoryListVl = new Vue({
                         from_date:"",
                         to_date:"",
                         mst_customers_cd:"",
-                        mst_customers_nm:"",
+                        customer_nm:"",
                     };
                     that.items = response.data.data;
                     that.recent_dw_number=response.recent_dw_number;
@@ -101,7 +101,7 @@ var ctrPaymentHistoryListVl = new Vue({
                     that.fileSearched.from_date= response.fieldSearch.from_date;
                     that.fileSearched.to_date= response.fieldSearch.to_date;
                     that.fileSearched.mst_customers_cd= response.fieldSearch.mst_customers_cd;
-                    that.fileSearched.mst_customers_nm= response.fieldSearch.mst_customers_nm;
+                    that.fileSearched.customer_nm= response.fieldSearch.customer_nm;
                     that.order = response.order;
                     that.flagSearch=true;
                     $.each(that.fileSearch, function (key, value) {
@@ -153,31 +153,31 @@ var ctrPaymentHistoryListVl = new Vue({
             };
         },
         inputPropsName:function () {
-            var cls_error = this.fileSearch.mst_customers_nm != undefined ? 'form-control is-invalid':'';
+            var cls_error = this.fileSearch.customer_nm != undefined ? 'form-control is-invalid':'';
             return {
                 id: 'autosuggest__input',
                 onInputChange: this.onInputChangeName,
-                initialValue: this.fileSearch.mst_customers_nm,
+                initialValue: this.fileSearch.customer_nm,
                 maxlength: 50,
                 class: 'form-control w-100',
-                ref:"mst_customers_nm"
+                ref:"customer_nm"
             };
         }
     },
     methods : {
         renderSuggestion(suggestion) {
             const customer = suggestion.item;
-            return customer.mst_customers_cd+ ': '+ customer.mst_customers_nm;
+            return customer.mst_customers_cd+ ': '+ (customer.customer_nm != null?customer.customer_nm:'');
 
         },
         getSuggestionValueCd(suggestion) {
-            this.$refs.mst_customers_nm.searchInput = suggestion.item.mst_customers_nm;
+            this.$refs.customer_nm.searchInput = suggestion.item.customer_nm;
             return suggestion.item.mst_customers_cd;
 
         },
         getSuggestionValueName(suggestion) {
             this.$refs.mst_customers_cd.searchInput = suggestion.item.mst_customers_cd;
-            return suggestion.item.mst_customers_nm;
+            return suggestion.item.customer_nm;
         },
         onInputChangeCd(text) {
             this.fileSearch.mst_customers_cd= text;
@@ -193,14 +193,15 @@ var ctrPaymentHistoryListVl = new Vue({
             }]
         },
         onInputChangeName(text){
-            this.fileSearch.mst_customers_nm= text;
+            this.fileSearch.customer_nm= text;
             if (text === '' || text === undefined) {
                 this.filteredCustomerNm = [];
                 return;
             }
             const filteredDataNm = this.dropdown_mst_customer_nm[0].data.filter(item => {
-                return item.mst_customers_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
+                return item.customer_nm.toString().toLowerCase().indexOf(text.toLowerCase()) > -1;
             }).slice(0, this.limit);
+            /* Full control over filtering. Maybe fetch from API?! Up to you!!! */
 
             this.filteredCustomerNm=[{
                 data:filteredDataNm
@@ -209,18 +210,18 @@ var ctrPaymentHistoryListVl = new Vue({
         },
         onSelectedCd(option) {
             this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
-            this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
+            this.fileSearch.customer_nm = option.item.customer_nm;
         },
         onSelectedName(option) {
             this.fileSearch.mst_customers_cd = option.item.mst_customers_cd;
-            this.fileSearch.mst_customers_nm = option.item.mst_customers_nm;
+            this.fileSearch.customer_nm = option.item.customer_nm;
         },
         clearCondition:function () {
             this.setDefaultDate();
             this.fileSearch.mst_customers_cd="";
             this.$refs.mst_customers_cd.searchInput = "";
-            this.fileSearch.mst_customers_nm="";
-            this.$refs.mst_customers_nm.searchInput = "";
+            this.fileSearch.customer_nm="";
+            this.$refs.customer_nm.searchInput = "";
             this.filteredCustomerCd = [];
             this.filteredCustomerNm = [];
         },
@@ -268,7 +269,7 @@ var ctrPaymentHistoryListVl = new Vue({
         }
     },
     mounted () {
-        sales_lists_service.loadCustomerList().then((response) => {
+        invoice_service.loadListCustomers().then((response) => {
             this.dropdown_mst_customer_cd[0].data =  response.data;
             this.dropdown_mst_customer_nm[0].data =  response.data;
         });
