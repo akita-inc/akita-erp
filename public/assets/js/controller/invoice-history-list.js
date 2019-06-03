@@ -22060,13 +22060,39 @@ var ctrInvoiceHistoryListVl = new Vue({
       });
     }
   },
-  mounted: function mounted() {
-    var that = this;
-    invoice_history_service.loadListCustomers().then(function (response) {
-      that.dropdown_customer_cd[0].data = response.data;
-      that.dropdown_customer_nm[0].data = response.data;
-    });
-  },
+  mounted: function () {
+    var _mounted = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+      var that;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              that = this;
+              _context6.next = 3;
+              return invoice_history_service.loadListCustomers().then(function (response) {
+                that.dropdown_customer_cd[0].data = response.data;
+                that.dropdown_customer_nm[0].data = response.data;
+              });
+
+            case 3:
+              that.getItems();
+
+            case 4:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, this);
+    }));
+
+    function mounted() {
+      return _mounted.apply(this, arguments);
+    }
+
+    return mounted;
+  }(),
   components: {
     PulseLoader: vue_spinner_src_PulseLoader_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_2___default.a,
@@ -22083,7 +22109,7 @@ var ctrInvoiceHistoryListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\invoice-history-list-vl.js */"./resources/assets/js/controller/invoice-history-list-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\invoice-history-list-vl.js */"./resources/assets/js/controller/invoice-history-list-vl.js");
 
 
 /***/ })

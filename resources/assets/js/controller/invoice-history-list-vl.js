@@ -299,12 +299,13 @@ var ctrInvoiceHistoryListVl = new Vue({
             });
         },
     },
-    mounted () {
+    async mounted () {
         var that = this;
-        invoice_history_service.loadListCustomers().then((response) => {
+        await invoice_history_service.loadListCustomers().then((response) => {
             that.dropdown_customer_cd[0].data =  response.data;
             that.dropdown_customer_nm[0].data =  response.data;
         });
+        that.getItems();
     },
     components: {
         PulseLoader,

@@ -355,13 +355,13 @@ class InvoiceHistoryController extends Controller {
         $enclosure = config('params.csv.enclosure');
         $callback = function() use ($keys,$item, $enclosure,$csvContent) {
             $file = fopen('php://output', 'w');
-            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
+            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS-win", "UTF-8"))."\r\n");
             foreach ($csvContent as $content) {
                 $row = [];
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content->{$key}.$enclosure;
                 }
-                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
+                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS-win", "UTF-8"))."\r\n");
             }
             fclose($file);
         };
@@ -391,13 +391,13 @@ class InvoiceHistoryController extends Controller {
         $enclosure = config('params.amazon_csv.enclosure');
         $callback = function() use ($amazonCSVContent,$keys,$item, $enclosure) {
             $file = fopen('php://output', 'w');
-            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS", "UTF-8"))."\r\n");
+            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS-win", "UTF-8"))."\r\n");
             foreach ($amazonCSVContent as $content) {
                 $row = [];
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content->{$key}.$enclosure;
                 }
-                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
+                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS-win", "UTF-8"))."\r\n");
             }
             fclose($file);
         };
