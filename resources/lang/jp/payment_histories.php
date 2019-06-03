@@ -13,12 +13,13 @@ return [
     |
     */
 
-    'title' => '入金処理',
+    'title' => '入金履歴',
     'list' => [
-        'title' => '入金処理',
+        'title' => '入金履歴',
         'search' => [
             'customer'=>'得意先',
             'code'=>'コード',
+            'name'=>'名称',
             'customer_nm'=>'名称',
             'payment_date'=>'入金日',
             'button' => [

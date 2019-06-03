@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-md-5 padding-row-5 grid-form-search text-left">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
-                                {{trans("invoices.list.search.name")}}
+                                {{trans("payment_histories.list.search.name")}}
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredCustomerNm"
@@ -65,9 +65,9 @@
                     <div class="col-md-6 col-sm-12 row">
                         <div class="col-md-5 padding-row-5 grid-form-search d-inline-flex">
                             <div class="wd-60 col-list-search-f text-center">
-                                {{trans("sales_lists.list.search.period_time")}}
+                                {{trans("payment_histories.list.search.payment_date")}}
                             </div>
-                            <div class="w-100">
+                            <div class="w-100 padding-row-5">
                                 <date-picker
                                         :lang='lang'
                                         id="from_date"
@@ -79,10 +79,8 @@
                                 <span v-cloak v-if="errors.from_date != undefined" class="message-error">@{{errors.from_date}}</span>
                             </div>
                         </div>
-                        <div class="col-md-5 padding-row-5 grid-form-search d-inline-flex">
-                            <div class="wd-60 col-list-search-f text-left">
-                                ～
-                            </div>
+                        <div class="col-md-5 grid-form-search d-inline-flex">
+                            <div class="wd-60 col-list-search-f text-left">～</div>
                             <div class="w-100">
                                 <date-picker
                                         :lang='lang'
