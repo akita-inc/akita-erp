@@ -52,6 +52,9 @@ class PaymentHistoriesController extends Controller {
         $this->query->join('mst_customers', function ($join) {
             $join->on('mst_customers.mst_customers_cd', '=', 't_payment_histories.mst_customers_cd')
                 ->whereRaw('mst_customers.deleted_at IS NULL');
+        })->join('t_billing_history_headers as bill_headers', function ($join) {
+            $join->on('bill_headers.invoice_number', '=',  't_payment_histories.invoice_number')
+                ->whereRaw('bill_headers.deleted_at IS NULL');
         });
         if ($where['from_date'] != '' && $where['to_date'] != '' ) {
             $this->query->where('t_payment_histories.dw_day', '>=',$where['from_date'])
