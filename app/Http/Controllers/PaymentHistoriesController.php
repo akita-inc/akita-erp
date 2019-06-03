@@ -42,8 +42,8 @@ class PaymentHistoriesController extends Controller {
         $this->query->select(
             DB::raw("DATE_FORMAT(t_payment_histories.dw_day, '%Y/%m/%d') as dw_day"),
             "t_payment_histories.mst_customers_cd",
+            "mst_general_purposes.date_nm as dw_classification",
             DB::raw("mst_customers.customer_nm_formal as customer_nm"),
-            "t_payment_histories.dw_classification",
             DB::raw('IFNULL(SUM(t_payment_histories.actual_dw),0) as actual_dw'),
             DB::raw('IFNULL(SUM(t_payment_histories.fee),0) as fee'),
             DB::raw('IFNULL(SUM(t_payment_histories.discount),0) as discount'),
@@ -56,6 +56,9 @@ class PaymentHistoriesController extends Controller {
         })->join('t_billing_history_headers as bill_headers', function ($join) {
             $join->on('bill_headers.invoice_number', '=',  't_payment_histories.invoice_number')
                 ->whereRaw('bill_headers.deleted_at IS NULL');
+        })->leftJoin('mst_general_purposes',function ($join){
+            $join->on('mst_general_purposes.date_id', '=',  't_payment_histories.dw_classification')
+                ->where('mst_general_purposes.data_kb', config('params.data_kb')['wf_payment_method']);;
         });
         if ($where['from_date'] != '' && $where['to_date'] != '' ) {
             $this->query->where('t_payment_histories.dw_day', '>=',$where['from_date'])
@@ -71,6 +74,7 @@ class PaymentHistoriesController extends Controller {
         $this->query->groupBy(
                             't_payment_histories.dw_number',
                             't_payment_histories.dw_day',
+                            'mst_general_purposes.date_nm',
                             't_payment_histories.mst_customers_cd',
                             'mst_customers.customer_nm_formal',
                             't_payment_histories.dw_classification',
