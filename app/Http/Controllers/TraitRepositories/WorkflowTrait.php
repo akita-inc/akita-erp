@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\TraitRepositories;
 
 
+use App\Models\MBusinessOffices;
 use App\Models\MStaffs;
 use App\Models\MWfAdditionalNotice;
 use App\Models\MWfRequireApproval;
 use App\Models\WApprovalStatus;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -184,7 +186,7 @@ trait WorkflowTrait
     public function handleReject($wf_id,$listWfAdditionalNotice,$arrayInsert,$applicant_id,$applicant_mail,&$mailTo, &$mailCC){
         $mWApprovalStatus = new WApprovalStatus();
         $mStaff = new MStaffs();
-        $listWApprovalStatus = $mWApprovalStatus->getListByWfID($wf_id);
+        $listWApprovalStatus = $mWApprovalStatus->getListByWfID($wf_id,$this->wf_type_id);
         $mailTo = !empty($applicant_mail) ? [$applicant_mail] : [];
         foreach ($listWApprovalStatus as $item){
             $listMail = $mStaff->getListMailTo($arrayInsert['applicant_office_id'],$item->approval_levels,$applicant_id);
@@ -287,19 +289,17 @@ trait WorkflowTrait
 
     public function checkAuthentication($id,$modelInfo,$request, &$mode,&$role){
         $mWApprovalStatus = new WApprovalStatus();
-        $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('id','staff_cd','email_address')->where('wf_id','=',$id)->where('wf_type_id','=', $this->wf_type_id)->get()->toArray();
-        $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id,$this->wf_type_id);
         $countVacationNotApproval = $mWApprovalStatus->countVacationNotApproval($id, $this->wf_type_id);
         $countVacationNotApprovalOfUserLogin = $mWApprovalStatus->countVacationNotApproval($id,$this->wf_type_id, true);
         $routeName = $request->route()->getName();
-        switch ($routeName){
-            case 'take_vacation.approval':
+        switch (true){
+            case strpos($routeName, 'approval') !== false:
                 $mode = 'approval';
                 if(!empty($modelInfo['delete_at']) || is_null(Auth::user()->approval_levels) ||  $countVacationNotApprovalOfUserLogin<=0 || $modelInfo['applicant_id']== Auth::user()->staff_cd  ){
                     $role = 2; // no authentication
                 }
                 break;
-            case 'take_vacation.reference':
+            case strpos($routeName, 'reference') !== false:
                 $mode = 'reference';
                 if((!empty($modelInfo['delete_at']) &&  $modelInfo['applicant_id']!= Auth::user()->staff_cd &&  is_null(Auth::user()->approval_levels )) ||
                     (empty($modelInfo['delete_at']) &&  is_null(Auth::user()->approval_levels ))
@@ -312,5 +312,41 @@ trait WorkflowTrait
                     $role = 2;
                 }
         }
+    }
+
+    public function beforeStore($id){
+        $listWfAdditionalNotice = [];
+        $listWApprovalStatus = [];
+        $fieldShowTable = [
+            'staff_nm' => [
+                "classTH" => "wd-100",
+                "sortBy"=>"staff_nm"
+            ],
+            'business_office_nm'=> [
+                "classTH" => "wd-60",
+                "sortBy"=>"business_office_nm"
+            ],
+            'mail'=> [
+                "classTH" => "wd-120",
+                "sortBy"=>"mail"
+            ],
+        ];
+        $mBusinessOffices = new MBusinessOffices();
+        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices(trans('common.kara_select_option'));
+        $businessOfficeNm = $mBusinessOffices->select('id','business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
+
+        if($id != null) {
+            $mWApprovalStatus = new WApprovalStatus();
+            $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('id', 'staff_cd', 'email_address')->where('wf_id', '=', $id)->where('wf_type_id', '=', $this->wf_type_id)->get()->toArray();
+            $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id, $this->wf_type_id);
+        }
+        return [
+            'fieldShowTable' => $fieldShowTable,
+            'businessOfficeNm' => $businessOfficeNm ? $businessOfficeNm->business_office_nm: null,
+            'businessOfficeID' => $businessOfficeNm ? $businessOfficeNm->id: null,
+            'listBusinessOffices' => $listBusinessOffices,
+            'listWfAdditionalNotice' => json_encode($listWfAdditionalNotice,true),
+            'listWApprovalStatus' => $listWApprovalStatus,
+        ];
     }
 }

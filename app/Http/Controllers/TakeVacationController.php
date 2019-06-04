@@ -303,85 +303,37 @@ class TakeVacationController extends Controller
     }
 
     public function checkIsExist(Request $request, $id){
-        $this->checkIsExistWf($request,$id);
+        return $this->checkIsExistWf($request,$id);
     }
 
     public function store(Request $request, $id=null){
-        $fieldShowTable = [
-            'staff_nm' => [
-                "classTH" => "wd-100",
-                "sortBy"=>"staff_nm"
-            ],
-            'business_office_nm'=> [
-                "classTH" => "wd-60",
-                "sortBy"=>"business_office_nm"
-            ],
-            'mail'=> [
-                "classTH" => "wd-120",
-                "sortBy"=>"mail"
-            ],
-        ];
         $mWPaidVacation = null;
         $mode = "register";
         $role = 1;
-        $listWfAdditionalNotice = [];
-        $listWApprovalStatus = [];
         $mWApprovalStatus = new WApprovalStatus();
         if($id != null){
-            $modelWPaidVacation = new WPaidVacation();
-            $mWPaidVacation = $modelWPaidVacation->getInfoByID($id);
+            $mWPaidVacation = new WPaidVacation();
+            $mWPaidVacation = $mWPaidVacation->getInfoByID($id);
             if(empty($mWPaidVacation)){
                 abort('404');
             }else{
                 $mWPaidVacation = $mWPaidVacation->toArray();
-                $listWfAdditionalNotice = MWfAdditionalNotice::query()->select('id','staff_cd','email_address')->where('wf_id','=',$id)->where('wf_type_id','=', $this->wf_type_id)->get()->toArray();
-                $listWApprovalStatus = $mWApprovalStatus->getListByWfID($id,$this->wf_type_id);
-                $countVacationNotApproval = $mWApprovalStatus->countVacationNotApproval($id, $this->wf_type_id);
-                $countVacationNotApprovalOfUserLogin = $mWApprovalStatus->countVacationNotApproval($id,$this->wf_type_id, true);
-                $routeName = $request->route()->getName();
-                switch ($routeName){
-                    case 'take_vacation.approval':
-                        $mode = 'approval';
-                        if(!empty($mWPaidVacation['delete_at']) || is_null(Auth::user()->approval_levels) ||  $countVacationNotApprovalOfUserLogin<=0 || $mWPaidVacation['applicant_id']== Auth::user()->staff_cd  ){
-                            $role = 2; // no authentication
-                        }
-                        break;
-                    case 'take_vacation.reference':
-                        $mode = 'reference';
-                            if((!empty($mWPaidVacation['delete_at']) &&  $mWPaidVacation['applicant_id']!= Auth::user()->staff_cd &&  is_null(Auth::user()->approval_levels )) ||
-                                (empty($mWPaidVacation['delete_at']) &&  is_null(Auth::user()->approval_levels ))
-                            )
-                                $role = 2;
-                        break;
-                    default:
-                        $mode ='edit';
-                        if(!empty($mWPaidVacation['delete_at'])  || $mWPaidVacation['applicant_id']!= Auth::user()->staff_cd || $countVacationNotApproval<=0 ){
-                            $role = 2;
-                        }
-                }
+                $this->checkAuthentication($id,$mWPaidVacation,$request, $mode,$role);
             }
         }
-        $mBusinessOffices = new MBusinessOffices();
+        $arrayStore = $this->beforeStore($id);
         $mGeneralPurposes = new MGeneralPurposes();
-        $listBusinessOffices = $mBusinessOffices->getListBusinessOffices(trans('common.kara_select_option'));
-        $businessOfficeNm = $mBusinessOffices->select('id','business_office_nm')->where('id','=',Auth::user()->mst_business_office_id)->first();
         $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
         $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
         $currentDate = date('Y/m/d');
-        return view('take_vacation.form', [
+        return view('take_vacation.form', array_merge($arrayStore,[
             'mWPaidVacation' => $mWPaidVacation,
-            'businessOfficeNm' => $businessOfficeNm ? $businessOfficeNm->business_office_nm: null,
-            'businessOfficeID' => $businessOfficeNm ? $businessOfficeNm->id: null,
             'listVacationIndicator' => $listVacationIndicator,
             'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,
             'currentDate' => $currentDate,
-            'listBusinessOffices' => $listBusinessOffices,
             'role' => $role,
             'mode' => $mode,
-            'fieldShowTable' => $fieldShowTable,
-            'listWfAdditionalNotice' => json_encode($listWfAdditionalNotice,true),
-            'listWApprovalStatus' => $listWApprovalStatus,
-        ]);
+        ]));
     }
 
     public function beforeSubmit($data){
