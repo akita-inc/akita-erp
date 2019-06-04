@@ -40,41 +40,44 @@
                 </table>
 
                 <div class="w-100 text-left"></div>
-
-                <table class="table table-striped table-bordered search-content" v-if="modal.billing_headers.length>0">
-                    <thead>
-                    <tr>
-                        @foreach($fieldShowTableDetails as $key => $field)
-                            <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payment_histories.modal.table.".$key)}}</th>
-                        @endforeach
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-cloak v-for="item in modal.billing_headers">
-                        @foreach($fieldShowTableDetails as $key => $field)
-                            <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
-                                @switch($key)
-                                    @case('tax_included_amount')
-                                    @case('consumption_tax')
-                                    @case('total_fee')
-                                    @case('total_fee')
-                                    @case('last_payment_amount')
-                                    @case('total_dw_amount')
-                                    @case('fee')
-                                    @case('discount')
-                                    @case('deposit_balance')
-                                    <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
-                                    @break
-                                    @default
-                                    <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
-                                    <span v-else>---</span>
-                                    @break
-                                @endswitch
-                            </td>
-                        @endforeach
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="wrapper">
+                    <div class="scroll-horizontal">
+                    <table class="table table-striped table-bordered search-content" v-if="modal.billing_headers.length>0">
+                        <thead>
+                            <tr>
+                                @foreach($fieldShowTableDetails as $key => $field)
+                                    <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payment_histories.modal.table.".$key)}}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-cloak v-for="item in modal.billing_headers">
+                                @foreach($fieldShowTableDetails as $key => $field)
+                                    <td class="text-center {{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak >
+                                        @switch($key)
+                                            @case('tax_included_amount')
+                                            @case('consumption_tax')
+                                            @case('total_fee')
+                                            @case('total_fee')
+                                            @case('last_payment_amount')
+                                            @case('total_dw_amount')
+                                            @case('fee')
+                                            @case('discount')
+                                            @case('deposit_balance')
+                                            <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
+                                            @break
+                                            @default
+                                            <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
+                                            <span v-else>---</span>
+                                            @break
+                                        @endswitch
+                                    </td>
+                                @endforeach
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-danger"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal" v-on:click="openModalDelete(modal.payment_histories['dw_number'])">{{trans("payment_histories.list.search.button.delete")}}</button>
