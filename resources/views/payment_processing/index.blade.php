@@ -100,8 +100,12 @@
                                          :editable='false'
                             >
                             </date-picker>
-                            <span v-cloak v-if="errorValidate.dw_day != undefined" class="message-error" v-html="errorValidate.dw_day.join('<br />')"></span>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 row">
+                        <span v-cloak v-if="errorValidate.dw_day != undefined" class="message-error" v-html="errorValidate.dw_day.join('<br />')"></span>
                     </div>
                 </div>
                 <div class="break-row-form"></div>
@@ -111,7 +115,7 @@
                             {{trans("payment_processing.list.field.invoice_balance_total")}}
                         </div>
                         <div class="col-md-4 no-padding grid-form-search">
-                            <input type="text" v-model="field.invoice_balance_total" name="invoice_balance_total" maxlength="13" disabled  v-bind:class="errorValidate.invoice_balance_total != undefined ? 'form-control is-invalid':'form-control'">
+                            <input type="text" v-model="field.invoice_balance_total" name="invoice_balance_total"  disabled  v-bind:class="errorValidate.invoice_balance_total != undefined ? 'form-control is-invalid':'form-control'">
                             <span v-cloak v-if="errorValidate.invoice_balance_total != undefined" class="message-error" v-html="errorValidate.invoice_balance_total.join('<br />')"></span>
                         </div>
                         <div class="col-md-2 no-padding col-list-search-f text-center">
@@ -130,7 +134,7 @@
                             {{trans("payment_processing.list.field.payment_amount")}}
                         </div>
                         <div class="col-md-8 no-padding grid-form-search">
-                            <input type="text" v-model="field.payment_amount" name="payment_amount" id="payment_amount"  maxlength="13" @change="handlePayment" @focus="removeCommaByID('payment_amount')" @blur="addCommaByID('payment_amount')" v-bind:class="errors.payment_amount!= undefined ? 'form-control number_only is-invalid':'form-control number_only'">
+                            <input type="text" v-model="field.payment_amount" name="payment_amount" id="payment_amount" @change="handlePayment" @focus="removeCommaByID('payment_amount')" @blur="addCommaByID('payment_amount')" v-bind:class="errors.payment_amount!= undefined ? 'form-control number_only is-invalid':'form-control number_only'">
 
                             <span v-cloak v-if="errorValidate.payment_amount != undefined" class="message-error" v-html="errorValidate.payment_amount.join('<br />')"></span>
                         </div>
@@ -141,14 +145,23 @@
                         </div>
                         <div class="col-md-4 no-padding grid-form-search">
                             <input type="text" v-model="field.fee" name="fee" maxlength="13"  @change="handleFee" id="fee" v-bind:class="errorValidate.fee != undefined ? 'form-control number_only is-invalid':'form-control number_only'" @focus="removeCommaByID('fee')" @blur="addCommaByID('fee')">
-                            <span v-cloak v-if="errorValidate.fee != undefined" class="message-error" v-html="errorValidate.fee.join('<br />')"></span>
                         </div>
                         <div class="col-md-2 no-padding col-list-search-f text-center">
                             {{trans("payment_processing.list.field.total_discount")}}
                         </div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
-                            <input type="text" v-model="field.total_discount" name="total_discount" maxlength="13" disabled  v-bind:class="errorValidate.total_discount != undefined ? 'form-control number_only is-invalid':'form-control number_only'">
+                            <input type="text" v-model="field.total_discount" name="total_discount" disabled  v-bind:class="errorValidate.total_discount != undefined ? 'form-control number_only is-invalid':'form-control number_only'">
                             <span v-cloak v-if="errorValidate.total_discount != undefined" class="message-error" v-html="errorValidate.total_discount.join('<br />')"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 row"></div>
+                    <div class="col-md-3 row">
+                    </div>
+                    <div class="col-md-5 row">
+                        <div class="col-md-7 padding-row-5 col-list-search-f text-left">
+                            <span v-cloak v-if="errorValidate.fee != undefined" class="message-error" v-html="errorValidate.fee.join('<br />')"></span>
                         </div>
                     </div>
                 </div>
@@ -160,7 +173,6 @@
                         </div>
                         <div class="col-md-9 no-padding grid-form-search">
                             <input type="text" v-model="field.note" name="note" maxlength="200" v-bind:class="errorValidate.note != undefined ? 'form-control is-invalid':'form-control'">
-                            <span v-cloak v-if="errorValidate.note != undefined" class="message-error" v-html="errorValidate.note.join('<br />')"></span>
                         </div>
                     </div>
                     <div class="col-md-3 row">
@@ -168,7 +180,7 @@
                             {{trans("payment_processing.list.field.total_payment_amount")}}
                         </div>
                         <div class="col-md-8 no-padding grid-form-search">
-                            <input type="text" v-model="field.total_payment_amount" name="total_payment_amount" maxlength="13" disabled v-bind:class="errorValidate.total_payment_amount != undefined ? 'form-control is-invalid':'form-control'">
+                            <input type="text" v-model="field.total_payment_amount" name="total_payment_amount" disabled v-bind:class="errorValidate.total_payment_amount != undefined ? 'form-control is-invalid':'form-control'">
                             <span v-cloak v-if="errorValidate.total_payment_amount != undefined" class="message-error" v-html="errorValidate.total_payment_amount.join('<br />')"></span>
                         </div>
                     </div>
@@ -177,7 +189,7 @@
                             {{trans("payment_processing.list.field.item_payment_total")}}
                         </div>
                         <div class="col-md-4 no-padding grid-form-search">
-                            <input type="text" v-model="field.item_payment_total" name="item_payment_total" maxlength="13" disabled v-bind:class="errorValidate.item_payment_total != undefined ? 'form-control is-invalid':'form-control'">
+                            <input type="text" v-model="field.item_payment_total" name="item_payment_total" disabled v-bind:class="errorValidate.item_payment_total != undefined ? 'form-control is-invalid':'form-control'">
                             <span v-cloak v-if="errorValidate.item_payment_total != undefined" class="message-error" v-html="errorValidate.item_payment_total.join('<br />')"></span>
                         </div>
                         <div class="col-md-2 no-padding col-list-search-f text-center"></div>
@@ -186,6 +198,11 @@
                                 {{trans('common.button.register')}}
                             </button>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 row">
+                        <span v-cloak v-if="errorValidate.note != undefined" class="message-error" v-html="errorValidate.note.join('<br />')"></span>
                     </div>
                 </div>
             </div>
