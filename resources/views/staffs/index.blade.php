@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12 row">
-                        <div class="col-md-4 col-sm-12 text-left">
+                        <div class="col-md-4 col-sm-12 col-list-search-f text-left">
                             {{trans("staffs.list.search.belong_company_id")}}
                         </div>
                         <div class="col-md-8  col-sm-12 input-group">
