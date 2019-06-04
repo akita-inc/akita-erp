@@ -58,7 +58,7 @@ var ctrPaymentHistoryListVl = new Vue({
             that.loading = true;
             if( that.fileSearch.from_date=="")
             {
-                that.errors["from_date"]=messages["MSG02001"].split(':attribute').join('期間');
+                that.errors["from_date"]=messages["MSG02001"].split(':attribute').join('入金日');
                 that.loading = false;
             }
             else
@@ -67,7 +67,7 @@ var ctrPaymentHistoryListVl = new Vue({
             }
             if( that.fileSearch.to_date=="")
             {
-                that.errors["to_date"]=messages["MSG02001"].split(':attribute').join('期間');
+                that.errors["to_date"]=messages["MSG02001"].split(':attribute').join('入金日');
                 that.loading = false;
             }
             else
