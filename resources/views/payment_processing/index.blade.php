@@ -7,9 +7,6 @@
         .form-control[readonly]{
             background-color: white;
         }
-        table {
-            table-layout:fixed;
-        }
     </style>
 @endsection
 @section('content')
@@ -202,6 +199,7 @@
             </div>
         </div>
         <div class="wrapper-table" v-if="items.length > 0" v-cloak>
+            <div class="scroll-horizontal">
             <table class="table table-striped table-bordered search-content">
                 <thead>
                 <tr>
@@ -234,10 +232,10 @@
                                 <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
                                 @break
                                 @case('total_dw_amount')
-                                <input type="text" v-model="item.total_dw_amount" :name="'total_dw_amount'+index" maxlength="13" class="w-90 text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)" :id="'total_dw_amount'+index" v-bind:class="(errors.total_dw_amount!= undefined && errors.total_dw_amount.indexError.indexOf(index) != -1) || (errorValidate.listInvoice!= undefined && errorValidate.listInvoice[0].total_dw_amount.indexError.indexOf(index) != -1) ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('total_dw_amount',index)" @blur="addCommaByID('total_dw_amount',index)">
+                                <input type="text" v-model="item.total_dw_amount" :name="'total_dw_amount'+index" maxlength="13" class="wd-140 text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)" :id="'total_dw_amount'+index" v-bind:class="(errors.total_dw_amount!= undefined && errors.total_dw_amount.indexError.indexOf(index) != -1) || (errorValidate.listInvoice!= undefined && errorValidate.listInvoice[0].total_dw_amount.indexError.indexOf(index) != -1) ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('total_dw_amount',index)" @blur="addCommaByID('total_dw_amount',index)">
                                 @break
                                 @case('discount')
-                                <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="13" class="w-90 form-control text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeDiscount(index)" :id="'discount'+index" v-bind:class="errorValidate.listInvoice!= undefined && errorValidate.listInvoice[0].discount.indexError.indexOf(index) != -1 ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('discount',index)" @blur="addCommaByID('discount',index)">
+                                <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="13" class="wd-140 form-control text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeDiscount(index)" :id="'discount'+index" v-bind:class="errorValidate.listInvoice!= undefined && errorValidate.listInvoice[0].discount.indexError.indexOf(index) != -1 ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('discount',index)" @blur="addCommaByID('discount',index)">
                                 @break
                                 @default
                                 <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
@@ -252,6 +250,7 @@
                 </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 @endsection
