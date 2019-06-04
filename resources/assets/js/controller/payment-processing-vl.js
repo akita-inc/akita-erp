@@ -69,6 +69,9 @@ var ctrPaymentProcessingVl = new Vue({
                 if(response.success == false){
                     that.errors = response.message;
                     that.loading = false;
+                    that.items=[];
+                    that.itemsDB=[];
+                    that.flagSearch = false;
                 }else{
                     that.fileSearched= {
                         customer_cd: "",
