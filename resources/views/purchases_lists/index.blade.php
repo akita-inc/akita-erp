@@ -147,20 +147,20 @@
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('total_fee')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
-                                <p v-else>---</p>
+                                <span v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</span>
+                                <span v-else>---</span>
                                 @break
                                 @case('consumption_tax')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
-                                <p v-else>---</p>
+                                <span v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</span>
+                                <span v-else>---</span>
                                 @break
                                 @case('tax_included_amount')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
-                                <p v-else>---</p>
+                                <span v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</span>
+                                <span v-else>---</span>
                                 @break
                                 @default
-                                <p v-if="item['{{$key}}']">{!! "@{{item['$key']}}" !!}</p>
-                                <p v-else>---</p>
+                                <span v-if="item['{{$key}}']">{!! "@{{item['$key']}}" !!}</span>
+                                <span v-else>---</span>
                                 @break
                             @endswitch
                         </td>
