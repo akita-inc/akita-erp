@@ -3318,14 +3318,14 @@ var ctrPaymentHistoryListVl = new Vue({
       that.loading = true;
 
       if (that.fileSearch.from_date == "") {
-        that.errors["from_date"] = messages["MSG02001"].split(':attribute').join('期間');
+        that.errors["from_date"] = messages["MSG02001"].split(':attribute').join('入金日');
         that.loading = false;
       } else {
         delete that.errors["from_date"];
       }
 
       if (that.fileSearch.to_date == "") {
-        that.errors["to_date"] = messages["MSG02001"].split(':attribute').join('期間');
+        that.errors["to_date"] = messages["MSG02001"].split(':attribute').join('入金日');
         that.loading = false;
       } else {
         delete that.errors["to_date"];
@@ -3562,7 +3562,7 @@ var ctrPaymentHistoryListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-histories-list-vl.js */"./resources/assets/js/controller/payment-histories-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\payment-histories-list-vl.js */"./resources/assets/js/controller/payment-histories-list-vl.js");
 
 
 /***/ })
