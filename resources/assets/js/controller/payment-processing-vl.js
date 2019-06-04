@@ -159,6 +159,7 @@ var ctrPaymentProcessingVl = new Vue({
             }else{
                 this.fileSearch.customer_nm = "";
             }
+            this.fileSearch.customer_nm = "";
         },
         clearCondition: function(){
             this.fileSearch.customer_cd="";
@@ -247,31 +248,33 @@ var ctrPaymentProcessingVl = new Vue({
                 that.field.payment_amount = that.addComma(0);
             }
             that.field.item_payment_total = 0;
-            if(that.listCheckbox.length > 0) {
-                var payment_amount = that.removeComma(that.field.payment_amount);
-                $.each(that.items, function (key, item) {
-                    item.total_dw_amount = 0;
-                    if (that.listCheckbox.indexOf(key) != -1) {
-                        if (payment_amount > 0) {
-                            var payment_remaining = that.removeComma(that.itemsDB[key].payment_remaining);
-                            if (payment_amount < payment_remaining) {
-                                item.total_dw_amount = payment_amount;
-                                payment_amount = 0;
-                            } else {
-                                item.total_dw_amount = payment_remaining -  that.removeComma(item.fee) -  that.removeComma(item.discount);
-                                payment_amount = payment_amount - parseFloat(payment_remaining) + that.removeComma(item.fee) +  that.removeComma(item.discount);
-                            }
+
+            var payment_amount = that.removeComma(that.field.payment_amount);
+            $.each(that.items, function (key, item) {
+                item.total_dw_amount = 0;
+                if (that.listCheckbox.indexOf(key) != -1) {
+                    if (payment_amount > 0) {
+                        var payment_remaining = that.removeComma(that.itemsDB[key].payment_remaining);
+                        if (payment_amount < payment_remaining) {
+                            item.total_dw_amount = payment_amount;
+                            payment_amount = 0;
                         } else {
-                            item.total_dw_amount = 0;
+                            item.total_dw_amount = payment_remaining -  that.removeComma(item.fee) -  that.removeComma(item.discount);
+                            payment_amount = payment_amount - parseFloat(payment_remaining) + that.removeComma(item.fee) +  that.removeComma(item.discount);
                         }
-                        that.field.item_payment_total += item.total_dw_amount;
-                        item.total_dw_amount = that.addComma(item.total_dw_amount);
-                        that.handlePaymentRemaining(key);
-                    }else{
-                        item.total_dw_amount = that.addComma(0);
+                    } else {
+                        item.total_dw_amount = 0;
                     }
-                });
-            }
+                    that.field.item_payment_total += item.total_dw_amount;
+                    item.total_dw_amount = that.addComma(item.total_dw_amount);
+                    that.handlePaymentRemaining(key);
+                }else{
+                    item.discount = that.addComma(0);
+                    item.total_dw_amount = that.addComma(0);
+                    that.handlePaymentRemaining(key);
+                }
+            });
+
             that.field.item_payment_total =  that.addComma(that.field.item_payment_total);
             that.handleToTalPayment();
 
@@ -449,6 +452,7 @@ var ctrPaymentProcessingVl = new Vue({
         },
         showErrorValidate: function ( ){
             var that = this;
+            that.errorStr = "";
             $.each(that.errorValidate, function (key, item) {
                 if(key =='listInvoice'){
                     $.each(item[0], function (key1, item1) {

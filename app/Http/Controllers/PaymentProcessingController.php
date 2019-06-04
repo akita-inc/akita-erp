@@ -107,11 +107,10 @@ class PaymentProcessingController extends Controller{
                 DB::raw("IFNULL(IFNULL(billing.tax_included_amount,0)- IFNULL(payment.total_dw_amount,0),0)  as payment_remaining")
             )
             ->whereNull('billing.deleted_at')
-            ->join(DB::raw('( SELECT invoice_number, IFNULL( SUM( total_dw_amount ), 0 ) AS total_dw_amount FROM t_payment_histories WHERE deleted_at IS NULL GROUP BY invoice_number ) payment'),
+            ->leftJoin(DB::raw('( SELECT invoice_number, IFNULL( SUM( total_dw_amount ), 0 ) AS total_dw_amount FROM t_payment_histories WHERE deleted_at IS NULL GROUP BY invoice_number ) payment'),
                 function($join)
                 {
-                    $join->on('billing.invoice_number', '=', 'payment.invoice_number')
-                    ->whereRaw('billing.tax_included_amount - payment.total_dw_amount > 0');
+                    $join->on('billing.invoice_number', '=', 'payment.invoice_number');
                 })
             ->join(DB::raw('mst_business_offices office'), function ($join) {
                 $join->on('office.id', '=', 'billing.mst_business_office_id')
@@ -120,7 +119,7 @@ class PaymentProcessingController extends Controller{
         if ($dataSearch['customer_cd'] != '') {
             $this->query->where('billing.mst_customers_cd','=',$dataSearch['customer_cd']);
         }
-        $this->query->orderBy('mst_business_office_id')
+        $this->query->havingRaw('tax_included_amount - last_payment_amount > 0')->orderBy('office.mst_business_office_cd')
         ->orderBy('invoice_number');
         return $this->query->get();
     }
