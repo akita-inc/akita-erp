@@ -237,7 +237,6 @@ var ctrPaymentHistoryListVl = new Vue({
             var that = this;
             that.modal.payment_histories = item;
             that.modal.billing_headers="";
-            console.log(item);
             payment_histories_service.getDetailsPaymentHistories({'dw_number':item.dw_number,'fieldSearch': that.fileSearched}).then((response) => {
                 if (response.info.length > 0) {
                     that.modal.billing_headers = response.info;
@@ -248,7 +247,6 @@ var ctrPaymentHistoryListVl = new Vue({
         },
         confirmDelete:function() {
             var that = this;
-            console.log(that.dw_number);
             that.loading=true;
             payment_histories_service.delete(that.dw_number).then((response) => {
                 if (!response.success) {

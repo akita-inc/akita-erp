@@ -3358,7 +3358,6 @@ var ctrExpenseApplicationVl = new Vue({
       this.fileSearch.show_deleted = false;
     },
     setBgColor: function setBgColor(delete_at) {
-      console.log(delete_at);
       var bgColor = "";
 
       if (delete_at !== null) {
@@ -3389,7 +3388,7 @@ var ctrExpenseApplicationVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\expense-application-list-vl.js */"./resources/assets/js/controller/expense-application-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\expense-application-list-vl.js */"./resources/assets/js/controller/expense-application-list-vl.js");
 
 
 /***/ })

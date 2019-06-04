@@ -108,7 +108,6 @@ var ctrExpenseApplicationVl = new Vue({
             this.fileSearch.show_deleted=false;
         },
         setBgColor:function(delete_at){
-            console.log(delete_at);
             let bgColor="";
             if(delete_at !== null){
                 bgColor="#DDDDDD";
