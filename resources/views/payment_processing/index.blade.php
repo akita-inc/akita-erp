@@ -32,6 +32,7 @@
                                 {{trans("payment_processing.list.search.name")}}
                             </label>
                             <select v-bind:class="errors.customer_cd != undefined ? 'form-control is-invalid':'form-control'" v-model="fileSearch.customer_nm" name="customer_nm"  v-cloak @change="handleChangeCustomerNm">
+                                <option value="">{{trans('common.kara_select_option')}}</option>
                                 <option v-for="option in listCustomer" v-bind:value="option.mst_customers_cd">@{{option.customer_nm}}</option>
                             </select>
                         </div>
