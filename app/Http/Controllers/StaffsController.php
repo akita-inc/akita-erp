@@ -123,11 +123,11 @@ class StaffsController extends Controller
             }
             $this->query->orderbyRaw($orderCol);
         } else {
-            $this->query->orderbyRaw('mst_business_offices.business_office_nm ASC,
-                                      mst_staffs.staff_cd ASC,
-                                      CONCAT_WS("",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana) ASC,
-                                        employment_pattern.date_nm ASC,
-                                        position.date_nm ASC');
+            $this->query->orderbyRaw('mst_business_offices.business_office_nm,
+                                      mst_staffs.staff_cd,
+                                      CONCAT_WS("",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana),
+                                      employment_pattern.date_nm,
+                                      position.date_nm');
         }
     }
 
