@@ -110,7 +110,8 @@ class StaffsController extends Controller
             $this->query->where('mst_staffs.staff_cd', 'LIKE', '%' . $where['staff_cd'] . '%');
         }
         if ($where['staff_nm'] != '') {
-            $this->query->where( DB::raw('CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%');
+            $this->query->where( DB::raw('CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%')
+                        ->orWhere( DB::raw('CONCAT(mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)'),'LIKE','%'.$where['staff_nm'].'%');
         }
 
         if ($data["order"]["col"] != '') {
