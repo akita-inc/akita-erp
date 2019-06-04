@@ -189,7 +189,7 @@ class MBillingHistoryHeaderDetails extends Model {
                 'details.departure_point_name',
                 'details.landing_name',
                 DB::raw("format(IFNULL(details.total_fee,0), '#,##0') as total_fee"),
-                DB::raw("format(IFNULL(details.insurance_fee,0), '#,##0') as consumption_tax"),
+                DB::raw("format(IFNULL(details.consumption_tax,0), '#,##0') as consumption_tax"),
                 DB::raw("format(IFNULL(details.tax_included_amount,0), '#,##0') as tax_included_amount")
             )
             ->whereNull('details.deleted_at')

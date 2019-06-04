@@ -258,8 +258,8 @@ var ctrPaymentProcessingVl = new Vue({
                                 item.total_dw_amount = payment_amount;
                                 payment_amount = 0;
                             } else {
-                                item.total_dw_amount = payment_remaining;
-                                payment_amount = payment_amount - parseFloat(payment_remaining);
+                                item.total_dw_amount = payment_remaining -  that.removeComma(item.fee) -  that.removeComma(item.discount);
+                                payment_amount = payment_amount - parseFloat(payment_remaining) + that.removeComma(item.fee) +  that.removeComma(item.discount);
                             }
                         } else {
                             item.total_dw_amount = 0;
@@ -394,7 +394,7 @@ var ctrPaymentProcessingVl = new Vue({
                     row.total_dw_amount  = item.total_dw_amount;
                     row.total_dw_amount  = that.removeComma(row.total_dw_amount);
                     row.payment_remaining  = item.payment_remaining;
-                    that.data.push(row);
+                    that.data[key] = row;
                 }
             });
             let dataPayment = {};

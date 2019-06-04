@@ -128,48 +128,37 @@ class PaymentProcessingController extends Controller{
     public function index(Request $request){
         $fieldShowTable = [
             'invoice_number' => [
-                "classTH" => "wd-60",
-                "classTD" => "wd-60",
+                "classTH" => "wd-100",
             ],
             'publication_date'=> [
                 "classTH" => "wd-80",
-                "classTD" => "wd-80",
             ],
             'office_nm'=> [
-                "classTH" => "wd-80",
-                "classTD" => "wd-80",
+                "classTH" => "wd-100",
             ],
             'total_fee'=> [
-                "classTH" => "wd-100",
-                "classTD" => "wd-100",
+                "classTH" => "wd-120",
             ],
             'consumption_tax'=> [
-                "classTH" => "wd-80",
-                "classTD" => "wd-80",
+                "classTH" => "wd-120",
             ],
             'tax_included_amount'=> [
-                "classTH" => "wd-140",
-                "classTD" => "wd-140",
+                "classTH" => "wd-120",
             ],
             'last_payment_amount'=> [
-                "classTH" => "wd-140",
-                "classTD" => "wd-140",
+                "classTH" => "wd-120",
             ],
             'total_dw_amount'=> [
                 "classTH" => "wd-80",
-                "classTD" => "wd-80",
             ],
             'fee'=> [
-                "classTH" => "wd-60",
-                "classTD" => "wd-60",
+                "classTH" => "wd-120",
             ],
             'discount'=> [
                 "classTH" => "wd-80",
-                "classTD" => "wd-80",
             ],
             'payment_remaining'=> [
-                "classTH" => "wd-140",
-                "classTD" => "wd-140",
+                "classTH" => "wd-120",
             ],
         ];
         $currentDate = date("Y/m/d",time());
@@ -202,6 +191,7 @@ class PaymentProcessingController extends Controller{
         $validator = Validator::make( $dataPayment, $this->ruleValid ,[] ,$this->labels );
         $validator->after(function($validator) use ($listInvoice,$error) {
             foreach ($listInvoice as $key => $value) {
+                if(!$value) continue;
                 $value['total_dw_amount'] = number_format($value['total_dw_amount'],0,null,'');
                 $value['discount'] = number_format($value['discount'],0,null,'');
                 $validatorEx = Validator::make( $value, [
@@ -246,6 +236,7 @@ class PaymentProcessingController extends Controller{
             }
 
             foreach ($listInvoice as $key => $value) {
+                if(!$value) continue;
                 if ($value['payment_remaining'] < 0) {
                     if(!isset($error['total_dw_amount'])){
                         $error['total_dw_amount'] = [
