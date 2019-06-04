@@ -65,6 +65,9 @@ var ctrPaymentProcessingVl = new Vue({
             };
             that.listCheckbox = [];
             that.allSelected =  false;
+            that.items=[];
+            that.itemsDB=[];
+            that.flagSearch = false;
             await payment_processing_service.loadList(data).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
@@ -204,6 +207,12 @@ var ctrPaymentProcessingVl = new Vue({
         },
         handleChecked: function(e){
             var that = this;
+            if(that.listCheckbox.length ==0){
+                that.allSelected = false;
+            }
+            if(that.listCheckbox.length ==that.items.length){
+                that.allSelected = true;
+            }
             that.handlePayment();
             that.handleFee();
             that.handleTotalDiscount();
@@ -237,9 +246,9 @@ var ctrPaymentProcessingVl = new Vue({
             if(!that.field.payment_amount){
                 that.field.payment_amount = that.addComma(0);
             }
+            that.field.item_payment_total = 0;
             if(that.listCheckbox.length > 0) {
                 var payment_amount = that.removeComma(that.field.payment_amount);
-                that.field.item_payment_total = 0;
                 $.each(that.items, function (key, item) {
                     item.total_dw_amount = 0;
                     if (that.listCheckbox.indexOf(key) != -1) {
@@ -258,6 +267,8 @@ var ctrPaymentProcessingVl = new Vue({
                         that.field.item_payment_total += item.total_dw_amount;
                         item.total_dw_amount = that.addComma(item.total_dw_amount);
                         that.handlePaymentRemaining(key);
+                    }else{
+                        item.total_dw_amount = that.addComma(0);
                     }
                 });
             }

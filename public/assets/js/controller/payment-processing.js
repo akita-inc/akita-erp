@@ -21695,7 +21695,10 @@ var ctrPaymentProcessingVl = new Vue({
                 };
                 that.listCheckbox = [];
                 that.allSelected = false;
-                _context.next = 11;
+                that.items = [];
+                that.itemsDB = [];
+                that.flagSearch = false;
+                _context.next = 14;
                 return payment_processing_service.loadList(data).then(function (response) {
                   if (response.success == false) {
                     that.errors = response.message;
@@ -21759,7 +21762,7 @@ var ctrPaymentProcessingVl = new Vue({
                   }
                 });
 
-              case 11:
+              case 14:
                 $.each(that.items, function (key, item) {
                   if (document.getElementById('total_dw_amount' + key) != null) {
                     that.setInputFilter(document.getElementById('total_dw_amount' + key), function (value) {
@@ -21774,7 +21777,7 @@ var ctrPaymentProcessingVl = new Vue({
                   }
                 });
 
-              case 12:
+              case 15:
               case "end":
                 return _context.stop();
             }
@@ -21857,6 +21860,15 @@ var ctrPaymentProcessingVl = new Vue({
     },
     handleChecked: function handleChecked(e) {
       var that = this;
+
+      if (that.listCheckbox.length == 0) {
+        that.allSelected = false;
+      }
+
+      if (that.listCheckbox.length == that.items.length) {
+        that.allSelected = true;
+      }
+
       that.handlePayment();
       that.handleFee();
       that.handleTotalDiscount();
@@ -21894,9 +21906,10 @@ var ctrPaymentProcessingVl = new Vue({
         that.field.payment_amount = that.addComma(0);
       }
 
+      that.field.item_payment_total = 0;
+
       if (that.listCheckbox.length > 0) {
         var payment_amount = that.removeComma(that.field.payment_amount);
-        that.field.item_payment_total = 0;
         $.each(that.items, function (key, item) {
           item.total_dw_amount = 0;
 
@@ -21918,6 +21931,8 @@ var ctrPaymentProcessingVl = new Vue({
             that.field.item_payment_total += item.total_dw_amount;
             item.total_dw_amount = that.addComma(item.total_dw_amount);
             that.handlePaymentRemaining(key);
+          } else {
+            item.total_dw_amount = that.addComma(0);
           }
         });
       }
