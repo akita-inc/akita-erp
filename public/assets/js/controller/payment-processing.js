@@ -21921,8 +21921,8 @@ var ctrPaymentProcessingVl = new Vue({
               item.total_dw_amount = payment_amount;
               payment_amount = 0;
             } else {
-              item.total_dw_amount = payment_remaining - that.removeComma(item.fee) - that.removeComma(item.discount);
-              payment_amount = payment_amount - parseFloat(payment_remaining) + that.removeComma(item.fee) + that.removeComma(item.discount);
+              item.total_dw_amount = that.roundFloat(payment_remaining - that.removeComma(item.fee) - that.removeComma(item.discount));
+              payment_amount = that.roundFloat(payment_amount - parseFloat(payment_remaining) + that.removeComma(item.fee) + that.removeComma(item.discount));
             }
           } else {
             item.total_dw_amount = 0;
@@ -22091,6 +22091,11 @@ var ctrPaymentProcessingVl = new Vue({
         } else {
           that.errors = [];
           that.errorValidate = [];
+          that.items = [];
+          that.itemsDB = [];
+          that.errorStr = "";
+          that.clearCondition();
+          that.flagSearch = false;
           that.registerSuccess = true;
         }
 
@@ -22132,6 +22137,9 @@ var ctrPaymentProcessingVl = new Vue({
           });
         }
       });
+    },
+    roundFloat: function roundFloat(value) {
+      return Math.round(value * 100) / 100;
     }
   },
   mounted: function mounted() {

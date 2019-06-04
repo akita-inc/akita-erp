@@ -33,9 +33,9 @@ class PaymentProcessingController extends Controller{
         'invoice_balance_total' => 'required|one_byte_number|length:13',
         'dw_classification' => 'required|one_byte_number|length:13',
         'fee' => 'required|one_byte_number|length:13',
-        'total_discount' => 'required|one_byte_number|length:13',
-        'total_payment_amount' => 'required|one_byte_number|length:13',
-        'item_payment_total' => 'required|one_byte_number|length:13',
+        'total_discount' => 'required|one_byte_number',
+        'total_payment_amount' => 'required|one_byte_number',
+        'item_payment_total' => 'required|one_byte_number',
         'note' => 'nullable|length:200',
     ];
 
