@@ -110,12 +110,12 @@ class StaffsController extends Controller
             $this->query->where('mst_staffs.staff_cd', 'LIKE', '%' . $where['staff_cd'] . '%');
         }
         if ($where['staff_nm'] != '') {
-            $this->query->where( DB::raw('CONCAT(mst_staffs.last_nm,mst_staffs.first_nm)'), 'LIKE', '%'.$where['staff_nm'].'%');
+            $this->query->where( DB::raw('CONCAT_WS("",mst_staffs.last_nm,mst_staffs.first_nm,mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)'), 'LIKE', '%'.$where['staff_nm'].'%');
         }
 
         if ($data["order"]["col"] != '') {
             if ($data["order"]["col"] == 'staff_nm_kana')
-                $orderCol = 'CONCAT_WS("    ",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)';
+                $orderCol = 'CONCAT_WS("",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana)';
             else
                 $orderCol = $data["order"]["col"];
             if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
@@ -123,7 +123,11 @@ class StaffsController extends Controller
             }
             $this->query->orderbyRaw($orderCol);
         } else {
-            $this->query->orderby('mst_staffs.staff_cd');
+            $this->query->orderbyRaw('mst_business_offices.business_office_nm,
+                                      mst_staffs.staff_cd,
+                                      CONCAT_WS("",mst_staffs.last_nm_kana,mst_staffs.first_nm_kana),
+                                      employment_pattern.date_nm,
+                                      position.date_nm');
         }
     }
 
