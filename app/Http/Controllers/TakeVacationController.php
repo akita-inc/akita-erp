@@ -415,9 +415,9 @@ class TakeVacationController extends Controller
                 $mWPaidVacation = new WPaidVacation();
                 $vacationInfo = $mWPaidVacation->getInfoByID($id);
                 if($approval_fg==1) {
-                    $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo, $mailCC);
+                    $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
                 }else{
-                    $this->handleReject($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo, $mailCC);
+                    $this->handleReject($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
                 }
             }
             DB::commit();

@@ -155,7 +155,7 @@ trait WorkflowTrait
         }
     }
 
-    public function handleApproval($wf_id,$listWfAdditionalNotice,$arrayInsert,$applicant_id,$applicant_mail,&$mailTo, &$mailCC){
+    public function handleApproval($wf_id,$listWfAdditionalNotice,$arrayInsert,$applicant_id,$applicant_mail,&$mailTo){
         $mWApprovalStatus = new WApprovalStatus();
         $mStaff = new MStaffs();
         $dataWfAdditionalNotice = [];
@@ -183,7 +183,7 @@ trait WorkflowTrait
         }
     }
 
-    public function handleReject($wf_id,$listWfAdditionalNotice,$arrayInsert,$applicant_id,$applicant_mail,&$mailTo, &$mailCC){
+    public function handleReject($wf_id,$listWfAdditionalNotice,$arrayInsert,$applicant_id,$applicant_mail,&$mailTo){
         $mWApprovalStatus = new WApprovalStatus();
         $mStaff = new MStaffs();
         $listWApprovalStatus = $mWApprovalStatus->getListByWfID($wf_id,$this->wf_type_id);
@@ -232,7 +232,7 @@ trait WorkflowTrait
             //1. 承認ステータスを判断
             // 1-1. 未承認の承認ステータスが1レコード以上ある場合
             $WApprovalStatus = new WApprovalStatus();
-            $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
+            $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'wf_type_id'=>$this->wf_type_id])->get();
             $return =['mode' =>''];
             if($data->delete_at != null){
                 $return['mode'] = 'reference';
@@ -243,7 +243,7 @@ trait WorkflowTrait
                         $return['mode'] = 'edit';
                     }
                     else{//1-1-2.  申請者 != ログインID
-                        if($WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'approval_levels'=>Auth::user()->approval_levels])->count() > 0){// 1-1-2-1. ログイン者＝承認権限を持っている（mst_staffs.approval_levels is not null）かつ、その承認レベルが未承認である。
+                        if($WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'approval_levels'=>Auth::user()->approval_levels,'wf_type_id'=>$this->wf_type_id])->count() > 0){// 1-1-2-1. ログイン者＝承認権限を持っている（mst_staffs.approval_levels is not null）かつ、その承認レベルが未承認である。
                             $return['mode'] = 'approval';
                         }else{//1-1-2-2. それ以外
                             $return['mode'] = 'reference';
@@ -256,18 +256,14 @@ trait WorkflowTrait
             return Response()->json(array_merge(array('success'=>true),$return));
         }else{
             if (is_null($data->delete_at)) {
-                if($this->table!='empty_info' || ($mode!='edit' && $this->table=='empty_info') || ($mode=='edit' && $this->table=='empty_info' && Session::get('sysadmin_flg')==1)){
-
-                    if(!is_null($modified_at)){
-                        if(Carbon::parse($modified_at) != Carbon::parse($data->modified_at)){
-                            $message = Lang::get('messages.MSG04003');
-                            return Response()->json(array('success'=>false, 'msg'=> $message));
-                        }
+                if(!is_null($modified_at)){
+                    if(Carbon::parse($modified_at) != Carbon::parse($data->modified_at)){
+                        $message = Lang::get('messages.MSG04003');
+                        return Response()->json(array('success'=>false, 'msg'=> $message));
                     }
                 }
-
                 $WApprovalStatus = new WApprovalStatus();
-                $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0])->get();
+                $approvalStatus = $WApprovalStatus::where(['wf_id'=>$data->id,'approval_fg'=>0,'wf_type_id'=>$this->wf_type_id])->get();
                 if($approvalStatus->count() <= 0){
                     return Response()->json(array('success'=>false, 'msg'=> Lang::get('messages.MSG04003')));
                 }
