@@ -116,15 +116,16 @@
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['filed'=>'last_nm_kana','attr_input'=>'maxlength=50'])
+                        @include('Component.form.input',[
+                            'filed'=>'first_nm',
+                            'attr_input' => 'maxlength=25 v-on:input="convertKana($event, \'first_nm_kana\')"'
+                        ])
                     </div>
 
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',[
-                             'filed'=>'first_nm',
-                             'attr_input' => 'maxlength=25 v-on:input="convertKana($event, \'first_nm_kana\')"'
-                         ])
+                        @include('Component.form.input',['filed'=>'last_nm_kana','attr_input'=>'maxlength=50'])
+
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
@@ -864,30 +865,11 @@
                                 </div>
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.input',[
-                                        'filed'=>'health_insurance_numbers',
-                                        'class'=>'w-75',
-                                        'filedId'=>"mst_others_health_insurance_numbers",
-                                        'filedMode'=>"items.health_insurance_numbers",
-                                        'attr_input' => "maxlength='20'",
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.input',[
-                                        'filed'=>'employees_pension_insurance_numbers',
-                                        'filedId'=>"mst_others_employees_pension_insurance_numbers",
-                                        'filedMode'=>"items.employees_pension_insurance_numbers",
-                                        'attr_input' => "maxlength='10'",
-                                    ])
-                                </div>
-
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.checkbox',[
-                                        'filed'=>'workmens_compensation_insurance_fg',
-                                        'filedId'=>"mst_others_workmens_compensation_insurance_fg",
-                                        'filedMode'=>"items.workmens_compensation_insurance_fg",
-                                        'checkboxLabel'=>'あり'
-                                    ])
+                                       'filed'=>'employees_pension_insurance_numbers',
+                                       'filedId'=>"mst_others_employees_pension_insurance_numbers",
+                                       'filedMode'=>"items.employees_pension_insurance_numbers",
+                                       'attr_input' => "maxlength='10'",
+                                   ])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
@@ -901,14 +883,15 @@
 
                                 <div class="col-md-7 col-sm-12 pd-l-20">
                                     @include('Component.form.select',[
-                                        'filed'=>'section_id',
-                                        'filedId'=>"mst_others_section_id",
-                                        'filedMode'=>"items.section_id",
-                                        'required'=>true,
-                                        'class'=>"w-75",
-                                        'array'=>$listSectionIds,
-                                    ])
+                                       'filed'=>'section_id',
+                                       'filedId'=>"mst_others_section_id",
+                                       'filedMode'=>"items.section_id",
+                                       'required'=>true,
+                                       'class'=>"w-75",
+                                       'array'=>$listSectionIds,
+                                   ])
                                 </div>
+                                <div class="break-row-form"></div>
                             </div>
                         </div>
                     </div>
