@@ -287,6 +287,7 @@ class PaymentProcessingController extends Controller{
         $serial_number = $mNumberings->getSerialNumberByTargetID('4001');
         $branch_number = 1;
         foreach ($listInvoice as $key => $value) {
+            if(!$value) continue;
             $row = [];
             $row['dw_number'] = $serial_number->serial_number;
             $row['branch_number'] = $branch_number++;
