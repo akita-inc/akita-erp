@@ -217,7 +217,7 @@
                         </div>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
-                        <label class="col-md-4 col-sm-4" for="first_year_registration_dt">初年度登録年月</label>
+                        <label class="col-md-4 col-sm-4" for="first_year_registration_dt">初度登録年月</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
                             <input type="text" class="form-control w-25" v-bind:class="errors.first_year_registration_dt != undefined ? 'is-invalid':'' " id="first_year_registration_dt" name="first_year_registration_dt" v-model="field.first_year_registration_dt" maxlength="6">
                             ※例：201903など
@@ -272,7 +272,7 @@
                     </div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
-                        <label class="col-md-5 col-sm-5" for="seating_capacity">定員</label>
+                        <label class="col-md-5 col-sm-5" for="seating_capacity">定員（人）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
                             <input type="text" class="form-control w-50" v-bind:class="errors.seating_capacity != undefined ? 'is-invalid':'' " id="seating_capacity" name="seating_capacity" v-model="field.seating_capacity" maxlength="2">
                         </div>

@@ -100,14 +100,14 @@ trait WorkflowTrait
     public function registerWApprovalStatus($wf_id,$listLevel,&$approval_levels_step_1){
         $dataWfApprovalStatus = [];
         $fixValue = [
-            'wf_type_id' => config('params.vacation_wf_type_id_default'),
+            'wf_type_id' => $this->wf_type_id,
             'wf_id' => $wf_id,
             'approver_id' => null,
             'approval_fg' => 0,
             'approval_date' => null,
             'send_back_reason' => null,
         ];
-        $listRequireApproval = MWfRequireApproval::query()->where('wf_type', '=', 1)->where('applicant_section', '=', Auth::user()->section_id)->get();
+        $listRequireApproval = MWfRequireApproval::query()->where('wf_type', '=', $this->wf_type_id)->where('applicant_section', '=', Auth::user()->section_id)->get();
         if (count($listRequireApproval) > 0) {
             foreach ($listRequireApproval as $item) {
                 if ($item->approval_steps == 1) {
@@ -131,7 +131,7 @@ trait WorkflowTrait
                 $row =[];
                 $row['staff_cd'] = $item['staff_cd'];
                 $row['email_address'] = $item['email_address'];
-                $row['wf_type_id'] = config('params.vacation_wf_type_id_default');
+                $row['wf_type_id'] = $this->wf_type_id;
                 $row['wf_id'] = $wf_id;
                 array_push($dataWfAdditionalNotice, $row);
             } else {
@@ -163,7 +163,7 @@ trait WorkflowTrait
             if (!empty($item['email_address'])) {
                 if (!isset($item['id'])) {
                     $row = $item;
-                    $row['wf_type_id'] = config('params.vacation_wf_type_id_default');
+                    $row['wf_type_id'] = $this->wf_type_id;
                     $row['wf_id'] = $wf_id;
                     array_push($dataWfAdditionalNotice, $row);
                 }
