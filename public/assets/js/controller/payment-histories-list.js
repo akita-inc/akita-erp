@@ -3524,6 +3524,8 @@ var ctrPaymentHistoryListVl = new Vue({
         } else {
           that.loading = false;
           that.deleteFlagSuccess = true;
+
+          _this2.clearCondition();
         }
       });
     },
