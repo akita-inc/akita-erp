@@ -215,8 +215,8 @@ var ctrPaymentProcessingVl = new Vue({
             if(that.listCheckbox.length ==that.items.length){
                 that.allSelected = true;
             }
-            that.handlePayment();
             that.handleFee();
+            that.handlePayment();
             that.handleTotalDiscount();
             that.handlePaymentRemainingTotal();
         },
@@ -228,8 +228,8 @@ var ctrPaymentProcessingVl = new Vue({
                     that.listCheckbox.push(key);
                 });
             }
-            that.handlePayment();
             that.handleFee();
+            that.handlePayment();
             that.handleTotalDiscount();
             that.handlePaymentRemainingTotal();
         },

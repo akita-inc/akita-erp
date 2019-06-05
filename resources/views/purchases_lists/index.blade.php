@@ -7,6 +7,9 @@
             font-size: 14px;
             text-align: left;
         }
+        .input-cd+div{
+            width: 300px!important;
+        }
     </style>
 @endsection
 @section('content')
