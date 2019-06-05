@@ -22,32 +22,6 @@ class PurchasesListsController extends Controller
     ];
     public $messagesCustom =[];
     public $labels=[];
-    public $csvColumn=[
-            "daily_report_date"=>"日報日付",
-            "branch_office_cd"=>"支店CD",
-            "document_no"=>"伝票NO",
-            "registration_numbers"=>"登録番号",
-            "staff_cd"=>"社員CD",
-            "staff_nm"=>"社員名",
-            "mst_customers_cd"=>"得意先CD",
-            "customer_nm"=>"得意先名",
-            "goods"=>"品物",
-            "departure_point_name"=>"発地名",
-            "landing_name"=>"着地名",
-            "delivery_destination"=>"納入先",
-            "quantity"=>"数量",
-            "unit_price"=>"単価",
-            "total_fee"=>"便請求金額",
-            "insurance_fee"=>"保険料",
-            "billing_fast_charge"=>"請求高速料",
-            "discount_amount"=>"値引金額",
-            "tax_included_amount"=>"請求金額",
-            "loading_fee"=>"積込料",
-            "wholesale_fee"=>"取卸料",
-            "waiting_fee"=>"待機料",
-            "incidental_fee"=>"附帯料",
-            "surcharge_fee"=>"サーチャージ料",
-    ];
     public $currentData=null;
     public function __construct(){
         parent::__construct();
@@ -202,33 +176,6 @@ class PurchasesListsController extends Controller
             'order' => $data['order'],
         ];
         return response()->json($response);
-    }
-    public function createCSV(Request $request){
-        $items=$request->all()['data'];
-        $keys = array_keys($this->csvColumn);
-        $inputs=json_decode(json_encode($items), true);
-        $fileName = 'kakunin_'.$items[0]['branch_office_cd'].'_'.date('YmdHis', time()).'.csv';
-        $headers = array(
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        );
-        $enclosure = config('params.csv.enclosure');
-        $callback = function() use ($keys,$inputs, $enclosure) {
-            $file = fopen('php://output', 'w');
-            fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
-            foreach ($inputs as $content) {
-                $row = [];
-                foreach ($keys as $key) {
-                    $row[$key] = $enclosure.$content[$key].$enclosure;
-                }
-                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
-            }
-            fclose($file);
-        };
-        return response()->stream($callback, 200, $headers);
     }
 
 

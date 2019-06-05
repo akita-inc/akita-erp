@@ -122,11 +122,6 @@
                                 {{trans('common.button.search')}}
                             </button>
                         </div>
-                        <div class="col-md-3 lh-38 text-left padding-row-5">
-                            <button class="btn btn-primary w-100" v-if="items.length>0 && flagExport==true" v-on:click="createCSV" v-cloak>
-                                {{trans('common.button.export_excel')}}
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>

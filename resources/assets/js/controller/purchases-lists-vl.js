@@ -34,7 +34,6 @@ var ctrPurchasesListVl = new Vue({
             last_page:0
         },
         flagSearch:false,
-        flagExport:false,
         order: null,
         dropdown_mst_supplier_cd: [{
             data:[]
@@ -70,17 +69,12 @@ var ctrPurchasesListVl = new Vue({
             that.fileSearch.mst_suppliers_cd=this.$refs.mst_suppliers_cd.searchInput;
             that.fileSearch.mst_suppliers_nm=this.$refs.mst_suppliers_nm.searchInput;
             that.flagSearch=false;
-            that.flagExport=false;
             var data = {
                 pageSize: that.pageSize,
                 page:page,
                 fieldSearch: that.fileSearch,
                 order: that.order,
             };
-            if(that.fileSearch.from_date!="" && that.fileSearch.to_date!="" && that.$refs.mst_suppliers_cd.searchInput!="" && that.fileSearch.invoicing_flag=="0" && that.fileSearch.mst_business_office_id)
-            {
-                that.flagExport=true;
-            }
             if(that.errors.from_date===undefined && that.errors.to_date===undefined)
             {
                 that.loading = true;
@@ -221,43 +215,6 @@ var ctrPurchasesListVl = new Vue({
             var to_date = new Date();
             var lastDay = new Date(to_date.getFullYear(), to_date.getMonth()+1,0);
             this.fileSearch.to_date=lastDay.getFullYear()+"/"+(lastDay.getMonth()+1)+"/"+lastDay.getDate();
-        },
-        createCSV: async function () {
-            var that = this;
-            that.loading = true;
-            var data = {
-                data: that.allItems,
-            };
-            purchases_lists_service.createCSV(data).then(  function (response){
-                that.downloadFileCSV(response, 'csv');
-                that.loading = false;
-            });
-        },
-        downloadFileCSV(response) {
-            // It is necessary to create a new blob object with mime-type explicitly set
-            // otherwise only Chrome works like it should
-            var newBlob = new Blob([response.data], {type: response.headers["content-type"]})
-
-            var filename = response.headers['content-disposition'].split('=')[1].replace(/^\"+|\"+$/g, '')
-
-            // IE doesn't allow using a blob object directly as link href
-            // instead it is necessary to use msSaveOrOpenBlob
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(newBlob,filename)
-                return
-            }
-
-            // For other browsers:
-            // Create a link pointing to the ObjectURL containing the blob.
-            const data = window.URL.createObjectURL(newBlob)
-            var link = document.createElement('a')
-            link.href = data
-            link.download = filename;
-            link.click()
-            setTimeout(function () {
-                // For Firefox it is necessary to delay revoking the ObjectURL
-                window.URL.revokeObjectURL(data)
-            }, 100)
         },
     },
     mounted () {
