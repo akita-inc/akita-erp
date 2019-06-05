@@ -37,6 +37,57 @@ return [
             'cost'=>'概算費用',
             'approval_status'=>'承認ステータス'
         ]
+    ],
+    'create' =>[
+        'title_register' => '交際費支出申請 登録',
+        'title_edit' => '交際費支出申請 編集',
+        'title_approval' => '交際費支出申請 承認・却下',
+        'title_reference' => '交際費支出申請 照会 ',
+        'field' => [
+            'applicant_id' => '申請者',
+            'applicant_office_nm' => '所属営業所',
+            'staff_nm' => '',
+            'date' => '実施日',
+            'cost'=>'概算費用',
+            'client_company_name'=>'相手先会社名',
+            'client_members_count'=>'相手先参加者',
+            'client_members'=>'',
+            'own_members_count'=>'当社参加者',
+            'own_members'=>'',
+            'place'=>'場所',
+            'conditions'=>'取引状況',
+            'purpose'=>'目的',
+            'deposit_flg'=>'仮払い',
+            'deposit_amount'=>'仮払い金額',
+            'email_address'=>'追加通知',
+
+        ],
+        'search' => [
+
+        ],
+        'modal' =>[
+            'table'=>[
+
+            ]
+        ]
+    ],
+    'modal' => [
+        'register'=>[
+            'title' => '登録',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
+        ],
+        'edit'=>[
+            'title' => '登録',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10025')
+        ],
+        'approval'=>[
+            'title' => '承認',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10016')
+        ],
+        'reject'=>[
+            'title' => '却下',
+            'content' => \Illuminate\Support\Facades\Lang::get('messages.MSG10019')
+        ],
     ]
 
 ];

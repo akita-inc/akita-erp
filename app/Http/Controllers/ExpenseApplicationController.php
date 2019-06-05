@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\TraitRepositories\ListTrait;
+use App\Http\Controllers\TraitRepositories\WorkflowTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MSaleses;
 use App\Models\WApprovalStatus;
+use App\Models\WFBusinessEntertaining;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
 class ExpenseApplicationController extends Controller
 {
-    use ListTrait;
+    use ListTrait,WorkflowTrait;
     public $table = "wf_business_entertaining";
     public $ruleValid = [
     ];
@@ -307,6 +307,36 @@ class ExpenseApplicationController extends Controller
             'fieldShowTable'=>$fieldShowTable,
             'businessOffices' => $businessOffices,
         ]);
+    }
+
+    public function store(Request $request, $id=null){
+        $mWBusinessEntertaining = null;
+        $mode = "register";
+        $role = 1;
+        $mWApprovalStatus = new WApprovalStatus();
+        if($id != null){
+            $mWBusinessEntertaining = new WFBusinessEntertaining();
+            $mWBusinessEntertaining = $mWBusinessEntertaining->getInfoByID($id);
+            if(empty($mWBusinessEntertaining)){
+                abort('404');
+            }else{
+                $mWBusinessEntertaining = $mWBusinessEntertaining->toArray();
+                $this->checkAuthentication($id,$mWBusinessEntertaining,$request, $mode,$role);
+            }
+        }
+        $arrayStore = $this->beforeStore($id);
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
+//        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
+        $currentDate = date('Y/m/d');
+        return view('expense_application.form', array_merge($arrayStore,[
+//            'mWPaidVacation' => $mWPaidVacation,
+            'listVacationIndicator' => $listVacationIndicator,
+            'listVacationAcquisitionTimeIndicator' => [],
+            'currentDate' => $currentDate,
+            'role' => $role,
+            'mode' => $mode,
+        ]));
     }
 
 

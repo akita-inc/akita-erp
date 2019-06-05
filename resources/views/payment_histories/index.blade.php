@@ -76,8 +76,10 @@
                                         v-model="fileSearch.from_date"
                                         :input-class="errors.from_date != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
                                 ></date-picker>
-                                <span v-cloak v-if="errors.from_date != undefined" class="message-error">@{{errors.from_date}}</span>
                             </div>
+                            <label  v-cloak v-if="errors.from_date != undefined" class="message-error error-label-search" for="format_date">
+                                @{{errors.from_date}}
+                            </label>
                         </div>
                         <div class="col-md-5 grid-form-search d-inline-flex">
                             <div class="wd-60 col-list-search-f text-left">～</div>
@@ -90,12 +92,14 @@
                                         v-model="fileSearch.to_date"
                                         :input-class="errors.to_date != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
                                 ></date-picker>
-                                <span v-cloak v-if="errors.to_date != undefined" class="message-error">@{{errors.to_date}}</span>
                             </div>
+                            <label v-cloak v-if="errors.to_date != undefined" class="message-error error-label-search" for="to_date">
+                                @{{errors.to_date}}
+                            </label>
                         </div>
                     </div>
                 </div>
-                <div class="break-row-form" style="height: 15px;"></div>
+                <div class="break-row-form" style="height: 30px;"></div>
                 <div class="row">
                     <div class="col-md-7 col-sm-12 row text-left">
                     </div>
@@ -160,7 +164,7 @@
                 <div class="grid-form border-0">
                     <div class="row">
                         <div class="col-sm-12">
-                            {{trans("payment_histories.list.search.no_data")}}
+                            @php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10033'); @endphp
                         </div>
                     </div>
                 </div>
@@ -171,7 +175,7 @@
                     <div class="grid-form border-0">
                         <div class="row">
                             <div class="col-sm-12">
-                                {{trans("payment_histories.list.search.deleted")}}
+                             @php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10034'); @endphp
                             </div>
                         </div>
                     </div>
