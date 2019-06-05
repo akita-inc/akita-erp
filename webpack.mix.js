@@ -130,3 +130,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/expense-application-list-vl.js'
 ], 'public/assets/js/controller/expense-application-list.js');
+
+mix.js([
+    'resources/assets/js/controller/expense-application-vl.js'
+], 'public/assets/js/controller/expense-application.js');
