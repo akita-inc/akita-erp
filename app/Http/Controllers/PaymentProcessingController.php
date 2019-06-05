@@ -30,12 +30,12 @@ class PaymentProcessingController extends Controller{
 
     public $ruleValid = [
         'dw_day' => 'required',
-        'invoice_balance_total' => 'required|one_byte_number|length:13',
-        'dw_classification' => 'required|one_byte_number|length:13',
-        'fee' => 'required|one_byte_number|length:13',
-        'total_discount' => 'required|one_byte_number',
-        'total_payment_amount' => 'required|one_byte_number',
-        'item_payment_total' => 'required|one_byte_number',
+        'invoice_balance_total' => 'required|decimal_custom|length:13',
+        'dw_classification' => 'required|decimal_custom|length:13',
+        'fee' => 'required|decimal_custom|length:13',
+        'total_discount' => 'required|decimal_custom',
+        'total_payment_amount' => 'required|decimal_custom',
+        'item_payment_total' => 'required|decimal_custom',
         'note' => 'nullable|length:200',
     ];
 
@@ -179,23 +179,23 @@ class PaymentProcessingController extends Controller{
     public function submit(Request $request){
         $data = $request->all();
         $dataPayment = $data['dataPayment'];
-        $dataPayment['total_discount']= number_format($dataPayment['total_discount'],0,null,'');
-        $dataPayment['fee']= number_format($dataPayment['fee'],0,null,'');
-        $dataPayment['invoice_balance_total']= number_format($dataPayment['invoice_balance_total'],0,null,'');
-        $dataPayment['item_payment_total']= number_format($dataPayment['item_payment_total'],0,null,'');
-        $dataPayment['payment_amount']= number_format($dataPayment['payment_amount'],0,null,'');
-        $dataPayment['total_payment_amount']= number_format($dataPayment['total_payment_amount'],0,null,'');
+        $dataPayment['total_discount']= number_format($dataPayment['total_discount'],2,null,'');
+        $dataPayment['fee']= number_format($dataPayment['fee'],2,null,'');
+        $dataPayment['invoice_balance_total']= number_format($dataPayment['invoice_balance_total'],2,null,'');
+        $dataPayment['item_payment_total']= number_format($dataPayment['item_payment_total'],2,null,'');
+        $dataPayment['payment_amount']= number_format($dataPayment['payment_amount'],02,null,'');
+        $dataPayment['total_payment_amount']= number_format($dataPayment['total_payment_amount'],2,null,'');
         $listInvoice = $data['listInvoice'];
         $error = [];
         $validator = Validator::make( $dataPayment, $this->ruleValid ,[] ,$this->labels );
         $validator->after(function($validator) use ($listInvoice,$error) {
             foreach ($listInvoice as $key => $value) {
                 if(!$value) continue;
-                $value['total_dw_amount'] = number_format($value['total_dw_amount'],0,null,'');
-                $value['discount'] = number_format($value['discount'],0,null,'');
+                $value['total_dw_amount'] = number_format($value['total_dw_amount'],2,null,'');
+                $value['discount'] = number_format($value['discount'],2,null,'');
                 $validatorEx = Validator::make( $value, [
-                    'total_dw_amount' => 'nullable|one_byte_number|length:13',
-                    'discount' => 'nullable|one_byte_number|length:13'
+                    'total_dw_amount' => 'nullable|decimal_custom|length:13',
+                    'discount' => 'nullable|decimal_custom|length:13'
                 ] ,[] ,$this->labels );
                 if ( $validatorEx->fails() ) {
                     $failedRules = $validatorEx->failed();

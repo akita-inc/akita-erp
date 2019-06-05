@@ -46,9 +46,9 @@ class PurchasesListsController extends Controller
                 'mst_suppliers.supplier_nm_formal as supplier_nm',
                 't_purchases.departure_point_name',
                 't_purchases.landing_name',
-                't_purchases.total_fee',
-                't_purchases.consumption_tax',
-                't_purchases.tax_included_amount',
+                DB::raw('IFNULL(t_purchases.total_fee,0) as total_fee'),
+                DB::raw('IFNULL(t_purchases.consumption_tax,0) as consumption_tax'),
+                DB::raw('IFNULL(t_purchases.tax_included_amount,0) as tax_included_amount'),
                 DB::raw("DATE_FORMAT(headers.publication_date, '%Y/%m/%d') as publication_date")
             );
         $this->query->join('mst_suppliers', function ($join) {
