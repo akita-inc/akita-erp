@@ -253,19 +253,21 @@ var ctrPaymentProcessingVl = new Vue({
             var payment_amount = that.removeComma(that.field.payment_amount);
             $.each(that.items, function (key, item) {
                 item.total_dw_amount = 0;
+                item.payment_remaining = that.removeComma(that.itemsDB[key].payment_remaining);
                 if (that.listCheckbox.indexOf(key) != -1) {
                     if (payment_amount > 0) {
-                        var payment_remaining = that.removeComma(that.itemsDB[key].payment_remaining);
-                        if (payment_amount < payment_remaining) {
+                        var real_payment = item.payment_remaining -  that.removeComma(item.fee) -  that.removeComma(item.discount)
+                        if (payment_amount < real_payment) {
                             item.total_dw_amount = payment_amount;
                             payment_amount = 0;
                         } else {
-                            item.total_dw_amount = that.roundFloat(payment_remaining -  that.removeComma(item.fee) -  that.removeComma(item.discount));
-                            payment_amount = that.roundFloat(payment_amount - parseFloat(payment_remaining) + that.removeComma(item.fee) +  that.removeComma(item.discount));
+                            item.total_dw_amount = that.roundFloat(real_payment);
+                            payment_amount = that.roundFloat(payment_amount - parseFloat(item.payment_remaining) + that.removeComma(item.fee) +  that.removeComma(item.discount));
                         }
                     } else {
                         item.total_dw_amount = 0;
                     }
+
                     that.field.item_payment_total += item.total_dw_amount;
                     item.total_dw_amount = that.addComma(item.total_dw_amount);
                     that.handlePaymentRemaining(key);
