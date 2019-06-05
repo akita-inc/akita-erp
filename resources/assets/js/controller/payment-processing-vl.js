@@ -345,6 +345,7 @@ var ctrPaymentProcessingVl = new Vue({
             that.items[key].payment_remaining = that.itemsDB[key].payment_remaining;
             let tax_included_amount = parseFloat(that.itemsDB[key].tax_included_amount);
             that.items[key].payment_remaining = tax_included_amount -  parseFloat(that.items[key].last_payment_amount) -  that.removeComma(that.items[key].total_dw_amount)-  that.removeComma(that.items[key].fee) -  that.removeComma(that.items[key].discount);
+            that.items[key].payment_remaining = that.roundFloat(that.items[key].payment_remaining);
         },
         handleTotalDiscount: function () {
             var that = this;
@@ -473,7 +474,11 @@ var ctrPaymentProcessingVl = new Vue({
             });
         },
         roundFloat: function (value) {
-            return Math.round((value) * 100) / 100;
+            var result  = value.toFixed(2);
+            if(result=='-0.00'){
+                result = 0;
+            }
+            return result;
         }
     },
     mounted () {
