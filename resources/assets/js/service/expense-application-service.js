@@ -69,4 +69,11 @@ expense_application_service = {
             return error;
         });
     },
+    submit: function (data) {
+        return axios.post('/expense_application/api-v1/submit', data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }

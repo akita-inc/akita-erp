@@ -319,6 +319,13 @@ expense_application_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  submit: function submit(data) {
+    return axios.post('/expense_application/api-v1/submit', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Http\Controllers\TraitRepositories\WorkflowTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
 use App\Models\MSaleses;
+use App\Models\MStaffs;
 use App\Models\WApprovalStatus;
 use App\Models\WFBusinessEntertaining;
+use App\Models\WPaidVacation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -17,13 +20,37 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 class ExpenseApplicationController extends Controller
 {
-    use ListTrait,WorkflowTrait;
+    use ListTrait,WorkflowTrait,FormTrait;
     public $table = "wf_business_entertaining";
     public $ruleValid = [
+        'applicant_office_nm' => 'required',
+        'date' => 'required',
+        'cost'=>'required|decimal_custom|length:8',
+        'client_company_name'=>'required',
+        'client_members_count'=>'required|one_byte_number|number_range_custom:127|length:4',
+        'own_members_count'=>'required|one_byte_number|number_range_custom:127|length:4',
+        'place'=>'required|length:200',
+        'conditions'=>'required|length:200',
+        'purpose'=>'required|length:400',
     ];
     public $messagesCustom =[];
-    public $labels=[];
-    public $csvColumn=[
+    public $labels=[
+        'applicant_id' => '申請者',
+        'applicant_office_nm' => '所属営業所',
+        'date'=>'実施日',
+        'cost'=>'概算費用',
+        'client_company_name'=>'相手先会社名',
+        'client_members_count'=>'相手先参加者',
+        'client_members'=>'',
+        'own_members_count'=>'当社参加者',
+        'own_members'=>'',
+        'place'=>'場所',
+        'conditions'=>'取引状況',
+        'purpose'=>'目的',
+        'deposit_flg'=>'仮払い',
+        'deposit_amount'=>'仮払い金額',
+        'email_address'=>'追加通知',
+        'additional_notice'=>'追加通知'
     ];
     public $currentData=null;
     public function __construct(){
@@ -186,6 +213,7 @@ class ExpenseApplicationController extends Controller
         $this->query->orderBy('wf_business_entertaining.id','desc');
 
     }
+
     public function checkIsExist(Request $request, $id){
         $approval_fg= $request->get('approval_fg');
         $mode = $request->get('mode');
@@ -251,7 +279,6 @@ class ExpenseApplicationController extends Controller
         }
     }
 
-
     public function index(Request $request){
         $fieldShowTable = [
             'id' => [
@@ -315,28 +342,127 @@ class ExpenseApplicationController extends Controller
         $role = 1;
         $mWApprovalStatus = new WApprovalStatus();
         if($id != null){
-            $mWBusinessEntertaining = new WFBusinessEntertaining();
-            $mWBusinessEntertaining = $mWBusinessEntertaining->getInfoByID($id);
-            if(empty($mWBusinessEntertaining)){
+            $mWFBusinessEntertain = new WFBusinessEntertaining();
+            $mWFBusinessEntertain = $mWFBusinessEntertain->getInfoByID($id);
+            if(empty($mWFBusinessEntertain)){
                 abort('404');
             }else{
-                $mWBusinessEntertaining = $mWBusinessEntertaining->toArray();
-                $this->checkAuthentication($id,$mWBusinessEntertaining,$request, $mode,$role);
+                $mWFBusinessEntertain = $mWFBusinessEntertain->toArray();
+                $this->checkAuthentication($id,$mWFBusinessEntertain,$request, $mode,$role);
             }
         }
         $arrayStore = $this->beforeStore($id);
         $mGeneralPurposes = new MGeneralPurposes();
-        $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
+        $listDepositClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_expense_app_temporary_payment'),'Empty');
 //        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
         $currentDate = date('Y/m/d');
         return view('expense_application.form', array_merge($arrayStore,[
-//            'mWPaidVacation' => $mWPaidVacation,
-            'listVacationIndicator' => $listVacationIndicator,
+//            'mWFBusinessEntertain' => $mWFBusinessEntertain,
+            'listDepositClassification' => $listDepositClassification,
             'listVacationAcquisitionTimeIndicator' => [],
             'currentDate' => $currentDate,
             'role' => $role,
             'mode' => $mode,
         ]));
+    }
+    public function beforeSubmit($data){
+       if(isset($data['deposit_flg']) && $data['deposit_flg']==0 )
+       {
+           $this->ruleValid['deposit_amount'] = 'required|decimal_custom|length:8';
+       }
+    }
+    protected function validAfter( &$validator,$data ){
+        $listWfAdditionalNotice = $data['wf_additional_notice'];
+        $this->validateWfAdditionalNotice($validator,$listWfAdditionalNotice);
+    }
+
+    protected function save($data){
+        $id_before =  null;
+        $mGeneralPurposes = new MGeneralPurposes();
+        $listLevel= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'Empty');
+        $arrayInsert = $data;
+        $listWfAdditionalNotice = $arrayInsert['wf_additional_notice'];
+        $currentTime = date("Y-m-d H:i:s",time());
+        $arrayInsert['regist_date'] = $currentTime;
+        $mode = $arrayInsert["mode"];
+        $approval_fg = $arrayInsert["approval_fg"];
+        $send_back_reason  = $arrayInsert["send_back_reason"];
+        unset($arrayInsert["id"]);
+        unset($arrayInsert["mode"]);
+        unset($arrayInsert["staff_nm"]);
+        unset($arrayInsert["applicant_office_nm"]);
+        unset($arrayInsert["wf_additional_notice"]);
+        unset($arrayInsert["approval_fg"]);
+        unset($arrayInsert["send_back_reason"]);
+        $mStaff = new MStaffs();
+        $mWApprovalStatus = new WApprovalStatus();
+//        $mailCC = [];
+//        $mailTo = [];
+        DB::beginTransaction();
+        try{
+            if(isset( $data["id"]) && $data["id"]){
+//                $arrayInsert["modified_at"] = $currentTime;
+//                if($mode=='edit'){
+//                    $id_before = $data["id"];
+//                    WPaidVacation::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
+//                    $configMail = config('params.vacation_edit_mail');
+//                }else{
+//                    if($approval_fg==1){
+//                        $mWApprovalStatus->approvalVacation($data["id"], $this->wf_type_id, $currentTime);
+//                        $configMail = config('params.vacation_approval_mail');
+//                    }
+//                    if($approval_fg==0){
+//                        $mWApprovalStatus->rejectVacation($data["id"],  $this->wf_type_id,$currentTime,$data['send_back_reason']);
+//                        $configMail = config('params.vacation_reject_mail');
+//                    }
+//                }
+
+            }else{
+                $configMail = config('params.vacation_register_mail');
+            }
+            if($mode=='register' || $mode=='edit') {
+                $approval_levels_step_1 = "";
+                $arrayInsert["create_at"] = $currentTime;
+                $arrayInsert["modified_at"] = $currentTime;
+                $id = WFBusinessEntertaining::query()->insertGetId($arrayInsert);
+//                if ($id) {
+//                    $this->registerWApprovalStatus($id,$listLevel,$approval_levels_step_1);
+//
+//                    $this->registerWfAdditionalNotice($id,$listWfAdditionalNotice);
+//                }
+//                $this->getListMailRegisterOrEdit($arrayInsert,$approval_levels_step_1,$listWfAdditionalNotice,$mailTo, $mailCC);
+            }else{
+//                $id = $data['id'];
+//                $mWPaidVacation = new WPaidVacation();
+//                $vacationInfo = $mWPaidVacation->getInfoByID($id);
+//                if($approval_fg==1) {
+//                    $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
+//                }else{
+//                    $this->handleReject($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
+//                }
+            }
+            DB::commit();
+//            $this->handleMail($id,$configMail,$mailTo,$mailCC,$id_before);
+            if(isset( $data["id"])){
+                $this->backHistory();
+                if($mode=='edit'){
+                    \Session::flash('message',Lang::get('messages.MSG04002'));
+                }else{
+                    if($approval_fg==1){
+                        \Session::flash('message',Lang::get('messages.MSG10017'));
+                    }
+                    if($approval_fg==0){
+                        \Session::flash('message',Lang::get('messages.MSG10020'));
+                    }
+                }
+            }else{
+                \Session::flash('message',Lang::get('messages.MSG03002'));
+            }
+        }catch (\Exception $e){
+            DB::rollback();
+            dd($e);
+        }
+        return $id;
     }
 
 

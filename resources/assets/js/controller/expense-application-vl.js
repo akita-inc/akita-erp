@@ -14,13 +14,16 @@ var ctrExpenseApplicationVl = new Vue({
             staff_nm:staff_nm,
             applicant_office_id	:mst_business_office_id,
             applicant_office_nm	:business_ofice_nm,
-            approval_kb:defaultApprovalKb,
-            half_day_kb	:defaultHalfDayKb,
-            start_date:currentDate,
-            end_date:currentDate,
-            days:1,
-            times:0,
-            reasons:'',
+            date:"",
+            cost:0,
+            client_company_name:"",
+            client_members:"",
+            client_members_count:"",
+            own_members:"",
+            own_members_count:"",
+            conditions:"",
+            deposit_flg:defaultApprovalKb,
+            deposit_amount:0,
             wf_additional_notice:[
                 {
                     email_address:'',
@@ -28,13 +31,13 @@ var ctrExpenseApplicationVl = new Vue({
                 }
             ],
             mode:$('#mode').val(),
-            approval_fg:null,
             send_back_reason:""
         },
         search:{
             name:"",
             mst_business_office_id:"",
         },
+        deposit_flg:false,
         errors:{},
         disabledStartDate: false,
         disabledEndDate: false,
@@ -57,7 +60,7 @@ var ctrExpenseApplicationVl = new Vue({
             this.disabledEndDate=  false;
             this.disabledDays = false;
             this.disabledTimes = false;
-            if($("#hd_take_vacation_edit").val() == 1){
+            if($("#hd_expense_application_edit").val() == 1){
                 this.loadFormEdit();
             }else{
                 this.field = {
@@ -65,8 +68,6 @@ var ctrExpenseApplicationVl = new Vue({
                     staff_nm:staff_nm,
                     applicant_office_id	:mst_business_office_id,
                     applicant_office_nm	:business_ofice_nm,
-                    approval_kb:defaultApprovalKb,
-                    half_day_kb	:defaultHalfDayKb,
                     start_date:currentDate,
                     end_date:currentDate,
                     days:1,
@@ -98,42 +99,44 @@ var ctrExpenseApplicationVl = new Vue({
             if(this.field.mode != 'register'){
                 this.field["id"] = this.take_vacation_id;
             }
+            that.field.cost=that.removeComma(that.field.cost);
+            that.field.deposit_amount=that.removeComma(that.field.deposit_amount);
             switch (this.field.mode) {
                 case 'register':
-                    take_vacation_list_service.submit(that.field).then((response) => {
+                    expense_application_service.submit(that.field).then((response) => {
                         if(response.success == false){
                             that.errors = response.message;
                         }else{
                             that.errors = [];
-                            window.location.href = listRoute;
+                            // window.location.href = listRoute;
                         }
                         that.loading = false;
                     });
                     break;
-                case 'edit':
-                case 'approval':
-                    if(that.field.mode=='approval'){
-                        that.field.approval_fg = approval_fg;
-                    }
-                    take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
-                        if (!response.success) {
-                            that.loading = false;
-                            alert(response.msg);
-                            that.backHistory();
-                            return false;
-                        } else {
-                            take_vacation_list_service.submit(that.field).then((response) => {
-                                if(response.success == false){
-                                    that.errors = response.message;
-                                }else{
-                                    that.errors = [];
-                                    window.location.href = listRoute;
-                                }
-                                that.loading = false;
-                            });
-                        }
-                    });
-                    break;
+                // case 'edit':
+                // case 'approval':
+                //     if(that.field.mode=='approval'){
+                //         that.field.approval_fg = approval_fg;
+                //     }
+                //     take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
+                //         if (!response.success) {
+                //             that.loading = false;
+                //             alert(response.msg);
+                //             that.backHistory();
+                //             return false;
+                //         } else {
+                //             take_vacation_list_service.submit(that.field).then((response) => {
+                //                 if(response.success == false){
+                //                     that.errors = response.message;
+                //                 }else{
+                //                     that.errors = [];
+                //                     window.location.href = listRoute;
+                //                 }
+                //                 that.loading = false;
+                //             });
+                //         }
+                //     });
+                //     break;
             }
         },
         showError: function ( errors ){
@@ -333,28 +336,53 @@ var ctrExpenseApplicationVl = new Vue({
                 });
             });
         },
-
+        addComma: function (value) {
+            if(value!=null){
+                return  '¥'+value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }else{
+                return 0;
+            }
+        },
+        removeComma: function (value) {
+            if(value!=null && value!= '') {
+                return  parseFloat(value.toString().replace(/,/g, '').replace('¥',''));
+            }else{
+                return 0;
+            }
+        },
+        addCommaByID: function (id,key) {
+          if(this.field[id]!=null){
+               this.field[id] = '¥'+this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          }
+          this.$forceUpdate();
+        },
+        removeCommaByID: function (id,key) {
+          if(this.field[id]!=null){
+               this.field[id] = parseFloat(this.field[id].toString().replace(/,/g, '').replace('¥',''));
+          }
+          this.$forceUpdate();
+        },
+        handleDepositFlag:function () {
+            var that=this;
+            that.deposit_flg=false;
+            if(that.field.deposit_flg==1)
+            {
+                that.field.deposit_amount="";
+                that.deposit_flg=true;
+            }
+        }
     },
     mounted () {
-        console.log(this.field.applicant_id);
         this.handleChangeHalfDay();
-        if($("#hd_take_vacation_edit").val() == 1) {
+        if($("#hd_expense_application_edit").val() == 1) {
             this.loadFormEdit();
         }
-        if(document.getElementById("days")!=null){
-            this.setInputFilter(document.getElementById("days"), function(value) {
-                return /^\d*$/.test(value); });
-        }
-        if(document.getElementById("times")!=null){
-            this.setInputFilter(document.getElementById("times"), function(value) {
-                return /^\d*$/.test(value); });
-        }
-        if(this.field.mode!='register' && this.field.mode!='edit'){
-            this.disabledStartDate = true;
-            this.disabledEndDate = true;
-            this.disabledDays = true;
-            this.disabledTimes= true;
-        }
+        // if(this.field.mode!='register' && this.field.mode!='edit'){
+        //     this.disabledStartDate = true;
+        //     this.disabledEndDate = true;
+        //     this.disabledDays = true;
+        //     this.disabledTimes= true;
+        // }
     },
     components: {
         PulseLoader,
