@@ -21764,6 +21764,18 @@ var ctrPaymentProcessingVl = new Vue({
                 });
 
               case 15:
+                if (document.getElementById('payment_amount') != null) {
+                  this.setInputFilter(document.getElementById('payment_amount'), function (value) {
+                    return /^\d*\.?\d*$/.test(value);
+                  });
+                }
+
+                if (document.getElementById('fee') != null) {
+                  this.setInputFilter(document.getElementById('fee'), function (value) {
+                    return /^\d*\.?\d*$/.test(value);
+                  });
+                }
+
                 $.each(that.items, function (key, item) {
                   if (document.getElementById('total_dw_amount' + key) != null) {
                     that.setInputFilter(document.getElementById('total_dw_amount' + key), function (value) {
@@ -21778,7 +21790,7 @@ var ctrPaymentProcessingVl = new Vue({
                   }
                 });
 
-              case 16:
+              case 18:
               case "end":
                 return _context.stop();
             }
@@ -22148,11 +22160,11 @@ var ctrPaymentProcessingVl = new Vue({
     roundFloat: function roundFloat(value) {
       var result = value.toFixed(2);
 
-      if (result == '-0.00') {
+      if (result == '-0.00' || result == '0.00') {
         result = 0;
       }
 
-      return result;
+      return Math.round(result * 100) / 100;
     }
   },
   mounted: function mounted() {
@@ -22160,17 +22172,11 @@ var ctrPaymentProcessingVl = new Vue({
     payment_processing_service.loadListCustomers().then(function (response) {
       that.listCustomer = response.data;
     });
-    var listInputNumber = ['customer_cd', 'payment_amount', 'fee'];
-    var _arr = listInputNumber;
 
-    for (var _i = 0; _i < _arr.length; _i++) {
-      var item = _arr[_i];
-
-      if (document.getElementById(item) != null) {
-        this.setInputFilter(document.getElementById(item), function (value) {
-          return /^\d*\.?\d*$/.test(value);
-        });
-      }
+    if (document.getElementById('customer_cd') != null) {
+      this.setInputFilter(document.getElementById('customer_cd'), function (value) {
+        return /^\d*\.?\d*$/.test(value);
+      });
     }
   },
   components: {
