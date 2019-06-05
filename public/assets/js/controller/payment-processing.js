@@ -21764,33 +21764,6 @@ var ctrPaymentProcessingVl = new Vue({
                 });
 
               case 15:
-                if (document.getElementById('payment_amount') != null) {
-                  this.setInputFilter(document.getElementById('payment_amount'), function (value) {
-                    return /^\d*\.?\d*$/.test(value);
-                  });
-                }
-
-                if (document.getElementById('fee') != null) {
-                  this.setInputFilter(document.getElementById('fee'), function (value) {
-                    return /^\d*\.?\d*$/.test(value);
-                  });
-                }
-
-                $.each(that.items, function (key, item) {
-                  if (document.getElementById('total_dw_amount' + key) != null) {
-                    that.setInputFilter(document.getElementById('total_dw_amount' + key), function (value) {
-                      return /^\d*\.?\d*$/.test(value);
-                    });
-                  }
-
-                  if (document.getElementById('discount' + key) != null) {
-                    that.setInputFilter(document.getElementById('discount' + key), function (value) {
-                      return /^\d*\.?\d*$/.test(value);
-                    });
-                  }
-                });
-
-              case 18:
               case "end":
                 return _context.stop();
             }
@@ -22175,7 +22148,7 @@ var ctrPaymentProcessingVl = new Vue({
 
     if (document.getElementById('customer_cd') != null) {
       this.setInputFilter(document.getElementById('customer_cd'), function (value) {
-        return /^\d*\.?\d*$/.test(value);
+        return /^\d*$/.test(value);
       });
     }
   },
