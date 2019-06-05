@@ -134,7 +134,7 @@
                             {{trans("payment_processing.list.field.payment_amount")}}
                         </div>
                         <div class="col-md-8 no-padding grid-form-search">
-                            <input type="text" v-model="field.payment_amount" name="payment_amount" id="payment_amount" @change="handlePayment" @focus="removeCommaByID('payment_amount')" @blur="addCommaByID('payment_amount')" v-bind:class="errors.payment_amount!= undefined ? 'form-control number_only is-invalid':'form-control number_only'">
+                            <input type="text" v-model="field.payment_amount" name="payment_amount" id="payment_amount" @change="handlePayment" @focus="removeCommaByID('payment_amount')" @blur="addCommaByID('payment_amount')" v-bind:class="errors.payment_amount!= undefined ? 'form-control number_only is-invalid':'form-control number_only'" onkeypress="return isNumberKey(event)">
 
                             <span v-cloak v-if="errorValidate.payment_amount != undefined" class="message-error" v-html="errorValidate.payment_amount.join('<br />')"></span>
                         </div>
@@ -144,7 +144,7 @@
                             {{trans("payment_processing.list.field.fee")}}
                         </div>
                         <div class="col-md-4 no-padding grid-form-search">
-                            <input type="text" v-model="field.fee" name="fee" maxlength="13"  @change="handleFee" id="fee" v-bind:class="errorValidate.fee != undefined ? 'form-control number_only is-invalid':'form-control number_only'" @focus="removeCommaByID('fee')" @blur="addCommaByID('fee')">
+                            <input type="text" v-model="field.fee" name="fee" maxlength="13"  @change="handleFee" id="fee" v-bind:class="errorValidate.fee != undefined ? 'form-control number_only is-invalid':'form-control number_only'" @focus="removeCommaByID('fee')" @blur="addCommaByID('fee')" onkeypress="return isNumberKey(event)">
                         </div>
                         <div class="col-md-2 no-padding col-list-search-f text-center">
                             {{trans("payment_processing.list.field.total_discount")}}
@@ -250,10 +250,10 @@
                                 <span>{!! "￥@{{ Number(item['$key']).toLocaleString()}}" !!}</span>
                                 @break
                                 @case('total_dw_amount')
-                                <input type="text" v-model="item.total_dw_amount" :name="'total_dw_amount'+index" maxlength="13" class="wd-140 text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)" :id="'total_dw_amount'+index" v-bind:class="(errors.total_dw_amount!= undefined && errors.total_dw_amount.indexError.indexOf(index) != -1) || (errorValidate.listInvoice!= undefined &&  errorValidate.listInvoice[0].total_dw_amount!= undefined  && errorValidate.listInvoice[0].total_dw_amount.indexError.indexOf(index) != -1) ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('total_dw_amount',index)" @blur="addCommaByID('total_dw_amount',index)">
+                                <input type="text" v-model="item.total_dw_amount" :name="'total_dw_amount'+index" maxlength="13" class="wd-140 text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeTotalDwAmount(index)" :id="'total_dw_amount'+index" v-bind:class="(errors.total_dw_amount!= undefined && errors.total_dw_amount.indexError.indexOf(index) != -1) || (errorValidate.listInvoice!= undefined &&  errorValidate.listInvoice[0].total_dw_amount!= undefined  && errorValidate.listInvoice[0].total_dw_amount.indexError.indexOf(index) != -1) ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('total_dw_amount',index)" @blur="addCommaByID('total_dw_amount',index)" onkeypress="return isNumberKey(event)">
                                 @break
                                 @case('discount')
-                                <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="13" class="wd-140 form-control text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeDiscount(index)" :id="'discount'+index" v-bind:class="errorValidate.listInvoice!= undefined &&  errorValidate.listInvoice[0].discount!= undefined  && errorValidate.listInvoice[0].discount.indexError.indexOf(index) != -1 ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('discount',index)" @blur="addCommaByID('discount',index)">
+                                <input type="text" v-model="item.discount" :name="'discount'+index" maxlength="13" class="wd-140 form-control text-center number_only" :disabled="listCheckbox.indexOf(index) == -1" @change="changeDiscount(index)" :id="'discount'+index" v-bind:class="errorValidate.listInvoice!= undefined &&  errorValidate.listInvoice[0].discount!= undefined  && errorValidate.listInvoice[0].discount.indexError.indexOf(index) != -1 ? 'form-control is-invalid':'form-control'" @focus="removeCommaByID('discount',index)" @blur="addCommaByID('discount',index)" onkeypress="return isNumberKey(event)">
                                 @break
                                 @default
                                 <span v-if="item['{{$key}}']">{!! "@{{ item['$key'] }}" !!}</span>
@@ -281,6 +281,15 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/payment-processing.js') }}" charset="utf-8"></script>
 @endsection
