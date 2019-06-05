@@ -45,7 +45,8 @@ class MPurchases extends Model {
             ->groupBy(
                 't_purchases.mst_suppliers_cd',
                 'mst_suppliers.supplier_nm'
-            );
+            )
+            ->orderBy('t_purchases.mst_suppliers_cd' );
         return $query->get();
     }
 }
