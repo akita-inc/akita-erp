@@ -136,7 +136,7 @@ var ctrPurchasesListVl = new Vue({
                 onInputChange: this.onInputChangeCd,
                 initialValue: this.fileSearch.mst_suppliers_cd,
                 maxlength: 6,
-                class: 'form-control',
+                class: 'form-control input-cd',
                 ref:"mst_suppliers_cd"
             };
         },

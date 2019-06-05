@@ -10238,7 +10238,7 @@ var ctrPurchasesListVl = new Vue({
         onInputChange: this.onInputChangeCd,
         initialValue: this.fileSearch.mst_suppliers_cd,
         maxlength: 6,
-        class: 'form-control',
+        class: 'form-control input-cd',
         ref: "mst_suppliers_cd"
       };
     },
@@ -10409,7 +10409,7 @@ var ctrPurchasesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\purchases-lists-vl.js */"./resources/assets/js/controller/purchases-lists-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\purchases-lists-vl.js */"./resources/assets/js/controller/purchases-lists-vl.js");
 
 
 /***/ })

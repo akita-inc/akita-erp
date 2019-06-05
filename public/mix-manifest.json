@@ -5,7 +5,6 @@
     "/assets/js/controller/customers-list.js": "/assets/js/controller/customers-list.js",
     "/assets/js/controller/empty-info.js": "/assets/js/controller/empty-info.js",
     "/assets/js/controller/empty-info-list.js": "/assets/js/controller/empty-info-list.js",
-    "/assets/js/controller/expense-application.js": "/assets/js/controller/expense-application.js",
     "/assets/js/controller/expense-application-list.js": "/assets/js/controller/expense-application-list.js",
     "/assets/js/controller/invoice-history-list.js": "/assets/js/controller/invoice-history-list.js",
     "/assets/js/controller/invoice-list.js": "/assets/js/controller/invoice-list.js",
