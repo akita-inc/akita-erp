@@ -37,7 +37,7 @@ class PaymentHistoriesController extends Controller {
             'from_date' =>date('Y-m-d', strtotime($data['fieldSearch']['from_date'])),
             'to_date'=>date('Y-m-d', strtotime($data['fieldSearch']['to_date'])),
             'mst_customers_cd'=>$data['fieldSearch']['mst_customers_cd'],
-            'customer_nm_formal'=>$data['fieldSearch']['customer_nm']
+            'customer_nm'=>$data['fieldSearch']['customer_nm']
         );
         $this->query->select(
             DB::raw("DATE_FORMAT(t_payment_histories.dw_day, '%Y/%m/%d') as dw_day"),
@@ -67,8 +67,8 @@ class PaymentHistoriesController extends Controller {
         if ($where['mst_customers_cd'] != '' ) {
             $this->query->where('mst_customers.mst_customers_cd', '=',  $where['mst_customers_cd']);
         }
-        if ($where['customer_nm_formal'] != '' ) {
-            $this->query->where('mst_customers.customer_nm_formal', 'LIKE',  '%'.$where['customer_nm_formal'].'%');
+        if ($where['customer_nm'] != '' ) {
+            $this->query->where('mst_customers.customer_nm', 'LIKE',  '%'.$where['customer_nm'].'%');
         }
         $this->query->where('t_payment_histories.deleted_at',null);
         $this->query->groupBy(
