@@ -167,4 +167,16 @@ return [
             "------------------------------------------------------\n\n".
             "Akita ERP - ワークフロー\n\n"
     ),
+    'expense_application_register_mail'=>array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【交際費支出申請】No. [id][applicant_id]（[applicant_office_id]）',
+        'template' => "【交際費支出申請】\n\n".
+            "＜申請ID＞\n".
+            "No. [id]\n\n".
+            "＜登録者＞\n".
+            "[applicant_id]\n\n".
+            "確認の後、承認お願いいたします。\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
+    )
 ];

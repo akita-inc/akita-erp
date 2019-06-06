@@ -87,11 +87,11 @@
                 </div>
             @endif
         </div>
-{{--        @if($role==2)--}}
-{{--            <div class="alert alert-danger w-100 mt-2">--}}
-{{--                {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}--}}
-{{--            </div>--}}
-{{--        @endif--}}
+        @if($role==2)
+            <div class="alert alert-danger w-100 mt-2">
+                {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
+            </div>
+        @endif
         @if($role==1)
             <form class="form-inline" role="form">
                 @if($mode=='approval' || $mode=='reference')
@@ -166,7 +166,7 @@
                     </fieldset>
                 @endif
                 @include('Component.workflow.search-email-address',['label' => trans("expense_application.create.field.additional_notice")])
-                @include('Component.workflow.list-approval-status',['$listWApprovalStatus' => $listWApprovalStatus])
+                @include('Component.workflow.list-approval-status',['listWApprovalStatus' => $listWApprovalStatus])
 
             </form>
             <div class="sub-header mt-3">
@@ -195,28 +195,28 @@
                                         </button>
                                     </div>
                                 @else
-                                    @if($mode=='approval')
-                                        <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
-                                            <div class="col-md-4 row h-100 justify-content-start">
-                                                <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
-                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
-                                            </div>
-                                            <div class="col-md-4 row lh-38">
-                                                <div class="col-md-2 col-sm-12 no-padding text-right">
-                                                    {{ trans("take_vacation.create.field.send_back_reason") }}
-                                                </div>
-                                                <div class="col-md-10 col-sm-12 text-left pr-0">
-                                                    <input v-model="field.send_back_reason"
-                                                           type="text"
-                                                           class="form-control w-100"
-                                                           maxlength="200"
-                                                           name="send_back_reason"
-                                                           v-bind:class="errors.send_back_reason!= undefined ? 'form-control is-invalid':'form-control' "
-                                                    >
-                                                    <span v-cloak v-if="errors.send_back_reason != undefined" class="message-error" v-html="errors.send_back_reason.join('<br />')"></span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                @if($mode=='approval')
+{{--                                        <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">--}}
+{{--                                            <div class="col-md-4 row h-100 justify-content-start">--}}
+{{--                                                <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>--}}
+{{--                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="col-md-4 row lh-38">--}}
+{{--                                                <div class="col-md-2 col-sm-12 no-padding text-right">--}}
+{{--                                                    {{ trans("take_vacation.create.field.send_back_reason") }}--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-md-10 col-sm-12 text-left pr-0">--}}
+{{--                                                    <input v-model="field.send_back_reason"--}}
+{{--                                                           type="text"--}}
+{{--                                                           class="form-control w-100"--}}
+{{--                                                           maxlength="200"--}}
+{{--                                                           name="send_back_reason"--}}
+{{--                                                           v-bind:class="errors.send_back_reason!= undefined ? 'form-control is-invalid':'form-control' "--}}
+{{--                                                    >--}}
+{{--                                                    <span v-cloak v-if="errors.send_back_reason != undefined" class="message-error" v-html="errors.send_back_reason.join('<br />')"></span>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                     @endif
                                 @endif
                             </div>

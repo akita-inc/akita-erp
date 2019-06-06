@@ -53,9 +53,11 @@ class ExpenseApplicationController extends Controller
         'additional_notice'=>'追加通知'
     ];
     public $currentData=null;
+    public $wf_type_id="";
     public function __construct(){
-        date_default_timezone_set("Asia/Tokyo");
         parent::__construct();
+        date_default_timezone_set("Asia/Tokyo");
+        $this->wf_type_id = config('params.expense_wf_type_id_default');
 
     }
     protected function search($data){
@@ -366,7 +368,7 @@ class ExpenseApplicationController extends Controller
         ]));
     }
     public function beforeSubmit($data){
-       if(isset($data['deposit_flg']) && $data['deposit_flg']==0 )
+       if(isset($data['deposit_flg']) && $data['deposit_flg']==1 )
        {
            $this->ruleValid['deposit_amount'] = 'required|decimal_custom|length:8';
        }
@@ -382,10 +384,10 @@ class ExpenseApplicationController extends Controller
         $listLevel= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'Empty');
         $arrayInsert = $data;
         $listWfAdditionalNotice = $arrayInsert['wf_additional_notice'];
+        $approval_fg = $arrayInsert["approval_fg"];
         $currentTime = date("Y-m-d H:i:s",time());
         $arrayInsert['regist_date'] = $currentTime;
         $mode = $arrayInsert["mode"];
-        $approval_fg = $arrayInsert["approval_fg"];
         $send_back_reason  = $arrayInsert["send_back_reason"];
         unset($arrayInsert["id"]);
         unset($arrayInsert["mode"]);
@@ -396,8 +398,8 @@ class ExpenseApplicationController extends Controller
         unset($arrayInsert["send_back_reason"]);
         $mStaff = new MStaffs();
         $mWApprovalStatus = new WApprovalStatus();
-//        $mailCC = [];
-//        $mailTo = [];
+        $mailCC = [];
+        $mailTo = [];
         DB::beginTransaction();
         try{
             if(isset( $data["id"]) && $data["id"]){
@@ -418,19 +420,18 @@ class ExpenseApplicationController extends Controller
 //                }
 
             }else{
-                $configMail = config('params.vacation_register_mail');
+                $configMail = Lang::get('mail_template.expense_application_register_mail');
             }
             if($mode=='register' || $mode=='edit') {
                 $approval_levels_step_1 = "";
                 $arrayInsert["create_at"] = $currentTime;
                 $arrayInsert["modified_at"] = $currentTime;
                 $id = WFBusinessEntertaining::query()->insertGetId($arrayInsert);
-//                if ($id) {
-//                    $this->registerWApprovalStatus($id,$listLevel,$approval_levels_step_1);
-//
-//                    $this->registerWfAdditionalNotice($id,$listWfAdditionalNotice);
-//                }
-//                $this->getListMailRegisterOrEdit($arrayInsert,$approval_levels_step_1,$listWfAdditionalNotice,$mailTo, $mailCC);
+                if ($id) {
+                    $this->registerWApprovalStatus($id,$listLevel,$approval_levels_step_1);
+                    $this->registerWfAdditionalNotice($id,$listWfAdditionalNotice);
+                }
+                $this->getListMailRegisterOrEdit($arrayInsert,$approval_levels_step_1,$listWfAdditionalNotice,$mailTo, $mailCC);
             }else{
 //                $id = $data['id'];
 //                $mWPaidVacation = new WPaidVacation();
@@ -442,7 +443,7 @@ class ExpenseApplicationController extends Controller
 //                }
             }
             DB::commit();
-//            $this->handleMail($id,$configMail,$mailTo,$mailCC,$id_before);
+            $this->handleMail($id,$configMail,$mailTo,$mailCC,$id_before);
             if(isset( $data["id"])){
                 $this->backHistory();
                 if($mode=='edit'){
@@ -463,6 +464,15 @@ class ExpenseApplicationController extends Controller
             dd($e);
         }
         return $id;
+    }
+    public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
+        $mWFBusinessEntertaining=new WFBusinessEntertaining();
+        $data = $mWFBusinessEntertaining->getInfoForMail($id);
+        $field = ['[id]','[applicant_id]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]','[send_back_reason]'];
+        $data['id_before'] = $id_before;
+        $text = str_replace($field, [$data['id'],$data['staff_nm'],$data['title'],$data['send_back_reason']],$configMail['template']);
+        $subject = str_replace(['[id]','[applicant_id]'],[$data['id'],$data['staff_nm']],$configMail["subject"]);
+        $this->sendMail($configMail,$mailTo,$mailCC,$subject,$text);
     }
 
 

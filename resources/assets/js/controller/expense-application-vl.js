@@ -15,7 +15,7 @@ var ctrExpenseApplicationVl = new Vue({
             applicant_office_id	:mst_business_office_id,
             applicant_office_nm	:business_ofice_nm,
             date:"",
-            cost:0,
+            cost:"",
             client_company_name:"",
             client_members:"",
             client_members_count:"",
@@ -23,7 +23,8 @@ var ctrExpenseApplicationVl = new Vue({
             own_members_count:"",
             conditions:"",
             deposit_flg:defaultApprovalKb,
-            deposit_amount:0,
+            deposit_amount:"",
+            approval_fg:null,
             wf_additional_notice:[
                 {
                     email_address:'',
@@ -56,10 +57,6 @@ var ctrExpenseApplicationVl = new Vue({
     methods : {
         resetForm: function () {
             this.errors = {};
-            this.disabledStartDate = false;
-            this.disabledEndDate=  false;
-            this.disabledDays = false;
-            this.disabledTimes = false;
             if($("#hd_expense_application_edit").val() == 1){
                 this.loadFormEdit();
             }else{
@@ -68,11 +65,18 @@ var ctrExpenseApplicationVl = new Vue({
                     staff_nm:staff_nm,
                     applicant_office_id	:mst_business_office_id,
                     applicant_office_nm	:business_ofice_nm,
-                    start_date:currentDate,
-                    end_date:currentDate,
-                    days:1,
-                    times:0,
-                    reasons:'',
+                    date:"",
+                    cost:"",
+                    client_company_name:"",
+                    client_members:"",
+                    client_members_count:"",
+                    own_members:"",
+                    own_members_count:"",
+                    conditions:"",
+                    deposit_flg:defaultApprovalKb,
+                    deposit_amount:"",
+                    approval_fg:null,
+                    send_back_reason:"",
                     wf_additional_notice:[
                         {
                             email_address:'',
@@ -81,16 +85,10 @@ var ctrExpenseApplicationVl = new Vue({
                     ],
                     mode:$('#mode').val(),
                 };
-                $('input:checkbox').prop('checked',false);
                 $('input:text').val('');
                 $('input[type="tel"]').val('');
                 $('textarea').val('');
-            }
-            if(this.field.mode=='register'){
-                this.handleChangeHalfDay();
-            }
-            if(this.field.mode=='edit'){
-                this.handleChangeHalfDayEdit();
+                this.handleDepositFlag();
             }
         },
         submit: function(approval_fg){
@@ -106,9 +104,18 @@ var ctrExpenseApplicationVl = new Vue({
                     expense_application_service.submit(that.field).then((response) => {
                         if(response.success == false){
                             that.errors = response.message;
+                            that.field.cost=that.addComma(isNaN(that.field.cost)?0:that.field.cost);
+                            if(that.field.deposit_flg==1)
+                            {
+                                that.field.deposit_amount=that.addComma(isNaN(that.field.deposit_amount)?0:that.field.deposit_amount);
+                            }
+                            else
+                            {
+                                that.field.deposit_amount="";
+                            }
                         }else{
                             that.errors = [];
-                            // window.location.href = listRoute;
+                            window.location.href = listRoute;
                         }
                         that.loading = false;
                     });
@@ -144,7 +151,7 @@ var ctrExpenseApplicationVl = new Vue({
         },
         backHistory: function () {
             if(this.take_vacation_edit == 1){
-                take_vacation_list_service.backHistory().then(function () {
+                expense_application_service.backHistory().then(function () {
                     window.location.href = listRoute;
                 });
             }else{
@@ -337,52 +344,60 @@ var ctrExpenseApplicationVl = new Vue({
             });
         },
         addComma: function (value) {
-            if(value!=null){
+            if(value!=null  && value!=""){
                 return  '¥'+value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }else{
-                return 0;
+                return "";
             }
         },
         removeComma: function (value) {
-            if(value!=null && value!= '') {
+            if(value!=null && value!="") {
                 return  parseFloat(value.toString().replace(/,/g, '').replace('¥',''));
             }else{
-                return 0;
+                return "";
             }
         },
         addCommaByID: function (id,key) {
-          if(this.field[id]!=null){
-               this.field[id] = '¥'+this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-          }
-          this.$forceUpdate();
+            if(this.field[id]!=null && this.field[id]!=""){
+                this.field[id] = '¥'+this.field[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            else
+            {
+                this.field[id] ="";
+            }
+            this.$forceUpdate();
         },
         removeCommaByID: function (id,key) {
-          if(this.field[id]!=null){
+          if(this.field[id]!==null && this.field[id]!=""){
                this.field[id] = parseFloat(this.field[id].toString().replace(/,/g, '').replace('¥',''));
+          }
+          else
+          {
+              this.field[id] ="";
+
           }
           this.$forceUpdate();
         },
         handleDepositFlag:function () {
             var that=this;
             that.deposit_flg=false;
-            if(that.field.deposit_flg==1)
+            if(that.field.deposit_flg==0)
             {
                 that.field.deposit_amount="";
                 that.deposit_flg=true;
             }
+            else
+            {
+                that.field.deposit_amount=that.addComma(0);
+                that.deposit_flg=false;
+            }
         }
     },
     mounted () {
-        this.handleChangeHalfDay();
+        this.handleDepositFlag();
         if($("#hd_expense_application_edit").val() == 1) {
             this.loadFormEdit();
         }
-        // if(this.field.mode!='register' && this.field.mode!='edit'){
-        //     this.disabledStartDate = true;
-        //     this.disabledEndDate = true;
-        //     this.disabledDays = true;
-        //     this.disabledTimes= true;
-        // }
     },
     components: {
         PulseLoader,
