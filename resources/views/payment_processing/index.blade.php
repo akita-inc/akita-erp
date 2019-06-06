@@ -64,19 +64,25 @@
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" v-if="flagSearch && items.length ==0">
                             {{trans("payment_processing.list.search.no_data")}}
+                        </div>
+                        <div class="col-sm-12" v-if="!registerSuccess ==0">
+                            {{trans("payment_processing.list.search.register_error")}}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="sub-header mt-3 ml-5 mr-5 bg-color-green" v-cloak v-if="registerSuccess">
+        <div class="sub-header mt-3 ml-5 mr-5 bg-color-green" v-cloak v-if="flagRegister">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" v-if="registerSuccess">
                             {{trans("payment_processing.list.search.register_success")}}
+                        </div>
+                        <div class="col-sm-12" v-else>
+                            {{trans("payment_processing.list.search.register_error")}}
                         </div>
                     </div>
                 </div>
@@ -262,9 +268,6 @@
                             @endswitch
                         </td>
                     @endforeach
-                </tr>
-                <tr v-cloak v-if="message !== ''">
-                    <td colspan="14">@{{message}} </td>
                 </tr>
                 </tbody>
             </table>
