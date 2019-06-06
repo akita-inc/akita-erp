@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
 
 class MEmptyInfo extends Model
@@ -42,7 +43,7 @@ class MEmptyInfo extends Model
                     if(!empty($mEmptyInfo->ask_staff_email_address)){
                         $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
                     }
-                    $configMail = config('params.empty_info_reservation_reject_mail');
+                    $configMail = Lang::get('mail_template..empty_info_reservation_reject_mail');
                     $mEmptyInfo->ask_date = null;
                     $mEmptyInfo->ask_office = null;
                     $mEmptyInfo->ask_staff = null;
@@ -53,7 +54,7 @@ class MEmptyInfo extends Model
                     if(!empty($mEmptyInfo->email_address)){
                         $mailTo = explode(';',$mEmptyInfo->email_address);
                     }
-                    $configMail = config('params.empty_info_reservation_mail');
+                    $configMail = Lang::get('mail_template.empty_info_reservation_mail');
                     $empty_mail_add = MEmptyMailTo::where('office_id',Auth::user()->mst_business_office_id)->whereNull('deleted_at')->first();
                     $mEmptyInfo->ask_date = TimeFunction::getTimestamp();
                     $mEmptyInfo->ask_office = Auth::user()->mst_business_office_id ;
@@ -64,7 +65,7 @@ class MEmptyInfo extends Model
                     if(!empty($mEmptyInfo->ask_staff_email_address)){
                         $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
                     }
-                    $configMail = config('params.empty_info_reservation_approval_mail');
+                    $configMail = Lang::get('mail_template..empty_info_reservation_approval_mail');
                     $mEmptyInfo->apr_date = TimeFunction::getTimestamp();
                     $mEmptyInfo->apr_staff = Auth::user()->staff_cd;
                     break;
@@ -72,7 +73,7 @@ class MEmptyInfo extends Model
                     if(!empty($mEmptyInfo->ask_staff_email_address)){
                         $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
                     }
-                    $configMail = config('params.empty_info_reservation_reject_mail');
+                    $configMail = Lang::get('mail_template.empty_info_reservation_reject_mail');
                     $mEmptyInfo->ask_date = null;
                     $mEmptyInfo->ask_office = null;
                     $mEmptyInfo->ask_staff = null;

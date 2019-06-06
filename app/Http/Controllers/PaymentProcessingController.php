@@ -284,7 +284,7 @@ class PaymentProcessingController extends Controller{
         $currentTime = date("Y-m-d H:i:s",time());
         $listPayment = [];
         $mNumberings =  new MNumberings();
-        $serial_number = $mNumberings->getSerialNumberByTargetID('4001');
+        $serial_number = $mNumberings->getSerialNumberByTargetID(config('params.mst_numbering_target_default.purchases'));
         $branch_number = 1;
         foreach ($listInvoice as $key => $value) {
             if(!$value) continue;
