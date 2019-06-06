@@ -272,7 +272,7 @@ class PaymentsController extends Controller
         $mNumberings = new MNumberings();
         DB::beginTransaction();
         try{
-            $serial_number = $mNumberings->getSerialNumberByTargetID('3001');
+            $serial_number = $mNumberings->getSerialNumberByTargetID(config('params.mst_numbering_target_default.payment'));
             $tPaymentHistoryHeaders->invoice_number = $serial_number->serial_number;
             $tPaymentHistoryHeaders->mst_suppliers_cd =$item['mst_suppliers_cd'];
             $tPaymentHistoryHeaders->mst_business_office_id =$item['mst_business_office_id'];
