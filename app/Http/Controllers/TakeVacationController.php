@@ -384,20 +384,20 @@ class TakeVacationController extends Controller
                 if($mode=='edit'){
                     $id_before = $data["id"];
                     WPaidVacation::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
-                    $configMail = config('params.vacation_edit_mail');
+                    $configMail = Lang::get('mail_template.vacation_edit_mail');
                 }else{
                     if($approval_fg==1){
                         $mWApprovalStatus->approvalVacation($data["id"], $this->wf_type_id, $currentTime);
-                        $configMail = config('params.vacation_approval_mail');
+                        $configMail = Lang::get('mail_template.vacation_approval_mail');
                     }
                     if($approval_fg==0){
                         $mWApprovalStatus->rejectVacation($data["id"],  $this->wf_type_id,$currentTime,$data['send_back_reason']);
-                        $configMail = config('params.vacation_reject_mail');
+                        $configMail = Lang::get('mail_template.vacation_reject_mail');
                     }
                 }
 
             }else{
-                $configMail = config('params.vacation_register_mail');
+                $configMail = Lang::get('mail_template.vacation_register_mail');
             }
             if($mode=='register' || $mode=='edit') {
                 $approval_levels_step_1 = "";

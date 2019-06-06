@@ -148,10 +148,10 @@ trait WorkflowTrait
         $mailTo = $mStaff->getListMailTo($arrayInsert['applicant_office_id'], $approval_levels_step_1, $arrayInsert['applicant_id']);
         if (count($mailTo) == 0) {
             $mailCC = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
-            $mailTo = array_column($listWfAdditionalNotice, 'email_address');
+            $mailTo = array_filter(array_column($listWfAdditionalNotice, 'email_address'));
         } else {
             $mailCC = !empty(Auth::user()->mail) ? [Auth::user()->mail] : [];
-            $mailCC = array_merge($mailCC, array_column($listWfAdditionalNotice, 'email_address'));
+            $mailCC = array_merge($mailCC, array_filter(array_column($listWfAdditionalNotice, 'email_address')));
         }
     }
 

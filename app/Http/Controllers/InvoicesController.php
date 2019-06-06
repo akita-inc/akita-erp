@@ -498,7 +498,7 @@ class InvoicesController extends Controller {
         $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $mNumberings =  new MNumberings();
         $this->csvContent[$item['customer_cd']] = [];
-        $serial_number = $mNumberings->getSerialNumberByTargetID('2001');
+        $serial_number = $mNumberings->getSerialNumberByTargetID(config('params.mst_numbering_target_default.invoice'));
         DB::beginTransaction();
         try
         {
