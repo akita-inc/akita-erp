@@ -34,16 +34,16 @@
 
                 <input type="hidden" id="hd_expense_application_edit" value="{!! !empty($mWFBusinessEntertain) ? 1:0 !!}">
                 <input type="hidden" id="mode" value="{!! $mode !!}">
-{{--                @if(!empty($mWPaidVacation))--}}
-{{--                    @foreach($mWPaidVacation as $key=>$value)--}}
-{{--                        <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">--}}
-{{--                    @endforeach--}}
-{{--                    <div class="d-flex ml-auto">--}}
-{{--                        @if($role==1 && ($mode=='register' || $mode=='edit'))--}}
-{{--                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>--}}
-{{--                        @endif--}}
-{{--                    </div>--}}
-{{--                @endif--}}
+                @if(!empty($mWFBusinessEntertain))
+                    @foreach($mWFBusinessEntertain as $key=>$value)
+                        <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">
+                    @endforeach
+                    <div class="d-flex ml-auto">
+                        @if($role==1 && ($mode=='register' || $mode=='edit'))
+                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWFBusinessEntertain['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                        @endif
+                    </div>
+                @endif
             </div>
             @if($role==1)
                 <div class="sub-header-line-two">
