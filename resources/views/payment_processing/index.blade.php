@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div class="sub-header mt-3 ml-5 mr-5 bg-color-green" v-bind:class="registerSuccess ? 'bg-color-green' :'bg-color-pink'" v-cloak v-if="flagRegister">
+        <div class="sub-header mt-3 ml-5 mr-5" v-bind:class="registerSuccess ? 'bg-color-green' :'bg-color-pink'" v-cloak v-if="flagRegister">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
