@@ -306,10 +306,17 @@ class PaymentProcessingController extends Controller{
             $row['upd_mst_staff_id'] = Auth::user()->id;
             array_push($listPayment,$row);
         }
-        TPaymentHistories::query()->insert( $listPayment );
+        try{
+            TPaymentHistories::query()->insert( $listPayment );
+        }catch (\Exception $e) {
+            return [
+                'success'=>true,
+                'register_success' =>false,
+            ];
+        }
         return response()->json([
             'success'=>true,
-            'message'=> ''
+            'register_success' =>true,
         ]);
     }
 }

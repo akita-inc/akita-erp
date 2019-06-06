@@ -29,6 +29,7 @@ var ctrPaymentProcessingVl = new Vue({
         message: '',
         disableBtn: false,
         flagSearch: false,
+        flagRegister: false,
         fileSearched:{
             customer_cd: "",
             customer_nm:"",
@@ -68,6 +69,7 @@ var ctrPaymentProcessingVl = new Vue({
             that.items=[];
             that.itemsDB=[];
             that.flagSearch = false;
+            that.flagRegister = false;
             that.errorStr="";
             await payment_processing_service.loadList(data).then((response) => {
                 if(response.success == false){
@@ -80,11 +82,6 @@ var ctrPaymentProcessingVl = new Vue({
                     };
                     that.flagSearch = true;
                     that.errors = [];
-                    if (response.data.length===0) {
-                        that.message = messages["MSG05001"];
-                    } else {
-                        that.message = '';
-                    }
                     $.each(response.data, function (key, item) {
                         that.items[key] = {
                             invoice_number:'',
@@ -231,6 +228,7 @@ var ctrPaymentProcessingVl = new Vue({
                     that.field.invoice_balance_total += parseFloat(item.payment_remaining);
                 }
             });
+            that.field.invoice_balance_total = that.roundFloat(that.field.invoice_balance_total);
             that.field.invoice_balance_total = that.addComma(that.field.invoice_balance_total);
         },
         handlePayment: function () {
@@ -425,7 +423,8 @@ var ctrPaymentProcessingVl = new Vue({
                     that.errorStr="";
                     that.clearCondition();
                     that.flagSearch= false;
-                    that.registerSuccess = true;
+                    that.flagRegister = true;
+                    that.registerSuccess = response.register_success;
                 }
                 that.loading = false;
             });

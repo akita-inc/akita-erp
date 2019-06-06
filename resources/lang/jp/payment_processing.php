@@ -9,6 +9,7 @@ return[
             'name' => '名称',
             'no_data'=>'データがありません。',
             'register_success'=>'入金登録しました。',
+            'register_error'=>'入金登録処理に失敗しました。',
         ],
         'table' => [
             'invoice_number' => '請求書No.',
