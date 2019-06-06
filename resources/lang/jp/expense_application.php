@@ -60,6 +60,7 @@ return [
             'deposit_flg'=>'仮払い',
             'deposit_amount'=>'仮払い金額',
             'email_address'=>'追加通知',
+            'additional_notice'=>'追加通知'
 
         ],
         'search' => [
