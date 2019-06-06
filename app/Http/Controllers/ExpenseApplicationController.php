@@ -359,7 +359,7 @@ class ExpenseApplicationController extends Controller
 //        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
         $currentDate = date('Y/m/d');
         return view('expense_application.form', array_merge($arrayStore,[
-//            'mWFBusinessEntertain' => $mWFBusinessEntertain,
+            'mWFBusinessEntertain' => $mWFBusinessEntertain,
             'listDepositClassification' => $listDepositClassification,
             'listVacationAcquisitionTimeIndicator' => [],
             'currentDate' => $currentDate,

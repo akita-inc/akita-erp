@@ -45,5 +45,23 @@ class WFBusinessEntertaining extends Model {
         return $query->first()->toArray();
 
     }
+    public function getInfoByID($id){
+        return $this->select(
+            'wf_business_entertaining.*',
+            'mst_staffs.mail',
+            DB::raw('CONCAT(mst_staffs.last_nm , mst_staffs.first_nm) as staff_nm'),
+            DB::raw('mst_business_offices.business_office_nm as applicant_office_nm')
+        )
+            ->leftjoin('mst_staffs', function ($join) {
+                $join->on('mst_staffs.staff_cd', '=', 'wf_business_entertaining.applicant_id')
+                    ->whereNull('mst_staffs.deleted_at');
+            })
+            ->join('mst_business_offices', function ($join) {
+                $join->on('mst_business_offices.id', '=', 'wf_business_entertaining.applicant_office_id')
+                    ->whereNull('mst_business_offices.deleted_at');
+            })
+            ->where('wf_business_entertaining.id','=',$id)
+            ->first();
+    }
 
 }

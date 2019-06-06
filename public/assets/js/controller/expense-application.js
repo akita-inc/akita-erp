@@ -20855,8 +20855,8 @@ var ctrExpenseApplicationVl = new Vue({
   data: {
     lang: lang_date_picker,
     loading: false,
-    take_vacation_edit: 0,
-    take_vacation_id: null,
+    expense_application_edit: 0,
+    expense_application_id: null,
     field: {
       applicant_id: staff_cd,
       staff_nm: staff_nm,
@@ -20941,7 +20941,7 @@ var ctrExpenseApplicationVl = new Vue({
       that.loading = true;
 
       if (this.field.mode != 'register') {
-        this.field["id"] = this.take_vacation_id;
+        this.field["id"] = this.expense_application_id;
       }
 
       that.field.cost = that.removeComma(that.field.cost);
@@ -20967,37 +20967,44 @@ var ctrExpenseApplicationVl = new Vue({
             that.loading = false;
           });
           break;
-        // case 'edit':
-        // case 'approval':
-        //     if(that.field.mode=='approval'){
-        //         that.field.approval_fg = approval_fg;
-        //     }
-        //     take_vacation_list_service.checkIsExist(that.take_vacation_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
-        //         if (!response.success) {
-        //             that.loading = false;
-        //             alert(response.msg);
-        //             that.backHistory();
-        //             return false;
-        //         } else {
-        //             take_vacation_list_service.submit(that.field).then((response) => {
-        //                 if(response.success == false){
-        //                     that.errors = response.message;
-        //                 }else{
-        //                     that.errors = [];
-        //                     window.location.href = listRoute;
-        //                 }
-        //                 that.loading = false;
-        //             });
-        //         }
-        //     });
-        //     break;
+
+        case 'edit':
+        case 'approval':
+          if (that.field.mode == 'approval') {
+            that.field.approval_fg = approval_fg;
+          }
+
+          expense_application_service.checkIsExist(that.expense_application_id, {
+            'mode': this.field.mode,
+            'approval_fg': approval_fg,
+            'modified_at': that.modified_at
+          }).then(function (response) {
+            if (!response.success) {
+              that.loading = false;
+              alert(response.msg);
+              that.backHistory();
+              return false;
+            } else {
+              expense_application_service.submit(that.field).then(function (response) {
+                if (response.success == false) {
+                  that.errors = response.message;
+                } else {
+                  that.errors = [];
+                  window.location.href = listRoute;
+                }
+
+                that.loading = false;
+              });
+            }
+          });
+          break;
       }
     },
     showError: function showError(errors) {
       return errors.join("<br/>");
     },
     backHistory: function backHistory() {
-      if (this.take_vacation_edit == 1) {
+      if (this.expense_application_edit == 1) {
         expense_application_service.backHistory().then(function () {
           window.location.href = listRoute;
         });
@@ -21008,8 +21015,9 @@ var ctrExpenseApplicationVl = new Vue({
     loadFormEdit: function loadFormEdit() {
       var that = this;
       this.loading = true;
-      that.take_vacation_edit = 1;
-      that.take_vacation_id = $("#hd_id").val();
+      that.expense_application_edit = 1;
+      that.expense_application_id = $("#hd_id").val();
+      console.log(that.expense_application_edit);
       $.each(this.field, function (key, value) {
         if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
           that.field[key] = $("#hd_" + key).val();
@@ -21024,8 +21032,8 @@ var ctrExpenseApplicationVl = new Vue({
         }];
       }
 
-      this.modified_at = $('#hd_modified_at').val();
-      this.handleChangeHalfDayEdit();
+      this.modified_at = $('#hd_modified_at').val(); // this.handleChangeHalfDayEdit();
+
       this.loading = false;
     },
     deleteVacation: function deleteVacation(id) {
