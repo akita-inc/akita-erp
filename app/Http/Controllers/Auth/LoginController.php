@@ -73,7 +73,7 @@ class LoginController extends Controller
         } else {
             $staff = MStaffs::where('staff_cd', $data['staff_cd'])->first();
             if (Auth::attempt(['staff_cd' => $data['staff_cd'], 'password' => $data['password']], $remember)) {
-                $minutes = env('SESSION_LIFETIME');
+                $minutes = 120;
                 $password_old = cookie('password_old',  $staff->password, $minutes);
                 Session::put('password_old', $staff->password);
                 Session::put('sysadmin_flg', $staff->sysadmin_flg);
