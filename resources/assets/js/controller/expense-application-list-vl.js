@@ -1,5 +1,5 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-import DatePicker from '../component/vue2-datepicker-master'
+import DatePicker from '../component/vue2-datepicker-master';
 
 var ctrExpenseApplicationVl = new Vue({
     el: '#ctrExpenseApplicationVl',
@@ -76,6 +76,7 @@ var ctrExpenseApplicationVl = new Vue({
                             break;
                         default:
                             window.location.href = 'reference/' + id;
+                            break;
                     }
                 }
             });
@@ -112,7 +113,7 @@ var ctrExpenseApplicationVl = new Vue({
             if(delete_at !== null){
                 bgColor="#DDDDDD";
             }
-            else            {
+            else{
                 bgColor="rgb(255, 255, 255)";
             }
             return bgColor;

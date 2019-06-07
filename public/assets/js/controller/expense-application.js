@@ -20864,12 +20864,14 @@ var ctrExpenseApplicationVl = new Vue({
       applicant_office_nm: business_ofice_nm,
       date: "",
       cost: "",
+      place: "",
       client_company_name: "",
       client_members: "",
       client_members_count: "",
       own_members: "",
       own_members_count: "",
       conditions: "",
+      purpose: "",
       deposit_flg: defaultApprovalKb,
       deposit_amount: "",
       approval_fg: null,
@@ -20914,12 +20916,14 @@ var ctrExpenseApplicationVl = new Vue({
           applicant_office_nm: business_ofice_nm,
           date: "",
           cost: "",
+          place: "",
           client_company_name: "",
           client_members: "",
           client_members_count: "",
           own_members: "",
           own_members_count: "",
           conditions: "",
+          purpose: "",
           deposit_flg: defaultApprovalKb,
           deposit_amount: "",
           approval_fg: null,
@@ -21014,10 +21018,9 @@ var ctrExpenseApplicationVl = new Vue({
     },
     loadFormEdit: function loadFormEdit() {
       var that = this;
-      this.loading = true;
+      that.loading = true;
       that.expense_application_edit = 1;
       that.expense_application_id = $("#hd_id").val();
-      console.log(that.expense_application_edit);
       $.each(this.field, function (key, value) {
         if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
           that.field[key] = $("#hd_" + key).val();
@@ -21032,13 +21035,16 @@ var ctrExpenseApplicationVl = new Vue({
         }];
       }
 
-      this.modified_at = $('#hd_modified_at').val(); // this.handleChangeHalfDayEdit();
+      that.modified_at = $('#hd_modified_at').val();
+      that.field.cost = that.addComma(that.field.cost);
+      that.handleDepositFlag(); // this.handleDepositFlag();
 
-      this.loading = false;
+      that.loading = false;
+      console.log(that.field);
     },
-    deleteVacation: function deleteVacation(id) {
+    deleteExpenseApplication: function deleteExpenseApplication(id) {
       var that = this;
-      take_vacation_list_service.checkIsExist(id, {
+      expense_application_service.checkIsExist(id, {
         'mode': 'delete'
       }).then(function (response) {
         if (!response.success) {
@@ -21047,91 +21053,12 @@ var ctrExpenseApplicationVl = new Vue({
           return false;
         } else {
           if (confirm(messages["MSG10028"])) {
-            take_vacation_list_service.delete(id).then(function (response) {
+            expense_application_service.delete(id).then(function (response) {
               window.location.href = listRoute;
             });
           }
         }
       });
-    },
-    handleSelectDate: function handleSelectDate(date) {
-      var that = this;
-
-      if (that.field.half_day_kb == 2 || that.field.half_day_kb == 3) {
-        that.field.end_date = that.field.start_date;
-      }
-
-      if (that.field.half_day_kb == 1) {
-        var end_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.end_date);
-        var start_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.start_date);
-        that.field.days = end_date.diff(start_date, 'days') + 1;
-
-        if (that.field.days < 0) {
-          that.field.days = 0;
-        }
-      }
-    },
-    handleChangeHalfDay: function handleChangeHalfDay() {
-      var that = this;
-
-      switch (that.field.half_day_kb) {
-        case '1':
-          that.handleSelectDate();
-          that.field.times = 0;
-          that.disabledStartDate = false;
-          that.disabledEndDate = false;
-          that.disabledDays = false;
-          that.disabledTimes = true;
-          break;
-
-        case '2':
-        case '3':
-          that.field.days = 0;
-          that.field.times = 4;
-          that.field.end_date = that.field.start_date;
-          that.disabledStartDate = false;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = true;
-          break;
-
-        case '4':
-          that.field.start_date = currentDate;
-          that.field.end_date = currentDate;
-          that.field.days = 0;
-          that.disabledStartDate = true;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = false;
-          break;
-      }
-    },
-    handleChangeHalfDayEdit: function handleChangeHalfDayEdit() {
-      var that = this;
-
-      switch (that.field.half_day_kb) {
-        case '1':
-          that.disabledStartDate = false;
-          that.disabledEndDate = false;
-          that.disabledDays = false;
-          that.disabledTimes = true;
-          break;
-
-        case '2':
-        case '3':
-          that.disabledStartDate = false;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = true;
-          break;
-
-        case '4':
-          that.disabledStartDate = true;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = false;
-          break;
-      }
     },
     openModal: function openModal(index) {
       var that = this;
@@ -21244,13 +21171,12 @@ var ctrExpenseApplicationVl = new Vue({
     },
     handleDepositFlag: function handleDepositFlag() {
       var that = this;
-      that.deposit_flg = false;
 
       if (that.field.deposit_flg == 0) {
         that.field.deposit_amount = "";
         that.deposit_flg = true;
       } else {
-        that.field.deposit_amount = that.addComma(0);
+        that.field.deposit_amount = that.field.deposit_amount == null ? "" : that.addComma(that.field.deposit_amount);
         that.deposit_flg = false;
       }
     }

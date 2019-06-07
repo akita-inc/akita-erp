@@ -7,11 +7,8 @@ use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Http\Controllers\TraitRepositories\WorkflowTrait;
 use App\Models\MBusinessOffices;
 use App\Models\MGeneralPurposes;
-use App\Models\MSaleses;
-use App\Models\MStaffs;
 use App\Models\WApprovalStatus;
 use App\Models\WFBusinessEntertaining;
-use App\Models\WPaidVacation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -356,12 +353,10 @@ class ExpenseApplicationController extends Controller
         $arrayStore = $this->beforeStore($id);
         $mGeneralPurposes = new MGeneralPurposes();
         $listDepositClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_expense_app_temporary_payment'),'Empty');
-//        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
         $currentDate = date('Y/m/d');
         return view('expense_application.form', array_merge($arrayStore,[
             'mWFBusinessEntertain' => $mWFBusinessEntertain,
             'listDepositClassification' => $listDepositClassification,
-            'listVacationAcquisitionTimeIndicator' => [],
             'currentDate' => $currentDate,
             'role' => $role,
             'mode' => $mode,
@@ -388,7 +383,6 @@ class ExpenseApplicationController extends Controller
         $currentTime = date("Y-m-d H:i:s",time());
         $arrayInsert['regist_date'] = $currentTime;
         $mode = $arrayInsert["mode"];
-        $send_back_reason  = $arrayInsert["send_back_reason"];
         unset($arrayInsert["id"]);
         unset($arrayInsert["mode"]);
         unset($arrayInsert["staff_nm"]);
@@ -396,28 +390,17 @@ class ExpenseApplicationController extends Controller
         unset($arrayInsert["wf_additional_notice"]);
         unset($arrayInsert["approval_fg"]);
         unset($arrayInsert["send_back_reason"]);
-        $mStaff = new MStaffs();
-        $mWApprovalStatus = new WApprovalStatus();
         $mailCC = [];
         $mailTo = [];
         DB::beginTransaction();
         try{
             if(isset( $data["id"]) && $data["id"]){
-//                $arrayInsert["modified_at"] = $currentTime;
-//                if($mode=='edit'){
-//                    $id_before = $data["id"];
-//                    WPaidVacation::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
-//                    $configMail = config('params.vacation_edit_mail');
-//                }else{
-//                    if($approval_fg==1){
-//                        $mWApprovalStatus->approvalVacation($data["id"], $this->wf_type_id, $currentTime);
-//                        $configMail = config('params.vacation_approval_mail');
-//                    }
-//                    if($approval_fg==0){
-//                        $mWApprovalStatus->rejectVacation($data["id"],  $this->wf_type_id,$currentTime,$data['send_back_reason']);
-//                        $configMail = config('params.vacation_reject_mail');
-//                    }
-//                }
+                $arrayInsert["modified_at"] = $currentTime;
+                if($mode=='edit'){
+                    $id_before = $data["id"];
+                    WFBusinessEntertaining::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
+                    $configMail = config('params.expense_application_edit_mail');
+                }
 
             }else{
                 $configMail = Lang::get('mail_template.expense_application_register_mail');
@@ -432,15 +415,6 @@ class ExpenseApplicationController extends Controller
                     $this->registerWfAdditionalNotice($id,$listWfAdditionalNotice);
                 }
                 $this->getListMailRegisterOrEdit($arrayInsert,$approval_levels_step_1,$listWfAdditionalNotice,$mailTo, $mailCC);
-            }else{
-//                $id = $data['id'];
-//                $mWPaidVacation = new WPaidVacation();
-//                $vacationInfo = $mWPaidVacation->getInfoByID($id);
-//                if($approval_fg==1) {
-//                    $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
-//                }else{
-//                    $this->handleReject($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
-//                }
             }
             DB::commit();
             $this->handleMail($id,$configMail,$mailTo,$mailCC,$id_before);
