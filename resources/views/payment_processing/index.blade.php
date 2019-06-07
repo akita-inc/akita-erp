@@ -228,7 +228,7 @@
                 <thead>
                 <tr>
                     <th class="wd-20">
-                        <input type="checkbox" @click="selectAll" v-model="allSelected">
+                        <input type="checkbox" @change="selectAll" v-model="allSelected"  ref="allSelected">
                     </th>
                     @foreach($fieldShowTable as $key => $field)
                         <th id="th_{{$key}}" class="align-top {{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("payment_processing.list.table.".$key)}}</th>
