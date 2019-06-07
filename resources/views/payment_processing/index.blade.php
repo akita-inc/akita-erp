@@ -213,7 +213,7 @@
                 </div>
             </div>
         </div>
-        <div class="sub-header mt-3 bg-white" v-cloak v-if="errorStr!=''">
+        <div class="w-100 mb-n3" v-cloak v-if="errorStr!=''">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
