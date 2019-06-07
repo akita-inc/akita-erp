@@ -188,91 +188,21 @@ var ctrExpenseApplicationVl = new Vue({
             console.log(that.field);
 
         },
-        deleteVacation: function(id){
+        deleteExpenseApplication: function(id){
             var that = this;
-            take_vacation_list_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
+            expense_application_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
                     that.backHistory();
                     return false;
                 } else {
                     if (confirm(messages["MSG10028"])) {
-                        take_vacation_list_service.delete(id).then((response) => {
+                        expense_application_service.delete(id).then((response) => {
                             window.location.href = listRoute;
                         });
                     }
                 }
             });
-        },
-        handleSelectDate: function (date) {
-            var that = this;
-            if(that.field.half_day_kb==2 || that.field.half_day_kb==3 ){
-                that.field.end_date = that.field.start_date;
-            }
-            if(that.field.half_day_kb==1){
-                let end_date =  moment(that.field.end_date);
-                let start_date =  moment(that.field.start_date);
-                that.field.days = end_date.diff(start_date, 'days')+1;
-                if(that.field.days < 0){
-                    that.field.days = 0;
-                }
-            }
-        },
-        handleChangeHalfDay: function () {
-            var that = this;
-            switch (that.field.half_day_kb) {
-                case '1':
-                    that.handleSelectDate();
-                    that.field.times = 0;
-                    that.disabledStartDate = false;
-                    that.disabledEndDate = false;
-                    that.disabledDays = false;
-                    that.disabledTimes= true;
-                    break;
-                case '2':
-                case '3':
-                    that.field.days = 0;
-                    that.field.times = 4;
-                    that.field.end_date = that.field.start_date;
-                    that.disabledStartDate = false;
-                    that.disabledEndDate = true;
-                    that.disabledDays = true;
-                    that.disabledTimes= true;
-                    break;
-                case '4':
-                    that.field.start_date = currentDate;
-                    that.field.end_date = currentDate;
-                    that.field.days = 0;
-                    that.disabledStartDate = true;
-                    that.disabledEndDate = true;
-                    that.disabledDays = true;
-                    that.disabledTimes = false;
-                    break;
-            }
-        },
-        handleChangeHalfDayEdit: function () {
-            var that = this;
-            switch (that.field.half_day_kb) {
-                case '1':
-                    that.disabledStartDate = false;
-                    that.disabledEndDate = false;
-                    that.disabledDays = false;
-                    that.disabledTimes= true;
-                    break;
-                case '2':
-                case '3':
-                    that.disabledStartDate = false;
-                    that.disabledEndDate = true;
-                    that.disabledDays = true;
-                    that.disabledTimes= true;
-                    break;
-                case '4':
-                    that.disabledStartDate = true;
-                    that.disabledEndDate = true;
-                    that.disabledDays = true;
-                    that.disabledTimes = false;
-                    break;
-            }
         },
         openModal: function (index) {
             var that = this;

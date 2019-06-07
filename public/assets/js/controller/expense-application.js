@@ -21042,9 +21042,9 @@ var ctrExpenseApplicationVl = new Vue({
       that.loading = false;
       console.log(that.field);
     },
-    deleteVacation: function deleteVacation(id) {
+    deleteExpenseApplication: function deleteExpenseApplication(id) {
       var that = this;
-      take_vacation_list_service.checkIsExist(id, {
+      expense_application_service.checkIsExist(id, {
         'mode': 'delete'
       }).then(function (response) {
         if (!response.success) {
@@ -21053,91 +21053,12 @@ var ctrExpenseApplicationVl = new Vue({
           return false;
         } else {
           if (confirm(messages["MSG10028"])) {
-            take_vacation_list_service.delete(id).then(function (response) {
+            expense_application_service.delete(id).then(function (response) {
               window.location.href = listRoute;
             });
           }
         }
       });
-    },
-    handleSelectDate: function handleSelectDate(date) {
-      var that = this;
-
-      if (that.field.half_day_kb == 2 || that.field.half_day_kb == 3) {
-        that.field.end_date = that.field.start_date;
-      }
-
-      if (that.field.half_day_kb == 1) {
-        var end_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.end_date);
-        var start_date = moment__WEBPACK_IMPORTED_MODULE_2___default()(that.field.start_date);
-        that.field.days = end_date.diff(start_date, 'days') + 1;
-
-        if (that.field.days < 0) {
-          that.field.days = 0;
-        }
-      }
-    },
-    handleChangeHalfDay: function handleChangeHalfDay() {
-      var that = this;
-
-      switch (that.field.half_day_kb) {
-        case '1':
-          that.handleSelectDate();
-          that.field.times = 0;
-          that.disabledStartDate = false;
-          that.disabledEndDate = false;
-          that.disabledDays = false;
-          that.disabledTimes = true;
-          break;
-
-        case '2':
-        case '3':
-          that.field.days = 0;
-          that.field.times = 4;
-          that.field.end_date = that.field.start_date;
-          that.disabledStartDate = false;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = true;
-          break;
-
-        case '4':
-          that.field.start_date = currentDate;
-          that.field.end_date = currentDate;
-          that.field.days = 0;
-          that.disabledStartDate = true;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = false;
-          break;
-      }
-    },
-    handleChangeHalfDayEdit: function handleChangeHalfDayEdit() {
-      var that = this;
-
-      switch (that.field.half_day_kb) {
-        case '1':
-          that.disabledStartDate = false;
-          that.disabledEndDate = false;
-          that.disabledDays = false;
-          that.disabledTimes = true;
-          break;
-
-        case '2':
-        case '3':
-          that.disabledStartDate = false;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = true;
-          break;
-
-        case '4':
-          that.disabledStartDate = true;
-          that.disabledEndDate = true;
-          that.disabledDays = true;
-          that.disabledTimes = false;
-          break;
-      }
     },
     openModal: function openModal(index) {
       var that = this;

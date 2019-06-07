@@ -326,6 +326,13 @@ expense_application_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  delete: function _delete(id) {
+    return axios.get('/expense_application/api-v1/delete/' + id).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 
