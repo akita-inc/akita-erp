@@ -19,11 +19,13 @@ class StaffUpdateMiddleware
                 ->whereNull("deleted_at")
                 ->first();
 
-            if( empty($staff) || $staff->password != $request->cookie("password_old") ){
+            if( empty($staff) || (!empty($request->session()->get("password_old")) && $staff->password != $request->session()->get("password_old")) ){
                 if($request->ajax()){
                     abort(403);
                 }
                 return redirect('/logoutError');
+            } else if (empty($request->session()->get("password_old"))) {
+                Session::put('password_old', $staff->password);
             }
             return $next($request);
         }

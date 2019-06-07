@@ -61,6 +61,7 @@ return [
         'vacation_indicator'            => '12004', // 休暇区分
         'vacation_acquisition_time_indicator' => '12005', // 休暇取得時間区分
         'wf_applicant_affiliation_classification' => '12006', // ワークフロー申請者所属区分
+        'wf_expense_app_temporary_payment'=>'12007',//交際費申請仮払い区分
     ],
     'data_kb_nm' => [
         '01001'=> '性別ID',

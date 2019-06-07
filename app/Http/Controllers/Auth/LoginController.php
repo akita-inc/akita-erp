@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MStaffs;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Validator;
@@ -73,11 +72,9 @@ class LoginController extends Controller
         } else {
             $staff = MStaffs::where('staff_cd', $data['staff_cd'])->first();
             if (Auth::attempt(['staff_cd' => $data['staff_cd'], 'password' => $data['password']], $remember)) {
-                $minutes = config('session.lifetime');
-                $password_old = cookie('password_old',  $staff->password, $minutes);
                 Session::put('password_old', $staff->password);
                 Session::put('sysadmin_flg', $staff->sysadmin_flg);
-                return redirect('/')->withCookie($password_old);
+                return redirect('/');
             } else {
                 $errors = new MessageBag(['errorlogin' => trans('messages.MSG01003')]);
                 return redirect()->back()->withInput($request->only('staff_cd', 'remember'))->withErrors($errors);
@@ -88,16 +85,14 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        $cookie = Cookie::forget('password_old');
         Session::put('password_old',null);
-        return redirect('/login')->withCookie($cookie);
+        return redirect('/login');
     }
     public function logoutError(Request $request)
     {
         Auth::logout();
-        $cookie = Cookie::forget('password_old');
         Session::put('password_old',null);
         Session::flash('message',Lang::get('messages.MSG10008'));
-        return redirect('/login')->withCookie($cookie);
+        return redirect('/login');
     }
 }
