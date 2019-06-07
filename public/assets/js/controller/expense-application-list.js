@@ -3324,6 +3324,7 @@ var ctrExpenseApplicationVl = new Vue({
 
             default:
               window.location.href = 'reference/' + id;
+              break;
           }
         }
       });

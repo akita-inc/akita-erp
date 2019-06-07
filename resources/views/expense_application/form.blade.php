@@ -96,7 +96,7 @@
             <form class="form-inline" role="form">
                 @if($mode=='approval' || $mode=='reference')
                     <fieldset disabled="disabled">
-                        @endif
+                @endif
                         <div class="text-danger">
                             {{ trans("common.description-form.indicates_required_items") }}
                         </div>
@@ -162,22 +162,21 @@
                                 </div>
                             </div>
                         </div>
-                        @if($mode=='reference' || $mode=='approval')
+                @if($mode=='reference' || $mode=='approval')
                     </fieldset>
                 @endif
                 @include('Component.workflow.search-email-address',['label' => trans("expense_application.create.field.additional_notice")])
                 @include('Component.workflow.list-approval-status',['listWApprovalStatus' => $listWApprovalStatus])
-
             </form>
             <div class="sub-header mt-3">
                 <div class="sub-header-line-one d-flex">
                     <div class="d-flex">
                         <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
-                    @if(!empty($mWPaidVacation))
+                    @if(!empty($mWFBusinessEntertain))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $mode=='edit')
-                                <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWFBusinessEntertain['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif
