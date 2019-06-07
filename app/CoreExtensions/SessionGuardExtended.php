@@ -29,7 +29,7 @@ class SessionGuardExtended extends SessionGuard
 
         // Check password in DB and password in cookie
         // If difference logout
-        if($user->getAuthPassword() != $recaller->hash())
+        if(isset($user) && $user->getAuthPassword() != $recaller->hash())
             return null;
 
         return $user;
