@@ -114,8 +114,8 @@ var ctrPaymentProcessingVl = new Vue({
                     that.itemsDB = response.data;
                     if(that.items.length>0){
                         that.handlePaymentRemainingTotal();
-                        that.selectAll();
                         that.allSelected =  true;
+                        that.selectAll();
                     }
                     that.fileSearched.customer_cd=response.fieldSearch.customer_cd;
                     that.fileSearched.customer_nm=response.fieldSearch.customer_nm;
@@ -210,7 +210,7 @@ var ctrPaymentProcessingVl = new Vue({
         selectAll: function() {
             var that = this;
             that.listCheckbox = [];
-            if (!that.allSelected) {
+            if (that.allSelected) {
                 $.each(that.items, function (key, item) {
                     that.listCheckbox.push(key);
                 });
@@ -244,12 +244,12 @@ var ctrPaymentProcessingVl = new Vue({
                 item.payment_remaining = that.removeComma(that.itemsDB[key].payment_remaining);
                 if (that.listCheckbox.indexOf(key) != -1) {
                     if (payment_amount > 0) {
-                        var real_payment = item.payment_remaining -  that.removeComma(item.fee) -  that.removeComma(item.discount)
+                        var real_payment = item.payment_remaining -  that.removeComma(item.fee) -  that.removeComma(item.discount);
                         if (payment_amount < real_payment) {
                             item.total_dw_amount = payment_amount;
                             payment_amount = 0;
                         } else {
-                            item.total_dw_amount = that.roundFloat(real_payment);
+                            item.total_dw_amount = that.roundFloat(real_payment < 0 ? 0 : real_payment);
                             payment_amount = that.roundFloat(payment_amount - parseFloat(item.payment_remaining) + that.removeComma(item.fee) +  that.removeComma(item.discount));
                         }
                     } else {

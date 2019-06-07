@@ -30,12 +30,8 @@ class PaymentProcessingController extends Controller{
 
     public $ruleValid = [
         'dw_day' => 'required',
-        'invoice_balance_total' => 'required|decimal_custom|length:13',
         'dw_classification' => 'required|decimal_custom|length:13',
         'fee' => 'required|decimal_custom|length:13',
-        'total_discount' => 'required|decimal_custom',
-        'total_payment_amount' => 'required|decimal_custom',
-        'item_payment_total' => 'required|decimal_custom',
         'note' => 'nullable|length:200',
     ];
 

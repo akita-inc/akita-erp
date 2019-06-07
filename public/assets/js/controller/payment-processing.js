@@ -21745,8 +21745,8 @@ var ctrPaymentProcessingVl = new Vue({
 
                     if (that.items.length > 0) {
                       that.handlePaymentRemainingTotal();
-                      that.selectAll();
                       that.allSelected = true;
+                      that.selectAll();
                     }
 
                     that.fileSearched.customer_cd = response.fieldSearch.customer_cd;
@@ -21861,7 +21861,7 @@ var ctrPaymentProcessingVl = new Vue({
       var that = this;
       that.listCheckbox = [];
 
-      if (!that.allSelected) {
+      if (that.allSelected) {
         $.each(that.items, function (key, item) {
           that.listCheckbox.push(key);
         });
@@ -21904,7 +21904,7 @@ var ctrPaymentProcessingVl = new Vue({
               item.total_dw_amount = payment_amount;
               payment_amount = 0;
             } else {
-              item.total_dw_amount = that.roundFloat(real_payment);
+              item.total_dw_amount = that.roundFloat(real_payment < 0 ? 0 : real_payment);
               payment_amount = that.roundFloat(payment_amount - parseFloat(item.payment_remaining) + that.removeComma(item.fee) + that.removeComma(item.discount));
             }
           } else {
@@ -22165,7 +22165,7 @@ var ctrPaymentProcessingVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
 
 
 /***/ })
