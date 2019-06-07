@@ -273,7 +273,7 @@ class PaymentProcessingController extends Controller{
                 ]);
             }
         }
-        $this->save($data);
+        return $this->save($data);
 
     }
 
@@ -308,15 +308,15 @@ class PaymentProcessingController extends Controller{
         }
         try{
             TPaymentHistories::query()->insert( $listPayment );
+            return response()->json([
+                'success'=>true,
+                'register_success' =>true,
+            ]);
         }catch (\Exception $e) {
-            return [
+            return response()->json([
                 'success'=>true,
                 'register_success' =>false,
-            ];
+            ]);
         }
-        return response()->json([
-            'success'=>true,
-            'register_success' =>true,
-        ]);
     }
 }
