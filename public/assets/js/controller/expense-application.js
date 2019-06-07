@@ -20864,12 +20864,14 @@ var ctrExpenseApplicationVl = new Vue({
       applicant_office_nm: business_ofice_nm,
       date: "",
       cost: "",
+      place: "",
       client_company_name: "",
       client_members: "",
       client_members_count: "",
       own_members: "",
       own_members_count: "",
       conditions: "",
+      purpose: "",
       deposit_flg: defaultApprovalKb,
       deposit_amount: "",
       approval_fg: null,
@@ -20914,12 +20916,14 @@ var ctrExpenseApplicationVl = new Vue({
           applicant_office_nm: business_ofice_nm,
           date: "",
           cost: "",
+          place: "",
           client_company_name: "",
           client_members: "",
           client_members_count: "",
           own_members: "",
           own_members_count: "",
           conditions: "",
+          purpose: "",
           deposit_flg: defaultApprovalKb,
           deposit_amount: "",
           approval_fg: null,
@@ -21014,10 +21018,9 @@ var ctrExpenseApplicationVl = new Vue({
     },
     loadFormEdit: function loadFormEdit() {
       var that = this;
-      this.loading = true;
+      that.loading = true;
       that.expense_application_edit = 1;
       that.expense_application_id = $("#hd_id").val();
-      console.log(that.expense_application_edit);
       $.each(this.field, function (key, value) {
         if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
           that.field[key] = $("#hd_" + key).val();
@@ -21032,9 +21035,12 @@ var ctrExpenseApplicationVl = new Vue({
         }];
       }
 
-      this.modified_at = $('#hd_modified_at').val(); // this.handleChangeHalfDayEdit();
+      that.modified_at = $('#hd_modified_at').val();
+      that.field.cost = that.addComma(that.field.cost);
+      that.handleDepositFlag(); // this.handleDepositFlag();
 
-      this.loading = false;
+      that.loading = false;
+      console.log(that.field);
     },
     deleteVacation: function deleteVacation(id) {
       var that = this;
@@ -21244,13 +21250,12 @@ var ctrExpenseApplicationVl = new Vue({
     },
     handleDepositFlag: function handleDepositFlag() {
       var that = this;
-      that.deposit_flg = false;
 
       if (that.field.deposit_flg == 0) {
         that.field.deposit_amount = "";
         that.deposit_flg = true;
       } else {
-        that.field.deposit_amount = that.addComma(0);
+        that.field.deposit_amount = that.field.deposit_amount == null ? "" : that.addComma(that.field.deposit_amount);
         that.deposit_flg = false;
       }
     }
