@@ -38,7 +38,6 @@ class MstCustomers extends BaseImport
         'N' =>'notes',
         'O' =>'mst_account_titles_id',
         'U' =>'created_at',
-        'X' =>'modified_at',
     ];
     public $rules = [
         'mst_customers_cd' =>'required',
@@ -50,8 +49,8 @@ class MstCustomers extends BaseImport
         'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',
-        'address1'  => 'nullable|length:20',
-        'address2' =>'nullable|length:20',
+        'address1'  => 'nullable|length:200',
+        'address2' =>'nullable|length:200',
         'phone_number' =>'nullable|length:20',
         'bundle_dt' =>'nullable',
         //'discount_rate' =>'nullable|length:3',
@@ -132,9 +131,7 @@ class MstCustomers extends BaseImport
                 if(isset($excel_column[$pos])){
                     switch ($excel_column[$pos]) {
                         case 'created_at':
-                        case 'modified_at':
                             $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd hh:mm:ss');
-                            break;
                         case 'customer_nm':
                             $record[$excel_column[$pos]] = (string)$value;
                             //$record['customer_nm_formal'] = (string)$value;
@@ -179,6 +176,7 @@ class MstCustomers extends BaseImport
                     }
                 }
             }
+            $record['modified_at'] = $record['created_at'];
             $record['consumption_tax_calc_unit_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['consumption_tax_calc_unit'],'請求単位');
             $record['rounding_method_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['rounding_method'],'四捨五入');
             $record['enable_fg'] = 1;
@@ -281,9 +279,9 @@ class MstCustomers extends BaseImport
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => mb_substr($record[$field], 0, $error[0]),
+                            "DBvalue" => null,
                         ]));
-                        $record[$field] = mb_substr($record[$field], 0, $error[0]);
+                        $record[$field] = null;
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
