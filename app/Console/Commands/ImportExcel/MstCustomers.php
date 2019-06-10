@@ -132,6 +132,7 @@ class MstCustomers extends BaseImport
                     switch ($excel_column[$pos]) {
                         case 'created_at':
                             $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd hh:mm:ss');
+                            break;
                         case 'customer_nm':
                             $record[$excel_column[$pos]] = (string)$value;
                             //$record['customer_nm_formal'] = (string)$value;
@@ -180,7 +181,6 @@ class MstCustomers extends BaseImport
             $record['consumption_tax_calc_unit_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['consumption_tax_calc_unit'],'請求単位');
             $record['rounding_method_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['rounding_method'],'四捨五入');
             $record['enable_fg'] = 1;
-
             //$record['bill_mst_customers_cd'] = isset($mst_customers_relate_cds[$record['mst_customers_cd']])?$mst_customers_relate_cds[$record['mst_customers_cd']]:null;
 
             $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_customers.main.fileName'),$error_fg);
