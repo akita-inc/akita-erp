@@ -177,7 +177,7 @@ class MstCustomers extends BaseImport
                     }
                 }
             }
-            $record['modified_at'] = $record['created_at'];
+            $record['modified_at'] = isset($record['created_at']) ? $record['created_at'] : null;;
             $record['consumption_tax_calc_unit_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['consumption_tax_calc_unit'],'請求単位');
             $record['rounding_method_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['rounding_method'],'四捨五入');
             $record['enable_fg'] = 1;

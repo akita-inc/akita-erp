@@ -340,7 +340,7 @@ class MstVehicles extends BaseImport
                     }
 
                 }
-                $record['modified_at'] = $record['created_at'];
+                $record['modified_at'] = isset($record['created_at']) ? $record['created_at'] : null;
             }
             if(!empty($rowData[$row]['AG']) && is_numeric($rowData[$row]['AG'])){
                 $findOffice = $mBusinessOffices->where('mst_business_office_cd','=',(string)$rowData[$row]['AG'])->whereNull('deleted_at')->first();

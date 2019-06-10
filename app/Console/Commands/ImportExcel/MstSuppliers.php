@@ -153,7 +153,7 @@ class MstSuppliers extends BaseImport{
 
                     }
                 }
-                $record['modified_at'] = $record['created_at'];
+                $record['modified_at'] = isset($record['created_at']) ? $record['created_at'] : null;
                 $record['consumption_tax_calc_unit_id'] = $this->consumption_tax_calc_unit_id ? $this->consumption_tax_calc_unit_id->date_id : null;
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
