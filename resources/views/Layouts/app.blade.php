@@ -73,7 +73,6 @@
         </div>
         <a href="#menu2sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">購買</a>
         <div class="collapse" id="menu2sub1">
-            <a href="{{ route('payments.list') }}" class="list-group-item" data-parent="#menu2sub1">支払締処理</a>
             <a href="{{ route('purchases_lists.list') }}" class="list-group-item" data-parent="#menu2sub1">仕入一覧</a>
             <a href="{{ route('accounts_payable_data_output.list') }}" class="list-group-item" data-parent="#menu2sub1">買掛データ出力</a>
         </div>
