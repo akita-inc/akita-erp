@@ -422,8 +422,7 @@ class InvoiceHistoryController extends Controller {
             $data['invoicing_flag'] = 0;
             MSaleses::query()->where("document_no","=",$data['document_no'])->where("mst_customers_cd","=",$data['customer_cd'])->where("branch_office_cd","=",$data['branch_office_cd'])->update($dataUpdate);
             DB::commit();
-            \Session::flash('message',Lang::get('messages.MSG10004'));
-            $response = ['success' => true];
+            $response = ['success' => true, 'msg'=>Lang::get('messages.MSG10004')];
 
         }catch (\Exception $e){
             DB::rollback();

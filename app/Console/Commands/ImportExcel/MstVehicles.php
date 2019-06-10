@@ -60,7 +60,6 @@ class MstVehicles extends BaseImport
         'AJ' => 'vehicle_insurance_prices',
         'AW' => 'dispose_dt',
         'AX' => 'created_at',
-        'BA' => 'modified_at',
     ];
     public $excel_column_extra_1_sheet_1 = [
         'G' => 'registration_numbers1',
@@ -109,7 +108,7 @@ class MstVehicles extends BaseImport
     public $rules = [
         'vehicles_cd'=>'required',
         'vehicles_kb'=>'required',
-        'mst_business_office_id'=>'required|length:5',
+        'mst_business_office_id'=>'nullable|length:5',
         'frame_numbers'=>'nullable|length:50',
         'vehicle_types'=>'nullable|length:50',
         'engine_typese'=>'nullable|length:50',
@@ -268,7 +267,6 @@ class MstVehicles extends BaseImport
                 if (isset($excel_column[$pos])) {
                     switch ($excel_column[$pos]) {
                         case 'created_at':
-                        case 'modified_at':
                             $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd hh:mm:ss');
                             break;
                         case 'first_year_registration_dt':
@@ -342,6 +340,7 @@ class MstVehicles extends BaseImport
                     }
 
                 }
+                $record['modified_at'] = $record['created_at'];
             }
             if(!empty($rowData[$row]['AG']) && is_numeric($rowData[$row]['AG'])){
                 $findOffice = $mBusinessOffices->where('mst_business_office_cd','=',(string)$rowData[$row]['AG'])->whereNull('deleted_at')->first();
@@ -349,7 +348,7 @@ class MstVehicles extends BaseImport
                     $record['mst_business_office_id'] = $findOffice->id;
                 }
             }else{
-                $record['mst_business_office_id'] = '';
+                $record['mst_business_office_id'] = null;
             }
 
             $data = $record;
@@ -377,9 +376,9 @@ class MstVehicles extends BaseImport
                                 "excelValue" => $data[$field],
                                 "tableName" => $this->table,
                                 "DBFieldName" => $field,
-                                "DBvalue" => mb_substr($data[$field],0,$error[0]),
+                                "DBvalue" => null,
                             ]));
-                            $data[$field] = mb_substr($data[$field],0,$error[0]);
+                            $data[$field] = null;
                         }else if($ruleName=='Required'){
                             $error_fg = true;
                             $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
@@ -403,12 +402,12 @@ class MstVehicles extends BaseImport
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
                                     if(strpos($field, 'registration_numbers') === 0){
-                                        $error_fg = true;
                                         $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                             "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                             "fieldName" => $this->column_name[$field],
                                             "row" => $data['row'],
                                         ]));
+                                        $data[$field] = null;
                                     }else {
                                         $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
                                             "fileName" => config('params.import_file_path.mst_vehicles.extra' . $k . '.fileName') . ($k == 2 ? '.' . $data['sheet'] : ''),
@@ -417,9 +416,9 @@ class MstVehicles extends BaseImport
                                             "excelValue" => $data[$field],
                                             "tableName" => $this->table,
                                             "DBFieldName" => $field,
-                                            "DBvalue" => mb_substr($data[$field], 0, $error[0]),
+                                            "DBvalue" => null,
                                         ]));
-                                        $data[$field] = mb_substr($data[$field], 0, $error[0]);
+                                        $data[$field] = null;
                                     }
                                 }else if($ruleName=='Required'){
                                     $error_fg = true;
@@ -429,12 +428,12 @@ class MstVehicles extends BaseImport
                                         "row" => $data['row'],
                                     ]));
                                 }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber' || $ruleName=='TwoBytesString') && strpos($field, 'registration_numbers') === 0){
-                                    $error_fg = true;
                                     $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                         "fieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                     ]));
+                                    $data[$field] = null;
                                 }
                             }
                         }

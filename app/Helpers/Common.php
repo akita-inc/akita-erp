@@ -249,6 +249,6 @@ class Common {
     public static function convertToKanaExcel($string,$option = 'KVC')
     {
         $kana = mb_convert_kana($string,$option);
-        return preg_replace('/[-]+/', 'ー', $kana);
+        return $kana;
     }
 }

@@ -29,7 +29,6 @@ class MstSuppliers extends BaseImport{
         'O' => 'phone_number',
         'AA' => 'notes',
         'AB' => 'created_at',
-        'AE' => 'modified_at',
     ];
     public $excel_column_extra1 = [
         'A' => 'mst_suppliers_cd',
@@ -128,7 +127,6 @@ class MstSuppliers extends BaseImport{
                     if (isset($excel_column[$pos])) {
                         switch ($excel_column[$pos]) {
                             case 'created_at':
-                            case 'modified_at':
                                 $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd hh:mm:ss');
                                 break;
                             case 'supplier_nm':
@@ -155,6 +153,7 @@ class MstSuppliers extends BaseImport{
 
                     }
                 }
+                $record['modified_at'] = $record['created_at'];
                 $record['consumption_tax_calc_unit_id'] = $this->consumption_tax_calc_unit_id ? $this->consumption_tax_calc_unit_id->date_id : null;
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
@@ -222,9 +221,9 @@ class MstSuppliers extends BaseImport{
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => mb_substr($record[$field], 0, $error[0]),
+                            "DBvalue" => null,
                         ]));
-                        $record[$field] = mb_substr($record[$field], 0, $error[0]);
+                        $record[$field] = null;
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
