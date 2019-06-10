@@ -185,12 +185,15 @@ class MBillingHistoryHeaderDetails extends Model {
         $query = DB::table('t_billing_history_header_details as details')
             ->select(
                 'details.id',
+                'details.document_no',
+                'details.branch_office_cd',
                 DB::raw("DATE_FORMAT(details.daily_report_date, '%Y/%m/%d') as daily_report_date"),
                 'details.departure_point_name',
                 'details.landing_name',
                 DB::raw("format(IFNULL(details.total_fee,0), '#,##0') as total_fee"),
                 DB::raw("format(IFNULL(details.consumption_tax,0), '#,##0') as consumption_tax"),
-                DB::raw("format(IFNULL(details.tax_included_amount,0), '#,##0') as tax_included_amount")
+                DB::raw("format(IFNULL(details.tax_included_amount,0), '#,##0') as tax_included_amount"),
+                DB::raw("(select COUNT(t_payment_histories.id) FROM t_payment_histories where t_payment_histories.invoice_number = details.invoice_number and t_payment_histories.deleted_at is null) as count_payment_histories")
             )
             ->whereNull('details.deleted_at')
             ->where('details.invoice_number','=',$condition['invoice_number'])

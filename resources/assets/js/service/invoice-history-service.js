@@ -69,4 +69,11 @@ invoice_history_service = {
             return error;
         });
     },
+    delete: function (data) {
+        return axios.post('/invoice_history/api-v1/delete' , data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }

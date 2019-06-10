@@ -59,10 +59,7 @@ var ctrInvoiceHistoryListVl = new Vue({
         },
         listBillingHistoryHeaderID:[],
         listBillingHistoryDetailID:[],
-        getItems: function(page,show_msg){
-            if (show_msg !== true) {
-                $('.alert').hide();
-            }
+        getItems: function(not_show_msg){
             this.fileSearch.customer_cd = this.$refs.customer_cd.searchInput;
             this.fileSearch.customer_nm = this.$refs.customer_nm.searchInput;
             var data = {
@@ -70,6 +67,10 @@ var ctrInvoiceHistoryListVl = new Vue({
             };
             var that = this;
             this.loading = true;
+            if(typeof not_show_msg !='undefined' && not_show_msg){
+                that.deleteFlagSuccess=false;
+            }
+
             invoice_history_service.loadList(data).then((response) => {
                 if(response.success == false){
                     that.errors = response.message;
@@ -110,6 +111,7 @@ var ctrInvoiceHistoryListVl = new Vue({
                 }
             });
         },
+        deleteFlagSuccess: false,
     },
     computed: {
         inputPropsCd: function() {
@@ -194,6 +196,7 @@ var ctrInvoiceHistoryListVl = new Vue({
         },
         openModal: function (item) {
             this.loading = true;
+            this.deleteFlagSuccess=false;
             this.modal.invoice = item;
             var that = this;
             invoice_history_service.getDetailsInvoice({'invoice_number':item.invoice_number}).then((response) => {
@@ -205,6 +208,7 @@ var ctrInvoiceHistoryListVl = new Vue({
             });
         },
         createPDF: async function () {
+            this.deleteFlagSuccess=false;
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
@@ -230,6 +234,7 @@ var ctrInvoiceHistoryListVl = new Vue({
             this.loading =  false;
         },
         createCSV: async function () {
+            this.deleteFlagSuccess=false;
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
@@ -247,6 +252,7 @@ var ctrInvoiceHistoryListVl = new Vue({
             this.loading = false;
         },
         createAmazonCSV: async function () {
+            this.deleteFlagSuccess=false;
             var that = this;
             this.loading = true;
             await that.items.forEach(  ( value,key) =>{
@@ -298,6 +304,29 @@ var ctrInvoiceHistoryListVl = new Vue({
                 that.fileSearch.end_date = response.lastDayPreviousMonth;
             });
         },
+        confirmDelete:function() {
+            var that = this;
+            that.loading=true;
+            invoice_history_service.delete({
+                invoice_number:that.modal.invoice.invoice_number,
+                document_no:that.modal.sale_info[0].document_no,
+                customer_cd:that.modal.invoice.customer_cd,
+                branch_office_cd:that.modal.sale_info[0].branch_office_cd,
+            }).then((response) => {
+                if (!response.success) {
+                    alert(response.msg);
+                } else {
+                    that.loading=false;
+                    that.deleteFlagSuccess=true;
+                    this.clearCondition();
+                    $(window).scrollTop(0);
+                    this.getItems();
+                }
+            });
+        },
+        openModalDelete: function(){
+            $('#confirmDeleteModal').modal('show');
+        }
     },
     async mounted () {
         var that = this;

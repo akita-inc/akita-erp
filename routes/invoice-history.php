@@ -10,7 +10,7 @@ Route::group(['name' => 'invoice-history', 'prefix' => 'invoice_history', 'middl
         Route::any('back-history', ['uses' => 'InvoiceHistoryController@backHistory']);
         Route::any('load-list-staff', ['uses' => 'InvoiceHistoryController@loadListStaff']);
         Route::any('/submit','InvoiceHistoryController@save')->name("invoice_history.save");
-        Route::get('/delete/{id}', 'InvoiceHistoryController@delete')->name('invoice_history.delete');
+        Route::any('/delete', 'InvoiceHistoryController@delete')->name('invoice_history.delete');
         Route::get('/getListCustomers', 'InvoiceHistoryController@getListCustomers');
         Route::any('/load-list-bundle-dt', 'InvoiceHistoryController@loadListBundleDt');
         Route::any('/get-details-invoice', 'InvoiceHistoryController@getDetailsInvoice');
