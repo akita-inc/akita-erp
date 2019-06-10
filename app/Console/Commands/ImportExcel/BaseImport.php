@@ -175,7 +175,7 @@ class BaseImport{
                 $this->import();
                 $this->numRead++;
             }
-            if($this->table=="mst_staffs")
+            if($this->table=="mst_staffs" || $this->table=="mst_staffs_copy1")
             {
                 $this->numRead=$this->numNormal+$this->numErr;
                 $this->exportPassword();
