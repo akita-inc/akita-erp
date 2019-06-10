@@ -23,6 +23,7 @@ class BaseImport{
     public $objPHPExcel="";
     public $tableLabel = [
         'mst_staffs' => '社員',
+        'mst_staffs_copy1' => '社員',
         'mst_staff_dependents' => '社員扶養者',
         'mst_staff_qualifications' => '社員保有資格',
         'mst_vehicles' => '車両',

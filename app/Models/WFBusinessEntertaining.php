@@ -20,21 +20,24 @@ class WFBusinessEntertaining extends Model {
         $query = $this->select(
             'wf_business_entertaining.id',
             'wf_business_entertaining.applicant_id',
-            DB::raw('CONCAT(mst_staffs.last_nm , mst_staffs.first_nm) as staff_nm'),
-            'wf_approval_status.send_back_reason',
-            'wf_approval_status.title'
-        )
-            ->leftjoin('wf_approval_status', function ($join) {
-                $join->on('wf_approval_status.wf_id', '=', 'wf_business_entertaining.id')
-                    ->where('approval_levels','=',Auth::user()->approval_levels);
-            })
-            ->leftjoin('mst_staffs', function ($join) {
-                $join->on('mst_staffs.staff_cd', '=', 'wf_business_entertaining.applicant_id')
-                    ->whereNull('mst_staffs.deleted_at');
-            })
-            ->where('wf_business_entertaining.id','=',$id);
+            'wf_business_entertaining.applicant_office_id',
+            'wf_business_entertaining.date',
+            'wf_business_entertaining.client_company_name',
+            'wf_business_entertaining.client_members',
+            'wf_business_entertaining.client_members_count',
+            'wf_business_entertaining.own_members_count',
+            'wf_business_entertaining.own_members',
+            'wf_business_entertaining.place',
+            'wf_business_entertaining.conditions',
+            'wf_business_entertaining.purpose',
+            DB::raw('CASE WHEN wf_business_entertaining.deposit_flg = 0 THEN "不要"
+                           ELSE "要"
+                           END AS deposit_flg'),
+            DB::raw('CASE WHEN wf_business_entertaining.deposit_flg = 0 THEN ""
+                           ELSE CONCAT_WS("","￥",format(wf_business_entertaining.deposit_amount, "#,##0"))
+                           END AS deposit_amount')
+        )->where('wf_business_entertaining.id','=',$id);
         return $query->first()->toArray();
-
     }
     public function getInfoByID($id){
         return $this->select(
