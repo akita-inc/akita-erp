@@ -169,12 +169,26 @@ return [
     ),
     'expense_application_register_mail'=>array(
         'from' => 'shinwaytest@gmail.com',
-        'subject' => '【交際費支出申請】No. [id][applicant_id]（[applicant_office_id]）',
+        'subject' => '【交際費支出申請】No. [id] [applicant_id]（[applicant_office_id]）',
         'template' => "【交際費支出申請】\n\n".
             "＜申請ID＞\n".
             "No. [id]\n\n".
             "＜登録者＞\n".
-            "[applicant_id]\n\n".
+            "[applicant_id] （[applicant_office_id]）\n\n".
+            "＜実施日＞\n".
+            "[date]\n\n".
+            "＜相手先＞\n".
+            "会社名：[client_company_name]\n".
+            "出席者：[client_members] （[client_members_count]名）\n\n".
+            "当社参加者：[own_members] （[own_members_count]名）\n\n".
+            "＜場所＞\n".
+            "[place]\n\n".
+            "＜取引状況＞\n".
+            "[conditions]\n\n".
+            "＜目的＞\n".
+            "[purpose]\n\n".
+            "＜仮払＞\n".
+            "[deposit_flg] [deposit_amount]\n\n\n".
             "確認の後、承認お願いいたします。\n\n".
             "------------------------------------------------------\n\n".
             "Akita ERP - ワークフロー\n\n"
@@ -183,11 +197,6 @@ return [
         'from' => 'shinwaytest@gmail.com',
         'subject' => '【交際費支出申請】No. [id][applicant_id]（[applicant_office_id]）',
         'template' => "【交際費支出申請】\n\n".
-            "＜申請ID＞\n".
-            "No. [id]\n\n".
-            "＜登録者＞\n".
-            "[applicant_id]\n\n".
-            "確認の後、承認お願いいたします。\n\n".
             "------------------------------------------------------\n\n".
             "Akita ERP - ワークフロー\n\n"
     )
