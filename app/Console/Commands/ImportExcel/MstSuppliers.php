@@ -198,7 +198,7 @@ class MstSuppliers extends BaseImport{
     }
 
     protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_suppliers')->where('mst_suppliers_cd', '=', $record['mst_suppliers_cd'])->whereNull('deleted_at')->exists()) {
+        if (DB::table('mst_suppliers_copy1')->where('mst_suppliers_cd', '=', $record['mst_suppliers_cd'])->whereNull('deleted_at')->exists()) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,
@@ -253,7 +253,7 @@ class MstSuppliers extends BaseImport{
                         $record['supplier_nm_kana'] = Common::convertToKanaExcel($record['supplier_nm_kana']);
                         $record['supplier_nm_kana_formal'] = Common::convertToKanaExcel($record['supplier_nm_kana']);
                     }
-                    DB::table('mst_suppliers')->insert($record);
+                    DB::table('mst_suppliers_copy1')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }

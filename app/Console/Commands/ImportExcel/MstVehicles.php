@@ -352,7 +352,7 @@ class MstVehicles extends BaseImport
             }
 
             $data = $record;
-            if (DB::table('mst_vehicles')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
+            if (DB::table('mst_vehicles_copy1')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
                 $error_fg = true;
                 $existed_record_in_db = true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
@@ -461,7 +461,7 @@ class MstVehicles extends BaseImport
                             $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
                             $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
                         }
-                        DB::table('mst_vehicles')->insert($data);
+                        DB::table('mst_vehicles_copy1')->insert($data);
                         DB::commit();
                         $this->numNormal++;
                     }
