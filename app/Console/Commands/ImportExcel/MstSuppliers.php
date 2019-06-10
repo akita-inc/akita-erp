@@ -43,8 +43,8 @@ class MstSuppliers extends BaseImport{
         'supplier_nm_kana'  => 'kana_custom|nullable|length:200',
         'zip_cd'  => 'nullable|length:7',
         'prefectures_cd'=> 'nullable|length:2',
-        'address1'  => 'nullable|length:20',
-        'address2'  => 'nullable|length:20',
+        'address1'  => 'nullable|length:200',
+        'address2'  => 'nullable|length:200',
         'phone_number'  => 'phone_number|nullable|length:20',
         'notes'=> 'nullable|length:50',
         'created_at'=> 'required',
@@ -221,7 +221,7 @@ class MstSuppliers extends BaseImport{
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => null,
+                            "DBvalue" => 'null',
                         ]));
                         $record[$field] = null;
                     } else if ($ruleName == 'Required') {

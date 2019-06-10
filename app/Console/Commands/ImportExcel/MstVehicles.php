@@ -376,7 +376,7 @@ class MstVehicles extends BaseImport
                                 "excelValue" => $data[$field],
                                 "tableName" => $this->table,
                                 "DBFieldName" => $field,
-                                "DBvalue" => null,
+                                "DBvalue" => 'null',
                             ]));
                             $data[$field] = null;
                         }else if($ruleName=='Required'){
@@ -416,7 +416,7 @@ class MstVehicles extends BaseImport
                                             "excelValue" => $data[$field],
                                             "tableName" => $this->table,
                                             "DBFieldName" => $field,
-                                            "DBvalue" => null,
+                                            "DBvalue" => 'null',
                                         ]));
                                         $data[$field] = null;
                                     }
