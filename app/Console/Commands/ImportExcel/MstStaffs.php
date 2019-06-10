@@ -140,6 +140,7 @@ class MstStaffs extends BaseImport
 
     public function __construct()
     {
+        $this->table="mst_staffs_copy1";
         $this->path = config('params.import_file_path.mst_staffs.main');
         date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("YmdHis");
@@ -550,7 +551,7 @@ class MstStaffs extends BaseImport
         }
     }
     public function validateRow($record){
-        if (DB::table('mst_staffs')->where('staff_cd', '=', $record['staff_cd'])->whereNull('deleted_at')->exists()) {
+        if (DB::table($this->table)->where('staff_cd', '=', $record['staff_cd'])->whereNull('deleted_at')->exists()) {
             $this->error_fg = true;
             $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
                 "fileName" => config('params.import_file_path.mst_staffs.main_file_name'),
