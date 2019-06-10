@@ -41,7 +41,7 @@ var ctrCustomersVl = new Vue({
             consumption_tax_calc_unit_id:"",
             rounding_method_id:"",
             discount_rate:"",
-            except_g_drive_bill_fg:false,
+            except_g_drive_bill_fg:true,
             mst_bill_issue_destinations:[{
                 prefectures_cd:"",
                 address1:"",

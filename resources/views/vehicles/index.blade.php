@@ -109,7 +109,6 @@
                     <th v-on:click="sortList($event, 'size.date_nm')" id="th_vehicle_size">{{trans("vehicles.list.table.vehicle_size")}}</th>
                     <th v-on:click="sortList($event, 'purpose.date_nm')" id="th_vehicle_purpose">{{trans("vehicles.list.table.vehicle_purpose")}}</th>
                     <th v-on:click="sortList($event, 'modified_at')" id="th_modified_at" class="wd-120">{{trans("vehicles.list.table.modified_at")}}</th>
-                    @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>
                 <tbody>
@@ -124,11 +123,6 @@
                         <td>{!! "@{{ item['vehicle_size_kb_nm'] }}" !!}</td>
                         <td>{!! "@{{ item['vehicle_purpose_nm'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
-                        @if ($accessible_kb == 1)
-                        <td class="no-padding">
-                            <button type="button" class="btn btn-delete w-100" v-on:click="deleteVehicle(item['id'])">削除</button>
-                        </td>
-                        @endif
                     </tr>
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="8">@{{message}} </td>

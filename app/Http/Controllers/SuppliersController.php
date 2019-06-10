@@ -50,7 +50,7 @@ class SuppliersController extends Controller
             $this->query->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%");
         }
         if ($where['supplier_nm'] != '') {
-            $this->query->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
+            $this->query->where('mst_suppliers.supplier_nm_kana_formal', "LIKE", "%{$where['supplier_nm']}%");
         }
         if ($data["order"]["col"] != '') {
             if ($data["order"]["col"] == 'street_address')
@@ -132,7 +132,6 @@ class SuppliersController extends Controller
                 'fax_number'  => 'fax_number|nullable|length:20',
                 'zip_cd'  => 'zip_code|nullable|length:7',
                 'bundle_dt'  => 'one_byte_number|nullable|length:2',
-                'payday'  => 'one_byte_number|nullable|between_custom:1,31|length:2',
                 'payment_day'  => 'one_byte_number|nullable|between_custom:1,31|length:2',
                 'explanations_bill'  => 'nullable|length:100',
                 'payment_bank_cd'  => 'nullable|length:4',
@@ -177,7 +176,6 @@ class SuppliersController extends Controller
                     $mSupplier->fax_number= $data["fax_number"];
                     $mSupplier->hp_url= $data["hp_url"];
                     $mSupplier->bundle_dt= $data["bundle_dt"];
-                    $mSupplier->payday= $data["payday"];
                     $mSupplier->payment_month_id= $data["payment_month_id"];
                     $mSupplier->payment_day= $data["payment_day"];
                     $mSupplier->payment_method_id= $data["payment_method_id"];

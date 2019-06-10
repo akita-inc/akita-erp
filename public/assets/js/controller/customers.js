@@ -20904,7 +20904,7 @@ var ctrCustomersVl = new Vue({
       consumption_tax_calc_unit_id: "",
       rounding_method_id: "",
       discount_rate: "",
-      except_g_drive_bill_fg: false,
+      except_g_drive_bill_fg: true,
       mst_bill_issue_destinations: [{
         prefectures_cd: "",
         address1: "",
@@ -21203,7 +21203,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
+module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\customers-vl.js */"./resources/assets/js/controller/customers-vl.js");
 
 
 /***/ })
