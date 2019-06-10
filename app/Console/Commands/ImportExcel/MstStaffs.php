@@ -609,15 +609,6 @@ class MstStaffs extends BaseImport
 
                     }
                 }
-                if(isset($failedRules['last_nm_kana']['KanaCustom']) || isset($failedRules['first_nm_kana']['KanaCustom']) )
-                {
-                    $this->error_fg=true;
-                    $this->log("DataConvert_Err_KANA",Lang::trans("log_import.check_kana",[
-                        "fileName" =>  config('params.import_file_path.mst_staffs.main_file_name'),
-                        "fieldName" => $this->column_main_name['staff_nm_kana'],
-                        "row" => $this->rowIndex,
-                    ]));
-                }
             }
         }
         return $record;
