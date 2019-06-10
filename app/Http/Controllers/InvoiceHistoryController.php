@@ -18,6 +18,7 @@ use App\Models\MSaleses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -402,5 +403,33 @@ class InvoiceHistoryController extends Controller {
             fclose($file);
         };
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function delete(Request $request)
+    {
+        $data = $request->all();
+        $currentTime = date("Y-m-d H:i:s",time());
+        $dataUpdate = [
+            'deleted_at' => $currentTime,
+            'upd_mst_staff_id'=>Auth::user()->id,
+        ];
+        $this->backHistory();
+        DB::beginTransaction();
+        try{
+            MBillingHistoryHeaders::query()->where("invoice_number","=",$data['invoice_number'])->update($dataUpdate);
+            MBillingHistoryHeaderDetails::query()->where("invoice_number","=",$data['invoice_number'])->update($dataUpdate);
+
+            $data['invoicing_flag'] = 0;
+            MSaleses::query()->where("document_no","=",$data['document_no'])->where("mst_customers_cd","=",$data['customer_cd'])->where("branch_office_cd","=",$data['branch_office_cd'])->update($dataUpdate);
+            DB::commit();
+            \Session::flash('message',Lang::get('messages.MSG10004'));
+            $response = ['success' => true];
+
+        }catch (\Exception $e){
+            DB::rollback();
+            dd($e);
+            $response = ['success' => false,'msg' => Lang::get('messages.MSG06002')];
+        }
+        return response()->json($response);
     }
 }

@@ -18,6 +18,8 @@ return[
                 'export'=>'詳細',
                 'choose'=>'選択',
                 'amazonCSV'=>'再Amazon',
+                'close'=>'閉じる',
+                'delete'=>'削除'
             ],
             'no_data'=>'データがありません。',
         ],

@@ -121,7 +121,7 @@
                             </button>
                         </div>
                         <div class="col-md-7 lh-38 text-right no-padding">
-                            <button class="btn btn-primary w-100" v-on:click="getItems(1)">
+                            <button class="btn btn-primary w-100" v-on:click="getItems(true)">
                                 {{trans('common.button.search')}}
                             </button>
                         </div>
@@ -133,6 +133,17 @@
                     </div>
                     <div class="col-md-9 text-right" v-if="errors.closed_date_input != undefined" v-cloak>
                         <span v-cloak v-if="errors.closed_date_input != undefined" class="message-error text-right w-100" v-html="errors.closed_date_input.join('<br />')"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sub-header bg-color-green mt-3 ml-5 mr-5" v-cloak v-if="deleteFlagSuccess">
+            <div class="sub-header-line-two">
+                <div class="grid-form border-0">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10034'); @endphp
+                        </div>
                     </div>
                 </div>
             </div>
@@ -236,6 +247,14 @@
         'btn_ok_title' => trans('common.button.yes'),
         'btn_cancel_title' => trans('common.button.no'),
         ])
+        @include('Layouts.modal',[
+               'id'=> 'confirmDeleteModal',
+               'title'=> '',
+               'content'=> trans('messages.MSG10028'),
+               'attr_input' => "@click='confirmDelete()'",
+               'btn_ok_title' => trans('common.button.yes'),
+               'btn_cancel_title' => trans('common.button.no'),
+       ])
 
     </div>
 @endsection
