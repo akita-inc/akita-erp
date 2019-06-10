@@ -42,9 +42,7 @@ class MstCustomers extends BaseImport
     public $rules = [
         'mst_customers_cd' =>'required',
         'customer_nm' =>'nullable|length:200',
-        'customer_nm_kana' =>'kana_custom|nullable|length:200',
-        //'customer_nm_formal' =>'nullable|length:200',
-        //'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
+        'customer_nm_kana' =>'nullable|length:200',
         'person_in_charge_last_nm' =>'nullable|length:25',
         'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
@@ -285,13 +283,6 @@ class MstCustomers extends BaseImport
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
-                            "fileName" => $fileName,
-                            "fieldName" => $column_name[$field],
-                            "row" => $row,
-                        ]));
-                    }else if ($ruleName == 'KanaCustom') {
-                        $error_fg = true;
-                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
                             "row" => $row,
