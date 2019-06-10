@@ -363,10 +363,10 @@ class ExpenseApplicationController extends Controller
         ]));
     }
     public function beforeSubmit($data){
-       if(isset($data['deposit_flg']) && $data['deposit_flg']==1 )
-       {
-           $this->ruleValid['deposit_amount'] = 'required|decimal_custom|length:8';
-       }
+        if(isset($data['deposit_flg']) && $data['deposit_flg']==1 )
+        {
+            $this->ruleValid['deposit_amount'] = 'required|decimal_custom|length:8';
+        }
     }
     protected function validAfter( &$validator,$data ){
         $listWfAdditionalNotice = $data['wf_additional_notice'];
@@ -382,6 +382,7 @@ class ExpenseApplicationController extends Controller
         $approval_fg = $arrayInsert["approval_fg"];
         $currentTime = date("Y-m-d H:i:s",time());
         $arrayInsert['regist_date'] = $currentTime;
+        $send_back_reason=$arrayInsert["send_back_reason"];
         $mode = $arrayInsert["mode"];
         unset($arrayInsert["id"]);
         unset($arrayInsert["mode"]);
@@ -390,6 +391,7 @@ class ExpenseApplicationController extends Controller
         unset($arrayInsert["wf_additional_notice"]);
         unset($arrayInsert["approval_fg"]);
         unset($arrayInsert["send_back_reason"]);
+        $mWApprovalStatus = new WApprovalStatus();
         $mailCC = [];
         $mailTo = [];
         DB::beginTransaction();
@@ -399,10 +401,20 @@ class ExpenseApplicationController extends Controller
                 if($mode=='edit'){
                     $id_before = $data["id"];
                     WFBusinessEntertaining::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
-                    $configMail = config('params.expense_application_edit_mail');
+                    $configMail = Lang::get('mail_template.expense_application_edit_mail');
                 }
-
-            }else{
+                else{
+                    if($approval_fg==1){
+                        $mWApprovalStatus->approvalVacation($data["id"], $this->wf_type_id, $currentTime);
+                        $configMail = Lang::get('mail_template.expense_application_approval_mail');
+                    }
+                    if($approval_fg==0){
+                        $mWApprovalStatus->rejectVacation($data["id"],  $this->wf_type_id,$currentTime,$send_back_reason);
+                        $configMail = Lang::get('mail_template.expense_application_approval_mail');
+                    }
+                }
+            }
+            else{
                 $configMail = Lang::get('mail_template.expense_application_register_mail');
             }
             if($mode=='register' || $mode=='edit') {
@@ -415,6 +427,15 @@ class ExpenseApplicationController extends Controller
                     $this->registerWfAdditionalNotice($id,$listWfAdditionalNotice);
                 }
                 $this->getListMailRegisterOrEdit($arrayInsert,$approval_levels_step_1,$listWfAdditionalNotice,$mailTo, $mailCC);
+            }else{
+                $id = $data['id'];
+                $mWFBusinessEntertaining = new WFBusinessEntertaining();
+                $mBusinessEntertainInfo = $mWFBusinessEntertaining->getInfoByID($id);
+                if($approval_fg==1) {
+                    $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$mBusinessEntertainInfo->applicant_id,$mBusinessEntertainInfo->mail,$mailTo);
+                }else{
+                    $this->handleReject($id,$listWfAdditionalNotice,$arrayInsert,$mBusinessEntertainInfo->applicant_id,$mBusinessEntertainInfo->mail,$mailTo);
+                }
             }
             DB::commit();
             $this->handleMail($id,$configMail,$mailTo,$mailCC,$id_before);
@@ -442,10 +463,10 @@ class ExpenseApplicationController extends Controller
     public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
         $mWFBusinessEntertaining=new WFBusinessEntertaining();
         $data = $mWFBusinessEntertaining->getInfoForMail($id);
-        $field = ['[id]','[applicant_id]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]','[send_back_reason]'];
+        $field = ['[id]','[applicant_id]','[applicant_office_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[conditions]','[purpose]','[deposit_flg]','[deposit_amount]'];
         $data['id_before'] = $id_before;
-        $text = str_replace($field, [$data['id'],$data['staff_nm'],$data['title'],$data['send_back_reason']],$configMail['template']);
-        $subject = str_replace(['[id]','[applicant_id]'],[$data['id'],$data['staff_nm']],$configMail["subject"]);
+        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['conditions'],$data['purpose'],$data['deposit_flg'],$data['deposit_amount']],$configMail['template']);
+        $subject = str_replace(['[id]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
         $this->sendMail($configMail,$mailTo,$mailCC,$subject,$text);
     }
 
