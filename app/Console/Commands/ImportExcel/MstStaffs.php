@@ -140,7 +140,6 @@ class MstStaffs extends BaseImport
 
     public function __construct()
     {
-        $this->table="mst_staffs_copy1";
         $this->path = config('params.import_file_path.mst_staffs.main');
         date_default_timezone_set("Asia/Tokyo");
         $this->dateTimeRun = date("YmdHis");
@@ -362,6 +361,7 @@ class MstStaffs extends BaseImport
         return $recordChild;
     }
     public function mainReading($rowData,$row){
+        $this->table="mst_staffs_copy1";
         $excel_column = $this->excel_column;
         $record = array();
         $this->error_fg=false;
