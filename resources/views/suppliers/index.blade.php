@@ -66,7 +66,6 @@
                     <th v-on:click="sortList($event, 'street_address')" id="th_street_address">{{trans('suppliers.list.table.street_address')}}</th>
                     <th v-on:click="sortList($event, 'explanations_bill')" id="th_explanations_bill">{{trans('suppliers.list.table.explanations_bill')}}</th>
                     <th v-on:click="sortList($event, 'modified_at')" id="th_modified_at" class="wd-120">{{trans('suppliers.list.table.modified_at')}}</th>
-                    @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>
                 <tbody>
@@ -82,11 +81,6 @@
                         <td>{!! "@{{ item['street_address'] }}" !!}</td>
                         <td class="td-nl2br">{!! "@{{ item['explanations_bill'] }}" !!}</td>
                         <td>{!! "@{{ item['modified_at'] }}" !!}</td>
-                        @if ($accessible_kb == 1)
-                        <td class="no-padding">
-                            <button type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
-                        </td>
-                        @endif
                     </tr>
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="8">@{{message}} </td>

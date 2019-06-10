@@ -71,7 +71,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100">
                             <label class="col-md-5 col-sm-5 required" for="mst_suppliers_cd">仕入先コード</label>
                             <div class="col-md-7 col-sm-7 wrap-control">
-                                <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" maxlength="5" value="{{ old('mst_suppliers_cd') }}">
+                                <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" maxlength="5" value="{{ old('mst_suppliers_cd') }}" onkeypress='return isNumberKey(event)'>
                             </div>
                             @if ($errors->has('mst_suppliers_cd'))
                                 <span class="invalid-feedback d-block" role="alert">
@@ -235,7 +235,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="zip_cd">郵便番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ old('zip_cd', !is_null($mSupplier->zip_cd) ? $mSupplier->zip_cd : '')}}" maxlength="7">
+                            <input type="text" class="form-control w-50 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ old('zip_cd', !is_null($mSupplier->zip_cd) ? $mSupplier->zip_cd : '')}}" maxlength="7" placeholder="12345678">
                         </div>
                         @if ($errors->has('zip_cd'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -333,7 +333,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="bundle_dt">締日</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('bundle_dt')? 'is-invalid': ''}}" id="bundle_dt" name="bundle_dt" value="{{ old('bundle_dt', !is_null($mSupplier->bundle_dt) ? $mSupplier->bundle_dt: '')}}" maxlength="2">
+                            <input type="text" class="form-control w-50 {{$errors->has('bundle_dt')? 'is-invalid': ''}}" id="bundle_dt" name="bundle_dt" value="{{ old('bundle_dt', !is_null($mSupplier->bundle_dt) ? $mSupplier->bundle_dt: '')}}" maxlength="2" placeholder="末は99">
                         </div>
                         @if ($errors->has('bundle_dt'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -341,17 +341,7 @@
                             </span>
                         @endif
                     </div>
-                    <div class="col-md-7 col-sm-12 row grid-col h-100">
-                        <label class="col-md-4 col-sm-4" for="payday">支払日</label>
-                        <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payday')? 'is-invalid': ''}}" id="payday" name="payday" value="{{ old('payday', !is_null($mSupplier->payday) ? $mSupplier->payday :'')}}" maxlength="2">
-                        </div>
-                        @if ($errors->has('payday'))
-                            <span class="invalid-feedback d-block" role="alert">
-                                <strong>{{ $errors->first('payday') }}</strong>
-                            </span>
-                        @endif
-                    </div>
+                    <div class="col-md-7 col-sm-12 row grid-col h-100"></div>
                     <div class="break-row-form"></div>
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_month_id">支払予定月</label>
@@ -366,7 +356,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="payment_day">支払予定日</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('payment_day')? 'is-invalid': ''}}" id="payment_day" name="payment_day" value="{{ old('payment_day', !is_null($mSupplier->payment_day) ? $mSupplier->payment_day: '')}}" maxlength="2">
+                            <input type="text" class="form-control w-50 {{$errors->has('payment_day')? 'is-invalid': ''}}" id="payment_day" name="payment_day" value="{{ old('payment_day', !is_null($mSupplier->payment_day) ? $mSupplier->payment_day: '')}}" maxlength="2" placeholder="末は99">
                         </div>
                         @if ($errors->has('payment_day'))
                             <span class="invalid-feedback d-block" role="alert">
@@ -574,6 +564,15 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/suppliers.js') }}" charset="utf-8"></script>
 @endsection

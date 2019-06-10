@@ -85,7 +85,7 @@ class CustomersController extends Controller
             $this->query->where('mst_customers.mst_customers_cd', 'LIKE', '%' . $dataSearch['mst_customers_cd'] . '%');
         }
         if ($dataSearch['customer_nm'] != '') {
-            $this->query->where('mst_customers.customer_nm', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
+            $this->query->where('mst_customers.customer_nm_kana_formal ', 'LIKE', '%' . $dataSearch['customer_nm'] . '%');
         }
 
         if ($data["order"]["col"] != '') {

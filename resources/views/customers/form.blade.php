@@ -53,7 +53,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($customer) ? 'readonly=""':'')])
+                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "onkeypress='return isNumberKey(event)' maxlength='5'".(!empty($customer) ? 'readonly=""':'')])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col"></div>
                 </div>
@@ -117,7 +117,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'zip_cd','attr_input' => "maxlength='7'"])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'zip_cd','attr_input' => "maxlength='7' placeholder='12345678'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>
@@ -182,14 +182,14 @@
                     </div>
 
                     <div class="col-md-7 col-sm-12 pd-l-20">
-                        @include('Component.form.input',['class'=>'wd-250','filed'=>'bundle_dt','attr_input' => "maxlength='2'"])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'bundle_dt','attr_input' => "maxlength='2'  placeholder='末は99'"])
                         <div class="break-row-form"></div>
                         <div class="col-md-12 col-sm-12 row grid-col no-padding">
                             <div class="col-md-6 col-sm-12 no-padding">
                                 @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_month_id','array'=>$listDepositMonths])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
-                                @include('Component.form.input',['class'=>'wd-250','filed'=>'deposit_day','attr_input' => "maxlength='2'"])
+                                @include('Component.form.input',['class'=>'wd-300','filed'=>'deposit_day','attr_input' => "maxlength='2' placeholder='末は99'"])
                             </div>
                         </div>
                     </div>
@@ -404,6 +404,15 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/customers.js') }}" charset="utf-8"></script>
 @endsection

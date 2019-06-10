@@ -74,7 +74,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100">
                             <label class="col-md-5 col-sm-5 required" for="vehicles_cd">車両コード</label>
                             <div class="col-md-7 col-sm-7 wrap-control">
-                                <input type="text" class="form-control w-50" v-bind:class="errors.vehicles_cd != undefined ? 'is-invalid':'' " name="vehicles_cd" id="vehicles_cd" maxlength="10" v-model="field.vehicles_cd">
+                                <input type="text" class="form-control w-50" v-bind:class="errors.vehicles_cd != undefined ? 'is-invalid':'' " name="vehicles_cd" id="vehicles_cd" maxlength="10" v-model="field.vehicles_cd" onkeypress='return isNumberKey(event)'>
                             </div>
                             <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicles_cd!= undefined" v-html="errors.vehicles_cd[0]"></span>
                             </span>
@@ -274,14 +274,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="seating_capacity">定員（人）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.seating_capacity != undefined ? 'is-invalid':'' " id="seating_capacity" name="seating_capacity" v-model="field.seating_capacity" maxlength="2">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.seating_capacity != undefined ? 'is-invalid':'' " id="seating_capacity" name="seating_capacity" v-model="field.seating_capacity" maxlength="2" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.seating_capacity!= undefined" v-html="errors.seating_capacity[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="max_loading_capacity">最大積載量（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.max_loading_capacity != undefined ? 'is-invalid':'' " id="max_loading_capacity" name="max_loading_capacity" v-model="field.max_loading_capacity" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.max_loading_capacity != undefined ? 'is-invalid':'' " id="max_loading_capacity" name="max_loading_capacity" v-model="field.max_loading_capacity" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.max_loading_capacity!= undefined" v-html="errors.max_loading_capacity[0]"></span>
                     </div>
@@ -289,14 +289,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_body_weights">車両重量（Kg）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_body_weights != undefined ? 'is-invalid':'' " id="vehicle_body_weights" name="vehicle_body_weights" v-model="field.vehicle_body_weights" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_body_weights != undefined ? 'is-invalid':'' " id="vehicle_body_weights" name="vehicle_body_weights" v-model="field.vehicle_body_weights" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicle_body_weights!= undefined" v-html="errors.vehicle_body_weights[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_total_weights">車両総重量（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_total_weights != undefined ? 'is-invalid':'' " id="vehicle_total_weights" name="vehicle_total_weights" v-model="field.vehicle_total_weights" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_total_weights != undefined ? 'is-invalid':'' " id="vehicle_total_weights" name="vehicle_total_weights" v-model="field.vehicle_total_weights" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicle_total_weights!= undefined" v-html="errors.vehicle_total_weights[0]"></span>
                     </div>
@@ -304,14 +304,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="frame_numbers">車台番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.frame_numbers != undefined ? 'is-invalid':'' " id="frame_numbers" name="frame_numbers" v-model="field.frame_numbers" maxlength="10">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.frame_numbers != undefined ? 'is-invalid':'' " id="frame_numbers" name="frame_numbers" v-model="field.frame_numbers" maxlength="10" placeholder="EK3-130">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.frame_numbers!= undefined" v-html="errors.frame_numbers[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_lengths">長さ（cm）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_lengths != undefined ? 'is-invalid':'' " id="vehicle_lengths" name="vehicle_lengths" v-model="field.vehicle_lengths" maxlength="4">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_lengths != undefined ? 'is-invalid':'' " id="vehicle_lengths" name="vehicle_lengths" v-model="field.vehicle_lengths" maxlength="4" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicle_lengths!= undefined" v-html="errors.vehicle_lengths[0]"></span>
                     </div>
@@ -319,14 +319,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_widths">幅（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_widths != undefined ? 'is-invalid':'' " id="vehicle_widths" name="vehicle_widths" v-model="field.vehicle_widths" maxlength="3">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_widths != undefined ? 'is-invalid':'' " id="vehicle_widths" name="vehicle_widths" v-model="field.vehicle_widths" maxlength="3" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicle_widths!= undefined" v-html="errors.vehicle_widths[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_heights">高さ（cm）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_heights != undefined ? 'is-invalid':'' " id="vehicle_heights" name="vehicle_heights" v-model="field.vehicle_heights" maxlength="3">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_heights != undefined ? 'is-invalid':'' " id="vehicle_heights" name="vehicle_heights" v-model="field.vehicle_heights" maxlength="3" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicle_heights!= undefined" v-html="errors.vehicle_heights[0]"></span>
                     </div>
@@ -334,14 +334,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="axle_loads_ff">前前軸重（Kg）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.axle_loads_ff != undefined ? 'is-invalid':'' " id="axle_loads_ff" name="axle_loads_ff" v-model="field.axle_loads_ff" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.axle_loads_ff != undefined ? 'is-invalid':'' " id="axle_loads_ff" name="axle_loads_ff" v-model="field.axle_loads_ff" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.axle_loads_ff!= undefined" v-html="errors.axle_loads_ff[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="axle_loads_fr">前後軸重（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.axle_loads_fr != undefined ? 'is-invalid':'' " id="axle_loads_fr" name="axle_loads_fr" v-model="field.axle_loads_fr" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.axle_loads_fr != undefined ? 'is-invalid':'' " id="axle_loads_fr" name="axle_loads_fr" v-model="field.axle_loads_fr" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.axle_loads_fr!= undefined" v-html="errors.axle_loads_fr[0]"></span>
                     </div>
@@ -349,14 +349,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="axle_loads_rf">後前軸重（Kg）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.axle_loads_rf != undefined ? 'is-invalid':'' " id="axle_loads_rf" name="axle_loads_rf" v-model="field.axle_loads_rf" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.axle_loads_rf != undefined ? 'is-invalid':'' " id="axle_loads_rf" name="axle_loads_rf" v-model="field.axle_loads_rf" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.axle_loads_rf!= undefined" v-html="errors.axle_loads_rf[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="axle_loads_rr">後後軸重（Kg）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" id="axle_loads_rr" v-bind:class="errors.axle_loads_rr != undefined ? 'is-invalid':'' " name="axle_loads_rr" v-model="field.axle_loads_rr" maxlength="5">
+                            <input type="text" class="form-control w-50" id="axle_loads_rr" v-bind:class="errors.axle_loads_rr != undefined ? 'is-invalid':'' " name="axle_loads_rr" v-model="field.axle_loads_rr" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.axle_loads_rr!= undefined" v-html="errors.axle_loads_rr[0]"></span>
                     </div>
@@ -364,14 +364,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_types">型式</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_types != undefined ? 'is-invalid':'' " id="vehicle_types" name="vehicle_types" v-model="field.vehicle_types" maxlength="50">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.vehicle_types != undefined ? 'is-invalid':'' " id="vehicle_types" name="vehicle_types" v-model="field.vehicle_types" maxlength="50" placeholder="GF-EK3">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicle_types!= undefined" v-html="errors.vehicle_types[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="engine_typese">原動機の型式</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.engine_typese != undefined ? 'is-invalid':'' " id="engine_typese" name="engine_typese" v-model="field.engine_typese" maxlength="50">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.engine_typese != undefined ? 'is-invalid':'' " id="engine_typese" name="engine_typese" v-model="field.engine_typese" maxlength="50" placeholder="D15B">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.engine_typese!= undefined" v-html="errors.engine_typese[0]"></span>
                     </div>
@@ -379,14 +379,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="total_displacements">総排気量（L）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.total_displacements != undefined ? 'is-invalid':'' " id="total_displacements" name="total_displacements" v-model="field.total_displacements" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.total_displacements != undefined ? 'is-invalid':'' " id="total_displacements" name="total_displacements" v-model="field.total_displacements" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.total_displacements!= undefined" v-html="errors.total_displacements[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="rated_outputs">定格出力（KW）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.rated_outputs != undefined ? 'is-invalid':'' " id="rated_outputs" name="rated_outputs" v-model="field.rated_outputs" maxlength="5">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.rated_outputs != undefined ? 'is-invalid':'' " id="rated_outputs" name="rated_outputs" v-model="field.rated_outputs" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.rated_outputs!= undefined" v-html="errors.rated_outputs[0]"></span>
                     </div>
@@ -405,7 +405,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="type_designation_numbers">型式指定番号</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.type_designation_numbers != undefined ? 'is-invalid':'' " id="type_designation_numbers" name="type_designation_numbers" v-model="field.type_designation_numbers" maxlength="50">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.type_designation_numbers != undefined ? 'is-invalid':'' " id="type_designation_numbers" name="type_designation_numbers" v-model="field.type_designation_numbers" maxlength="50" placeholder="8288">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.type_designation_numbers!= undefined" v-html="errors.type_designation_numbers[0]"></span>
                     </div>
@@ -413,7 +413,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="id_segment_numbers">識別区分番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.id_segment_numbers != undefined ? 'is-invalid':'' " id="id_segment_numbers" name="id_segment_numbers" v-model="field.id_segment_numbers" maxlength="50">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.id_segment_numbers != undefined ? 'is-invalid':'' " id="id_segment_numbers" name="id_segment_numbers" v-model="field.id_segment_numbers" maxlength="50" placeholder="366">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.id_segment_numbers!= undefined" v-html="errors.id_segment_numbers[0]"></span>
                     </div>
@@ -603,14 +603,14 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="loading_inside_dimension_capacity_length">長さ（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" v-bind:class="errors.loading_inside_dimension_capacity_length != undefined ? 'is-invalid':'' " id="loading_inside_dimension_capacity_length" name="loading_inside_dimension_capacity_length" v-model="field.loading_inside_dimension_capacity_length" maxlength="5">
+                            <input type="text" class="form-control" v-bind:class="errors.loading_inside_dimension_capacity_length != undefined ? 'is-invalid':'' " id="loading_inside_dimension_capacity_length" name="loading_inside_dimension_capacity_length" v-model="field.loading_inside_dimension_capacity_length" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.loading_inside_dimension_capacity_length!= undefined" v-html="errors.loading_inside_dimension_capacity_length[0]"></span>
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="loading_inside_dimension_capacity_width">幅（cm）</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control" v-bind:class="errors.loading_inside_dimension_capacity_width != undefined ? 'is-invalid':'' " id="loading_inside_dimension_capacity_width" name="loading_inside_dimension_capacity_width" v-model="field.loading_inside_dimension_capacity_width" maxlength="5">
+                            <input type="text" class="form-control" v-bind:class="errors.loading_inside_dimension_capacity_width != undefined ? 'is-invalid':'' " id="loading_inside_dimension_capacity_width" name="loading_inside_dimension_capacity_width" v-model="field.loading_inside_dimension_capacity_width" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.loading_inside_dimension_capacity_width!= undefined" v-html="errors.loading_inside_dimension_capacity_width[0]"></span>
                     </div>
@@ -618,7 +618,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="loading_inside_dimension_capacity_height">高さ（cm）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control" v-bind:class="errors.loading_inside_dimension_capacity_height != undefined ? 'is-invalid':'' " id="loading_inside_dimension_capacity_height" name="loading_inside_dimension_capacity_height" v-model="field.loading_inside_dimension_capacity_height" maxlength="5">
+                            <input type="text" class="form-control" v-bind:class="errors.loading_inside_dimension_capacity_height != undefined ? 'is-invalid':'' " id="loading_inside_dimension_capacity_height" name="loading_inside_dimension_capacity_height" v-model="field.loading_inside_dimension_capacity_height" maxlength="5" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.loading_inside_dimension_capacity_height!= undefined" v-html="errors.loading_inside_dimension_capacity_height[0]"></span>
                     </div>
@@ -903,7 +903,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="tire_sizes">タイヤサイズ</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <input type="text" class="form-control" v-bind:class="errors.tire_sizes != undefined ? 'is-invalid':'' " id="tire_sizes" name="tire_sizes" maxlength="10" v-model="field.tire_sizes">
+                            <input type="text" class="form-control" v-bind:class="errors.tire_sizes != undefined ? 'is-invalid':'' " id="tire_sizes" name="tire_sizes" maxlength="10" v-model="field.tire_sizes" placeholder="9R19.5">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.tire_sizes!= undefined" v-html="errors.tire_sizes[0]"></span>
                     </div>
@@ -911,7 +911,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="battery_sizes">バッテリーサイズ</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.battery_sizes != undefined ? 'is-invalid':'' " id="battery_sizes" name="battery_sizes" maxlength="10" v-model="field.battery_sizes">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.battery_sizes != undefined ? 'is-invalid':'' " id="battery_sizes" name="battery_sizes" maxlength="10" v-model="field.battery_sizes" placeholder="170F51">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.battery_sizes!= undefined" v-html="errors.battery_sizes[0]"></span>
                     </div>
@@ -984,6 +984,15 @@
         var listRoute = "{{route('vehicles.list')}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
     </script>
     <script type="text/javascript" src="{{ url('/js/PDFObject/pdfobject.min.js') }}" charset="utf-8"></script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/vehicles.js') }}" charset="utf-8"></script>

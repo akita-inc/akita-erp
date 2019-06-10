@@ -62,7 +62,6 @@
                     @foreach($fieldShowTable as $key => $field)
                         <th v-on:click="sortList($event, '{{isset($field["sortBy"]) ? $field["sortBy"] : $key}}')" id="th_{{$key}}" class="{{ isset($field["classTH"])?$field["classTH"]:"" }}">{{trans("customers.list.table.".$key)}}</th>
                     @endforeach
-                    @if ($accessible_kb == 1)<th class="wd-60"></th>@endif
                 </tr>
                 </thead>
                 <tbody>
@@ -79,11 +78,6 @@
                                 @endif
                             </td>
                         @endforeach
-                        @if ($accessible_kb == 1)
-                        <td class="no-padding">
-                            <button type="button" class="btn btn-delete w-100" v-on:click="deleteSupplier(item['id'])">削除</button>
-                        </td>
-                        @endif
                     </tr>
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="8">@{{message}} </td>
