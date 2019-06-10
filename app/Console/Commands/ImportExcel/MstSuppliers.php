@@ -40,7 +40,7 @@ class MstSuppliers extends BaseImport{
     public $rules = [
         'mst_suppliers_cd'  => 'required',
         'supplier_nm'  => 'required|length:200',
-        'supplier_nm_kana'  => 'kana_custom|nullable|length:200',
+        'supplier_nm_kana'  => 'nullable|length:200',
         'zip_cd'  => 'nullable|length:7',
         'prefectures_cd'=> 'nullable|length:2',
         'address1'  => 'nullable|length:200',
@@ -227,13 +227,6 @@ class MstSuppliers extends BaseImport{
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
-                            "fileName" => $fileName,
-                            "fieldName" => $column_name[$field],
-                            "row" => $row,
-                        ]));
-                    }else if ($ruleName == 'KanaCustom') {
-                        $error_fg = true;
-                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
                             "row" => $row,
