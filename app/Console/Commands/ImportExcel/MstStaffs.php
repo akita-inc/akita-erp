@@ -119,11 +119,11 @@ class MstStaffs extends BaseImport
         'last_nm_kana'  => 'kana_custom|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
         'first_nm_kana'=>'kana_custom|nullable|length:50',
-        'address1'=>'length:20|nullable',
-        'address2'=>'length:20|nullable',
+        'address1'=>'length:200|nullable',
+        'address2'=>'length:200|nullable',
         "landline_phone_number"=>"length:20|nullable",
         "cellular_phone_number"=>"length:20|nullable",
-        "notes"=>"length:50|nullable",
+        "notes"=>"length:255|nullable",
         "insurer_number"=>"length:20|nullable",
         "basic_pension_number"=>"length:20|nullable",
         "person_insured_number"=>"length:20|nullable",
@@ -590,9 +590,9 @@ class MstStaffs extends BaseImport
                                 "excelValue" => $record[$field],
                                 "tableName" => $this->table,
                                 "DBFieldName" => $field,
-                                "DBvalue" => mb_substr($record[$field], 0, $error[0]),
+                                "DBvalue" => "null",
                             ]));
-                            $record[$field] = mb_substr($record[$field], 0, $error[0]);
+                            $record[$field] = null;
                         };
                         if($ruleName == 'Required')
                         {
@@ -634,9 +634,9 @@ class MstStaffs extends BaseImport
                             "excelValue" => $recordChildFile[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => mb_substr($recordChildFile[$field], 0, $error[0]),
+                            "DBvalue" => "null",
                         ]));
-                        $recordChildFile[$field] = empty($recordChildFile[$field])?null:mb_substr($recordChildFile[$field],0,$error[0]);
+                        $recordChildFile[$field] = null;
                     }
                 }
             }
@@ -712,9 +712,9 @@ class MstStaffs extends BaseImport
                                     "excelValue" => $staff_dependents_nm['first_nm'],
                                     "tableName" => 'mst_staff_dependents',
                                     "DBFieldName" => 'first_nm',
-                                    "DBvalue" => mb_substr($staff_dependents_nm['first_nm'], 0,25),
+                                    "DBvalue" => "null",
                                 ]));
-                                $staff_dependents_nm['first_nm'] = mb_substr($staff_dependents_nm['first_nm'],0,25);
+                                $staff_dependents_nm['first_nm'] = null;
                         }
                         if (mb_strlen($staff_dependents_nm['last_nm'], 'UTF-8')>25) {
                             $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
@@ -724,9 +724,9 @@ class MstStaffs extends BaseImport
                                 "excelValue" => $staff_dependents_nm['last_nm'],
                                 "tableName" => 'mst_staff_dependents',
                                 "DBFieldName" =>'last_nm',
-                                "DBvalue" => mb_substr($staff_dependents_nm['last_nm'], 0,25),
+                                "DBvalue" => "null",
                             ]));
-                            $staff_dependents_nm['last_nm'] = mb_substr($staff_dependents_nm['last_nm'],0,25);
+                            $staff_dependents_nm['last_nm'] =null;
                         }
                         $staffDependents[$k]=$staff_dependents_nm;
                         $record['dependent_kb']=$this->getDependentKB($k);
