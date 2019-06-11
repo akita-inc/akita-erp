@@ -112,25 +112,29 @@ class RunBatchImport extends Command
                 }
             }
         }
+        $staffAdmin=null;
         foreach ($this->arrayRunTime as $run){
             if($run == "mst_staffs"){
-                $staffAdmin = DB::table($run)->where("staff_cd","=","admin")->first();
+                $staffAdmin = DB::table($run)->where("staff_cd","=",config('params.account_admin'))->first();
+                dd($staffAdmin);
                 if( $staffAdmin ){
                     $staffAdmin = (array)$staffAdmin;
                     unset($staffAdmin["id"]);
                 }
             }
             DB::table($run)->truncate();
-
-            if($run == "mst_staffs"){
-                if( $staffAdmin ) {
-                    DB::table($run)->insert($staffAdmin);
-                }
-            }
         }
         foreach ($this->arrayRunTime as $run){
             Artisan::call("ConvertDataByExcels", ['--type' => $run]);
         }
+        $staffAdminImported = DB::table("mst_staffs")->where("staff_cd","=",config('params.account_admin'))->first();
+        if(empty($staffAdminImported))
+        {
+            if(!empty($staffAdmin) ){
+                DB::table("mst_staffs")->insert($staffAdmin);
+            }
+        }
+
 
     }
 }

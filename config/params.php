@@ -207,6 +207,7 @@ return [
     "log_import_path" => [
         'data_convert'=>storage_path('logs/DataConvert.log')
     ],
+    'account_admin'=>'99999',
     'import_mst_staffs_data_kb' => [
         'employment_pattern_kb'=>[
             '1'=>'正社員',
