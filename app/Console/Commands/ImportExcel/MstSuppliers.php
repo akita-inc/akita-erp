@@ -159,7 +159,6 @@ class MstSuppliers extends BaseImport{
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
                 $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_suppliers.main.fileName'),$error_fg);
                 $record['supplier_nm_formal'] = $record['supplier_nm'];
-                $record['supplier_nm_kana_formal'] = $record['supplier_nm_kana'];
                 $this->insertDB($error_fg, $row, $record,config('params.import_file_path.mst_suppliers.main.fileName'));
             }
         }

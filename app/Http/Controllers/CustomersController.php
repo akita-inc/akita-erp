@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers;
 
+use App\Helpers\Common;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Models\MAccountTitles;
@@ -34,13 +35,13 @@ class CustomersController extends Controller
         'mst_customers_cd'  => 'required|one_bytes_string|length:5',
         'discount_rate'  => 'nullable|one_byte_number|length:3',
         'customer_nm'  => 'required|nullable|length:200',
-        'customer_nm_kana'  => 'kana|nullable|length:200',
+        'customer_nm_kana'  => 'nullable|length:200',
         'customer_nm_formal'  => 'length:200|nullable',
-        'customer_nm_kana_formal'  => 'kana|nullable|length:200',
+        'customer_nm_kana_formal'  => 'nullable|length:200',
         'person_in_charge_last_nm'  => 'length:25|nullable',
         'person_in_charge_first_nm'  => 'length:25|nullable',
-        'person_in_charge_last_nm_kana'  => 'kana|nullable|length:50',
-        'person_in_charge_first_nm_kana'  => 'kana|nullable|length:50',
+        'person_in_charge_last_nm_kana'  => 'nullable|length:50',
+        'person_in_charge_first_nm_kana'  => 'nullable|length:50',
         'zip_cd'  => 'zip_code|nullable|length:7',
         'address1'  => 'nullable|length:20',
         'address2'  => 'nullable|length:20',
@@ -231,6 +232,10 @@ class CustomersController extends Controller
         }else{
             $arrayInsert["except_g_drive_bill_fg"] = 0;
         }
+        $arrayInsert["customer_nm_kana"] = Common::convertToKanaExcel($arrayInsert["customer_nm_kana"]);
+        $arrayInsert["customer_nm_kana_formal"] = Common::convertToKanaExcel($arrayInsert["customer_nm_kana_formal"]);
+        $arrayInsert["person_in_charge_last_nm_kana"] = Common::convertToKanaExcel($arrayInsert["person_in_charge_last_nm_kana"]);
+        $arrayInsert["person_in_charge_first_nm_kana"] = Common::convertToKanaExcel($arrayInsert["person_in_charge_first_nm_kana"]);
         if(isset( $data["id"]) && $data["id"]){
             $id = $data["id"];
             $arrayInsert["modified_at"] = $currentTime;
