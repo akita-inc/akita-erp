@@ -117,7 +117,7 @@ class MstBillIssueDestinations extends BaseImport
                                 "excelValue" => $record[$field],
                                 "tableName" => $this->table,
                                 "DBFieldName" => $field,
-                                "DBvalue" => null,
+                                "DBvalue" => 'null',
                             ]));
                             $record[$field] = null;
                         }
