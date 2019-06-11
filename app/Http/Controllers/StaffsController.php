@@ -288,6 +288,11 @@ class StaffsController extends Controller
         }
         $data['last_nm_kana']=isset($data['last_nm_kana'])?Common::convertToKanaExcel($data['last_nm_kana']):'';
         $data['first_nm_kana']=isset($data['first_nm_kana'])?Common::convertToKanaExcel($data['first_nm_kana']):'';
+        foreach($data['mst_staff_dependents'] as &$item)
+        {
+            $item['dept_last_nm_kana']=isset($item['dept_last_nm_kana'])?Common::convertToKanaExcel($item['dept_last_nm_kana']):'';
+            $item['dept_first_nm_kana']=isset($item['dept_first_nm_kana'])?Common::convertToKanaExcel($item['dept_first_nm_kana']):'';
+        }
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
         $mst_staff_auths=$data["mst_staff_auths"];
