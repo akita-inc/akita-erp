@@ -51,9 +51,9 @@
             <li class="list-group-item">
                 <a href="{{route('logout')}}">ログアウト</a>
             </li>
-            <li class="list-group-item">
-                <a href="#">プロフィール</a>
-            </li>
+            {{--<li class="list-group-item">--}}
+                {{--<a href="#">プロフィール</a>--}}
+            {{--</li>--}}
             <li class="list-group-item">
                 <a href="#">パスワード変更</a>
             </li>
