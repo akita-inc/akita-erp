@@ -330,5 +330,6 @@ return [
         'payment' => '3001',
         'purchases' => '2002',
         'withdrawal' => '3002',
-    ]
+    ],
+    'manual_file' => 'manual.pdf'
 ];

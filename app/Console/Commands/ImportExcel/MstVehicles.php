@@ -391,7 +391,7 @@ class MstVehicles extends BaseImport
                 }
             }
 
-
+            $error_registration_numbers = false;
             for ($k = 1; $k <=3; $k++){
                 if(isset($this->{"data_extra_file_".$k}[$record['vehicles_cd']])){
                     $data = $data + $this->{"data_extra_file_".$k}[$record['vehicles_cd']];
@@ -402,12 +402,12 @@ class MstVehicles extends BaseImport
                             foreach ($errors as $ruleName => $error){
                                 if($ruleName=='Length'){
                                     if(strpos($field, 'registration_numbers') === 0){
+                                        $error_registration_numbers = true;
                                         $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                             "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                             "fieldName" => $this->column_name[$field],
                                             "row" => $data['row'],
                                         ]));
-                                        $data[$field] = null;
                                     }else {
                                         $this->log("DataConvert_Trim", Lang::trans("log_import.check_length_and_trim", [
                                             "fileName" => config('params.import_file_path.mst_vehicles.extra' . $k . '.fileName') . ($k == 2 ? '.' . $data['sheet'] : ''),
@@ -421,19 +421,23 @@ class MstVehicles extends BaseImport
                                         $data[$field] = null;
                                     }
                                 }else if($ruleName=='Required'){
-                                    $error_fg = true;
+                                    if(strpos($field, 'registration_numbers') === 0) {
+                                        $error_registration_numbers = true;
+                                    }else{
+                                        $error_fg = true;
+                                    }
                                     $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                         "fieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                     ]));
                                 }elseif(($ruleName=='Hiragana' || $ruleName=='OneBytesString' || $ruleName=='OneByteNumber' || $ruleName=='TwoBytesString') && strpos($field, 'registration_numbers') === 0){
+                                    $error_registration_numbers = true;
                                     $this->log("DataConvert_Err_Registration_Numbers",Lang::trans("log_import.registration_numbers_err",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                         "fieldName" => $this->column_name[$field],
                                         "row" => $data['row'],
                                     ]));
-                                    $data[$field] = null;
                                 }
                             }
                         }
@@ -457,9 +461,17 @@ class MstVehicles extends BaseImport
                 DB::beginTransaction();
                 try{
                     if (!empty($data)) {
-                        if(isset($data['registration_numbers4'])){
-                            $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
-                            $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
+                        if( $error_registration_numbers){
+                            $data['registration_numbers'] = null;
+                            $data['registration_numbers1'] = null;
+                            $data['registration_numbers2'] = null;
+                            $data['registration_numbers3'] = null;
+                            $data['registration_numbers4'] = null;
+                        }else{
+                            if(isset($data['registration_numbers4'])){
+                                $data['registration_numbers4'] = str_pad($data['registration_numbers4'], 4, '0', STR_PAD_LEFT);
+                                $data['registration_numbers'] = $data['registration_numbers1'].$data['registration_numbers2'].$data['registration_numbers3'].$data['registration_numbers4'];
+                            }
                         }
                         DB::table('mst_vehicles_copy1')->insert($data);
                         DB::commit();

@@ -46,11 +46,18 @@
     <div class="collapse navbar-collapse" id="navbarRightContent">
         <ul class="list-group">
             <li class="list-group-item">
-                <a href="#">プロフィール</a>
+                <a href="{{route('get-file',['filename' => config('params.manual_file')])}}" target="_blank">マニュアル</a>
             </li>
             <li class="list-group-item">
                 <a href="{{route('logout')}}">ログアウト</a>
             </li>
+            <li class="list-group-item">
+                <a href="#">プロフィール</a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">パスワード変更</a>
+            </li>
+
         </ul>
     </div>
     <!--Left menu -->
