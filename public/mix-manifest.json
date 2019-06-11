@@ -8,6 +8,7 @@
     "/assets/js/controller/expense-application.js": "/assets/js/controller/expense-application.js",
     "/assets/js/controller/expense-application-list.js": "/assets/js/controller/expense-application-list.js",
     "/assets/js/controller/expense-entertainment.js": "/assets/js/controller/expense-entertainment.js",
+    "/assets/js/controller/expense-entertainment-list.js": "/assets/js/controller/expense-entertainment-list.js",
     "/assets/js/controller/invoice-history-list.js": "/assets/js/controller/invoice-history-list.js",
     "/assets/js/controller/invoice-list.js": "/assets/js/controller/invoice-list.js",
     "/assets/js/controller/payment-histories-list.js": "/assets/js/controller/payment-histories-list.js",

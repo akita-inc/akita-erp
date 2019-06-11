@@ -135,6 +135,11 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/expense-application-vl.js'
 ], 'public/assets/js/controller/expense-application.js');
+
+mix.js([
+    'resources/assets/js/controller/expense-entertainment-list-vl.js'
+], 'public/assets/js/controller/expense-entertainment-list.js');
+
 mix.js([
     'resources/assets/js/controller/expense-entertainment-vl.js'
 ], 'public/assets/js/controller/expense-entertainment.js');

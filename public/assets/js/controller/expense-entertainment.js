@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -21237,7 +21237,7 @@ var ctrTakeVacationVl = new Vue({
 
 /***/ }),
 
-/***/ 27:
+/***/ 28:
 /*!**************************************************************************!*\
   !*** multi ./resources/assets/js/controller/expense-entertainment-vl.js ***!
   \**************************************************************************/
