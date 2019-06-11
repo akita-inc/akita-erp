@@ -224,7 +224,7 @@ class MstCustomers extends BaseImport
                 if (!empty($record)) {
                     if(isset($record['customer_nm_kana'])){
                         $record['customer_nm_kana'] = Common::convertToKanaExcel($record['customer_nm_kana']);
-                        $record['customer_nm_kana_formal'] = Common::convertToKanaExcel($record['customer_nm_kana_formal']);
+                        $record['customer_nm_kana_formal'] = $record['customer_nm_kana'];
                     }
                     DB::table('mst_customers')->insert($record);
                     DB::commit();
