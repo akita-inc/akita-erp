@@ -275,10 +275,29 @@ class StaffsController extends Controller
                 $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
             }
         }
+        if(isset($data["drivers_license_divisions"]) && count($data["drivers_license_divisions"])>14)
+        {
+           // $validator->errors()->add('drivers_license_divisions', Lang::get('messages.MSG02022'));
+        }
+    }
+    protected function sortDriverLicense(&$data)
+    {
+        $mGeneralPurpose=new MGeneralPurposes();
+        $drivers_license_divisions=$data['drivers_license_divisions'];
+        $mDriversLicense=$mGeneralPurpose->sortDateIdByArray(config('params.data_kb')['drivers_license_divisions_kb'],$drivers_license_divisions);
+        foreach (json_decode(json_encode($mDriversLicense), true) as $key=>$item)
+        {
+            if($key>=0 && $key<14 && $item !=null)
+            {
+                $data["drivers_license_divisions_".($key+1)]=$item['date_id'];
+            }
+        }
     }
     protected function save($data){
         $mStaffAuth =  new MStaffAuths();
         $rolesStaffScreen=$mStaffAuth->getDataScreenStaffAuth();
+        $this->sortDriverLicense($data);
+        dd($data);
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
             $this->password= bcrypt($data['password']);
             $data['password'] = $this->password;
@@ -298,6 +317,7 @@ class StaffsController extends Controller
         $mst_staff_auths=$data["mst_staff_auths"];
         $drivers_license_picture=$data["drivers_license_picture"];
         $deleteFile=$data["deleteFile"];
+        unset($arrayInsert["drivers_license_divisions"]);
         unset($arrayInsert["id"]);
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
