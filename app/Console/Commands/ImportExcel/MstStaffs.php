@@ -117,9 +117,9 @@ class MstStaffs extends BaseImport
     public $ruleValid = [
         'staff_cd'  => 'required',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'kana_custom|nullable|length:50',
+        'last_nm_kana'  => 'nullable|length:50',
         'first_nm'  => 'length:25|nullable',
-        'first_nm_kana'=>'kana_custom|nullable|length:50',
+        'first_nm_kana'=>'nullable|length:50',
         'address1'=>'length:200|nullable',
         'address2'=>'length:200|nullable',
         "landline_phone_number"=>"length:20|nullable",
