@@ -183,7 +183,6 @@ class MstCustomers extends BaseImport
 
             $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_customers.main.fileName'),$error_fg);
             $record['customer_nm_formal'] = $record['customer_nm'];
-            $record['customer_nm_kana_formal'] = $record['customer_nm_kana'];
             $this->insertDB($error_fg, $row, $record);
         }
         foreach($mst_customers_relate_cds as $key=>$values){

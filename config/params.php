@@ -5,6 +5,7 @@ return [
     'page_size_sale_lists'=>50,
     'page_size_purchase_lists'=>50,
     'page_size_take_vacation'=>10,
+    'page_size_expense_entertainment'=>10,
     'data_kb' => [
         'sex'                           => '01001', // 性別ID
         'prefecture_cd'                 => '01002', // 都道府県CD
@@ -325,6 +326,7 @@ return [
     'domain_email_address' => '@akita-inc.co.jp',
     'vacation_wf_type_id_default' => 1,
     'expense_wf_type_id_default'=>3,
+    'expense_entertainment_wf_type_id_default'=>4,
     'mst_numbering_target_default' => [
         'invoice' => '2001',
         'payment' => '3001',

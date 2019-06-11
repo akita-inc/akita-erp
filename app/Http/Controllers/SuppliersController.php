@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Common;
 use App\Http\Controllers\TraitRepositories\ListTrait;
 use App\Http\Controllers\TraitRepositories\FormTrait;
 use App\Helpers\TimeFunction;
@@ -113,17 +114,17 @@ class SuppliersController extends Controller
             $rules = [
                 'mst_suppliers_cd'  => 'required|one_bytes_string|length:5|unique:mst_suppliers,mst_suppliers_cd,NULL,id,deleted_at,NULL',
                 'supplier_nm'  => 'required|length:200',
-                'supplier_nm_kana'  => 'kana|nullable|length:200',
+                'supplier_nm_kana'  => 'nullable|length:200',
                 'supplier_nm_formal'  => 'length:200|nullable',
-                'supplier_nm_kana_formal'  => 'kana|length:200|nullable',
+                'supplier_nm_kana_formal'  => 'length:200|nullable',
                 'dealing_person_in_charge_last_nm'  => 'length:25|nullable',
                 'dealing_person_in_charge_first_nm'  => 'length:25|nullable',
-                'dealing_person_in_charge_last_nm_kana'  => 'kana|nullable|length:50',
-                'dealing_person_in_charge_first_nm_kana'  => 'kana|nullable|length:50',
+                'dealing_person_in_charge_last_nm_kana'  => 'nullable|length:50',
+                'dealing_person_in_charge_first_nm_kana'  => 'nullable|length:50',
                 'accounting_person_in_charge_last_nm'  => 'length:25|nullable',
                 'accounting_person_in_charge_first_nm'  => 'length:25|nullable',
-                'accounting_person_in_charge_last_nm_kana'  => 'kana|nullable|length:50',
-                'accounting_person_in_charge_first_nm_kana'  => 'kana|nullable|length:50',
+                'accounting_person_in_charge_last_nm_kana'  => 'nullable|length:50',
+                'accounting_person_in_charge_first_nm_kana'  => 'nullable|length:50',
                 'phone_number'  => 'phone_number|nullable|length:20',
                 'address1'  => 'nullable|length:20',
                 'address2'  => 'nullable|length:20',
@@ -156,17 +157,17 @@ class SuppliersController extends Controller
                 {
                     $mSupplier->mst_suppliers_cd= $data["mst_suppliers_cd"];
                     $mSupplier->supplier_nm= $data["supplier_nm"];
-                    $mSupplier->supplier_nm_kana= $data["supplier_nm_kana"];
+                    $mSupplier->supplier_nm_kana= Common::convertToKanaExcel($data["supplier_nm_kana"]);
                     $mSupplier->supplier_nm_formal= $data["supplier_nm_formal"];
-                    $mSupplier->supplier_nm_kana_formal= $data["supplier_nm_kana_formal"];
+                    $mSupplier->supplier_nm_kana_formal= Common::convertToKanaExcel($data["supplier_nm_kana_formal"]);
                     $mSupplier->dealing_person_in_charge_last_nm= $data["dealing_person_in_charge_last_nm"];
                     $mSupplier->dealing_person_in_charge_first_nm= $data["dealing_person_in_charge_first_nm"];
-                    $mSupplier->dealing_person_in_charge_last_nm_kana= $data["dealing_person_in_charge_last_nm_kana"];
-                    $mSupplier->dealing_person_in_charge_first_nm_kana= $data["dealing_person_in_charge_first_nm_kana"];
+                    $mSupplier->dealing_person_in_charge_last_nm_kana= Common::convertToKanaExcel($data["dealing_person_in_charge_last_nm_kana"]);
+                    $mSupplier->dealing_person_in_charge_first_nm_kana= Common::convertToKanaExcel($data["dealing_person_in_charge_first_nm_kana"]);
                     $mSupplier->accounting_person_in_charge_last_nm= $data["accounting_person_in_charge_last_nm"];
                     $mSupplier->accounting_person_in_charge_first_nm= $data["accounting_person_in_charge_first_nm"];
-                    $mSupplier->accounting_person_in_charge_last_nm_kana= $data["accounting_person_in_charge_last_nm_kana"];
-                    $mSupplier->accounting_person_in_charge_first_nm_kana= $data["accounting_person_in_charge_first_nm_kana"];
+                    $mSupplier->accounting_person_in_charge_last_nm_kana= Common::convertToKanaExcel($data["accounting_person_in_charge_last_nm_kana"]);
+                    $mSupplier->accounting_person_in_charge_first_nm_kana= Common::convertToKanaExcel($data["accounting_person_in_charge_first_nm_kana"]);
                     $mSupplier->zip_cd= $data["zip_cd"];
                     $mSupplier->prefectures_cd= $data["prefectures_cd"];
                     $mSupplier->address1= $data["address1"];
