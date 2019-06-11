@@ -644,6 +644,7 @@ class MstStaffs extends BaseImport
             }
             $password=$this->generateRandomString(8);
 //            $data["password"]=bcrypt($password);
+            $data["password"]=$password;
             $id = DB::table($this->table)->insertGetId( $data);
             $this->numNormal++;
             if($id)
