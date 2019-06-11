@@ -323,7 +323,7 @@ var ctrStaffsVl = new Vue({
                             }
                             else {
                                 that.errors = {};
-                                window.location.href = listRoute;
+                                // window.location.href = listRoute;
                             }
                             that.field["is_change_password"] = null;
                             that.field["is_change_password_confirm"] = null;
@@ -350,7 +350,7 @@ var ctrStaffsVl = new Vue({
                     else
                     {
                         that.errors = {};
-                        window.location.href = listRoute;
+                        // window.location.href = listRoute;
                     }
                     this.field["is_change_password"] = null;
                     this.field["is_change_password_confirm"] = null;

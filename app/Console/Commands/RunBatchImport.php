@@ -114,14 +114,13 @@ class RunBatchImport extends Command
         }
         foreach ($this->arrayRunTime as $run){
             if($run == "mst_staffs"){
-                $staffAdmin = DB::table($run)->where("staff_cd","=","admin")->first();
+                $staffAdmin = DB::table($run)->where("staff_cd","=",config('params.account_admin'))->first();
                 if( $staffAdmin ){
                     $staffAdmin = (array)$staffAdmin;
                     unset($staffAdmin["id"]);
                 }
             }
             DB::table($run)->truncate();
-
             if($run == "mst_staffs"){
                 if( $staffAdmin ) {
                     DB::table($run)->insert($staffAdmin);
