@@ -465,6 +465,9 @@ class MstVehicles extends BaseImport
 
                         }
                         $data['registration_numbers'] = (isset($data['registration_numbers1']) ? $data['registration_numbers1'] :'').(isset($data['registration_numbers2'])? $data['registration_numbers2'] :'').(isset($data['registration_numbers3'])? $data['registration_numbers3'] :'').(isset($data['registration_numbers4']) ? $data['registration_numbers4'] :'');
+                        if(empty($data['registration_numbers'])){
+                            $data['registration_numbers'] = null;
+                        }
                         DB::table('mst_vehicles')->insert($data);
                         DB::commit();
                         $this->numNormal++;
