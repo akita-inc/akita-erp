@@ -72,7 +72,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-380','filed'=>'staff_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'staff_cd','required'=>true,'attr_input' => "onkeypress='return isNumberKey(event)' maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                     </div>
@@ -137,7 +137,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-380','filed'=>'zip_cd','attr_input' => "maxlength=7"])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'zip_cd','attr_input' => "placeholder='1234567' maxlength=7"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode()">〒 → 住所</button>
@@ -1060,6 +1060,15 @@
         var info_basic_screen="{{in_array(1,$rolesStaffScreen)}}";
         var dependents_screen="{{in_array(5,$rolesStaffScreen)}}";
         var role = "{{$role}}";
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/staffs.js') }}" charset="utf-8"></script>
 @endsection
