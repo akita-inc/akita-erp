@@ -14,6 +14,7 @@ use App\Models\MStaffs;
 use App\Models\MGeneralPurposes;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
+use App\Helpers\Common;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MStaffAuths;
@@ -28,9 +29,9 @@ class StaffsController extends Controller
     public $ruleValid = [
         'staff_cd'  => 'required|one_byte_number|number_range|length:5',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'kana|nullable|length:50',
+        'last_nm_kana'  => 'nullable|length:50',
         'first_nm'  => 'length:25|nullable',
-        'first_nm_kana'=>'kana|nullable|length:50',
+        'first_nm_kana'=>'nullable|length:50',
         'zip_cd'=>'zip_code|nullable|length:7',
         'mail'=>'length:255|nullable|email_format|email_character',
         'address1'=>'length:20|nullable',
@@ -237,9 +238,9 @@ class StaffsController extends Controller
         ]);
         $this->validateBlockCollapse($validator,"mst_staff_dependents",$data,[
             'dept_last_nm' => 'nullable|length:25',
-            'dept_last_nm_kana' => 'kana|nullable|length:50',
+            'dept_last_nm_kana' => 'nullable|length:50',
             'dept_first_nm' => 'nullable|length:25',
-            'dept_first_nm_kana' => 'kana|nullable|length:50',
+            'dept_first_nm_kana' => 'nullable|length:50',
             'dept_social_security_number'=>'nullable|length:10'
         ]);
         $staffScreen=$data["mst_staff_auths"][1]["staffScreen"];
@@ -285,6 +286,8 @@ class StaffsController extends Controller
             $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
             $data['password'] = $passwordStaff->password;
         }
+        $data['last_nm_kana']=isset($data['last_nm_kana'])?Common::convertToKanaExcel($data['last_nm_kana']):'';
+        $data['first_nm_kana']=isset($data['first_nm_kana'])?Common::convertToKanaExcel($data['first_nm_kana']):'';
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
         $mst_staff_auths=$data["mst_staff_auths"];
