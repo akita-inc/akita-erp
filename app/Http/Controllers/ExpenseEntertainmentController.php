@@ -295,7 +295,7 @@ class ExpenseEntertainmentController extends Controller
         $mBussinessOffice = new MBusinessOffices();
         $businessOffices = $mBussinessOffice->getAllData();
         $vacationClasses = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['vacation_indicator']);
-        return view('take_vacation.index',[
+        return view('expense_entertainment.index',[
             'fieldShowTable'=>$fieldShowTable,
             'businessOffices' => $businessOffices,
             'vacationClasses' => $vacationClasses
@@ -326,7 +326,7 @@ class ExpenseEntertainmentController extends Controller
         $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
         $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
         $currentDate = date('Y/m/d');
-        return view('take_vacation.form', array_merge($arrayStore,[
+        return view('expense_entertainment.form', array_merge($arrayStore,[
             'mWPaidVacation' => $mWPaidVacation,
             'listVacationIndicator' => $listVacationIndicator,
             'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,
