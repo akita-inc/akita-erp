@@ -42,3 +42,6 @@ Route::group(['middleware' => 'UpdateLogRouters'], function () {
         include "expense-application.php";
     });
 });
+Route::group(['name' => 'storage', 'prefix' => 'storage'], function() {
+    Route::get('{filename}', ['as' => 'get-file', 'uses' => 'StorageController@getFile']);
+});
