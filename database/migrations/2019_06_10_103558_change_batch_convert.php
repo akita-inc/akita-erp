@@ -15,6 +15,7 @@ class ChangeBatchConvert extends Migration
     {
         // mst_staffs
         Schema::table('mst_staffs', function (Blueprint $table) {
+            $table->integer('staff_cd')->change();
             $table->string('address1',200)->change();
             $table->string('address2',200)->change();
             $table->string('address3',200)->change();
@@ -29,6 +30,7 @@ class ChangeBatchConvert extends Migration
 
         // mst_customers
         Schema::table('mst_customers', function (Blueprint $table) {
+            $table->integer('mst_customers_cd')->change();
             $table->string('address1',200)->change();
             $table->string('address2',200)->change();
             $table->string('address3',200)->change();
@@ -36,6 +38,7 @@ class ChangeBatchConvert extends Migration
 
         // mst_suppliers
         Schema::table('mst_suppliers', function (Blueprint $table) {
+            $table->integer('mst_suppliers_cd')->change();
             $table->string('address1',200)->change();
             $table->string('address2',200)->change();
             $table->string('address3',200)->change();
@@ -51,6 +54,7 @@ class ChangeBatchConvert extends Migration
     {
         // mst_staffs
         Schema::table('mst_staffs', function (Blueprint $table) {
+            $table->string('staff_cd',5)->change();
             $table->string('address1',20)->change();
             $table->string('address2',20)->change();
             $table->string('address3',50)->change();
@@ -65,6 +69,7 @@ class ChangeBatchConvert extends Migration
 
         // mst_customers
         Schema::table('mst_customers', function (Blueprint $table) {
+            $table->string('mst_customers_cd',5)->change();
             $table->string('address1',20)->change();
             $table->string('address2',20)->change();
             $table->string('address3',50)->change();
@@ -72,6 +77,7 @@ class ChangeBatchConvert extends Migration
 
         // mst_suppliers
         Schema::table('mst_suppliers', function (Blueprint $table) {
+            $table->string('mst_suppliers_cd',5)->change();
             $table->string('address1',20)->change();
             $table->string('address2',20)->change();
             $table->string('address3',50)->change();
