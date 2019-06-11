@@ -643,7 +643,8 @@ class MstStaffs extends BaseImport
                 unset($data['staff_dependents_nm_'.$k]);
             }
             $password=$this->generateRandomString(8);
-            $data["password"]=bcrypt($password);
+//            $data["password"]=bcrypt($password);
+            $data["password"]=$password;
             $id = DB::table($this->table)->insertGetId( $data);
             $this->numNormal++;
             if($id)
