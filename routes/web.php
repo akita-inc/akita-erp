@@ -40,6 +40,7 @@ Route::group(['middleware' => 'UpdateLogRouters'], function () {
         include "accounts_payable_data_output.php";
         include "payment-processing.php";
         include "expense-application.php";
+        include "expense-entertainment.php";
     });
 });
 Route::group(['name' => 'storage', 'prefix' => 'storage'], function() {

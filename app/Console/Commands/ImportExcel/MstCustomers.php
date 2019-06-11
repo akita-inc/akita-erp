@@ -224,9 +224,9 @@ class MstCustomers extends BaseImport
                 if (!empty($record)) {
                     if(isset($record['customer_nm_kana'])){
                         $record['customer_nm_kana'] = Common::convertToKanaExcel($record['customer_nm_kana']);
-                        $record['customer_nm_kana_formal'] = Common::convertToKanaExcel($record['customer_nm_kana_formal']);
+                        $record['customer_nm_kana_formal'] = $record['customer_nm_kana'];
                     }
-                    DB::table('mst_customers_copy1')->insert($record);
+                    DB::table('mst_customers')->insert($record);
                     DB::commit();
                     $this->numNormal++;
                 }
@@ -244,7 +244,7 @@ class MstCustomers extends BaseImport
         }
     }
     protected function validate(&$record, $row, $column_name, $fileName, &$error_fg){
-        if (DB::table('mst_customers_copy1')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
+        if (DB::table('mst_customers')->where('mst_customers_cd', '=', $record['mst_customers_cd'])->whereNull('deleted_at')->exists()) {
             $error_fg = true;
             $this->log("DataConvert_Err_ID_Match", Lang::trans("log_import.existed_record_in_db", [
                 "fileName" => $fileName,

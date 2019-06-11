@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Validator;
 class ExpenseEntertainmentController extends Controller
 {
     use ListTrait,FormTrait,WorkflowTrait;
-    public $table = "wf_business_entertaining";
+    public $table = "wf_business_entertaining_expenses";
     public $ruleValid = [
         'applicant_office_nm' => 'required',
         'approval_kb' => 'required',
@@ -65,48 +65,31 @@ class ExpenseEntertainmentController extends Controller
 
     protected function search($data){
         $where = array(
-            'vacation_id' => $data['fieldSearch']['vacation_id'],
+            'applicant_id' => $data['fieldSearch']['applicant_id'],
             'applicant_nm' => $data['fieldSearch']['applicant_nm'],
-            'mst_business_office_id' => $data['fieldSearch']['sales_office'],
-            'approval_kb' => $data['fieldSearch']['vacation_class'],
-            'show_approved' =>$data['fieldSearch']['show_approved'],
+            'mst_business_office_id' => $data['fieldSearch']['applicant_office_id'],
+            'client_company_name' => $data['fieldSearch']['client_company_name'],
+            'show_status' =>$data['fieldSearch']['show_status'],
             'show_deleted' =>$data['fieldSearch']['show_deleted'],
         );
-        //select
         $this->query->select(
-            'wf_paid_vacation.id',
-            DB::raw("DATE_FORMAT(wf_paid_vacation.regist_date,'%Y/%m/%d') as applicant_date"),
+            'wf_business_entertaining_expenses.id',
+            DB::raw("DATE_FORMAT(wf_business_entertaining_expenses.regist_date,'%Y/%m/%d') as regist_date"),
             'ms.staff_cd as staff_cd',
             DB::raw('CONCAT_WS("    ",ms.last_nm,ms.first_nm) as applicant_nm'),
-            DB::raw('CONCAT_WS("    ",ms.last_nm_kana,ms.first_nm_kana) as applicant_nm_kana'),
-            'mbo.id as business_office_id',
-            'mbo.business_office_nm as sales_office',
-            'mgp.date_id as vacation_class_id',
-            'mgp.date_nm as vacation_class_nm',
-            'wf_paid_vacation.start_date as start_date',
-            'wf_paid_vacation.days as days',
-            'wf_paid_vacation.times as times',
+            'offices.business_office_nm as applicant_office_id',
+            'wf_business_entertaining_expenses.date',
+            'wf_business_entertaining_expenses.client_company_name',
+            DB::raw('CONCAT_WS("",wf_business_entertaining_expenses.client_members_count,"名 / ",wf_business_entertaining_expenses.own_members_count,"名") as participant_amount'),
+            'wf_business_entertaining_expenses.cost',
+            'wf_business_entertaining_expenses.delete_at',
             DB::raw("
             CASE	
-                WHEN wf_paid_vacation.start_date = wf_paid_vacation.end_date THEN
-                DATE_FORMAT(wf_paid_vacation.start_date,'%Y/%m/%d')
-                ELSE CONCAT_WS( '～', DATE_FORMAT(wf_paid_vacation.start_date,'%Y/%m/%d'), DATE_FORMAT(wf_paid_vacation.end_date,'%Y/%m/%d')) 
-            END AS period,
-            CASE		
-                WHEN ( wf_paid_vacation.days = 0 AND wf_paid_vacation.times = 0 ) THEN
-                '' 
-                WHEN ( wf_paid_vacation.days <> 0 AND wf_paid_vacation.times = 0 ) THEN
-                CONCAT( wf_paid_vacation.days, '日' ) 
-                WHEN ( wf_paid_vacation.days = 0 AND wf_paid_vacation.times <> 0 ) THEN
-                CONCAT( wf_paid_vacation.times, '時間' )
-                ELSE CONCAT( wf_paid_vacation.days, '日 ', wf_paid_vacation.times, '時間' ) 
-            END AS datetime,
-            CASE	
-                WHEN (( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id) = 0) THEN
+                WHEN (( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id) = 0) THEN
                 '---'	
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 ) = 0 ) THEN
-                '承認済み' 
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 ) = 0 ) THEN
+               '承認済み' 
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
 		        '却下'
             ELSE 
                 CONCAT(
@@ -116,29 +99,28 @@ class ExpenseEntertainmentController extends Controller
                     FROM
                         wf_approval_status was			
                     WHERE
-                        was.wf_type_id = ".$this->wf_type_id." 
-                        AND was.wf_id = wf_paid_vacation.id
+                        was.wf_type_id = ".config('params.expense_wf_type_id_default')."
+                        AND was.wf_id = wf_business_entertaining_expenses.id
                         AND was.approval_fg = 0
                     ORDER BY
                         was.approval_steps,
                         was.id 
                         LIMIT 1 
-                    ),''),
-                    ' 承認待ち' 
+                    ),''),' 承認待ち' 
                 ) 
 	        END AS approval_status,
 	        CASE -- approval_fg
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 ) = 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 ) = 0 ) THEN
                 (SELECT  approval_fg
                 FROM wf_approval_status 
-                WHERE wf_id = wf_paid_vacation.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 ORDER BY id
                 LIMIT 1)-- 承認済み
                 
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
                 (SELECT  approval_fg
                 FROM wf_approval_status 
-                WHERE wf_id = wf_paid_vacation.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 2
                 ORDER BY id
                 LIMIT 1)-- 却下
@@ -146,24 +128,23 @@ class ExpenseEntertainmentController extends Controller
                 ELSE
                 (SELECT  approval_fg
                 FROM wf_approval_status 
-                WHERE wf_id = wf_paid_vacation.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 0
                 ORDER BY approval_steps,id
                 LIMIT 1)
             END AS approval_fg,
-
             CASE -- approval_levels
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 ) = 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 ) = 0 ) THEN
                 (SELECT  approval_levels
                 FROM wf_approval_status 
-                WHERE wf_id = wf_paid_vacation.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 ORDER BY id
                 LIMIT 1)-- 承認済み
                 
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_paid_vacation.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
                 (SELECT  approval_levels
                 FROM wf_approval_status 
-                WHERE wf_id = wf_paid_vacation.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 2
                 ORDER BY id
                 LIMIT 1)-- 却下
@@ -171,81 +152,71 @@ class ExpenseEntertainmentController extends Controller
                 ELSE
                 (SELECT  approval_levels
                 FROM wf_approval_status 
-                WHERE wf_id = wf_paid_vacation.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 0
                 ORDER BY approval_steps,id
                 LIMIT 1)
             END AS approval_levels
-            "),
-            'wf_paid_vacation.delete_at'
+            ")
         );
-        //join
         $this->query->join('mst_staffs as ms', function($join){
-            $join->on('ms.staff_cd','=','wf_paid_vacation.applicant_id');
+            $join->on('ms.staff_cd','=','wf_business_entertaining_expenses.applicant_id')
+                ->whereRaw('ms.deleted_at IS NULL');
+        })->join('mst_business_offices as offices', function($join){
+            $join->on('offices.id','=','wf_business_entertaining_expenses.applicant_office_id')
+                ->whereRaw('offices.deleted_at IS NULL');
         });
-        $this->query->join('mst_business_offices as mbo', function($join){
-            $join->on('mbo.id','=','wf_paid_vacation.applicant_office_id');
-        });
-        $this->query->join('mst_general_purposes as mgp', function($join){
-            $join->on('mgp.date_id','=','wf_paid_vacation.approval_kb')
-                ->where('mgp.data_kb',config('params.data_kb')['vacation_indicator']);
-        });
-        //where
         if(Auth::user()->approval_levels === null){
-            $this->query->where('wf_paid_vacation.applicant_id','=',Auth::user()->staff_cd);
+            $this->query->where('wf_business_entertaining_expenses.applicant_id','=',Auth::user()->staff_cd);
         }
-        if($where['vacation_id']!='')
+        if($where['applicant_id']!='')
         {
-            $this->query->where('wf_paid_vacation.id','LIKE','%' .$where['vacation_id'].'%');
+            $this->query->where('wf_business_entertaining_expenses.id','LIKE','%' .$where['applicant_id'].'%');
         }
         //
         if($where['applicant_nm']!='')
         {
             $this->query->where( DB::raw('CONCAT(ms.last_nm,ms.first_nm)'), 'LIKE', '%'.$where['applicant_nm'].'%');
         }
-        //
         if($where['mst_business_office_id']!='')
         {
-            $this->query->where('wf_paid_vacation.applicant_office_id',$where['mst_business_office_id']);
+            $this->query->where('wf_business_entertaining_expenses.applicant_office_id',$where['mst_business_office_id']);
         }
-        //
-        if($where['approval_kb']!='')
+        if($where['client_company_name']!='')
         {
-            $this->query->where('wf_paid_vacation.approval_kb',$where['approval_kb']);
+            $this->query->where( 'wf_business_entertaining_expenses.client_company_name', 'LIKE', '%'.$where['client_company_name'].'%');
         }
-        //
-        if($where['show_approved']!=true)
+        if($where['show_status']!=true)
         {
             $this->query->whereRaw('(SELECT COUNT(*)
                                     FROM wf_approval_status
-                                    WHERE wf_id = wf_paid_vacation.id 
-                                    AND wf_type_id = '.$this->wf_type_id.' 
-                                    AND (approval_fg = 0 
-                                    OR approval_fg  = 2)) > 0');
+                                    WHERE wf_id = wf_business_entertaining_expenses.id AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
+                                    AND approval_fg = 0) > 0');
         }
-        //
         if($where['show_deleted']!=true)
         {
             $this->query->whereNull('delete_at');
         }
-        //Order by
         if ($data["order"]["col"] != '') {
             $orderCol = $data["order"]["col"];
             if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
-                if($orderCol  == 'days,times'){
-                    $orderCol = 'days DESC,times DESC';
+                if($orderCol  == 'client_members_count,own_members_count'){
+                    $orderCol = 'wf_business_entertaining_expenses.client_members_count DESC,wf_business_entertaining_expenses.own_members_count DESC';
                 }
                 else if($orderCol  == 'approval_fg,approval_levels'){
                     $orderCol = 'approval_fg DESC,approval_levels DESC';
+                }
+                else if($orderCol  == 'applicant_office_id'){
+                    $orderCol = 'offices.business_office_nm DESC';
                 }
                 else{
                     $orderCol .= " DESC";
                 }
             }
             $this->query->orderbyRaw($orderCol);
-        } else {
-            $this->query->orderBy('id','desc');
         }
+        $this->query->orderBy('wf_business_entertaining_expenses.id','desc');
+
     }
 
     public function index(Request $request){
@@ -255,35 +226,40 @@ class ExpenseEntertainmentController extends Controller
                 "classTD" => "text-center",
                 "sortBy"=>"id"
             ],
-            'applicant_date' => [
+            'regist_date' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"applicant_date"
+                "sortBy"=>"regist_date"
             ],
             'applicant_nm' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
                 "sortBy"=>"applicant_nm_kana"
             ],
-            'sales_office' => [
+            'applicant_office_id' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
                 "sortBy"=>"business_office_id"
             ],
-            'vacation_class_nm' => [
+            'date' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"vacation_class_id"
+                "sortBy"=>"date"
             ],
-            'period' => [
+            'client_company_name' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"start_date"
+                "sortBy"=>"client_company_name"
             ],
-            'datetime' => [
+            'participant_amount' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"days,times"
+                "sortBy"=>"client_members_count,own_members_count"
+            ],
+            'cost' => [
+                "classTH" => "min-wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"cost"
             ],
             'approval_status' => [
                 "classTH" => "min-wd-100",
@@ -295,7 +271,7 @@ class ExpenseEntertainmentController extends Controller
         $mBussinessOffice = new MBusinessOffices();
         $businessOffices = $mBussinessOffice->getAllData();
         $vacationClasses = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['vacation_indicator']);
-        return view('take_vacation.index',[
+        return view('expense_entertainment.index',[
             'fieldShowTable'=>$fieldShowTable,
             'businessOffices' => $businessOffices,
             'vacationClasses' => $vacationClasses
@@ -326,7 +302,7 @@ class ExpenseEntertainmentController extends Controller
         $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
         $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
         $currentDate = date('Y/m/d');
-        return view('take_vacation.form', array_merge($arrayStore,[
+        return view('expense_entertainment.form', array_merge($arrayStore,[
             'mWPaidVacation' => $mWPaidVacation,
             'listVacationIndicator' => $listVacationIndicator,
             'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,

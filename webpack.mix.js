@@ -33,6 +33,7 @@ mix.js([
     'resources/assets/js/service/accounts-payable-data-output-service.js',
     'resources/assets/js/service/payment-processing-service.js',
     'resources/assets/js/service/expense-application-service.js',
+    'resources/assets/js/service/expense-entertainment-service.js',
 ], 'public/assets/js/service/service.js');
 
 //mix directive
@@ -134,3 +135,11 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/expense-application-vl.js'
 ], 'public/assets/js/controller/expense-application.js');
+
+mix.js([
+    'resources/assets/js/controller/expense-entertainment-list-vl.js'
+], 'public/assets/js/controller/expense-entertainment-list.js');
+
+mix.js([
+    'resources/assets/js/controller/expense-entertainment-vl.js'
+], 'public/assets/js/controller/expense-entertainment.js');
