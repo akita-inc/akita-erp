@@ -200,9 +200,9 @@ class MstStaffQualifications extends BaseImport{
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => substr($record[$field], 0, $error[0]),
+                            "DBvalue" => null,
                         ]));
-                        $record[$field] = substr($record[$field], 0, $error[0]);
+                        $record[$field] = null;
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
