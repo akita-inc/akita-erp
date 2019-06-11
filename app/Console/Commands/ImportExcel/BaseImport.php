@@ -23,7 +23,6 @@ class BaseImport{
     public $objPHPExcel="";
     public $tableLabel = [
         'mst_staffs' => '社員',
-        'mst_staffs_copy1' => '社員',
         'mst_staff_dependents' => '社員扶養者',
         'mst_staff_qualifications' => '社員保有資格',
         'mst_vehicles' => '車両',
@@ -175,7 +174,7 @@ class BaseImport{
                 $this->import();
                 $this->numRead++;
             }
-            if($this->table=="mst_staffs" || $this->table=="mst_staffs_copy1")
+            if($this->table=="mst_staffs")
             {
                 $this->numRead=$this->numNormal+$this->numErr;
                 $this->exportPassword();
