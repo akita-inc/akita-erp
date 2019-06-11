@@ -20858,6 +20858,7 @@ var ctrExpenseApplicationVl = new Vue({
     expense_application_edit: 0,
     expense_application_id: null,
     field: {
+      wf_business_entertaining_id: "",
       applicant_id: staff_cd,
       staff_nm: staff_nm,
       applicant_office_id: mst_business_office_id,
@@ -20900,8 +20901,7 @@ var ctrExpenseApplicationVl = new Vue({
     listStaffs: [],
     message: '',
     currentIndex: 0,
-    listWfAdditionalNoticeDB: JSON.parse(listWfAdditionalNotice.replace(/&quot;/g, '"')),
-    wf_business_entertaining_id: ""
+    listWfAdditionalNoticeDB: JSON.parse(listWfAdditionalNotice.replace(/&quot;/g, '"'))
   },
   methods: {
     resetForm: function resetForm() {
@@ -21180,6 +21180,35 @@ var ctrExpenseApplicationVl = new Vue({
         that.field.deposit_amount = that.field.deposit_amount == null ? "" : that.addComma(that.field.deposit_amount);
         that.deposit_flg = false;
       }
+    },
+    searchEntertainment: function searchEntertainment() {
+      var that = this;
+
+      if (that.field.wf_business_entertaining_id == '') {
+        alert(messages['MSG10035']);
+        return;
+      } else {
+        if (isNaN(that.field.wf_business_entertaining_id)) {
+          alert(messages['MSG10010']);
+          return;
+        }
+      }
+
+      expense_entertainment_service.searchEntertainment({
+        wf_business_entertaining_id: that.field.wf_business_entertaining_id
+      }).then(function (response) {
+        if (!response.success) {
+          alert(response.msg);
+          return false;
+        } else {
+          var result = response.info;
+          that.field.registration_numbers = result.registration_numbers;
+          that.field.vehicle_size = result.vehicle_size_kb;
+          that.field.vehicle_body_shape = result.car_body_shape;
+          that.field.max_load_capacity = result.max_loading_capacity;
+          that.addComma('max_load_capacity');
+        }
+      });
     }
   },
   mounted: function mounted() {

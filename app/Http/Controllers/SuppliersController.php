@@ -30,6 +30,7 @@ class SuppliersController extends Controller
         $where = array(
             'suppliers_cd' => $data['fieldSearch']['mst_suppliers_cd'],
             'supplier_nm' => $data['fieldSearch']['supplier_nm'],
+            'supplier_nm_kana_formal' => $data['fieldSearch']['supplier_nm_kana_formal'],
         );
 
         $this->query->select('mst_suppliers.id',
@@ -51,7 +52,10 @@ class SuppliersController extends Controller
             $this->query->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%");
         }
         if ($where['supplier_nm'] != '') {
-            $this->query->where('mst_suppliers.supplier_nm_kana_formal', "LIKE", "%{$where['supplier_nm']}%");
+            $this->query->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
+        }
+        if ($where['supplier_nm_kana_formal'] != '') {
+            $this->query->where('mst_suppliers.supplier_nm_kana_formal', "LIKE", "%{$where['supplier_nm_kana_formal']}%");
         }
         if ($data["order"]["col"] != '') {
             if ($data["order"]["col"] == 'street_address')
