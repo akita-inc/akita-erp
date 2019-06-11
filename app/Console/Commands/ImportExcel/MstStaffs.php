@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Validator;
 class MstStaffs extends BaseImport
 {
     public $path = "";
-    public $table="mst_staffs_copy1";
     public $error_fg=false;
     public $belongCompanyId=null;
     public $prefCdByPrefNameCustom=[];
@@ -143,7 +142,6 @@ class MstStaffs extends BaseImport
     {
         $this->path = config('params.import_file_path.mst_staffs.main');
         date_default_timezone_set("Asia/Tokyo");
-        $this->table="mst_staffs_copy1";
         $this->dateTimeRun = date("YmdHis");
         $mGeneralPurposes=new MGeneralPurposes();
         $mBusinessOffices=new MBusinessOffices();
@@ -363,7 +361,6 @@ class MstStaffs extends BaseImport
         return $recordChild;
     }
     public function mainReading($rowData,$row){
-        $this->table="mst_staffs_copy1";
         $excel_column = $this->excel_column;
         $record = array();
         $this->error_fg=false;
