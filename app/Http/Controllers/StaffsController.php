@@ -26,7 +26,7 @@ class StaffsController extends Controller
     public $password=null;
 
     public $ruleValid = [
-        'staff_cd'  => 'required|one_bytes_string|length:5',
+        'staff_cd'  => 'required|one_byte_number|number_range|length:5',
         'last_nm'  => 'nullable|length:25',
         'last_nm_kana'  => 'kana|nullable|length:50',
         'first_nm'  => 'length:25|nullable',
