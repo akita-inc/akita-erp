@@ -23,6 +23,7 @@ class ChangeBatchConvert extends Migration
 
         // mst_vehicles
         Schema::table('mst_vehicles', function (Blueprint $table) {
+            $table->string('registration_numbers',50)->nullable()->change();
             $table->integer('mst_business_office_id')->nullable()->change();
         });
 
@@ -58,6 +59,7 @@ class ChangeBatchConvert extends Migration
 
         // mst_vehicles
         Schema::table('mst_vehicles', function (Blueprint $table) {
+            $table->string('registration_numbers',50)->change();
             $table->integer('mst_business_office_id')->change();
         });
 
