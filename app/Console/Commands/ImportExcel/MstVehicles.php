@@ -120,10 +120,10 @@ class MstVehicles extends BaseImport
         'etc_numbers'=>'nullable|length:19',
     ];
     public $rules_extra_2 = [
-        'registration_numbers1'=>'required|two_bytes_string|length:10',
-        'registration_numbers2'=>'required|one_bytes_string|length:3',
-        'registration_numbers3'=>'required|hiragana|length:1',
-        'registration_numbers4'=>'required|one_byte_number|length:4',
+        'registration_numbers1'=>'nullable|two_bytes_string|length:10',
+        'registration_numbers2'=>'nullable|one_bytes_string|length:3',
+        'registration_numbers3'=>'nullable|hiragana|length:1',
+        'registration_numbers4'=>'nullable|one_byte_number|length:4',
         'transmissions_notes'=>'nullable|length:50',
     ];
     public $rules_extra_3 = [
@@ -352,7 +352,7 @@ class MstVehicles extends BaseImport
             }
 
             $data = $record;
-            if (DB::table('mst_vehicles')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
+            if (DB::table('mst_vehicles_copy2')->where('vehicles_cd', '=', $record['vehicles_cd'])->whereNull('deleted_at')->exists()) {
                 $error_fg = true;
                 $existed_record_in_db = true;
                 $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.existed_record_in_db",[
@@ -420,11 +420,7 @@ class MstVehicles extends BaseImport
                                         $data[$field] = null;
                                     }
                                 }else if($ruleName=='Required'){
-                                    if(strpos($field, 'registration_numbers') === 0) {
-                                        $data[$field] = null;
-                                    }else{
-                                        $error_fg = true;
-                                    }
+                                    $error_fg = true;
                                     $this->log("DataConvert_Err_required",Lang::trans("log_import.required",[
                                         "fileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'). ($k==2 ? '.'.$data['sheet'] : ''),
                                         "fieldName" => $this->column_name[$field],
@@ -446,13 +442,11 @@ class MstVehicles extends BaseImport
                     unset($this->{"data_extra_file_".$k}[$record['vehicles_cd']]);
                 }else{
                     if($k==2 && $existed_record_in_db==false){
-                        $error_fg = true;
-                        $this->log("DataConvert_Err_required",Lang::trans("log_import.registration_numbers_required",[
-                            'mainFileName' => config('params.import_file_path.mst_vehicles.main.fileName'),
-                            "fieldName" => '登録番号',
-                            "row" => $row,
-                            "extraFileName" => config('params.import_file_path.mst_vehicles.extra'.$k.'.fileName'),
-                        ]));
+                        $data['registration_numbers'] = null;
+                        $data['registration_numbers1'] = null;
+                        $data['registration_numbers2'] = null;
+                        $data['registration_numbers3'] = null;
+                        $data['registration_numbers4'] = null;
                     }
                 }
             }
@@ -468,7 +462,7 @@ class MstVehicles extends BaseImport
                         if(empty($data['registration_numbers'])){
                             $data['registration_numbers'] = null;
                         }
-                        DB::table('mst_vehicles')->insert($data);
+                        DB::table('mst_vehicles_copy2')->insert($data);
                         DB::commit();
                         $this->numNormal++;
                     }

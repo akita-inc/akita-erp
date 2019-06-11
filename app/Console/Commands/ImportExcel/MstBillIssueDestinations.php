@@ -117,9 +117,9 @@ class MstBillIssueDestinations extends BaseImport
                                 "excelValue" => $record[$field],
                                 "tableName" => $this->table,
                                 "DBFieldName" => $field,
-                                "DBvalue" => mb_substr($record[$field],0,$error[0]),
+                                "DBvalue" => null,
                             ]));
-                            $record[$field] = mb_substr($record[$field],0,$error[0]);
+                            $record[$field] = null;
                         }
                         elseif($ruleName=='Required')
                         {
