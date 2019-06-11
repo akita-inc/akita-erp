@@ -24,24 +24,29 @@
             @endif
             <div class="sub-header-line-two p-t-30 frm-search-list">
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 row">
-                        <div class="col-md-3 padding-row-5 col-list-search-f">
+                    <div class="col-md-9 col-sm-12 row">
+                        <div class="col-md-1 padding-row-5 col-list-search-f">
                             {{trans("suppliers.list.search.customer")}}
                         </div>
-                        <div class="col-md-4 padding-row-5 grid-form-search">
+                        <div class="col-md-2 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_suppliers_cd">
                                 {{trans("suppliers.list.search.code")}}
                             </label>
                             <input type="text" v-model="fieldSearch.mst_suppliers_cd" name="supplier_cd" id="supplier_cd" class="form-control">
                         </div>
-                        <div class="col-md-5 padding-row-5">
+                        <div class="col-md-3 padding-row-5">
                             <label class="grid-form-search-label" for="input_mst_suppliers_name">
                                 {{trans("suppliers.list.search.name")}}
                             </label>
                             <input type="text" v-model="fieldSearch.supplier_nm" name="supplier_nm" id="supplier_nm" class="form-control">
                         </div>
+                        <div class="col-md-3 padding-row-5">
+                            <label class="grid-form-search-label" for="input_mst_suppliers_name_kana_formal">
+                                {{trans("suppliers.list.search.name_kana")}}
+                            </label>
+                            <input type="text" v-model="fieldSearch.supplier_nm_kana_formal" name="supplier_nm_kana_formal" id="supplier_nm_kana_formal" class="form-control">
+                        </div>
                     </div>
-                    <div class="col-md-4 col-sm-12 row"></div>
                     <div class="col-md-3 col-sm-12 row">
                         <div class="col-md-5 lh-38 padding-row-5">
                             <button class="btn btn-black w-100" type="button" v-on:click="clearCondition()" >

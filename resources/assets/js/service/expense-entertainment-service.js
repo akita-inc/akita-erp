@@ -1,4 +1,4 @@
-expense_entertainment_list_service = {
+expense_entertainment_service = {
     loadList: function (data) {
         return axios.post('/expense_entertainment/api-v1/getItems', data).then(function (response) {
             return response.data;
@@ -36,6 +36,13 @@ expense_entertainment_list_service = {
     },
     submit: function (data) {
         return axios.post('/expense_entertainment/api-v1/submit', data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
+    searchEntertainment: function (data) {
+        return axios.post('/empty_info/api-v1/search-entertainment',data).then(function (response) {
             return response.data;
         }).catch(function (error) {
             return error;

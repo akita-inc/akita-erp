@@ -11,6 +11,7 @@ use App\Models\MStaffs;
 use App\Models\MWfAdditionalNotice;
 use App\Models\MWfRequireApproval;
 use App\Models\WApprovalStatus;
+use App\Models\WFBusinessEntertaining;
 use App\Models\WPaidVacation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
@@ -400,6 +401,7 @@ class ExpenseEntertainmentController extends Controller
         }
         return $id;
     }
+
     public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
         $mWFBusinessEntertaining=new WFBusinessEntertaining();
         $data = $mWFBusinessEntertaining->getInfoForMail($id);
@@ -409,5 +411,19 @@ class ExpenseEntertainmentController extends Controller
         $subject = str_replace(['[id]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
         $this->sendMail($configMail,$mailTo,$mailCC,$subject,$text);
     }
-
+    public function searchEntertainment(Request $request){
+        $input = $request->all();
+        $data = WFBusinessEntertaining::find($input['wf_business_entertaining_id']);
+        if($data){
+            return response()->json([
+                'success'=>true,
+                'info'=> $data,
+            ]);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'msg'=> Lang::get('messages.MSG10036'),
+            ]);
+        }
+    }
 }

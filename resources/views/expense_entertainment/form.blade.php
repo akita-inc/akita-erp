@@ -92,8 +92,8 @@
                                 <div class="break-row-form"></div>
                                 <div class="col-md-5 col-sm-12">
                                     <div class="wrap-control-group">
-                                        <label for="search_vehicle">ナンバー検索</label>
-                                        <input v-model="wf_business_entertaining_id"
+                                        <label for="search_business_entertaining">{{ trans("expense_entertainment.create.field.wf_business_entertaining_id") }}</label>
+                                        <input v-model="field.wf_business_entertaining_id"
                                                type="tel"
                                                class="form-control w-50"
                                                id="search_business_entertaining"
@@ -103,7 +103,7 @@
 
                                 </div>
                                 <div class="col-md-7 col-sm-12">
-                                    <button class="btn btn-outline-secondary" type="button" @click="searchEntertaining">{{ trans("expense_entertainment.create.button.data_acquisition") }}</button>
+                                    <button class="btn btn-outline-secondary" type="button" @click="searchEntertainment">{{ trans("expense_entertainment.create.button.data_acquisition") }}</button>
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-4 col-sm-12">
@@ -213,7 +213,8 @@
         var listRoute = "{{route('expense_entertainment.list')}}";
         var defaultApprovalKb = "{{array_keys($listDepositClassification)[0]}}";
         var messages = [];
-        messages["MSG10028"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10028'); ?>";
+        messages["MSG10035"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10035'); ?>";
+        messages["MSG10036"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10036'); ?>";
         var staff_cd = "<?php echo \Illuminate\Support\Facades\Auth::user()->staff_cd ?>";
         var staff_nm = "<?php echo \Illuminate\Support\Facades\Auth::user()->last_nm. \Illuminate\Support\Facades\Auth::user()->first_nm?>";
         var mst_business_office_id = "{{$businessOfficeID}}";

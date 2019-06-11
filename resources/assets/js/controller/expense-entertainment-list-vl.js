@@ -41,7 +41,7 @@ var ctrExpenseEntertainmentListVl = new Vue({
             };
             var that = this;
             that.loading = true;
-            expense_entertainment_list_service.loadList(data).then((response) => {
+            expense_entertainment_service.loadList(data).then((response) => {
                 if (response.data.data.length===0) {
                     this.message = messages["MSG05001"];
                 } else {
@@ -62,7 +62,7 @@ var ctrExpenseEntertainmentListVl = new Vue({
             });
         },
         checkIsExist: function (id) {
-            expense_entertainment_list_service.checkIsExist(id).then((response) => {
+            expense_entertainment_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
                     this.getItems(1);

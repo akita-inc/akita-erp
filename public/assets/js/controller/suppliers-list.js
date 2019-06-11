@@ -3251,7 +3251,8 @@ var ctrSuppliersListVl = new Vue({
     items: [],
     fieldSearch: {
       mst_suppliers_cd: "",
-      supplier_nm: ""
+      supplier_nm: "",
+      supplier_nm_kana_formal: ""
     },
     message: '',
     pagination: {
@@ -3321,6 +3322,7 @@ var ctrSuppliersListVl = new Vue({
     clearCondition: function clearCondition() {
       this.fieldSearch.mst_suppliers_cd = '';
       this.fieldSearch.supplier_nm = '';
+      this.fieldSearch.supplier_nm_kana_formal = '';
     },
     deleteSupplier: function deleteSupplier(id) {
       var _this2 = this;
