@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Validator;
 class ExpenseEntertainmentController extends Controller
 {
     use ListTrait,FormTrait,WorkflowTrait;
-    public $table = "wf_business_entertaining";
+    public $table = "wf_business_entertaining_expenses";
     public $ruleValid = [
         'applicant_office_nm' => 'required',
         'approval_kb' => 'required',
@@ -73,23 +73,23 @@ class ExpenseEntertainmentController extends Controller
             'show_deleted' =>$data['fieldSearch']['show_deleted'],
         );
         $this->query->select(
-            'wf_business_entertaining.id',
-            DB::raw("DATE_FORMAT(wf_business_entertaining.regist_date,'%Y/%m/%d') as regist_date"),
+            'wf_business_entertaining_expenses.id',
+            DB::raw("DATE_FORMAT(wf_business_entertaining_expenses.regist_date,'%Y/%m/%d') as regist_date"),
             'ms.staff_cd as staff_cd',
             DB::raw('CONCAT_WS("    ",ms.last_nm,ms.first_nm) as applicant_nm'),
             'offices.business_office_nm as applicant_office_id',
-            'wf_business_entertaining.date',
-            'wf_business_entertaining.client_company_name',
-            DB::raw('CONCAT_WS("",wf_business_entertaining.client_members_count,"名 / ",wf_business_entertaining.own_members_count,"名") as participant_amount'),
-            'wf_business_entertaining.cost',
-            'wf_business_entertaining.delete_at',
+            'wf_business_entertaining_expenses.date',
+            'wf_business_entertaining_expenses.client_company_name',
+            DB::raw('CONCAT_WS("",wf_business_entertaining_expenses.client_members_count,"名 / ",wf_business_entertaining_expenses.own_members_count,"名") as participant_amount'),
+            'wf_business_entertaining_expenses.cost',
+            'wf_business_entertaining_expenses.delete_at',
             DB::raw("
             CASE	
-                WHEN (( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining.id) = 0) THEN
+                WHEN (( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id) = 0) THEN
                 '---'	
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining.id AND approval_fg <> 1 ) = 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 ) = 0 ) THEN
                '承認済み' 
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
 		        '却下'
             ELSE 
                 CONCAT(
@@ -100,7 +100,7 @@ class ExpenseEntertainmentController extends Controller
                         wf_approval_status was			
                     WHERE
                         was.wf_type_id = ".config('params.expense_wf_type_id_default')."
-                        AND was.wf_id = wf_business_entertaining.id
+                        AND was.wf_id = wf_business_entertaining_expenses.id
                         AND was.approval_fg = 0
                     ORDER BY
                         was.approval_steps,
@@ -110,17 +110,17 @@ class ExpenseEntertainmentController extends Controller
                 ) 
 	        END AS approval_status,
 	        CASE -- approval_fg
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining.id AND approval_fg <> 1 ) = 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 ) = 0 ) THEN
                 (SELECT  approval_fg
                 FROM wf_approval_status 
-                WHERE wf_id = wf_business_entertaining.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 ORDER BY id
                 LIMIT 1)-- 承認済み
                 
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
                 (SELECT  approval_fg
                 FROM wf_approval_status 
-                WHERE wf_id = wf_business_entertaining.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 2
                 ORDER BY id
                 LIMIT 1)-- 却下
@@ -128,23 +128,23 @@ class ExpenseEntertainmentController extends Controller
                 ELSE
                 (SELECT  approval_fg
                 FROM wf_approval_status 
-                WHERE wf_id = wf_business_entertaining.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 0
                 ORDER BY approval_steps,id
                 LIMIT 1)
             END AS approval_fg,
             CASE -- approval_levels
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining.id AND approval_fg <> 1 ) = 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 ) = 0 ) THEN
                 (SELECT  approval_levels
                 FROM wf_approval_status 
-                WHERE wf_id = wf_business_entertaining.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 ORDER BY id
                 LIMIT 1)-- 承認済み
                 
-                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
+                WHEN ( ( SELECT count( approval_fg ) FROM wf_approval_status WHERE wf_id = wf_business_entertaining_expenses.id AND approval_fg <> 1 AND approval_fg <> 0) > 0 ) THEN
                 (SELECT  approval_levels
                 FROM wf_approval_status 
-                WHERE wf_id = wf_business_entertaining.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 2
                 ORDER BY id
                 LIMIT 1)-- 却下
@@ -152,7 +152,7 @@ class ExpenseEntertainmentController extends Controller
                 ELSE
                 (SELECT  approval_levels
                 FROM wf_approval_status 
-                WHERE wf_id = wf_business_entertaining.id
+                WHERE wf_id = wf_business_entertaining_expenses.id
                 AND approval_fg = 0
                 ORDER BY approval_steps,id
                 LIMIT 1)
@@ -160,18 +160,18 @@ class ExpenseEntertainmentController extends Controller
             ")
         );
         $this->query->join('mst_staffs as ms', function($join){
-            $join->on('ms.staff_cd','=','wf_business_entertaining.applicant_id')
+            $join->on('ms.staff_cd','=','wf_business_entertaining_expenses.applicant_id')
                 ->whereRaw('ms.deleted_at IS NULL');
         })->join('mst_business_offices as offices', function($join){
-            $join->on('offices.id','=','wf_business_entertaining.applicant_office_id')
+            $join->on('offices.id','=','wf_business_entertaining_expenses.applicant_office_id')
                 ->whereRaw('offices.deleted_at IS NULL');
         });
         if(Auth::user()->approval_levels === null){
-            $this->query->where('wf_business_entertaining.applicant_id','=',Auth::user()->staff_cd);
+            $this->query->where('wf_business_entertaining_expenses.applicant_id','=',Auth::user()->staff_cd);
         }
         if($where['applicant_id']!='')
         {
-            $this->query->where('wf_business_entertaining.id','LIKE','%' .$where['applicant_id'].'%');
+            $this->query->where('wf_business_entertaining_expenses.id','LIKE','%' .$where['applicant_id'].'%');
         }
         //
         if($where['applicant_nm']!='')
@@ -180,17 +180,17 @@ class ExpenseEntertainmentController extends Controller
         }
         if($where['mst_business_office_id']!='')
         {
-            $this->query->where('wf_business_entertaining.applicant_office_id',$where['mst_business_office_id']);
+            $this->query->where('wf_business_entertaining_expenses.applicant_office_id',$where['mst_business_office_id']);
         }
         if($where['client_company_name']!='')
         {
-            $this->query->where( 'wf_business_entertaining.client_company_name', 'LIKE', '%'.$where['client_company_name'].'%');
+            $this->query->where( 'wf_business_entertaining_expenses.client_company_name', 'LIKE', '%'.$where['client_company_name'].'%');
         }
         if($where['show_status']!=true)
         {
             $this->query->whereRaw('(SELECT COUNT(*)
                                     FROM wf_approval_status
-                                    WHERE wf_id = wf_business_entertaining.id AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
+                                    WHERE wf_id = wf_business_entertaining_expenses.id AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
                                     AND approval_fg = 0) > 0');
         }
         if($where['show_deleted']!=true)
@@ -201,7 +201,7 @@ class ExpenseEntertainmentController extends Controller
             $orderCol = $data["order"]["col"];
             if (isset($data["order"]["descFlg"]) && $data["order"]["descFlg"]) {
                 if($orderCol  == 'client_members_count,own_members_count'){
-                    $orderCol = 'wf_business_entertaining.client_members_count DESC,wf_business_entertaining.own_members_count DESC';
+                    $orderCol = 'wf_business_entertaining_expenses.client_members_count DESC,wf_business_entertaining_expenses.own_members_count DESC';
                 }
                 else if($orderCol  == 'approval_fg,approval_levels'){
                     $orderCol = 'approval_fg DESC,approval_levels DESC';
@@ -215,7 +215,7 @@ class ExpenseEntertainmentController extends Controller
             }
             $this->query->orderbyRaw($orderCol);
         }
-        $this->query->orderBy('wf_business_entertaining.id','desc');
+        $this->query->orderBy('wf_business_entertaining_expenses.id','desc');
 
     }
 
@@ -226,10 +226,10 @@ class ExpenseEntertainmentController extends Controller
                 "classTD" => "text-center",
                 "sortBy"=>"id"
             ],
-            'applicant_date' => [
+            'regist_date' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"applicant_date"
+                "sortBy"=>"regist_date"
             ],
             'applicant_nm' => [
                 "classTH" => "min-wd-100",

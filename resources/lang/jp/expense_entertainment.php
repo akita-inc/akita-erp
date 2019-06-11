@@ -28,7 +28,7 @@ return [
         ],
         'table' => [
             'id'=>'ID',
-            'applicant_date'=>'申請日',
+            'regist_date'=>'申請日',
             'applicant_nm'=>'申請者',
             'applicant_office_id'=>'営業所',
             'date'=>'実施日',
