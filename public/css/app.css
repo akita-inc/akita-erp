@@ -704,3 +704,6 @@ input[type="checkbox"]:focus {
 .wd-140{
     width: 140px !important;
 }
+.form-control::placeholder {
+    color: 	#A9A9A9!important;
+}
