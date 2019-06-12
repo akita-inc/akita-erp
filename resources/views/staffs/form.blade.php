@@ -632,7 +632,7 @@
                                                 @foreach($listDriversLicenseDivisions as  $key=>$item)
                                                     @if(!empty($key))
                                                     <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
-                                                    <span for="info_target_{{$item}}">{{$item}}</span>
+                                                    <label for="info_target_{{$key}}" class="custom-label">{{$item}}</label>
                                                     @endif
                                                 @endforeach
                                             @endif
