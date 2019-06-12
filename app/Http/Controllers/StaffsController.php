@@ -14,6 +14,7 @@ use App\Models\MStaffs;
 use App\Models\MGeneralPurposes;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
+use App\Helpers\Common;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MStaffAuths;
@@ -28,9 +29,9 @@ class StaffsController extends Controller
     public $ruleValid = [
         'staff_cd'  => 'required|one_byte_number|number_range|length:5',
         'last_nm'  => 'nullable|length:25',
-        'last_nm_kana'  => 'kana|nullable|length:50',
+        'last_nm_kana'  => 'nullable|length:50',
         'first_nm'  => 'length:25|nullable',
-        'first_nm_kana'=>'kana|nullable|length:50',
+        'first_nm_kana'=>'nullable|length:50',
         'zip_cd'=>'zip_code|nullable|length:7',
         'mail'=>'length:255|nullable|email_format|email_character',
         'address1'=>'length:20|nullable',
@@ -237,9 +238,9 @@ class StaffsController extends Controller
         ]);
         $this->validateBlockCollapse($validator,"mst_staff_dependents",$data,[
             'dept_last_nm' => 'nullable|length:25',
-            'dept_last_nm_kana' => 'kana|nullable|length:50',
+            'dept_last_nm_kana' => 'nullable|length:50',
             'dept_first_nm' => 'nullable|length:25',
-            'dept_first_nm_kana' => 'kana|nullable|length:50',
+            'dept_first_nm_kana' => 'nullable|length:50',
             'dept_social_security_number'=>'nullable|length:10'
         ]);
         $staffScreen=$data["mst_staff_auths"][1]["staffScreen"];
@@ -274,10 +275,25 @@ class StaffsController extends Controller
                 $validator->errors()->add('confirm_password', Lang::get('messages.MSG02022'));
             }
         }
+        if(isset($data["drivers_license_divisions"]) && count($data["drivers_license_divisions"])>14)
+        {
+            $validator->errors()->add('drivers_license_divisions', Lang::get('messages.MSG10037'));
+        }
+    }
+    protected function sortDriverLicense(&$data)
+    {
+        $mGeneralPurpose=new MGeneralPurposes();
+        $drivers_license_divisions=$data['drivers_license_divisions'];
+        $arrDriversLicense=$mGeneralPurpose->sortDateIdByArray(config('params.data_kb')['drivers_license_divisions_kb'],$drivers_license_divisions);
+        for($i=0;$i<14;$i++)
+        {
+            $data["drivers_license_divisions_".($i+1)]=isset($arrDriversLicense[$i])?$arrDriversLicense[$i]:null;
+        }
     }
     protected function save($data){
         $mStaffAuth =  new MStaffAuths();
         $rolesStaffScreen=$mStaffAuth->getDataScreenStaffAuth();
+        $this->sortDriverLicense($data);
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
             $this->password= bcrypt($data['password']);
             $data['password'] = $this->password;
@@ -285,11 +301,19 @@ class StaffsController extends Controller
             $passwordStaff = MStaffs::select("password")->where("id","=",$data["id"])->first();
             $data['password'] = $passwordStaff->password;
         }
+        $data['last_nm_kana']=isset($data['last_nm_kana'])?Common::convertToKanaExcel($data['last_nm_kana']):'';
+        $data['first_nm_kana']=isset($data['first_nm_kana'])?Common::convertToKanaExcel($data['first_nm_kana']):'';
+        foreach($data['mst_staff_dependents'] as &$item)
+        {
+            $item['dept_last_nm_kana']=isset($item['dept_last_nm_kana'])?Common::convertToKanaExcel($item['dept_last_nm_kana']):'';
+            $item['dept_first_nm_kana']=isset($item['dept_first_nm_kana'])?Common::convertToKanaExcel($item['dept_first_nm_kana']):'';
+        }
         $arrayInsert = $data;
         $currentTime = date("Y-m-d H:i:s",time());
         $mst_staff_auths=$data["mst_staff_auths"];
         $drivers_license_picture=$data["drivers_license_picture"];
         $deleteFile=$data["deleteFile"];
+        unset($arrayInsert["drivers_license_divisions"]);
         unset($arrayInsert["id"]);
         unset($arrayInsert["mst_staff_job_experiences"]);
         unset($arrayInsert["dropdown_relocate_municipal_office_nm"]);//
@@ -301,6 +325,7 @@ class StaffsController extends Controller
         unset($arrayInsert["is_change_password"]);
         unset($arrayInsert["is_change_password_confirm"]);
         unset($arrayInsert["confirm_password"]);
+        unset($arrayInsert["drivers_license_divisions_edit"]);
         DB::beginTransaction();
         try{
             $modeEdit=false;
@@ -375,6 +400,7 @@ class StaffsController extends Controller
         $listApprovalLevels=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['wf_level'],'');
         $listSectionIds=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['wf_applicant_affiliation_classification'],'');
         $staff=null;
+        $driverLicenseChoosen=[];
         //load form by update
         if($id != null){
             $staff = MStaffs::find( $id );
@@ -382,6 +408,13 @@ class StaffsController extends Controller
                 abort('404');
             }else{
                 $staff = $staff->toArray();
+                foreach ($staff as $key=>$item)
+                {
+                    if(strpos($key,'drivers_license_divisions')!==false && $item!==null)
+                    {
+                        array_push($driverLicenseChoosen,$item);
+                    }
+                }
             }
         }
         return view('staffs.form', [
@@ -401,6 +434,7 @@ class StaffsController extends Controller
             'mBusinessOffices'=>$mBusinessOffices,
             'listDepartments'=>$listDepartments,
             'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
+            'driverLicenseChoosen'=>$driverLicenseChoosen,
             'listDriversLicenseColors'=>$listDriversLicenseColors,
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
             'role'=>$role,

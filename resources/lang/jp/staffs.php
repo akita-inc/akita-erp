@@ -110,6 +110,7 @@ return [
             "drivers_license_picture"=>"運転免許証の画像",
             "btn_browse_license_picture"=>"ファイル選択",
             "btn_delete_file_license_picture"=>"ファイル削除",
+            "drivers_license_divisions"=>"区分",
             "drivers_license_divisions_1"=>"区分１",
             "drivers_license_divisions_2"=>"区分２",
             "drivers_license_divisions_3"=>"区分３",
