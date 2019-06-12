@@ -631,7 +631,7 @@
                                             @if(@$listDriversLicenseDivisions)
                                                 @foreach($listDriversLicenseDivisions as  $key=>$item)
                                                     @if(!empty($key))
-                                                        <div class="col-md-2 col-sm-12">
+                                                        <div class="">
                                                             <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
                                                             <label for="info_target_{{$key}}" class="custom-label">{{$item}}</label>
                                                         </div>
