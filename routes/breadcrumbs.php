@@ -69,10 +69,14 @@ Breadcrumbs::for('suppliers_list', function ($trail) {
 });
 
 Breadcrumbs::for('suppliers_create', function ($trail) {
-    $trail->parent('master');
-    $trail->push('仕入先', route('suppliers.create'));
+    $trail->parent('suppliers_list');
+    $trail->push('新規追加', route('suppliers.create'));
 });
 
+Breadcrumbs::for('suppliers_edit', function ($trail,$id) {
+    $trail->parent('suppliers_list');
+    $trail->push('修正画面', route('suppliers.edit',['id' => $id]));
+});
 
 Breadcrumbs::for('customers_list', function ($trail) {
     $trail->parent('master');

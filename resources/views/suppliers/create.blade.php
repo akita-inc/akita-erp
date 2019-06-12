@@ -6,7 +6,11 @@
 @endsection
 @section('content')
     <div id="ctrSupplierrsVl">
+        @if($mSupplier->id)
+        {{ Breadcrumbs::render('suppliers_edit',$mSupplier->id) }}
+        @else
         {{ Breadcrumbs::render('suppliers_create') }}
+        @endif
         <form class="form-inline w-100" role="form" method="post" id="form1">
             @csrf
             <div class="sub-header">
