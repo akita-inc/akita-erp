@@ -11,6 +11,7 @@ var ctrCustomersListVl = new Vue({
         fileSearch:{
             mst_customers_cd:"",
             customer_nm:"",
+            customer_nm_kana_formal :"",
         },
         message: '',
         pagination:{
@@ -77,6 +78,7 @@ var ctrCustomersListVl = new Vue({
         clearCondition: function clearCondition() {
             this.fileSearch.mst_customers_cd = '';
             this.fileSearch.customer_nm = '';
+            this.fileSearch.customer_nm_kana_formal = '';
         },
         deleteSupplier: function (id){
             customers_service.checkIsExist(id).then((response) => {
