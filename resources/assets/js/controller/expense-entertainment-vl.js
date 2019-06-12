@@ -24,9 +24,10 @@ var ctrExpenseApplicationVl = new Vue({
             place:"",
             report:"",
             cost:"",
-            payoff_kb:defaultPayoffKb,
+            payoff_kb:0,
             deposit_amount:'',
             payoff_amount:0,
+            approval_fg:null,
             wf_additional_notice:[
                 {
                     email_address:'',
@@ -40,7 +41,6 @@ var ctrExpenseApplicationVl = new Vue({
             name:"",
             mst_business_office_id:"",
         },
-        payoff_fg:false,
         errors:{},
         disabledStartDate: false,
         disabledEndDate: false,
@@ -102,24 +102,20 @@ var ctrExpenseApplicationVl = new Vue({
             }
             that.field.cost=that.removeComma(that.field.cost);
             that.field.deposit_amount=that.removeComma(that.field.deposit_amount);
+            that.field.payoff_amount=that.removeComma(that.field.payoff_amount);
             switch (this.field.mode) {
                 case 'register':
-                    expense_application_service.submit(that.field).then((response) => {
+                    expense_entertainment_service.submit(that.field).then((response) => {
                         if(response.success == false){
                             that.errors = response.message;
                             that.field.cost=that.addComma(isNaN(that.field.cost)?0:that.field.cost);
-                            if(that.field.payoff_fg==1)
-                            {
-                                that.field.deposit_amount=that.addComma(isNaN(that.field.deposit_amount)?0:that.field.deposit_amount);
-                            }
-                            else {
-                                that.field.deposit_amount="";
-                            }
+                            that.field.deposit_amount=that.addComma(isNaN(that.field.deposit_amount)?0:that.field.deposit_amount);
+                            that.field.payoff_amount=that.addComma(isNaN(that.field.payoff_amount)?0:that.field.payoff_amount);
                         }else{
                             that.errors = [];
-                            window.location.href = listRoute;
+                            // window.location.href = listRoute;
                         }
-                        that.loading = false;
+                        // that.loading = false;
                     });
                     break;
                 case 'edit':
@@ -127,14 +123,14 @@ var ctrExpenseApplicationVl = new Vue({
                     if(that.field.mode=='approval'){
                         that.field.approval_fg = approval_fg;
                     }
-                    expense_application_service.checkIsExist(that.expense_application_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
+                    expense_entertainment_service.checkIsExist(that.expense_application_id, {'mode' : this.field.mode,'approval_fg': approval_fg,'modified_at': that.modified_at }).then((response) => {
                         if (!response.success) {
                             that.loading = false;
                             alert(response.msg);
                             that.backHistory();
                             return false;
                         } else {
-                            expense_application_service.submit(that.field).then((response) => {
+                            expense_entertainment_service.submit(that.field).then((response) => {
                                 if(response.success == false){
                                     that.errors = response.message;
                                 }else{
@@ -153,7 +149,7 @@ var ctrExpenseApplicationVl = new Vue({
         },
         backHistory: function () {
             if(this.expense_application_edit == 1){
-                expense_application_service.backHistory().then(function () {
+                expense_entertainment_service.backHistory().then(function () {
                     window.location.href = listRoute;
                 });
             }else{
@@ -181,22 +177,20 @@ var ctrExpenseApplicationVl = new Vue({
             }
             that.modified_at = $('#hd_modified_at').val();
             that.field.cost=that.addComma(that.field.cost);
-            that.handleDepositFlag();
-            // this.handleDepositFlag();
+            that.handlePayoffKb();
             that.loading = false;
-            console.log(that.field);
 
         },
         deleteExpenseApplication: function(id){
             var that = this;
-            expense_application_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
+            expense_entertainment_service.checkIsExist(id,{'mode' : 'delete'}).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
                     that.backHistory();
                     return false;
                 } else {
                     if (confirm(messages["MSG10028"])) {
-                        expense_application_service.delete(id).then((response) => {
+                        expense_entertainment_service.delete(id).then((response) => {
                             window.location.href = listRoute;
                         });
                     }
@@ -315,15 +309,15 @@ var ctrExpenseApplicationVl = new Vue({
         },
         handlePayoffKb:function () {
             var that=this;
-            if(that.field.payoff_fg==0) {
-                that.field.payoff_amount= (that.field.cost=='' ? 0 : that.field.cost)- (that.field.deposit_amount=='' ? 0 : that.field.deposit_amount);
+            let cost =  that.field.cost=='' ? 0 : that.removeComma(that.field.cost);
+            let deposit_amount =  that.field.deposit_amount=='' ? 0 : that.removeComma(that.field.deposit_amount);
+            if(that.field.payoff_kb==0) {
+                that.field.payoff_amount= cost - deposit_amount;
                 that.field.payoff_amount= that.addComma(that.field.payoff_amount)
-                that.payoff_fg=true;
             }
             else {
-                that.field.payoff_amount= (that.field.deposit_amount=='' ? 0 : that.field.deposit_amount)- (that.field.cost=='' ? 0 : that.field.cost);
+                that.field.payoff_amount= deposit_amount - cost;
                 that.field.payoff_amount= that.addComma(that.field.payoff_amount);
-                that.payoff_fg=false;
             }
         },
         searchEntertainment: function () {
@@ -343,19 +337,23 @@ var ctrExpenseApplicationVl = new Vue({
                     return false;
                 } else {
                     let result = response.info;
-                    that.field.registration_numbers = result.registration_numbers;
-                    that.field.vehicle_size = result.vehicle_size_kb;
-                    that.field.vehicle_body_shape = result.car_body_shape;
-                    that.field.max_load_capacity = result.max_loading_capacity;
-                    that.addComma('max_load_capacity');
+                    that.field.date = result.date;
+                    that.field.client_company_name = result.client_company_name;
+                    that.field.client_members = result.client_members;
+                    that.field.client_members_count = result.client_members_count;
+                    that.field.own_members = result.own_members;
+                    that.field.own_members_count = result.own_members_count;
+                    that.field.place = result.place;
+                    that.field.deposit_amount = result.deposit_amount;
+                    that.addCommaByID('cost');
+                    that.addCommaByID('deposit_amount');
+                    that.handlePayoffKb();
                 }
             });
-
-
         },
     },
     mounted () {
-        this.handleDepositFlag();
+        this.handlePayoffKb();
         if($("#hd_expense_application_edit").val() == 1) {
             this.loadFormEdit();
         }

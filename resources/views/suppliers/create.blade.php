@@ -71,7 +71,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100">
                             <label class="col-md-5 col-sm-5 required" for="mst_suppliers_cd">仕入先コード</label>
                             <div class="col-md-7 col-sm-7 wrap-control">
-                                <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" maxlength="5" value="{{ old('mst_suppliers_cd') }}" onkeypress='return isNumberKey(event)'>
+                                <input type="text" class="form-control w-50 {{$errors->has('mst_suppliers_cd')? 'is-invalid': ''}}" name="mst_suppliers_cd" id="mst_suppliers_cd" maxlength="5" value="{{ old('mst_suppliers_cd') }}">
                             </div>
                             @if ($errors->has('mst_suppliers_cd'))
                                 <span class="invalid-feedback d-block" role="alert">
@@ -564,15 +564,6 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
-        function isNumberKey(evt)
-        {
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31
-                && (charCode < 48 || charCode > 57))
-                return false;
-
-            return true;
-        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/suppliers.js') }}" charset="utf-8"></script>
 @endsection

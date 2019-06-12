@@ -115,18 +115,22 @@
                                     @include('Component.form.input',['filed'=>'client_company_name','required'=>true,'attr_input' => "maxlength=200"])
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-3 col-sm-12">
+                                <div class="col-md-4 col-sm-12 row">
+                                    <div class="col-md-11">
                                     @include('Component.form.input',['filed'=>'client_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                    </div>
+                                    <div class="no-padding col-md-1 lh-38 text-center">名</div>
                                 </div>
-                                <div class="no-padding wd-32 lh-38 text-center">名</div>
                                 <div class="col-md-8 col-sm-12">
                                     @include('Component.form.input',['class' => 'pl-0','filed'=>'client_members', 'attr_input' => "maxlength=200"])
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-3 col-sm-12">
+                                <div class="col-md-4 col-sm-12 row">
+                                    <div class="col-md-11">
                                     @include('Component.form.input',['filed'=>'own_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                    </div>
+                                    <div class="no-padding col-md-1 lh-38 text-center">名</div>
                                 </div>
-                                <div class="no-padding wd-32 lh-38 text-center">名</div>
                                 <div class="col-md-8 col-sm-12">
                                     @include('Component.form.input',['class' => 'pl-0','filed'=>'own_members', 'attr_input' => "maxlength=200"])
                                 </div>
@@ -142,14 +146,14 @@
                                         </label>
                                         <textarea {!! isset($attr_input) ? $attr_input:"" !!} v-model="field.report" type="text"
                                                   v-bind:class="errors.report!= undefined ? 'form-control is-invalid':'form-control' "
-                                                  class="form-control h-50" id="report" maxlength='400' ></textarea>
+                                                  class="form-control" id="report" maxlength='400' ></textarea>
                                         <span>{{trans('expense_entertainment.create.place_text')}}</span>
                                     </div>
                                     <span v-cloak v-if="errors.report != undefined" class="message-error" v-html="errors.report.join('<br />')"></span>
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'cost','required'=>true,'attr_input' => 'maxlength=8 @focus="removeCommaByID(\'cost\')" @blur="addCommaByID(\'cost\')" onkeypress="return isNumberKey(event)"'])
+                                    @include('Component.form.input',['filed'=>'cost','required'=>true,'attr_input' => 'maxlength=8 @focus="removeCommaByID(\'cost\')" @blur="addCommaByID(\'cost\')" onkeypress="return isNumberKey(event)" @change="handlePayoffKb"'])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
@@ -161,7 +165,7 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'payoff_amount','attr_input' => ':disabled="payoff_fg" maxlength=8 @focus="removeCommaByID(\'payoff_amount\')" @blur="addCommaByID(\'payoff_amount\')" onkeypress="return isNumberKey(event)"'])
+                                    @include('Component.form.input',['filed'=>'payoff_amount','attr_input' => 'disabled'])
                                 </div>
                             </div>
                         </div>
@@ -235,7 +239,7 @@
         function isNumberKey(evt)
         {
             var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode != 46 && charCode > 31
+            if (charCode > 31
                 && (charCode < 48 || charCode > 57))
                 return false;
 

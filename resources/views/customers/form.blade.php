@@ -53,7 +53,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "onkeypress='return isNumberKey(event)' maxlength='5'".(!empty($customer) ? 'readonly=""':'')])
+                            @include('Component.form.input',['class'=>'wd-300','filed'=>'mst_customers_cd','required'=>true,'attr_input' => "maxlength='5'".(!empty($customer) ? 'readonly=""':'')])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col"></div>
                 </div>
@@ -404,15 +404,6 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG07001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07001'); ?>";
         messages["MSG07002"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG07002'); ?>";
-        function isNumberKey(evt)
-        {
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31
-                && (charCode < 48 || charCode > 57))
-                return false;
-
-            return true;
-        }
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/customers.js') }}" charset="utf-8"></script>
 @endsection

@@ -67,7 +67,21 @@ var ctrSupplierrsVl = new Vue({
                     window.location.href = listRoute;
                 });
             }
-        }
+        },
+        setInputFilter: function (textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                });
+            });
+        },
     },
     mounted () {
         if(role==1 || (role==2 && supplier_id!='')) {
@@ -77,6 +91,10 @@ var ctrSupplierrsVl = new Vue({
             AutoKana.bind('#dealing_person_in_charge_first_nm', '#dealing_person_in_charge_first_nm_kana', {katakana: true});
             AutoKana.bind('#accounting_person_in_charge_last_nm', '#accounting_person_in_charge_last_nm_kana', {katakana: true});
             AutoKana.bind('#accounting_person_in_charge_first_nm', '#accounting_person_in_charge_first_nm_kana', {katakana: true});
+        }
+        if(document.getElementById('mst_suppliers_cd')!=null){
+            this.setInputFilter(document.getElementById('mst_suppliers_cd'), function(value) {
+                return   /^\d*$/.test(value); });
         }
     },
     components: {

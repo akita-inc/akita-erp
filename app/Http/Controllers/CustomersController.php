@@ -32,7 +32,7 @@ class CustomersController extends Controller
     public $beforeItem = null;
 
     public $ruleValid = [
-        'mst_customers_cd'  => 'required|one_bytes_string|length:5',
+        'mst_customers_cd'  => 'required|one_byte_number|length:5',
         'discount_rate'  => 'nullable|one_byte_number|length:3',
         'customer_nm'  => 'required|nullable|length:200',
         'customer_nm_kana'  => 'nullable|length:200',
@@ -51,7 +51,7 @@ class CustomersController extends Controller
         'hp_url'  => 'nullable|length:2500',
         'explanations_bill'  => 'nullable|length:100',
         'bundle_dt'  => 'one_byte_number|nullable|length:2',
-        'deposit_day'  => 'one_byte_number|nullable|between_custom:1,31|length:2',
+        'deposit_day'  => 'one_byte_number|nullable|length:2',
         'deposit_method_notes'  => 'nullable|length:200',
         'deposit_bank_cd'  => 'nullable|length:4',
         'notes'  => 'nullable|length:50',
