@@ -20858,24 +20858,23 @@ var ctrExpenseApplicationVl = new Vue({
     expense_application_edit: 0,
     expense_application_id: null,
     field: {
-      wf_business_entertaining_id: "",
       applicant_id: staff_cd,
       staff_nm: staff_nm,
       applicant_office_id: mst_business_office_id,
       applicant_office_nm: business_ofice_nm,
+      wf_business_entertaining_id: "",
       date: "",
-      cost: "",
-      place: "",
       client_company_name: "",
       client_members: "",
       client_members_count: "",
       own_members: "",
       own_members_count: "",
-      conditions: "",
-      purpose: "",
-      deposit_flg: defaultApprovalKb,
-      deposit_amount: "",
-      approval_fg: null,
+      place: "",
+      report: "",
+      cost: "",
+      payoff_kb: defaultPayoffKb,
+      deposit_amount: '',
+      payoff_amount: 0,
       wf_additional_notice: [{
         email_address: '',
         staff_cd: ''
@@ -20887,7 +20886,7 @@ var ctrExpenseApplicationVl = new Vue({
       name: "",
       mst_business_office_id: ""
     },
-    deposit_flg: false,
+    payoff_fg: false,
     errors: {},
     disabledStartDate: false,
     disabledEndDate: false,
@@ -20915,20 +20914,19 @@ var ctrExpenseApplicationVl = new Vue({
           staff_nm: staff_nm,
           applicant_office_id: mst_business_office_id,
           applicant_office_nm: business_ofice_nm,
+          wf_business_entertaining_id: "",
           date: "",
-          cost: "",
-          place: "",
           client_company_name: "",
           client_members: "",
           client_members_count: "",
           own_members: "",
           own_members_count: "",
-          conditions: "",
-          purpose: "",
-          deposit_flg: defaultApprovalKb,
-          deposit_amount: "",
-          approval_fg: null,
-          send_back_reason: "",
+          place: "",
+          report: "",
+          cost: "",
+          payoff_kb: defaultPayoffKb,
+          deposit_amount: '',
+          payoff_amount: 0,
           wf_additional_notice: [{
             email_address: '',
             staff_cd: ''
@@ -20959,7 +20957,7 @@ var ctrExpenseApplicationVl = new Vue({
               that.errors = response.message;
               that.field.cost = that.addComma(isNaN(that.field.cost) ? 0 : that.field.cost);
 
-              if (that.field.deposit_flg == 1) {
+              if (that.field.payoff_fg == 1) {
                 that.field.deposit_amount = that.addComma(isNaN(that.field.deposit_amount) ? 0 : that.field.deposit_amount);
               } else {
                 that.field.deposit_amount = "";
@@ -21170,15 +21168,17 @@ var ctrExpenseApplicationVl = new Vue({
 
       this.$forceUpdate();
     },
-    handleDepositFlag: function handleDepositFlag() {
+    handlePayoffKb: function handlePayoffKb() {
       var that = this;
 
-      if (that.field.deposit_flg == 0) {
-        that.field.deposit_amount = "";
-        that.deposit_flg = true;
+      if (that.field.payoff_fg == 0) {
+        that.field.payoff_amount = (that.field.cost == '' ? 0 : that.field.cost) - (that.field.deposit_amount == '' ? 0 : that.field.deposit_amount);
+        that.field.payoff_amount = that.addComma(that.field.payoff_amount);
+        that.payoff_fg = true;
       } else {
-        that.field.deposit_amount = that.field.deposit_amount == null ? "" : that.addComma(that.field.deposit_amount);
-        that.deposit_flg = false;
+        that.field.payoff_amount = (that.field.deposit_amount == '' ? 0 : that.field.deposit_amount) - (that.field.cost == '' ? 0 : that.field.cost);
+        that.field.payoff_amount = that.addComma(that.field.payoff_amount);
+        that.payoff_fg = false;
       }
     },
     searchEntertainment: function searchEntertainment() {

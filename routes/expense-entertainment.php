@@ -15,6 +15,6 @@ Route::group(['name' => 'expense-entertainment', 'prefix' => 'expense_entertainm
         Route::get('/delete/{id}', 'ExpenseEntertainmentController@delete')->name('expense_entertainment.delete');
         Route::any('/search-sales-lists', 'ExpenseEntertainmentController@searchSalesLists');
         Route::any('/search-staff', 'ExpenseEntertainmentController@searchStaff');
-        Route::any('/search-entertainment', 'EmptyInfoController@searchEntertainment');
+        Route::any('/search-entertainment', 'ExpenseEntertainmentController@searchEntertainment');
     });
 });

@@ -21783,7 +21783,7 @@ var ctrPaymentProcessingVl = new Vue({
     handleChangeCustomerCd: function handleChangeCustomerCd() {
       if (this.fileSearch.customer_cd != '') {
         for (var i = 0; i < this.listCustomer.length; i++) {
-          if (this.listCustomer[i].mst_customers_cd === this.fileSearch.customer_cd) {
+          if (this.listCustomer[i].mst_customers_cd == this.fileSearch.customer_cd) {
             this.fileSearch.customer_nm = this.listCustomer[i].mst_customers_cd;
             return;
           }

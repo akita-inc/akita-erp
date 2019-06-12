@@ -28,26 +28,30 @@ class ExpenseEntertainmentController extends Controller
     public $table = "wf_business_entertaining_expenses";
     public $ruleValid = [
         'applicant_office_nm' => 'required',
-        'approval_kb' => 'required',
-        'half_day_kb' => 'required',
-        'start_date' => 'required',
-        'end_date' => 'required',
-        'days' => 'required|one_byte_number|number_range_custom:127|length:11',
-        'times' => 'required|one_byte_number|length:11',
-        'reasons' => 'required|length:200',
+        'date' => 'required',
+        'cost'=>'required|decimal_custom|length:8',
+        'client_company_name'=>'required',
+        'client_members_count'=>'required|one_byte_number|number_range_custom:127|length:4',
+        'own_members_count'=>'required|one_byte_number|number_range_custom:127|length:4',
+        'place'=>'required|length:200',
+        'report'=>'required|length:400',
     ];
     public $messagesCustom =[];
     public $labels=[
         'applicant_id' => '申請者',
         'applicant_office_nm' => '所属営業所',
-        'approval_kb' => '休暇区分',
-        'half_day_kb' => '時間区分',
-        'date' => '期間',
-        'start_date' => '開始日',
-        'end_date' => '終了日',
-        'days' => '日数',
-        'times' => '時間数',
-        'reasons' => '理由',
+        'date'=>'実施日',
+        'cost'=>'確定費用',
+        'client_company_name'=>'相手先会社名',
+        'client_members_count'=>'相手先参加者',
+        'client_members'=>'',
+        'own_members_count'=>'当社参加者',
+        'own_members'=>'',
+        'place'=>'場所',
+        'report'=>'報告',
+        'deposit_amount'=>'仮払金額',
+        'payoff_amount'=>'精算金額',
+        'additional_notice'=>'追加通知',
         'email_address' => '追加通知',
         'send_back_reason' => '却下理由',
     ];
@@ -293,18 +297,18 @@ class ExpenseEntertainmentController extends Controller
         }
         $arrayStore = $this->beforeStore($id);
         $mGeneralPurposes = new MGeneralPurposes();
-        $listDepositClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_expense_app_temporary_payment'),'Empty');
+        $listPayoffKb= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.payoff_kb'),'Empty');
         $currentDate = date('Y/m/d');
         return view('expense_entertainment.form', array_merge($arrayStore,[
             'mWFBusinessEntertain' => $mWFBusinessEntertain,
-            'listDepositClassification' => $listDepositClassification,
+            'listPayoffKb' => $listPayoffKb,
             'currentDate' => $currentDate,
             'role' => $role,
             'mode' => $mode,
         ]));
     }
     public function beforeSubmit($data){
-        if(isset($data['deposit_flg']) && $data['deposit_flg']==1 )
+        if(isset($data['payoff_kb']) && $data['payoff_kb']==1 )
         {
             $this->ruleValid['deposit_amount'] = 'required|decimal_custom|length:8';
         }

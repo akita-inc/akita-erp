@@ -49,21 +49,21 @@ return [
             'staff_nm' => '',
             'wf_business_entertaining_id' => '交際費申請ID',
             'date' => '実施日',
-            'cost'=>'概算費用',
             'client_company_name'=>'相手先会社名',
             'client_members_count'=>'相手先参加者',
             'client_members'=>'',
             'own_members_count'=>'当社参加者',
             'own_members'=>'',
             'place'=>'場所',
-            'conditions'=>'取引状況',
-            'purpose'=>'目的',
-            'deposit_flg'=>'仮払い',
-            'deposit_amount'=>'仮払い金額',
+            'report'=>'報告',
+            'cost'=>'確定費用',
+            'payoff_kb'=>'受取払戻区分',
+            'deposit_amount'=>'仮払金額',
+            'payoff_amount'=>'精算金額',
             'email_address'=>'追加通知',
             'additional_notice'=>'追加通知'
-
         ],
+        'place_text' => '「会合によって目的は達成されたか」「今後の対応はどうするか」など具体的に報告すること。',
         'button' => [
             'data_acquisition' => 'データ取得'
         ],
