@@ -189,7 +189,7 @@
                     </div>
 
                     <div class="col-md-5 col-sm-12 pd-l-20">
-                        @include('Component.form.textarea',['filed'=>'notes','attr_input' => "maxlength='50'"])
+                        @include('Component.form.textarea',['filed'=>'notes','attr_input' => "maxlength='255'"])
                     </div>
                 </div>
             </div>
