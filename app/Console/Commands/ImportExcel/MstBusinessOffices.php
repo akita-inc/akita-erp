@@ -119,7 +119,7 @@ class MstBusinessOffices extends BaseImport
                             }
                             break;
                         default:
-                            $record[$excel_column[$pos]] = $value!= "" ? (string)$value : null;
+                            $record[$excel_column[$pos]] = !is_null($value) ? (string)$value : null;
                     }
                 }
             }
@@ -177,9 +177,9 @@ class MstBusinessOffices extends BaseImport
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => mb_substr($record[$field], 0, $error[0]),
+                            "DBvalue" => 'null',
                         ]));
-                        $record[$field] = mb_substr($record[$field], 0, $error[0]);
+                        $record[$field] = null;
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [

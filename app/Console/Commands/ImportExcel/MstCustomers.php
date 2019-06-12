@@ -38,20 +38,17 @@ class MstCustomers extends BaseImport
         'N' =>'notes',
         'O' =>'mst_account_titles_id',
         'U' =>'created_at',
-        'X' =>'modified_at',
     ];
     public $rules = [
         'mst_customers_cd' =>'required',
         'customer_nm' =>'nullable|length:200',
-        'customer_nm_kana' =>'kana_custom|nullable|length:200',
-        //'customer_nm_formal' =>'nullable|length:200',
-        //'customer_nm_kana_formal' =>'kana_custom|nullable|length:200',
+        'customer_nm_kana' =>'nullable|length:200',
         'person_in_charge_last_nm' =>'nullable|length:25',
         'person_in_charge_first_nm' =>'nullable|length:25',
         'zip_cd' =>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',
-        'address1'  => 'nullable|length:20',
-        'address2' =>'nullable|length:20',
+        'address1'  => 'nullable|length:200',
+        'address2' =>'nullable|length:200',
         'phone_number' =>'nullable|length:20',
         'bundle_dt' =>'nullable',
         //'discount_rate' =>'nullable|length:3',
@@ -132,7 +129,6 @@ class MstCustomers extends BaseImport
                 if(isset($excel_column[$pos])){
                     switch ($excel_column[$pos]) {
                         case 'created_at':
-                        case 'modified_at':
                             $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd hh:mm:ss');
                             break;
                         case 'customer_nm':
@@ -179,15 +175,14 @@ class MstCustomers extends BaseImport
                     }
                 }
             }
+            $record['modified_at'] = isset($record['created_at']) ? $record['created_at'] : null;;
             $record['consumption_tax_calc_unit_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['consumption_tax_calc_unit'],'請求単位');
             $record['rounding_method_id'] = $mGeneralPurposes->getDateIdByDateKbAndDateNm(config('params.data_kb')['rounding_method'],'四捨五入');
             $record['enable_fg'] = 1;
-
             //$record['bill_mst_customers_cd'] = isset($mst_customers_relate_cds[$record['mst_customers_cd']])?$mst_customers_relate_cds[$record['mst_customers_cd']]:null;
 
             $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_customers.main.fileName'),$error_fg);
             $record['customer_nm_formal'] = $record['customer_nm'];
-            $record['customer_nm_kana_formal'] = $record['customer_nm_kana'];
             $this->insertDB($error_fg, $row, $record);
         }
         foreach($mst_customers_relate_cds as $key=>$values){
@@ -229,7 +224,7 @@ class MstCustomers extends BaseImport
                 if (!empty($record)) {
                     if(isset($record['customer_nm_kana'])){
                         $record['customer_nm_kana'] = Common::convertToKanaExcel($record['customer_nm_kana']);
-                        $record['customer_nm_kana_formal'] = Common::convertToKanaExcel($record['customer_nm_kana_formal']);
+                        $record['customer_nm_kana_formal'] = $record['customer_nm_kana'];
                     }
                     DB::table('mst_customers')->insert($record);
                     DB::commit();
@@ -281,19 +276,12 @@ class MstCustomers extends BaseImport
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => mb_substr($record[$field], 0, $error[0]),
+                            "DBvalue" => 'null',
                         ]));
-                        $record[$field] = mb_substr($record[$field], 0, $error[0]);
+                        $record[$field] = null;
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
-                            "fileName" => $fileName,
-                            "fieldName" => $column_name[$field],
-                            "row" => $row,
-                        ]));
-                    }else if ($ruleName == 'KanaCustom') {
-                        $error_fg = true;
-                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
                             "row" => $row,

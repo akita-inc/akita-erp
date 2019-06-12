@@ -77,9 +77,9 @@ class MstStaffDependents extends BaseImport
                                 "excelValue" => $firstName,
                                 "tableName" => $this->table,
                                 "DBFieldName" => "first_nm",
-                                "DBvalue" => mb_substr($firstName, 0, $strLenFirstName),
+                                "DBvalue" => 'null',
                             ]));
-                            $firstName = mb_substr($firstName, 0, $strLenFirstName);
+                            $firstName = null;
                         }
 
                         $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;
@@ -128,9 +128,9 @@ class MstStaffDependents extends BaseImport
                                     "excelValue" => $firstName,
                                     "tableName" => $this->table,
                                     "DBFieldName" => "first_nm",
-                                    "DBvalue" => mb_substr($firstName, 0, $strLenFirstName),
+                                    "DBvalue" => 'null',
                                 ]));
-                                $firstName = mb_substr($firstName, 0, $strLenFirstName);
+                                $firstName = null;
                             }
 
                             $arrayInsert[count($arrayInsert) - 1]["first_nm"] = $firstName;

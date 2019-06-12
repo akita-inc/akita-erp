@@ -29,7 +29,6 @@ class MstSuppliers extends BaseImport{
         'O' => 'phone_number',
         'AA' => 'notes',
         'AB' => 'created_at',
-        'AE' => 'modified_at',
     ];
     public $excel_column_extra1 = [
         'A' => 'mst_suppliers_cd',
@@ -41,11 +40,11 @@ class MstSuppliers extends BaseImport{
     public $rules = [
         'mst_suppliers_cd'  => 'required',
         'supplier_nm'  => 'required|length:200',
-        'supplier_nm_kana'  => 'kana_custom|nullable|length:200',
+        'supplier_nm_kana'  => 'nullable|length:200',
         'zip_cd'  => 'nullable|length:7',
         'prefectures_cd'=> 'nullable|length:2',
-        'address1'  => 'nullable|length:20',
-        'address2'  => 'nullable|length:20',
+        'address1'  => 'nullable|length:200',
+        'address2'  => 'nullable|length:200',
         'phone_number'  => 'phone_number|nullable|length:20',
         'notes'=> 'nullable|length:50',
         'created_at'=> 'required',
@@ -128,7 +127,6 @@ class MstSuppliers extends BaseImport{
                     if (isset($excel_column[$pos])) {
                         switch ($excel_column[$pos]) {
                             case 'created_at':
-                            case 'modified_at':
                                 $record[$excel_column[$pos]] = \PHPExcel_Style_NumberFormat::toFormattedString($value, 'yyyy/mm/dd hh:mm:ss');
                                 break;
                             case 'supplier_nm':
@@ -155,12 +153,12 @@ class MstSuppliers extends BaseImport{
 
                     }
                 }
+                $record['modified_at'] = isset($record['created_at']) ? $record['created_at'] : null;
                 $record['consumption_tax_calc_unit_id'] = $this->consumption_tax_calc_unit_id ? $this->consumption_tax_calc_unit_id->date_id : null;
                 $record['rounding_method_id'] = $this->rounding_method ? $this->rounding_method->date_id : null;
                 array_push($this->list_supplier_cd, $record['mst_suppliers_cd']);
                 $this->validate($record,$row, $this->column_name, config('params.import_file_path.mst_suppliers.main.fileName'),$error_fg);
                 $record['supplier_nm_formal'] = $record['supplier_nm'];
-                $record['supplier_nm_kana_formal'] = $record['supplier_nm_kana'];
                 $this->insertDB($error_fg, $row, $record,config('params.import_file_path.mst_suppliers.main.fileName'));
             }
         }
@@ -222,19 +220,12 @@ class MstSuppliers extends BaseImport{
                             "excelValue" => $record[$field],
                             "tableName" => $this->table,
                             "DBFieldName" => $field,
-                            "DBvalue" => mb_substr($record[$field], 0, $error[0]),
+                            "DBvalue" => 'null',
                         ]));
-                        $record[$field] = mb_substr($record[$field], 0, $error[0]);
+                        $record[$field] = null;
                     } else if ($ruleName == 'Required') {
                         $error_fg = true;
                         $this->log("DataConvert_Err_required", Lang::trans("log_import.required", [
-                            "fileName" => $fileName,
-                            "fieldName" => $column_name[$field],
-                            "row" => $row,
-                        ]));
-                    }else if ($ruleName == 'KanaCustom') {
-                        $error_fg = true;
-                        $this->log("DataConvert_Err_KANA", Lang::trans("log_import.check_kana", [
                             "fileName" => $fileName,
                             "fieldName" => $column_name[$field],
                             "row" => $row,
