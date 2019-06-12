@@ -334,5 +334,6 @@ return [
         'purchases' => '2002',
         'withdrawal' => '3002',
     ],
-    'manual_file' => 'manual.pdf'
+    'manual_file' => 'manual.pdf',
+    'MENU_DISP_FLG' => 'True',
 ];
