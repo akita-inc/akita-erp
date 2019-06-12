@@ -32,7 +32,6 @@ class MstStaffs extends BaseImport
         'B'=>'staff_nm',
         'C'=>'staff_nm_kana',
         'D'=>'employment_pattern_id',
-        'E'=>'mst_business_office_id',
         'G' => 'sex_id',
         'I'=>'birthday',
         'J'=>'enter_date',
@@ -49,7 +48,8 @@ class MstStaffs extends BaseImport
         'T'=>'staff_dependents_nm_2',
         'U'=>'staff_dependents_nm_3',
         'V'=>'staff_dependents_nm_4',
-        'W'=>'staff_dependents_nm_5'
+        'W'=>'staff_dependents_nm_5',
+        'Z'=>'mst_business_office_id',
     ];
     public $column_main_name=[
         'staff_cd'=>'社員CD',
@@ -61,7 +61,7 @@ class MstStaffs extends BaseImport
         'last_nm_kana'=>'社員名かな(姓)',
         'first_nm_kana'=>'社員名かな(名)',
         'spouse_nm'=>'配偶者氏名',
-        'mst_business_office_id'=>'社員所属CD',
+        'mst_business_office_id'=>'office_id',
         'sex_id' => '性別',
         'birthday'=>'生年月日',
         'enter_date'=>'入社年月日',
@@ -191,16 +191,6 @@ class MstStaffs extends BaseImport
         else {
             return \PHPExcel_Style_NumberFormat::toFormattedString($date, 'yyyy/mm/dd hh:mm:ss');
         }
-    }
-    public function generateRandomString($length = 8) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        //add password cell
-        return $randomString;
     }
     public function getCellularPhone($phone)
     {
@@ -433,10 +423,7 @@ class MstStaffs extends BaseImport
                $record['address1']=$prefectures['address1'];
             }
             $office=$this->getOfficeId($record['mst_business_office_id']);
-            if($office)
-            {
-                $record['mst_business_office_id']=$office;
-            }
+            $record['mst_business_office_id']=isset($office)?$office:null;
             $staffName=$this->explodeStaffName($record['staff_nm'],null);
             if(!empty($staffName))
             {
@@ -507,31 +494,14 @@ class MstStaffs extends BaseImport
     }
     public function getOfficeId($office_cd)
     {
-        if($office_cd!=null)
-        {
-            $businessOffice=$this->businessOffice;
-            $office_cd=(int)$office_cd;
-            if(isset($businessOffice[$office_cd]))
-            {
-                $office_id=$businessOffice[$office_cd];
+        if($office_cd!=null) {
+            $businessOffice = $this->businessOffice;
+            if (isset($businessOffice[$office_cd])) {
+                $office_id = $businessOffice[$office_cd];
                 return $office_id;
             }
-            else
-            {
-                $this->error_fg=true;
-                $this->log("DataConvert_Err_ID_Match",Lang::trans("log_import.no_record_in_extra_file",[
-                    "mainFileName" => config('params.import_file_path.mst_staffs.main_file_name'),
-                    "fieldName" => $this->column_main_name["mst_business_office_id"],
-                    "row" => $this->rowIndex,
-                    "extraFileName" => 'mst_business_offices',
-                ]));
-                return null;
-            }
         }
-        else
-        {
             return null ;
-        }
     }
     protected function checkExistDataAndInsertCustom($data_kb,$string,$fileName,$fieldName, $row){
         $mGeneralPurposes = new MGeneralPurposes();
@@ -642,7 +612,7 @@ class MstStaffs extends BaseImport
                 array_push($staffDependents,$data['staff_dependents_nm_'.$k]);
                 unset($data['staff_dependents_nm_'.$k]);
             }
-            $password=$this->generateRandomString(8);
+            $password=!empty($data["birthday"])?str_replace("-","",$data["birthday"]):config('params.import_file_path.mst_staffs.password_default');
             $data["password"]=bcrypt($password);
             $id = DB::table($this->table)->insertGetId( $data);
             $this->numNormal++;
