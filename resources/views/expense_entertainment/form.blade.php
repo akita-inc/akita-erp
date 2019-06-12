@@ -98,6 +98,7 @@
                                                class="form-control w-50"
                                                id="search_business_entertaining"
                                                maxlength="4"
+                                               onkeypress="return isNumberKey(event)"
                                         >
                                     </div>
 
@@ -106,8 +107,45 @@
                                     <button class="btn btn-outline-secondary" type="button" @click="searchEntertainment">{{ trans("expense_entertainment.create.button.data_acquisition") }}</button>
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-4 col-sm-12">
+                                <div class="col-md-5 col-sm-12">
                                     @include('Component.form.date-picker',['filed'=>'date','required'=>true, 'attr_input' => ""])
+                                </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-12 col-sm-12">
+                                    @include('Component.form.input',['filed'=>'client_company_name','required'=>true,'attr_input' => "maxlength=200"])
+                                </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-3 col-sm-12">
+                                    @include('Component.form.input',['filed'=>'client_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                </div>
+                                <div class="no-padding wd-32 lh-38 text-center">名</div>
+                                <div class="col-md-8 col-sm-12">
+                                    @include('Component.form.input',['class' => 'pl-0','filed'=>'client_members', 'attr_input' => "maxlength=200"])
+                                </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-3 col-sm-12">
+                                    @include('Component.form.input',['filed'=>'own_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                </div>
+                                <div class="no-padding wd-32 lh-38 text-center">名</div>
+                                <div class="col-md-8 col-sm-12">
+                                    @include('Component.form.input',['class' => 'pl-0','filed'=>'own_members', 'attr_input' => "maxlength=200"])
+                                </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-12 col-sm-12">
+                                    @include('Component.form.input',['filed'=>'place','required'=>true,'attr_input' => "maxlength=200"])
+                                </div>
+                                <div class="break-row-form"></div>
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="wrap-control-group textarea">
+                                        <label class="required" for="report">
+                                            {{ trans('expense_entertainment.create.field.report') }}
+                                        </label>
+                                        <textarea {!! isset($attr_input) ? $attr_input:"" !!} v-model="field.report" type="text"
+                                                  v-bind:class="errors.report!= undefined ? 'form-control is-invalid':'form-control' "
+                                                  class="form-control h-50" id="report" maxlength='400' ></textarea>
+                                        <span>{{trans('expense_entertainment.create.place_text')}}</span>
+                                    </div>
+                                    <span v-cloak v-if="errors.report != undefined" class="message-error" v-html="errors.report.join('<br />')"></span>
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
@@ -115,42 +153,15 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'client_company_name','required'=>true,'attr_input' => "maxlength=200"])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-3 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'client_members_count','required'=>true, 'attr_input' => "maxlength=4"])
-                                </div>
-                                <div class="no-padding wd-32 lh-38 text-center">名</div>
-                                <div class="col-md-3 col-sm-12">
-                                    @include('Component.form.input',['class' => 'pl-0','filed'=>'client_members', 'attr_input' => "maxlength=200"])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-3 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'own_members_count','required'=>true, 'attr_input' => "maxlength=4"])
-                                </div>
-                                <div class="no-padding wd-32 lh-38 text-center">名</div>
-                                <div class="col-md-3 col-sm-12">
-                                    @include('Component.form.input',['class' => 'pl-0','filed'=>'own_members', 'attr_input' => "maxlength=200"])
+                                    @include('Component.form.radio',['class'=>'w-100','filed'=>'payoff_kb','required'=>true,'array' => $listPayoffKb,'role' => $mode=='register' || $mode=='edit' ? 1 :2,'attr_input'=>"@change='handlePayoffKb'" ])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'place','required'=>true,'attr_input' => "maxlength=200"])
+                                    @include('Component.form.input',['filed'=>'deposit_amount','attr_input' => 'maxlength=8 @focus="removeCommaByID(\'deposit_amount\')" @blur="addCommaByID(\'deposit_amount\')" onkeypress="return isNumberKey(event)"'])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.textarea',['filed'=>'conditions','required'=>true,'attr_input' => "maxlength=400 class='h-50'"])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.textarea',['filed'=>'purpose','required'=>true,'attr_input' => "maxlength=400 class='h-50'"])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-4 col-sm-12">
-                                    @include('Component.form.radio',['class'=>'w-100','filed'=>'deposit_flg','required'=>true,'array' => $listDepositClassification,'role' => $mode=='register' || $mode=='edit' ? 1 :2,'attr_input'=>"@change='handleDepositFlag'" ])
-                                </div>
-                                <div class="col-md-4 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'deposit_amount','attr_input' => ':disabled="deposit_flg" maxlength=8 @focus="removeCommaByID(\'deposit_amount\')" @blur="addCommaByID(\'deposit_amount\')" onkeypress="return isNumberKey(event)"'])
+                                    @include('Component.form.input',['filed'=>'payoff_amount','attr_input' => ':disabled="payoff_fg" maxlength=8 @focus="removeCommaByID(\'payoff_amount\')" @blur="addCommaByID(\'payoff_amount\')" onkeypress="return isNumberKey(event)"'])
                                 </div>
                             </div>
                         </div>
@@ -211,7 +222,7 @@
 @section("scripts")
     <script>
         var listRoute = "{{route('expense_entertainment.list')}}";
-        var defaultApprovalKb = "{{array_keys($listDepositClassification)[0]}}";
+        var defaultPayoffKb = "{{count($listPayoffKb) > 0 ? array_keys($listPayoffKb)[0] : ''}}";
         var messages = [];
         messages["MSG10035"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10035'); ?>";
         messages["MSG10036"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10036'); ?>";
@@ -231,5 +242,5 @@
             return true;
         }
     </script>
-    <script type="text/javascript" src="{{ mix('/assets/js/controller/expense-application.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ mix('/assets/js/controller/expense-entertainment.js') }}" charset="utf-8"></script>
 @endsection
