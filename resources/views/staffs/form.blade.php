@@ -627,12 +627,14 @@
                                         <label class="h-100" for="screen_category_id">
                                             {{ trans(@$prefix.'drivers_license_divisions') }}
                                         </label>
-                                        <div class="col-md-12 col-sm-12">
+                                        <div class="row">
                                             @if(@$listDriversLicenseDivisions)
                                                 @foreach($listDriversLicenseDivisions as  $key=>$item)
                                                     @if(!empty($key))
-                                                    <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
-                                                    <label for="info_target_{{$key}}" class="custom-label">{{$item}}</label>
+                                                        <div class="col-md-2 col-sm-12">
+                                                            <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
+                                                            <label for="info_target_{{$key}}" class="custom-label">{{$item}}</label>
+                                                        </div>
                                                     @endif
                                                 @endforeach
                                             @endif
