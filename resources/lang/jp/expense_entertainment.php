@@ -45,17 +45,27 @@ return [
         'title_reference' => '交際費精算 照会 ',
         'field' => [
             'applicant_id' => '申請者',
-            'staff_nm' => '',
             'applicant_office_nm' => '所属営業所',
-            'approval_kb' => '休暇区分',
-            'half_day_kb' => '時間区分',
-            'start_date' => '期間',
-            'end_date' => '',
-            'days' => '日数',
-            'times' => '',
-            'reasons' => '理由',
-            'additional_notice' => '追加通知',
-            'send_back_reason' => '却下理由',
+            'staff_nm' => '',
+            'wf_business_entertaining_id' => '交際費申請ID',
+            'date' => '実施日',
+            'cost'=>'概算費用',
+            'client_company_name'=>'相手先会社名',
+            'client_members_count'=>'相手先参加者',
+            'client_members'=>'',
+            'own_members_count'=>'当社参加者',
+            'own_members'=>'',
+            'place'=>'場所',
+            'conditions'=>'取引状況',
+            'purpose'=>'目的',
+            'deposit_flg'=>'仮払い',
+            'deposit_amount'=>'仮払い金額',
+            'email_address'=>'追加通知',
+            'additional_notice'=>'追加通知'
+
+        ],
+        'button' => [
+            'data_acquisition' => 'データ取得'
         ],
         'search' => [
             'name' => '氏名 / ふりがな',

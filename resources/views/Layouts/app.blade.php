@@ -60,7 +60,7 @@
 
         </ul>
     </div>
-    @if(Auth::user()->sysadmin_flg==1 || env("MENU_DISP_FLG")=='True')
+    @if(Auth::user()->sysadmin_flg==1 || env("MENU_DISP_FLG"))
     <!--Left menu -->
     <button class="navbar-toggler-left"
             type="button" data-toggle="collapse" data-target="#sidebar"

@@ -345,7 +345,7 @@ expense_application_service = {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-expense_entertainment_list_service = {
+expense_entertainment_service = {
   loadList: function loadList(data) {
     return axios.post('/expense_entertainment/api-v1/getItems', data).then(function (response) {
       return response.data;
@@ -383,6 +383,13 @@ expense_entertainment_list_service = {
   },
   submit: function submit(data) {
     return axios.post('/expense_entertainment/api-v1/submit', data).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
+  },
+  searchEntertainment: function searchEntertainment(data) {
+    return axios.post('/empty_info/api-v1/search-entertainment', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;

@@ -11,6 +11,7 @@ use App\Models\MStaffs;
 use App\Models\MWfAdditionalNotice;
 use App\Models\MWfRequireApproval;
 use App\Models\WApprovalStatus;
+use App\Models\WFBusinessEntertaining;
 use App\Models\WPaidVacation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
@@ -267,67 +268,49 @@ class ExpenseEntertainmentController extends Controller
                 "sortBy"=>"approval_fg,approval_levels"
             ],
         ];
-        $mGeneralPurpose = new MGeneralPurposes();
         $mBussinessOffice = new MBusinessOffices();
         $businessOffices = $mBussinessOffice->getAllData();
-        $vacationClasses = $mGeneralPurpose->getDataByMngDiv(config('params.data_kb')['vacation_indicator']);
         return view('expense_entertainment.index',[
             'fieldShowTable'=>$fieldShowTable,
             'businessOffices' => $businessOffices,
-            'vacationClasses' => $vacationClasses
         ]);
     }
 
-    public function checkIsExist(Request $request, $id){
-        return $this->checkIsExistWf($request,$id);
-    }
-
     public function store(Request $request, $id=null){
-        $mWPaidVacation = null;
+        $mWFBusinessEntertain = null;
         $mode = "register";
         $role = 1;
         $mWApprovalStatus = new WApprovalStatus();
         if($id != null){
-            $mWPaidVacation = new WPaidVacation();
-            $mWPaidVacation = $mWPaidVacation->getInfoByID($id);
-            if(empty($mWPaidVacation)){
+            $mWFBusinessEntertain = new WFBusinessEntertaining();
+            $mWFBusinessEntertain = $mWFBusinessEntertain->getInfoByID($id);
+            if(empty($mWFBusinessEntertain)){
                 abort('404');
             }else{
-                $mWPaidVacation = $mWPaidVacation->toArray();
-                $this->checkAuthentication($id,$mWPaidVacation,$request, $mode,$role);
+                $mWFBusinessEntertain = $mWFBusinessEntertain->toArray();
+                $this->checkAuthentication($id,$mWFBusinessEntertain,$request, $mode,$role);
             }
         }
         $arrayStore = $this->beforeStore($id);
         $mGeneralPurposes = new MGeneralPurposes();
-        $listVacationIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_indicator'),'Empty');
-        $listVacationAcquisitionTimeIndicator= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.vacation_acquisition_time_indicator'),'Empty');
+        $listDepositClassification= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_expense_app_temporary_payment'),'Empty');
         $currentDate = date('Y/m/d');
         return view('expense_entertainment.form', array_merge($arrayStore,[
-            'mWPaidVacation' => $mWPaidVacation,
-            'listVacationIndicator' => $listVacationIndicator,
-            'listVacationAcquisitionTimeIndicator' => $listVacationAcquisitionTimeIndicator,
+            'mWFBusinessEntertain' => $mWFBusinessEntertain,
+            'listDepositClassification' => $listDepositClassification,
             'currentDate' => $currentDate,
             'role' => $role,
             'mode' => $mode,
         ]));
     }
-
     public function beforeSubmit($data){
-
-        if($data['half_day_kb']=='4'){
-            $this->ruleValid['times'] = 'required|one_byte_number|between_custom:1,8|length:11';
-        }
-        if($data['mode']=='approval' && !is_null($data['approval_fg']) && $data['approval_fg']==0){
-            $this->ruleValid['send_back_reason'] = 'required|length:200';
+        if(isset($data['deposit_flg']) && $data['deposit_flg']==1 )
+        {
+            $this->ruleValid['deposit_amount'] = 'required|decimal_custom|length:8';
         }
     }
-
     protected function validAfter( &$validator,$data ){
         $listWfAdditionalNotice = $data['wf_additional_notice'];
-        if ($data['start_date'] != "" && $data['end_date'] != ""
-            && Carbon::parse($data['start_date']) > Carbon::parse($data['end_date'])) {
-            $validator->errors()->add('start_date', str_replace(' :attribute', $this->labels['date'], Lang::get('messages.MSG02014')));
-        }
         $this->validateWfAdditionalNotice($validator,$listWfAdditionalNotice);
     }
 
@@ -337,11 +320,11 @@ class ExpenseEntertainmentController extends Controller
         $listLevel= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.wf_level'),'Empty');
         $arrayInsert = $data;
         $listWfAdditionalNotice = $arrayInsert['wf_additional_notice'];
+        $approval_fg = $arrayInsert["approval_fg"];
         $currentTime = date("Y-m-d H:i:s",time());
         $arrayInsert['regist_date'] = $currentTime;
+        $send_back_reason=$arrayInsert["send_back_reason"];
         $mode = $arrayInsert["mode"];
-        $approval_fg = $arrayInsert["approval_fg"];
-        $send_back_reason  = $arrayInsert["send_back_reason"];
         unset($arrayInsert["id"]);
         unset($arrayInsert["mode"]);
         unset($arrayInsert["staff_nm"]);
@@ -349,7 +332,6 @@ class ExpenseEntertainmentController extends Controller
         unset($arrayInsert["wf_additional_notice"]);
         unset($arrayInsert["approval_fg"]);
         unset($arrayInsert["send_back_reason"]);
-        $mStaff = new MStaffs();
         $mWApprovalStatus = new WApprovalStatus();
         $mailCC = [];
         $mailTo = [];
@@ -359,41 +341,41 @@ class ExpenseEntertainmentController extends Controller
                 $arrayInsert["modified_at"] = $currentTime;
                 if($mode=='edit'){
                     $id_before = $data["id"];
-                    WPaidVacation::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
-                    $configMail = Lang::get('mail_template.vacation_edit_mail');
-                }else{
+                    WFBusinessEntertaining::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
+                    $configMail = Lang::get('mail_template.expense_entertainment_edit_mail');
+                }
+                else{
                     if($approval_fg==1){
                         $mWApprovalStatus->approvalVacation($data["id"], $this->wf_type_id, $currentTime);
-                        $configMail = Lang::get('mail_template.vacation_approval_mail');
+                        $configMail = Lang::get('mail_template.expense_entertainment_approval_mail');
                     }
                     if($approval_fg==0){
-                        $mWApprovalStatus->rejectVacation($data["id"],  $this->wf_type_id,$currentTime,$data['send_back_reason']);
-                        $configMail = Lang::get('mail_template.vacation_reject_mail');
+                        $mWApprovalStatus->rejectVacation($data["id"],  $this->wf_type_id,$currentTime,$send_back_reason);
+                        $configMail = Lang::get('mail_template.expense_entertainment_approval_mail');
                     }
                 }
-
-            }else{
-                $configMail = Lang::get('mail_template.vacation_register_mail');
+            }
+            else{
+                $configMail = Lang::get('mail_template.expense_entertainment_register_mail');
             }
             if($mode=='register' || $mode=='edit') {
                 $approval_levels_step_1 = "";
                 $arrayInsert["create_at"] = $currentTime;
                 $arrayInsert["modified_at"] = $currentTime;
-                $id = WPaidVacation::query()->insertGetId($arrayInsert);
+                $id = WFBusinessEntertaining::query()->insertGetId($arrayInsert);
                 if ($id) {
                     $this->registerWApprovalStatus($id,$listLevel,$approval_levels_step_1);
-
                     $this->registerWfAdditionalNotice($id,$listWfAdditionalNotice);
                 }
                 $this->getListMailRegisterOrEdit($arrayInsert,$approval_levels_step_1,$listWfAdditionalNotice,$mailTo, $mailCC);
             }else{
                 $id = $data['id'];
-                $mWPaidVacation = new WPaidVacation();
-                $vacationInfo = $mWPaidVacation->getInfoByID($id);
+                $mWFBusinessEntertaining = new WFBusinessEntertaining();
+                $mBusinessEntertainInfo = $mWFBusinessEntertaining->getInfoByID($id);
                 if($approval_fg==1) {
-                    $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
+                    $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$mBusinessEntertainInfo->applicant_id,$mBusinessEntertainInfo->mail,$mailTo);
                 }else{
-                    $this->handleReject($id,$listWfAdditionalNotice,$arrayInsert,$vacationInfo->applicant_id,$vacationInfo->mail,$mailTo);
+                    $this->handleReject($id,$listWfAdditionalNotice,$arrayInsert,$mBusinessEntertainInfo->applicant_id,$mBusinessEntertainInfo->mail,$mailTo);
                 }
             }
             DB::commit();
@@ -421,14 +403,27 @@ class ExpenseEntertainmentController extends Controller
     }
 
     public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
-        $mWPaidVacation = new WPaidVacation();
-        $data = $mWPaidVacation->getInfoForMail($id);
-        $field = ['[id]','[applicant_id]','[approval_kb]','[start_date]','[end_date]','[days]','[times]','[reasons]','[id_before]','[title]','[send_back_reason]'];
+        $mWFBusinessEntertaining=new WFBusinessEntertaining();
+        $data = $mWFBusinessEntertaining->getInfoForMail($id);
+        $field = ['[id]','[applicant_id]','[applicant_office_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[conditions]','[purpose]','[deposit_flg]','[deposit_amount]'];
         $data['id_before'] = $id_before;
-        $text = str_replace($field, [$data['id'],$data['staff_nm'],$data['approval_kb'],$data['start_date'],$data['end_date'],$data['days'],$data['times'],$data['reasons'],$data['id_before'],$data['title'],$data['send_back_reason']],
-            $configMail['template']);
-        $subject = str_replace(['[id]','[approval_kb]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['approval_kb'],$data['staff_nm'],$data['applicant_office_id']],$configMail["subject"]);
+        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['conditions'],$data['purpose'],$data['deposit_flg'],$data['deposit_amount']],$configMail['template']);
+        $subject = str_replace(['[id]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
         $this->sendMail($configMail,$mailTo,$mailCC,$subject,$text);
     }
-
+    public function searchEntertainment(Request $request){
+        $input = $request->all();
+        $data = WFBusinessEntertaining::find($input['wf_business_entertaining_id']);
+        if($data){
+            return response()->json([
+                'success'=>true,
+                'info'=> $data,
+            ]);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'msg'=> Lang::get('messages.MSG10036'),
+            ]);
+        }
+    }
 }

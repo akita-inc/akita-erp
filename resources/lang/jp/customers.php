@@ -18,6 +18,7 @@ return [
             'customer' => '得意先',
             'code' => 'コード',
             'name' => '名称',
+            'name_kana' => '名称カナ',
             'radio-all' => 'すべて',
             'radio-reference-date' => '基準日',
         ],
