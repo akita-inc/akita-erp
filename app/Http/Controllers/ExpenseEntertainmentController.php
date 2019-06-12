@@ -12,6 +12,7 @@ use App\Models\MWfAdditionalNotice;
 use App\Models\MWfRequireApproval;
 use App\Models\WApprovalStatus;
 use App\Models\WFBusinessEntertaining;
+use App\Models\WFBusinessEntertainingExpenses;
 use App\Models\WPaidVacation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
@@ -29,12 +30,18 @@ class ExpenseEntertainmentController extends Controller
     public $ruleValid = [
         'applicant_office_nm' => 'required',
         'date' => 'required',
+        'payoff_kb' => 'required',
         'cost'=>'required|decimal_custom|length:8',
         'client_company_name'=>'required',
         'client_members_count'=>'required|one_byte_number|number_range_custom:127|length:4',
+        'client_members'=>'required|length:200',
         'own_members_count'=>'required|one_byte_number|number_range_custom:127|length:4',
+        'own_members'=>'required|length:200',
         'place'=>'required|length:200',
         'report'=>'required|length:400',
+        'deposit_amount'=>'required|decimal_custom|length:8',
+        'deposit_amount'=>'nullable|decimal_custom|length:8',
+        'payoff_amount'=>'nullable|decimal_custom|length:8',
     ];
     public $messagesCustom =[];
     public $labels=[
@@ -43,12 +50,13 @@ class ExpenseEntertainmentController extends Controller
         'date'=>'実施日',
         'cost'=>'確定費用',
         'client_company_name'=>'相手先会社名',
-        'client_members_count'=>'相手先参加者',
-        'client_members'=>'',
-        'own_members_count'=>'当社参加者',
-        'own_members'=>'',
+        'client_members_count'=>'相手先参加人数',
+        'client_members'=>'相手先参加者',
+        'own_members_count'=>'当社参加人数',
+        'own_members'=>'当社参加者',
         'place'=>'場所',
         'report'=>'報告',
+        'payoff_kb'=>'受取払戻区分',
         'deposit_amount'=>'仮払金額',
         'payoff_amount'=>'精算金額',
         'additional_notice'=>'追加通知',
@@ -308,10 +316,7 @@ class ExpenseEntertainmentController extends Controller
         ]));
     }
     public function beforeSubmit($data){
-        if(isset($data['payoff_kb']) && $data['payoff_kb']==1 )
-        {
-            $this->ruleValid['deposit_amount'] = 'required|decimal_custom|length:8';
-        }
+
     }
     protected function validAfter( &$validator,$data ){
         $listWfAdditionalNotice = $data['wf_additional_notice'];
@@ -345,7 +350,7 @@ class ExpenseEntertainmentController extends Controller
                 $arrayInsert["modified_at"] = $currentTime;
                 if($mode=='edit'){
                     $id_before = $data["id"];
-                    WFBusinessEntertaining::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
+                    WFBusinessEntertainingExpenses::query()->where("id","=",$id_before)->update(['delete_at' => date("Y-m-d H:i:s",time())]);
                     $configMail = Lang::get('mail_template.expense_entertainment_edit_mail');
                 }
                 else{
@@ -366,7 +371,7 @@ class ExpenseEntertainmentController extends Controller
                 $approval_levels_step_1 = "";
                 $arrayInsert["create_at"] = $currentTime;
                 $arrayInsert["modified_at"] = $currentTime;
-                $id = WFBusinessEntertaining::query()->insertGetId($arrayInsert);
+                $id = WFBusinessEntertainingExpenses::query()->insertGetId($arrayInsert);
                 if ($id) {
                     $this->registerWApprovalStatus($id,$listLevel,$approval_levels_step_1);
                     $this->registerWfAdditionalNotice($id,$listWfAdditionalNotice);
@@ -374,8 +379,8 @@ class ExpenseEntertainmentController extends Controller
                 $this->getListMailRegisterOrEdit($arrayInsert,$approval_levels_step_1,$listWfAdditionalNotice,$mailTo, $mailCC);
             }else{
                 $id = $data['id'];
-                $mWFBusinessEntertaining = new WFBusinessEntertaining();
-                $mBusinessEntertainInfo = $mWFBusinessEntertaining->getInfoByID($id);
+                $mWFBusinessEntertainingExpenses = new WFBusinessEntertainingExpenses();
+                $mBusinessEntertainInfo = $mWFBusinessEntertainingExpenses->getInfoByID($id);
                 if($approval_fg==1) {
                     $this->handleApproval($id,$listWfAdditionalNotice,$arrayInsert,$mBusinessEntertainInfo->applicant_id,$mBusinessEntertainInfo->mail,$mailTo);
                 }else{
@@ -407,11 +412,11 @@ class ExpenseEntertainmentController extends Controller
     }
 
     public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
-        $mWFBusinessEntertaining=new WFBusinessEntertaining();
-        $data = $mWFBusinessEntertaining->getInfoForMail($id);
-        $field = ['[id]','[applicant_id]','[applicant_office_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[conditions]','[purpose]','[deposit_flg]','[deposit_amount]'];
+        $mWFBusinessEntertainingExpenses=new WFBusinessEntertainingExpenses();
+        $data = $mWFBusinessEntertainingExpenses->getInfoForMail($id);
+        $field = ['[id]','[applicant_id]','[applicant_office_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[report]','[cost]','[payoff_amount]','[deposit_amount]'];
         $data['id_before'] = $id_before;
-        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['conditions'],$data['purpose'],$data['deposit_flg'],$data['deposit_amount']],$configMail['template']);
+        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['report'],$data['cost'],$data['payoff_amount'],$data['deposit_amount']],$configMail['template']);
         $subject = str_replace(['[id]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
         $this->sendMail($configMail,$mailTo,$mailCC,$subject,$text);
     }

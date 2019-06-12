@@ -249,10 +249,28 @@ var ctrVehiclesVl = new Vue({
             this.field.user_nm = this.field.owner_nm;
             this.field.user_address = this.field.owner_address;
         },
+        setInputFilter: function (textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                });
+            });
+        },
     },
     mounted () {
         this.loadFormEdit();
         this.getListStaff();
+        if(document.getElementById('vehicles_cd')!=null){
+            this.setInputFilter(document.getElementById('vehicles_cd'), function(value) {
+                return   /^\d*$/.test(value); });
+        }
     },
     components: {
         DatePicker,
