@@ -43749,20 +43749,8 @@ var ctrStaffsVl = new Vue({
       drivers_license_issued_dt: "",
       drivers_license_period_validity: "",
       drivers_license_picture: "",
-      drivers_license_divisions_1: "",
-      drivers_license_divisions_2: "",
-      drivers_license_divisions_3: "",
-      drivers_license_divisions_4: "",
-      drivers_license_divisions_5: "",
-      drivers_license_divisions_6: "",
-      drivers_license_divisions_7: "",
-      drivers_license_divisions_8: "",
-      drivers_license_divisions_9: "",
-      drivers_license_divisions_10: "",
-      drivers_license_divisions_11: "",
-      drivers_license_divisions_12: "",
-      drivers_license_divisions_13: "",
-      drivers_license_divisions_14: "",
+      drivers_license_divisions: [],
+      drivers_license_divisions_edit: [],
       retire_reasons: "",
       retire_dt: "",
       death_reasons: "",
@@ -43882,20 +43870,7 @@ var ctrStaffsVl = new Vue({
         that.image_drivers_license_picture = "";
         that.field.drivers_license_picture = "";
         that.field.deleteFile = 'unset_roles_clone';
-        that.field.drivers_license_divisions_1 = "";
-        that.field.drivers_license_divisions_2 = "";
-        that.field.drivers_license_divisions_3 = "";
-        that.field.drivers_license_divisions_4 = "";
-        that.field.drivers_license_divisions_5 = "";
-        that.field.drivers_license_divisions_6 = "";
-        that.field.drivers_license_divisions_7 = "";
-        that.field.drivers_license_divisions_8 = "";
-        that.field.drivers_license_divisions_9 = "";
-        that.field.drivers_license_divisions_10 = "";
-        that.field.drivers_license_divisions_11 = "";
-        that.field.drivers_license_divisions_12 = "";
-        that.field.drivers_license_divisions_13 = "";
-        that.field.drivers_license_divisions_14 = "";
+        that.field.drivers_license_divisions = [];
       }
 
       if (that.roles_staff_screen.indexOf(7) < 0) {
@@ -44037,7 +44012,7 @@ var ctrStaffsVl = new Vue({
       var _loadFormEdit = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var that;
+        var that, drivers_license_divisions;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -44045,13 +44020,15 @@ var ctrStaffsVl = new Vue({
                 that = this;
 
                 if (!($("#hd_staff_edit").val() == 1)) {
-                  _context.next = 10;
+                  _context.next = 12;
                   break;
                 }
 
                 this.loading = true;
                 that.staff_edit = 1;
                 that.staff_id = $("#hd_id").val();
+                drivers_license_divisions = $("#hd_driver_license_choosen").val();
+                that.field.drivers_license_divisions_edit = drivers_license_divisions.split(",");
                 $.each(this.field, function (key, value) {
                   if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_staff_job_experiences' && key != 'mst_staff_dependents') {
                     that.field.workmens_compensation_insurance_fg = that.field.workmens_compensation_insurance_fg == 0 ? "" : 1;
@@ -44062,10 +44039,10 @@ var ctrStaffsVl = new Vue({
                 });
                 this.field["password"] = "********";
                 this.field["confirm_password"] = "********";
-                _context.next = 10;
+                _context.next = 12;
                 return that.getMstCollapses();
 
-              case 10:
+              case 12:
               case "end":
                 return _context.stop();
             }
@@ -44405,6 +44382,7 @@ var ctrStaffsVl = new Vue({
               return this.loadFormEdit();
 
             case 2:
+              this.field.drivers_license_divisions = this.field.drivers_license_divisions_edit;
               that = this;
               staffs_service.loadListReMunicipalOffice().then(function (response) {
                 that.dropdown_relocate_municipal_office_nm[0].data = response.data;
@@ -44430,7 +44408,7 @@ var ctrStaffsVl = new Vue({
                 }
               }
 
-            case 6:
+            case 7:
             case "end":
               return _context4.stop();
           }
@@ -44521,7 +44499,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-vl.js */"./resources/assets/js/controller/staffs-vl.js");
 
 
 /***/ })

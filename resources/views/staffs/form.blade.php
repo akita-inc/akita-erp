@@ -30,7 +30,8 @@
                 </div>
                 <input type="hidden" id="hd_staff_edit" value="{!! !empty($staff) ? 1:0 !!}">
                 <input type="hidden" id="roles_staff_screen" value="@php echo implode(",",$rolesStaffScreen) @endphp">
-                @if(!empty($staff))
+                <input type="hidden" id="hd_driver_license_choosen" value="@php echo implode(",",@$driverLicenseChoosen) @endphp">
+            @if(!empty($staff))
                     @foreach($staff as $key=>$value)
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
@@ -636,129 +637,11 @@
                                                 @endforeach
                                             @endif
                                             <br/>
-                                            <span v-cloak v-if="errors.drivers_license_divisions != undefined" class="message-error" v-html="errors.drivers_license_divisions.join('<br />')"></span>
                                         </div>
                                     </div>
+                                    <span v-cloak v-if="errors.drivers_license_divisions != undefined" class="message-error" v-html="errors.drivers_license_divisions.join('<br />')"></span>
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_1',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_1",
-                                         'filedMode'=>"items.drivers_license_divisions_1",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_2',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_2",
-                                         'filedMode'=>"items.drivers_license_divisions_2",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_3',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_3",
-                                         'filedMode'=>"items.drivers_license_divisions_3",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_4',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_4",
-                                         'filedMode'=>"items.drivers_license_divisions_4",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_5',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_5",
-                                         'filedMode'=>"items.drivers_license_divisions_5",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_6',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_6",
-                                         'filedMode'=>"items.drivers_license_divisions_6",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_7',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_7",
-                                         'filedMode'=>"items.drivers_license_divisions_7",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_8',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_8",
-                                         'filedMode'=>"items.drivers_license_divisions_8",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_9',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_9",
-                                         'filedMode'=>"items.drivers_license_divisions_9",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_10',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_10",
-                                         'filedMode'=>"items.drivers_license_divisions_10",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_11',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_11",
-                                         'filedMode'=>"items.drivers_license_divisions_11",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_12',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_12",
-                                         'filedMode'=>"items.drivers_license_divisions_12",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_13',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_13",
-                                         'filedMode'=>"items.drivers_license_divisions_13",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_14',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_14",
-                                         'filedMode'=>"items.drivers_license_divisions_14",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
                                 <!--address2 address3-->
                             </div>
                         </div>

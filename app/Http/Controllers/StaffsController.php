@@ -277,27 +277,23 @@ class StaffsController extends Controller
         }
         if(isset($data["drivers_license_divisions"]) && count($data["drivers_license_divisions"])>14)
         {
-           // $validator->errors()->add('drivers_license_divisions', Lang::get('messages.MSG02022'));
+            $validator->errors()->add('drivers_license_divisions', Lang::get('messages.MSG10037'));
         }
     }
     protected function sortDriverLicense(&$data)
     {
         $mGeneralPurpose=new MGeneralPurposes();
         $drivers_license_divisions=$data['drivers_license_divisions'];
-        $mDriversLicense=$mGeneralPurpose->sortDateIdByArray(config('params.data_kb')['drivers_license_divisions_kb'],$drivers_license_divisions);
-        foreach (json_decode(json_encode($mDriversLicense), true) as $key=>$item)
+        $arrDriversLicense=$mGeneralPurpose->sortDateIdByArray(config('params.data_kb')['drivers_license_divisions_kb'],$drivers_license_divisions);
+        for($i=0;$i<14;$i++)
         {
-            if($key>=0 && $key<14 && $item !=null)
-            {
-                $data["drivers_license_divisions_".($key+1)]=$item['date_id'];
-            }
+            $data["drivers_license_divisions_".($i+1)]=isset($arrDriversLicense[$i])?$arrDriversLicense[$i]:null;
         }
     }
     protected function save($data){
         $mStaffAuth =  new MStaffAuths();
         $rolesStaffScreen=$mStaffAuth->getDataScreenStaffAuth();
         $this->sortDriverLicense($data);
-        dd($data);
         if((isset($data["is_change_password"]) && $data["is_change_password"] == true) || !isset($data["id"])) {
             $this->password= bcrypt($data['password']);
             $data['password'] = $this->password;
@@ -329,6 +325,7 @@ class StaffsController extends Controller
         unset($arrayInsert["is_change_password"]);
         unset($arrayInsert["is_change_password_confirm"]);
         unset($arrayInsert["confirm_password"]);
+        unset($arrayInsert["drivers_license_divisions_edit"]);
         DB::beginTransaction();
         try{
             $modeEdit=false;
@@ -403,6 +400,7 @@ class StaffsController extends Controller
         $listApprovalLevels=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['wf_level'],'');
         $listSectionIds=$mGeneralPurposes->getDateIDByDataKB(config('params.data_kb')['wf_applicant_affiliation_classification'],'');
         $staff=null;
+        $driverLicenseChoosen=[];
         //load form by update
         if($id != null){
             $staff = MStaffs::find( $id );
@@ -410,6 +408,13 @@ class StaffsController extends Controller
                 abort('404');
             }else{
                 $staff = $staff->toArray();
+                foreach ($staff as $key=>$item)
+                {
+                    if(strpos($key,'drivers_license_divisions')!==false && $item!==null)
+                    {
+                        array_push($driverLicenseChoosen,$item);
+                    }
+                }
             }
         }
         return view('staffs.form', [
@@ -429,6 +434,7 @@ class StaffsController extends Controller
             'mBusinessOffices'=>$mBusinessOffices,
             'listDepartments'=>$listDepartments,
             'listDriversLicenseDivisions'=>$listDriversLicenseDivisions,
+            'driverLicenseChoosen'=>$driverLicenseChoosen,
             'listDriversLicenseColors'=>$listDriversLicenseColors,
             'listMedicalCheckupInterval'=>$listMedicalCheckupInterval,
             'role'=>$role,
