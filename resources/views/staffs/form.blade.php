@@ -73,7 +73,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-380','filed'=>'staff_cd','required'=>true,'attr_input' => "onkeypress='return isNumberKey(event)' maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'staff_cd','required'=>true,'attr_input' => " maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                     </div>
