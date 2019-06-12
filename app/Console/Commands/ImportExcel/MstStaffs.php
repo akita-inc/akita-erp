@@ -496,7 +496,6 @@ class MstStaffs extends BaseImport
     {
         if($office_cd!=null) {
             $businessOffice = $this->businessOffice;
-            $office_cd = (int)$office_cd;
             if (isset($businessOffice[$office_cd])) {
                 $office_id = $businessOffice[$office_cd];
                 return $office_id;
