@@ -108,7 +108,7 @@ class MstVehicles extends BaseImport
     public $rules = [
         'vehicles_cd'=>'required',
         'vehicles_kb'=>'required',
-        'mst_business_office_id'=>'nullable|length:5',
+        'mst_business_office_id'=>'nullable|length:3',
         'frame_numbers'=>'nullable|length:50',
         'vehicle_types'=>'nullable|length:50',
         'engine_typese'=>'nullable|length:50',
