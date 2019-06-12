@@ -332,7 +332,6 @@ var ctrStaffsVl = new Vue({
                     that.loading = false;
                 });
             }
-
         },
          loadFormEdit: async function () {
             let that = this;
@@ -600,11 +599,29 @@ var ctrStaffsVl = new Vue({
             this.autokana ['mst_staff_dependents_last_nm'+index] = AutoKana.bind('#mst_staff_dependents_last_nm'+index, '#mst_staff_dependents_last_nm_kana'+index, { katakana: true });
             this.autokana ['mst_staff_dependents_first_nm'+index] = AutoKana.bind('#mst_staff_dependents_first_nm'+index, '#mst_staff_dependents_first_nm_kana'+index, { katakana: true });
         },
+        setInputFilter: function (textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                });
+            });
+        },
     },
     async beforeMount(){
         await this.loadFormEdit();
     },
     async mounted () {
+        if(document.getElementById('staff_cd')!=null){
+            this.setInputFilter(document.getElementById('staff_cd'), function(value) {
+                return   /^\d*$/.test(value); });
+        }
         await this.loadFormEdit();
         this.field.drivers_license_divisions=this.field.drivers_license_divisions_edit;
         var that=this;

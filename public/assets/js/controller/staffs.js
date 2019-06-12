@@ -44342,6 +44342,20 @@ var ctrStaffsVl = new Vue({
       this.autokana['mst_staff_dependents_first_nm' + index] = vanilla_autokana__WEBPACK_IMPORTED_MODULE_7__["bind"]('#mst_staff_dependents_first_nm' + index, '#mst_staff_dependents_first_nm_kana' + index, {
         katakana: true
       });
+    },
+    setInputFilter: function setInputFilter(textbox, inputFilter) {
+      ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+        textbox.addEventListener(event, function () {
+          if (inputFilter(this.value)) {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+          }
+        });
+      });
     }
   },
   beforeMount: function () {
@@ -44378,10 +44392,16 @@ var ctrStaffsVl = new Vue({
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _context4.next = 2;
+              if (document.getElementById('staff_cd') != null) {
+                this.setInputFilter(document.getElementById('staff_cd'), function (value) {
+                  return /^\d*$/.test(value);
+                });
+              }
+
+              _context4.next = 3;
               return this.loadFormEdit();
 
-            case 2:
+            case 3:
               this.field.drivers_license_divisions = this.field.drivers_license_divisions_edit;
               that = this;
               staffs_service.loadListReMunicipalOffice().then(function (response) {
@@ -44408,7 +44428,7 @@ var ctrStaffsVl = new Vue({
                 }
               }
 
-            case 7:
+            case 8:
             case "end":
               return _context4.stop();
           }
