@@ -12,7 +12,8 @@
             {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
         </div>
     @else
-    <div class="row row-xs" id="ctrSuppliersListVl">
+    <div id="ctrSuppliersListVl">
+        {{ Breadcrumbs::render('suppliers_list') }}
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             @if ($accessible_kb == 1)
@@ -32,19 +33,19 @@
                             <label class="grid-form-search-label" for="input_mst_suppliers_cd">
                                 {{trans("suppliers.list.search.code")}}
                             </label>
-                            <input type="text" v-model="fieldSearch.mst_suppliers_cd" name="supplier_cd" id="supplier_cd" class="form-control">
+                            <input type="text" v-model="fieldSearch.mst_suppliers_cd" name="supplier_cd" id="supplier_cd" class="form-control" placeholder="{{trans("suppliers.list.search.code")}}">
                         </div>
                         <div class="col-md-3 padding-row-5">
                             <label class="grid-form-search-label" for="input_mst_suppliers_name">
                                 {{trans("suppliers.list.search.name")}}
                             </label>
-                            <input type="text" v-model="fieldSearch.supplier_nm" name="supplier_nm" id="supplier_nm" class="form-control">
+                            <input type="text" v-model="fieldSearch.supplier_nm" name="supplier_nm" id="supplier_nm" class="form-control" placeholder="{{trans("suppliers.list.search.name")}}">
                         </div>
                         <div class="col-md-3 padding-row-5">
                             <label class="grid-form-search-label" for="input_mst_suppliers_name_kana_formal">
                                 {{trans("suppliers.list.search.name_kana")}}
                             </label>
-                            <input type="text" v-model="fieldSearch.supplier_nm_kana_formal" name="supplier_nm_kana_formal" id="supplier_nm_kana_formal" class="form-control">
+                            <input type="text" v-model="fieldSearch.supplier_nm_kana_formal" name="supplier_nm_kana_formal" id="supplier_nm_kana_formal" class="form-control" placeholder="{{trans("suppliers.list.search.name_kana")}}">
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
@@ -62,8 +63,8 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table">
-            <table class="table table-striped table-bordered search-content">
+        <div class="wrapper-table Scroll">
+            <table class="table table-striped table-bordered search-content mb-3">
                 <thead>
                 <tr>
                     <th v-on:click="sortList($event, 'mst_suppliers_cd')" id="th_mst_suppliers_cd" class="wd-100">{{trans('suppliers.list.table.mst_suppliers_cd')}}</th>
@@ -74,7 +75,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr v-cloak v-for="item in items">
+                    <tr v-cloak v-for="item in items.data">
                         <td>
                             <div class="cd-link" v-on:click="checkIsExist(item.id)">{!! "@{{ item['mst_suppliers_cd'] }}" !!}</div>
                         </td>
@@ -85,7 +86,7 @@
                         </td>
                         <td>{!! "@{{ item['street_address'] }}" !!}</td>
                         <td class="td-nl2br">{!! "@{{ item['explanations_bill'] }}" !!}</td>
-                        <td>{!! "@{{ item['modified_at'] }}" !!}</td>
+                        <td class="text-center">{!! "@{{ item['modified_at'] }}" !!}</td>
                     </tr>
                     <tr v-cloak v-if="message !== ''">
                         <td colspan="8">@{{message}} </td>
@@ -93,9 +94,8 @@
 
                 </tbody>
             </table>
-            <div v-cloak class="mg-t-10">
-                @include("Layouts.pagination")
-            </div>
+
+            @include("Layouts.pagination")
         </div>
     </div>
     @endif

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="6px" height="6px" viewBox="0 0 6 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.1 (78136) - https://sketchapp.com -->
+    <title>Arrow</title>
+    <desc>Created with Sketch.</desc>
+    <g id="基本デザイン" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="パーツ" transform="translate(-662.000000, -1106.000000)" fill="#4B4B4B" fill-rule="nonzero">
+            <g id="Arrow" transform="translate(662.000000, 1106.000000)">
+                <polygon id="▼" points="2.99667037 5.22752497 0 -6.1284311e-14 6 -6.1284311e-14"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

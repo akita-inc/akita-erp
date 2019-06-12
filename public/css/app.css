@@ -347,11 +347,6 @@ input,select{
     left: 5px;
     font-size: 0.7rem;
 }
-.error-label-search{
-    position: absolute;
-    bottom: -30px;
-    left: 5px;
-}
 .frm-search-list .left-5px{
     left:5px!important;
 }

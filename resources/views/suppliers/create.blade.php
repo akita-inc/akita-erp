@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="{{ asset('css/supplier/add.css') }}">
 @endsection
 @section('content')
-    <div class="row row-xs" id="ctrSupplierrsVl">
+    <div id="ctrSupplierrsVl">
+        {{ Breadcrumbs::render('suppliers_create') }}
         <form class="form-inline w-100" role="form" method="post" id="form1">
             @csrf
             <div class="sub-header">

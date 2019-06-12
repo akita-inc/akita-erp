@@ -1,0 +1,400 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+display: flex;
+justify-content: space-between;
+font-size: 0.8rem;
+color: #333;
+border-top: 5px solid #552277;
+}
+
+@media (max-width:575.98px) {
+	body {
+	flex-direction: column;
+	}
+}
+
+.navbar {
+display: block;
+padding: 0;
+flex-direction: column;
+min-width: 185px;
+margin-right: 20px;
+/*background-color: #F1F1F1!important;*/
+background-color: #ECECEC!important;
+}
+
+.bg-light {
+border-bottom: none;
+}
+.navbar-brand {
+padding: 8px!important;
+margin-right: 0;
+display: block;
+white-space: pre-wrap;
+font-size: 0.9rem;
+}
+.container {
+margin-top: 0;
+padding-left: 0!important;
+}
+
+@media (max-width:575.98px) {
+	.container {
+	padding: 0 10px!important;
+	}
+}
+
+/*****************************************************************************
+左のnav
+*****************************************************************************/
+.nav-left {
+	/*	height: calc(100vh - 68px);*/
+	min-width: 185px;
+	max-width: 185px;
+	margin-right: 20px;
+	/*background-color: #F1F1F1;*/
+	background-color: #E3E3E3;
+}
+@media (max-width:575.98px) {
+	.nav-left {
+	min-width: 100vw;
+	padding: 0;
+	margin: 0;
+	}
+}
+
+/*togglerをPCでは非表示*/
+.navbar-toggler {
+display: none;
+}
+
+/*togglerをスマホでは表示*/
+@media (max-width:575.98px) {
+	.navbar-toggler {
+	display: block!important;
+	visibility: visible!important;
+	margin: 10px 10px 10px 0;
+	border-radius: 4px!important;
+	}
+}
+
+/*内容*/
+.collapse {
+visibility: visible!important;
+display: block!important;
+}
+.navbar-collapse {
+visibility: hidden;
+display: none;
+}
+
+@media (max-width:575.98px) {
+/*内容*/
+	.collapse {
+	visibility: hidden!important;
+	display: none!important;
+	}
+
+	.collapse.show {
+	visibility: visible!important;
+	display: block!important;
+	}
+
+/*togglerの位置？*/
+	.navbar-collapse {
+	visibility: hidden!important;
+	display: none!important;
+	}
+	.navbar-collapse.show {
+	visibility: visible!important;
+	display: block!important;
+	}
+}
+
+.collapse#menu0sub1,
+.collapse#menu1sub1,
+.collapse#menu2sub1,
+.collapse#menu3sub1,
+.collapse#menu4sub1 {
+visibility: hidden!important;
+display: none!important;
+}
+.collapse#menu0sub1.show,
+.collapse#menu1sub1.show,
+.collapse#menu2sub1.show,
+.collapse#menu3sub1.show,
+.collapse#menu4sub1.show {
+visibility: visible!important;
+display: block!important;
+}
+
+.Logo {
+display: block;
+width: 185px;
+height:  88px;
+background: url("../images/Logo.svg") center center / 155px auto no-repeat;
+text-indent: -9999px;
+}
+
+@media (max-width:575.98px) {
+.Logo {
+	width: 110px;
+	height: 53px;
+	margin-left: 10px;
+	overflow-y: hidden;
+	border-bottom: none!important;
+	background: url("../images/Logo.svg") center center / 110px auto no-repeat;
+	}
+}
+
+.nav-left .Category-Box {
+padding: 0;
+margin: 0;
+border-top: 1px solid #FFF;
+border-bottom: 1px solid #8A8A8A;
+}
+.nav-left .Category-Box a {
+display: block;
+color: #333;
+}
+.nav-left .Category-Box a:hover {
+text-decoration: none;
+background-color: #ECECEC;
+}
+
+.nav-left h2 {
+margin-bottom: 0!important;
+}
+.nav-left h2 a {
+display: block;
+font-size: 0.9rem;
+font-weight: normal;
+padding: 14px 14px 14px 15px;
+margin: 0!important;
+line-height: 1.1;
+}
+.nav-left h2 a.Arrow:before {
+	content: "▼";
+	font-size: 0.5rem;
+	/* [disabled]font-size: 0.4rem; */
+	color: #484848;
+	position: relative;
+	left: 5px;
+top: -2px;
+	margin-right: 15px;
+}
+
+.nav-left h2 a.Nav-Icon-Home {
+background-image: url("../images/menu-03.svg");
+background-repeat: no-repeat;
+background-position: 15px 15px;
+padding-left: 40px;
+}
+.nav-left h2 a.Nav-Icon-Hakokara {
+background-image: url("../images/menu-04.svg");
+background-repeat: no-repeat;
+background-position: 15px 15px;
+padding-left: 40px;
+}
+.nav-left ul {
+margin: 0;
+padding: 0;
+}
+.nav-left ul li  {
+font-weight: bold;
+list-style: none;
+}
+
+.nav-left ul li a {
+padding: 13px 8px 13px 44px;
+display: block;
+color: #333;
+margin-left: 0px;
+background-repeat: no-repeat;
+background-position: 22px 12px;
+background-image: url("../images/menu-01.svg");
+line-height: 1.1;
+}
+.nav-left ul li a.active {
+background-color: #FFF;
+}
+
+.nav-left ul li a:hover {
+background-color: #ECECEC;
+color: #4140BB;
+}
+.nav-left ul li a.Nav-Icon-Home {
+background-image: url("../images/menu-03.svg");
+}
+
+@media (max-width:575.98px) {
+	.nav-left ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	}
+	.nav-left ul li  {
+	width: 50%;
+	}
+}
+
+
+/*****************************************************************************
+トピックパス
+*****************************************************************************/
+/*margin-*bottom注意*/
+.breadcrumb {
+width: 100%!important;
+margin-bottom: 20px!important;
+margin-top: 20px;
+/*background-color: #F1F1F1;*/
+background-color: #E3E3E3;
+position: relative;
+}
+
+/*****************************************************************************
+H2（ページタイトル）
+*****************************************************************************/
+.H2-PageTitle {
+display: block;
+width: 100%!important;
+font-size: 23px;
+height: 30px;
+color: #404040;
+margin-bottom: 20px;
+font-weight: normal;
+}
+
+.sub-header{
+background-color: #DFEDFF;
+border-radius: 4px;
+border: 1px solid #CCC;
+}
+
+/*****************************************************************************
+フォーム系
+*****************************************************************************/
+.form-control {
+border-radius: 4px!important;
+}
+
+input[type="text"] {
+background-color: #FFFFF2!important;
+}
+
+input[type="text"]::placeholder {
+color: #888!important;
+font-size: 1.1rem!important;
+}
+
+input[type="text"]:focus {
+color: #000!important;
+}
+
+select {
+background-color: #F7F7F7!important;
+}
+
+.btn {
+padding: .43rem!important;
+border-radius: 4px;
+}
+
+.btn-black {
+background-color: #EEE;
+color: #212529;
+border: 1px solid #C6C6C6;
+}
+.btn-black:hover {
+background-color: #DFDFDF;
+color: #212529;
+}
+
+.btn-primary {
+background-color: #2D77EC;
+border: 1px solid #005CEE;
+}
+
+.btn-delete {
+background-color: #FF0000;
+border: 1px solid #FF0000;
+}
+
+/*****************************************************************************
+テーブル
+*****************************************************************************/
+.table thead th {
+background-color: #E1FFE9;
+color: #000;
+padding: 10px 8px;
+}
+
+.table-bordered {
+border: 1px solid #000;
+}
+.table thead th {
+vertical-align: bottom;
+border-bottom: 1px solid #CCC;
+}
+.table-bordered td, .table-bordered th {
+border: 1px solid #CCC;
+}
+
+.table td {
+color: #333;
+font-size: 13px;
+padding: 5px!important;
+}
+
+/* 暫定的に社員コードのみ大きく表示*/
+.table tbody td:first-child {
+font-size: 1.2rem;
+text-align: center!important;
+}
+
+.table td.no-padding {
+padding: 5px!important;
+}
+
+@media (max-width:575.98px) {
+	.Scroll {
+	width: calc(100vw - 20px);
+	display: block;
+	position: relative;
+	-webkit-overflow-scrolling: touch;
+	overflow-x: scroll;
+	}
+	table {
+	max-width: 100vw;
+	overflow-x: scroll;
+	}
+	table th {
+	white-space: nowrap;
+	}
+}
+
+/*****************************************************************************
+Pagenation
+*****************************************************************************/
+.pagination li.PgenationLabel {
+display: block;
+margin-right: 10px;
+color: #6A6A6A;
+line-height: 1.25;
+padding: .5rem .75rem;
+border: 1px solid #DEE2E6;
+border-radius: 4px;
+}
+.pagination>li>a {
+border-top: 1px solid #DEE2E6;
+border-bottom: 1px solid #DEE2E6;
+background-color: #EEE;
+margin-right: 5px;
+border-radius: 4px;
+}
+
+.page-link-Active {
+background-color: #FFF!important;
+}
