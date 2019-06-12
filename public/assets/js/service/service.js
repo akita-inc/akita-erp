@@ -389,7 +389,7 @@ expense_entertainment_service = {
     });
   },
   searchEntertainment: function searchEntertainment(data) {
-    return axios.post('/empty_info/api-v1/search-entertainment', data).then(function (response) {
+    return axios.post('/expense_entertainment/api-v1/search-entertainment', data).then(function (response) {
       return response.data;
     }).catch(function (error) {
       return error;
