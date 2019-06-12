@@ -37,7 +37,7 @@ class MBusinessOffices  extends Model
         foreach($data as $key=>$value)
         {
             $val = json_decode( json_encode($value), true);
-            $result[(string)$val['mst_business_office_cd']]=$val['id'];
+            $result[$val['mst_business_office_cd']]=$val['id'];
         }
         return $result;
     }
