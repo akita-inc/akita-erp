@@ -30,7 +30,7 @@ class MstBusinessOffices extends BaseImport
     ];
     public $rules = [
         'business_office_nm'=>'required|length:50',
-        'mst_business_office_cd'=>'required',
+        'mst_business_office_cd'=>'required|length:3',
         'branch_office_cd'=>'nullable',
         'zip_cd'=>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',
@@ -108,6 +108,9 @@ class MstBusinessOffices extends BaseImport
                             $val = str_replace(" ", "　", $value);
                             $val = str_replace("　", "", $val);
                             $record[$excel_column[$pos]] = $val!= "" ? str_replace("-", "", $val) : null;
+                            break;
+                        case 'branch_office_cd':
+                            $record[$excel_column[$pos]]=null;
                             break;
                         case 'address1':
                             $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
