@@ -30,7 +30,8 @@
                 </div>
                 <input type="hidden" id="hd_staff_edit" value="{!! !empty($staff) ? 1:0 !!}">
                 <input type="hidden" id="roles_staff_screen" value="@php echo implode(",",$rolesStaffScreen) @endphp">
-                @if(!empty($staff))
+                <input type="hidden" id="hd_driver_license_choosen" value="@php echo implode(",",@$driverLicenseChoosen) @endphp">
+            @if(!empty($staff))
                     @foreach($staff as $key=>$value)
                         <input type="hidden" id="hd_{!! $key !!}" value="{!! $value !!}">
                     @endforeach
@@ -72,7 +73,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-380','filed'=>'staff_cd','required'=>true,'attr_input' => "onkeypress='return isNumberKey(event)' maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
+                        @include('Component.form.input',['class'=>'wd-380','filed'=>'staff_cd','required'=>true,'attr_input' => " maxlength='5'".(!empty($staff) ? 'readonly=""':'')])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
                     </div>
@@ -188,7 +189,7 @@
                     </div>
 
                     <div class="col-md-5 col-sm-12 pd-l-20">
-                        @include('Component.form.textarea',['filed'=>'notes','attr_input' => "maxlength='50'"])
+                        @include('Component.form.textarea',['filed'=>'notes','attr_input' => "maxlength='255'"])
                     </div>
                 </div>
             </div>
@@ -621,124 +622,26 @@
                                     ])
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_1',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_1",
-                                         'filedMode'=>"items.drivers_license_divisions_1",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_2',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_2",
-                                         'filedMode'=>"items.drivers_license_divisions_2",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_3',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_3",
-                                         'filedMode'=>"items.drivers_license_divisions_3",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_4',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_4",
-                                         'filedMode'=>"items.drivers_license_divisions_4",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="wrap-control-group textarea">
+                                        <label class="h-100" for="screen_category_id">
+                                            {{ trans(@$prefix.'drivers_license_divisions') }}
+                                        </label>
+                                        <div class="col-md-12 col-sm-12">
+                                            @if(@$listDriversLicenseDivisions)
+                                                @foreach($listDriversLicenseDivisions as  $key=>$item)
+                                                    @if(!empty($key))
+                                                    <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
+                                                    <span for="info_target_{{$item}}">{{$item}}</span>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                            <br/>
+                                        </div>
+                                    </div>
+                                    <span v-cloak v-if="errors.drivers_license_divisions != undefined" class="message-error" v-html="errors.drivers_license_divisions.join('<br />')"></span>
                                 </div>
                                 <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_5',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_5",
-                                         'filedMode'=>"items.drivers_license_divisions_5",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_6',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_6",
-                                         'filedMode'=>"items.drivers_license_divisions_6",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_7',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_7",
-                                         'filedMode'=>"items.drivers_license_divisions_7",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_8',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_8",
-                                         'filedMode'=>"items.drivers_license_divisions_8",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_9',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_9",
-                                         'filedMode'=>"items.drivers_license_divisions_9",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_10',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_10",
-                                         'filedMode'=>"items.drivers_license_divisions_10",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_11',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_11",
-                                         'filedMode'=>"items.drivers_license_divisions_11",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_12',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_12",
-                                         'filedMode'=>"items.drivers_license_divisions_12",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
-                                <div class="break-row-form"></div>
-                                <div class="col-md-5 col-sm-12">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_13',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_13",
-                                         'filedMode'=>"items.drivers_license_divisions_13",
-                                         'array'=>$listDriversLicenseDivisions
-                                     ])
-                                </div>
-                                <div class="col-md-7 col-sm-12 pd-l-20">
-                                    @include('Component.form.select',[
-                                         'filed'=>'drivers_license_divisions_14',
-                                         'filedId'=>"mst_staff_drivers_license_divisions_14",
-                                         'filedMode'=>"items.drivers_license_divisions_14",
-                                         'array'=>$listDriversLicenseDivisions
-                                    ])
-                                </div>
                                 <!--address2 address3-->
                             </div>
                         </div>
@@ -899,121 +802,121 @@
             </div>
             @endif
             <!--Block 14-->
-            {{--@if(in_array(8,$rolesStaffScreen))--}}
-            {{--<div class="grid-form ">--}}
-                {{--<p class="header-collapse" >--}}
-                    {{--<a data-toggle="collapse" href="#b_mst_access_authority" role="button" aria-expanded="false" aria-controls="collapseExample">--}}
-                        {{--アクセス権限--}}
-                    {{--</a>--}}
-                {{--</p>--}}
-                {{--<div class="collapse" id="b_mst_access_authority">--}}
-                    {{--<div class="wrapper-collapse pr-0">--}}
-                        {{--<div class="grid-form items-collapse">--}}
-                            {{--<div class="row">--}}
-                                {{--<div class="col-md-5 col-sm-12">--}}
-                                    {{--@include('Component.form.select',[--}}
-                                        {{--'filed'=>'mst_role_id',--}}
-                                        {{--'filedId'=>"mst_access_authority_mst_role_id",--}}
-                                        {{--'filedMode'=>"items.mst_role_id",--}}
-                                        {{--'array'=>@$listRoles,--}}
-                                        {{--'attr_input' => 'v-on:change="loadRoleConfig"'--}}
-                                    {{--])--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-7 col-sm-12 pd-l-20">--}}
-                                {{--</div>--}}
-                                {{--<div class="break-row-form"></div>--}}
-                                {{--<div class="col-md-12 col-sm-12">--}}
-                                    {{--<div class="wrap-control-group textarea">--}}
-                                        {{--<label class="h-100" for="screen_category_id1">--}}
-                                            {{--{{ trans(@$prefix.'screen_category_id.1') }}--}}
-                                        {{--</label>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--■ 対象の情報--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--@if(@$listStaffScreens)--}}
-                                            {{--@foreach($listStaffScreens as $item)--}}
-                                                {{--<input type="checkbox" class="form-control" id="info_target_{{$item->id}}" value="{{$item->id}}" v-model="field.mst_staff_auths[1].staffScreen">--}}
-                                                {{--<span for="info_target_{{$item->id}}">{{$item->screen_nm}}</span>--}}
-                                            {{--@endforeach--}}
-                                            {{--@endif--}}
-                                            {{--<br/>--}}
-                                             {{--<span v-cloak v-if="errors.staffScreen != undefined" class="message-error" v-html="errors.staffScreen.join('<br />')"></span>--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--■ アクセス許可区分--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--@if(@$listAccessiblePermission)--}}
-                                            {{--@foreach($listAccessiblePermission as $key => $value)--}}
-                                                {{--<input type="radio" class="form-control" id="staff_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[1].accessible_kb" value="{{$key}}">--}}
-                                                {{--<span for="staff_access_permission_role_{{$key}}">{{ $value}}</span>--}}
-                                            {{--@endforeach--}}
-                                            {{--@endif--}}
+{{--            @if(in_array(8,$rolesStaffScreen))--}}
+{{--            <div class="grid-form ">--}}
+{{--                <p class="header-collapse" >--}}
+{{--                    <a data-toggle="collapse" href="#b_mst_access_authority" role="button" aria-expanded="false" aria-controls="collapseExample">--}}
+{{--                        アクセス権限--}}
+{{--                    </a>--}}
+{{--                </p>--}}
+{{--                <div class="collapse" id="b_mst_access_authority">--}}
+{{--                    <div class="wrapper-collapse pr-0">--}}
+{{--                        <div class="grid-form items-collapse">--}}
+{{--                            <div class="row">--}}
+{{--                                <div class="col-md-5 col-sm-12">--}}
+{{--                                    @include('Component.form.select',[--}}
+{{--                                        'filed'=>'mst_role_id',--}}
+{{--                                        'filedId'=>"mst_access_authority_mst_role_id",--}}
+{{--                                        'filedMode'=>"items.mst_role_id",--}}
+{{--                                        'array'=>@$listRoles,--}}
+{{--                                        'attr_input' => 'v-on:change="loadRoleConfig"'--}}
+{{--                                    ])--}}
+{{--                                </div>--}}
+{{--                                <div class="col-md-7 col-sm-12 pd-l-20">--}}
+{{--                                </div>--}}
+{{--                                <div class="break-row-form"></div>--}}
+{{--                                <div class="col-md-12 col-sm-12">--}}
+{{--                                    <div class="wrap-control-group textarea">--}}
+{{--                                        <label class="h-100" for="screen_category_id1">--}}
+{{--                                            {{ trans(@$prefix.'screen_category_id.1') }}--}}
+{{--                                        </label>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            ■ 対象の情報--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            @if(@$listStaffScreens)--}}
+{{--                                            @foreach($listStaffScreens as $item)--}}
+{{--                                                <input type="checkbox" class="form-control" id="info_target_{{$item->id}}" value="{{$item->id}}" v-model="field.mst_staff_auths[1].staffScreen">--}}
+{{--                                                <span for="info_target_{{$item->id}}">{{$item->screen_nm}}</span>--}}
+{{--                                            @endforeach--}}
+{{--                                            @endif--}}
+{{--                                            <br/>--}}
+{{--                                             <span v-cloak v-if="errors.staffScreen != undefined" class="message-error" v-html="errors.staffScreen.join('<br />')"></span>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            ■ アクセス許可区分--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            @if(@$listAccessiblePermission)--}}
+{{--                                            @foreach($listAccessiblePermission as $key => $value)--}}
+{{--                                                <input type="radio" class="form-control" id="staff_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[1].accessible_kb" value="{{$key}}">--}}
+{{--                                                <span for="staff_access_permission_role_{{$key}}">{{ $value}}</span>--}}
+{{--                                            @endforeach--}}
+{{--                                            @endif--}}
 
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                                {{--<div class="break-row-form"></div>--}}
+{{--                                <div class="break-row-form"></div>--}}
 
-                                {{--<div class="col-md-5 col-sm-12">--}}
-                                    {{--<div class="wrap-control-group textarea">--}}
-                                        {{--<label class="h-100" for="screen_category_id2">--}}
-                                            {{--{{ trans(@$prefix.'screen_category_id.2') }}--}}
-                                        {{--</label>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--■ アクセス許可区分--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--@foreach($listAccessiblePermission as $key => $value)--}}
-                                                {{--<input type="radio" class="form-control" id="supplier_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[2].accessible_kb" value="{{$key}}">--}}
-                                                {{--<span for="supplier_access_permission_role_{{$key}}">{{ $value}}</span>--}}
-                                            {{--@endforeach--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                                {{--<div class="col-md-7 col-sm-12 pd-l-20">--}}
-                                    {{--<div class="wrap-control-group textarea">--}}
-                                        {{--<label class="h-100" for="screen_category_id3">--}}
-                                            {{--{{ trans(@$prefix.'screen_category_id.3') }}--}}
-                                        {{--</label>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--■ アクセス許可区分--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--@foreach($listAccessiblePermission as $key => $value)--}}
-                                                {{--<input type="radio" class="form-control" id="customer_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[3].accessible_kb" value="{{$key}}">--}}
-                                                {{--<span for="customer_access_permission_role_{{$key}}">{{ $value}}</span>--}}
-                                            {{--@endforeach--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
+{{--                                <div class="col-md-5 col-sm-12">--}}
+{{--                                    <div class="wrap-control-group textarea">--}}
+{{--                                        <label class="h-100" for="screen_category_id2">--}}
+{{--                                            {{ trans(@$prefix.'screen_category_id.2') }}--}}
+{{--                                        </label>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            ■ アクセス許可区分--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            @foreach($listAccessiblePermission as $key => $value)--}}
+{{--                                                <input type="radio" class="form-control" id="supplier_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[2].accessible_kb" value="{{$key}}">--}}
+{{--                                                <span for="supplier_access_permission_role_{{$key}}">{{ $value}}</span>--}}
+{{--                                            @endforeach--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="col-md-7 col-sm-12 pd-l-20">--}}
+{{--                                    <div class="wrap-control-group textarea">--}}
+{{--                                        <label class="h-100" for="screen_category_id3">--}}
+{{--                                            {{ trans(@$prefix.'screen_category_id.3') }}--}}
+{{--                                        </label>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            ■ アクセス許可区分--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            @foreach($listAccessiblePermission as $key => $value)--}}
+{{--                                                <input type="radio" class="form-control" id="customer_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[3].accessible_kb" value="{{$key}}">--}}
+{{--                                                <span for="customer_access_permission_role_{{$key}}">{{ $value}}</span>--}}
+{{--                                            @endforeach--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                                {{--<div class="break-row-form"></div>--}}
-                                {{--<div class="col-md-5 col-sm-12">--}}
-                                    {{--<div class="wrap-control-group textarea">--}}
-                                        {{--<label class="h-100" for="screen_category_id4">--}}
-                                            {{--{{ trans(@$prefix.'screen_category_id.4') }}--}}
-                                        {{--</label>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--■ アクセス許可区分--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-12 col-sm-12">--}}
-                                            {{--@foreach($listAccessiblePermission as $key => $value)--}}
-                                                {{--<input type="radio" class="form-control" id="vehicle_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[4].accessible_kb" value="{{$key}}">--}}
-                                                {{--<span for="vehicle_access_permission_role_{{$key}}">{{ $value}}</span>--}}
-                                            {{--@endforeach--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
+{{--                                <div class="break-row-form"></div>--}}
+{{--                                <div class="col-md-5 col-sm-12">--}}
+{{--                                    <div class="wrap-control-group textarea">--}}
+{{--                                        <label class="h-100" for="screen_category_id4">--}}
+{{--                                            {{ trans(@$prefix.'screen_category_id.4') }}--}}
+{{--                                        </label>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            ■ アクセス許可区分--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-md-12 col-sm-12">--}}
+{{--                                            @foreach($listAccessiblePermission as $key => $value)--}}
+{{--                                                <input type="radio" class="form-control" id="vehicle_access_permission_role_{{$key}}" v-model="field.mst_staff_auths[4].accessible_kb" value="{{$key}}">--}}
+{{--                                                <span for="vehicle_access_permission_role_{{$key}}">{{ $value}}</span>--}}
+{{--                                            @endforeach--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-            {{--@endif--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            @endif--}}
             <!--End-->
             @if($role==2)
             </fieldset>

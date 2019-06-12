@@ -21901,11 +21901,31 @@ var ctrVehiclesVl = new Vue({
     copyText: function copyText() {
       this.field.user_nm = this.field.owner_nm;
       this.field.user_address = this.field.owner_address;
+    },
+    setInputFilter: function setInputFilter(textbox, inputFilter) {
+      ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+        textbox.addEventListener(event, function () {
+          if (inputFilter(this.value)) {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+          }
+        });
+      });
     }
   },
   mounted: function mounted() {
     this.loadFormEdit();
     this.getListStaff();
+
+    if (document.getElementById('vehicles_cd') != null) {
+      this.setInputFilter(document.getElementById('vehicles_cd'), function (value) {
+        return /^\d*$/.test(value);
+      });
+    }
   },
   components: {
     DatePicker: _component_vue2_datepicker_master__WEBPACK_IMPORTED_MODULE_2___default.a,
@@ -21982,7 +22002,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\vehicles-vl.js */"./resources/assets/js/controller/vehicles-vl.js");
 
 
 /***/ })

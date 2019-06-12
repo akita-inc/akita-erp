@@ -112,28 +112,31 @@ class RunBatchImport extends Command
                 }
             }
         }
-        $staffAdmin=null;
+
+        // Get user administrator
+        $staffAdmin = DB::table("mst_staffs")->where("staff_cd","=",config('params.account_admin'))->first();
+        if( $staffAdmin ){
+            $staffAdmin = (array)$staffAdmin;
+            unset($staffAdmin["id"]);
+        }
+
+        // Truncate DB
         foreach ($this->arrayRunTime as $run){
-            if($run == "mst_staffs"){
-                $staffAdmin = DB::table($run)->where("staff_cd","=",config('params.account_admin'))->first();
-                if( $staffAdmin ){
-                    $staffAdmin = (array)$staffAdmin;
-                    unset($staffAdmin["id"]);
-                }
-            }
             DB::table($run)->truncate();
         }
+
+        // Run batch
         foreach ($this->arrayRunTime as $run){
             Artisan::call("ConvertDataByExcels", ['--type' => $run]);
-        }
-        $staffAdminImported = DB::table("mst_staffs")->where("staff_cd","=",config('params.account_admin'))->first();
-        if(empty($staffAdminImported))
-        {
-            if(!empty($staffAdmin) ){
-                DB::table("mst_staffs")->insert($staffAdmin);
+
+            if ($run == "mst_staffs") {
+                // Insert user administrator if not exist
+                $staffAdminImported = DB::table("mst_staffs")->where("staff_cd","=",config('params.account_admin'))->first();
+                if(!isset($staffAdminImported) && isset($staffAdmin))
+                {
+                    DB::table("mst_staffs")->insert($staffAdmin);
+                }
             }
         }
-
-
     }
 }

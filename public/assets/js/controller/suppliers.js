@@ -2362,6 +2362,20 @@ var ctrSupplierrsVl = new Vue({
           window.location.href = listRoute;
         });
       }
+    },
+    setInputFilter: function setInputFilter(textbox, inputFilter) {
+      ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+        textbox.addEventListener(event, function () {
+          if (inputFilter(this.value)) {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+          }
+        });
+      });
     }
   },
   mounted: function mounted() {
@@ -2383,6 +2397,12 @@ var ctrSupplierrsVl = new Vue({
       });
       vanilla_autokana__WEBPACK_IMPORTED_MODULE_2__["bind"]('#accounting_person_in_charge_first_nm', '#accounting_person_in_charge_first_nm_kana', {
         katakana: true
+      });
+    }
+
+    if (document.getElementById('mst_suppliers_cd') != null) {
+      this.setInputFilter(document.getElementById('mst_suppliers_cd'), function (value) {
+        return /^\d*$/.test(value);
       });
     }
   },
@@ -2459,7 +2479,7 @@ var CACHE = [],
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\suppliers-vl.js */"./resources/assets/js/controller/suppliers-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\suppliers-vl.js */"./resources/assets/js/controller/suppliers-vl.js");
 
 
 /***/ })

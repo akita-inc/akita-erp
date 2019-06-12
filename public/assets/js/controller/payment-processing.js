@@ -21783,7 +21783,7 @@ var ctrPaymentProcessingVl = new Vue({
     handleChangeCustomerCd: function handleChangeCustomerCd() {
       if (this.fileSearch.customer_cd != '') {
         for (var i = 0; i < this.listCustomer.length; i++) {
-          if (this.listCustomer[i].mst_customers_cd === this.fileSearch.customer_cd) {
+          if (this.listCustomer[i].mst_customers_cd == this.fileSearch.customer_cd) {
             this.fileSearch.customer_nm = this.listCustomer[i].mst_customers_cd;
             return;
           }
@@ -22165,7 +22165,7 @@ var ctrPaymentProcessingVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\payment-processing-vl.js */"./resources/assets/js/controller/payment-processing-vl.js");
 
 
 /***/ })

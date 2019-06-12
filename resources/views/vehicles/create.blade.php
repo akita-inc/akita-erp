@@ -74,7 +74,7 @@
                         <div class="col-md-5 col-sm-12 row grid-col h-100">
                             <label class="col-md-5 col-sm-5 required" for="vehicles_cd">車両コード</label>
                             <div class="col-md-7 col-sm-7 wrap-control">
-                                <input type="text" class="form-control w-50" v-bind:class="errors.vehicles_cd != undefined ? 'is-invalid':'' " name="vehicles_cd" id="vehicles_cd" maxlength="10" v-model="field.vehicles_cd" onkeypress='return isNumberKey(event)'>
+                                <input type="text" class="form-control w-50" v-bind:class="errors.vehicles_cd != undefined ? 'is-invalid':'' " name="vehicles_cd" id="vehicles_cd" maxlength="10" v-model="field.vehicles_cd">
                             </div>
                             <span class="message-error w-100" role="alert" v-cloak v-if="errors.vehicles_cd!= undefined" v-html="errors.vehicles_cd[0]"></span>
                             </span>
@@ -304,7 +304,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="frame_numbers">車台番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.frame_numbers != undefined ? 'is-invalid':'' " id="frame_numbers" name="frame_numbers" v-model="field.frame_numbers" maxlength="10" placeholder="EK3-130">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.frame_numbers != undefined ? 'is-invalid':'' " id="frame_numbers" name="frame_numbers" v-model="field.frame_numbers" maxlength="50" placeholder="EK3-130">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.frame_numbers!= undefined" v-html="errors.frame_numbers[0]"></span>
                     </div>
@@ -379,7 +379,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="total_displacements">総排気量（L）</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50" v-bind:class="errors.total_displacements != undefined ? 'is-invalid':'' " id="total_displacements" name="total_displacements" v-model="field.total_displacements" maxlength="5" placeholder="99">
+                            <input type="text" class="form-control w-50" v-bind:class="errors.total_displacements != undefined ? 'is-invalid':'' " id="total_displacements" name="total_displacements" v-model="field.total_displacements" maxlength="11" placeholder="99">
                         </div>
                         <span class="message-error w-100" role="alert" v-cloak v-if="errors.total_displacements!= undefined" v-html="errors.total_displacements[0]"></span>
                     </div>
@@ -984,15 +984,6 @@
         var listRoute = "{{route('vehicles.list')}}";
         var messages = [];
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
-        function isNumberKey(evt)
-        {
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31
-                && (charCode < 48 || charCode > 57))
-                return false;
-
-            return true;
-        }
     </script>
     <script type="text/javascript" src="{{ url('/js/PDFObject/pdfobject.min.js') }}" charset="utf-8"></script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/vehicles.js') }}" charset="utf-8"></script>

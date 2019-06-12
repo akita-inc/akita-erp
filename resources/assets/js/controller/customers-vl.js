@@ -235,6 +235,20 @@ var ctrCustomersVl = new Vue({
                 }
             });
         },
+        setInputFilter: function (textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                });
+            });
+        },
     },
     mounted () {
         this.loadFormEdit();
@@ -243,6 +257,10 @@ var ctrCustomersVl = new Vue({
             this.autokana ['customer_nm_formal'] = AutoKana.bind('#customer_nm_formal', '#customer_nm_kana_formal', {katakana: true});
             this.autokana ['person_in_charge_last_nm'] = AutoKana.bind('#person_in_charge_last_nm', '#person_in_charge_last_nm_kana', {katakana: true});
             this.autokana ['person_in_charge_first_nm'] = AutoKana.bind('#person_in_charge_first_nm', '#person_in_charge_first_nm_kana', {katakana: true});
+        }
+        if(document.getElementById('mst_customers_cd')!=null){
+            this.setInputFilter(document.getElementById('mst_customers_cd'), function(value) {
+                return   /^\d*$/.test(value); });
         }
     },
     components: {

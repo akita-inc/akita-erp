@@ -30,6 +30,7 @@ class SuppliersController extends Controller
         $where = array(
             'suppliers_cd' => $data['fieldSearch']['mst_suppliers_cd'],
             'supplier_nm' => $data['fieldSearch']['supplier_nm'],
+            'supplier_nm_kana_formal' => $data['fieldSearch']['supplier_nm_kana_formal'],
         );
 
         $this->query->select('mst_suppliers.id',
@@ -51,7 +52,10 @@ class SuppliersController extends Controller
             $this->query->where('mst_suppliers.mst_suppliers_cd', "LIKE", "%{$where['suppliers_cd']}%");
         }
         if ($where['supplier_nm'] != '') {
-            $this->query->where('mst_suppliers.supplier_nm_kana_formal', "LIKE", "%{$where['supplier_nm']}%");
+            $this->query->where('mst_suppliers.supplier_nm', "LIKE", "%{$where['supplier_nm']}%");
+        }
+        if ($where['supplier_nm_kana_formal'] != '') {
+            $this->query->where('mst_suppliers.supplier_nm_kana_formal', "LIKE", "%{$where['supplier_nm_kana_formal']}%");
         }
         if ($data["order"]["col"] != '') {
             if ($data["order"]["col"] == 'street_address')
@@ -112,7 +116,7 @@ class SuppliersController extends Controller
             $currentTime = date("Y-m-d H:i:s",time());
             $data = $request->all();
             $rules = [
-                'mst_suppliers_cd'  => 'required|one_bytes_string|length:5|unique:mst_suppliers,mst_suppliers_cd,NULL,id,deleted_at,NULL',
+                'mst_suppliers_cd'  => 'required|one_byte_number|length:5|unique:mst_suppliers,mst_suppliers_cd,NULL,id,deleted_at,NULL',
                 'supplier_nm'  => 'required|length:200',
                 'supplier_nm_kana'  => 'nullable|length:200',
                 'supplier_nm_formal'  => 'length:200|nullable',
@@ -133,7 +137,7 @@ class SuppliersController extends Controller
                 'fax_number'  => 'fax_number|nullable|length:20',
                 'zip_cd'  => 'zip_code|nullable|length:7',
                 'bundle_dt'  => 'one_byte_number|nullable|length:2',
-                'payment_day'  => 'one_byte_number|nullable|between_custom:1,31|length:2',
+                'payment_day'  => 'one_byte_number|nullable|length:2',
                 'explanations_bill'  => 'nullable|length:100',
                 'payment_bank_cd'  => 'nullable|length:4',
                 'payment_bank_name'  => 'nullable|length:30',

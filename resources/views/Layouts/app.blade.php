@@ -60,6 +60,7 @@
 
         </ul>
     </div>
+    @if(Auth::user()->sysadmin_flg==1 || config("params.MENU_DISP_FLG")=='True')
     <!--Left menu -->
     <button class="navbar-toggler-left"
             type="button" data-toggle="collapse" data-target="#sidebar"
@@ -108,11 +109,13 @@
         <div class="collapse" id="menu4sub1">
             <a href="{{url('/take_vacation/list')}}" class="list-group-item" data-parent="#menu4sub1">休暇取得申請</a>
             <a href="{{route('expense_application.list')}}" class="list-group-item" data-parent="#menu4sub1">交際費申請</a>
+            <a href="{{route('expense_entertainment.list')}}" class="list-group-item" data-parent="#menu4sub1">交際費精算</a>
         @if(Auth::user()->sysadmin_flg==1)
             <a href="{{route('work_flow.list')}}" class="list-group-item" data-parent="#menu4sub1">基本設定</a>
             @endif
         </div>
     </div>
+    @endif
 </nav>
 
 <div class="container">

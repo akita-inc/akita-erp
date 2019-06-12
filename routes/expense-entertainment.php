@@ -1,19 +1,20 @@
 <?php
-Route::group(['name' => 'take-vacation', 'prefix' => 'take_vacation', 'middleware' => ['auth'] ], function () {
-    Route::any('/list', 'TakeVacationController@index')->name('take_vacation.list');
-    Route::get('/create', 'TakeVacationController@store')->name('take_vacation.create');
-    Route::get('/edit/{id}', 'TakeVacationController@store')->name('take_vacation.edit');
-    Route::get('/approval/{id}', 'TakeVacationController@store')->name('take_vacation.approval');
-    Route::get('/reference/{id}', 'TakeVacationController@store')->name('take_vacation.reference');
+Route::group(['name' => 'expense-entertainment', 'prefix' => 'expense_entertainment', 'middleware' => ['auth'] ], function () {
+    Route::any('/list', 'ExpenseEntertainmentController@index')->name('expense_entertainment.list');
+    Route::get('/create', 'ExpenseEntertainmentController@store')->name('expense_entertainment.create');
+    Route::get('/edit/{id}', 'ExpenseEntertainmentController@store')->name('expense_entertainment.edit');
+    Route::get('/approval/{id}', 'ExpenseEntertainmentController@store')->name('expense_entertainment.approval');
+    Route::get('/reference/{id}', 'ExpenseEntertainmentController@store')->name('expense_entertainment.reference');
 
     /*Api using Vue*/
     Route::group(['prefix' => 'api-v1'], function () {
-        Route::post('/getItems','TakeVacationController@getItems')->name("take_vacation.getItems");
-        Route::any('/checkIsExist/{id}','TakeVacationController@checkIsExist')->name("take_vacation.checkIsExist");
-        Route::any('back-history', ['uses' => 'TakeVacationController@backHistory']);
-        Route::any('/submit','TakeVacationController@submit')->name("take_vacation.save");
-        Route::get('/delete/{id}', 'TakeVacationController@delete')->name('take_vacation.delete');
-        Route::any('/search-sales-lists', 'TakeVacationController@searchSalesLists');
-        Route::any('/search-staff', 'TakeVacationController@searchStaff');
+        Route::post('/getItems','ExpenseEntertainmentController@getItems')->name("expense_entertainment.getItems");
+        Route::any('/checkIsExist/{id}','ExpenseEntertainmentController@checkIsExist')->name("expense_entertainment.checkIsExist");
+        Route::any('back-history', ['uses' => 'ExpenseEntertainmentController@backHistory']);
+        Route::any('/submit','ExpenseEntertainmentController@submit')->name("expense_entertainment.save");
+        Route::get('/delete/{id}', 'ExpenseEntertainmentController@delete')->name('expense_entertainment.delete');
+        Route::any('/search-sales-lists', 'ExpenseEntertainmentController@searchSalesLists');
+        Route::any('/search-staff', 'ExpenseEntertainmentController@searchStaff');
+        Route::any('/search-entertainment', 'ExpenseEntertainmentController@searchEntertainment');
     });
 });

@@ -3251,7 +3251,8 @@ var ctrSuppliersListVl = new Vue({
     items: [],
     fieldSearch: {
       mst_suppliers_cd: "",
-      supplier_nm: ""
+      supplier_nm: "",
+      supplier_nm_kana_formal: ""
     },
     message: '',
     pagination: {
@@ -3321,6 +3322,7 @@ var ctrSuppliersListVl = new Vue({
     clearCondition: function clearCondition() {
       this.fieldSearch.mst_suppliers_cd = '';
       this.fieldSearch.supplier_nm = '';
+      this.fieldSearch.supplier_nm_kana_formal = '';
     },
     deleteSupplier: function deleteSupplier(id) {
       var _this2 = this;
@@ -3373,7 +3375,7 @@ var ctrSuppliersListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\suppliers-list-vl.js */"./resources/assets/js/controller/suppliers-list-vl.js");
 
 
 /***/ })

@@ -199,5 +199,118 @@ return [
         'template' => "【交際費支出申請】\n\n".
             "------------------------------------------------------\n\n".
             "Akita ERP - ワークフロー\n\n"
-    )
+    ),
+    'expense_entertainment_register_mail'=>array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【交際費精算】No. [id] [applicant_id]（[applicant_office_id]）',
+        'template' => "【交際費精算】\n\n".
+            "＜申請ID＞\n".
+            "No. [id]\n\n".
+            "＜登録者＞\n".
+            "[applicant_id] （[applicant_office_id]）\n\n".
+            "＜交際費支出申請ID＞\n".
+            "[wf_business_entertaining_id]\n\n".
+            "＜実施日＞\n".
+            "[date]\n\n".
+            "＜相手先＞\n".
+            "会社名：[client_company_name]\n".
+            "出席者：[client_members] （[client_members_count]名）\n\n".
+            "当社参加者：[own_members] （[own_members_count]名）\n\n".
+            "＜場所＞\n".
+            "[place]\n\n".
+            "＜報告＞\n".
+            "[report]\n\n".
+            "＜確定金額＞\n".
+            "[cost]\n\n".
+            "＜精算金額＞\n".
+            "[payoff_amount]（仮払金額：[deposit_amount]）\n\n\n".
+            "確認の後、承認お願いいたします。\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
+    ),
+    'expense_entertainment_edit_mail'=>array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【交際費精算】No. [id][applicant_id]（[applicant_office_id]）（修正）',
+        'template' => "【交際費精算】\n\n".
+            "＜申請ID＞\n".
+            "No. [id]（No. [id_before] を修正）\n\n".
+            "＜登録者＞\n".
+            "[applicant_id] （[applicant_office_id]）\n\n".
+            "＜交際費支出申請ID＞\n".
+            "[wf_business_entertaining_id]\n\n".
+            "＜実施日＞\n".
+            "[date]\n\n".
+            "＜相手先＞\n".
+            "会社名：[client_company_name]\n".
+            "出席者：[client_members] （[client_members_count]名）\n\n".
+            "当社参加者：[own_members] （[own_members_count]名）\n\n".
+            "＜場所＞\n".
+            "[place]\n\n".
+            "＜報告＞\n".
+            "[report]\n\n".
+            "＜確定金額＞\n".
+            "[cost]\n\n".
+            "＜精算金額＞\n".
+            "[payoff_amount]（仮払金額：[deposit_amount]）\n\n\n".
+            "確認の後、承認お願いいたします。\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
+    ),
+    'expense_entertainment_approval_mail'=>array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【交際費精算】承認：No. [id] [applicant_id]（[applicant_office_id]）',
+        'template' => "【交際費精算】\n\n".
+            "[title] に承認されました。\n\n".
+            "＜申請ID＞\n".
+            "No. [id]\n\n".
+            "＜登録者＞\n".
+            "[applicant_id] （[applicant_office_id]）\n\n".
+            "＜交際費支出申請ID＞\n".
+            "[wf_business_entertaining_id]\n\n".
+            "＜実施日＞\n".
+            "[date]\n\n".
+            "＜相手先＞\n".
+            "会社名：[client_company_name]\n".
+            "出席者：[client_members] （[client_members_count]名）\n\n".
+            "当社参加者：[own_members] （[own_members_count]名）\n\n".
+            "＜場所＞\n".
+            "[place]\n\n".
+            "＜報告＞\n".
+            "[report]\n\n".
+            "＜確定金額＞\n".
+            "[cost]\n\n".
+            "＜精算金額＞\n".
+            "[payoff_amount]（仮払金額：[deposit_amount]）\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
+    ),
+    'expense_entertainment_reject_mail'=>array(
+        'from' => 'shinwaytest@gmail.com',
+        'subject' => '【交際費精算】却下：No. [id] [applicant_id]（[applicant_office_id]）',
+        'template' => "【交際費精算】\n\n".
+            "[title] に却下されました。\n".
+            "理由：[send_back_reason]\n\n".
+            "＜申請ID＞\n".
+            "No. [id]\n\n".
+            "＜登録者＞\n".
+            "[applicant_id] （[applicant_office_id]）\n\n".
+            "＜交際費支出申請ID＞\n".
+            "[wf_business_entertaining_id]\n\n".
+            "＜実施日＞\n".
+            "[date]\n\n".
+            "＜相手先＞\n".
+            "会社名：[client_company_name]\n".
+            "出席者：[client_members] （[client_members_count]名）\n\n".
+            "当社参加者：[own_members] （[own_members_count]名）\n\n".
+            "＜場所＞\n".
+            "[place]\n\n".
+            "＜報告＞\n".
+            "[report]\n\n".
+            "＜確定金額＞\n".
+            "[cost]\n\n".
+            "＜精算金額＞\n".
+            "[payoff_amount]（仮払金額：[deposit_amount]）\n\n".
+            "------------------------------------------------------\n\n".
+            "Akita ERP - ワークフロー\n\n"
+    ),
 ];

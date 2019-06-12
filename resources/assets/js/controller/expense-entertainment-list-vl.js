@@ -1,18 +1,18 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 //import DatePicker from '../component/vue2-datepicker-master'
 
-var ctrTakeVacationListVl = new Vue({
-    el: '#ctrTakeVacationListVl',
+var ctrExpenseEntertainmentListVl = new Vue({
+    el: '#ctrExpenseEntertainmentListVl',
     data: {
         loading:false,
         items:[],
         fileSearch:{
-            vacation_id:"",
+            applicant_id:"",
             applicant_nm:"",
-            show_approved:false,
+            show_status:false,
             show_deleted:false,
-            sales_office:"",
-            vacation_class:"",
+            applicant_office_id:"",
+            client_company_name:"",
         },
         message: '',
         flagSearch:false,
@@ -41,7 +41,7 @@ var ctrTakeVacationListVl = new Vue({
             };
             var that = this;
             that.loading = true;
-            take_vacation_list_service.loadList(data).then((response) => {
+            expense_entertainment_service.loadList(data).then((response) => {
                 if (response.data.data.length===0) {
                     this.message = messages["MSG05001"];
                 } else {
@@ -62,7 +62,7 @@ var ctrTakeVacationListVl = new Vue({
             });
         },
         checkIsExist: function (id) {
-            take_vacation_list_service.checkIsExist(id).then((response) => {
+            expense_entertainment_service.checkIsExist(id).then((response) => {
                 if (!response.success) {
                     alert(response.msg);
                     this.getItems(1);
@@ -102,10 +102,10 @@ var ctrTakeVacationListVl = new Vue({
         clearCondition: function clearCondition() {
             this.fileSearch.vacation_id="";
             this.fileSearch.applicant_nm="";
-            this.fileSearch.show_approved=false;
+            this.fileSearch.show_status=false;
             this.fileSearch.show_deleted=false;
             this.fileSearch.sales_office="";
-            this.fileSearch.vacation_class="";
+            this.fileSearch.client_company_name="";
         },
         setBgColor:function(delete_at){
             let bgColor="";
