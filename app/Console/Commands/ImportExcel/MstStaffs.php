@@ -192,16 +192,6 @@ class MstStaffs extends BaseImport
             return \PHPExcel_Style_NumberFormat::toFormattedString($date, 'yyyy/mm/dd hh:mm:ss');
         }
     }
-    public function generateRandomString($length = 8) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        //add password cell
-        return $randomString;
-    }
     public function getCellularPhone($phone)
     {
         $cellPhone=substr($phone,0,3);
@@ -642,7 +632,7 @@ class MstStaffs extends BaseImport
                 array_push($staffDependents,$data['staff_dependents_nm_'.$k]);
                 unset($data['staff_dependents_nm_'.$k]);
             }
-            $password=$this->generateRandomString(8);
+            $password=!empty($data["birthday"])?str_replace("-","",$data["birthday"]):config('params.import_file_path.mst_staffs.password_default');
             $data["password"]=bcrypt($password);
             $id = DB::table($this->table)->insertGetId( $data);
             $this->numNormal++;
