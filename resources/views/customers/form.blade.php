@@ -117,7 +117,7 @@
             <div class="grid-form">
                 <div class="row">
                     <div class="col-md-5 col-sm-12">
-                        @include('Component.form.input',['class'=>'wd-300','filed'=>'zip_cd','attr_input' => "maxlength='7' placeholder='12345678'"])
+                        @include('Component.form.input',['class'=>'wd-300','filed'=>'zip_cd','attr_input' => "maxlength='7' placeholder='1234567'"])
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20">
                         <button type="button" class="btn btn-black" v-on:click="getAddrFromZipCode">〒 → 住所</button>

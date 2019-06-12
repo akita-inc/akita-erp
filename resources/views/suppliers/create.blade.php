@@ -235,7 +235,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="zip_cd">郵便番号</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <input type="text" class="form-control w-50 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ old('zip_cd', !is_null($mSupplier->zip_cd) ? $mSupplier->zip_cd : '')}}" maxlength="7" placeholder="12345678">
+                            <input type="text" class="form-control w-50 {{$errors->has('zip_cd')? 'is-invalid': ''}}" id="zip_cd" name="zip_cd" value="{{ old('zip_cd', !is_null($mSupplier->zip_cd) ? $mSupplier->zip_cd : '')}}" maxlength="7" placeholder="1234567">
                         </div>
                         @if ($errors->has('zip_cd'))
                             <span class="invalid-feedback d-block" role="alert">
