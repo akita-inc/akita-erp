@@ -54,12 +54,11 @@
         <div class="Category-Box">
             <h2><a href="#menu0sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">
                     <span>{{$businessOfficeNm}}</span>
-                    <span class="ml-1-7">{{Auth::user()->last_nm.Auth::user()->first_nm}}</span>
+                    <div class="ml-1-7 mt-2">{{Auth::user()->last_nm.Auth::user()->first_nm}}</div>
                 </a></h2>
             <div class="collapse" id="menu0sub1">
                 <ul>
                     <li><a href="{{route('get-file',['filename' => config('params.manual_file')])}}" target="_blank" data-parent="menu0sub1">マニュアル</a></li>
-                    <li><a href="javaScript:" data-parent="menu0sub1">プロフィール</a></li>
                     <li><a href="{{route('logout')}}" data-parent="menu0sub1">ログアウト</a></li>
                     <li><a href="#" data-parent="menu0sub1">パスワード変更</a></li>
                 </ul>
@@ -87,7 +86,6 @@
             <h2><a href="#menu2sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">購買</a></h2>
             <div class="collapse" id="menu2sub1">
                 <ul>
-                    <li><a href="{{route('payments.list')}}" data-parent="#menu2sub1">支払締処理</a></li>
                     <li><a href="{{route('purchases_lists.list')}}" data-parent="#menu2sub1">仕入一覧</a></li>
                     <li><a href="{{route('accounts_payable_data_output.list')}}" data-parent="#menu2sub1">買掛データ出力</a></li>
                 </ul>
