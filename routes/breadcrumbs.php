@@ -5,7 +5,7 @@ Breadcrumbs::for('home', function ($trail) {
 
 Breadcrumbs::for('sale', function ($trail) {
     $trail->parent('home');
-    $trail->push('販売', '');
+    $trail->push('販売', '#');
 });
 
 Breadcrumbs::for('sales_lists', function ($trail) {
@@ -133,7 +133,7 @@ Breadcrumbs::for('empty_info_reservation_approval', function ($trail,$id) {
     $trail->push('予約承認', route('empty_info.reservation_approval',['id' => $id]));
 });
 
-Breadcrumbs::for('work_flow_list', function ($trail) {
+Breadcrumbs::for('work_flow', function ($trail) {
     $trail->parent('home');
     $trail->push('ワークフロー', '#');
 });

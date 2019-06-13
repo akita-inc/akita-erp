@@ -5,8 +5,9 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
 @endsection
 @section('content')
-    @include('Layouts.alert')
     <div class="row row-xs" id="ctrAccountsPayableDataOutputVl">
+        {{ Breadcrumbs::render('accounts_payable_data_output') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: #F4B084">
             <div class="sub-header-line-two p-t-30 frm-search-list">
@@ -17,7 +18,7 @@
                                 {{trans("accounts_payable_data_output.list.search.billing_month")}}
                             </div>
                             <div class="col-md-2 no-padding">
-                                <select class="form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year" @change="handleEndDate">
+                                <select class="custom-select form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year" @change="handleEndDate">
                                     @foreach($listYear as $year)
                                         <option value="{{$year}}"> {{$year}}</option>
                                     @endforeach
@@ -25,7 +26,7 @@
                             </div>
                             <div class="col-md-1 padding-row-5 text-left col-list-search-f">年</div>
                             <div class="col-md-2 no-padding">
-                                <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month" @change="handleEndDate">
+                                <select class="custom-select form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month" @change="handleEndDate">
                                     @foreach($listMonth as $month)
                                         <option value="{{$month}}"> {{$month}}</option>
                                     @endforeach
@@ -36,7 +37,7 @@
                                 {{trans("accounts_payable_data_output.list.search.closed_date")}}
                             </div>
                             <div class="col-md-2 padding-row-5 col-list-search-f">
-                                <select  v-bind:class="errors.closed_date != undefined ? 'form-control dropdown-list is-invalid':'form-control dropdown-list' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" v-cloak @change="handleEndDate">
+                                <select  v-bind:class="errors.closed_date != undefined ? 'custom-select  form-control is-invalid':'custom-select form-control' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" v-cloak @change="handleEndDate">
                                     @foreach($listBundleDt as $key => $value)
                                     <option value="{{ $value['bundle_dt']  }}" v-cloak>
                                         {{ $value['bundle_dt']  }}

@@ -73,10 +73,9 @@
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input type="checkbox" value="1" v-model="fileSearch.display_remaining_payment" class="form-check-input">{{trans("invoice_history.list.search.display_remaining_payment")}}
-                            </label>
+                        <div class="ustom-control custom-checkbox">
+                            <input type="checkbox" value="1" v-model="fileSearch.display_remaining_payment" class="custom-control-input" id="display_remaining_payment">
+                            <label class="custom-control-label" for="display_remaining_payment">{{trans("invoice_history.list.search.display_remaining_payment")}}</label>
                         </div>
                     </div>
                 </div>

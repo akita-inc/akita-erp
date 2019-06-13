@@ -3,7 +3,9 @@
 @section('title_header',trans("take_vacation.list.title"))
 @section('content')
     @include('Layouts.alert')
-        <div class="row row-xs" id="ctrTakeVacationListVl">
+        <div id="ctrTakeVacationListVl">
+            {{ Breadcrumbs::render('take_vacation_list') }}
+            @include('Layouts.alert')
             <pulse-loader :loading="loading"></pulse-loader>
             <div class="sub-header">
                 <div class="sub-header-line-one text-right">
@@ -32,16 +34,14 @@
                             </div>
                         </div>
                         <div class="col-md-5 col-sm-12 row">
-                            <div class="col-md-7 row">
-                                <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" value="1" v-model="fileSearch.show_approved" class="form-check-input">{{trans("take_vacation.list.search.show_approved")}}
-                                    </label>
+                            <div class="col-md-7 row align-items-center">
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" value="1" v-model="fileSearch.show_approved" class="custom-control-input" id="show_status">
+                                    <label class="custom-control-label" for="show_status">{{trans("take_vacation.list.search.show_approved")}}</label>
                                 </div>
-                                <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="form-check-input">{{trans("take_vacation.list.search.show_deleted")}}
-                                    </label>
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="custom-control-input" id="show_status">
+                                    <label class="custom-control-label" for="show_deleted">{{trans("take_vacation.list.search.show_deleted")}}</label>
                                 </div>
                             </div>
                             <div class="col-md-5"></div>
@@ -55,7 +55,7 @@
                                     {{trans("take_vacation.list.search.sales_office")}}
                                 </div>
                                 <div class="col-md-8 input-group">
-                                    <select class="form-control dropdown-list" name="sales_office"  id="sales_office"  v-model="fileSearch.sales_office">
+                                    <select class="custom-select form-control" name="sales_office"  id="sales_office"  v-model="fileSearch.sales_office">
                                         <option value="">{{trans('common.kara_select_option')}}</option>
                                         @foreach($businessOffices as $office)
                                             <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -68,7 +68,7 @@
                                     {{trans("take_vacation.list.search.vacation_class")}}
                                 </div>
                                 <div class="col-md-8 input-group">
-                                    <select class="form-control dropdown-list" name="vacation_class"  id="vacation_class"  v-model="fileSearch.vacation_class">
+                                    <select class="custom-select form-control" name="vacation_class"  id="vacation_class"  v-model="fileSearch.vacation_class">
                                         <option value="">{{trans('common.all')}}</option>
                                         @foreach($vacationClasses as $class)
                                             <option value="{{$class['date_id']}}"> {{$class['date_nm']}}</option>
@@ -106,7 +106,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.delete_at) }">
+                    <tr  v-cloak v-for="item in items.data" v-bind:style="{ backgroundColor: setBgColor(item.delete_at) }">
                         @foreach($fieldShowTable as $key => $field)
                             @if($key=='id')
                             <td>
