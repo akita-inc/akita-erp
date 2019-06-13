@@ -83,14 +83,54 @@ Breadcrumbs::for('customers_list', function ($trail) {
     $trail->push('得意先', route('customers.list'));
 });
 
+Breadcrumbs::for('customers_create', function ($trail) {
+    $trail->parent('customers_list');
+    $trail->push('新規追加', route('customers.create'));
+});
+
+Breadcrumbs::for('customers_edit', function ($trail,$id) {
+    $trail->parent('customers_list');
+    $trail->push('修正画面', route('customers.edit',['id' => $id]));
+});
+
 Breadcrumbs::for('vehicles_list', function ($trail) {
     $trail->parent('master');
     $trail->push('車両', route('vehicles.list'));
 });
 
+Breadcrumbs::for('vehicles_create', function ($trail) {
+    $trail->parent('vehicles_list');
+    $trail->push('新規追加', route('vehicles.create'));
+});
+
+Breadcrumbs::for('vehicles_edit', function ($trail,$id) {
+    $trail->parent('vehicles_list');
+    $trail->push('修正画面', route('vehicles.edit',['id' => $id]));
+});
+
 Breadcrumbs::for('empty_info', function ($trail) {
     $trail->parent('home');
     $trail->push('ハコカラ', '');
+});
+
+Breadcrumbs::for('empty_info_register', function ($trail,$id) {
+    $trail->parent('empty_info');
+    $trail->push('新規登録', route('empty_info.register'));
+});
+
+Breadcrumbs::for('empty_info_edit', function ($trail,$id) {
+    $trail->parent('empty_info');
+    $trail->push('編集', route('empty_info.edit',['id' => $id]));
+});
+
+Breadcrumbs::for('empty_info_reservation', function ($trail,$id) {
+    $trail->parent('empty_info');
+    $trail->push('仮押さえ', route('empty_info.reservation',['id' => $id]));
+});
+
+Breadcrumbs::for('empty_info_reservation_approval', function ($trail,$id) {
+    $trail->parent('empty_info');
+    $trail->push('予約承認', route('empty_info.reservation_approval',['id' => $id]));
 });
 
 Breadcrumbs::for('work_flow_list', function ($trail) {

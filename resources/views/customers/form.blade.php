@@ -3,7 +3,12 @@
 @section('title_header',trans("customers.create.title".(!empty($customer) ? "_edit":"")))
 @section('content')
     @php $prefix='customers.create.field.' @endphp
-    <div class="wrapper-container" id="ctrCustomersVl">
+    <div id="ctrCustomersVl">
+        @if(!empty($customer))
+            {{ Breadcrumbs::render('customers_edit',$customer['id']) }}
+        @else
+            {{ Breadcrumbs::render('customers_create') }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
@@ -343,11 +348,11 @@
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_2','array'=>$listAccountTitles])
+                            @include('Component.form.select',['filed'=>'mst_account_titles_id_2','array'=>$listAccountTitles])
                         </div>
 
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_3','array'=>$listAccountTitles])
+                            @include('Component.form.select',['filed'=>'mst_account_titles_id_3','array'=>$listAccountTitles])
                         </div>
                     </div>
 

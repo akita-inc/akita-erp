@@ -9,7 +9,8 @@
             {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
         </div>
     @else
-    <div class="row row-xs" id="ctrCustomersListVl">
+    <div id="ctrCustomersListVl">
+        {{ Breadcrumbs::render('customers_list') }}
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             @if ($accessible_kb == 1)
@@ -29,19 +30,19 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("customers.list.search.code")}}
                             </label>
-                            <input id="input_mst_customers_cd" class="form-control" name="mst_customers_cd" v-model="fileSearch.mst_customers_cd">
+                            <input id="input_mst_customers_cd" class="form-control" name="mst_customers_cd" v-model="fileSearch.mst_customers_cd" placeholder="{{trans("customers.list.search.code")}}">
                         </div>
                         <div class="col-md-3 padding-row-5">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("customers.list.search.name")}}
                             </label>
-                            <input id="input_mst_customers_name" class="form-control"  name="customer_nm" v-model="fileSearch.customer_nm">
+                            <input id="input_mst_customers_name" class="form-control"  name="customer_nm" v-model="fileSearch.customer_nm" placeholder="{{trans("customers.list.search.name")}}">
                         </div>
                         <div class="col-md-3 padding-row-5">
                             <label class="grid-form-search-label" for="input_mst_customer_nm_kana_formal">
                                 {{trans("customers.list.search.name_kana")}}
                             </label>
-                            <input id="input_mst_customer_nm_kana_formal" class="form-control"  name="customer_nm_kana_formal" v-model="fileSearch.customer_nm_kana_formal">
+                            <input id="input_mst_customer_nm_kana_formal" class="form-control"  name="customer_nm_kana_formal" v-model="fileSearch.customer_nm_kana_formal" placeholder="{{trans("customers.list.search.name_kana")}}">
                         </div>
                     </div>
 
@@ -70,7 +71,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr  v-cloak v-for="item in items">
+                    <tr  v-cloak v-for="item in items.data">
                         @foreach($fieldShowTable as $key => $field)
                             <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                                 @if ($key == 'customer_nm')
