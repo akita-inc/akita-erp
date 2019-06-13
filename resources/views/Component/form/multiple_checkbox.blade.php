@@ -5,8 +5,10 @@
     @foreach($array as $key => $value)
     <div class="row">
         <div class="col-md-5 col-sm-12">
-            <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="form-control" id="{!! $filed.$value->date_id  !!}" value="{!! $value->date_id !!}" name="{!! $filed !!}" @change="check($event)" index="{!! $value->date_id !!}">
-            <label class="custom-label" for="{!! $filed.$value->date_id !!}">{!! $value->date_nm !!}</label>
+            <div class="custom-control custom-checkbox">
+            <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="custom-control-input" id="{!! $filed.$value->date_id  !!}" value="{!! $value->date_id !!}" name="{!! $filed !!}" @change="check($event)" index="{!! $value->date_id !!}">
+            <label class="custom-control-label custom-label" for="{!! $filed.$value->date_id !!}">{!! $value->date_nm !!}</label>
+            </div>
         </div>
         <div class="d-flex col-md-7 col-sm-9">
             <div class="wd-100">
@@ -28,8 +30,12 @@
     @endforeach
     <div class="row">
         <div class="col-md-5 col-sm-12">
-            <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="form-control" id="{!! $filed.'0' !!}" @change="check($event)" index="0" value="0" :checked="checkOther">
-            <label class="custom-label" for="{!! $filed.'0' !!}">その他</label>
+            <div class="custom-control custom-checkbox">
+                <input {!! isset($attr_input) ? $attr_input:"" !!} type="checkbox" class="custom-control-input" id="{!! $filed.'0' !!}" @change="check($event)" index="0" value="0" :checked="checkOther">
+                <label class="custom-control-label custom-label" for="{!! $filed.'0' !!}">その他</label>
+            </div>
+
+
         </div>
         <div class="col-md-7 col-sm-12">
             <textarea {!! isset($attr_input) ? $attr_input:"" !!}

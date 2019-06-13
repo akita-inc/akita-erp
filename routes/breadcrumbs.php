@@ -113,9 +113,9 @@ Breadcrumbs::for('empty_info', function ($trail) {
     $trail->push('ハコカラ', '#');
 });
 
-Breadcrumbs::for('empty_info_register', function ($trail,$id) {
+Breadcrumbs::for('empty_info_register', function ($trail) {
     $trail->parent('empty_info');
-    $trail->push('新規登録', route('empty_info.register'));
+    $trail->push('新規登録', route('empty_info.create'));
 });
 
 Breadcrumbs::for('empty_info_edit', function ($trail,$id) {
@@ -125,7 +125,7 @@ Breadcrumbs::for('empty_info_edit', function ($trail,$id) {
 
 Breadcrumbs::for('empty_info_reservation', function ($trail,$id) {
     $trail->parent('empty_info');
-    $trail->push('仮押さえ', route('empty_info.reservation',['id' => $id]));
+    $trail->push('照会', route('empty_info.reservation',['id' => $id]));
 });
 
 Breadcrumbs::for('empty_info_reservation_approval', function ($trail,$id) {

@@ -245,8 +245,8 @@ input,select{
     padding-right: 0px!important;
 }
 .grid-col > label {
-    background-color: #0070c0;
-    color: white;
+    background-color:#E1FFE9;
+    color: black;
     justify-content: left;
     min-height: 38px;
 }
@@ -632,7 +632,7 @@ input[type=text]::-ms-clear {
     background-color: #ddd;
 }
 .form-control:disabled, .form-control[readonly] {
-    background-color: #D9D9D9;
+    background-color: #D9D9D9 !important;
     opacity: 1;
 }
 
@@ -704,6 +704,12 @@ input[type="checkbox"]:focus {
 .ml-1-7{
     margin-left: 1.7rem!important;
 }
-.p-3-px{
+.custom-control-label{
     padding: 3px;
+}
+.custom-checkbox{
+    font-size: 0.8rem !important;
+}
+.btn-danger{
+    background-color: #FF0000 !important;
 }

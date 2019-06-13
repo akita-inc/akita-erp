@@ -5,7 +5,7 @@
     @if($role==1 && ($mode=='register' || $mode=='edit'))
         <style>
             .form-control[readonly]{
-                background-color: white;
+                background-color: white !important;
             }
         </style>
     @endif
@@ -13,6 +13,11 @@
 @section('content')
     @php $prefix='empty_info.create.field.' @endphp
     <div class="wrapper-container" id="ctrEmptyInfoVl">
+        @if($mode=='register')
+        {{ Breadcrumbs::render('empty_info_'.$mode) }}
+        @else
+        {{ Breadcrumbs::render('empty_info_'.$mode,$mEmptyInfo['id']) }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
