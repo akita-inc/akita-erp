@@ -109,9 +109,6 @@ class MstBusinessOffices extends BaseImport
                             $val = str_replace("　", "", $val);
                             $record[$excel_column[$pos]] = $val!= "" ? str_replace("-", "", $val) : null;
                             break;
-                        case 'branch_office_cd':
-                            $record[$excel_column[$pos]]=null;
-                            break;
                         case 'address1':
                             $prefectures_cd = $mGeneralPurposes->getPrefCdByPrefName($value);
                             if ($prefectures_cd) {
