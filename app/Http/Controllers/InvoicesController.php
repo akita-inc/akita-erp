@@ -138,7 +138,7 @@ class InvoicesController extends Controller {
             $paramsSearch['customer_cd'] = $dataSearch['customer_cd'];
         }
         if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
-            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
+            $date = $dataSearch['billing_year'].'-'.$dataSearch['billing_month'].'-'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date']);
             $querySearch .= "AND ts.daily_report_date <= :date "."\n";
             $paramsSearch['date'] = $date;
         }
