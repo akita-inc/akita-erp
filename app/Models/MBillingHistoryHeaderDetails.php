@@ -22,12 +22,10 @@ class MBillingHistoryHeaderDetails extends Model {
 
     ];
 
-    public function getInvoicePDFDetail($listID,$dataSearch){
-        $date = date("m/d",strtotime($dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
-        $yearDate = date("m/d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
+    public function getInvoicePDFDetail($listID){
         $query1 = DB::table('t_billing_history_header_details as details')->select(
-                DB::raw("'$date' as daily_report_date"),
-                DB::raw("'$yearDate' as daily_report_date_or"),
+                DB::raw("DATE_FORMAT(MAX(details.daily_report_date), '%m/%d') as daily_report_date"),
+                DB::raw("DATE_FORMAT(MAX(details.daily_report_date), '%Y/%m/%d') as daily_report_date_or"),
                 'details.goods',
                 DB::raw("(CASE 
                     WHEN mst_vehicles.vehicle_size_kb=1 THEN '2t' 
@@ -179,6 +177,26 @@ class MBillingHistoryHeaderDetails extends Model {
             })
             ->whereNull('details.deleted_at')
             ->whereIn('details.id',$listID)
+            ->orderBy('details.daily_report_date');
+        return $query->get();
+    }
+
+    public function getListByCondition($condition){
+        $query = DB::table('t_billing_history_header_details as details')
+            ->select(
+                'details.id',
+                'details.document_no',
+                'details.branch_office_cd',
+                DB::raw("DATE_FORMAT(details.daily_report_date, '%Y/%m/%d') as daily_report_date"),
+                'details.departure_point_name',
+                'details.landing_name',
+                DB::raw("format(IFNULL(details.total_fee,0), '#,##0') as total_fee"),
+                DB::raw("format(IFNULL(details.consumption_tax,0), '#,##0') as consumption_tax"),
+                DB::raw("format(IFNULL(details.tax_included_amount,0), '#,##0') as tax_included_amount"),
+                DB::raw("(select COUNT(t_payment_histories.id) FROM t_payment_histories where t_payment_histories.invoice_number = details.invoice_number and t_payment_histories.deleted_at is null) as count_payment_histories")
+            )
+            ->whereNull('details.deleted_at')
+            ->where('details.invoice_number','=',$condition['invoice_number'])
             ->orderBy('details.daily_report_date');
         return $query->get();
     }

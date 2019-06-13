@@ -347,6 +347,11 @@ input,select{
     left: 5px;
     font-size: 0.7rem;
 }
+.error-label-search{
+    position: absolute;
+    bottom: -30px;
+    left: 5px;
+}
 .frm-search-list .left-5px{
     left:5px!important;
 }
@@ -689,4 +694,16 @@ input[type="checkbox"]:focus {
 }
 .w-85{
     width: 85% !important;
+}
+.wd-20{
+    width: 20px !important;
+}
+.wd-80{
+    width: 80px !important;
+}
+.wd-140{
+    width: 140px !important;
+}
+.form-control::placeholder {
+    color: 	#A9A9A9!important;
 }

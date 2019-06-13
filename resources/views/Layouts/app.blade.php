@@ -67,13 +67,14 @@
         <div class="collapse" id="menu1sub1">
             <a href="{{route('sales_lists.list')}}" class="list-group-item" data-parent="#menu1sub1">売上一覧</a>
             <a href="{{route('invoices.list')}}" class="list-group-item" data-parent="#menu1sub1">請求書発行</a>
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">請求書発行履歴</a>
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">入金処理</a>
-            <a href="#" class="list-group-item" data-parent="#menu1sub1">入金履歴</a>
+            <a href="{{route('invoice_history.list')}}" class="list-group-item" data-parent="#menu1sub1">請求書発行履歴</a>
+            <a href="{{route('payment_processing.list')}}" class="list-group-item" data-parent="#menu1sub1">入金処理</a>
+            <a href="{{route('payment_histories.list')}}" class="list-group-item" data-parent="#menu1sub1">入金履歴</a>
         </div>
         <a href="#menu2sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">購買</a>
         <div class="collapse" id="menu2sub1">
-            <a href="{{ route('payments.list') }}" class="list-group-item" data-parent="#menu2sub1">支払締処理</a>
+            <a href="{{ route('purchases_lists.list') }}" class="list-group-item" data-parent="#menu2sub1">仕入一覧</a>
+            <a href="{{ route('accounts_payable_data_output.list') }}" class="list-group-item" data-parent="#menu2sub1">買掛データ出力</a>
         </div>
         @if (\Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9
                 || \Illuminate\Support\Facades\Session::get('suppliers_accessible_kb') != 9

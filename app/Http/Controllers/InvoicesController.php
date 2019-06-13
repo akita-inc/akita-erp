@@ -138,7 +138,7 @@ class InvoicesController extends Controller {
             $paramsSearch['customer_cd'] = $dataSearch['customer_cd'];
         }
         if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
-            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
+            $date = $dataSearch['billing_year'].'-'.$dataSearch['billing_month'].'-'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date']);
             $querySearch .= "AND ts.daily_report_date <= :date "."\n";
             $paramsSearch['date'] = $date;
         }
@@ -379,7 +379,7 @@ class InvoicesController extends Controller {
             $fileName = 'seikyu_'.$item['office_cd'].'_'.$item['customer_cd'].'_'.date('Ymd', time()).'.pdf';
             if(!empty($this->billingHistoryHeaderID)){
                 $contentHeader = $mBillingHistoryHeaders->getInvoicePDFHeader($this->billingHistoryHeaderID);
-                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID, $fieldSearch);
+                $contentDetails = $mBillingHistoryHeaderDetails->getInvoicePDFDetail($this->listBillingHistoryDetailID);
                 $pdf = new InvoicePDF();
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);
@@ -434,13 +434,13 @@ class InvoicesController extends Controller {
         $enclosure = config('params.csv.enclosure');
         $callback = function() use ($keys,$item, $enclosure,$csvContent) {
             $file = fopen('php://output', 'w');
-            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS", "UTF-8"))."\r\n");
+            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->csvColumn), "SJIS-win", "UTF-8"))."\r\n");
             foreach ($csvContent as $content) {
                 $row = [];
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content->{$key}.$enclosure;
                 }
-                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
+                fwrite ($file,implode(config('params.csv.delimiter'),mb_convert_encoding($row, "SJIS-win", "UTF-8"))."\r\n");
             }
             fclose($file);
         };
@@ -478,13 +478,13 @@ class InvoicesController extends Controller {
         $enclosure = config('params.amazon_csv.enclosure');
         $callback = function() use ($amazonCSVContent,$keys,$item, $enclosure) {
             $file = fopen('php://output', 'w');
-            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS", "UTF-8"))."\r\n");
+            fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding(array_values($this->amazonCsvColumn), "SJIS-win", "UTF-8"))."\r\n");
             foreach ($amazonCSVContent as $content) {
                 $row = [];
                 foreach ($keys as $key) {
                     $row[$key] = $enclosure.$content->{$key}.$enclosure;
                 }
-                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS", "UTF-8"))."\r\n");
+                fwrite ($file,implode(config('params.amazon_csv.delimiter'),mb_convert_encoding($row, "SJIS-win", "UTF-8"))."\r\n");
             }
             fclose($file);
         };
@@ -498,7 +498,7 @@ class InvoicesController extends Controller {
         $mBillingHistoryHeaderDetails =  new MBillingHistoryHeaderDetails();
         $mNumberings =  new MNumberings();
         $this->csvContent[$item['customer_cd']] = [];
-        $serial_number = $mNumberings->getSerialNumberByTargetID('2001');
+        $serial_number = $mNumberings->getSerialNumberByTargetID(config('params.mst_numbering_target_default.invoice'));
         DB::beginTransaction();
         try
         {

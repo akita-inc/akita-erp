@@ -164,6 +164,20 @@ class MGeneralPurposes extends Model
             ->orderBy('disp_number','ASC')
             ->get();
     }
+    public function sortDateIdByArray($data_kb,$date_id_array)
+    {
+        $data=$this->select('date_id')
+            ->whereIn('date_id',$date_id_array)
+            ->where('data_kb',$data_kb)
+            ->where('deleted_at','=',null)
+            ->orderBy('disp_number')
+            ->get();
+        $result=[];
+        foreach (json_decode(json_encode($data), true) as $key=>$item){
+            $result[] = $item['date_id'];
+        }
+        return $result;
+    }
     public function getDataByMngDiv($div){
         return $this->where('data_kb',$div)
             ->where('deleted_at','=',null)

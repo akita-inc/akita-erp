@@ -5,6 +5,7 @@ return [
     'page_size_sale_lists'=>50,
     'page_size_purchase_lists'=>50,
     'page_size_take_vacation'=>10,
+    'page_size_expense_entertainment'=>10,
     'data_kb' => [
         'sex'                           => '01001', // 性別ID
         'prefecture_cd'                 => '01002', // 都道府県CD
@@ -37,6 +38,7 @@ return [
         'consumption_tax_calc_unit'     => '05003', // 消費税計算単位区分ID
         'rounding_method'               => '05004', // 消費税端数処理区分ID
         'deposit_bank_cd'               => '05005', // 入金銀行コード
+        'payment_method_id'             => '05006', // 入金方法ID
         'payment_month'                 => '06001', // 支払予定月ID
         'payment_method'                => '06002', // 支払予定方法ID
         'payment_bank_cd'               => '06003', // 支払銀行コード
@@ -60,6 +62,8 @@ return [
         'vacation_indicator'            => '12004', // 休暇区分
         'vacation_acquisition_time_indicator' => '12005', // 休暇取得時間区分
         'wf_applicant_affiliation_classification' => '12006', // ワークフロー申請者所属区分
+        'wf_expense_app_temporary_payment'=>'12007',//交際費申請仮払い区分
+        'payoff_kb'=>'12008',//交際費申請仮払い区分
     ],
     'data_kb_nm' => [
         '01001'=> '性別ID',
@@ -93,6 +97,7 @@ return [
         '05003'=> '消費税計算単位区分ID',
         '05004'=> '消費税端数処理区分ID',
         '05005'=> '入金銀行コード',
+        '05006'=> '入金方法ID',
         '06001'=> '支払予定月ID',
         '06002'=> '支払予定方法ID',
         '06003'=> '支払銀行コード',
@@ -492,4 +497,14 @@ return [
     ),
     'vacation_wf_type_id_default' => 1,
     'expense_wf_type_id_default'=>3,
+    'expense_entertainment_wf_type_id_default'=>4,
+    'mst_numbering_target_default' => [
+        'invoice' => '2001',
+        'payment' => '3001',
+        'purchases' => '2002',
+        'withdrawal' => '3002',
+    ],
+    'manual_file_name' => "manual.pdf",
+    'manual_file_path' => storage_path('manual_file'),
+    'MENU_DISP_FLG' => 'True',
 ];

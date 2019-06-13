@@ -31,8 +31,13 @@ Route::group(['middleware' => 'UpdateLogRouters'], function () {
         include "empty-info.php";
         include "invoice.php";
         include "sales-lists.php";
+        include "purchases-lists.php";
         include "payment.php";
         include "work-flow.php";
         include "take-vacation.php";
+        include "invoice-history.php";
+        include "payment-histories.php";
+        include "accounts_payable_data_output.php";
+        include "payment-processing.php";
     });
 });
