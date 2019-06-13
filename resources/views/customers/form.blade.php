@@ -191,10 +191,10 @@
                         <div class="break-row-form"></div>
                         <div class="col-md-12 col-sm-12 row grid-col no-padding">
                             <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_month_id','array'=>$listDepositMonths])
+                                @include('Component.form.select',['filed'=>'deposit_month_id','array'=>$listDepositMonths])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
-                                @include('Component.form.input',['class'=>'wd-300','filed'=>'deposit_day','attr_input' => "maxlength='2' placeholder='末は99'"])
+                                @include('Component.form.input',['filed'=>'deposit_day','attr_input' => "maxlength='2' placeholder='末は99'"])
                             </div>
                         </div>
                     </div>

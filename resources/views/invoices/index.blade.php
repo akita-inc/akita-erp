@@ -22,8 +22,9 @@
     </style>
 @endsection
 @section('content')
-    @include('Layouts.alert')
-    <div class="row row-xs" id="ctrInvoiceListVl">
+    <div id="ctrInvoiceListVl">
+        {{ Breadcrumbs::render('invoices') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: #F4B084">
             <div class="sub-header-line-two p-t-30 frm-search-list">
@@ -33,7 +34,7 @@
                             {{trans("invoices.list.search.mst_business_office_id")}}
                         </div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
-                            <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
+                            <select class="custom-select form-control" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans("invoices.list.search.mst_business_office_id_default")}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -44,7 +45,7 @@
                             {{trans("invoices.list.search.billing_year")}}
                         </div>
                         <div class="col-md-2 padding-row-5 row lh-38">
-                            <select class="form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year">
+                            <select class="custom-select form-control" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year">
                                 @foreach($listYear as $year)
                                     <option value="{{$year}}"> {{$year}}</option>
                                 @endforeach
@@ -53,7 +54,7 @@
                         <div class="col-md-4 padding-row-5 grid-form-search row lh-38">
                             <div class="col-md-1 col-sm-1 no-padding text-center">年</div>
                             <div class="col-md-4 no-padding">
-                                <select class="form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
+                                <select class="custom-select form-control" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month">
                                     @foreach($listMonth as $month)
                                         <option value="{{$month}}"> {{$month}}</option>
                                     @endforeach
@@ -107,7 +108,7 @@
                         </div>
                         <div class="col-md-2  col-sm-12 no-padding row lh-38">
                             <div class="col-md-10  col-sm-10 no-padding">
-                                <select  v-bind:class="errors.closed_date != undefined ? 'form-control dropdown-list is-invalid':'form-control dropdown-list' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" :disabled ='fileSearch.special_closing_date==1' v-cloak>
+                                <select  v-bind:class="errors.closed_date != undefined ? 'custom-select form-control is-invalid':'custom-select form-control' " name="closed_date"  id="closed_date"  v-model="fileSearch.closed_date" :disabled ='fileSearch.special_closing_date==1' v-cloak>
                                     <option v-for="item in list_bundle_dt" :value="item.bundle_dt" v-cloak>
                                         @{{ item.bundle_dt }}
                                     </option>

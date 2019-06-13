@@ -2,7 +2,6 @@
 @section('title',trans("customers.title"))
 @section('title_header',trans("customers.title"))
 @section('content')
-    @include('Layouts.alert')
     @php $accessible_kb = \Illuminate\Support\Facades\Session::get('customers_accessible_kb'); @endphp
     @if ($accessible_kb == 9)
         <div class="alert alert-danger w-100 mt-2">
@@ -11,6 +10,7 @@
     @else
     <div id="ctrCustomersListVl">
         {{ Breadcrumbs::render('customers_list') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             @if ($accessible_kb == 1)

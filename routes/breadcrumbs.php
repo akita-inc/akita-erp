@@ -55,7 +55,7 @@ Breadcrumbs::for('accounts_payable_data_output', function ($trail) {
 
 Breadcrumbs::for('master', function ($trail) {
     $trail->parent('home');
-    $trail->push('マスタ', '');
+    $trail->push('マスタ', '#');
 });
 
 Breadcrumbs::for('staffs_list', function ($trail) {
@@ -110,7 +110,7 @@ Breadcrumbs::for('vehicles_edit', function ($trail,$id) {
 
 Breadcrumbs::for('empty_info', function ($trail) {
     $trail->parent('home');
-    $trail->push('ハコカラ', '');
+    $trail->push('ハコカラ', '#');
 });
 
 Breadcrumbs::for('empty_info_register', function ($trail,$id) {
@@ -135,7 +135,7 @@ Breadcrumbs::for('empty_info_reservation_approval', function ($trail,$id) {
 
 Breadcrumbs::for('work_flow_list', function ($trail) {
     $trail->parent('home');
-    $trail->push('ワークフロー', '');
+    $trail->push('ワークフロー', '#');
 });
 
 Breadcrumbs::for('take_vacation_list', function ($trail) {

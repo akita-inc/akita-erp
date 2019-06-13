@@ -52,7 +52,10 @@
     <div class="collapse navbar-collapse/" id="navbarSupportedContent">
 
         <div class="Category-Box">
-            <h2><a href="#menu0sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">{{Auth::user()->last_nm.Auth::user()->first_nm}}</a></h2>
+            <h2><a href="#menu0sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">
+                    <span>{{$businessOfficeNm}}</span>
+                    <span class="ml-1-7">{{Auth::user()->last_nm.Auth::user()->first_nm}}</span>
+                </a></h2>
             <div class="collapse" id="menu0sub1">
                 <ul>
                     <li><a href="{{route('get-file',['filename' => config('params.manual_file')])}}" target="_blank" data-parent="menu0sub1">マニュアル</a></li>

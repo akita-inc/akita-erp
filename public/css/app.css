@@ -281,12 +281,12 @@ input,select{
     position: relative;
     min-height: 38px;
 }
-.wrap-control-group label{
+.wrap-control-group label:first-child{
     position: absolute;
     left: 0px;
     line-height: 38px;
-    background-color: #0070c0;
-    color: white;
+    background-color: #E1FFE9;
+    color: black;
     justify-content: left;
     width: 180px;
     padding-left: 10px;
@@ -700,4 +700,10 @@ input[type="checkbox"]:focus {
 }
 .form-control::placeholder {
     color: 	#A9A9A9!important;
+}
+.ml-1-7{
+    margin-left: 1.7rem!important;
+}
+.p-3-px{
+    padding: 3px;
 }

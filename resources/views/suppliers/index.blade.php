@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}">
 @endsection
 @section('content')
-    @include('Layouts.alert')
     @php $accessible_kb = \Illuminate\Support\Facades\Session::get('suppliers_accessible_kb'); @endphp
     @if ($accessible_kb == 9)
         <div class="alert alert-danger w-100 mt-2">
@@ -14,6 +13,7 @@
     @else
     <div id="ctrSuppliersListVl">
         {{ Breadcrumbs::render('suppliers_list') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             @if ($accessible_kb == 1)
