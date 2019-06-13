@@ -71,8 +71,8 @@
                 </table>
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-danger"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal" v-on:click="openModalDelete(modal.invoice.invoice_number)" v-if="modal.sale_info.length > 0 && modal.sale_info[0].count_payment_histories == 0">{{trans("invoice_history.list.search.button.delete")}}</button>
-                <button type="button" class="btn btn-secondary"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">{{trans("invoice_history.list.search.button.delete")}}</button>
+                <button type="button" class="btn btn-danger"  {!! isset($attr_input) ? $attr_input:"" !!} v-on:click="openModalDelete(modal.invoice.invoice_number)" v-if="modal.sale_info.length > 0 && modal.sale_info[0].count_payment_histories == 0">{{trans("invoice_history.list.search.button.delete")}}</button>
+                <button type="button" class="btn btn-secondary"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal">{{trans("invoice_history.list.search.button.close")}}</button>
             </div>
         </div>
     </div>

@@ -94,17 +94,7 @@ class InvoiceHistoryController extends Controller {
 
     public function getItems(Request $request)
     {
-
-        if(Session::exists('backQueryFlag') && Session::get('backQueryFlag')){
-            if(Session::exists('backQueryFlag') ){
-                $data = Session::get('requestHistory');
-            }
-            Session::put('backQueryFlag', false);
-        }else{
-            $data = $request->all();
-            Session::put('requestHistory', $data);
-        }
-
+        $data = $request->all();
         $items = $this->search($data);
         $response = [
             'success'=>true,
@@ -417,17 +407,18 @@ class InvoiceHistoryController extends Controller {
         DB::beginTransaction();
         try{
             MBillingHistoryHeaders::query()->where("invoice_number","=",$data['invoice_number'])->update($dataUpdate);
+            $listDetailCustomerCd = MBillingHistoryHeaderDetails::query()->select('mst_customers_cd')->where("invoice_number","=",$data['invoice_number'])->get()->toArray();
+            $listDetailCustomerCd = array_column($listDetailCustomerCd,'mst_customers_cd');
             MBillingHistoryHeaderDetails::query()->where("invoice_number","=",$data['invoice_number'])->update($dataUpdate);
 
             $data['invoicing_flag'] = 0;
-            MSaleses::query()->where("document_no","=",$data['document_no'])->where("mst_customers_cd","=",$data['customer_cd'])->where("branch_office_cd","=",$data['branch_office_cd'])->update($dataUpdate);
+            MSaleses::query()->where("document_no","=",$data['document_no'])->whereIn("mst_customers_cd",$listDetailCustomerCd)->where("branch_office_cd","=",$data['branch_office_cd'])->update($dataUpdate);
             DB::commit();
-            $response = ['success' => true, 'msg'=>Lang::get('messages.MSG10004')];
+            $response = ['success' => true,'message' => Lang::get('messages.MSG10034')];
 
         }catch (\Exception $e){
             DB::rollback();
-            dd($e);
-            $response = ['success' => false,'msg' => Lang::get('messages.MSG06002')];
+            $response = ['success' => false,'message' => Lang::get('messages.MSG06002')];
         }
         return response()->json($response);
     }
