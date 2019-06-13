@@ -43,6 +43,6 @@ Route::group(['middleware' => 'UpdateLogRouters'], function () {
         include "expense-entertainment.php";
     });
 });
-Route::group(['name' => 'storage', 'prefix' => 'storage'], function() {
-    Route::get('{filename}', ['as' => 'get-file', 'uses' => 'StorageController@getFile']);
+Route::group(['name' => 'storage', 'prefix' => ''], function() {
+    Route::get('{filename}', ['uses' => 'StorageController@getManualFile'])->name('getManualFile');
 });

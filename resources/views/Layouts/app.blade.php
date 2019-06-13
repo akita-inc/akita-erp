@@ -46,7 +46,7 @@
     <div class="collapse navbar-collapse" id="navbarRightContent">
         <ul class="list-group">
             <li class="list-group-item">
-                <a href="{{route('get-file',['filename' => config('params.manual_file')])}}" target="_blank">マニュアル</a>
+                <a href="{{route('getManualFile',['filename' => config('params.manual_file_name')])}}" target="_blank">マニュアル</a>
             </li>
             <li class="list-group-item">
                 <a href="{{route('logout')}}">ログアウト</a>

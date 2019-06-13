@@ -336,6 +336,7 @@ return [
         'purchases' => '2002',
         'withdrawal' => '3002',
     ],
-    'manual_file' => 'manual.pdf',
+    'manual_file_name' => "manual.pdf",
+    'manual_file_path' => storage_path('manual_file'),
     'MENU_DISP_FLG' => 'True',
 ];
