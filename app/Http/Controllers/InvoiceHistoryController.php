@@ -410,7 +410,8 @@ class InvoiceHistoryController extends Controller {
             $listDetail= MBillingHistoryHeaderDetails::query()->select('document_no','mst_customers_cd','branch_office_cd')->where("invoice_number","=",$data['invoice_number'])->get()->toArray();
             MBillingHistoryHeaderDetails::query()->where("invoice_number","=",$data['invoice_number'])->update($dataUpdate);
 
-            $data['invoicing_flag'] = 0;
+            unset($dataUpdate['deleted_at']);
+            $dataUpdate['invoicing_flag'] = 0;
             foreach ($listDetail as $value){
                 MSaleses::query()->where("document_no","=",$value['document_no'])->where("mst_customers_cd",'=',$value['mst_customers_cd'])->where("branch_office_cd","=",$value['branch_office_cd'])->update($dataUpdate);
             }
