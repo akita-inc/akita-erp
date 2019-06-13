@@ -407,17 +407,19 @@ class InvoiceHistoryController extends Controller {
         DB::beginTransaction();
         try{
             MBillingHistoryHeaders::query()->where("invoice_number","=",$data['invoice_number'])->update($dataUpdate);
-            $listDetailCustomerCd = MBillingHistoryHeaderDetails::query()->select('mst_customers_cd')->where("invoice_number","=",$data['invoice_number'])->get()->toArray();
-            $listDetailCustomerCd = array_column($listDetailCustomerCd,'mst_customers_cd');
+            $listDetail= MBillingHistoryHeaderDetails::query()->select('document_no','mst_customers_cd','branch_office_cd')->where("invoice_number","=",$data['invoice_number'])->get()->toArray();
             MBillingHistoryHeaderDetails::query()->where("invoice_number","=",$data['invoice_number'])->update($dataUpdate);
 
             $data['invoicing_flag'] = 0;
-            MSaleses::query()->where("document_no","=",$data['document_no'])->whereIn("mst_customers_cd",$listDetailCustomerCd)->where("branch_office_cd","=",$data['branch_office_cd'])->update($dataUpdate);
+            foreach ($listDetail as $value){
+                MSaleses::query()->where("document_no","=",$value['document_no'])->where("mst_customers_cd",'=',$value['mst_customers_cd'])->where("branch_office_cd","=",$value['branch_office_cd'])->update($dataUpdate);
+            }
             DB::commit();
             $response = ['success' => true,'message' => Lang::get('messages.MSG10034')];
 
         }catch (\Exception $e){
             DB::rollback();
+            dd($e);
             $response = ['success' => false,'message' => Lang::get('messages.MSG06002')];
         }
         return response()->json($response);
