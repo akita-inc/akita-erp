@@ -267,6 +267,8 @@
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         var firstDayPreviousMonth = "{{$firstDayPreviousMonth}}"
         var lastDayPreviousMonth = "{{$lastDayPreviousMonth}}"
+        var placeholderCode="<?php echo trans("invoice_history.list.search.code");?>";
+        var placeholderName="<?php echo trans("invoice_history.list.search.name"); ?> ";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/invoice-history-list.js') }}" charset="utf-8"></script>
 @endsection

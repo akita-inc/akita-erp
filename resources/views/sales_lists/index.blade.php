@@ -11,7 +11,9 @@
 @endsection
 @section('content')
     @include('Layouts.alert')
-    <div class="row row-xs" id="ctrSalesListVl">
+    <div id="ctrSalesListVl">
+        {{ Breadcrumbs::render('sales_lists') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header bg-sales-lists">
             <div class="sub-header-line-two p-t-30 frm-search-list">
@@ -79,6 +81,7 @@
                                 </label>
                                 <vue-autosuggest
                                         :suggestions="filteredCustomerCd"
+                                        placeholder="placeholder!!!"
                                         :input-props="inputPropsCd"
                                         :on-selected="onSelectedCd"
                                         :render-suggestion="renderSuggestion"
@@ -94,6 +97,7 @@
                             </label>
                             <vue-autosuggest
                                     :suggestions="filteredCustomerNm"
+                                    placeholder="placeholder!!!"
                                     :input-props="inputPropsName"
                                     :on-selected="onSelectedName"
                                     :render-suggestion="renderSuggestion"
@@ -106,7 +110,7 @@
                     <div class="col-md-6 col-sm-12 row">
                         <div class="col-md-4 grid-form-search d-inline-flex no-padding">
                             <label class="col-list-search-f w-50"> {{trans("sales_lists.list.search.invoicing_flag")}}</label>
-                            <select class="form-control dropdown-list" name="invoicing_flag"  id="invoicing_flag"  v-model="fileSearch.invoicing_flag">
+                            <select class="form-control custom-select" name="invoicing_flag"  id="invoicing_flag"  v-model="fileSearch.invoicing_flag">
                                 <option value="">{{trans("sales_lists.list.search.invoicing_flag_default_value")}}</option>
                                 @foreach(config('params.invoicing_flag') as $key=>$invoice)
                                     <option value="{{$key}}"> {{$invoice}}</option>
@@ -194,6 +198,8 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         var date_now ='<?php echo date('Y/m/d'); ?>';
+        var placeholderCode=" <?php echo trans("sales_lists.list.search.code") ?>";
+        var placeholderCustomerNm="<?php echo trans("sales_lists.list.search.customer_nm") ?>";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/sales-lists.js') }}" charset="utf-8"></script>
 @endsection

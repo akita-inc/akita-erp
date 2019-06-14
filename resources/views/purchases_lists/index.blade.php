@@ -181,6 +181,8 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         var date_now ='<?php echo date('Y/m/d'); ?>';
+        var placeholderCode="<?php echo trans("purchases_lists.list.search.code");?>";
+        var placeholderName="<?php echo trans("purchases_lists.list.search.supplier_nm"); ?> ";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/purchases-lists.js') }}" charset="utf-8"></script>
 @endsection
