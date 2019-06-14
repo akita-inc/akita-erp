@@ -58,7 +58,7 @@
                 </a></h2>
             <div class="collapse" id="menu0sub1">
                 <ul>
-                    <li><a href="{{route('get-file',['filename' => config('params.manual_file')])}}" target="_blank" data-parent="menu0sub1">マニュアル</a></li>
+                    <li><a href="{{route('getManualFile',['filename' => config('params.manual_file_name')])}}" target="_blank" data-parent="menu0sub1">マニュアル</a></li>
                     <li><a href="{{route('logout')}}" data-parent="menu0sub1">ログアウト</a></li>
                     <li><a href="#" data-parent="menu0sub1">パスワード変更</a></li>
                 </ul>
