@@ -561,6 +561,9 @@ span.note{
     font-size: 80%;
     font-weight: bold;
 }
+#password-error{
+    font-size: 100%;
+}
 .error-form .mx-input{
     border-color: #dc3545;
 }
@@ -671,6 +674,9 @@ input[type="checkbox"]:focus {
     background-color: #0070C0;
     color: #ffffff;
 }
+#footer-modal{
+    border-top:unset;
+}
 .bg-sales-lists{
     background: rgb(244,176,132);
 }
@@ -712,4 +718,7 @@ input[type="checkbox"]:focus {
 }
 .btn-danger{
     background-color: #FF0000 !important;
+}
+#msg-success-password{
+    display: none;
 }

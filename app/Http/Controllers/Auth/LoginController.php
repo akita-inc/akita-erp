@@ -56,7 +56,34 @@ class LoginController extends Controller
             return view('auth.login');
         }
     }
-
+    public  function changePassword(Request $request)
+    {
+        $data=$request->all();
+        $rules = [
+            'password' => 'required|min:6'
+        ];
+        $labels = Lang::get("common.modal.change_password");
+        $validator = Validator::make( $data, $rules ,[],$labels );
+        if ($validator->fails()) {
+            return response()->json([
+                'success'=>FALSE,
+                'message'=> $validator->errors()
+            ]);
+        }
+        else
+        {
+            $staff = MStaffs::where('staff_cd', Auth::user()->staff_cd)->first();
+            if($staff)
+            {
+                $staff['password']=bcrypt($data['password']);
+                $staff->save();
+                Session::put('password_old',  $staff['password']);
+                Session::put('sysadmin_flg', $staff->sysadmin_flg);
+                Session::flash('passwordSuccessMsg',Lang::get('messages.MSG04002'));
+            }
+        }
+        return response()->json(['success' => TRUE, 'message' => Lang::get('messages.MSG04002')]);
+    }
     public function postLogin(Request $request)
     {
         $data=$request->all();

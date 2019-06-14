@@ -39,6 +39,7 @@
 <body>
 
 <!-- 追加 左のnavここから-->
+<div id="navBarMain">
 <nav class="nav-left navbar-light">
 
     <div class="Category-Box d-flex justify-content-between">
@@ -60,7 +61,10 @@
                 <ul>
                     <li><a href="{{route('getManualFile',['filename' => config('params.manual_file_name')])}}" target="_blank" data-parent="menu0sub1">マニュアル</a></li>
                     <li><a href="{{route('logout')}}" data-parent="menu0sub1">ログアウト</a></li>
-                    <li><a href="#" data-parent="menu0sub1">パスワード変更</a></li>
+{{--                    <li><a href="#" data-parent="menu0sub1">パスワード変更</a></li>--}}
+                    <li>
+                        <a v-on:click="openModal" href="#"  data-parent="menu0sub1">パスワード変更</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -137,8 +141,15 @@
     </div>
 </nav>
 <!-- 追加 左のnavここまで-->
-
+    @include('Layouts.modalChangePassword',[
+                   'id'=> 'changePasswordModal',
+           ])
+</div>
 <div class="container">
+    <div class="alert alert-success mt-3" id="msg-success-password">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <span>{{trans('messages.MSG04002')}}</span>
+    </div>
     @yield('content')
 </div>
 
@@ -166,6 +177,7 @@
 <script type="text/javascript" src="{{ mix('/assets/js/app-vl.js') }}"></script>
 <script type="text/javascript" src="{{ mix('/assets/js/service/service.js') }}" charset="utf-8"></script>
 <script type="text/javascript" src="{{ mix('/assets/js/directive/directive.js') }}" charset="utf-8"></script>
+<script type="text/javascript" src="{{ mix('/assets/js/controller/change-password.js') }}" charset="utf-8"></script>
 @yield('scripts')
 <script>
     axios.interceptors.response.use((response) => {

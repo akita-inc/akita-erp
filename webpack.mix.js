@@ -143,3 +143,7 @@ mix.js([
 mix.js([
     'resources/assets/js/controller/expense-entertainment-vl.js'
 ], 'public/assets/js/controller/expense-entertainment.js');
+
+mix.js([
+    'resources/assets/js/controller/change-password-vl.js'
+], 'public/assets/js/controller/change-password.js');
