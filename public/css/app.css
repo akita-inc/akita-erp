@@ -571,7 +571,7 @@ span.note{
     border-color: #dc3545;
     padding-right: 12px !important;
     background-image: none;
-    border-radius: 0px !important;
+    border-radius: 4px !important;
 }
 input[type=text]::-ms-clear {
     display: none;

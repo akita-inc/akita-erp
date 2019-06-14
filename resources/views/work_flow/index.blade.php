@@ -2,8 +2,9 @@
 @section('title',trans("work_flow.list.title"))
 @section('title_header',trans("work_flow.list.title"))
 @section('content')
-    @include('Layouts.alert')
-        <div class="row row-xs" id="ctrWorkFlowListVl">
+        <div id="ctrWorkFlowListVl">
+            {{ Breadcrumbs::render('basic_setting_list') }}
+            @include('Layouts.alert')
             <pulse-loader :loading="loading"></pulse-loader>
             <div class="sub-header">
                 <div class="sub-header-line-one text-right">
@@ -35,7 +36,7 @@
                 </div>
             </div>
             <div class="col-md-3"></div>
-            <div class="wrapper-table table-green w-50">
+            <div class="wrapper-table table-green w-50 ml-auto mr-auto">
                 <table class="table table-striped table-bordered search-content">
                     <thead>
                     <tr>

@@ -143,9 +143,39 @@ Breadcrumbs::for('take_vacation_list', function ($trail) {
     $trail->push('休暇取得申請', route('take_vacation.list'));
 });
 
+Breadcrumbs::for('take_vacation_create', function ($trail) {
+    $trail->parent('take_vacation_list');
+    $trail->push('新規登録', route('take_vacation.create'));
+});
+
+Breadcrumbs::for('take_vacation_edit', function ($trail,$id) {
+    $trail->parent('take_vacation_list');
+    $trail->push('編集', route('take_vacation.edit',['id' => $id]));
+});
+
+Breadcrumbs::for('take_vacation_approval', function ($trail,$id) {
+    $trail->parent('take_vacation_list');
+    $trail->push('承認・却下', route('take_vacation.approval',['id' => $id]));
+});
+
+Breadcrumbs::for('take_vacation_reference', function ($trail,$id) {
+    $trail->parent('take_vacation_list');
+    $trail->push('照会', route('take_vacation.reference',['id' => $id]));
+});
+
 Breadcrumbs::for('basic_setting_list', function ($trail) {
     $trail->parent('work_flow');
-    $trail->push('得意先', route('work_flow.list'));
+    $trail->push('基本設定', route('work_flow.list'));
+});
+
+Breadcrumbs::for('basic_setting_create', function ($trail) {
+    $trail->parent('basic_setting_list');
+    $trail->push('新規登録', route('work_flow.create'));
+});
+
+Breadcrumbs::for('basic_setting_edit', function ($trail,$id) {
+    $trail->parent('basic_setting_list');
+    $trail->push('編集', route('work_flow.edit',['id' => $id]));
 });
 
 Breadcrumbs::for('expense_application_list', function ($trail) {
@@ -153,7 +183,47 @@ Breadcrumbs::for('expense_application_list', function ($trail) {
     $trail->push('交際費申請', route('expense_application.list'));
 });
 
+Breadcrumbs::for('expense_application_create', function ($trail) {
+    $trail->parent('expense_application_list');
+    $trail->push('新規登録', route('expense_application.create'));
+});
+
+Breadcrumbs::for('expense_application_edit', function ($trail,$id) {
+    $trail->parent('expense_application_list');
+    $trail->push('編集', route('expense_application.edit',['id' => $id]));
+});
+
+Breadcrumbs::for('expense_application_approval', function ($trail,$id) {
+    $trail->parent('expense_application_list');
+    $trail->push('承認・却下', route('expense_application.approval',['id' => $id]));
+});
+
+Breadcrumbs::for('expense_application_reference', function ($trail,$id) {
+    $trail->parent('expense_application_list');
+    $trail->push('照会', route('expense_application.reference',['id' => $id]));
+});
+
 Breadcrumbs::for('expense_entertainment_list', function ($trail) {
     $trail->parent('work_flow');
     $trail->push('交際費精算', route('expense_entertainment.list'));
+});
+
+Breadcrumbs::for('expense_entertainment_create', function ($trail) {
+    $trail->parent('expense_entertainment_list');
+    $trail->push('新規登録', route('expense_entertainment.create'));
+});
+
+Breadcrumbs::for('expense_entertainment_edit', function ($trail,$id) {
+    $trail->parent('expense_entertainment_list');
+    $trail->push('編集', route('expense_entertainment.edit',['id' => $id]));
+});
+
+Breadcrumbs::for('expense_entertainment_approval', function ($trail,$id) {
+    $trail->parent('expense_entertainment_list');
+    $trail->push('承認・却下', route('expense_entertainment.approval',['id' => $id]));
+});
+
+Breadcrumbs::for('expense_entertainment_reference', function ($trail,$id) {
+    $trail->parent('expense_entertainment_list');
+    $trail->push('照会', route('expense_entertainment.reference',['id' => $id]));
 });
