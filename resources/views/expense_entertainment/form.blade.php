@@ -45,7 +45,7 @@
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
-                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            <button class="btn btn-delete w-100" v-on:click="deleteVacation('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -187,7 +187,7 @@
                     @if(!empty($mWFBusinessEntertainExpenses))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $mode=='edit')
-                                <button class="btn btn-danger text-white" v-on:click="deleteExpenseApplication('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteExpenseApplication('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif

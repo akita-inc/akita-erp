@@ -20,7 +20,7 @@
                     </div>
                     @if($mSupplier->id && $role==1)
                     <div class="d-flex ml-auto">
-                        <button class="btn btn-danger text-white" v-on:click='deleteSupplier("{{$mSupplier->id}}")' type="button">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-delete w-100" v-on:click='deleteSupplier("{{$mSupplier->id}}")' type="button">{{ trans("common.button.delete") }}</button>
                     </div>
                     @endif
                 </div>
@@ -536,7 +536,7 @@
                         </div>
                         @if($mSupplier->id && $role==1)
                             <div class="d-flex ml-auto">
-                                <button class="btn btn-danger text-white" v-on:click='deleteSupplier("{{$mSupplier->id}}")' type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click='deleteSupplier("{{$mSupplier->id}}")' type="button">{{ trans("common.button.delete") }}</button>
                             </div>
                         @endif
                     </div>

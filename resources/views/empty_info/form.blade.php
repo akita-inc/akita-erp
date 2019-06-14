@@ -33,7 +33,7 @@
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
-                            <button class="btn btn-danger text-white" v-on:click="deleteInfo('{{$mEmptyInfo['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            <button class="btn btn-delete w-100" v-on:click="deleteInfo('{{$mEmptyInfo['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -54,7 +54,7 @@
                                     <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
                                     @endif
                                     @if($mode=='reservation_approval')
-                                    <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
+                                    <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-delete btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
                                     @endif
                                 @endif
                             </div>
@@ -203,7 +203,7 @@
                     @if(!empty($mEmptyInfo))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $mode=='edit' && $mEmptyInfo['regist_office_id']== \Illuminate\Support\Facades\Auth::user()->mst_business_office_id)
-                                <button class="btn btn-danger text-white" v-on:click="deleteInfo('{{$mEmptyInfo['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteInfo('{{$mEmptyInfo['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif
@@ -224,7 +224,7 @@
                                         <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
                                         @endif
                                         @if($mode=='reservation_approval')
-                                        <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-danger btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
+                                        <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-delete w-100 btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
                                         @endif
                                     @endif
                                 </div>
