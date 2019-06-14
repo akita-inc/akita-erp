@@ -7,10 +7,10 @@
                     <div class="wrap-control-group">
                         <label for="search_vehicle">{{ $label }}</label>
                         <div class="row" v-cloak v-for="(item,index) in  field.wf_additional_notice" style="margin-bottom: 10px !important;">
-                            <div class="col-md-1 col-sm-12" >
-                                <button class="btn btn-outline-secondary" type="button" @click="openModal(index)" :disabled="field.mode =='approval' && typeof listWfAdditionalNoticeDB[index] !='undefined'">{{ trans("common.button.search") }}</button>
+                            <div class="col-md-1 col-sm-12 padding-row-5" >
+                                <button class="btn btn-outline-secondary w-100" type="button" @click="openModal(index)" :disabled="field.mode =='approval' && typeof listWfAdditionalNoticeDB[index] !='undefined'">{{ trans("common.button.search") }}</button>
                             </div>
-                            <div class="col-md-11 col-sm-12">
+                            <div class="col-md-11 col-sm-12 no-padding">
                                 <input v-model="item.email_address"
                                        type="email"
                                        class="form-control w-100"
@@ -24,7 +24,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-1 col-sm-12"></div>
-                            <div class="col-md-11 col-sm-12">
+                            <div class="col-md-11 col-sm-12 no-padding">
                                 <button class="btn btn-outline-secondary" type="button" @click="addRow" v-cloak v-if="field.mode!= 'reference'"> {{ trans("common.button.add_row") }}</button>
                             </div>
                         </div>

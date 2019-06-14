@@ -24,7 +24,12 @@
 @endsection
 @section('content')
     @php $prefix='take_vacation.create.field.' @endphp
-    <div class="wrapper-container" id="ctrTakeVacationVl">
+    <div id="ctrTakeVacationVl">
+        @if($mode=='register')
+            {{ Breadcrumbs::render('take_vacation_create') }}
+        @else
+            {{ Breadcrumbs::render('take_vacation_'.$mode, $mWPaidVacation['id']) }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
