@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
     <style>
         .form-control[readonly]{
-            background-color: white;
+            background-color: white !important;
         }
     </style>
 @endsection
