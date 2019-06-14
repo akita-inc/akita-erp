@@ -43,7 +43,7 @@ class MEmptyInfo extends Model
                     if(!empty($mEmptyInfo->ask_staff_email_address)){
                         $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
                     }
-                    $configMail = Lang::get('mail_template..empty_info_reservation_reject_mail');
+                    $configMail = Lang::get('mail_template.empty_info_reservation_reject_mail');
                     $mEmptyInfo->ask_date = null;
                     $mEmptyInfo->ask_office = null;
                     $mEmptyInfo->ask_staff = null;
@@ -65,7 +65,7 @@ class MEmptyInfo extends Model
                     if(!empty($mEmptyInfo->ask_staff_email_address)){
                         $mailTo = explode(';',$mEmptyInfo->ask_staff_email_address);
                     }
-                    $configMail = Lang::get('mail_template..empty_info_reservation_approval_mail');
+                    $configMail = Lang::get('mail_template.empty_info_reservation_approval_mail');
                     $mEmptyInfo->apr_date = TimeFunction::getTimestamp();
                     $mEmptyInfo->apr_staff = Auth::user()->staff_cd;
                     break;
@@ -101,14 +101,12 @@ class MEmptyInfo extends Model
             [$emptyInfo->id, $emptyInfo->start_address, $emptyInfo->arrive_address, $emptyInfo->start_date_time, $emptyInfo->arrive_date, $emptyInfo->regist_office, $emptyInfo->regist_staff, $emptyInfo->vehicle_classification, $emptyInfo->registration_numbers, $emptyInfo->vehicle_size, $emptyInfo->vehicle_body_shape, $emptyInfo->asking_price, $emptyInfo->asking_baggage],
             $configMail['template']);
         $subject = str_replace('[id]',$id,$configMail["subject"]);
-        if(count($mailTo) > 0) {
-            Mail::raw($text,
-                function ($message) use ($configMail, $subject, $mailTo) {
-                    $message->from($configMail["from"]);
-                    $message->to($mailTo)
-                        ->subject($subject);
-                });
-        }
+        Mail::raw($text,
+            function ($message) use ($configMail, $subject, $mailTo) {
+                $message->from($configMail["from"]);
+                $message->to($mailTo)
+                    ->subject($subject);
+            });
     }
     public function getInfoForMail($id,$status){
         $query = DB::table($this->table);
