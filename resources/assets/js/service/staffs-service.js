@@ -76,4 +76,11 @@ staffs_service = {
             return error;
         });
     },
+    changePassword: function (data) {
+        return axios.post('/staffs/api-v1/change-password', data,{ 'content-type': 'multipart/form-data' }).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return error;
+        });
+    },
 }
