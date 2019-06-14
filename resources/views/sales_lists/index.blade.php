@@ -23,7 +23,7 @@
                             <div class="wd-100 col-list-search-f text-left">
                                 {{trans("sales_lists.list.search.mst_business_office_id")}}
                             </div>
-                            <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
+                            <select class="form-control custom-select" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans('sales_lists.list.search.business_default_value')}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -136,7 +136,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table" v-cloak  v-if="items.length>0">
+        <div class="wrapper-table" v-cloak  v-if="pagination.total>0">
             <table class="table table-striped table-bordered table-blue table-green">
                 <thead>
                 <tr>
@@ -146,18 +146,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr  v-cloak v-for="item in items">
+                <tr  v-cloak v-for="item in items.data">
                     @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('total_fee')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
-                                <p v-else>---</p>
-                                @break
                                 @case('consumption_tax')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
-                                <p v-else>---</p>
-                                @break
                                 @case('tax_included_amount')
                                 <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
                                 <p v-else>---</p>
@@ -176,7 +170,7 @@
                 @include("Layouts.pagination")
             </div>
         </div>
-        <div class="sub-header bg-color-pink ml-auto mt-3 mr-auto w-90" v-cloak v-if="items.length==0 && flagSearch">
+        <div class="sub-header bg-color-pink ml-auto mt-3 mr-auto w-90" v-cloak v-if="pagination.total==0 && flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">

@@ -10109,7 +10109,7 @@ var ctrSalesListVl = new Vue({
     loading: false,
     lang: lang_date_picker,
     format_date: format_date_picker,
-    items: [],
+    items: {},
     allItems: [],
     export_file_nm: "",
     message: '',
@@ -10143,60 +10143,6 @@ var ctrSalesListVl = new Vue({
     dropdown_mst_customer_nm: [{
       data: []
     }],
-    getItems: function getItems(page, show_msg) {
-      if (show_msg !== true) {
-        $('.alert').hide();
-      }
-
-      var that = this;
-      that.loading = true;
-
-      if (that.fileSearch.from_date == "") {
-        that.errors["from_date"] = messages["MSG02001"].split(':attribute').join('期間');
-        that.loading = false;
-      } else {
-        delete that.errors["from_date"];
-      }
-
-      if (that.fileSearch.to_date == "") {
-        that.errors["to_date"] = messages["MSG02001"].split(':attribute').join('期間');
-        that.loading = false;
-      } else {
-        delete that.errors["to_date"];
-      }
-
-      that.fileSearch.mst_customers_cd = this.$refs.mst_customers_cd.searchInput;
-      that.fileSearch.mst_customers_nm = this.$refs.mst_customers_nm.searchInput;
-      that.flagSearch = false;
-      that.flagExport = false;
-      var data = {
-        pageSize: that.pageSize,
-        page: page,
-        fieldSearch: that.fileSearch,
-        order: that.order
-      };
-
-      if (that.fileSearch.from_date != "" && that.fileSearch.to_date != "" && that.$refs.mst_customers_cd.searchInput != "" && that.fileSearch.invoicing_flag == "0" && that.fileSearch.mst_business_office_id) {
-        that.flagExport = true;
-      }
-
-      if (that.errors.from_date === undefined && that.errors.to_date === undefined) {
-        that.loading = true;
-        sales_lists_service.loadList(data).then(function (response) {
-          that.items = response.data.data;
-          that.pagination = response.pagination;
-          that.fileSearch = response.fieldSearch;
-          that.order = response.order;
-          that.allItems = response.allItems;
-          that.export_file_nm = response.export_file_nm;
-          that.flagSearch = true;
-          $.each(that.fileSearch, function (key, value) {
-            if (value === null) that.fileSearch[key] = '';
-          });
-          that.loading = false;
-        });
-      }
-    },
     changePage: function changePage(page) {
       this.pagination.current_page = page;
       this.getItems(page);
@@ -10257,6 +10203,60 @@ var ctrSalesListVl = new Vue({
     }
   },
   methods: {
+    getItems: function getItems(page, show_msg) {
+      if (show_msg !== true) {
+        $('.alert').hide();
+      }
+
+      var that = this;
+      that.loading = true;
+
+      if (that.fileSearch.from_date == "") {
+        that.errors["from_date"] = messages["MSG02001"].split(':attribute').join('期間');
+        that.loading = false;
+      } else {
+        delete that.errors["from_date"];
+      }
+
+      if (that.fileSearch.to_date == "") {
+        that.errors["to_date"] = messages["MSG02001"].split(':attribute').join('期間');
+        that.loading = false;
+      } else {
+        delete that.errors["to_date"];
+      }
+
+      that.fileSearch.mst_customers_cd = this.$refs.mst_customers_cd.searchInput;
+      that.fileSearch.mst_customers_nm = this.$refs.mst_customers_nm.searchInput;
+      that.flagSearch = false;
+      that.flagExport = false;
+      var data = {
+        pageSize: that.pageSize,
+        page: page,
+        fieldSearch: that.fileSearch,
+        order: that.order
+      };
+
+      if (that.fileSearch.from_date != "" && that.fileSearch.to_date != "" && that.$refs.mst_customers_cd.searchInput != "" && that.fileSearch.invoicing_flag == "0" && that.fileSearch.mst_business_office_id) {
+        that.flagExport = true;
+      }
+
+      if (that.errors.from_date === undefined && that.errors.to_date === undefined) {
+        that.loading = true;
+        sales_lists_service.loadList(data).then(function (response) {
+          that.items = response.data;
+          that.pagination = response.pagination;
+          that.fileSearch = response.fieldSearch;
+          that.order = response.order;
+          that.allItems = response.allItems;
+          that.export_file_nm = response.export_file_nm;
+          that.flagSearch = true;
+          $.each(that.fileSearch, function (key, value) {
+            if (value === null) that.fileSearch[key] = '';
+          });
+          that.loading = false;
+        });
+      }
+    },
     renderSuggestion: function renderSuggestion(suggestion) {
       var customer = suggestion.item;
       return customer.mst_customers_cd + ': ' + customer.mst_customers_nm;
@@ -10411,7 +10411,7 @@ var ctrSalesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
 
 
 /***/ })
