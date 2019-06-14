@@ -35,7 +35,7 @@ Breadcrumbs::for('payment_histories', function ($trail) {
 
 Breadcrumbs::for('buy', function ($trail) {
     $trail->parent('home');
-    $trail->push('購買', '');
+    $trail->push('購買', '#');
 });
 
 Breadcrumbs::for('payments', function ($trail) {
