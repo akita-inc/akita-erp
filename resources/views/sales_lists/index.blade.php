@@ -136,7 +136,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table" v-cloak  v-if="">
+        <div class="wrapper-table" v-cloak  v-if="pagination.total>0">
             <table class="table table-striped table-bordered table-blue table-green">
                 <thead>
                 <tr>
@@ -151,13 +151,7 @@
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
                                 @case('total_fee')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
-                                <p v-else>---</p>
-                                @break
                                 @case('consumption_tax')
-                                <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
-                                <p v-else>---</p>
-                                @break
                                 @case('tax_included_amount')
                                 <p v-if="item['{{$key}}']">{!!"￥@{{ Number(item['$key']).toLocaleString() }}" !!}</p>
                                 <p v-else>---</p>
@@ -176,7 +170,7 @@
                 @include("Layouts.pagination")
             </div>
         </div>
-        <div class="sub-header bg-color-pink ml-auto mt-3 mr-auto w-90" v-cloak v-if="items.length==0 && flagSearch">
+        <div class="sub-header bg-color-pink ml-auto mt-3 mr-auto w-90" v-cloak v-if="pagination.total==0 && flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">

@@ -153,6 +153,7 @@ var ctrSalesListVl = new Vue({
                     that.loading = false;
                 });
             }
+
         },
 
         renderSuggestion(suggestion) {
