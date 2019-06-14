@@ -10,7 +10,7 @@
             <div class="modal-body d-flex flex-column align-items-center">
                 <div class="w-75">
                         <div class="text-danger">
-                            6文字以上
+                            {{trans('common.modal.change_password.warning')}}
                         </div>
                         <div v-bind:class="errors.password != undefined ? 'error-form':''">
                                 <input {!! isset($attr_input) ? $attr_input:"" !!}

@@ -14,10 +14,6 @@ var navBarMain = new Vue({
 
     },
     methods : {
-        openModalChangePassword:function(){
-            $('#changePasswordVl').modal('show');
-
-        },
         changePassword: function() {
             var that=this;
             staffs_service.changePassword(that.field).then((response) => {
@@ -38,12 +34,6 @@ var navBarMain = new Vue({
                 }
                 that.loading = false;
             });
-        },
-        init:function () {
-            this.errors=[];
-            this.field.password="";
-            this.successMsg="";
-
         },
         openModal:function () {
             this.loading = false;

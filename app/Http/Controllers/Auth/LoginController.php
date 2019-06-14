@@ -62,9 +62,7 @@ class LoginController extends Controller
         $rules = [
             'password' => 'required|min:6'
         ];
-        $labels=[
-            'password'=>'パスワード'
-        ];
+        $labels = Lang::get("common.modal.change_password");
         $validator = Validator::make( $data, $rules ,[],$labels );
         if ($validator->fails()) {
             return response()->json([

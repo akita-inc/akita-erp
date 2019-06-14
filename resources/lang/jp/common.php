@@ -40,7 +40,9 @@ return [
     'modal'=>[
         'change_password'=>[
             'title'=>'パスワード変更',
-            'update'=>'更新'
+            'update'=>'更新',
+            'warning'=>'6文字以上',
+            "password"=>"パスワード",
         ],
     ],
     'select_option' => '===選択===',

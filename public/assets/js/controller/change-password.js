@@ -3272,9 +3272,6 @@ var navBarMain = new Vue({
     successMsg: ""
   },
   methods: {
-    openModalChangePassword: function openModalChangePassword() {
-      $('#changePasswordVl').modal('show');
-    },
     changePassword: function changePassword() {
       var that = this;
       staffs_service.changePassword(that.field).then(function (response) {
@@ -3297,11 +3294,6 @@ var navBarMain = new Vue({
 
         that.loading = false;
       });
-    },
-    init: function init() {
-      this.errors = [];
-      this.field.password = "";
-      this.successMsg = "";
     },
     openModal: function openModal() {
       this.loading = false;
