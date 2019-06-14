@@ -8,7 +8,7 @@
                 class="custom-select form-control" v-model="field.{!! $filed !!}" id="{!! $filed !!}">
             @if(isset($array) && !empty($array))
                 @if(@$hiddenData)
-                    <option value=""  data-foo="" >==選択==</option>
+                    <option value=""  data-foo="" >{{trans("common.select_option")}}</option>
                 @endif
                 @foreach($array as $key => $value)
                     @if(@$hiddenData)

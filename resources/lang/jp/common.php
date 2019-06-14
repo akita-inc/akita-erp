@@ -45,7 +45,7 @@ return [
             "password"=>"パスワード",
         ],
     ],
-    'select_option' => '===選択===',
+    'select_option' => '選択',
     'kara_select_option'=>'選択してください ',
     'save_fail' => 'Error! Save Fail.',
     'all' => '全て',

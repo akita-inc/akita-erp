@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
+
 class MBusinessOffices  extends Model
 {
     use SoftDeletes;
@@ -47,7 +49,7 @@ class MBusinessOffices  extends Model
             ->where('deleted_at','=',null)
             ->orderBy('disp_number', 'asc')
             ->get();
-        $result = array("" => $firstItemTxt ? $firstItemTxt :'==選択==');
+        $result = array("" => $firstItemTxt ? $firstItemTxt : Lang::trans('common.select_option'));
         foreach (json_decode(json_encode($data), true) as $key => $item) {
             $result[$item['id']] = $item['business_office_nm'];
         }

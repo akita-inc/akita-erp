@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-md-8  col-sm-12 input-group">
                             <select class="form-control dropdown-list" name="belong_company_id"  id="belong_company_id"  v-model="fileSearch.belong_company_id">
-                                    <option value="">={{trans('common.select_option')}}=</option>
+                                    <option value="">{{trans('common.select_option')}}</option>
                                 @foreach($belongCompanies as $company)
                                     <option value="{{$company['date_id']}}"> {{$company['date_nm']}}</option>
                                 @endforeach

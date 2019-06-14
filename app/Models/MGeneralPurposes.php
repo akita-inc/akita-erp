@@ -10,6 +10,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 class MGeneralPurposes extends Model
 {
@@ -142,7 +143,7 @@ class MGeneralPurposes extends Model
         if($kDefault == "Empty"){
 	        $result = array();
         }else{
-	        $result = array($kDefault => '==選択==');
+	        $result = array($kDefault => Lang::trans('common.select_option'));
         }
         foreach (json_decode(json_encode($data), true) as $key=>$item){
             $result[$item['date_id']] = $item['date_nm'];
