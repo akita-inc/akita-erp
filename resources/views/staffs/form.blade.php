@@ -74,12 +74,8 @@
                     <div class="col-md-5 col-sm-12">
                         @include('Component.form.input',['filed'=>'password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                     </div>
-                    <div class="col-md-7 col-sm-12 row grid-col">
-                        <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-100','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
-                        </div>
-                        <div class="col-md-6 col-sm-12 pd-l-20">
-                        </div>
+                    <div class="col-md-7 col-sm-12 pd-l-20">
+                        @include('Component.form.input',['filed'=>'confirm_password','class'=>'w-75','required'=>true,'attr_input'=>"maxlength=50 type='password' class='w-100' autocomplete='new-password' autofill='off'"])
                     </div>
                 </div>
             </div>
@@ -235,9 +231,9 @@
                         @include('Component.form.input',['filed'=>'welfare_annuity_class','attr_input'=>"maxlength='10'"])
                     </div>
                     <div class="col-md-7 col-sm-12 row grid-col">
-                        <div class="col-md-6 col-sm-12 no-padding">
+                        <div class="col-sm-12 no-padding">
                             <label class="grid-form-label pl-200">コード</label>
-                            <div class="wrap-control-group">
+                            <div class="wrap-control-group wd-380">
                                 <label for="relocation_municipal_office_cd">
                                     {{ trans($prefix.'relocation_municipal_office_cd') }}
                                 </label>
