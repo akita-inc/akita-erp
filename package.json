@@ -27,6 +27,7 @@
     "dependencies": {
         "encoding-japanese": "^1.0.29",
         "historykana": "^1.0.4",
+        "laravel-vue-pagination": "^2.3.0",
         "moment": "^2.24.0",
         "vanilla-autokana": "^1.1.2",
         "vue-autosuggest": "^1.8.3",

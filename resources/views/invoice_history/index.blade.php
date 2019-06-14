@@ -22,8 +22,9 @@
     </style>
 @endsection
 @section('content')
-    @include('Layouts.alert')
-    <div class="row row-xs" id="ctrInvoiceHistoryListVl">
+    <div id="ctrInvoiceHistoryListVl">
+        {{ Breadcrumbs::render('invoice_history') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: #F4B084">
             <div class="sub-header-line-two p-t-30 frm-search-list">
@@ -33,7 +34,7 @@
                             {{trans("invoice_history.list.search.mst_business_office_id")}}
                         </div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
-                            <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
+                            <select class="custom-select form-control" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans("invoice_history.list.search.mst_business_office_id_default")}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -72,10 +73,9 @@
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 row">
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input type="checkbox" value="1" v-model="fileSearch.display_remaining_payment" class="form-check-input">{{trans("invoice_history.list.search.display_remaining_payment")}}
-                            </label>
+                        <div class="ustom-control custom-checkbox">
+                            <input type="checkbox" value="1" v-model="fileSearch.display_remaining_payment" class="custom-control-input" id="display_remaining_payment">
+                            <label class="custom-control-label" for="display_remaining_payment">{{trans("invoice_history.list.search.display_remaining_payment")}}</label>
                         </div>
                     </div>
                 </div>

@@ -5,7 +5,7 @@
         </label>
         <select {!! isset($attr_input) ? $attr_input:"" !!}
                 v-bind:class="errors.{!! $filed !!} != undefined ? 'form-control is-invalid':'form-control' "
-                class="form-control" v-model="field.{!! $filed !!}" id="{!! $filed !!}">
+                class="custom-select form-control" v-model="field.{!! $filed !!}" id="{!! $filed !!}">
             @if(isset($array) && !empty($array))
                 @if(@$hiddenData)
                     <option value=""  data-foo="" >==選択==</option>

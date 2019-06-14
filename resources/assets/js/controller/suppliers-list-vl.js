@@ -7,7 +7,7 @@ var ctrSuppliersListVl = new Vue({
         lang: lang_date_picker,
         format_date: format_date_picker,
         loading: false,
-        items: [],
+        items: {},
         fieldSearch: {
             mst_suppliers_cd: "",
             supplier_nm: "",
@@ -27,36 +27,7 @@ var ctrSuppliersListVl = new Vue({
             descFlg: true,
             divId:''
         },
-        getItems: function(page, show_msg){
-            if (show_msg !== true) {
-                $('.alert').hide();
-            }
 
-            var data = {
-                pageSize:this.pageSize,
-                page:page,
-                fieldSearch:this.fieldSearch,
-                order:this.order,
-            };
-
-            var that = this;
-            this.loading = true;
-            suppliers_service.loadList(data).then((response) => {
-                if (response.data.data.length===0) {
-                    this.message = messages["MSG05001"];
-                } else {
-                    this.message = '';
-                }
-
-                that.items = response.data.data;
-                that.pagination = response.pagination;
-                that.fieldSearch = response.fieldSearch;
-                that.order = response.order;
-                that.loading = false;
-                if (that.order.col !== null)
-                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
-            });
-        },
         changePage: function (page) {
             this.pagination.current_page = page;
             this.getItems(page);
@@ -76,6 +47,35 @@ var ctrSuppliersListVl = new Vue({
         }
     },
     methods : {
+        getItems: function(page, show_msg){
+            if (show_msg !== true) {
+                $('.alert').hide();
+            }
+
+            var data = {
+                page:page,
+                fieldSearch:this.fieldSearch,
+                order:this.order,
+            };
+
+            var that = this;
+            this.loading = true;
+            suppliers_service.loadList(data).then((response) => {
+                if (response.data.data.length===0) {
+                    this.message = messages["MSG05001"];
+                } else {
+                    this.message = '';
+                }
+
+                that.items = response.data;
+                that.pagination = response.pagination;
+                that.fieldSearch = response.fieldSearch;
+                that.order = response.order;
+                that.loading = false;
+                if (that.order.col !== null)
+                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+            });
+        },
         clearCondition: function clearCondition() {
             this.fieldSearch.mst_suppliers_cd = '';
             this.fieldSearch.supplier_nm = '';

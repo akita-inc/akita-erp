@@ -3,7 +3,12 @@
 @section('title_header',trans("customers.create.title".(!empty($customer) ? "_edit":"")))
 @section('content')
     @php $prefix='customers.create.field.' @endphp
-    <div class="wrapper-container" id="ctrCustomersVl">
+    <div id="ctrCustomersVl">
+        @if(!empty($customer))
+            {{ Breadcrumbs::render('customers_edit',$customer['id']) }}
+        @else
+            {{ Breadcrumbs::render('customers_create') }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
@@ -186,10 +191,10 @@
                         <div class="break-row-form"></div>
                         <div class="col-md-12 col-sm-12 row grid-col no-padding">
                             <div class="col-md-6 col-sm-12 no-padding">
-                                @include('Component.form.select',['class'=>'wd-350','filed'=>'deposit_month_id','array'=>$listDepositMonths])
+                                @include('Component.form.select',['filed'=>'deposit_month_id','array'=>$listDepositMonths])
                             </div>
                             <div class="col-md-6 col-sm-12 pd-l-20">
-                                @include('Component.form.input',['class'=>'wd-300','filed'=>'deposit_day','attr_input' => "maxlength='2' placeholder='末は99'"])
+                                @include('Component.form.input',['filed'=>'deposit_day','attr_input' => "maxlength='2' placeholder='末は99'"])
                             </div>
                         </div>
                     </div>
@@ -343,11 +348,11 @@
                     </div>
                     <div class="col-md-7 col-sm-12 pd-l-20 row grid-col">
                         <div class="col-md-6 col-sm-12 no-padding">
-                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_2','array'=>$listAccountTitles])
+                            @include('Component.form.select',['filed'=>'mst_account_titles_id_2','array'=>$listAccountTitles])
                         </div>
 
                         <div class="col-md-6 col-sm-12 pd-l-20">
-                            @include('Component.form.select',['class'=>'wd-350','filed'=>'mst_account_titles_id_3','array'=>$listAccountTitles])
+                            @include('Component.form.select',['filed'=>'mst_account_titles_id_3','array'=>$listAccountTitles])
                         </div>
                     </div>
 

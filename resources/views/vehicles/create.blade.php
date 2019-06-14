@@ -6,7 +6,12 @@
 @endsection
 @section('content')
     @php $prefix='vehicles.create.field.' @endphp
-    <div class="row row-xs" id="ctrVehiclesVl">
+    <div id="ctrVehiclesVl">
+        @if(!empty($mVehicle))
+            {{ Breadcrumbs::render('vehicles_edit',$mVehicle['id']) }}
+        @else
+            {{ Breadcrumbs::render('vehicles_create') }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <form class="form-inline w-100" role="form" method="post" id="form1" >
             @csrf
@@ -95,7 +100,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicles_kb">車両区分</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control w-25" id="vehicles_kb" name="vehicles_kb" v-model="field.vehicles_kb">
+                            <select class="custom-select form-control w-25" id="vehicles_kb" name="vehicles_kb" v-model="field.vehicles_kb">
                                 @foreach($listVehicleKb as $key => $value)
                                 <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -107,7 +112,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5 required" for="mst_business_office_id">営業所</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-100" id="mst_business_office_id" name="mst_business_office_id" v-model="field.mst_business_office_id">
+                            <select class="custom-select form-control w-100" id="mst_business_office_id" name="mst_business_office_id" v-model="field.mst_business_office_id">
                                 @foreach($listBusinessOffices as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -134,7 +139,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_size_kb">小中大区分</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="vehicle_size_kb" name="vehicle_size_kb" v-model="field.vehicle_size_kb">
+                            <select class="custom-select form-control w-50" id="vehicle_size_kb" name="vehicle_size_kb" v-model="field.vehicle_size_kb">
                                 @foreach($listVehicleSize as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -145,7 +150,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_purpose_id">用途</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control w-25" id="vehicle_purpose_id" name="vehicle_purpose_id" v-model="field.vehicle_purpose_id">
+                            <select class="custom-select form-control w-25" id="vehicle_purpose_id" name="vehicle_purpose_id" v-model="field.vehicle_purpose_id">
                                 @foreach($listVehiclePurpose as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -157,7 +162,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="land_transport_office_cd">陸運支局</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-100" id="land_transport_office_cd" name="land_transport_office_cd" v-model="field.land_transport_office_cd">
+                            <select class="custom-select form-control w-100" id="land_transport_office_cd" name="land_transport_office_cd" v-model="field.land_transport_office_cd">
                                 @foreach($listLandTranportOfficeCd as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -228,7 +233,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="vehicle_classification_id">自動車種別</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="vehicle_classification_id" name="vehicle_classification_id" v-model="field.vehicle_classification_id">
+                            <select class="custom-select form-control w-50" id="vehicle_classification_id" name="vehicle_classification_id" v-model="field.vehicle_classification_id">
                                 @foreach($listVehicleClassification as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -239,7 +244,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="private_commercial_id">自家用・事業用の別</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control w-25" id="private_commercial_id" name="private_commercial_id" v-model="field.private_commercial_id">
+                            <select class="custom-select form-control w-25" id="private_commercial_id" name="private_commercial_id" v-model="field.private_commercial_id">
                                 @foreach($listPrivateCommercial as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -251,7 +256,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="car_body_shape_id">車体の形状</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="car_body_shape_id" name="car_body_shape_id" v-model="field.car_body_shape_id">
+                            <select class="custom-select form-control w-50" id="car_body_shape_id" name="car_body_shape_id" v-model="field.car_body_shape_id">
                                 @foreach($listCarBodyShape as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -262,7 +267,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="vehicle_id">車名</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control w-25" id="vehicle_id" name="vehicle_id" v-model="field.vehicle_id">
+                            <select class="custom-select form-control w-25" id="vehicle_id" name="vehicle_id" v-model="field.vehicle_id">
                                 @foreach($listVehicle as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -394,7 +399,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="kinds_of_fuel_id">燃料の種類</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-75" id="kinds_of_fuel_id" name="kinds_of_fuel_id" v-model="field.kinds_of_fuel_id">
+                            <select class="custom-select form-control w-75" id="kinds_of_fuel_id" name="kinds_of_fuel_id" v-model="field.kinds_of_fuel_id">
                                 @foreach($listKindOfFuel as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -546,7 +551,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="drive_system_id">駆動</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control" id="drive_system_id" name="drive_system_id" v-model="field.drive_system_id">
+                            <select class="custom-select form-control" id="drive_system_id" name="drive_system_id" v-model="field.drive_system_id">
                                 @foreach($listDriveSystem as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -557,7 +562,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="transmissions_id">ミッション</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control" id="transmissions_id" name="transmissions_id" v-model="field.transmissions_id">
+                            <select class="custom-select form-control" id="transmissions_id" name="transmissions_id" v-model="field.transmissions_id">
                                 @foreach($listTransmissions as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -575,7 +580,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="suspensions_cd">サスペンション</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control" id="suspensions_cd" name="suspensions_cd" v-model="field.suspensions_cd">
+                            <select class="custom-select form-control" id="suspensions_cd" name="suspensions_cd" v-model="field.suspensions_cd">
                                 @foreach($listSuspensionsCd as $key => $value)
                                     <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -684,7 +689,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="power_gate_cd">パワーゲート</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="power_gate_cd" name="power_gate_cd" v-model="field.power_gate_cd">
+                            <select class="custom-select form-control w-50" id="power_gate_cd" name="power_gate_cd" v-model="field.power_gate_cd">
                                 @foreach($listPowerGate as $key => $value)
                                 <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
@@ -721,7 +726,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="mst_staff_cd">車輌管理責任者</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-100" id="mst_staff_cd" name="mst_staff_cd" v-cloak="" v-model="field.mst_staff_cd">
+                            <select class="custom-select form-control w-100" id="mst_staff_cd" name="mst_staff_cd" v-cloak="" v-model="field.mst_staff_cd">
                                 <option v-for="option in listStaffs" :value="option.value" v-cloak="">@{{option.text}}</option>
                             </select>
                         </div>

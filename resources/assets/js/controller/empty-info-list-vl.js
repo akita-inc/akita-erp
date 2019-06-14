@@ -7,7 +7,7 @@ var ctrEmptyInfoListVl = new Vue({
         lang:lang_date_picker,
         format_date: format_date_picker,
         loading:false,
-        items:[],
+        items:{},
         fileSearch:{
             regist_office_id:"",
             vehicle_size:"",
@@ -37,40 +37,6 @@ var ctrEmptyInfoListVl = new Vue({
         },
         errors:[],
         auth_offfice_id:auth_offfice_id,
-        getItems: function(page,show_msg){
-            if (show_msg !== true) {
-                $('.alert').hide();
-            }
-            var data = {
-                pageSize:this.pageSize,
-                page:page,
-                fieldSearch:this.fileSearch,
-                order:this.order
-            };
-            var that = this;
-            this.loading = true;
-            empty_info_service.loadList(data).then((response) => {
-                if (response.data.data.length===0) {
-                    that.message = messages["MSG05001"];
-                } else {
-                    that.message = '';
-                }
-                that.items = response.data.data;
-                that.pagination = response.pagination;
-                that.fileSearch = response.fieldSearch;
-                that.order = response.order;
-                $.each(that.fileSearch, function (key, value) {
-                    if (value === null)
-                        that.fileSearch[key] = '';
-                });
-                that.loading = false;
-                that.auth_offfice_id=auth_offfice_id;
-                if (that.order.col !== null)
-                {
-                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
-                }
-            });
-        },
         changePage: function (page) {
             this.pagination.current_page = page;
             this.getItems(page);
@@ -90,6 +56,40 @@ var ctrEmptyInfoListVl = new Vue({
         }
     },
     methods : {
+        getItems: function(page,show_msg){
+            if (show_msg !== true) {
+                $('.alert').hide();
+            }
+            var data = {
+                pageSize:this.pageSize,
+                page:page,
+                fieldSearch:this.fileSearch,
+                order:this.order
+            };
+            var that = this;
+            this.loading = true;
+            empty_info_service.loadList(data).then((response) => {
+                if (response.data.data.length===0) {
+                    that.message = messages["MSG05001"];
+                } else {
+                    that.message = '';
+                }
+                that.items = response.data;
+                that.pagination = response.pagination;
+                that.fileSearch = response.fieldSearch;
+                that.order = response.order;
+                $.each(that.fileSearch, function (key, value) {
+                    if (value === null)
+                        that.fileSearch[key] = '';
+                });
+                that.loading = false;
+                that.auth_offfice_id=auth_offfice_id;
+                if (that.order.col !== null)
+                {
+                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+                }
+            });
+        },
         setBgColor:function(status){
             let bgColor="";
             if(status==2)

@@ -3248,7 +3248,7 @@ var ctrCustomersListVl = new Vue({
     lang: lang_date_picker,
     format_date: format_date_picker,
     loading: false,
-    items: [],
+    items: {},
     fileSearch: {
       mst_customers_cd: "",
       customer_nm: "",
@@ -3267,36 +3267,6 @@ var ctrCustomersListVl = new Vue({
       col: '',
       descFlg: true,
       divId: ''
-    },
-    getItems: function getItems(page, show_msg) {
-      var _this = this;
-
-      if (show_msg !== true) {
-        $('.alert').hide();
-      }
-
-      var data = {
-        pageSize: this.pageSize,
-        page: page,
-        fieldSearch: this.fileSearch,
-        order: this.order
-      };
-      var that = this;
-      this.loading = true;
-      customers_service.loadList(data).then(function (response) {
-        if (response.data.data.length === 0) {
-          _this.message = messages["MSG05001"];
-        } else {
-          _this.message = '';
-        }
-
-        that.items = response.data.data;
-        that.pagination = response.pagination;
-        that.fileSearch = response.fieldSearch;
-        that.order = response.order;
-        that.loading = false;
-        if (that.order.col !== null) $('#' + that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
-      });
     },
     changePage: function changePage(page) {
       this.pagination.current_page = page;
@@ -3319,6 +3289,36 @@ var ctrCustomersListVl = new Vue({
     }
   },
   methods: {
+    getItems: function getItems(page, show_msg) {
+      var _this = this;
+
+      if (show_msg !== true) {
+        $('.alert').hide();
+      }
+
+      var data = {
+        pageSize: this.pageSize,
+        page: page,
+        fieldSearch: this.fileSearch,
+        order: this.order
+      };
+      var that = this;
+      this.loading = true;
+      customers_service.loadList(data).then(function (response) {
+        if (response.data.data.length === 0) {
+          _this.message = messages["MSG05001"];
+        } else {
+          _this.message = '';
+        }
+
+        that.items = response.data;
+        that.pagination = response.pagination;
+        that.fileSearch = response.fieldSearch;
+        that.order = response.order;
+        that.loading = false;
+        if (that.order.col !== null) $('#' + that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+      });
+    },
     clearCondition: function clearCondition() {
       this.fileSearch.mst_customers_cd = '';
       this.fileSearch.customer_nm = '';

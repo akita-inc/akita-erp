@@ -5,7 +5,12 @@
     <link rel="stylesheet" href="{{ asset('css/supplier/add.css') }}">
 @endsection
 @section('content')
-    <div class="row row-xs" id="ctrSupplierrsVl">
+    <div id="ctrSupplierrsVl">
+        @if($mSupplier->id)
+        {{ Breadcrumbs::render('suppliers_edit',$mSupplier->id) }}
+        @else
+        {{ Breadcrumbs::render('suppliers_create') }}
+        @endif
         <form class="form-inline w-100" role="form" method="post" id="form1">
             @csrf
             <div class="sub-header">
@@ -250,7 +255,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="prefectures_cd">都道府県</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="prefectures_cd" name="prefectures_cd">
+                            <select class="custom-select form-control w-50" id="prefectures_cd" name="prefectures_cd">
                                 @foreach($listPrefecture as $key => $value)
                                     <option value="{{$key}}" {{Common::selectIfValue('prefectures_cd', $key, $mSupplier->prefectures_cd)}}>{{$value}}</option>
                                 @endforeach
@@ -346,7 +351,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_month_id">支払予定月</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="payment_month_id" name="payment_month_id">
+                            <select class="custom-select form-control w-50" id="payment_month_id" name="payment_month_id">
                                 @foreach($listPaymentMonth as $key => $value)
                                     <option value="{{$key}}" {{Common::selectIfValue('payment_month_id', $key, $mSupplier->payment_month_id)}}>{{$value}}</option>
                                 @endforeach
@@ -368,7 +373,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_method_id">支払予定方法</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="payment_method_id" name="payment_method_id">
+                            <select class="custom-select form-control w-50" id="payment_method_id" name="payment_method_id">
                                 @foreach($listPaymentMethod as $key => $value)
                                     <option value="{{$key}}" {{Common::selectIfValue('payment_method_id', $key, $mSupplier->payment_method_id)}}>{{$value}}</option>
                                 @endforeach
@@ -407,7 +412,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="consumption_tax_calc_unit_id">消費税計算単位区分</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50" id="consumption_tax_calc_unit_id" name="consumption_tax_calc_unit_id">
+                            <select class="custom-select form-control w-50" id="consumption_tax_calc_unit_id" name="consumption_tax_calc_unit_id">
                                 @foreach($listConsumptionTaxCalcUnit as $key => $value)
                                     <option value="{{$key}}" {{Common::selectIfValue('consumption_tax_calc_unit_id', $key, $mSupplier->consumption_tax_calc_unit_id)}}>{{$value}}</option>
                                 @endforeach
@@ -417,7 +422,7 @@
                     <div class="col-md-7 col-sm-12 row grid-col h-100">
                         <label class="col-md-4 col-sm-4" for="rounding_method_id">消費税端数処理区分</label>
                         <div class="col-md-8 col-sm-8 wrap-control">
-                            <select class="form-control w-50" id="rounding_method_id" name="rounding_method_id">
+                            <select class="custom-select form-control w-50" id="rounding_method_id" name="rounding_method_id">
                                 @foreach($listRoundingMethod as $key => $value)
                                     <option value="{{$key}}" {{Common::selectIfValue('rounding_method_id', $key, $mSupplier->rounding_method_id)}}>{{$value}}</option>
                                 @endforeach
@@ -477,7 +482,7 @@
                     <div class="col-md-5 col-sm-12 row grid-col h-100">
                         <label class="col-md-5 col-sm-5" for="payment_account_type">支払口座種別</label>
                         <div class="col-md-7 col-sm-7 wrap-control">
-                            <select class="form-control w-50 " id="payment_account_type" name="payment_account_type">
+                            <select class="custom-select form-control w-50 " id="payment_account_type" name="payment_account_type">
                                 @foreach($listPaymentAccountType as $key => $value)
                                     <option value="{{$key}}" {{Common::selectIfValue('payment_account_type', $key, $mSupplier->payment_account_type)}}>{{$value}}</option>
                                 @endforeach

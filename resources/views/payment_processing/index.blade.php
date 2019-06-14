@@ -10,8 +10,9 @@
     </style>
 @endsection
 @section('content')
-    @include('Layouts.alert')
-    <div class="row row-xs" id="ctrPaymentProcessingVl">
+    <div id="ctrPaymentProcessingVl">
+        {{ Breadcrumbs::render('payment_processing') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: #F4B084">
             <div class="sub-header-line-two p-t-30 frm-search-list">

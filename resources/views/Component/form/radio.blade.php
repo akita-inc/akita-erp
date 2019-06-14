@@ -4,8 +4,10 @@
     </label>
     <div class="pl-3 {{isset($role) && $role!=1 ?  'disabled-bg' : ''}}">
     @foreach($array as $key=>$value)
-        <input type="radio" id="{!! $filed.$key !!}" name="{!! $filed !!}" v-model="field.{!! $filed !!}" class="form-control form-check-input" value="{!!  $key!!}"  {!! isset($attr_input) ? $attr_input:"" !!}>
-        <label class="form-check-label custom-label {{isset($role) && $role!=1 ?  'disabled-bg' : ''}}" for="{!! $filed.$key !!}">{!! $value !!}</label>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="{!! $filed.$key !!}" name="{!! $filed !!}" v-model="field.{!! $filed !!}" class="custom-control-input" value="{!!  $key!!}"  {!! isset($attr_input) ? $attr_input:"" !!}>
+            <label class="custom-control-label custom-label {{isset($role) && $role!=1 ?  'disabled-bg' : ''}}" for="{!! $filed.$key !!}">{!! $value !!}</label>
+        </div>
     @endforeach
     </div>
 </div>
