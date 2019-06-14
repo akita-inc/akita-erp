@@ -72,8 +72,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-12 row">
-                        <div class="ustom-control custom-checkbox">
+                    <div class="col-md-3 col-sm-12 row align-items-center">
+                        <div class="custom-control custom-checkbox">
                             <input type="checkbox" value="1" v-model="fileSearch.display_remaining_payment" class="custom-control-input" id="display_remaining_payment">
                             <label class="custom-control-label" for="display_remaining_payment">{{trans("invoice_history.list.search.display_remaining_payment")}}</label>
                         </div>

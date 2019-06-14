@@ -25,14 +25,14 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("payment_processing.list.search.code")}}
                             </label>
-                            <input type="text" v-model="fileSearch.customer_cd" name="customer_cd" id="customer_cd" maxlength="5" v-bind:class="errors.customer_cd != undefined ? 'form-control  number_only is-invalid':'form-control number_only' " @change="handleChangeCustomerCd" v-cloak>
+                            <input type="text" v-model="fileSearch.customer_cd" name="customer_cd" id="customer_cd" maxlength="5" v-bind:class="errors.customer_cd != undefined ? 'form-control  number_only is-invalid':'form-control number_only' " @change="handleChangeCustomerCd" v-cloak placeholder="{{trans("payment_processing.list.search.code")}}">
 
                         </div>
                         <div class="col-md-5 padding-row-5 grid-form-search text-left">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("payment_processing.list.search.name")}}
                             </label>
-                            <select v-bind:class="errors.customer_cd != undefined ? 'form-control is-invalid':'form-control'" v-model="fileSearch.customer_nm" name="customer_nm"  v-cloak @change="handleChangeCustomerNm">
+                            <select v-bind:class="errors.customer_cd != undefined ? 'custom-select form-control is-invalid':'custom-select form-control'" v-model="fileSearch.customer_nm" name="customer_nm"  v-cloak @change="handleChangeCustomerNm">
                                 <option value="">{{trans('common.kara_select_option')}}</option>
                                 <option v-for="option in listCustomer" v-bind:value="option.mst_customers_cd">@{{option.customer_nm}}</option>
                             </select>

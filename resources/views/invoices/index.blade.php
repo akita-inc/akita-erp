@@ -118,11 +118,10 @@
                             <div class="col-md-2 col-sm-2 no-padding">日</div>
                         </div>
                         <div class="col-md-3  row no-padding">
-                            <div class="col-md-7 col-sm-7 no-padding lh-38 text-right">
-                                <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" value="1" v-model="fileSearch.special_closing_date" class="form-check-input">{{trans("invoices.list.search.special_closing_date")}}
-                                    </label>
+                            <div class="col-md-7 col-sm-7 no-padding d-flex align-items-center justify-content-end">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" value="1" v-model="fileSearch.special_closing_date" class="custom-control-input" id="special_closing_date">
+                                    <label class="custom-control-label" for="special_closing_date">{{trans("invoices.list.search.special_closing_date")}}</label>
                                 </div>
                             </div>
                             <div class="col-md-3  col-sm-3 no-padding">
