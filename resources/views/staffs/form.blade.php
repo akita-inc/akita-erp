@@ -2,22 +2,7 @@
 @section('title',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
 @section('title_header',trans("staffs.create.title".(!empty($staff) ? "_edit":"")))
 @section('css')
-    <style>
-        .wrap-control-group{
-            padding-left: 230px!important;
-        }
-        .wrap-control-group label{
-            width:230px!important;
-        }
-        .wrap-control-group .label-file-image{
-            width: 120px!important;
-            left: 50px!important;
-            position: absolute;
-        }
-        .btnPreviewdrivers_license_picture{
-            margin-left: 130px!important;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/staff/staff.css') }}">
 @endsection
 @section('content')
     @include('Layouts.alert')
@@ -637,9 +622,9 @@
                                             @if(@$listDriversLicenseDivisions)
                                                 @foreach($listDriversLicenseDivisions as  $key=>$item)
                                                     @if(!empty($key))
-                                                        <div class="">
-                                                            <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
-                                                            <label for="info_target_{{$key}}" class="custom-label">{{$item}}</label>
+                                                        <div class="custom-control custom-checkbox ml-2 mr-2">
+                                                            <input type="checkbox" class="custom-control-input" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
+                                                            <label for="info_target_{{$key}}" class="d-block custom-control-label">{{$item}}</label>
                                                         </div>
                                                     @endif
                                                 @endforeach
