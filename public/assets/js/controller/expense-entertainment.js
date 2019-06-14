@@ -20960,8 +20960,7 @@ var ctrExpenseApplicationVl = new Vue({
               that.field.deposit_amount = that.addComma(isNaN(that.field.deposit_amount) ? 0 : that.field.deposit_amount);
               that.field.payoff_amount = that.addComma(isNaN(that.field.payoff_amount) ? 0 : that.field.payoff_amount);
             } else {
-              that.errors = [];
-              window.location.href = listRoute;
+              that.errors = []; // window.location.href = listRoute;
             }
 
             that.loading = false;

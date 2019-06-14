@@ -19,10 +19,10 @@ class WFBusinessEntertainingExpenses extends Model {
     public function getInfoForMail($id){
         $query = $this->select(
             'wf_business_entertaining_expenses.id',
-            'wf_business_entertaining_expenses.applicant_id',
-            'wf_business_entertaining_expenses.applicant_office_id',
+            DB::raw('CONCAT(mst_staffs.last_nm , mst_staffs.first_nm) as applicant_id'),
+            DB::raw('mst_business_offices.business_office_nm as applicant_office_id'),
             'wf_business_entertaining_expenses.wf_business_entertaining_id',
-            'wf_business_entertaining_expenses.date',
+            DB::raw("DATE_FORMAT(wf_business_entertaining_expenses.date, '%Y/%m/%d') as date"),
             'wf_business_entertaining_expenses.client_company_name',
             'wf_business_entertaining_expenses.client_members',
             'wf_business_entertaining_expenses.client_members_count',
@@ -30,10 +30,24 @@ class WFBusinessEntertainingExpenses extends Model {
             'wf_business_entertaining_expenses.own_members',
             'wf_business_entertaining_expenses.place',
             'wf_business_entertaining_expenses.report',
+            DB::raw('CONCAT_WS("","￥",format(wf_business_entertaining_expenses.cost, "#,##0")) AS cost'),
             DB::raw('CONCAT_WS("","￥",format(wf_business_entertaining_expenses.deposit_amount, "#,##0")) AS deposit_amount'),
             DB::raw('CONCAT_WS("","￥",format(wf_business_entertaining_expenses.payoff_amount, "#,##0")) AS payoff_amount'),
-            DB::raw('CONCAT_WS("","￥",format(wf_business_entertaining_expenses.cost, "#,##0")) AS cost')
+            'wf_approval_status.send_back_reason',
+            'wf_approval_status.title'
         )
+        ->leftjoin('wf_approval_status', function ($join) {
+            $join->on('wf_approval_status.wf_id', '=', 'wf_business_entertaining_expenses.id')
+                ->where('approval_levels','=',Auth::user()->approval_levels);
+        })
+        ->join(DB::raw('mst_business_offices'), function ($join) {
+            $join->on('mst_business_offices.id', '=', 'wf_business_entertaining_expenses.applicant_office_id')
+                ->whereNull('mst_business_offices.deleted_at');
+        })
+        ->leftjoin('mst_staffs', function ($join) {
+            $join->on('mst_staffs.staff_cd', '=', 'wf_business_entertaining_expenses.applicant_id')
+                ->whereNull('mst_staffs.deleted_at');
+        })
         ->where('wf_business_entertaining_expenses.id','=',$id);
         return $query->first()->toArray();
     }
