@@ -37,6 +37,14 @@ return [
     "description-form" =>[
         "indicates_required_items" => "*　は必須入力の項目です。"
     ],
+    'modal'=>[
+        'change_password'=>[
+            'title'=>'パスワード変更',
+            'update'=>'更新',
+            'warning'=>'6文字以上',
+            "password"=>"パスワード",
+        ],
+    ],
     'select_option' => '===選択===',
     'kara_select_option'=>'選択してください ',
     'save_fail' => 'Error! Save Fail.',

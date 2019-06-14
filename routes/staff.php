@@ -18,6 +18,7 @@ Route::group(['name' => 'staffs', 'prefix'=>'/staffs', 'middleware' => ['auth']]
         Route::any('/list-staff-auths/{id}',['uses'=>'Api\StaffsController@getStaffAuths']);
         Route::any('/relocation-municipal-office', ['uses' => 'Api\StaffsController@getListReMunicipalOffice']);
         Route::any('/load-role-config', ['uses' => 'Api\StaffsController@getRoleConfig']);
+        Route::any('/change-password', ['uses' => 'Auth\LoginController@changePassword']);
     });
 });
 
