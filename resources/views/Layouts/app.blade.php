@@ -189,7 +189,6 @@
         }
         return Promise.reject(error.response);
     });
-    $('#msg-success-password').hide();
 </script>
 </body>
 </html>
