@@ -233,7 +233,7 @@ input,select{
     padding: 0px !important;
 }
 .grid-form{
-    border: 1px solid;
+    border: 1px solid #CCC;
     display: block;
     width: 100%;
     margin-top: 10px;
