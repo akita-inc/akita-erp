@@ -1,0 +1,20 @@
+.wrap-control-group{
+    padding-left: 230px!important;
+}
+.wrap-control-group label{
+    width:230px!important;
+}
+.wrap-control-group .label-file-image{
+    width: 120px!important;
+    left: 50px!important;
+    position: absolute;
+}
+.btnPreviewdrivers_license_picture{
+    margin-left: 130px!important;
+}
+.wrap-control-group.textarea label{
+    height: unset;
+}
+.wrap-control-group.textarea .custom-control-label{
+    width:unset!important;
+}
