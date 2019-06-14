@@ -136,7 +136,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper-table" v-cloak  v-if="items.length>0">
+        <div class="wrapper-table" v-cloak  v-if="">
             <table class="table table-striped table-bordered table-blue table-green">
                 <thead>
                 <tr>
@@ -146,7 +146,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr  v-cloak v-for="item in items">
+                <tr  v-cloak v-for="item in items.data">
                     @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
