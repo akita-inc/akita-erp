@@ -20,7 +20,7 @@
                                     {{trans("expense_entertainment.list.search.applicant_id")}}
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control">
+                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control" placeholder="{{trans("expense_entertainment.list.search.applicant_id")}}">
                                 </div>
                             </div>
                             <div class="col-md-6 row">
@@ -28,7 +28,7 @@
                                     {{trans("expense_entertainment.list.search.applicant")}}
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="fileSearch.applicant_nm" name="applicant_nm" id="applicant_nm" class="form-control">
+                                    <input type="text" v-model="fileSearch.applicant_nm" name="applicant_nm" id="applicant_nm" class="form-control" placeholder="{{trans("expense_entertainment.list.search.applicant")}}">
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                     {{trans("expense_entertainment.list.search.client_company_name")}}
                                 </div>
                                 <div class="col-md-8 input-group">
-                                    <input type="text" v-model="fileSearch.client_company_name" name="client_company_name" id="client_company_name" class="form-control">
+                                    <input type="text" v-model="fileSearch.client_company_name" name="client_company_name" id="client_company_name" class="form-control" placeholder=" {{trans("expense_entertainment.list.search.client_company_name")}}">
                                 </div>
                             </div>
                         </div>

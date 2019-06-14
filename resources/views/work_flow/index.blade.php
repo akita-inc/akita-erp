@@ -19,7 +19,7 @@
                                 {{trans("work_flow.list.search.name")}}
                             </div>
                             <div class="col-md-6 grid-form-search">
-                                <input type="text" v-model="fileSearch.name" name="name" id="name" class="form-control">
+                                <input type="text" v-model="fileSearch.name" name="name" id="name" class="form-control" placeholder="{{trans("work_flow.list.search.name")}}">
                             </div>
                             <div class="col-md-2 lh-38 padding-row-5">
                                 <button class="btn btn-light m-auto w-100" type="button" v-on:click="clearCondition()" >
