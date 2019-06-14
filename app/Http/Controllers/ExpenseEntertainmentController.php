@@ -289,7 +289,7 @@ class ExpenseEntertainmentController extends Controller
     }
 
     public function store(Request $request, $id=null){
-        $mWFBusinessEntertain = null;
+        $mWFBusinessEntertainExpenses = null;
         $mode = "register";
         $role = 1;
         $mWApprovalStatus = new WApprovalStatus();

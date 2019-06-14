@@ -20,7 +20,7 @@
                                     {{trans("expense_entertainment.list.search.applicant_id")}}
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control"  autocomplete="new-password">
+                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6 row">
