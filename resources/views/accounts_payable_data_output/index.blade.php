@@ -18,7 +18,7 @@
                                 {{trans("accounts_payable_data_output.list.search.billing_month")}}
                             </div>
                             <div class="col-md-2 no-padding">
-                                <select class="custom-select form-control dropdown-list" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year" @change="handleEndDate">
+                                <select class="custom-select form-control" name="billing_year"  id="billing_year"  v-model="fileSearch.billing_year" @change="handleEndDate">
                                     @foreach($listYear as $year)
                                         <option value="{{$year}}"> {{$year}}</option>
                                     @endforeach
@@ -26,7 +26,7 @@
                             </div>
                             <div class="col-md-1 padding-row-5 text-left col-list-search-f">年</div>
                             <div class="col-md-2 no-padding">
-                                <select class="custom-select form-control dropdown-list" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month" @change="handleEndDate">
+                                <select class="custom-select form-control" name="billing_month"  id="billing_month"  v-model="fileSearch.billing_month" @change="handleEndDate">
                                     @foreach($listMonth as $month)
                                         <option value="{{$month}}"> {{$month}}</option>
                                     @endforeach

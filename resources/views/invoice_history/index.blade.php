@@ -34,7 +34,7 @@
                             {{trans("invoice_history.list.search.mst_business_office_id")}}
                         </div>
                         <div class="col-md-3 padding-row-5 grid-form-search">
-                            <select class="custom-select form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
+                            <select class="custom-select form-control" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans("invoice_history.list.search.mst_business_office_id_default")}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>

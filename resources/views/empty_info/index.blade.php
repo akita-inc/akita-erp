@@ -20,7 +20,7 @@
                                 {{trans("empty_info.list.search.regist_office_id")}}
                             </div>
                             <div class="wd-350 pd-l-20">
-                                <select class="form-control dropdown-list" name="regist_office_id"  id="regist_office_id"  v-model="fileSearch.regist_office_id">
+                                <select class="form-control custom-select" name="regist_office_id"  id="regist_office_id"  v-model="fileSearch.regist_office_id">
                                     <option value="">{{trans('common.kara_select_option')}}</option>
                                     @foreach($businessOffices as $office)
                                         <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -65,7 +65,7 @@
                                 {{trans("empty_info.list.search.asking_baggage")}}
                             </div>
                             <div class="wd-350 pd-l-20">
-                                <select class="form-control dropdown-list" name="asking_baggage"  id="asking_baggage"  v-model="fileSearch.asking_baggage">
+                                <select class="form-control custom-select" name="asking_baggage"  id="asking_baggage"  v-model="fileSearch.asking_baggage">
                                     <option value="">{{trans('common.kara_select_option')}}</option>
                                     @foreach($askingBaggages as $baggage)
                                         <option value="{{$baggage['date_id']}}"> {{$baggage['date_nm']}}</option>
@@ -91,7 +91,7 @@
                                 {{trans("empty_info.list.search.start_pref_cd")}}
                             </div>
                             <div class="wd-250 pd-l-10">
-                                <select class="form-control dropdown-list" name="start_pref_cd"  id="start_pref_cd"  v-model="fileSearch.start_pref_cd">
+                                <select class="form-control custom-select" name="start_pref_cd"  id="start_pref_cd"  v-model="fileSearch.start_pref_cd">
                                     <option value="">{{trans("empty_info.list.search.pref")}}</option>
                                     @foreach($startPrefCds as $prefCd)
                                         <option value="{{$prefCd['date_id']}}"> {{$prefCd['date_nm']}}</option>
@@ -112,7 +112,7 @@
                                 {{trans("empty_info.list.search.arrive_pref_cd")}}
                             </div>
                             <div class="wd-250 pd-l-10">
-                                <select class="form-control dropdown-list" name="arrive_pref_cd"  id="arrive_pref_cd"  v-model="fileSearch.arrive_pref_cd">
+                                <select class="form-control custom-select" name="arrive_pref_cd"  id="arrive_pref_cd"  v-model="fileSearch.arrive_pref_cd">
                                     <option value="">{{trans("empty_info.list.search.pref")}}</option>
                                     @foreach($startPrefCds as $prefCd)
                                         <option value="{{$prefCd['date_id']}}"> {{$prefCd['date_nm']}}</option>
