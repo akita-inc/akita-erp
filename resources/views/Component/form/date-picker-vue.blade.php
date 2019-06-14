@@ -11,9 +11,9 @@
                 placeholder=""
                 format="YYYY/MM/DD"
                 value-type="format"
-                v-bind:class="errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!} != undefined
+                :input-class="errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!} != undefined
                && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index] != undefined
-               && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index].{!! $filed !!} != undefined ? 'is-invalid':'' "
+               && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index].{!! $filed !!} != undefined ? 'form-control w-100 is-invalid':'form-control w-100' "
                 v-model="{!! $filedMode !!}"
                 @if(isset($role) && $role!=1) :disabled="true" @endif>
         </date-picker>
