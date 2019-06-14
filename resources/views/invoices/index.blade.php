@@ -290,6 +290,8 @@
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
         messages["MSG06005"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06005'); ?>";
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
+        var placeholderCode="<?php echo trans("invoices.list.search.code");?>";
+        var placeholderName="<?php echo trans("invoices.list.search.name"); ?> ";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/invoice-list.js') }}" charset="utf-8"></script>
 @endsection
