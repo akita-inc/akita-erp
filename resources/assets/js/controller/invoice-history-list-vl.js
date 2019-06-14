@@ -180,19 +180,18 @@ var ctrInvoiceHistoryListVl = new Vue({
                 this.fileSearch.closed_date = '';
             }
         },
-        clearCondition: async function() {
+        clearCondition: function() {
             this.$refs.customer_nm.searchInput = "";
             this.$refs.customer_cd.searchInput = "";
             this.fileSearch.mst_business_office_id="";
-            this.fileSearch.start_date="";
-            this.fileSearch.end_date="";
+            this.fileSearch.start_date=firstDayPreviousMonth;
+            this.fileSearch.end_date=lastDayPreviousMonth;
             this.fileSearch.customer_cd="";
             this.fileSearch.customer_nm="";
             this.fileSearch.display_remaining_payment=0;
             this.errors = [];
             this.filteredCustomerCd = [];
             this.filteredCustomerNm = [];
-            this.getFirstLastDatePreviousMonth();
         },
         openModal: function (item) {
             this.loading = true;
@@ -307,6 +306,7 @@ var ctrInvoiceHistoryListVl = new Vue({
         confirmDelete:function() {
             var that = this;
             that.loading=true;
+            $('#detailsModal').modal('hide');
             invoice_history_service.delete({
                 invoice_number:that.modal.invoice.invoice_number,
                 document_no:that.modal.sale_info[0].document_no,

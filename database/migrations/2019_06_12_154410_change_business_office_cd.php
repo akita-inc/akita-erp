@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDiscountToTPaymentHistoriesTable extends Migration
+class ChangeBusinessOfficeCd extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddDiscountToTPaymentHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('t_payment_histories', function (Blueprint $table) {
-            //
-            $table->decimal('discount',12,2)->after('fee');
-
+        Schema::table('mst_business_offices', function (Blueprint $table) {
+            $table->string('mst_business_office_cd',3)->change();
         });
     }
 
@@ -27,9 +25,8 @@ class AddDiscountToTPaymentHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('t_payment_histories', function (Blueprint $table) {
-            //
-            $table->dropColumn('discount');
+        Schema::table('mst_business_offices', function (Blueprint $table) {
+            $table->integer('mst_business_office_cd')->change();
         });
     }
 }

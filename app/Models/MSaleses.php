@@ -85,7 +85,7 @@ class MSaleses extends Model {
             ->where('c.bill_cus_cd',$mst_customers_cd)
             ->where('t_saleses.invoicing_flag',0);
         if ($dataSearch['billing_year'] != '' && $dataSearch['billing_month'] != '' && ($dataSearch['closed_date_input'] !='' || $dataSearch['closed_date'])) {
-            $date = date("Y-m-d",strtotime($dataSearch['billing_year'].'/'.$dataSearch['billing_month'].'/'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date'])));
+            $date = $dataSearch['billing_year'].'-'.$dataSearch['billing_month'].'-'.($dataSearch['special_closing_date'] ? $dataSearch['closed_date_input'] : $dataSearch['closed_date']);
             $query = $query->where('t_saleses.daily_report_date','<=',$date);
         }
          return $query->orderBy('t_saleses.daily_report_date')->get();

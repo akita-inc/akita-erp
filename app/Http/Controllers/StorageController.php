@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 class StorageController {
-    public function getFile($path) {
-
+    public function getManualFile($path) {
+        $path = config('params.manual_file_path').'/'.$path;
         if (!File::exists($path)) {
             abort(404);
         }

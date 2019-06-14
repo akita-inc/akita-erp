@@ -30,7 +30,7 @@ class MstBusinessOffices extends BaseImport
     ];
     public $rules = [
         'business_office_nm'=>'required|length:50',
-        'mst_business_office_cd'=>'required',
+        'mst_business_office_cd'=>'required|length:3',
         'branch_office_cd'=>'nullable',
         'zip_cd'=>'nullable|length:7',
         'prefectures_cd' =>'nullable|length:2',

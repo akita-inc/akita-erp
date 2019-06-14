@@ -20,9 +20,9 @@ class CreateTPaymentHistories extends Migration
             $table->string('mst_customers_cd',5);
             $table->date('dw_day');
             $table->integer('dw_classification');
-            $table->decimal('total_dw_amount',12,2);
-            $table->decimal('actual_dw',12,2);
-            $table->decimal('fee',12,2);
+            $table->decimal('total_dw_amount',10,2);
+            $table->decimal('actual_dw',10,2);
+            $table->decimal('fee',10,2);
             $table->bigInteger('invoice_number');
             $table->string('note',200)->nullable();
             $table->timestamp('deleted_at')->nullable();
