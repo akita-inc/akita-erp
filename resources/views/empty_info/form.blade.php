@@ -224,7 +224,7 @@
                                         <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.".$mode) }}</button>
                                         @endif
                                         @if($mode=='reservation_approval')
-                                        <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-delete w-100 btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
+                                        <button data-toggle="modal" data-target="#reservation_rejectModal" class="btn btn-delete btn-submit m-auto">{{ trans("common.button.reservation_reject") }}</button>
                                         @endif
                                     @endif
                                 </div>
