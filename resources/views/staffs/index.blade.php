@@ -5,14 +5,15 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
 @endsection
 @section('content')
-    @include('Layouts.alert')
     @php $accessible_kb = \Illuminate\Support\Facades\Session::get('staffs_accessible_kb'); @endphp
     @if ($accessible_kb == 9)
         <div class="alert alert-danger w-100 mt-2">
             {{\Illuminate\Support\Facades\Lang::get('messages.MSG10006')}}
         </div>
     @else
-    <div class="row row-xs" id="ctrStaffsListVl">
+    <div id="ctrStaffsListVl">
+        {{ Breadcrumbs::render('staffs_list') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             @if ($accessible_kb == 1)
@@ -32,13 +33,13 @@
                             <label class="grid-form-search-label" for="input_mst_customers_cd">
                                 {{trans("staffs.list.search.code")}}
                             </label>
-                            <input id="input_staffs_cd" class="form-control" name="staffs_cd" v-model="fileSearch.staff_cd">
+                            <input id="input_staffs_cd" class="form-control" name="staffs_cd" v-model="fileSearch.staff_cd" placeholder="{{trans("staffs.list.search.code")}}">
                         </div>
                         <div class="col-md-6 padding-row-5 grid-form-search">
                             <label class="grid-form-search-label" for="input_mst_customers_name">
                                 {{trans("staffs.list.search.staff_nm")}}
                             </label>
-                            <input id="input_mst_staffs_name" class="form-control" name="staff_nm" v-model="fileSearch.staff_nm">
+                            <input id="input_mst_staffs_name" class="form-control" name="staff_nm" v-model="fileSearch.staff_nm" placeholder="{{trans("staffs.list.search.staff_nm")}}">
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12 row">
@@ -121,7 +122,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr  v-cloak v-for="item in items">
+                <tr  v-cloak v-for="item in items.data">
                     @foreach($fieldShowTable as $key => $field)
                         <td class="{{ isset($field["classTD"])?$field["classTD"]:"" }}" v-cloak>
                             @switch($key)
