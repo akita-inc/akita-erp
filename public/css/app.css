@@ -707,8 +707,8 @@ input[type="checkbox"]:focus {
 .form-control::placeholder {
     color: 	#A9A9A9!important;
 }
-.ml-1-7{
-    margin-left: 1.7rem!important;
+.ml-1-5{
+    margin-left: 1.5rem!important;
 }
 .custom-control-label{
     padding: 3px;
