@@ -420,9 +420,9 @@ class ExpenseEntertainmentController extends Controller
     public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
         $mWFBusinessEntertainingExpenses=new WFBusinessEntertainingExpenses();
         $data = $mWFBusinessEntertainingExpenses->getInfoForMail($id);
-        $field = ['[id]','[applicant_id]','[applicant_office_id]','[wf_business_entertaining_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[report]','[cost]','[payoff_amount]','[deposit_amount]'];
+        $field = ['[id]','[applicant_id]','[applicant_office_id]','[wf_business_entertaining_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[report]','[cost]','[payoff_amount]','[deposit_amount]','[id_before]','[title]','[send_back_reason]'];
         $data['id_before'] = $id_before;
-        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['wf_business_entertaining_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['report'],$data['cost'],$data['payoff_amount'],$data['deposit_amount']],$configMail['template']);
+        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['wf_business_entertaining_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['report'],$data['cost'],$data['payoff_amount'],$data['deposit_amount'],$data['id_before'],$data['title'],$data['send_back_reason']],$configMail['template']);
         $subject = str_replace(['[id]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
         $this->sendMail($configMail,$mailTo,$mailCC,$subject,$text);
     }

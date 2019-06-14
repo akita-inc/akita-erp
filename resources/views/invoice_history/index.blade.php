@@ -17,7 +17,7 @@
             border-top: none !important;
         }
         .form-control[readonly]{
-            background-color: white;
+            background-color: white !important;
         }
     </style>
 @endsection
@@ -137,7 +137,7 @@
                 </div>
             </div>
         </div>
-        <div class="sub-header bg-color-green mt-3 ml-5 mr-5" v-cloak v-if="deleteFlagSuccess">
+        <div class="sub-header bg-color-green ml-auto mt-3 mr-auto w-90" v-cloak v-if="deleteFlagSuccess">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
@@ -208,7 +208,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">
+        <div class="sub-header bg-color-pink ml-auto mt-3 mr-auto w-90" v-cloak v-if="items.length==0 && flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">

@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('css/search-list.css') }}"/>
 @endsection
 @section('content')
-    <div class="row row-xs" id="ctrAccountsPayableDataOutputVl">
+    <div id="ctrAccountsPayableDataOutputVl">
         {{ Breadcrumbs::render('accounts_payable_data_output') }}
         @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
@@ -72,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="sub-header mt-3 ml-5 mr-5" v-bind:class="outputSuccess?'bg-color-green':'bg-color-pink'" v-cloak v-if="flagSearch">
+        <div class="sub-header ml-auto mt-3 mr-auto w-90" v-bind:class="outputSuccess?'bg-color-green':'bg-color-pink'" v-cloak v-if="flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">

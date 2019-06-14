@@ -13,8 +13,9 @@
     </style>
 @endsection
 @section('content')
-    @include('Layouts.alert')
-    <div class="row row-xs" id="ctrPurchasesListVl">
+    <div id="ctrPurchasesListVl">
+        {{ Breadcrumbs::render('purchases_lists') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: rgb(198, 224, 180);">
             <div class="sub-header-line-two p-t-30 frm-search-list">
@@ -24,7 +25,7 @@
                             {{trans("purchases_lists.list.search.mst_business_office_id")}}
                         </div>
                         <div class="col-md-3  no-padding grid-form-search">
-                            <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
+                            <select class="form-control custom-select" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans('purchases_lists.list.search.business_default_value')}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -102,7 +103,7 @@
                             {{trans("purchases_lists.list.search.invoicing_flag")}}
                         </div>
                         <div class="col-md-3 grid-form-search no-padding">
-                            <select class="form-control dropdown-list" name="invoicing_flag"  id="invoicing_flag"  v-model="fileSearch.invoicing_flag">
+                            <select class="form-control custom-select" name="invoicing_flag"  id="invoicing_flag"  v-model="fileSearch.invoicing_flag">
                                 <option value="">{{trans("purchases_lists.list.search.invoicing_flag_default_value")}}</option>
                                 @foreach(config('params.payment_closed') as $key=>$invoice)
                                     <option value="{{$key}}"> {{$invoice}}</option>
@@ -159,7 +160,7 @@
                 @include("Layouts.pagination")
             </div>
         </div>
-        <div class="sub-header bg-color-pink mt-3 ml-5 mr-5" v-cloak v-if="items.length==0 && flagSearch">
+        <div class="sub-header bg-color-pink ml-auto mt-3 mr-auto w-90" v-cloak v-if="items.length==0 && flagSearch">
             <div class="sub-header-line-two">
                 <div class="grid-form border-0">
                     <div class="row">
