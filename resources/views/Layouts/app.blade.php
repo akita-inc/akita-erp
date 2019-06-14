@@ -55,7 +55,7 @@
         <div class="Category-Box">
             <h2><a href="#menu0sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">
                     <span>{{$businessOfficeNm}}</span>
-                    <div class="ml-1-7 mt-2">{{Auth::user()->last_nm.Auth::user()->first_nm}}</div>
+                    <div class="ml-1-5 mt-2">{{Auth::user()->last_nm.Auth::user()->first_nm}}</div>
                 </a></h2>
             <div class="collapse" id="menu0sub1">
                 <ul>
