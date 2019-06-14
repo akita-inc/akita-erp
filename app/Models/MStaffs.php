@@ -13,6 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Models\MGeneralPurposes;
+use Illuminate\Support\Facades\Lang;
+
 class MStaffs extends Authenticatable
 {
     use Notifiable;
@@ -113,7 +115,7 @@ class MStaffs extends Authenticatable
             ->get();
         if($data){
             $data = $data->toArray();
-            array_unshift($data,array('value' => '','text' => '==選択=='));
+            array_unshift($data,array('value' => '','text' => Lang::trans('common.select_option')));
         }
         return $data;
     }

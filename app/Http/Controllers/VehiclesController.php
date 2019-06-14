@@ -416,7 +416,7 @@ class VehiclesController extends Controller
         $mStaff = new MStaffs();
         $list = $mStaff->getListOption();
         if(count($list) <=0) {
-            return Response()->json(array('success'=>true, 'info'=> [array('value' => '','text' => '==選択==')]));
+            return Response()->json(array('success'=>true, 'info'=> [array('value' => '','text' => Lang::trans('common.select_option'))]));
         }
         return Response()->json(array('success'=>true, 'info'=> $list));
     }

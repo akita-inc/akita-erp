@@ -3248,7 +3248,7 @@ var ctrStaffsListVl = new Vue({
     loading: false,
     lang: lang_date_picker,
     format_date: format_date_picker,
-    items: [],
+    items: {},
     message: '',
     auth_staff_cd: '',
     fileSearch: {
@@ -3273,41 +3273,24 @@ var ctrStaffsListVl = new Vue({
       descFlg: true,
       divId: ''
     },
-    getItems: function getItems(page, show_msg) {
-      if (show_msg !== true) {
-        $('.alert').hide();
-      }
-
-      var data = {
-        pageSize: this.pageSize,
-        page: page,
-        fieldSearch: this.fileSearch,
-        order: this.order
-      };
-      var that = this;
-      this.loading = true;
-      staffs_service.loadList(data).then(function (response) {
-        if (response.data.data.length === 0) {
-          that.message = messages["MSG05001"];
-        } else {
-          that.message = '';
-        }
-
-        that.items = response.data.data;
-        that.pagination = response.pagination;
-        that.fileSearch = response.fieldSearch;
-        that.order = response.order;
-        $.each(that.fileSearch, function (key, value) {
-          if (value === null) that.fileSearch[key] = '';
-        });
-        that.loading = false;
-        that.auth_staff_cd = auth_staff_cd;
-        if (that.order.col !== null) $('#' + that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
-      });
-    },
     changePage: function changePage(page) {
       this.pagination.current_page = page;
       this.getItems(page);
+    },
+    sortList: function sortList(event, order_by) {
+      $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
+
+      if (this.order.col === order_by && this.order.descFlg) {
+        this.order.descFlg = false;
+        event.target.classList.toggle('sort-asc');
+      } else {
+        this.order.descFlg = true;
+        event.target.classList.toggle('sort-desc');
+      }
+
+      this.order.col = order_by;
+      this.order.divId = event.currentTarget.id;
+      this.getItems(this.pagination.current_page);
     },
     deleteStaffs: function deleteStaffs(id) {
       var _this = this;
@@ -3338,24 +3321,41 @@ var ctrStaffsListVl = new Vue({
           window.location.href = 'edit/' + id;
         }
       });
-    },
-    sortList: function sortList(event, order_by) {
-      $('.search-content thead th').removeClass('sort-asc').removeClass('sort-desc');
-
-      if (this.order.col === order_by && this.order.descFlg) {
-        this.order.descFlg = false;
-        event.target.classList.toggle('sort-asc');
-      } else {
-        this.order.descFlg = true;
-        event.target.classList.toggle('sort-desc');
-      }
-
-      this.order.col = order_by;
-      this.order.divId = event.currentTarget.id;
-      this.getItems(this.pagination.current_page);
     }
   },
   methods: {
+    getItems: function getItems(page, show_msg) {
+      if (show_msg !== true) {
+        $('.alert').hide();
+      }
+
+      var data = {
+        pageSize: this.pageSize,
+        page: page,
+        fieldSearch: this.fileSearch,
+        order: this.order
+      };
+      var that = this;
+      this.loading = true;
+      staffs_service.loadList(data).then(function (response) {
+        if (response.data.data.length === 0) {
+          that.message = messages["MSG05001"];
+        } else {
+          that.message = '';
+        }
+
+        that.items = response.data;
+        that.pagination = response.pagination;
+        that.fileSearch = response.fieldSearch;
+        that.order = response.order;
+        $.each(that.fileSearch, function (key, value) {
+          if (value === null) that.fileSearch[key] = '';
+        });
+        that.loading = false;
+        that.auth_staff_cd = auth_staff_cd;
+        if (that.order.col !== null) $('#' + that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+      });
+    },
     clearCondition: function clearCondition() {
       this.fileSearch.staff_cd = "";
       this.fileSearch.staff_nm = "";
@@ -3385,7 +3385,7 @@ var ctrStaffsListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\staffs-list-vl.js */"./resources/assets/js/controller/staffs-list-vl.js");
 
 
 /***/ })

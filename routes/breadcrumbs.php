@@ -63,6 +63,16 @@ Breadcrumbs::for('staffs_list', function ($trail) {
     $trail->push('社員', route('staffs.list'));
 });
 
+Breadcrumbs::for('staffs_create', function ($trail) {
+    $trail->parent('staffs_list');
+    $trail->push('新規追加', route('staffs.create'));
+});
+
+Breadcrumbs::for('staffs_edit', function ($trail,$id) {
+    $trail->parent('staffs_list');
+    $trail->push('修正画面', route('staffs.edit',['id'=>$id]));
+});
+
 Breadcrumbs::for('suppliers_list', function ($trail) {
     $trail->parent('master');
     $trail->push('仕入先', route('suppliers.list'));

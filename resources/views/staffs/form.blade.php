@@ -12,6 +12,7 @@
         .wrap-control-group .label-file-image{
             width: 120px!important;
             left: 50px!important;
+            position: absolute;
         }
         .btnPreviewdrivers_license_picture{
             margin-left: 130px!important;
@@ -22,6 +23,11 @@
     @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
     <div class="wrapper-container" id="ctrStaffsVl">
+        @if(!empty($staff))
+            {{ Breadcrumbs::render('staffs_edit',$staff['id']) }}
+        @else
+            {{ Breadcrumbs::render('staffs_create') }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
