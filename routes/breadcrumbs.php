@@ -140,7 +140,7 @@ Breadcrumbs::for('empty_info_reservation', function ($trail,$id) {
 
 Breadcrumbs::for('empty_info_reservation_approval', function ($trail,$id) {
     $trail->parent('empty_info');
-    $trail->push('予約承認', route('empty_info.reservation_approval',['id' => $id]));
+    $trail->push('承認・却下', route('empty_info.reservation_approval',['id' => $id]));
 });
 
 Breadcrumbs::for('work_flow', function ($trail) {

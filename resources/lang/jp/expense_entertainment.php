@@ -34,7 +34,8 @@ return [
             'date'=>'実施日',
             'client_company_name'=>'相手先',
             'participant_amount'=>'参加人数',
-            'cost'=>'精算額',
+            'deposit_amount'=>'仮払い',
+            'payoff_amount'=>'精算額',
             'approval_status'=>'承認ステータス',
         ]
     ],
