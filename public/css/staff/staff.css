@@ -12,7 +12,7 @@
 .btnPreviewdrivers_license_picture{
     margin-left: 130px!important;
 }
-.wrap-control-group.textarea label{
+.wrap-control-group.textarea .custom-control-label{
     height: unset;
 }
 .wrap-control-group.textarea .custom-control-label{
