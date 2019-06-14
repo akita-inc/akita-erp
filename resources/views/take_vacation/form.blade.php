@@ -18,7 +18,7 @@
     @endif
     <style>
         .form-control[disabled]{
-            background-color: #D9D9D9;;
+            background-color: #D9D9D9!important;
         }
     </style>
 @endsection
