@@ -10239,7 +10239,8 @@ var ctrSalesListVl = new Vue({
         initialValue: this.fileSearch.mst_customers_cd,
         maxlength: 6,
         class: 'form-control',
-        ref: "mst_customers_cd"
+        ref: "mst_customers_cd",
+        placeholder: placeholderCode
       };
     },
     inputPropsName: function inputPropsName() {
@@ -10250,7 +10251,8 @@ var ctrSalesListVl = new Vue({
         initialValue: this.fileSearch.mst_customers_nm,
         maxlength: 50,
         class: 'form-control w-100',
-        ref: "mst_customers_nm"
+        ref: "mst_customers_nm",
+        placeholder: placeholderCustomerNm
       };
     }
   },
@@ -10409,7 +10411,7 @@ var ctrSalesListVl = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! F:\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
+module.exports = __webpack_require__(/*! D:\petproject\akita-erp\resources\assets\js\controller\sales-lists-vl.js */"./resources/assets/js/controller/sales-lists-vl.js");
 
 
 /***/ })

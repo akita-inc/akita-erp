@@ -221,6 +221,8 @@
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         messages["MSG10023"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10023'); ?>";
         messages["MSG10024"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10024'); ?>";
+        var placeholderCode="<?php echo trans("payments.list.search.code");?>";
+        var placeholderName="<?php echo trans("payments.list.search.name"); ?> ";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/payments-list.js') }}" charset="utf-8"></script>
 @endsection

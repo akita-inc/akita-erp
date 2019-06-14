@@ -205,6 +205,8 @@
         messages["MSG02001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG02001'); ?>";
         messages["MSG10028"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG10028'); ?>";
         var listRoute = "{{route('payment_histories.list')}}";
+        var placeholderCode="<?php echo trans("payment_histories.list.search.code");?>";
+        var placeholderName="<?php echo trans("payment_histories.list.search.name"); ?> ";
     </script>
     <script type="text/javascript" src="{{ mix('/assets/js/controller/payment-histories-list.js') }}" charset="utf-8"></script>
 @endsection
