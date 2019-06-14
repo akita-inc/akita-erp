@@ -40,7 +40,7 @@
                                     <label class="custom-control-label" for="show_status">{{trans("take_vacation.list.search.show_approved")}}</label>
                                 </div>
                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="custom-control-input" id="show_status">
+                                    <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="custom-control-input" id="show_deleted">
                                     <label class="custom-control-label" for="show_deleted">{{trans("take_vacation.list.search.show_deleted")}}</label>
                                 </div>
                             </div>

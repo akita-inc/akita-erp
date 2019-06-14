@@ -203,7 +203,7 @@ class ExpenseEntertainmentController extends Controller
         {
             $this->query->whereRaw('(SELECT COUNT(*)
                                     FROM wf_approval_status
-                                    WHERE wf_id = wf_business_entertaining_expenses.id AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
+                                    WHERE wf_id = wf_business_entertaining_expenses.id AND wf_type_id = '.$this->wf_type_id.' 
                                     AND approval_fg = 0) > 0');
         }
         if($where['show_deleted']!=true)
@@ -294,13 +294,14 @@ class ExpenseEntertainmentController extends Controller
         $role = 1;
         $mWApprovalStatus = new WApprovalStatus();
         if($id != null){
-            $mWFBusinessEntertain = new WFBusinessEntertaining();
-            $mWFBusinessEntertain = $mWFBusinessEntertain->getInfoByID($id);
-            if(empty($mWFBusinessEntertain)){
+            $mWFBusinessEntertainExpenses = new WFBusinessEntertainingExpenses();
+            $mWFBusinessEntertainExpenses = $mWFBusinessEntertainExpenses->getInfoByID($id);
+
+            if(empty($mWFBusinessEntertainExpenses)){
                 abort('404');
             }else{
-                $mWFBusinessEntertain = $mWFBusinessEntertain->toArray();
-                $this->checkAuthentication($id,$mWFBusinessEntertain,$request, $mode,$role);
+                $mWFBusinessEntertainExpenses = $mWFBusinessEntertainExpenses->toArray();
+                $this->checkAuthentication($id,$mWFBusinessEntertainExpenses,$request, $mode,$role);
             }
         }
         $arrayStore = $this->beforeStore($id);
@@ -308,13 +309,18 @@ class ExpenseEntertainmentController extends Controller
         $listPayoffKb= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.payoff_kb'),'Empty');
         $currentDate = date('Y/m/d');
         return view('expense_entertainment.form', array_merge($arrayStore,[
-            'mWFBusinessEntertain' => $mWFBusinessEntertain,
+            'mWFBusinessEntertainExpenses' => $mWFBusinessEntertainExpenses,
             'listPayoffKb' => $listPayoffKb,
             'currentDate' => $currentDate,
             'role' => $role,
             'mode' => $mode,
         ]));
     }
+
+    public function checkIsExist(Request $request, $id){
+        return $this->checkIsExistWf($request,$id);
+    }
+
     public function beforeSubmit($data){
 
     }
