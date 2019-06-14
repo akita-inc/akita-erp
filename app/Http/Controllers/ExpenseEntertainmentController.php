@@ -91,10 +91,11 @@ class ExpenseEntertainmentController extends Controller
             'ms.staff_cd as staff_cd',
             DB::raw('CONCAT_WS("    ",ms.last_nm,ms.first_nm) as applicant_nm'),
             'offices.business_office_nm as applicant_office_id',
-            'wf_business_entertaining_expenses.date',
+            DB::raw("DATE_FORMAT(wf_business_entertaining_expenses.date, '%Y/%m/%d') as date"),
             'wf_business_entertaining_expenses.client_company_name',
             DB::raw('CONCAT_WS("",wf_business_entertaining_expenses.client_members_count,"名 / ",wf_business_entertaining_expenses.own_members_count,"名") as participant_amount'),
-            'wf_business_entertaining_expenses.cost',
+            DB::raw('CONCAT_WS("","￥",format(wf_business_entertaining_expenses.deposit_amount, "#,##0")) AS deposit_amount'),
+            DB::raw('(CASE WHEN wf_business_entertaining_expenses.payoff_kb = 1 THEN CONCAT_WS("","-","￥",format(wf_business_entertaining_expenses.payoff_amount, "#,##0"))ELSE CONCAT_WS("","￥",format(wf_business_entertaining_expenses.payoff_amount, "#,##0")) END )AS payoff_amount'),
             'wf_business_entertaining_expenses.delete_at',
             DB::raw("
             CASE	
@@ -269,10 +270,15 @@ class ExpenseEntertainmentController extends Controller
                 "classTD" => "text-center",
                 "sortBy"=>"client_members_count,own_members_count"
             ],
-            'cost' => [
+            'deposit_amount' => [
                 "classTH" => "min-wd-100",
                 "classTD" => "text-center",
-                "sortBy"=>"cost"
+                "sortBy"=>"deposit_amount"
+            ],
+            'payoff_amount' => [
+                "classTH" => "min-wd-100",
+                "classTD" => "text-center",
+                "sortBy"=>"payoff_amount"
             ],
             'approval_status' => [
                 "classTH" => "min-wd-100",
