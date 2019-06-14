@@ -203,7 +203,7 @@ class ExpenseEntertainmentController extends Controller
         {
             $this->query->whereRaw('(SELECT COUNT(*)
                                     FROM wf_approval_status
-                                    WHERE wf_id = wf_business_entertaining_expenses.id AND wf_type_id = '.config('params.expense_wf_type_id_default').' 
+                                    WHERE wf_id = wf_business_entertaining_expenses.id AND wf_type_id = '.$this->wf_type_id.' 
                                     AND approval_fg = 0) > 0');
         }
         if($where['show_deleted']!=true)
@@ -294,13 +294,14 @@ class ExpenseEntertainmentController extends Controller
         $role = 1;
         $mWApprovalStatus = new WApprovalStatus();
         if($id != null){
-            $mWFBusinessEntertain = new WFBusinessEntertaining();
-            $mWFBusinessEntertain = $mWFBusinessEntertain->getInfoByID($id);
-            if(empty($mWFBusinessEntertain)){
+            $mWFBusinessEntertainExpenses = new WFBusinessEntertainingExpenses();
+            $mWFBusinessEntertainExpenses = $mWFBusinessEntertainExpenses->getInfoByID($id);
+
+            if(empty($mWFBusinessEntertainExpenses)){
                 abort('404');
             }else{
-                $mWFBusinessEntertain = $mWFBusinessEntertain->toArray();
-                $this->checkAuthentication($id,$mWFBusinessEntertain,$request, $mode,$role);
+                $mWFBusinessEntertainExpenses = $mWFBusinessEntertainExpenses->toArray();
+                $this->checkAuthentication($id,$mWFBusinessEntertainExpenses,$request, $mode,$role);
             }
         }
         $arrayStore = $this->beforeStore($id);
@@ -308,13 +309,18 @@ class ExpenseEntertainmentController extends Controller
         $listPayoffKb= $mGeneralPurposes->getDateIDByDataKB(config('params.data_kb.payoff_kb'),'Empty');
         $currentDate = date('Y/m/d');
         return view('expense_entertainment.form', array_merge($arrayStore,[
-            'mWFBusinessEntertain' => $mWFBusinessEntertain,
+            'mWFBusinessEntertainExpenses' => $mWFBusinessEntertainExpenses,
             'listPayoffKb' => $listPayoffKb,
             'currentDate' => $currentDate,
             'role' => $role,
             'mode' => $mode,
         ]));
     }
+
+    public function checkIsExist(Request $request, $id){
+        return $this->checkIsExistWf($request,$id);
+    }
+
     public function beforeSubmit($data){
 
     }
@@ -414,9 +420,9 @@ class ExpenseEntertainmentController extends Controller
     public function handleMail($id,$configMail,$mailTo,$mailCC,$id_before){
         $mWFBusinessEntertainingExpenses=new WFBusinessEntertainingExpenses();
         $data = $mWFBusinessEntertainingExpenses->getInfoForMail($id);
-        $field = ['[id]','[applicant_id]','[applicant_office_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[report]','[cost]','[payoff_amount]','[deposit_amount]'];
+        $field = ['[id]','[applicant_id]','[applicant_office_id]','[wf_business_entertaining_id]','[date]','[client_company_name]','[client_members]','[client_members_count]','[own_members]','[own_members_count]','[place]','[report]','[cost]','[payoff_amount]','[deposit_amount]'];
         $data['id_before'] = $id_before;
-        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['report'],$data['cost'],$data['payoff_amount'],$data['deposit_amount']],$configMail['template']);
+        $text = str_replace($field, [$data['id'],$data['applicant_id'],$data['applicant_office_id'],$data['wf_business_entertaining_id'],$data['date'],$data['client_company_name'],$data['client_members'],$data['client_members_count'],$data['own_members'],$data['own_members_count'],$data['place'],$data['report'],$data['cost'],$data['payoff_amount'],$data['deposit_amount']],$configMail['template']);
         $subject = str_replace(['[id]','[applicant_id]','[applicant_office_id]'],[$data['id'],$data['applicant_id'],$data['applicant_office_id']],$configMail["subject"]);
         $this->sendMail($configMail,$mailTo,$mailCC,$subject,$text);
     }

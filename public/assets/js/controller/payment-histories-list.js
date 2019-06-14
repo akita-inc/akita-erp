@@ -3410,7 +3410,8 @@ var ctrPaymentHistoryListVl = new Vue({
         initialValue: this.fileSearch.mst_customers_cd,
         maxlength: 6,
         class: 'form-control input-cd',
-        ref: "mst_customers_cd"
+        ref: "mst_customers_cd",
+        placeholder: placeholderCode
       };
     },
     inputPropsName: function inputPropsName() {
@@ -3421,7 +3422,8 @@ var ctrPaymentHistoryListVl = new Vue({
         initialValue: this.fileSearch.customer_nm,
         maxlength: 50,
         class: 'form-control w-100',
-        ref: "customer_nm"
+        ref: "customer_nm",
+        placeholder: placeholderName
       };
     }
   },

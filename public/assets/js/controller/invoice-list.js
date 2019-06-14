@@ -21749,7 +21749,8 @@ var ctrInvoiceListVl = new Vue({
         initialValue: this.fileSearch.customer_cd,
         maxlength: 5,
         class: 'form-control input-cd',
-        ref: "customer_cd"
+        ref: "customer_cd",
+        placeholder: placeholderCode
       };
     },
     inputPropsNm: function inputPropsNm() {
@@ -21759,7 +21760,8 @@ var ctrInvoiceListVl = new Vue({
         initialValue: this.fileSearch.customer_nm,
         maxlength: 5,
         class: 'form-control',
-        ref: "customer_nm"
+        ref: "customer_nm",
+        placeholder: placeholderName
       };
     }
   },

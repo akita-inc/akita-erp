@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+    <!-- 上書き CSS -->
+    <link href="{{ asset('css/OverWrite-4.css') }}" rel="stylesheet">
+
     <script>
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
@@ -34,91 +37,119 @@
     @yield('css')
 </head>
 <body>
-<!-- header -->
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="/">システムタイトル</a>
-    <h1>@yield('title_header')</h1>
-    <p class="nav-user-name">{{$businessOfficeNm}}　{{Auth::user()->last_nm.Auth::user()->first_nm}}</p>
-    <!--Ringt menu -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarRightContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarRightContent">
-        <ul class="list-group">
-            <li class="list-group-item">
-                <a href="{{route('get-file',['filename' => config('params.manual_file')])}}" target="_blank">マニュアル</a>
-            </li>
-            <li class="list-group-item">
-                <a href="{{route('logout')}}">ログアウト</a>
-            </li>
-            {{--<li class="list-group-item">--}}
-                {{--<a href="#">プロフィール</a>--}}
-            {{--</li>--}}
-            <li class="list-group-item">
-                <a href="#">パスワード変更</a>
-            </li>
 
-        </ul>
+<!-- 追加 左のnavここから-->
+<div id="navBarMain">
+<nav class="nav-left navbar-light h-100">
+
+    <div class="Category-Box d-flex justify-content-between">
+        <div class="Logo">AKITA</div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     </div>
-    @if(Auth::user()->sysadmin_flg==1 || config("params.MENU_DISP_FLG")=='True')
-    <!--Left menu -->
-    <button class="navbar-toggler-left"
-            type="button" data-toggle="collapse" data-target="#sidebar"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-        Menu
-    </button>
-    <div class="collapse navbar-collapse" id="sidebar">
-        <a href="#" class="list-group-item" data-parent="#menu1">Top</a>
-        <a href="#menu1sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">販売</a>
-        <div class="collapse" id="menu1sub1">
-            <a href="{{route('sales_lists.list')}}" class="list-group-item" data-parent="#menu1sub1">売上一覧</a>
-            <a href="{{route('invoices.list')}}" class="list-group-item" data-parent="#menu1sub1">請求書発行</a>
-            <a href="{{route('invoice_history.list')}}" class="list-group-item" data-parent="#menu1sub1">請求書発行履歴</a>
-            <a href="{{route('payment_processing.list')}}" class="list-group-item" data-parent="#menu1sub1">入金処理</a>
-            <a href="{{route('payment_histories.list')}}" class="list-group-item" data-parent="#menu1sub1">入金履歴</a>
+
+    <div class="Category-Box"><a class="navbar-brand" href="/">システムタイトル</a></div>
+    <div class="collapse navbar-collapse/" id="navbarSupportedContent">
+
+        <div class="Category-Box">
+            <h2><a href="#menu0sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">
+                    <span>{{$businessOfficeNm}}</span>
+                    <div class="ml-1-7 mt-2">{{Auth::user()->last_nm.Auth::user()->first_nm}}</div>
+                </a></h2>
+            <div class="collapse" id="menu0sub1">
+                <ul>
+                    <li><a href="{{route('getManualFile',['filename' => config('params.manual_file_name')])}}" target="_blank" data-parent="menu0sub1">マニュアル</a></li>
+                    <li><a href="{{route('logout')}}" data-parent="menu0sub1">ログアウト</a></li>
+{{--                    <li><a href="#" data-parent="menu0sub1">パスワード変更</a></li>--}}
+                    <li>
+                        <a v-on:click="openModal" href="#"  data-parent="menu0sub1">パスワード変更</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <a href="#menu2sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">購買</a>
-        <div class="collapse" id="menu2sub1">
-            <a href="{{ route('purchases_lists.list') }}" class="list-group-item" data-parent="#menu2sub1">仕入一覧</a>
-            <a href="{{ route('accounts_payable_data_output.list') }}" class="list-group-item" data-parent="#menu2sub1">買掛データ出力</a>
+
+        <div class="Category-Box">
+            <h2><a href="javaScript:" class="Nav-Icon-Home">ホーム</a></h2>
         </div>
+        @if(Auth::user()->sysadmin_flg==1 || config("params.MENU_DISP_FLG")=='True')
+        <div class="Category-Box">
+            <h2><a href="#menu1sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">販売</a></h2>
+            <div class="collapse" id="menu1sub1">
+                <ul>
+                    <li><a href="{{route('sales_lists.list')}}" data-parent="#menu1sub1" class="active">売上一覧</a></li>
+                    <li><a href="{{route('invoices.list')}}" data-parent="#menu1sub1">請求書発行</a></li>
+                    <li><a href="{{route('invoice_history.list')}}" data-parent="#menu1sub1">請求書発行履歴</a></li>
+                    <li><a href="{{route('payment_processing.list')}}" data-parent="#menu1sub1">入金処理</a></li>
+                    <li><a href="{{route('payment_histories.list')}}" data-parent="#menu1sub1">入金履歴</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="Category-Box">
+            <h2><a href="#menu2sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">購買</a></h2>
+            <div class="collapse" id="menu2sub1">
+                <ul>
+                    <li><a href="{{route('purchases_lists.list')}}" data-parent="#menu2sub1">仕入一覧</a></li>
+                    <li><a href="{{route('accounts_payable_data_output.list')}}" data-parent="#menu2sub1">買掛データ出力</a></li>
+                </ul>
+            </div>
+        </div>
+
         @if (\Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9
                 || \Illuminate\Support\Facades\Session::get('suppliers_accessible_kb') != 9
                 || \Illuminate\Support\Facades\Session::get('customers_accessible_kb') != 9
                 || \Illuminate\Support\Facades\Session::get('vehicles_accessible_kb') != 9)
-        <a href="#menu3sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">マスタ</a>
-        <div class="collapse" id="menu3sub1">
-            @if (\Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9)
-            <a href="{{ route('staffs.list') }}" class="list-group-item" data-parent="#menu3sub1">社員</a>
-            @endif
-            @if (\Illuminate\Support\Facades\Session::get('suppliers_accessible_kb') != 9)
-            <a href="{{ route('suppliers.list') }}" class="list-group-item" data-parent="#menu3sub1">仕入先</a>
-            @endif
-            @if (\Illuminate\Support\Facades\Session::get('customers_accessible_kb') != 9)
-            <a href="{{ route('customers.list') }}" class="list-group-item" data-parent="#menu3sub1">得意先</a>
-            @endif
-            @if (\Illuminate\Support\Facades\Session::get('vehicles_accessible_kb') != 9)
-            <a href="{{ route('vehicles.list') }}" class="list-group-item" data-parent="#menu3sub1">車両</a>
-            @endif
+        <div class="Category-Box">
+            <h2><a href="#menu3sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">マスタ</a></h2>
+            <div class="collapse" id="menu3sub1">
+                <ul>
+                    @if (\Illuminate\Support\Facades\Session::get('staffs_accessible_kb') != 9)
+                    <li><a href="{{route('staffs.list')}}" data-parent="#menu3sub1">社員</a></li>
+                    @endif
+                    @if (\Illuminate\Support\Facades\Session::get('suppliers_accessible_kb') != 9)
+                    <li><a href="{{route('suppliers.list')}}" data-parent="#menu3sub1">仕入先</a></li>
+                    @endif
+                    @if (\Illuminate\Support\Facades\Session::get('customers_accessible_kb') != 9)
+                    <li><a href="{{route('customers.list')}}" data-parent="#menu3sub1">得意先</a></li>
+                    @endif
+                    @if (\Illuminate\Support\Facades\Session::get('vehicles_accessible_kb') != 9)
+                    <li><a href="{{route('vehicles.list')}}" data-parent="#menu3sub1">車両</a></li>
+                    @endif
+                </ul>
+            </div>
         </div>
         @endif
-        <a href="{{ route('empty_info.list')  }}" class="list-group-item">ハコカラ</a>
-        <a href="#menu4sub1" class="list-group-item" data-toggle="collapse" aria-expanded="false">ワークフロー</a>
-        <div class="collapse" id="menu4sub1">
-            <a href="{{url('/take_vacation/list')}}" class="list-group-item" data-parent="#menu4sub1">休暇取得申請</a>
-            <a href="{{route('expense_application.list')}}" class="list-group-item" data-parent="#menu4sub1">交際費申請</a>
-            <a href="{{route('expense_entertainment.list')}}" class="list-group-item" data-parent="#menu4sub1">交際費精算</a>
-        @if(Auth::user()->sysadmin_flg==1)
-            <a href="{{route('work_flow.list')}}" class="list-group-item" data-parent="#menu4sub1">基本設定</a>
-            @endif
+        <div class="Category-Box">
+            <h2><a href="{{route('empty_info.list')}}" class="Nav-Icon-Hakokara">ハコカラ</a></h2>
         </div>
-    </div>
-    @endif
-</nav>
 
+        <div class="Category-Box">
+            <h2><a href="#menu4sub1" data-toggle="collapse" aria-expanded="false" class="Arrow">ワークフロー</a></h2>
+            <div class="collapse" id="menu4sub1">
+                <ul>
+                    <li><a href="{{route('take_vacation.list')}}" data-parent="#menu4sub1">休暇取得申請</a></li>
+                    <li><a href="{{route('expense_application.list')}}" data-parent="#menu4sub1">交際費申請</a></li>
+                    <li><a href="{{route('expense_entertainment.list')}}" data-parent="#menu4sub1">交際費精算</a></li>
+                @if(Auth::user()->sysadmin_flg==1)
+                    <li><a href="{{route('work_flow.list')}}" data-parent="#menu4sub1">基本設定</a></li>
+                    @endif
+                </ul>
+            </div>
+        </div>
+        @endif
+    </div>
+</nav>
+<!-- 追加 左のnavここまで-->
+    @include('Layouts.modalChangePassword',[
+                   'id'=> 'changePasswordModal',
+           ])
+</div>
 <div class="container">
+    <div class="alert alert-success mt-3" id="msg-success-password">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <span>{{trans('messages.MSG04002')}}</span>
+    </div>
     @yield('content')
 </div>
 
@@ -146,6 +177,7 @@
 <script type="text/javascript" src="{{ mix('/assets/js/app-vl.js') }}"></script>
 <script type="text/javascript" src="{{ mix('/assets/js/service/service.js') }}" charset="utf-8"></script>
 <script type="text/javascript" src="{{ mix('/assets/js/directive/directive.js') }}" charset="utf-8"></script>
+<script type="text/javascript" src="{{ mix('/assets/js/controller/change-password.js') }}" charset="utf-8"></script>
 @yield('scripts')
 <script>
     axios.interceptors.response.use((response) => {

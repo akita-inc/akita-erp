@@ -19,9 +19,9 @@ class CreateTPaymentHistoryHeaderes extends Migration
             $table->string('mst_suppliers_cd',5);
             $table->integer('mst_business_office_id');
             $table->date('publication_date');
-            $table->decimal('total_fee',12,2);
-            $table->decimal('consumption_tax',12,2);
-            $table->decimal('tax_included_amount',12,2);
+            $table->decimal('total_fee',10,2);
+            $table->decimal('consumption_tax',10,2);
+            $table->decimal('tax_included_amount',10,2);
             $table->timestamp('deleted_at')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('add_mst_staff_id');

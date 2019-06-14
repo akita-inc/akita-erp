@@ -957,6 +957,15 @@ staffs_service = {
     }).catch(function (error) {
       return error;
     });
+  },
+  changePassword: function changePassword(data) {
+    return axios.post('/staffs/api-v1/change-password', data, {
+      'content-type': 'multipart/form-data'
+    }).then(function (response) {
+      return response.data;
+    }).catch(function (error) {
+      return error;
+    });
   }
 };
 

@@ -12,6 +12,7 @@
         .wrap-control-group .label-file-image{
             width: 120px!important;
             left: 50px!important;
+            position: absolute;
         }
         .btnPreviewdrivers_license_picture{
             margin-left: 130px!important;
@@ -22,6 +23,11 @@
     @include('Layouts.alert')
     @php $prefix='staffs.create.field.' @endphp
     <div class="wrapper-container" id="ctrStaffsVl">
+        @if(!empty($staff))
+            {{ Breadcrumbs::render('staffs_edit',$staff['id']) }}
+        @else
+            {{ Breadcrumbs::render('staffs_create') }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
@@ -37,7 +43,7 @@
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
-                        <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-delete w-100" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -371,7 +377,7 @@
                                             <!--address2 address3-->
 
                                         </div>
-                                        <button @click="removeRows('mst_staff_dependents',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                                        <button @click="removeRows('mst_staff_dependents',index)" type="button" class="btn btn-delete btn-rows-remove">-</button>
                                     </div>
                                     <button @click="addRows('mst_staff_dependents')" type="button" class="btn btn-primary btn-rows-add">+</button>
                                 </div>
@@ -451,7 +457,7 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-delete btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_job_experiences')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -548,7 +554,7 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-delete btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_qualifications')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -627,12 +633,14 @@
                                         <label class="h-100" for="screen_category_id">
                                             {{ trans(@$prefix.'drivers_license_divisions') }}
                                         </label>
-                                        <div class="col-md-12 col-sm-12">
+                                        <div class="row">
                                             @if(@$listDriversLicenseDivisions)
                                                 @foreach($listDriversLicenseDivisions as  $key=>$item)
                                                     @if(!empty($key))
-                                                    <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
-                                                    <span for="info_target_{{$item}}">{{$item}}</span>
+                                                        <div class="">
+                                                            <input type="checkbox" class="form-control" id="info_target_{{$key}}" value="{{$key}}" v-model="field.drivers_license_divisions">
+                                                            <label for="info_target_{{$key}}" class="custom-label">{{$item}}</label>
+                                                        </div>
                                                     @endif
                                                 @endforeach
                                             @endif
@@ -930,7 +938,7 @@
                     @if(!empty($staff))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
-                                <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif

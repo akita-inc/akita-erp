@@ -245,8 +245,8 @@ input,select{
     padding-right: 0px!important;
 }
 .grid-col > label {
-    background-color: #0070c0;
-    color: white;
+    background-color:#E1FFE9;
+    color: black;
     justify-content: left;
     min-height: 38px;
 }
@@ -281,12 +281,12 @@ input,select{
     position: relative;
     min-height: 38px;
 }
-.wrap-control-group label{
+.wrap-control-group label:first-child{
     position: absolute;
     left: 0px;
     line-height: 38px;
-    background-color: #0070c0;
-    color: white;
+    background-color: #E1FFE9;
+    color: black;
     justify-content: left;
     width: 180px;
     padding-left: 10px;
@@ -302,7 +302,6 @@ input,select{
 .wrap-control-group input[type="text"],.wrap-control-group input[type="tel"], .wrap-control-group select,.wrap-control-group textarea{
     width: 100% !important;
     height: 38px;
-    line-height: 38px;
 }
 
 .wrap-control-group input[type="checkbox"]{
@@ -346,11 +345,6 @@ input,select{
     top: -20px;
     left: 5px;
     font-size: 0.7rem;
-}
-.error-label-search{
-    position: absolute;
-    bottom: -30px;
-    left: 5px;
 }
 .frm-search-list .left-5px{
     left:5px!important;
@@ -567,6 +561,9 @@ span.note{
     font-size: 80%;
     font-weight: bold;
 }
+#password-error{
+    font-size: 100%;
+}
 .error-form .mx-input{
     border-color: #dc3545;
 }
@@ -574,7 +571,7 @@ span.note{
     border-color: #dc3545;
     padding-right: 12px !important;
     background-image: none;
-    border-radius: 0px !important;
+    border-radius: 4px !important;
 }
 input[type=text]::-ms-clear {
     display: none;
@@ -638,7 +635,7 @@ input[type=text]::-ms-clear {
     background-color: #ddd;
 }
 .form-control:disabled, .form-control[readonly] {
-    background-color: #D9D9D9;
+    background-color: #D9D9D9 !important;
     opacity: 1;
 }
 
@@ -677,6 +674,9 @@ input[type="checkbox"]:focus {
     background-color: #0070C0;
     color: #ffffff;
 }
+#footer-modal{
+    border-top:unset;
+}
 .bg-sales-lists{
     background: rgb(244,176,132);
 }
@@ -706,4 +706,19 @@ input[type="checkbox"]:focus {
 }
 .form-control::placeholder {
     color: 	#A9A9A9!important;
+}
+.ml-1-7{
+    margin-left: 1.7rem!important;
+}
+.custom-control-label{
+    padding: 3px;
+}
+.custom-checkbox{
+    font-size: 0.8rem !important;
+}
+.btn-danger{
+    background-color: #FF0000 !important;
+}
+#msg-success-password{
+    display: none;
 }

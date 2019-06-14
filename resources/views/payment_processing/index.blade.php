@@ -10,8 +10,9 @@
     </style>
 @endsection
 @section('content')
-    @include('Layouts.alert')
-    <div class="row row-xs" id="ctrPaymentProcessingVl">
+    <div id="ctrPaymentProcessingVl">
+        {{ Breadcrumbs::render('payment_processing') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header" style="background-color: #F4B084">
             <div class="sub-header-line-two p-t-30 frm-search-list">
@@ -278,7 +279,7 @@
 @section("scripts")
     <script>
         var currentDate = "{{$currentDate}}";
-        var defaultDwClassification = "{{array_keys($listDepositMethod)[0]}}";
+        var defaultDwClassification = "{{!empty($listDepositMethod) ? array_keys($listDepositMethod)[0] : ''}}";
         var messages = [];
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";

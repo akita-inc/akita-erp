@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Lang;
+
 class MRoles  extends Model
 {
     protected $table = "mst_roles";
@@ -27,7 +29,7 @@ class MRoles  extends Model
         $data = $this->select('id', 'role_nm')
             ->orderBy('disp_number', 'asc')
             ->get();
-        $result = array("" => '==選択==');
+        $result = array("" => Lang::trans('common.select_option'));
         foreach (json_decode(json_encode($data), true) as $key => $item) {
             $result[$item['id']] = $item['role_nm'];
         }

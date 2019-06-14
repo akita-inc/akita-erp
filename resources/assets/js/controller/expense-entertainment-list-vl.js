@@ -5,7 +5,7 @@ var ctrExpenseEntertainmentListVl = new Vue({
     el: '#ctrExpenseEntertainmentListVl',
     data: {
         loading:false,
-        items:[],
+        items:{},
         fileSearch:{
             applicant_id:"",
             applicant_nm:"",
@@ -28,38 +28,6 @@ var ctrExpenseEntertainmentListVl = new Vue({
             col:'',
             descFlg: true,
             divId:''
-        },
-        getItems: function(page, show_msg){
-            if (show_msg !== true) {
-                $('.alert').hide();
-            }
-            var data = {
-                pageSize:this.pageSize,
-                page:page,
-                fieldSearch:this.fileSearch,
-                order:this.order,
-            };
-            var that = this;
-            that.loading = true;
-            expense_entertainment_service.loadList(data).then((response) => {
-                if (response.data.data.length===0) {
-                    this.message = messages["MSG05001"];
-                } else {
-                    this.message = '';
-                }
-                that.flagSearch=true;
-                that.items = response.data.data;
-                that.pagination = response.pagination;
-                that.fileSearch = response.fieldSearch;
-                that.order = response.order;
-                $.each(that.fileSearch, function (key, value) {
-                    if (value === null)
-                        that.fileSearch[key] = '';
-                });
-                that.loading = false;
-                if (that.order.col !== null)
-                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
-            });
         },
         checkIsExist: function (id) {
             expense_entertainment_service.checkIsExist(id).then((response) => {
@@ -99,6 +67,37 @@ var ctrExpenseEntertainmentListVl = new Vue({
         }
     },
     methods : {
+        getItems: function(page, show_msg){
+            if (show_msg !== true) {
+                $('.alert').hide();
+            }
+            var data = {
+                page:page,
+                fieldSearch:this.fileSearch,
+                order:this.order,
+            };
+            var that = this;
+            that.loading = true;
+            expense_entertainment_service.loadList(data).then((response) => {
+                if (response.data.data.length===0) {
+                    this.message = messages["MSG05001"];
+                } else {
+                    this.message = '';
+                }
+                that.flagSearch=true;
+                that.items = response.data;
+                that.pagination = response.pagination;
+                that.fileSearch = response.fieldSearch;
+                that.order = response.order;
+                $.each(that.fileSearch, function (key, value) {
+                    if (value === null)
+                        that.fileSearch[key] = '';
+                });
+                that.loading = false;
+                if (that.order.col !== null)
+                    $('#'+ that.order.divId).addClass(that.order.descFlg ? 'sort-desc' : 'sort-asc');
+            });
+        },
         clearCondition: function clearCondition() {
             this.fileSearch.vacation_id="";
             this.fileSearch.applicant_nm="";

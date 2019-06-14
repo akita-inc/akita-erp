@@ -20932,8 +20932,7 @@ var ctrCustomersVl = new Vue({
   },
   methods: {
     testblur: function testblur(event) {
-      var keyCode = event.keyCode;
-      console.log(keyCode); // Tab 9 or Enter 13
+      var keyCode = event.keyCode; // Tab 9 or Enter 13
 
       if (keyCode === 9 || keyCode === 13) {
         this.popupVisible = false;
@@ -21079,6 +21078,8 @@ var ctrCustomersVl = new Vue({
             if (key == "except_g_drive_bill_fg") {
               if ($("#hd_" + key).val() == 1) {
                 that.field[key] = true;
+              } else {
+                that.field[key] = false;
               }
             } else {
               that.field[key] = $("#hd_" + key).val();

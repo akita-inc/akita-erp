@@ -2,8 +2,9 @@
 @section('title',trans("expense_entertainment.list.title"))
 @section('title_header',trans("expense_entertainment.list.title"))
 @section('content')
-    @include('Layouts.alert')
-        <div class="row row-xs" id="ctrExpenseEntertainmentListVl">
+        <div id="ctrExpenseEntertainmentListVl">
+            {{ Breadcrumbs::render('expense_entertainment_list') }}
+            @include('Layouts.alert')
             <pulse-loader :loading="loading"></pulse-loader>
             <div class="sub-header">
                 <div class="sub-header-line-one text-right">
@@ -19,7 +20,7 @@
                                     {{trans("expense_entertainment.list.search.applicant_id")}}
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control">
+                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control"  autocomplete="new-password">
                                 </div>
                             </div>
                             <div class="col-md-6 row">
@@ -32,16 +33,14 @@
                             </div>
                         </div>
                         <div class="col-md-5 col-sm-12 row">
-                            <div class="col-md-7 row">
-                                <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" value="1" v-model="fileSearch.show_status" class="form-check-input">{{trans("expense_entertainment.list.search.show_status")}}
-                                    </label>
+                            <div class="col-md-7 row align-items-center">
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" value="1" v-model="fileSearch.show_status" class="custom-control-input" id="show_status">
+                                    <label class="custom-control-label" for="show_status">{{trans("expense_entertainment.list.search.show_status")}}</label>
                                 </div>
-                                <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="form-check-input">{{trans("expense_entertainment.list.search.show_deleted")}}
-                                    </label>
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="custom-control-input" id="show_deleted">
+                                    <label class="custom-control-label" for="show_deleted">{{trans("expense_entertainment.list.search.show_deleted")}}</label>
                                 </div>
                             </div>
                             <div class="col-md-5"></div>
@@ -55,7 +54,7 @@
                                     {{trans("expense_entertainment.list.search.applicant_office_id")}}
                                 </div>
                                 <div class="col-md-8 input-group">
-                                    <select class="form-control dropdown-list" name="applicant_office_id"  id="applicant_office_id"  v-model="fileSearch.applicant_office_id">
+                                    <select class="custom-select form-control" name="applicant_office_id"  id="applicant_office_id"  v-model="fileSearch.applicant_office_id">
                                         <option value="">{{trans('common.kara_select_option')}}</option>
                                         @foreach($businessOffices as $office)
                                             <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -88,6 +87,7 @@
                             <div class="col-md-4"></div>
                         </div>
                     </div>
+                    </form>
                 </div>
             </div>
             <div class="col-md-3"></div>
@@ -101,7 +101,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.delete_at) }">
+                    <tr  v-cloak v-for="item in items.data" v-bind:style="{ backgroundColor: setBgColor(item.delete_at) }">
                         @foreach($fieldShowTable as $key => $field)
                             @if($key=='id')
                             <td>

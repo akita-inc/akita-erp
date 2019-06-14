@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-danger"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal" v-on:click="openModalDelete(modal.payment_histories['dw_number'])">{{trans("payment_histories.list.search.button.delete")}}</button>
+                <button type="button" class="btn btn-delete"  {!! isset($attr_input) ? $attr_input:"" !!} data-dismiss="modal" v-on:click="openModalDelete(modal.payment_histories['dw_number'])">{{trans("payment_histories.list.search.button.delete")}}</button>
                 <button type="button" class="btn btn-secondary"  data-dismiss="modal">{{trans("payment_histories.list.search.button.close")}}</button>
             </div>
         </div>

@@ -25,6 +25,11 @@
 @section('content')
     @php $prefix='expense_entertainment.create.field.' @endphp
     <div class="wrapper-container" id="ctrExpenseApplicationVl">
+        @if($mode=='register')
+            {{ Breadcrumbs::render('expense_entertainment_create') }}
+        @else
+            {{ Breadcrumbs::render('expense_entertainment_'.$mode,$mWFBusinessEntertainExpenses['id']) }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
@@ -32,15 +37,15 @@
                     <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                 </div>
 
-                <input type="hidden" id="hd_expense_entertainment_edit" value="{!! !empty($mWFBusinessEntertain) ? 1:0 !!}">
+                <input type="hidden" id="hd_expense_entertainment_edit" value="{!! !empty($mWFBusinessEntertainExpenses) ? 1:0 !!}">
                 <input type="hidden" id="mode" value="{!! $mode !!}">
-                @if(!empty($mWFBusinessEntertain))
-                    @foreach($mWFBusinessEntertain as $key=>$value)
+                @if(!empty($mWFBusinessEntertainExpenses))
+                    @foreach($mWFBusinessEntertainExpenses as $key=>$value)
                         <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
-                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWFBusinessEntertain['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            <button class="btn btn-delete w-100" v-on:click="deleteVacation('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -98,7 +103,6 @@
                                                class="form-control w-50"
                                                id="search_business_entertaining"
                                                maxlength="4"
-                                               onkeypress="return isNumberKey(event)"
                                         >
                                     </div>
 
@@ -117,7 +121,7 @@
                                 <div class="break-row-form"></div>
                                 <div class="col-md-4 col-sm-12 row">
                                     <div class="col-md-11">
-                                    @include('Component.form.input',['filed'=>'client_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                    @include('Component.form.input',['filed'=>'client_members_count','required'=>true, 'attr_input' => "maxlength=4"])
                                     </div>
                                     <div class="no-padding col-md-1 lh-38 text-center">名</div>
                                 </div>
@@ -127,7 +131,7 @@
                                 <div class="break-row-form"></div>
                                 <div class="col-md-4 col-sm-12 row">
                                     <div class="col-md-11">
-                                    @include('Component.form.input',['filed'=>'own_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                    @include('Component.form.input',['filed'=>'own_members_count','required'=>true, 'attr_input' => "maxlength=4"])
                                     </div>
                                     <div class="no-padding col-md-1 lh-38 text-center">名</div>
                                 </div>
@@ -153,7 +157,7 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'cost','required'=>true,'attr_input' => 'maxlength=8 @focus="removeCommaByID(\'cost\')" @blur="addCommaByID(\'cost\')" onkeypress="return isNumberKey(event)" @change="handlePayoffKb"'])
+                                    @include('Component.form.input',['filed'=>'cost','required'=>true,'attr_input' => 'maxlength=8 @focus="removeCommaByID(\'cost\')" @blur="addCommaByID(\'cost\')" @change="handlePayoffKb"'])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
@@ -161,7 +165,7 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'deposit_amount','attr_input' => 'maxlength=8 @focus="removeCommaByID(\'deposit_amount\')" @blur="addCommaByID(\'deposit_amount\')" onkeypress="return isNumberKey(event)"'])
+                                    @include('Component.form.input',['filed'=>'deposit_amount','attr_input' => 'maxlength=8 @focus="removeCommaByID(\'deposit_amount\')" @blur="addCommaByID(\'deposit_amount\')"'])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
@@ -180,10 +184,10 @@
                     <div class="d-flex">
                         <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
-                    @if(!empty($mWFBusinessEntertain))
+                    @if(!empty($mWFBusinessEntertainExpenses))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $mode=='edit')
-                                <button class="btn btn-danger text-white" v-on:click="deleteExpenseApplication('{{$mWFBusinessEntertain['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteExpenseApplication('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif

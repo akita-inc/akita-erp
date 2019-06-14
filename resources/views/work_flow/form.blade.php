@@ -15,6 +15,11 @@
 @section('content')
     @php $prefix='work_flow.create.field.' @endphp
     <div class="wrapper-container" id="ctrWorkFlowVl">
+        @if(empty($mWfType))
+            {{ Breadcrumbs::render('basic_setting_create') }}
+        @else
+            {{ Breadcrumbs::render('basic_setting_edit',$mWfType['id']) }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">

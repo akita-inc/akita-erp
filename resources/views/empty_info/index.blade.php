@@ -2,8 +2,9 @@
 @section('title',trans("empty_info.list.title"))
 @section('title_header',trans("empty_info.list.title"))
 @section('content')
-    @include('Layouts.alert')
-    <div class="row row-xs" id="ctrEmptyInfoListVl">
+    <div id="ctrEmptyInfoListVl">
+        {{ Breadcrumbs::render('empty_info') }}
+        @include('Layouts.alert')
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one text-right">
@@ -19,7 +20,7 @@
                                 {{trans("empty_info.list.search.regist_office_id")}}
                             </div>
                             <div class="wd-350 pd-l-20">
-                                <select class="form-control dropdown-list" name="regist_office_id"  id="regist_office_id"  v-model="fileSearch.regist_office_id">
+                                <select class="form-control custom-select" name="regist_office_id"  id="regist_office_id"  v-model="fileSearch.regist_office_id">
                                     <option value="">{{trans('common.kara_select_option')}}</option>
                                     @foreach($businessOffices as $office)
                                         <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
@@ -27,16 +28,14 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6 lh-38 text-left">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="checkbox" v-model="fileSearch.status" class="form-check-input">{{trans("empty_info.list.search.status")}}
-                                </label>
+                        <div class="col-md-6 lh-38 text-left no-padding">
+                            <div class="custom-control custom-checkbox custom-control-inline form-control border-0 w-auto mr-0 bg-transparent">
+                                <input type="checkbox" class="custom-control-input" id="status" v-model="fileSearch.status">
+                                <label class="custom-control-label" for="status">{{trans("empty_info.list.search.status")}}</label>
                             </div>
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="checkbox" v-model="fileSearch.arrive_date"  class="form-check-input" >{{trans("empty_info.list.search.arrive_date")}}
-                                </label>
+                            <div class="custom-control custom-checkbox custom-control-inline form-control border-0 w-auto mr-0 bg-transparent">
+                                <input type="checkbox" class="custom-control-input" id="arrive_date" v-model="fileSearch.arrive_date">
+                                <label class="custom-control-label" for="arrive_date">{{trans("empty_info.list.search.arrive_date")}}</label>
                             </div>
                         </div>
 
@@ -66,7 +65,7 @@
                                 {{trans("empty_info.list.search.asking_baggage")}}
                             </div>
                             <div class="wd-350 pd-l-20">
-                                <select class="form-control dropdown-list" name="asking_baggage"  id="asking_baggage"  v-model="fileSearch.asking_baggage">
+                                <select class="form-control custom-select" name="asking_baggage"  id="asking_baggage"  v-model="fileSearch.asking_baggage">
                                     <option value="">{{trans('common.kara_select_option')}}</option>
                                     @foreach($askingBaggages as $baggage)
                                         <option value="{{$baggage['date_id']}}"> {{$baggage['date_nm']}}</option>
@@ -92,7 +91,7 @@
                                 {{trans("empty_info.list.search.start_pref_cd")}}
                             </div>
                             <div class="wd-250 pd-l-10">
-                                <select class="form-control dropdown-list" name="start_pref_cd"  id="start_pref_cd"  v-model="fileSearch.start_pref_cd">
+                                <select class="form-control custom-select" name="start_pref_cd"  id="start_pref_cd"  v-model="fileSearch.start_pref_cd">
                                     <option value="">{{trans("empty_info.list.search.pref")}}</option>
                                     @foreach($startPrefCds as $prefCd)
                                         <option value="{{$prefCd['date_id']}}"> {{$prefCd['date_nm']}}</option>
@@ -113,7 +112,7 @@
                                 {{trans("empty_info.list.search.arrive_pref_cd")}}
                             </div>
                             <div class="wd-250 pd-l-10">
-                                <select class="form-control dropdown-list" name="arrive_pref_cd"  id="arrive_pref_cd"  v-model="fileSearch.arrive_pref_cd">
+                                <select class="form-control custom-select" name="arrive_pref_cd"  id="arrive_pref_cd"  v-model="fileSearch.arrive_pref_cd">
                                     <option value="">{{trans("empty_info.list.search.pref")}}</option>
                                     @foreach($startPrefCds as $prefCd)
                                         <option value="{{$prefCd['date_id']}}"> {{$prefCd['date_nm']}}</option>
@@ -125,13 +124,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-1 lh-38 text-right no-padding">
+                    <div class="col-md-2 lh-38 text-right no-padding">
                         <button class="btn btn-black w-100" v-on:click="clearCondition()">
                             {{trans('common.button.condition-clear')}}
                         </button>
                     </div>
                     <div class="mr-3"></div>
-                    <div class="col-md-1 lh-38 text-right no-padding">
+                    <div class="col-md-2 lh-38 text-right no-padding">
                         <button class="btn btn-primary m-auto w-100" v-on:click="getItems(1)">
                             {{trans('common.button.search')}}
                         </button>
@@ -150,7 +149,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.status) }">
+                <tr  v-cloak v-for="item in items.data" v-bind:style="{ backgroundColor: setBgColor(item.status) }">
                     <td class="no-padding wd-100 text-center">
                         <button type="button" class="btn  btn-handle-empty-info  w-75" v-on:click="handleLinkEmptyInfo(item.id,item.status,item.regist_office_id)">
                             <span v-if="item.status==8 || item.status==9"> {{trans("empty_info.list.search.button.inquiry")}} </span>

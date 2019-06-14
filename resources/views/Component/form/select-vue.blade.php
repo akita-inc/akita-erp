@@ -9,7 +9,7 @@
                 v-bind:class="errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!} != undefined
                && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index] != undefined
                && errors.{!! isset($filedErrors) ? $filedErrors:"NotField" !!}[0][index].{!! $filed !!} != undefined ? 'form-control is-invalid':'form-control' "
-                class="form-control"
+                class="custom-select form-control"
                 v-model="{!! $filedMode !!}"
                 v-bind:id="{!! $filedId !!}">
             @if(isset($array) && !empty($array))

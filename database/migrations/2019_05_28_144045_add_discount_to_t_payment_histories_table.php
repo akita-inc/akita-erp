@@ -15,7 +15,7 @@ class AddDiscountToTPaymentHistoriesTable extends Migration
     {
         Schema::table('t_payment_histories', function (Blueprint $table) {
             //
-            $table->decimal('discount',10,2)->after('fee');
+            $table->decimal('discount',12,2)->after('fee');
 
         });
     }

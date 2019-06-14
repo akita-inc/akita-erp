@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Lang;
+
 class MAccountTitles  extends Model
 {
     use SoftDeletes;
@@ -24,7 +26,7 @@ class MAccountTitles  extends Model
         $data=$this->select('id','account_title_name')
             ->orderBy('disp_number','asc')
             ->get();
-        $result = array("" => '==選択==');
+        $result = array("" => Lang::trans('common.select_option'));
         foreach (json_decode(json_encode($data), true) as $key=>$item){
             $result[$item['id']] = $item['account_title_name'];
         }
