@@ -23,7 +23,7 @@
                             <div class="wd-100 col-list-search-f text-left">
                                 {{trans("sales_lists.list.search.mst_business_office_id")}}
                             </div>
-                            <select class="form-control dropdown-list" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
+                            <select class="form-control custom-select" name="mst_business_office_id"  id="mst_business_office_id"  v-model="fileSearch.mst_business_office_id">
                                 <option value="">{{trans('sales_lists.list.search.business_default_value')}}</option>
                                 @foreach($businessOffices as $office)
                                     <option value="{{$office['id']}}"> {{$office['business_office_nm']}}</option>
