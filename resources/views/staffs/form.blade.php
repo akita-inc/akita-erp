@@ -43,7 +43,7 @@
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
-                        <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-delete w-100" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -377,7 +377,7 @@
                                             <!--address2 address3-->
 
                                         </div>
-                                        <button @click="removeRows('mst_staff_dependents',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                                        <button @click="removeRows('mst_staff_dependents',index)" type="button" class="btn btn-delete btn-rows-remove">-</button>
                                     </div>
                                     <button @click="addRows('mst_staff_dependents')" type="button" class="btn btn-primary btn-rows-add">+</button>
                                 </div>
@@ -457,7 +457,7 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_job_experiences',index)" type="button" class="btn btn-delete btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_job_experiences')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -554,7 +554,7 @@
                                 </div>
 
                             </div>
-                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows('mst_staff_qualifications',index)" type="button" class="btn btn-delete btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows('mst_staff_qualifications')" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -938,7 +938,7 @@
                     @if(!empty($staff))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $staff['staff_cd']!=Auth::user()->staff_cd)
-                                <button class="btn btn-danger text-white" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteStaff('{{$staff['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif

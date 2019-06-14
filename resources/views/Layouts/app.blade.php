@@ -40,7 +40,7 @@
 
 <!-- 追加 左のnavここから-->
 <div id="navBarMain">
-<nav class="nav-left navbar-light">
+<nav class="nav-left navbar-light h-100">
 
     <div class="Category-Box d-flex justify-content-between">
         <div class="Logo">AKITA</div>

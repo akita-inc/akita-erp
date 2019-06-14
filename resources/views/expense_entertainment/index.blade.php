@@ -20,7 +20,7 @@
                                     {{trans("expense_entertainment.list.search.applicant_id")}}
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control">
+                                    <input type="text" v-model="fileSearch.applicant_id" name="applicant_id" id="applicant_id" class="form-control"  autocomplete="new-password">
                                 </div>
                             </div>
                             <div class="col-md-6 row">
@@ -39,7 +39,7 @@
                                     <label class="custom-control-label" for="show_status">{{trans("expense_entertainment.list.search.show_status")}}</label>
                                 </div>
                                 <div class="custom-control custom-checkbox custom-control-inline">
-                                    <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="custom-control-input" id="show_status">
+                                    <input type="checkbox" value="1" v-model="fileSearch.show_deleted" class="custom-control-input" id="show_deleted">
                                     <label class="custom-control-label" for="show_deleted">{{trans("expense_entertainment.list.search.show_deleted")}}</label>
                                 </div>
                             </div>
@@ -87,6 +87,7 @@
                             <div class="col-md-4"></div>
                         </div>
                     </div>
+                    </form>
                 </div>
             </div>
             <div class="col-md-3"></div>
@@ -100,7 +101,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr  v-cloak v-for="item in items" v-bind:style="{ backgroundColor: setBgColor(item.delete_at) }">
+                    <tr  v-cloak v-for="item in items.data" v-bind:style="{ backgroundColor: setBgColor(item.delete_at) }">
                         @foreach($fieldShowTable as $key => $field)
                             @if($key=='id')
                             <td>

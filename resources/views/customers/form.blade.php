@@ -23,7 +23,7 @@
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1)
-                        <button class="btn btn-danger text-white" v-on:click="deleteCustomer('{{$customer['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                        <button class="btn btn-delete w-100" v-on:click="deleteCustomer('{{$customer['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -328,7 +328,7 @@
                                     ])
                                 </div>
                             </div>
-                            <button @click="removeRows(index)" type="button" class="btn btn-danger btn-rows-remove">-</button>
+                            <button @click="removeRows(index)" type="button" class="btn btn-delete btn-rows-remove">-</button>
                         </div>
                         <button @click="addRows" type="button" class="btn btn-primary btn-rows-add">+</button>
                     </div>
@@ -380,7 +380,7 @@
                         @endforeach
                         <div class="d-flex ml-auto">
                             @if($role==1)
-                                <button class="btn btn-danger text-white" v-on:click="deleteCustomer('{{$customer['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteCustomer('{{$customer['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif

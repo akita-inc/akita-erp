@@ -27,7 +27,7 @@
                         @endforeach
                         <div class="d-flex ml-auto">
                             @if($role==1)
-                                <button class="btn btn-danger text-white" v-on:click='deleteVehicle("{{$mVehicle['id']}}")' type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click='deleteVehicle("{{$mVehicle['id']}}")' type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif
@@ -961,7 +961,7 @@
                                 @endforeach
                                 <div class="d-flex ml-auto">
                                     @if($role==1)
-                                        <button class="btn btn-danger text-white" v-on:click='deleteVehicle("{{$mVehicle['id']}}")' type="button">{{ trans("common.button.delete") }}</button>
+                                        <button class="btn btn-delete w-100" v-on:click='deleteVehicle("{{$mVehicle['id']}}")' type="button">{{ trans("common.button.delete") }}</button>
                                     @endif
                                 </div>
                             @endif

@@ -28,7 +28,7 @@
         @if($mode=='register')
             {{ Breadcrumbs::render('expense_entertainment_create') }}
         @else
-            {{ Breadcrumbs::render('expense_entertainment_'.$mode) }}
+            {{ Breadcrumbs::render('expense_entertainment_'.$mode,$mWFBusinessEntertainExpenses['id']) }}
         @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
@@ -37,15 +37,15 @@
                     <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                 </div>
 
-                <input type="hidden" id="hd_expense_entertainment_edit" value="{!! !empty($mWFBusinessEntertain) ? 1:0 !!}">
+                <input type="hidden" id="hd_expense_entertainment_edit" value="{!! !empty($mWFBusinessEntertainExpenses) ? 1:0 !!}">
                 <input type="hidden" id="mode" value="{!! $mode !!}">
-                @if(!empty($mWFBusinessEntertain))
-                    @foreach($mWFBusinessEntertain as $key=>$value)
+                @if(!empty($mWFBusinessEntertainExpenses))
+                    @foreach($mWFBusinessEntertainExpenses as $key=>$value)
                         <input type="hidden" id="hd_{!! $key !!}" value="{{$value }}">
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
-                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWFBusinessEntertain['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            <button class="btn btn-delete w-100" v-on:click="deleteVacation('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -184,10 +184,10 @@
                     <div class="d-flex">
                         <button class="btn btn-black" type="button" @click="backHistory">{{ trans("common.button.back") }}</button>
                     </div>
-                    @if(!empty($mWFBusinessEntertain))
+                    @if(!empty($mWFBusinessEntertainExpenses))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $mode=='edit')
-                                <button class="btn btn-danger text-white" v-on:click="deleteExpenseApplication('{{$mWFBusinessEntertain['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteExpenseApplication('{{$mWFBusinessEntertainExpenses['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif

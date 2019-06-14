@@ -20855,8 +20855,8 @@ var ctrExpenseApplicationVl = new Vue({
   data: {
     lang: lang_date_picker,
     loading: false,
-    expense_application_edit: 0,
-    expense_application_id: null,
+    expense_entertainment_edit: 0,
+    expense_entertainment_id: null,
     field: {
       applicant_id: staff_cd,
       staff_nm: staff_nm,
@@ -20906,7 +20906,7 @@ var ctrExpenseApplicationVl = new Vue({
     resetForm: function resetForm() {
       this.errors = {};
 
-      if ($("#hd_expense_application_edit").val() == 1) {
+      if ($("#hd_expense_entertainment_edit").val() == 1) {
         this.loadFormEdit();
       } else {
         this.field = {
@@ -20944,7 +20944,7 @@ var ctrExpenseApplicationVl = new Vue({
       that.loading = true;
 
       if (this.field.mode != 'register') {
-        this.field["id"] = this.expense_application_id;
+        this.field["id"] = this.expense_entertainment_id;
       }
 
       that.field.cost = that.removeComma(that.field.cost);
@@ -20974,7 +20974,7 @@ var ctrExpenseApplicationVl = new Vue({
             that.field.approval_fg = approval_fg;
           }
 
-          expense_entertainment_service.checkIsExist(that.expense_application_id, {
+          expense_entertainment_service.checkIsExist(that.expense_entertainment_id, {
             'mode': this.field.mode,
             'approval_fg': approval_fg,
             'modified_at': that.modified_at
@@ -21004,7 +21004,7 @@ var ctrExpenseApplicationVl = new Vue({
       return errors.join("<br/>");
     },
     backHistory: function backHistory() {
-      if (this.expense_application_edit == 1) {
+      if (this.expense_entertainment_edit == 1) {
         expense_entertainment_service.backHistory().then(function () {
           window.location.href = listRoute;
         });
@@ -21015,13 +21015,16 @@ var ctrExpenseApplicationVl = new Vue({
     loadFormEdit: function loadFormEdit() {
       var that = this;
       that.loading = true;
-      that.expense_application_edit = 1;
-      that.expense_application_id = $("#hd_id").val();
+      that.expense_entertainment_edit = 1;
+      that.expense_entertainment_id = $("#hd_id").val();
       $.each(this.field, function (key, value) {
-        if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'mst_bill_issue_destinations') {
+        if ($("#hd_" + key) != undefined && $("#hd_" + key).val() != undefined && key != 'wf_additional_notice') {
           that.field[key] = $("#hd_" + key).val();
         }
       });
+      that.addCommaByID('cost');
+      that.addCommaByID('deposit_amount');
+      that.addCommaByID('payoff_amount');
       that.field.wf_additional_notice = JSON.parse(listWfAdditionalNotice.replace(/&quot;/g, '"'));
 
       if (that.field.wf_additional_notice.length == 0) {
@@ -21032,7 +21035,6 @@ var ctrExpenseApplicationVl = new Vue({
       }
 
       that.modified_at = $('#hd_modified_at').val();
-      that.field.cost = that.addComma(that.field.cost);
       that.handlePayoffKb();
       that.loading = false;
     },
@@ -21215,7 +21217,7 @@ var ctrExpenseApplicationVl = new Vue({
   mounted: function mounted() {
     this.handlePayoffKb();
 
-    if ($("#hd_expense_application_edit").val() == 1) {
+    if ($("#hd_expense_entertainment_edit").val() == 1) {
       this.loadFormEdit();
     }
 

@@ -45,7 +45,7 @@
                     @endforeach
                     <div class="d-flex ml-auto">
                         @if($role==1 && ($mode=='register' || $mode=='edit'))
-                            <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                            <button class="btn btn-delete w-100" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                         @endif
                     </div>
                 @endif
@@ -67,7 +67,7 @@
                                     <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
                                         <div class="col-md-4 row h-100 justify-content-start">
                                             <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
-                                            <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                            <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-delete w-100 btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
                                         </div>
                                         <div class="col-md-4 row lh-38">
                                             <div class="col-md-2 col-sm-12 no-padding text-right">
@@ -165,7 +165,7 @@
                     @if(!empty($mWPaidVacation))
                         <div class="d-flex ml-auto">
                             @if($role==1 && $mode=='edit')
-                                <button class="btn btn-danger text-white" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
+                                <button class="btn btn-delete w-100" v-on:click="deleteVacation('{{$mWPaidVacation['id']}}')" type="button">{{ trans("common.button.delete") }}</button>
                             @endif
                         </div>
                     @endif
@@ -187,7 +187,7 @@
                                         <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
                                             <div class="col-md-4 row h-100 justify-content-start">
                                                 <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
-                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-danger btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-delete w-100 btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
                                             </div>
                                             <div class="col-md-4 row lh-38">
                                                 <div class="col-md-2 col-sm-12 no-padding text-right">
