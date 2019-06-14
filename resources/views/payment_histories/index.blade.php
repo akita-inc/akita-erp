@@ -18,7 +18,7 @@
             border-top: none !important;
         }
         .form-control[readonly]{
-            background-color: white;
+            background-color: white !important;
         }
     </style>
 @endsection

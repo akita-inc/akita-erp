@@ -5,7 +5,7 @@
     @if($role==1 && ($mode=='register' || $mode=='edit'))
         <style>
             .form-control[readonly]{
-                background-color: white;
+                background-color: white!important;
             }
             #searchStaffModal .modal-header{
                 border-bottom: none !important;
