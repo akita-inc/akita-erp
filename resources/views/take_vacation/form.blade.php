@@ -67,7 +67,7 @@
                                     <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
                                         <div class="col-md-4 row h-100 justify-content-start">
                                             <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
-                                            <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-delete w-100 btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                            <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-delete btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
                                         </div>
                                         <div class="col-md-4 row lh-38">
                                             <div class="col-md-2 col-sm-12 no-padding text-right">
@@ -187,7 +187,7 @@
                                         <div class="col-md-12 col-sm-12 row grid-col h-100 justify-content-center">
                                             <div class="col-md-4 row h-100 justify-content-start">
                                                 <button data-toggle="modal" data-target="#{{$mode}}Modal" class="btn btn-primary btn-submit">{{ trans("common.button.reservation_approval") }}</button>
-                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-delete w-100 btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
+                                                <button data-toggle="modal" data-target="#vacation_rejectModal" class="btn btn-delete btn-submit ml-4">{{ trans("common.button.reservation_reject") }}</button>
                                             </div>
                                             <div class="col-md-4 row lh-38">
                                                 <div class="col-md-2 col-sm-12 no-padding text-right">

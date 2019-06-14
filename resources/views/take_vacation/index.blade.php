@@ -2,7 +2,6 @@
 @section('title',trans("take_vacation.list.title"))
 @section('title_header',trans("take_vacation.list.title"))
 @section('content')
-    @include('Layouts.alert')
         <div id="ctrTakeVacationListVl">
             {{ Breadcrumbs::render('take_vacation_list') }}
             @include('Layouts.alert')
