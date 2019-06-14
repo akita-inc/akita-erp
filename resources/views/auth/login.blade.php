@@ -55,10 +55,9 @@
         <input type="text" class="form-control"  placeholder="ログインID" name="staff_cd" value="{{old('staff_cd')}}">
         <label for="inputPassword" class="sr-only">パスワード</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="パスワード" name="password"  >
-        <div class="checkbox">
-            <label>
-                <input type="checkbox"  name="remember" {{ old('remember') ? 'checked' : '' }}> ログインしたままにする
-            </label>
+        <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }} class="custom-control-input">
+            <label for="remember" class="d-block custom-control-label"> ログインしたままにする</label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" name="submit" type="submit">ログイン</button>
     </form>
