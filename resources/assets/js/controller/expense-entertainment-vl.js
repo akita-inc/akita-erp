@@ -113,9 +113,9 @@ var ctrExpenseApplicationVl = new Vue({
                             that.field.payoff_amount=that.addComma(isNaN(that.field.payoff_amount)?0:that.field.payoff_amount);
                         }else{
                             that.errors = [];
-                            // window.location.href = listRoute;
+                            window.location.href = listRoute;
                         }
-                        // that.loading = false;
+                        that.loading = false;
                     });
                     break;
                 case 'edit':
@@ -356,6 +356,26 @@ var ctrExpenseApplicationVl = new Vue({
         this.handlePayoffKb();
         if($("#hd_expense_application_edit").val() == 1) {
             this.loadFormEdit();
+        }
+        if(document.getElementById('search_business_entertaining')!=null){
+            this.setInputFilter(document.getElementById('search_business_entertaining'), function(value) {
+                return   /^\d*$/.test(value); });
+        }
+        if(document.getElementById('client_members_count')!=null){
+            this.setInputFilter(document.getElementById('client_members_count'), function(value) {
+                return   /^\d*$/.test(value); });
+        }
+        if(document.getElementById('own_members_count')!=null){
+            this.setInputFilter(document.getElementById('own_members_count'), function(value) {
+                return   /^\d*$/.test(value); });
+        }
+        if(document.getElementById('cost')!=null){
+            this.setInputFilter(document.getElementById('cost'), function(value) {
+                return   /^\d*$/.test(value); });
+        }
+        if(document.getElementById('deposit_amount')!=null){
+            this.setInputFilter(document.getElementById('deposit_amount'), function(value) {
+                return   /^\d*$/.test(value); });
         }
     },
     components: {

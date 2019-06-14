@@ -25,6 +25,11 @@
 @section('content')
     @php $prefix='expense_entertainment.create.field.' @endphp
     <div class="wrapper-container" id="ctrExpenseApplicationVl">
+        @if($mode=='register')
+            {{ Breadcrumbs::render('expense_entertainment_create') }}
+        @else
+            {{ Breadcrumbs::render('expense_entertainment_'.$mode) }}
+        @endif
         <pulse-loader :loading="loading"></pulse-loader>
         <div class="sub-header">
             <div class="sub-header-line-one d-flex">
@@ -98,7 +103,6 @@
                                                class="form-control w-50"
                                                id="search_business_entertaining"
                                                maxlength="4"
-                                               onkeypress="return isNumberKey(event)"
                                         >
                                     </div>
 
@@ -117,7 +121,7 @@
                                 <div class="break-row-form"></div>
                                 <div class="col-md-4 col-sm-12 row">
                                     <div class="col-md-11">
-                                    @include('Component.form.input',['filed'=>'client_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                    @include('Component.form.input',['filed'=>'client_members_count','required'=>true, 'attr_input' => "maxlength=4"])
                                     </div>
                                     <div class="no-padding col-md-1 lh-38 text-center">名</div>
                                 </div>
@@ -127,7 +131,7 @@
                                 <div class="break-row-form"></div>
                                 <div class="col-md-4 col-sm-12 row">
                                     <div class="col-md-11">
-                                    @include('Component.form.input',['filed'=>'own_members_count','required'=>true, 'attr_input' => "maxlength=4 onkeypress='return isNumberKey(event)'"])
+                                    @include('Component.form.input',['filed'=>'own_members_count','required'=>true, 'attr_input' => "maxlength=4"])
                                     </div>
                                     <div class="no-padding col-md-1 lh-38 text-center">名</div>
                                 </div>
@@ -153,7 +157,7 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'cost','required'=>true,'attr_input' => 'maxlength=8 @focus="removeCommaByID(\'cost\')" @blur="addCommaByID(\'cost\')" onkeypress="return isNumberKey(event)" @change="handlePayoffKb"'])
+                                    @include('Component.form.input',['filed'=>'cost','required'=>true,'attr_input' => 'maxlength=8 @focus="removeCommaByID(\'cost\')" @blur="addCommaByID(\'cost\')" @change="handlePayoffKb"'])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
@@ -161,7 +165,7 @@
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">
-                                    @include('Component.form.input',['filed'=>'deposit_amount','attr_input' => 'maxlength=8 @focus="removeCommaByID(\'deposit_amount\')" @blur="addCommaByID(\'deposit_amount\')" onkeypress="return isNumberKey(event)"'])
+                                    @include('Component.form.input',['filed'=>'deposit_amount','attr_input' => 'maxlength=8 @focus="removeCommaByID(\'deposit_amount\')" @blur="addCommaByID(\'deposit_amount\')"'])
                                 </div>
                                 <div class="break-row-form"></div>
                                 <div class="col-md-6 col-sm-12">

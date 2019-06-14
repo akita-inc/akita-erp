@@ -21,6 +21,7 @@ class WFBusinessEntertainingExpenses extends Model {
             'wf_business_entertaining_expenses.id',
             'wf_business_entertaining_expenses.applicant_id',
             'wf_business_entertaining_expenses.applicant_office_id',
+            'wf_business_entertaining_expenses.wf_business_entertaining_id',
             'wf_business_entertaining_expenses.date',
             'wf_business_entertaining_expenses.client_company_name',
             'wf_business_entertaining_expenses.client_members',

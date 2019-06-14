@@ -1,5 +1,5 @@
 <div class="modal" tabindex="-1" role="dialog" id="changePasswordModal" >
-    <div class="modal-dialog modal-lg" role="document" style="max-width:600px;">
+    <div class="modal-dialog modal-lg" role="document" style="max-width:700px;">
         <div class="modal-content">
             <div class="modal-header modal_header_custom">
                 <h5 class="w-100 modal-title text-center">{{trans("common.modal.change_password.title")}}</h5>
@@ -25,8 +25,8 @@
                     <span v-cloak v-if="errors.password != undefined" class="message-error" v-html="errors.password.join('<br />')" id="password-error"></span>
                 </div>
             </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary"  v-on:click="changePassword">{{trans("common.modal.change_password.update")}}</button>
+            <div class="modal-footer justify-content-center" id="footer-modal">
+                <button type="button" class="btn btn-primary w-25"  v-on:click="changePassword">{{trans("common.modal.change_password.update")}}</button>
             </div>
         </div>
     </div>
