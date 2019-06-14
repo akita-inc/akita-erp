@@ -101,12 +101,14 @@ class MEmptyInfo extends Model
             [$emptyInfo->id, $emptyInfo->start_address, $emptyInfo->arrive_address, $emptyInfo->start_date_time, $emptyInfo->arrive_date, $emptyInfo->regist_office, $emptyInfo->regist_staff, $emptyInfo->vehicle_classification, $emptyInfo->registration_numbers, $emptyInfo->vehicle_size, $emptyInfo->vehicle_body_shape, $emptyInfo->asking_price, $emptyInfo->asking_baggage],
             $configMail['template']);
         $subject = str_replace('[id]',$id,$configMail["subject"]);
-        Mail::raw($text,
-            function ($message) use ($configMail,$subject,$mailTo) {
-                $message->from($configMail["from"]);
-                $message->to($mailTo)
-                    ->subject($subject);
-            });
+        if(count($mailTo) > 0) {
+            Mail::raw($text,
+                function ($message) use ($configMail, $subject, $mailTo) {
+                    $message->from($configMail["from"]);
+                    $message->to($mailTo)
+                        ->subject($subject);
+                });
+        }
     }
     public function getInfoForMail($id,$status){
         $query = DB::table($this->table);
