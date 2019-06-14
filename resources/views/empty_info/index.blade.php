@@ -46,7 +46,7 @@
                                 {{trans("empty_info.list.search.vehicle_size")}}
                             </div>
                             <div class="wd-350 pd-l-20">
-                                <input id="input_vehicle_size" class="form-control" name="vehicle_size" v-model="fileSearch.vehicle_size">
+                                <input id="input_vehicle_size" class="form-control" name="vehicle_size" v-model="fileSearch.vehicle_size" placeholder="{{trans("empty_info.list.search.vehicle_size")}}">
                             </div>
                         </div>
                         <div class="col-md-6 lh-38 d-inline-flex">
@@ -54,7 +54,7 @@
                                 {{trans("empty_info.list.search.vehicle_body_shape")}}
                             </div>
                             <div class="wd-350 pd-l-20">
-                                <input id="input_vehicle_body_shape" class="form-control" name="vehicle_body_shape" v-model="fileSearch.vehicle_body_shape">
+                                <input id="input_vehicle_body_shape" class="form-control" name="vehicle_body_shape" v-model="fileSearch.vehicle_body_shape" placeholder="{{trans("empty_info.list.search.vehicle_body_shape")}}">
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@
                                 {{trans("empty_info.list.search.equipment")}}
                             </div>
                             <div class="wd-350 pd-l-20">
-                                <input id="input_equipment" class="form-control" name="equipment" v-model="fileSearch.equipment">
+                                <input id="input_equipment" class="form-control" name="equipment" v-model="fileSearch.equipment" placeholder="{{trans("empty_info.list.search.equipment")}}">
                             </div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                                 </select>
                             </div>
                              <div class="wd-520 pl-lg-2">
-                                <input id="input_start_address" class="form-control" name="start_address" v-model="fileSearch.start_address">
+                                <input id="input_start_address" class="form-control" name="start_address" v-model="fileSearch.start_address" placeholder="{{trans("empty_info.list.search.start_pref_cd")}}">
                              </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                                 </select>
                             </div>
                             <div class="wd-520 pl-lg-2">
-                                <input id="input_arrive_address" class="form-control" name="arrive_address" v-model="fileSearch.arrive_address">
+                                <input id="input_arrive_address" class="form-control" name="arrive_address" v-model="fileSearch.arrive_address" placeholder="{{trans("empty_info.list.search.arrive_pref_cd")}}">
                             </div>
                         </div>
                     </div>

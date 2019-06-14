@@ -20,7 +20,7 @@
                                     {{trans("take_vacation.list.search.applicant_id")}}
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="fileSearch.vacation_id" name="vacation_id" id="vacation_id" class="form-control">
+                                    <input type="text" v-model="fileSearch.vacation_id" name="vacation_id" id="vacation_id" class="form-control" placeholder="{{trans("take_vacation.list.search.applicant_id")}}">
                                 </div>
                             </div>
                             <div class="col-md-6 row">
@@ -28,7 +28,7 @@
                                     {{trans("take_vacation.list.search.applicant")}}
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="fileSearch.applicant_nm" name="applicant_nm" id="applicant_nm" class="form-control">
+                                    <input type="text" v-model="fileSearch.applicant_nm" name="applicant_nm" id="applicant_nm" class="form-control" placeholder="{{trans("take_vacation.list.search.applicant")}}">
                                 </div>
                             </div>
                         </div>
