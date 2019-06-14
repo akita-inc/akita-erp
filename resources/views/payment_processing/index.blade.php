@@ -279,7 +279,7 @@
 @section("scripts")
     <script>
         var currentDate = "{{$currentDate}}";
-        var defaultDwClassification = "{{array_keys($listDepositMethod)[0]}}";
+        var defaultDwClassification = "{{!empty($listDepositMethod) ? array_keys($listDepositMethod)[0] : ''}}";
         var messages = [];
         messages["MSG05001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG05001'); ?>";
         messages["MSG06001"] = "<?php echo \Illuminate\Support\Facades\Lang::get('messages.MSG06001'); ?>";
