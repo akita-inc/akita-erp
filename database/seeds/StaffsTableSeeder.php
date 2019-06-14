@@ -13,9 +13,9 @@ class StaffsTableSeeder extends Seeder
     {
         //
         DB::table('mst_staffs')->insert([
-            'created_at'=>new \DateTime(),
-            'modified_at'=>new \DateTime(),
-            'staff_cd'=>'91919',
+            'adhibition_start_dt'=>new \DateTime(),
+            'adhibition_end_dt'=>new \DateTime(),
+            'staff_cd'=>'toan1',
             'last_nm'=>'鈴木',
             'first_nm'=>'太郎',
             'password' => bcrypt('123456'),
